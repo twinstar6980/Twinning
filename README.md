@@ -38,8 +38,6 @@
 
 ## 特别鸣谢
 
-* [`icons8.com`](https://icons8.com) 工具的图标来源于该网站。
-
 * `时漪` `PAK向日葵` `伊特` 等在 2019 年与我一同解析出了 `PopCap Animation (aka PAM)` 格式。
 
 * [`迎风听雨`](https://github.com/YingFengTingYu) 为项目中诸多 PopCap 格式的解析提供了帮助，包括 `Crypt-Data` 、`U-Texture` 、`Sexy-Texture` 、`Re-Animation` 、`Particle` 、`Trail` 、`Effect` 、`Character-Font-Widget-2` 。

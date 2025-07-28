@@ -1,28 +1,38 @@
 ﻿
+// Error
+WIN32_ERROR
+
+// FileSystem
 GetLongPathName
+
+// Memory
 GetProcessHeap
 HeapAlloc
 HeapFree
 
+// Library
 AddDllDirectory
 LoadLibrary
 FreeLibrary
 GetProcAddress
 
-ShellExecute
-
-WIN32_ERROR
-
+// Window
 ShowWindow
 SetForegroundWindow
+SHOW_WINDOW_CMD
 
+// COM
+CoInitialize
+CoUninitialize
+CoCreateInstance
+
+// FileDialog
+SHCreateItemFromParsingName
 IFileOpenDialog
 FileOpenDialog
 IFileSaveDialog
 FileSaveDialog
 FILEOPENDIALOGOPTIONS
 
-CoInitialize
-CoUninitialize
-CoCreateInstance
-SHCreateItemFromParsingName
+// Miscellaneous
+ShellExecute

@@ -96,8 +96,8 @@ namespace AssistantPlus.Utility {
 		) {
 			var state = true;
 			var handle = WindowHelper.Handle(window);
-			state &= PlatformInvoke.User32.ShowWindow(handle, PlatformInvoke.User32.SW_RESTORE);
-			state &= PlatformInvoke.User32.SetForegroundWindow(handle);
+			state &= Win32.PInvoke.ShowWindow(new (handle), Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_RESTORE);
+			state &= Win32.PInvoke.SetForegroundWindow(new (handle));
 			return state;
 		}
 

@@ -17,7 +17,7 @@ export namespace Twinning::Shell::Bridge {
 
 		inline static auto launch (
 			Client &                         client,
-			Library const &                  library,
+			Library &                        library,
 			std::string const &              script,
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> {

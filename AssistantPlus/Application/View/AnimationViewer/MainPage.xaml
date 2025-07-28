@@ -180,7 +180,7 @@
 					VerticalScrollBarVisibility="Visible"
 					ZoomMode="Enabled"
 					MinZoomFactor="0.1"
-					MaxZoomFactor="50.0"
+					MaxZoomFactor="100.0"
 					ViewChanged="{x:Bind Controller.uStage_ViewChanged}"
 					SizeChanged="{x:Bind Controller.uStage_ViewChanged}"
 					>
@@ -320,7 +320,7 @@
 								Width="32"
 								Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{x:Bind Controller.uStageScaleIcon_Glyph}"
+								Glyph="{StaticResource FluentIconGlyph.Reshare}"
 								>
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="0" />

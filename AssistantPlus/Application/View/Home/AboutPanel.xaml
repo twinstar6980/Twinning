@@ -54,6 +54,30 @@
 				Width="32"
 				Height="22"
 				FontSize="{StaticResource SmallIconSize}"
+				Glyph="{StaticResource FluentIconGlyph.SpecialEffectSize}"
+				/>
+			<ComboBox
+				ToolTipService.ToolTip="Theme Backdrop"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				ItemsSource="{x:Bind Controller.uSettingThemeBackdrop_ItemsSource}"
+				SelectedIndex="{x:Bind Controller.uSettingThemeBackdrop_SelectedIndex}"
+				SelectionChanged="{x:Bind Controller.uSettingThemeBackdrop_SelectionChanged}"
+				/>
+		</my:Stack>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="4"
+			>
+			<FontIcon
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Width="32"
+				Height="22"
+				FontSize="{StaticResource SmallIconSize}"
 				Glyph="{StaticResource FluentIconGlyph.BlueLight}"
 				/>
 			<ComboBox
@@ -171,30 +195,6 @@
 					</Flyout>
 				</ToggleSplitButton.Flyout>
 			</ToggleSplitButton>
-		</my:Stack>
-		<my:Stack
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			Orientation="Horizontal"
-			Spacing="4"
-			>
-			<FontIcon
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Center"
-				Width="32"
-				Height="22"
-				FontSize="{StaticResource SmallIconSize}"
-				Glyph="{StaticResource FluentIconGlyph.SpecialEffectSize}"
-				/>
-			<ComboBox
-				ToolTipService.ToolTip="Theme Backdrop"
-				my:Stack.Weight="1"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				ItemsSource="{x:Bind Controller.uSettingThemeBackdrop_ItemsSource}"
-				SelectedIndex="{x:Bind Controller.uSettingThemeBackdrop_SelectedIndex}"
-				SelectionChanged="{x:Bind Controller.uSettingThemeBackdrop_SelectionChanged}"
-				/>
 		</my:Stack>
 		<my:Divider />
 		<my:Stack

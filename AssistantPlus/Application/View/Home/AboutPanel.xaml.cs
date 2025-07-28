@@ -78,6 +78,32 @@ namespace AssistantPlus.View.Home {
 
 		#region setting
 
+		public List<String> uSettingThemeBackdrop_ItemsSource {
+			get {
+				return Enum.GetNames<CustomThemeBackdrop>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
+			}
+		}
+
+		public Size uSettingThemeBackdrop_SelectedIndex {
+			get {
+				return App.Setting.Data.ThemeBackdrop.AsCast<Size>();
+			}
+		}
+
+		public async void uSettingThemeBackdrop_SelectionChanged (
+			Object                    sender,
+			SelectionChangedEventArgs args
+		) {
+			var senders = sender.As<ComboBox>();
+			if (App.Setting.Data.ThemeBackdrop != senders.SelectedIndex.AsCast<CustomThemeBackdrop>()) {
+				App.Setting.Data.ThemeBackdrop = senders.SelectedIndex.AsCast<CustomThemeBackdrop>();
+				await App.Setting.Save();
+			}
+			return;
+		}
+
+		// ----------------
+
 		public List<String> uSettingThemeMode_ItemsSource {
 			get {
 				return Enum.GetNames<CustomThemeMode>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
@@ -86,7 +112,7 @@ namespace AssistantPlus.View.Home {
 
 		public Size uSettingThemeMode_SelectedIndex {
 			get {
-				return (Size)App.Setting.Data.Theme.Mode;
+				return App.Setting.Data.ThemeMode.AsCast<Size>();
 			}
 		}
 
@@ -95,8 +121,8 @@ namespace AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.Theme.Mode != (CustomThemeMode)senders.SelectedIndex) {
-				App.Setting.Data.Theme.Mode = (CustomThemeMode)senders.SelectedIndex;
+			if (App.Setting.Data.ThemeMode != senders.SelectedIndex.AsCast<CustomThemeMode>()) {
+				App.Setting.Data.ThemeMode = senders.SelectedIndex.AsCast<CustomThemeMode>();
 				await App.Setting.Save();
 			}
 			return;
@@ -106,7 +132,7 @@ namespace AssistantPlus.View.Home {
 
 		public Boolean uSettingThemeColor_IsChecked {
 			get {
-				return App.Setting.Data.Theme.Color.State;
+				return App.Setting.Data.ThemeColorState;
 			}
 		}
 
@@ -115,7 +141,7 @@ namespace AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<ToggleSplitButton>();
-			App.Setting.Data.Theme.Color.State = senders.IsChecked;
+			App.Setting.Data.ThemeColorState = senders.IsChecked;
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColor_IsChecked),
 				nameof(this.uSettingThemeColor_Content),
@@ -126,7 +152,7 @@ namespace AssistantPlus.View.Home {
 
 		public String uSettingThemeColor_Content {
 			get {
-				return !App.Setting.Data.Theme.Color.State ? "Default" : "Custom";
+				return !App.Setting.Data.ThemeColorState ? "Default" : "Custom";
 			}
 		}
 
@@ -135,9 +161,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ColorPicker>();
-			App.Setting.Data.Theme.Color.LightRed = senders.Color.R;
-			App.Setting.Data.Theme.Color.LightGreen = senders.Color.G;
-			App.Setting.Data.Theme.Color.LightBlue = senders.Color.B;
+			App.Setting.Data.ThemeColorLight = ConvertHelper.MakeColorToInteger(senders.Color);
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColorLight_Color),
 			]);
@@ -147,12 +171,7 @@ namespace AssistantPlus.View.Home {
 
 		public Color uSettingThemeColorLight_Color {
 			get {
-				return Color.FromArgb(
-					0xFF,
-					(Byte)App.Setting.Data.Theme.Color.LightRed,
-					(Byte)App.Setting.Data.Theme.Color.LightGreen,
-					(Byte)App.Setting.Data.Theme.Color.LightBlue
-				);
+				return ConvertHelper.ParseColorFromInteger(App.Setting.Data.ThemeColorLight);
 			}
 		}
 
@@ -161,9 +180,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ColorPicker>();
-			App.Setting.Data.Theme.Color.DarkRed = senders.Color.R;
-			App.Setting.Data.Theme.Color.DarkGreen = senders.Color.G;
-			App.Setting.Data.Theme.Color.DarkBlue = senders.Color.B;
+			App.Setting.Data.ThemeColorDark = ConvertHelper.MakeColorToInteger(senders.Color);
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColorDark_Color),
 			]);
@@ -173,46 +190,15 @@ namespace AssistantPlus.View.Home {
 
 		public Color uSettingThemeColorDark_Color {
 			get {
-				return Color.FromArgb(
-					0xFF,
-					(Byte)App.Setting.Data.Theme.Color.DarkRed,
-					(Byte)App.Setting.Data.Theme.Color.DarkGreen,
-					(Byte)App.Setting.Data.Theme.Color.DarkBlue
-				);
+				return ConvertHelper.ParseColorFromInteger(App.Setting.Data.ThemeColorDark);
 			}
-		}
-
-		// ----------------
-
-		public List<String> uSettingThemeBackdrop_ItemsSource {
-			get {
-				return Enum.GetNames<CustomThemeBackdrop>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
-			}
-		}
-
-		public Size uSettingThemeBackdrop_SelectedIndex {
-			get {
-				return (Size)App.Setting.Data.Theme.Backdrop;
-			}
-		}
-
-		public async void uSettingThemeBackdrop_SelectionChanged (
-			Object                    sender,
-			SelectionChangedEventArgs args
-		) {
-			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.Theme.Backdrop != (CustomThemeBackdrop)senders.SelectedIndex) {
-				App.Setting.Data.Theme.Backdrop = (CustomThemeBackdrop)senders.SelectedIndex;
-				await App.Setting.Save();
-			}
-			return;
 		}
 
 		// ----------------
 
 		public Boolean uSettingWindowPosition_IsChecked {
 			get {
-				return App.Setting.Data.Window.Position.State;
+				return App.Setting.Data.WindowPositionState;
 			}
 		}
 
@@ -221,7 +207,7 @@ namespace AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<ToggleSplitButton>();
-			App.Setting.Data.Window.Position.State = senders.IsChecked;
+			App.Setting.Data.WindowPositionState = senders.IsChecked;
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPosition_IsChecked),
 				nameof(this.uSettingWindowPosition_Content),
@@ -232,7 +218,7 @@ namespace AssistantPlus.View.Home {
 
 		public String uSettingWindowPosition_Content {
 			get {
-				return !App.Setting.Data.Window.Position.State ? "Default" : "Custom";
+				return !App.Setting.Data.WindowPositionState ? "Default" : "Custom";
 			}
 		}
 
@@ -242,7 +228,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.Window.Position.X = (Integer)senders.Value;
+				App.Setting.Data.WindowPositionX = senders.Value.AsCast<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPositionX_Value),
@@ -259,7 +245,7 @@ namespace AssistantPlus.View.Home {
 
 		public Floater uSettingWindowPositionX_Value {
 			get {
-				return App.Setting.Data.Window.Position.X;
+				return App.Setting.Data.WindowPositionX;
 			}
 		}
 
@@ -269,7 +255,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.Window.Position.Y = (Integer)senders.Value;
+				App.Setting.Data.WindowPositionY = senders.Value.AsCast<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPositionY_Value),
@@ -286,7 +272,7 @@ namespace AssistantPlus.View.Home {
 
 		public Floater uSettingWindowPositionY_Value {
 			get {
-				return App.Setting.Data.Window.Position.Y;
+				return App.Setting.Data.WindowPositionY;
 			}
 		}
 
@@ -294,7 +280,7 @@ namespace AssistantPlus.View.Home {
 
 		public Boolean uSettingWindowSize_IsChecked {
 			get {
-				return App.Setting.Data.Window.Size.State;
+				return App.Setting.Data.WindowSizeState;
 			}
 		}
 
@@ -303,7 +289,7 @@ namespace AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<ToggleSplitButton>();
-			App.Setting.Data.Window.Size.State = senders.IsChecked;
+			App.Setting.Data.WindowSizeState = senders.IsChecked;
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSize_IsChecked),
 				nameof(this.uSettingWindowSize_Content),
@@ -314,7 +300,7 @@ namespace AssistantPlus.View.Home {
 
 		public String uSettingWindowSize_Content {
 			get {
-				return !App.Setting.Data.Window.Size.State ? "Default" : "Custom";
+				return !App.Setting.Data.WindowSizeState ? "Default" : "Custom";
 			}
 		}
 
@@ -324,7 +310,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.Window.Size.Width = (Integer)senders.Value;
+				App.Setting.Data.WindowSizeWidth = senders.Value.AsCast<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSizeWidth_Value),
@@ -341,7 +327,7 @@ namespace AssistantPlus.View.Home {
 
 		public Floater uSettingWindowSizeWidth_Value {
 			get {
-				return App.Setting.Data.Window.Size.Width;
+				return App.Setting.Data.WindowSizeWidth;
 			}
 		}
 
@@ -351,7 +337,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.Window.Size.Height = (Integer)senders.Value;
+				App.Setting.Data.WindowSizeHeight = senders.Value.AsCast<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSizeHeight_Value),
@@ -368,7 +354,7 @@ namespace AssistantPlus.View.Home {
 
 		public Floater uSettingWindowSizeHeight_Value {
 			get {
-				return App.Setting.Data.Window.Size.Height;
+				return App.Setting.Data.WindowSizeHeight;
 			}
 		}
 
@@ -414,7 +400,7 @@ namespace AssistantPlus.View.Home {
 
 		public Size uSettingForwarderDefaultTarget_SelectedIndex {
 			get {
-				return (Size)App.Setting.Data.ForwarderDefaultTarget;
+				return App.Setting.Data.ForwarderDefaultTarget.AsCast<Size>();
 			}
 		}
 
@@ -423,8 +409,8 @@ namespace AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ForwarderDefaultTarget != (ModuleType)senders.SelectedIndex) {
-				App.Setting.Data.ForwarderDefaultTarget = (ModuleType)senders.SelectedIndex;
+			if (App.Setting.Data.ForwarderDefaultTarget != senders.SelectedIndex.AsCast<ModuleType>()) {
+				App.Setting.Data.ForwarderDefaultTarget = senders.SelectedIndex.AsCast<ModuleType>();
 				await App.Setting.Save();
 			}
 			return;

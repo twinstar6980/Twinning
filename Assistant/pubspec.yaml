@@ -1,5 +1,5 @@
 name: assistant
-version: 82.0.0+82
+version: 83.0.0+83
 publish_to: 'none'
 environment:
   sdk: ^3.8.1
@@ -19,47 +19,14 @@ dependencies:
   url_launcher: 6.3.2
   app_links: 6.4.0
   file_selector: 1.0.3
-  flutter_local_notifications: 19.3.1
+  flutter_local_notifications: 19.4.0
   super_drag_and_drop: 0.9.1
   single_child_two_dimensional_scroll_view: 0.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: 6.0.0
-  msix: 3.16.9
 flutter:
   uses-material-design: true
   assets:
     - asset/
-msix_config:
-  display_name: Twinning Assistant
-  publisher_display_name: TwinStar
-  identity_name: TwinStar.Twinning.Assistant
-  logo_path: asset/logo.png
-  trim_logo: false
-  languages: EN-US
-  protocol_activation: twinstar.twinning.assistant
-  toast_activator:
-    clsid: 3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A
-    arguments: "----AppNotificationActivated:"
-    display_name: Toast activator
-  context_menu:
-    dll_path: build/windows/x64/forwarder/Release/forwarder.dll
-    items:
-      - type: "*"
-        commands:
-          - id: TwinningAssistant
-            clsid: 9992EC48-22A5-86FA-EA42-72DA1A53F23D
-      - type: "Directory"
-        commands:
-          - id: TwinningAssistant
-            clsid: 9992EC48-22A5-86FA-EA42-72DA1A53F23D
-      - type: "Directory\\Background"
-        commands:
-          - id: TwinningAssistant
-            clsid: 9992EC48-22A5-86FA-EA42-72DA1A53F23D
-  publisher: CN=TwinStar
-  architecture: x64
-  build_windows: false
-  sign_msix: false
-  install_certificate: false

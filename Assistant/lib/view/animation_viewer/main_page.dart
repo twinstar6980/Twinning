@@ -103,10 +103,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     Boolean?            progressState,
   ) async {
     assertTest(this._loaded && !this._activated);
-    this._activeTarget = target;
+    var activeSprite = null as model.Sprite?;
     if (!target.$1) {
       var originalTarget = VisualHelper.selectImage(this._animation!, target.$2);
-      this._activeSprite = model.Sprite(
+      activeSprite = model.Sprite(
         name: VisualHelper.parseImageFileName(originalTarget.name),
         frameRate: null,
         workArea: (0, 0),
@@ -142,13 +142,16 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
     else {
       var originalTarget = VisualHelper.selectSprite(this._animation!, target.$2);
-      this._activeSprite = originalTarget;
+      activeSprite = originalTarget;
+      assertTest(activeSprite.frame.length != 0);
     }
+    this._activeTarget = target;
+    this._activeSprite = activeSprite;
     this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
     this._activeFrameRange = (0, 0);
     this._activeFrameSpeed = 0.0;
     this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
-    await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length));
+    await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length - 1));
     await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frameRate ?? this._animation!.frameRate.toDouble());
     await this._changeProgressIndex(progressIndex ?? 0);
     await this._changeProgressState(progressState ?? this._automaticPlay);
@@ -204,7 +207,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       this._animationController.stop();
     }
     this._activeFrameSpeed = frameSpeed;
-    this._animationController.duration = Duration(milliseconds: (this._activeSprite!.frame.length.toDouble() * 1000.0 / this._activeFrameSpeed!).ceil());
+    this._animationController.duration = Duration(milliseconds: (this._activeSprite!.frame.length * 1000 / this._activeFrameSpeed!).ceil());
     if (currentState) {
       this._animationController.forward();
     }
@@ -226,7 +229,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     if (currentState) {
       this._animationController.stop();
     }
-    this._animationController.value = index.toDouble() / this._activeSprite!.frame.length;
+    this._animationController.value = index / this._activeSprite!.frame.length;
     if (currentState) {
       this._animationController.forward();
     }
@@ -355,7 +358,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     if (option.check('-active_progress_state')) {
       optionActiveProgressState = option.nextBoolean();
     }
-    assertTest(option.done());
+    if (!option.done()) {
+      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
+    }
     if (optionImmediateSelect != null) {
       this._immediateSelect = optionImmediateSelect;
     }
@@ -526,6 +531,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   color: theme.colorScheme.surfaceContainer,
                   child: LayoutBuilder(
                     builder: (context, constraints) => SingleChildTwoDimensionalScrollView(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
                       padding: EdgeInsets.symmetric(
                         horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
                         vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
@@ -569,8 +575,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               message: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
                               child: Slider(
                                 min: 1.0,
-                                max: !this._activated ? 1.0 : (this._activeSprite!.frame.length.toDouble() + 1.0e-9),
-                                value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1).toDouble(),
+                                max: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
+                                value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
                                 onChanged: !this._activated
                                   ? null
                                   : (value) async {
@@ -614,7 +620,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         label: Row(
                           children: [
                             Text(
-                              !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$1 + this._activeFrameRange!.$2} ]',
+                              !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.start,
                             ).withExpanded(),
@@ -663,7 +669,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           )).toList(),
                                           onSelected: (value) async {
                                             value as Integer;
-                                            currentValue = value > (currentValue.$1 + currentValue.$2) ? (value - 1, 1) : (value - 1, currentValue.$1 + currentValue.$2 - value + 1);
+                                            value -= 1;
+                                            currentValue = (value, max(value, currentValue.$2));
                                             await refreshState(setStateForPanel);
                                           },
                                         ),
@@ -674,7 +681,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   onChanged: (text) async {
                                     var value = Integer.tryParse(text);
                                     if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                      currentValue = value > (currentValue.$1 + currentValue.$2) ? (value - 1, 1) : (value - 1, currentValue.$1 + currentValue.$2 - value + 1);
+                                      value -= 1;
+                                      currentValue = (value, max(value, currentValue.$2));
                                     }
                                     await refreshState(setStateForPanel);
                                   },
@@ -697,7 +705,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           itemBuilder: (context) => [
                                             (this._activeSprite!.frame.length, 'whole'),
                                             null,
-                                            ...this._activeFrameLabel!.map((value) => (value.$2 + value.$3, value.$1)),
+                                            ...this._activeFrameLabel!.map((value) => (value.$3 + 1, value.$1)),
                                           ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
                                             value: value.$1,
                                             child: ListTile(
@@ -716,18 +724,20 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           )).toList(),
                                           onSelected: (value) async {
                                             value as Integer;
-                                            currentValue = value - 1 < currentValue.$1 ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
+                                            value -= 1;
+                                            currentValue = (min(value, currentValue.$1), value);
                                             await refreshState(setStateForPanel);
                                           },
                                         ),
                                       ],
                                     ),
                                   ),
-                                  value: ConvertHelper.makeIntegerToString(currentValue.$1 + currentValue.$2, false),
+                                  value: ConvertHelper.makeIntegerToString(currentValue.$2 + 1, false),
                                   onChanged: (text) async {
                                     var value = Integer.tryParse(text);
                                     if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                      currentValue = value - 1 < currentValue.$1 ? (value - 1, 1) : (currentValue.$1, value - currentValue.$1);
+                                      value -= 1;
+                                      currentValue = (min(value, currentValue.$1), value);
                                     }
                                     await refreshState(setStateForPanel);
                                   },

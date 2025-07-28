@@ -32,6 +32,16 @@ namespace AssistantPlus.View.Home {
 
 		#region property
 
+		public event Action? PanelEnter;
+
+		public void OnPanelEnter (
+		) => this.PanelEnter?.Invoke();
+
+		public event Action? PanelExit;
+
+		public void OnPanelExit (
+		) => this.PanelExit?.Invoke();
+
 		#endregion
 
 	}
@@ -43,6 +53,10 @@ namespace AssistantPlus.View.Home {
 		public LauncherPanel View { get; init; } = default!;
 
 		// ----------------
+
+		public Action PanelEnter => this.View.OnPanelEnter;
+
+		public Action PanelExit => this.View.OnPanelExit;
 
 		#endregion
 
@@ -70,6 +84,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
+			this.PanelExit();
 			var command = new List<String>();
 			var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Command", new TextBox() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -86,6 +101,9 @@ namespace AssistantPlus.View.Home {
 			if (canContinue) {
 				await App.Instance.HandleCommand(command);
 			}
+			else {
+				this.PanelEnter();
+			}
 			return;
 		}
 
@@ -94,6 +112,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
+			this.PanelExit();
 			var resource = new List<String>();
 			var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new TextBox() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -109,6 +128,9 @@ namespace AssistantPlus.View.Home {
 			}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
 			if (canContinue) {
 				await App.Instance.HandleForward(resource);
+			}
+			else {
+				this.PanelEnter();
 			}
 			return;
 		}
@@ -173,11 +195,13 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
+			this.PanelExit();
 			if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
 				App.Setting.Data.ModuleLauncher.Recent.Clear();
 				this.uRecentLauncherList_ItemsSource.Clear();
 				await App.Setting.Save();
 			}
+			this.PanelEnter();
 			return;
 		}
 
@@ -220,6 +244,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
+			this.Host.PanelExit();
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Launcher Configuration", new LauncherConfigurationPanel() {
 				Data = this.Configuration,
 				Stamp = UniqueStamp.Create(),
@@ -229,6 +254,7 @@ namespace AssistantPlus.View.Home {
 				nameof(this.uTitle_Text),
 			]);
 			await App.Setting.Save();
+			this.Host.PanelEnter();
 			return;
 		}
 
@@ -255,8 +281,10 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<Button>();
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Module);
+			this.Host.PanelExit();
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", ModuleHelper.Query(this.Configuration.Type).SettingPanel(), null);
 			await App.Setting.Save();
+			this.Host.PanelEnter();
 			return;
 		}
 

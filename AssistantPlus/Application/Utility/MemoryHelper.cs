@@ -9,22 +9,22 @@ namespace AssistantPlus.Utility {
 
 		#region utility
 
-		private static readonly IntPtr Heap = PlatformInvoke.Kernel32.GetProcessHeap();
+		private static readonly Win32.Foundation.HANDLE Heap = Win32.PInvoke.GetProcessHeap();
 
 		// ----------------
 
 		public static void* Allocate (
 			Size size
 		) {
-			var data = PlatformInvoke.Kernel32.HeapAlloc(MemoryHelper.Heap, 0x00000008, (UIntPtr)size);
-			GF.AssertTest(data != IntPtr.Zero);
-			return (void*)data;
+			var data = Win32.PInvoke.HeapAlloc(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_ZERO_MEMORY, size.AsCast<IntegerUN>());
+			GF.AssertTest(data != null);
+			return data;
 		}
 
 		public static void Free (
 			void* data
 		) {
-			var state = PlatformInvoke.Kernel32.HeapFree(MemoryHelper.Heap, 0x00000000, (IntPtr)data);
+			var state = Win32.PInvoke.HeapFree(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_NONE, data);
 			GF.AssertTest(state);
 			return;
 		}

@@ -25,7 +25,7 @@ namespace AssistantPlus.View.ResourceShipper {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -116,31 +116,26 @@ namespace AssistantPlus.View.ResourceShipper {
 			var optionEnableFilter = default(Boolean?);
 			var optionEnableBatch = default(Boolean?);
 			var optionResource = default(List<Tuple<String>>?);
-			try {
-				var option = new CommandLineReader(optionView);
-				if (option.Check("-ParallelForward")) {
-					optionParallelForward = option.NextBoolean();
-				}
-				if (option.Check("-EnableFilter")) {
-					optionEnableFilter = option.NextBoolean();
-				}
-				if (option.Check("-EnableBatch")) {
-					optionEnableBatch = option.NextBoolean();
-				}
-				if (option.Check("-Resource")) {
-					optionResource = [];
-					while (!option.Done()) {
-						optionResource.Add(new (
-							option.NextString()
-						));
-					}
-				}
-				if (!option.Done()) {
-					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
+			var option = new CommandLineReader(optionView);
+			if (option.Check("-ParallelForward")) {
+				optionParallelForward = option.NextBoolean();
+			}
+			if (option.Check("-EnableFilter")) {
+				optionEnableFilter = option.NextBoolean();
+			}
+			if (option.Check("-EnableBatch")) {
+				optionEnableBatch = option.NextBoolean();
+			}
+			if (option.Check("-Resource")) {
+				optionResource = [];
+				while (!option.Done()) {
+					optionResource.Add(new (
+						option.NextString()
+					));
 				}
 			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			if (!option.Done()) {
+				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionParallelForward != null) {
 				this.ParallelForward = optionParallelForward.AsNotNull();

@@ -226,7 +226,7 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public Size uManifestType_SelectedIndex {
 			get {
-				return (Size)this.Value.Manifest.Type;
+				return this.Value.Manifest.Type.AsCast<Size>();
 			}
 		}
 
@@ -235,7 +235,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			this.Value.Manifest.Type = (PackageManifestType)senders.SelectedIndex;
+			this.Value.Manifest.Type = senders.SelectedIndex.AsCast<PackageManifestType>();
 			return;
 		}
 

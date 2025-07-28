@@ -11,6 +11,8 @@ namespace AssistantPlus.Utility {
 
 		private Action mAction;
 
+		// ----------------
+
 		public DisposableWrapper (
 			Action action
 		) {

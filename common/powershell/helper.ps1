@@ -24,6 +24,25 @@ function My-PackZip(
 	return
 }
 
+function My-PackMsix(
+	[Parameter(Mandatory)]
+	[String] $Name,
+	[Parameter(Mandatory)]
+	[String] $Source,
+	[Parameter(Mandatory)]
+	[String] $Destination
+) {
+	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/PackMsix"
+	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/PackMsix/${Name}"
+	Copy-Item -Force -Recurse -Path "${Source}\*" -Destination "${ProjectTemporaryDirectory}/PackMsix/${Name}"
+	makepri "createconfig" "/cf" "${ProjectTemporaryDirectory}/PackMsix/${Name}/priconfig.xml" "/dq" "en-US" "/o"
+	makepri "new" "/cf" "${ProjectTemporaryDirectory}/PackMsix/${Name}/priconfig.xml" "/pr" "${ProjectTemporaryDirectory}/PackMsix/${Name}" "/of" "${ProjectTemporaryDirectory}/PackMsix/${Name}/resources.pri" "/o"
+	makeappx "pack" "/o" "/d" "${ProjectTemporaryDirectory}/PackMsix/${Name}" "/p" "${ProjectTemporaryDirectory}/PackMsix/${Name}.msix"
+	Copy-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackMsix/${Name}.msix" -Destination "${Destination}"
+	Remove-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackMsix"
+	return
+}
+
 function My-PackDmg(
 	[Parameter(Mandatory)]
 	[String] $Name,
@@ -33,7 +52,7 @@ function My-PackDmg(
 	[String] $Destination
 ) {
 	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/PackDmg"
-	Move-Item -Force -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/PackDmg/${Name}.app"
+	Copy-Item -Force -Recurse -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/PackDmg/${Name}.app"
 	create-dmg "${ProjectTemporaryDirectory}/PackDmg/${Name}.dmg" "${ProjectTemporaryDirectory}/PackDmg/${Name}.app"
 	Copy-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackDmg/${Name}.dmg" -Destination "${Destination}"
 	Remove-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackDmg"

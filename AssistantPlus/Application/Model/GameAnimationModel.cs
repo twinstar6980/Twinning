@@ -1,5 +1,5 @@
 #pragma warning disable 0,
-// ReSharper disable CheckNamespace MemberHidesStaticFromOuterClass
+// ReSharper disable CheckNamespace
 
 using AssistantPlus;
 using AssistantPlus.Utility;

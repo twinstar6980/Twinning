@@ -100,7 +100,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
         ));
       }
     }
-    assertTest(option.done());
+    if (!option.done()) {
+      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
+    }
     if (optionParallelForward != null) {
       this._parallelForward = optionParallelForward;
     }

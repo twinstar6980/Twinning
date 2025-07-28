@@ -27,7 +27,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -96,17 +96,12 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionProjectDirectory = default(String?);
-			try {
-				var option = new CommandLineReader(optionView);
-				if (option.Check("-ProjectDirectory")) {
-					optionProjectDirectory = option.NextString();
-				}
-				if (!option.Done()) {
-					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
-				}
+			var option = new CommandLineReader(optionView);
+			if (option.Check("-ProjectDirectory")) {
+				optionProjectDirectory = option.NextString();
 			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			if (!option.Done()) {
+				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionProjectDirectory != null) {
 				await this.ApplyLoad(optionProjectDirectory);
@@ -258,15 +253,16 @@ namespace AssistantPlus.View.PackageBuilder {
 		public async Task<Boolean> CheckVersionFile (
 			String projectDirectory
 		) {
+			var result = true;
 			try {
 				var versionFile = $"{projectDirectory}/version.txt";
 				var versionText = await StorageHelper.ReadFileText(versionFile);
 				GF.AssertTest(versionText == "2");
-				return true;
 			}
 			catch (Exception) {
-				return false;
+				result = false;
 			}
+			return result;
 		}
 
 		// ----------------

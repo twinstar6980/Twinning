@@ -4,7 +4,6 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppNotifications.Builder;
 
@@ -26,7 +25,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -112,26 +111,21 @@ namespace AssistantPlus.View.ModdingWorker {
 			var optionAutomaticScroll = default(Boolean?);
 			var optionImmediateLaunch = default(Boolean?);
 			var optionAdditionalArgument = default(List<String>?);
-			try {
-				var option = new CommandLineReader(optionView);
-				if (option.Check("-AutomaticScroll")) {
-					optionAutomaticScroll = option.NextBoolean();
-				}
-				if (option.Check("-ImmediateLaunch")) {
-					optionImmediateLaunch = option.NextBoolean();
-				}
-				else {
-					optionImmediateLaunch = App.Setting.Data.ModdingWorker.ImmediateLaunch;
-				}
-				if (option.Check("-AdditionalArgument")) {
-					optionAdditionalArgument = option.NextStringList();
-				}
-				if (!option.Done()) {
-					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
-				}
+			var option = new CommandLineReader(optionView);
+			if (option.Check("-AutomaticScroll")) {
+				optionAutomaticScroll = option.NextBoolean();
 			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			if (option.Check("-ImmediateLaunch")) {
+				optionImmediateLaunch = option.NextBoolean();
+			}
+			else {
+				optionImmediateLaunch = App.Setting.Data.ModdingWorker.ImmediateLaunch;
+			}
+			if (option.Check("-AdditionalArgument")) {
+				optionAdditionalArgument = option.NextStringList();
+			}
+			if (!option.Done()) {
+				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionAutomaticScroll != null) {
 				this.AutomaticScroll = optionAutomaticScroll.AsNotNull();
@@ -192,7 +186,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				_ = this.View.DispatcherQueue.EnqueueAsync(async () => {
 					await Task.Delay(40);
 					this.View.uMessageListScrollViewer.ChangeView(null, this.View.uMessageListScrollViewer.ScrollableHeight, null, true);
-				});
+				}).SelfLet(App.Instance.WithTaskExceptionHandler);
 			}
 			return;
 		}
@@ -201,7 +195,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			SubmissionType type,
 			List<String>   option
 		) {
-			var history = this.SubmissionHistory[(Size)type];
+			var history = this.SubmissionHistory[type.AsCast<Size>()];
 			this.SubmissionState = true;
 			this.NotifyPropertyChanged([
 				nameof(this.uProgress_ProgressPaused),
@@ -378,7 +372,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			_ = this.LaunchSession();
+			_ = this.LaunchSession().SelfLet(App.Instance.WithTaskExceptionHandler);
 			return;
 		}
 

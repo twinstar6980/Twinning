@@ -74,37 +74,33 @@ namespace AssistantPlus {
 					await App.Setting.Reset();
 				}
 				await App.Setting.Save();
-				PlatformInvoke.Kernel32.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
+				unsafe {
+					Win32.PInvoke.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
+				}
 				this.RegisterNotification();
 				App.MainWindow = new ();
 				window = App.MainWindow;
-				if (App.Setting.Data.Window.Size.State) {
-					WindowHelper.Size(App.MainWindow, (Size)App.Setting.Data.Window.Size.Width, (Size)App.Setting.Data.Window.Size.Height);
+				if (App.Setting.Data.WindowSizeState) {
+					WindowHelper.Size(App.MainWindow, App.Setting.Data.WindowSizeWidth.AsCast<Size>(), App.Setting.Data.WindowSizeHeight.AsCast<Size>());
 				}
-				if (App.Setting.Data.Window.Position.State) {
-					WindowHelper.Position(App.MainWindow, (Size)App.Setting.Data.Window.Position.X, (Size)App.Setting.Data.Window.Position.Y);
+				if (App.Setting.Data.WindowPositionState) {
+					WindowHelper.Position(App.MainWindow, App.Setting.Data.WindowPositionX.AsCast<Size>(), App.Setting.Data.WindowPositionY.AsCast<Size>());
 				}
 				else {
 					WindowHelper.Center(App.MainWindow);
 				}
-				if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
-					_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
-						await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
+					await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+					if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
 						await this.HandleLink(new (argument[0]));
-					});
-				}
-				else if (argument.Length >= 1 && argument[0] == "Application") {
-					_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
-						await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+					}
+					else if (argument.Length >= 1 && argument[0] == "Application") {
 						await this.HandleCommand(argument[1..].ToList());
-					});
-				}
-				else {
-					_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
-						await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
+					}
+					else {
 						await App.MainWindow.ShowLauncherPanel();
-					});
-				}
+					}
+				}).SelfLet(App.Instance.WithTaskExceptionHandler);
 				await App.Setting.Apply();
 			}
 			catch (Exception e) {
@@ -184,6 +180,17 @@ namespace AssistantPlus {
 				});
 			}
 			return;
+		}
+
+		public Task WithTaskExceptionHandler (
+			Task task
+		) {
+			return task.ContinueWith((it) => {
+				if (task.Exception?.InnerException != null) {
+					this.HandleException(task.Exception.InnerException);
+				}
+				return;
+			});
 		}
 
 		// ----------------
@@ -320,14 +327,14 @@ namespace AssistantPlus {
 			List<String> resource
 		) {
 			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
-			var targetType = forwardOption[(Size)App.Setting.Data.ForwarderDefaultTarget] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
+			var targetType = forwardOption[App.Setting.Data.ForwarderDefaultTarget.AsCast<Size>()] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
 			var canContinue = (App.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new ItemsRepeater() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch,
 				ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					IsEnabled = forwardOption[(Size)item] != null,
+					IsEnabled = forwardOption[item.AsCast<Size>()] != null,
 					IsChecked = item == targetType,
 					Content = ModuleHelper.Query(item).Name,
 				}.SelfAlso((it) => {
@@ -338,7 +345,7 @@ namespace AssistantPlus {
 				})).ToList(),
 			}, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary);
 			if (canContinue && targetType != null) {
-				await this.HandleLaunch(ModuleHelper.Query(targetType.AsNotNull()).Name, targetType.AsNotNull(), forwardOption[(Size)targetType.AsNotNull()].AsNotNull());
+				await this.HandleLaunch(ModuleHelper.Query(targetType.AsNotNull()).Name, targetType.AsNotNull(), forwardOption[targetType.AsNotNull().AsCast<Size>()].AsNotNull());
 			}
 			return;
 		}
@@ -376,13 +383,13 @@ namespace AssistantPlus {
 				);
 			}
 			if (!option.Done()) {
-				throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
+				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionWindowSize != null) {
-				WindowHelper.Size(App.MainWindow, (Size)optionWindowSize.Item1, (Size)optionWindowSize.Item2);
+				WindowHelper.Size(App.MainWindow, optionWindowSize.Item1.AsCast<Size>(), optionWindowSize.Item2.AsCast<Size>());
 			}
 			if (optionWindowPosition != null) {
-				WindowHelper.Position(App.MainWindow, (Size)optionWindowPosition.Item1, (Size)optionWindowPosition.Item2);
+				WindowHelper.Position(App.MainWindow, optionWindowPosition.Item1.AsCast<Size>(), optionWindowPosition.Item2.AsCast<Size>());
 			}
 			if (optionWindowPosition == null && optionWindowSize != null) {
 				WindowHelper.Center(App.MainWindow);
@@ -404,6 +411,7 @@ namespace AssistantPlus {
 			}
 			var command = link.GetComponents(UriComponents.Query, UriFormat.UriEscaped)
 				.Split("&")
+				.Where((item) => (item.Count((it) => (it == '=')) == 1))
 				.Select((item) => (item.Split("=").Select(Uri.UnescapeDataString).ToList()))
 				.Select((item) => (new KeyValuePair<String, String>(item[0], item[1])))
 				.Where((item) => (item.Key == "Command"))

@@ -14,8 +14,8 @@ if ($TargetPlatform -eq "windows.x86_64") {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
 	flutter "build" "windows" "--release" "--no-tree-shake-icons"
-	dart "run" "msix:create"
-	My-SignMsix -Source "${ModuleDirectory}/build/windows/x64/runner/Release/assistant.msix" -Destination "${ModuleDistributionFile}"
+	My-PackMsix -Name "assistant" -Source "${ModuleDirectory}/build/windows/x64/runner/Release" -Destination "${ModuleDirectory}/build/windows/x64/runner/assistant.msix"
+	My-SignMsix -Source "${ModuleDirectory}/build/windows/x64/runner/assistant.msix" -Destination "${ModuleDistributionFile}"
 }
 if ($TargetPlatform -eq "linux.x86_64") {
 	$ModuleDistributionFile += ".zip"

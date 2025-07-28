@@ -10,8 +10,8 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="mp uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="63.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="5c0bdffa-0bc5-42fb-b680-8d184b26575c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="64.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="5C0BDFFA-0BC5-42FB-B680-8D184B26575C" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>
     <PublisherDisplayName>TwinStar</PublisherDisplayName>
@@ -27,7 +27,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
+    <Application Id="Application" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements DisplayName="Twinning Assistant Plus" Description="None" BackgroundColor="transparent" Square150x150Logo="Asset\Logo\Square150x150Logo.png" Square44x44Logo="Asset\Logo\Square44x44Logo.png">
         <uap:DefaultTile/>
       </uap:VisualElements>

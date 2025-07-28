@@ -20,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '82';
+  static const String version = '83';
 
   static const String developer = 'TwinStar';
 
@@ -45,10 +45,11 @@ final class SystemChecker {
 // ----------------
 
 Void assertTest(
-  Boolean condition,
-) {
+  Boolean condition, {
+  String? message = null,
+}) {
   if (!condition) {
-    throw core.AssertionError();
+    throw core.AssertionError(message);
   }
   return;
 }

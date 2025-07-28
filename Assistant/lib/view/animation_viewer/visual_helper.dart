@@ -53,7 +53,7 @@ class VisualHelper {
       }
       if (frame.stop) {
         for (var item in currentFrameLabel) {
-          result.add((item.$1, item.$2, frameIndex - item.$2 + 1));
+          result.add((item.$1, item.$2, frameIndex));
         }
         currentFrameLabel.clear();
       }
@@ -158,7 +158,7 @@ class VisualHelper {
     return Transform(
       transform: _makeMatrix(image.transform),
       child: textureData == null
-        ? null // TODO
+        ? null
         : Image(
           image: textureData.$1,
           width: (image.size?.$1 ?? textureData.$2).toDouble(),

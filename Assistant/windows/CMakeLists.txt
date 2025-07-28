@@ -52,9 +52,6 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
-# Custom extension module - forwarder
-add_subdirectory("forwarder")
-
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
@@ -110,7 +107,22 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
 
-# custom library
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/runner/resources/library/"
+
+# === Custom ===
+
+# forwarder
+add_subdirectory("forwarder")
+install(FILES "${CMAKE_INSTALL_PREFIX}/../../forwarder/Release/forwarder.dll"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime)
+
+# package
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/package/AppxManifest.xml"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/package/Asset/"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}/Asset"
+  COMPONENT Runtime)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/package/Library/"
   DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
   COMPONENT Runtime)

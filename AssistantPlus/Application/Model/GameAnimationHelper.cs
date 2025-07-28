@@ -54,8 +54,8 @@ namespace AssistantPlus {
 				if (frame.Stop) {
 					foreach (var item in currentFrameLabel) {
 						result.Add(new (item.Item1, new () {
-							Start = item.Item2,
-							Duration = frameIndex - item.Item2 + 1,
+							Begin = item.Item2,
+							End = frameIndex,
 						}));
 					}
 					currentFrameLabel.Clear();
@@ -115,8 +115,8 @@ namespace AssistantPlus {
 		}
 
 		public record FrameRange {
-			public required Size Start;
-			public required Size Duration;
+			public required Size Begin;
+			public required Size End;
 		}
 
 		private record VisualLayer {
@@ -203,8 +203,10 @@ namespace AssistantPlus {
 			List<Boolean>                    spriteFilter
 		) {
 			var visual = new SpriteVisual() {
-				Canvas = new () { },
-				Storyboard = new () { },
+				Canvas = new () {
+				},
+				Storyboard = new () {
+				},
 			};
 			var layerList = new Dictionary<Integer, VisualLayer?>();
 			var duration = sprite.Frame.Count;
@@ -226,7 +228,7 @@ namespace AssistantPlus {
 				}
 				foreach (var action in frame.Append) {
 					GF.AssertTest(!layerList.ContainsKey(action.Index));
-					var skip = !action.Sprite ? !imageFilter[(Size)action.Resource] : !spriteFilter[(Size)action.Resource];
+					var skip = !action.Sprite ? !imageFilter[action.Resource.AsCast<Size>()] : !spriteFilter[action.Resource.AsCast<Size>()];
 					var layer = layerList[action.Index] = skip
 						? null
 						: new VisualLayer() {
@@ -241,15 +243,15 @@ namespace AssistantPlus {
 						continue;
 					}
 					if (!action.Sprite) {
-						var subVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, (Size)action.Resource));
+						var subVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, action.Resource.AsCast<Size>()));
 						layer.Canvas = subVisual.Canvas;
 					}
 					else {
-						var subVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, (Size)action.Resource), imageFilter, spriteFilter);
+						var subVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, action.Resource.AsCast<Size>()), imageFilter, spriteFilter);
 						layer.Canvas = subVisual.Canvas;
 						visual.Storyboard.Children.Add(subVisual.Storyboard);
 					}
-					Canvas.SetZIndex(layer.Canvas, (Size)action.Index);
+					Canvas.SetZIndex(layer.Canvas, action.Index.AsCast<Size>());
 					layer.Canvas.Visibility = Visibility.Collapsed;
 					layer.Canvas.RenderTransform = new MatrixTransform() {
 						Matrix = new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),

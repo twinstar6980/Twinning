@@ -49,10 +49,10 @@ class Application extends StatelessWidget {
                   waitDuration: Duration(milliseconds: 1000),
                 ),
                 progressIndicatorTheme: ProgressIndicatorThemeData(
-                  year2023: false,
+                  year2023: false, // ignore: deprecated_member_use
                 ),
                 sliderTheme: SliderThemeData(
-                  year2023: false,
+                  year2023: false, // ignore: deprecated_member_use
                 ),
               ),
               darkTheme: ThemeData(
@@ -66,10 +66,10 @@ class Application extends StatelessWidget {
                   waitDuration: Duration(milliseconds: 1000),
                 ),
                 progressIndicatorTheme: ProgressIndicatorThemeData(
-                  year2023: false,
+                  year2023: false, // ignore: deprecated_member_use
                 ),
                 sliderTheme: SliderThemeData(
-                  year2023: false,
+                  year2023: false, // ignore: deprecated_member_use
                 ),
               ),
               themeMode: setting.data.themeMode,

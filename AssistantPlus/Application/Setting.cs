@@ -1,5 +1,5 @@
 #pragma warning disable 0,
-// ReSharper disable MemberHidesStaticFromOuterClass
+// ReSharper disable
 
 using AssistantPlus;
 using AssistantPlus.Utility;
@@ -13,8 +13,17 @@ namespace AssistantPlus {
 
 	public record SettingData {
 		public Integer                           Version                      = default!;
-		public CustomThemeSetting                Theme                        = default!;
-		public CustomWindowSetting               Window                       = default!;
+		public CustomThemeBackdrop               ThemeBackdrop                = default!;
+		public CustomThemeMode                   ThemeMode                    = default!;
+		public Boolean                           ThemeColorState              = default!;
+		public Integer                           ThemeColorLight              = default!;
+		public Integer                           ThemeColorDark               = default!;
+		public Boolean                           WindowPositionState          = default!;
+		public Integer                           WindowPositionX              = default!;
+		public Integer                           WindowPositionY              = default!;
+		public Boolean                           WindowSizeState              = default!;
+		public Integer                           WindowSizeWidth              = default!;
+		public Integer                           WindowSizeHeight             = default!;
 		public Dictionary<String, String>        StoragePickerHistoryLocation = default!;
 		public ModuleType                        ForwarderDefaultTarget       = default!;
 		public Boolean                           ForwarderImmediateJump       = default!;
@@ -28,9 +37,8 @@ namespace AssistantPlus {
 	}
 
 	public record SettingState {
-		public CustomThemeMode?     ThemeMode     = default!;
-		public CustomThemeColor?    ThemeColor    = default!;
 		public CustomThemeBackdrop? ThemeBackdrop = default!;
+		public CustomThemeMode?     ThemeMode     = default!;
 	}
 
 	public class SettingProvider {
@@ -61,15 +69,27 @@ namespace AssistantPlus {
 
 		public async Task Apply (
 		) {
-			// Theme.Mode
-			if (this.State.ThemeMode != this.Data.Theme.Mode && App.MainWindowIsInitialized) {
-				App.MainWindow.Content.As<FrameworkElement>().RequestedTheme = this.Data.Theme.Mode switch {
+			// ThemeBackdrop
+			if (this.State.ThemeBackdrop != this.Data.ThemeBackdrop && App.MainWindowIsInitialized) {
+				App.MainWindow.SystemBackdrop = this.Data.ThemeBackdrop switch {
+					CustomThemeBackdrop.Solid          => null,
+					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
+					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
+					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
+					_                                  => throw new (),
+				};
+				App.MainWindow.uBackground.Visibility = this.Data.ThemeBackdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
+				this.State.ThemeBackdrop = this.Data.ThemeBackdrop;
+			}
+			// ThemeMode
+			if (this.State.ThemeMode != this.Data.ThemeMode && App.MainWindowIsInitialized) {
+				App.MainWindow.Content.As<FrameworkElement>().RequestedTheme = this.Data.ThemeMode switch {
 					CustomThemeMode.System => ElementTheme.Default,
 					CustomThemeMode.Light  => ElementTheme.Light,
 					CustomThemeMode.Dark   => ElementTheme.Dark,
 					_                      => throw new (),
 				};
-				App.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.Theme.Mode switch {
+				App.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.ThemeMode switch {
 					CustomThemeMode.System => null,
 					CustomThemeMode.Light  => Colors.Black,
 					CustomThemeMode.Dark   => Colors.White,
@@ -78,24 +98,14 @@ namespace AssistantPlus {
 				await ControlHelper.IterateDialog(async (it) => {
 					it.RequestedTheme = App.MainWindow.Content.As<FrameworkElement>().RequestedTheme;
 				});
-				this.State.ThemeMode = this.Data.Theme.Mode;
+				this.State.ThemeMode = this.Data.ThemeMode;
 			}
-			// Theme.Color
-			if (this.State.ThemeColor != this.Data.Theme.Color) {
-				var customColorOnLight = Color.FromArgb(
-					0xFF,
-					(Byte)this.Data.Theme.Color.LightRed,
-					(Byte)this.Data.Theme.Color.LightGreen,
-					(Byte)this.Data.Theme.Color.LightBlue
-				);
-				var customColorOnDark = Color.FromArgb(
-					0xFF,
-					(Byte)this.Data.Theme.Color.DarkRed,
-					(Byte)this.Data.Theme.Color.DarkGreen,
-					(Byte)this.Data.Theme.Color.DarkBlue
-				);
+			// ThemeColor
+			{
+				var customColorOnLight = ConvertHelper.ParseColorFromInteger(this.Data.ThemeColorLight);
+				var customColorOnDark = ConvertHelper.ParseColorFromInteger(this.Data.ThemeColorDark);
 				foreach (var resourceKey in new[] { "SystemAccentColorDark1", "SystemAccentColorDark2", "SystemAccentColorDark3" }) {
-					if (!this.Data.Theme.Color.State) {
+					if (!this.Data.ThemeColorState) {
 						App.Instance.Resources.Remove(resourceKey);
 					}
 					else {
@@ -103,31 +113,22 @@ namespace AssistantPlus {
 					}
 				}
 				foreach (var resourceKey in new[] { "SystemAccentColorLight1", "SystemAccentColorLight2", "SystemAccentColorLight3" }) {
-					if (!this.Data.Theme.Color.State) {
+					if (!this.Data.ThemeColorState) {
 						App.Instance.Resources.Remove(resourceKey);
 					}
 					else {
 						App.Instance.Resources[resourceKey] = customColorOnDark;
 					}
 				}
-				this.State.ThemeColor = this.Data.Theme.Color;
-			}
-			// Theme.Backdrop
-			if (this.State.ThemeBackdrop != this.Data.Theme.Backdrop && App.MainWindowIsInitialized) {
-				App.MainWindow.SystemBackdrop = this.Data.Theme.Backdrop switch {
-					CustomThemeBackdrop.Solid          => null,
-					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
-					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
-					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
-					_                                  => throw new (),
-				};
-				App.MainWindow.uBackground.Visibility = this.Data.Theme.Backdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
-				this.State.ThemeBackdrop = this.Data.Theme.Backdrop;
 			}
 			// ModuleLauncher
-			await App.Instance.RegisterShellJumpList();
+			{
+				await App.Instance.RegisterShellJumpList();
+			}
 			// ModdingWorker.MessageFont
-			App.Instance.Resources["ModdingWorker.MessageFont"] = this.Data.ModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.ModdingWorker.MessageFont);
+			{
+				App.Instance.Resources["ModdingWorker.MessageFont"] = this.Data.ModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.ModdingWorker.MessageFont);
+			}
 			return;
 		}
 
@@ -172,31 +173,17 @@ namespace AssistantPlus {
 		) {
 			return new () {
 				Version = Package.Current.Id.Version.Major,
-				Theme = new () {
-					Mode = CustomThemeMode.System,
-					Color = new () {
-						State = false,
-						LightRed = 0x00,
-						LightGreen = 0x78,
-						LightBlue = 0xD4,
-						DarkRed = 0x4C,
-						DarkGreen = 0xC2,
-						DarkBlue = 0xFF,
-					},
-					Backdrop = CustomThemeBackdrop.MicaBase,
-				},
-				Window = new () {
-					Position = new () {
-						State = false,
-						X = 0,
-						Y = 0,
-					},
-					Size = new () {
-						State = false,
-						Width = 0,
-						Height = 0,
-					},
-				},
+				ThemeBackdrop = CustomThemeBackdrop.MicaBase,
+				ThemeMode = CustomThemeMode.System,
+				ThemeColorState = false,
+				ThemeColorLight = 0xFF0078D4L,
+				ThemeColorDark = 0xFF4CC2FFL,
+				WindowPositionState = false,
+				WindowPositionX = 0,
+				WindowPositionY = 0,
+				WindowSizeState = false,
+				WindowSizeWidth = 0,
+				WindowSizeHeight = 0,
 				StoragePickerHistoryLocation = [],
 				ForwarderDefaultTarget = ModuleType.ResourceShipper,
 				ForwarderImmediateJump = false,
@@ -247,9 +234,8 @@ namespace AssistantPlus {
 		private static SettingState CreateDefaultState (
 		) {
 			return new () {
-				ThemeMode = null,
-				ThemeColor = null,
 				ThemeBackdrop = null,
+				ThemeMode = null,
 			};
 		}
 

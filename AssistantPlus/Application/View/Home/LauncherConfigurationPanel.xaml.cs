@@ -112,7 +112,7 @@ namespace AssistantPlus.View.Home {
 
 		public Size uTypeSelect_SelectedIndex {
 			get {
-				return (Size)this.Data.Type;
+				return this.Data.Type.AsCast<Size>();
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			this.Data.Type = (ModuleType)senders.SelectedIndex;
+			this.Data.Type = senders.SelectedIndex.AsCast<ModuleType>();
 			return;
 		}
 

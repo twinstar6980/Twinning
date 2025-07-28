@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+  xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+  IgnorableNamespaces="mp uap rescap com desktop desktop4 desktop5 desktop6">
+  <Identity Name="TwinStar.Twinning.Assistant" Publisher="CN=TwinStar" Version="64.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="23C814C0-C764-4268-808A-9044C9CFBAEB" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>Twinning Assistant</DisplayName>
+    <PublisherDisplayName>TwinStar</PublisherDisplayName>
+    <Description>None</Description>
+    <Logo>Asset\Logo\StoreLogo.png</Logo>
+    <desktop6:FileSystemWriteVirtualization>disabled</desktop6:FileSystemWriteVirtualization>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="en-US" />
+  </Resources>
+  <Applications>
+    <Application Id="assistant" Executable="assistant.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Twinning Assistant" Description="None" BackgroundColor="transparent" Square150x150Logo="Asset\Logo\Square150x150Logo.png" Square44x44Logo="Asset\Logo\Square44x44Logo.png">
+        <uap:DefaultTile/>
+      </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="twinstar.twinning.assistant">
+            <uap:DisplayName>twinstar.twinning.assistant URI Scheme</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A" />
+        </desktop:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="assistant.exe" Arguments="----AppNotificationActivated:">
+              <com:Class Id="3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type="*">
+              <desktop5:Verb Id="TwinningAssistant" Clsid="9992EC48-22A5-86FA-EA42-72DA1A53F23D" />
+            </desktop5:ItemType>
+            <desktop5:ItemType Type="Directory">
+              <desktop5:Verb Id="TwinningAssistant" Clsid="9992EC48-22A5-86FA-EA42-72DA1A53F23D" />
+            </desktop5:ItemType>
+            <desktop5:ItemType Type="Directory\Background">
+              <desktop5:Verb Id="TwinningAssistant" Clsid="9992EC48-22A5-86FA-EA42-72DA1A53F23D" />
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer>
+              <com:Class Id="9992EC48-22A5-86FA-EA42-72DA1A53F23D" Path="forwarder.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+</Package>

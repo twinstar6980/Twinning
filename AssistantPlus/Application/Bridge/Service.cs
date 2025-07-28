@@ -1,5 +1,5 @@
 #pragma warning disable 0,
-// ReSharper disable InconsistentNaming
+// ReSharper disable
 
 using AssistantPlus;
 using AssistantPlus.Utility;

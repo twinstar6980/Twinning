@@ -107,8 +107,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.Storyboard.RepeatBehavior = new (1.0);
 			this.Storyboard.Completed += this.Storyboard_Completed;
 			this.FrameRange = new () {
-				Start = 0,
-				Duration = activeSprite.Frame.Count,
+				Begin = 0,
+				End = activeSprite.Frame.Count - 1,
 			};
 			this.HoldEnd = this.HoldEnd;
 			this.RepeatPlay = this.RepeatPlay;
@@ -196,8 +196,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			set {
 				GF.AssertTest(this.Loaded);
-				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Start) / this.FrameSpeed;
-				this.Storyboard.Duration = new (TimeSpan.FromSeconds(value.Start + value.Duration) - this.BasicTimeOffsetValue);
+				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Begin) / this.FrameSpeed;
+				this.Storyboard.Duration = new (TimeSpan.FromSeconds(value.End + 1) - this.BasicTimeOffsetValue);
 				this.mFrameRange = value;
 				return;
 			}
@@ -214,7 +214,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			set {
 				GF.AssertTest(this.Loaded);
 				GF.AssertTest(this.State != StateType.Idle);
-				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + value) / this.FrameSpeed + this.BasicTimeOffset);
+				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + value) / this.FrameSpeed + this.BasicTimeOffset);
 				return;
 			}
 		}
@@ -265,9 +265,9 @@ namespace AssistantPlus.View.AnimationViewer {
 						timeBeforeChange = this.CurrentTime;
 					}
 					this.Storyboard.SpeedRatio = value;
-					this.Storyboard.BeginTime = -TimeSpan.FromSeconds(this.FrameRange.Start) / value;
+					this.Storyboard.BeginTime = -TimeSpan.FromSeconds(this.FrameRange.Begin) / value;
 					if (this.State != StateType.Idle) {
-						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Start) + timeBeforeChange.AsNotNull()) / value + this.BasicTimeOffsetValue / value);
+						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + timeBeforeChange.AsNotNull()) / value + this.BasicTimeOffsetValue / value);
 					}
 				}
 				this.mFrameSpeed = value;

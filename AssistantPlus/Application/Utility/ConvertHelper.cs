@@ -4,6 +4,7 @@
 using AssistantPlus;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
+using Windows.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace AssistantPlus.Utility {
@@ -150,6 +151,27 @@ namespace AssistantPlus.Utility {
 
 		#endregion
 
+		#region color
+
+		public static Integer MakeColorToInteger (
+			Color value
+		) {
+			return (value.A.AsCast<Integer>() << 24) | (value.R.AsCast<Integer>() << 16) | (value.G.AsCast<Integer>() << 8) | (value.B.AsCast<Integer>() << 0);
+		}
+
+		public static Color ParseColorFromInteger (
+			Integer integer
+		) {
+			return Color.FromArgb(
+				((integer & 0xFF000000L) >> 24).AsCast<Byte>(),
+				((integer & 0x00FF0000L) >> 16).AsCast<Byte>(),
+				((integer & 0x0000FF00L) >> 8).AsCast<Byte>(),
+				((integer & 0x000000FFL) >> 0).AsCast<Byte>()
+			);
+		}
+
+		#endregion
+
 		#region bitmap
 
 		public static async Task<WriteableBitmap> ParseBitmapFromBinary (
@@ -157,7 +179,7 @@ namespace AssistantPlus.Utility {
 		) {
 			var stream = data.AsBuffer().AsStream().AsRandomAccessStream();
 			var decoder = await BitmapDecoder.CreateAsync(stream);
-			var image = new WriteableBitmap((Size)decoder.PixelWidth, (Size)decoder.PixelHeight);
+			var image = new WriteableBitmap(decoder.PixelWidth.AsCast<Size>(), decoder.PixelHeight.AsCast<Size>());
 			stream.Seek(0);
 			await image.SetSourceAsync(stream);
 			return image;

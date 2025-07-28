@@ -81,7 +81,7 @@ export namespace Twinning::Shell::Bridge {
 		#pragma region access
 
 		auto symbol (
-		) const -> Service const & {
+		) -> Service & {
 			return *thiz.m_symbol;
 		}
 

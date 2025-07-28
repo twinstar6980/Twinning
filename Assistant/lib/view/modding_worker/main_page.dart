@@ -164,7 +164,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     if (option.check('-additional_argument')) {
       optionAdditionalArgument = option.nextStringList();
     }
-    assertTest(option.done());
+    if (!option.done()) {
+      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
+    }
     if (optionAdditionalArgument != null) {
       this._additionalArgument.addAll(optionAdditionalArgument);
     }

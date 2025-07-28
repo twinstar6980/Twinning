@@ -421,7 +421,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				this.ValueOfInteger = null;
 			}
 			else if (Floater.IsFinite(senders.Value) && Integer.MinValue <= senders.Value && senders.Value <= Integer.MaxValue) {
-				this.ValueOfInteger = new () { Value = (Integer)senders.Value };
+				this.ValueOfInteger = new () { Value = senders.Value.AsCast<Integer>() };
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uIntegerValue_Value),

@@ -60,8 +60,6 @@ namespace AssistantPlus.View.Home {
 
 		// ----------------
 
-		public Flyout? LauncherPanelFlyout { get; set; } = null;
-
 		#endregion
 
 		#region initialize
@@ -90,31 +88,11 @@ namespace AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task ShowLauncherPanel (
-		) {
-			GF.AssertTest(this.LauncherPanelFlyout == null);
-			this.LauncherPanelFlyout = new Flyout() {
-				FlyoutPresenterStyle = this.View.Content.As<FrameworkElement>().FindResource("VerticalScrollFlyoutPresenterStyle").As<Style>(),
-				Content = new LauncherPanel() {
-					Stamp = new (),
-				},
-			}.SelfAlso((it) => {
-				it.Closed += (_, _) => {
-					this.LauncherPanelFlyout = null;
-					return;
-				};
-			});
-			this.LauncherPanelFlyout.ShowAt(this.View.Content.As<FrameworkElement>(), new () { Placement = FlyoutPlacementMode.Full });
-			return;
-		}
-
-		// ----------------
-
 		public async Task InsertTabItem (
 			ModuleLauncherConfiguration configuration
 		) {
-			if (this.LauncherPanelFlyout != null) {
-				this.LauncherPanelFlyout.Hide();
+			if (this.View.uLauncherFlyout.IsOpen) {
+				await this.HideLauncherPanel();
 			}
 			var model = ModuleHelper.Query(configuration.Type);
 			var frame = new Frame() {
@@ -158,24 +136,22 @@ namespace AssistantPlus.View.Home {
 			return;
 		}
 
-		#endregion
-
-		#region blank
-
-		public Boolean uBlank_Visibility {
-			get {
-				return this.uTab_TabItemsSource.Count == 0;
-			}
-		}
-
 		// ----------------
 
-		public async void uBlankLauncher_Click (
-			Object          sender,
-			RoutedEventArgs args
+		public async Task ShowLauncherPanel (
 		) {
-			var senders = sender.As<Button>();
-			await this.ShowLauncherPanel();
+			GF.AssertTest(!this.View.uLauncherFlyout.IsOpen);
+			this.NotifyPropertyChanged([
+				nameof(this.uLauncher_Stamp),
+			]);
+			this.View.uLauncherFlyout.ShowAt(this.View.Content.As<FrameworkElement>());
+			return;
+		}
+
+		public async Task HideLauncherPanel (
+		) {
+			GF.AssertTest(this.View.uLauncherFlyout.IsOpen);
+			this.View.uLauncherFlyout.Hide();
 			return;
 		}
 
@@ -223,6 +199,47 @@ namespace AssistantPlus.View.Home {
 				args.Handled = true;
 				await this.ShowLauncherPanel();
 			}
+			return;
+		}
+
+		#endregion
+
+		#region launcher
+
+		public async void uLauncher_PanelEnter (
+		) {
+			await this.ShowLauncherPanel();
+		}
+
+		public async void uLauncher_PanelExit (
+		) {
+			await this.HideLauncherPanel();
+		}
+
+		public UniqueStamp uLauncher_Stamp {
+			get {
+				return UniqueStamp.Create();
+			}
+		}
+
+		#endregion
+
+		#region blank
+
+		public Boolean uBlank_Visibility {
+			get {
+				return this.uTab_TabItemsSource.Count == 0;
+			}
+		}
+
+		// ----------------
+
+		public async void uBlankLauncher_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			await this.ShowLauncherPanel();
 			return;
 		}
 

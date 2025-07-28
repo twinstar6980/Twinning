@@ -10,9 +10,9 @@ namespace AssistantPlus.Bridge {
 
 		#region structor
 
-		private IntPtr? mHandle;
+		private Win32.Foundation.HMODULE? mHandle;
 
-		private Service* mSymbol;
+		private Win32.Foundation.FARPROC? mSymbol;
 
 		// ----------------
 
@@ -37,39 +37,39 @@ namespace AssistantPlus.Bridge {
 			String path
 		) {
 			GF.AssertTest(!this.State());
-			var handle = PlatformInvoke.Kernel32.LoadLibrary($"{path}.");
-			GF.AssertTest(handle != IntPtr.Zero);
-			var symbol = default(Service*);
+			var handle = Win32.PInvoke.LoadLibrary($"{path}.");
+			GF.AssertTest(!handle.IsNull);
+			var symbol = default(Win32.Foundation.FARPROC);
 			try {
-				symbol = (Service*)PlatformInvoke.Kernel32.GetProcAddress(handle, "_ZN8Twinning6Kernel9Interface7serviceE");
-				GF.AssertTest(symbol != null);
+				symbol = Win32.PInvoke.GetProcAddress(handle, "_ZN8Twinning6Kernel9Interface7serviceE");
+				GF.AssertTest(!symbol.IsNull);
 			}
 			catch (Exception) {
-				PlatformInvoke.Kernel32.FreeLibrary(handle);
+				Win32.PInvoke.FreeLibrary(handle);
 				throw;
 			}
 			this.mHandle = handle;
 			this.mSymbol = symbol;
-			this.mSymbol->initialize();
+			(*(Service*)this.mSymbol.AsNotNull().Value).initialize();
 			return;
 		}
 
 		public void Close (
 		) {
 			GF.AssertTest(this.State());
-			this.mSymbol->finalize();
+			(*(Service*)this.mSymbol.AsNotNull().Value).finalize();
 			this.mSymbol = null;
-			PlatformInvoke.Kernel32.FreeLibrary(this.mHandle.AsNotNull());
+			Win32.PInvoke.FreeLibrary(this.mHandle.AsNotNull());
 			this.mHandle = null;
 			return;
 		}
 
 		// ----------------
 
-		public Service Symbol (
+		public ref Service Symbol (
 		) {
 			GF.AssertTest(this.State());
-			return *this.mSymbol;
+			return ref *(Service*)this.mSymbol.AsNotNull().Value;
 		}
 
 		#endregion

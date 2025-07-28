@@ -30,7 +30,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -175,59 +175,54 @@ namespace AssistantPlus.View.AnimationViewer {
 			var optionActiveFrameRange = default(Tuple<Integer, Integer>?);
 			var optionActiveFrameSpeed = default(Floater?);
 			var optionActiveProgressState = default(Boolean?);
-			try {
-				var option = new CommandLineReader(optionView);
-				if (option.Check("-ImmediateSelect")) {
-					optionImmediateSelect = option.NextBoolean();
-				}
-				if (option.Check("-AutomaticPlay")) {
-					optionAutomaticPlay = option.NextBoolean();
-				}
-				if (option.Check("-RepeatPlay")) {
-					optionRepeatPlay = option.NextBoolean();
-				}
-				if (option.Check("-KeepSpeed")) {
-					optionKeepSpeed = option.NextBoolean();
-				}
-				if (option.Check("-ShowBoundary")) {
-					optionShowBoundary = option.NextBoolean();
-				}
-				if (option.Check("-ImageFilterRule")) {
-					optionImageFilterRule = option.NextString();
-				}
-				if (option.Check("-SpriteFilterRule")) {
-					optionSpriteFilterRule = option.NextString();
-				}
-				if (option.Check("-AnimationFile")) {
-					optionAnimationFile = option.NextString();
-				}
-				if (option.Check("-TextureDirectory")) {
-					optionTextureDirectory = option.NextString();
-				}
-				if (option.Check("-ActiveTarget")) {
-					optionActiveTarget = new (
-						option.NextBoolean(),
-						option.NextInteger()
-					);
-				}
-				if (option.Check("-ActiveFrameRange")) {
-					optionActiveFrameRange = new (
-						option.NextInteger(),
-						option.NextInteger()
-					);
-				}
-				if (option.Check("-ActiveFrameSpeed")) {
-					optionActiveFrameSpeed = option.NextFloater();
-				}
-				if (option.Check("-ActiveProgressState")) {
-					optionActiveProgressState = option.NextBoolean();
-				}
-				if (!option.Done()) {
-					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
-				}
+			var option = new CommandLineReader(optionView);
+			if (option.Check("-ImmediateSelect")) {
+				optionImmediateSelect = option.NextBoolean();
 			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			if (option.Check("-AutomaticPlay")) {
+				optionAutomaticPlay = option.NextBoolean();
+			}
+			if (option.Check("-RepeatPlay")) {
+				optionRepeatPlay = option.NextBoolean();
+			}
+			if (option.Check("-KeepSpeed")) {
+				optionKeepSpeed = option.NextBoolean();
+			}
+			if (option.Check("-ShowBoundary")) {
+				optionShowBoundary = option.NextBoolean();
+			}
+			if (option.Check("-ImageFilterRule")) {
+				optionImageFilterRule = option.NextString();
+			}
+			if (option.Check("-SpriteFilterRule")) {
+				optionSpriteFilterRule = option.NextString();
+			}
+			if (option.Check("-AnimationFile")) {
+				optionAnimationFile = option.NextString();
+			}
+			if (option.Check("-TextureDirectory")) {
+				optionTextureDirectory = option.NextString();
+			}
+			if (option.Check("-ActiveTarget")) {
+				optionActiveTarget = new (
+					option.NextBoolean(),
+					option.NextInteger()
+				);
+			}
+			if (option.Check("-ActiveFrameRange")) {
+				optionActiveFrameRange = new (
+					option.NextInteger(),
+					option.NextInteger()
+				);
+			}
+			if (option.Check("-ActiveFrameSpeed")) {
+				optionActiveFrameSpeed = option.NextFloater();
+			}
+			if (option.Check("-ActiveProgressState")) {
+				optionActiveProgressState = option.NextBoolean();
+			}
+			if (!option.Done()) {
+				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionImmediateSelect != null) {
 				this.ImmediateSelect = optionImmediateSelect.AsNotNull();
@@ -275,8 +270,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				await this.ApplyLoad(
 					optionAnimationFile,
 					optionTextureDirectory,
-					optionActiveTarget == null ? null : new (optionActiveTarget.Item1, (Size)optionActiveTarget.Item2),
-					optionActiveFrameRange == null ? null : new () { Start = (Size)optionActiveFrameRange.Item1, Duration = (Size)optionActiveFrameRange.Item2 },
+					optionActiveTarget == null ? null : new (optionActiveTarget.Item1, optionActiveTarget.Item2.AsCast<Size>()),
+					optionActiveFrameRange == null ? null : new () { Begin = optionActiveFrameRange.Item1.AsCast<Size>(), End = optionActiveFrameRange.Item2.AsCast<Size>() },
 					optionActiveFrameSpeed,
 					optionActiveProgressState
 				);
@@ -319,8 +314,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				option.NextInteger(this.ActiveTarget.AsNotNull().Item2);
 			}
 			if (option.Check("-ActiveFrameRange", this.Activated)) {
-				option.NextInteger(this.ActiveFrameRange.AsNotNull().Start);
-				option.NextInteger(this.ActiveFrameRange.AsNotNull().Duration);
+				option.NextInteger(this.ActiveFrameRange.AsNotNull().Begin);
+				option.NextInteger(this.ActiveFrameRange.AsNotNull().End);
 			}
 			if (option.Check("-ActiveFrameSpeed", this.Activated)) {
 				option.NextFloater(this.ActiveFrameSpeed.AsNotNull());
@@ -437,8 +432,8 @@ namespace AssistantPlus.View.AnimationViewer {
 		public async Task Unload (
 		) {
 			GF.AssertTest(this.Loaded && !this.Activated);
-			this.View.uImageList.DeselectRange(new (0, (USize)this.Animation.Image.Count));
-			this.View.uSpriteList.DeselectRange(new (0, (USize)this.Animation.Sprite.Count));
+			this.View.uImageList.DeselectRange(new (0, this.Animation.Image.Count.AsCast<SizeU>()));
+			this.View.uSpriteList.DeselectRange(new (0, this.Animation.Sprite.Count.AsCast<SizeU>()));
 			if (this.Animation.MainSprite != null) {
 				this.View.uMainSpriteList.DeselectRange(new (0, 1));
 			}
@@ -488,7 +483,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			GF.AssertTest(this.Loaded && !this.Activated);
 			var activeSprite = default(GameAnimationModel.Sprite);
 			if (!target.Item1) {
-				var originalTarget = GameAnimationHelper.SelectImage(this.Animation, (Size)target.Item2);
+				var originalTarget = GameAnimationHelper.SelectImage(this.Animation, target.Item2.AsCast<Size>());
 				activeSprite = new () {
 					Name = GameAnimationHelper.ParseImageFileName(originalTarget.Name),
 					FrameRate = null,
@@ -526,17 +521,18 @@ namespace AssistantPlus.View.AnimationViewer {
 			else {
 				var originalTarget = GameAnimationHelper.SelectSprite(this.Animation, target.Item2);
 				activeSprite = originalTarget;
+				GF.AssertTest(activeSprite.Frame.Count != 0);
 			}
 			this.ActiveTarget = target;
 			this.ActiveSprite = activeSprite;
-			this.ActiveFrameLabel = GameAnimationHelper.ParseSpriteFrameLabel(activeSprite);
-			this.ActiveFrameRange = frameRange ?? new () { Start = 0, Duration = activeSprite.Frame.Count };
-			this.ActiveFrameSpeed = frameSpeed ?? activeSprite.FrameRate ?? (Floater)this.Animation.FrameRate;
+			this.ActiveFrameLabel = GameAnimationHelper.ParseSpriteFrameLabel(this.ActiveSprite);
+			this.ActiveFrameRange = frameRange ?? new () { Begin = 0, End = this.ActiveSprite.Frame.Count - 1 };
+			this.ActiveFrameSpeed = frameSpeed ?? this.ActiveSprite.FrameRate ?? this.Animation.FrameRate.AsCast<Floater>();
 			this.ActiveProgressState = progressState ?? this.AutomaticPlay;
-			this.View.uSprite.Load(this.Animation, this.Texture, this.ImageFilter, this.SpriteFilter, activeSprite);
+			this.View.uSprite.Load(this.Animation, this.Texture, this.ImageFilter, this.SpriteFilter, this.ActiveSprite);
 			GF.AssertTest(this.View.uSprite.Loaded);
 			var sliderAnimation = new ObjectAnimationUsingKeyFrames();
-			for (var frameIndex = 0; frameIndex < activeSprite.Frame.Count; frameIndex++) {
+			for (var frameIndex = 0; frameIndex < this.ActiveSprite.Frame.Count; frameIndex++) {
 				sliderAnimation.KeyFrames.Add(
 					new DiscreteObjectKeyFrame() {
 						KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex)),
@@ -546,7 +542,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			Storyboard.SetTargetProperty(sliderAnimation, "Value");
 			var sliderStoryboard = new Storyboard() {
-				Duration = new (TimeSpan.FromSeconds(activeSprite.Frame.Count)),
+				Duration = new (TimeSpan.FromSeconds(this.ActiveSprite.Frame.Count)),
 				RepeatBehavior = RepeatBehavior.Forever,
 				Children = {
 					sliderAnimation,
@@ -566,7 +562,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.View.uSprite.FrameRange = this.ActiveFrameRange;
 			this.View.uSprite.FrameSpeed = this.ActiveFrameSpeed.AsNotNull();
 			this.View.uSprite.State = !this.ActiveProgressState.AsNotNull() ? SpriteControl.StateType.Paused : SpriteControl.StateType.Playing;
-			this.View.uSprite.CurrentTime = initialTime ?? TimeSpan.FromSeconds(this.ActiveFrameRange.Start);
+			this.View.uSprite.CurrentTime = initialTime ?? TimeSpan.FromSeconds(this.ActiveFrameRange.Begin);
 			this.NotifyPropertyChanged([
 				nameof(this.uActiveFrameRangeIcon_Opacity),
 				nameof(this.uActiveFrameRangeBegin_IsEnabled),
@@ -669,7 +665,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			GF.AssertTest(this.Loaded && this.Activated);
 			this.ActiveFrameRange = frameRange;
 			this.View.uSprite.FrameRange = frameRange;
-			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Start);
+			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Begin);
 			this.NotifyPropertyChanged([
 				nameof(this.uActiveFrameRangeBegin_Value),
 				nameof(this.uActiveFrameRangeEnd_Value),
@@ -844,17 +840,6 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 		}
 
-		public String uStageScaleIcon_Glyph {
-			get {
-				var valueLose = (Size)Math.Round(this.StageScale * 100.0);
-				return valueLose switch {
-					< 100 => FluentIconGlyph.BackToWindow,
-					100   => FluentIconGlyph.Reshare,
-					> 100 => FluentIconGlyph.FullScreen,
-				};
-			}
-		}
-
 		// ----------------
 
 		public async void uStage_ViewChanged (
@@ -869,7 +854,6 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uStagePositionX_Text),
 				nameof(this.uStagePositionY_Text),
 				nameof(this.uStageScale_Text),
-				nameof(this.uStageScaleIcon_Glyph),
 			]);
 			return;
 		}
@@ -1253,7 +1237,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.Activated) {
 					return Floater.NaN;
 				}
-				return this.ActiveFrameRange.Start + 1;
+				return this.ActiveFrameRange.Begin + 1;
 			}
 		}
 
@@ -1266,14 +1250,11 @@ namespace AssistantPlus.View.AnimationViewer {
 				return;
 			}
 			if (Floater.IsFinite(args.NewValue)) {
-				var newBegin = (Size)args.NewValue - 1;
+				var newBegin = args.NewValue.AsCast<Size>() - 1;
 				var newRange = new GameAnimationHelper.FrameRange() {
-					Start = newBegin,
-					Duration = this.ActiveFrameRange.Start + this.ActiveFrameRange.Duration - newBegin,
+					Begin = newBegin,
+					End = Math.Max(newBegin, this.ActiveFrameRange.End),
 				};
-				if (newRange.Start >= this.ActiveFrameRange.Start + this.ActiveFrameRange.Duration) {
-					newRange.Duration = 1;
-				}
 				if (newRange != this.ActiveFrameRange) {
 					await this.UpdateActiveFrameRange(newRange);
 				}
@@ -1324,7 +1305,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.Activated) {
 					return Floater.NaN;
 				}
-				return this.ActiveFrameRange.Start + this.ActiveFrameRange.Duration;
+				return this.ActiveFrameRange.End + 1;
 			}
 		}
 
@@ -1337,15 +1318,11 @@ namespace AssistantPlus.View.AnimationViewer {
 				return;
 			}
 			if (Floater.IsFinite(args.NewValue)) {
-				var newEnd = (Size)args.NewValue - 1;
+				var newEnd = args.NewValue.AsCast<Size>() - 1;
 				var newRange = new GameAnimationHelper.FrameRange() {
-					Start = this.ActiveFrameRange.Start,
-					Duration = newEnd - this.ActiveFrameRange.Start + 1,
+					Begin = Math.Min(newEnd, this.ActiveFrameRange.Begin),
+					End = newEnd,
 				};
-				if (newRange.Duration < 1) {
-					newRange.Start = newEnd;
-					newRange.Duration = 1;
-				}
 				if (newRange != this.ActiveFrameRange) {
 					await this.UpdateActiveFrameRange(newRange);
 				}
@@ -1397,7 +1374,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					return null;
 				}
 				var result = this.ActiveFrameLabel.Find((value) => (value.Item2 == this.ActiveFrameRange))?.Item1;
-				return result ?? (this.ActiveFrameRange.Start == 0 && this.ActiveFrameRange.Duration == this.ActiveSprite.AsNotNull().Frame.Count ? this.uActiveFrameRangeLabel__ItemNameOfAll : null);
+				return result ?? (this.ActiveFrameRange.Begin == 0 && this.ActiveFrameRange.End == this.ActiveSprite.AsNotNull().Frame.Count - 1 ? this.uActiveFrameRangeLabel__ItemNameOfAll : null);
 			}
 		}
 
@@ -1412,8 +1389,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (args.AddedItems.Count == 1) {
 				var newLabel = args.AddedItems[0].As<String>();
 				var newRange = new GameAnimationHelper.FrameRange() {
-					Start = 0,
-					Duration = this.ActiveSprite.AsNotNull().Frame.Count,
+					Begin = 0,
+					End = this.ActiveSprite.AsNotNull().Frame.Count - 1,
 				};
 				if (newLabel != this.uActiveFrameRangeLabel__ItemNameOfAll) {
 					newRange = this.ActiveFrameLabel.Find((value) => (value.Item1 == newLabel)).AsNotNull().Item2;
@@ -1510,7 +1487,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.Activated) {
 					return 0.0;
 				}
-				return this.ActiveFrameRange.Start + 1;
+				return this.ActiveFrameRange.Begin + 1;
 			}
 		}
 
@@ -1519,7 +1496,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (!this.Activated) {
 					return 0.0;
 				}
-				return this.ActiveFrameRange.Start + this.ActiveFrameRange.Duration;
+				return this.ActiveFrameRange.End + 1;
 			}
 		}
 
@@ -1651,7 +1628,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newTime = this.View.uSprite.CurrentTime - TimeSpan.FromSeconds(1.0);
-			var beginTime = TimeSpan.FromSeconds(this.ActiveFrameRange.Start);
+			var beginTime = TimeSpan.FromSeconds(this.ActiveFrameRange.Begin);
 			if (newTime < beginTime) {
 				newTime = beginTime;
 			}
@@ -1680,7 +1657,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newTime = this.View.uSprite.CurrentTime + TimeSpan.FromSeconds(1.0);
-			var endTime = TimeSpan.FromSeconds(this.ActiveFrameRange.Start + this.ActiveFrameRange.Duration - 1.0);
+			var endTime = TimeSpan.FromSeconds(this.ActiveFrameRange.End);
 			if (newTime > endTime) {
 				newTime = endTime;
 			}
@@ -2074,7 +2051,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				var model = this.Host.Animation.Sprite[this.Index];
 				var texture = default(ImageSource?);
 				if (model.Frame.Count == 1 && model.Frame[0].Append.Count == 1 && model.Frame[0].Change.Count == 1 && !model.Frame[0].Append[0].Sprite) {
-					texture = this.Host.Texture.GetValueOrDefault(GameAnimationHelper.SelectImage(this.Host.Animation, (Size)model.Frame[0].Append[0].Resource).Name);
+					texture = this.Host.Texture.GetValueOrDefault(GameAnimationHelper.SelectImage(this.Host.Animation, model.Frame[0].Append[0].Resource.AsCast<Size>()).Name);
 				}
 				if (texture != null) {
 					return new Image() {

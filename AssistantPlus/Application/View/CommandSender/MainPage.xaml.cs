@@ -24,7 +24,7 @@ namespace AssistantPlus.View.CommandSender {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -104,27 +104,22 @@ namespace AssistantPlus.View.CommandSender {
 			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionParallelForward = default(Boolean?);
 			var optionCommand = default(List<Tuple<String, Boolean, Dictionary<String, Object>>>?);
-			try {
-				var option = new CommandLineReader(optionView);
-				if (option.Check("-ParallelForward")) {
-					optionParallelForward = option.NextBoolean();
-				}
-				if (option.Check("-Command")) {
-					optionCommand = [];
-					while (!option.Done()) {
-						optionCommand.Add(new (
-							option.NextString(),
-							option.NextBoolean(),
-							option.NextString().SelfLet((it) => (JsonHelper.DeserializeText<Dictionary<String, Object>>(it)))
-						));
-					}
-				}
-				if (!option.Done()) {
-					throw new ($"Too many option : '{String.Join(' ', option.NextStringList())}'.");
+			var option = new CommandLineReader(optionView);
+			if (option.Check("-ParallelForward")) {
+				optionParallelForward = option.NextBoolean();
+			}
+			if (option.Check("-Command")) {
+				optionCommand = [];
+				while (!option.Done()) {
+					optionCommand.Add(new (
+						option.NextString(),
+						option.NextBoolean(),
+						option.NextString().SelfLet((it) => (JsonHelper.DeserializeText<Dictionary<String, Object>>(it)))
+					));
 				}
 			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to apply command option.", e.ToString());
+			if (!option.Done()) {
+				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionParallelForward != null) {
 				this.ParallelForward = optionParallelForward.AsNotNull();

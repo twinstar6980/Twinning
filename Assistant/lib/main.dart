@@ -143,7 +143,9 @@ class _Main {
         option.nextStringList(),
       );
     }
-    assertTest(option.done());
+    if (!option.done()) {
+      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
+    }
     if (optionLaunch != null) {
       await _handleLaunch(optionLaunch.$1, optionLaunch.$2, optionLaunch.$3);
     }
@@ -208,21 +210,19 @@ class _Main {
         await windowManager.show();
       }
       if (!(await AppLinks().getInitialLinkString() ?? '').startsWith('twinstar.twinning.assistant:')) {
-        if (argument.length >= 1 && argument[0] == 'application') {
-          ControlHelper.postTask(() async {
-            _handleCommand(argument.slice(1));
-          });
-        }
-        else {
-          ControlHelper.postTask(() async {
-            _setting.state.homeShowLauncherPanel!();
-          });
-        }
+        ControlHelper.postTask(() async {
+          if (argument.length >= 1 && argument[0] == 'application') {
+            await _handleCommand(argument.slice(1));
+          }
+          else {
+            await _setting.state.homeShowLauncherPanel!();
+          }
+        });
       }
       AppLinks().stringLinkStream.listen((link) async {
         ControlHelper.postTask(() async {
           if (link.startsWith('twinstar.twinning.assistant:')) {
-            _handleLink(Uri.parse(link));
+            await _handleLink(Uri.parse(link));
           }
         });
       });
