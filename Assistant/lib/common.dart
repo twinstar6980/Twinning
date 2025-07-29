@@ -20,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '84';
+  static const String version = '85';
 
   static const String developer = 'TwinStar';
 
@@ -56,13 +56,6 @@ Void assertTest(
 
 extension CommonObjectExtension<TType extends core.Object> on TType {
 
-  TTarget as<TTarget>(
-  ) {
-    return this as TTarget;
-  }
-
-  // ----------------
-
   TResult selfLet<TResult>(
     TResult Function(TType) action,
   ) {
@@ -74,6 +67,13 @@ extension CommonObjectExtension<TType extends core.Object> on TType {
   ) {
     action(this);
     return this;
+  }
+
+  // ----------------
+
+  TTarget as<TTarget>(
+  ) {
+    return this as TTarget;
   }
 
 }

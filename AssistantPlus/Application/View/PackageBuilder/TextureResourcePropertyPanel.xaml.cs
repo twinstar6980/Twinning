@@ -114,7 +114,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
-				this.Value.Format = senders.Value.AsCast<Integer>();
+				this.Value.Format = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uFormat_Value),
@@ -144,7 +144,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
-				this.Value.Pitch = senders.Value.AsCast<Integer>();
+				this.Value.Pitch = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uPitch_Value),
@@ -174,7 +174,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
-				this.Value.AdditionalByteCount = senders.Value.AsCast<Integer>();
+				this.Value.AdditionalByteCount = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uAdditionalByteCount_Value),
@@ -204,7 +204,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
-				this.Value.Size[0] = senders.Value.AsCast<Integer>();
+				this.Value.Size[0] = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSizeWidth_Value),
@@ -232,7 +232,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value) && IntegerU32.MinValue <= senders.Value && senders.Value <= IntegerU32.MaxValue) {
-				this.Value.Size[1] = senders.Value.AsCast<Integer>();
+				this.Value.Size[1] = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSizeHeight_Value),

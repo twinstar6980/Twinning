@@ -83,7 +83,7 @@ namespace AssistantPlus.Utility {
 			var destination = new Character[destinationLength];
 			var destinationLengthCheck = Win32.PInvoke.GetLongPathName(source, destination.AsSpan());
 			GF.AssertTest(destinationLengthCheck == destinationLength - 1);
-			return StorageHelper.Regularize(new (destination.AsSpan(0, destinationLength.AsCast<Size>() - 1)));
+			return StorageHelper.Regularize(new (destination.AsSpan(0, destinationLength.CastPrimitive<Size>() - 1)));
 		}
 
 		#endregion

@@ -61,7 +61,7 @@ namespace AssistantPlus.Utility {
 			Size   y
 		) {
 			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
-			window.AppWindow.Move(new ((Int32)(x * ratio), (Int32)(y * ratio)));
+			window.AppWindow.Move(new ((x * ratio).CastPrimitive<Int32>(), (y * ratio).CastPrimitive<Int32>()));
 			return;
 		}
 
@@ -78,7 +78,7 @@ namespace AssistantPlus.Utility {
 			Size   height
 		) {
 			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
-			window.AppWindow.Resize(new ((Int32)(width * ratio), (Int32)(height * ratio)));
+			window.AppWindow.Resize(new ((width * ratio).CastPrimitive<Int32>(), (height * ratio).CastPrimitive<Int32>()));
 			return;
 		}
 

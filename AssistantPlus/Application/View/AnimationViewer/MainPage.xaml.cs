@@ -270,8 +270,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				await this.ApplyLoad(
 					optionAnimationFile,
 					optionTextureDirectory,
-					optionActiveTarget == null ? null : new (optionActiveTarget.Item1, optionActiveTarget.Item2.AsCast<Size>()),
-					optionActiveFrameRange == null ? null : new () { Begin = optionActiveFrameRange.Item1.AsCast<Size>(), End = optionActiveFrameRange.Item2.AsCast<Size>() },
+					optionActiveTarget == null ? null : new (optionActiveTarget.Item1, optionActiveTarget.Item2.CastPrimitive<Size>()),
+					optionActiveFrameRange == null ? null : new () { Begin = optionActiveFrameRange.Item1.CastPrimitive<Size>(), End = optionActiveFrameRange.Item2.CastPrimitive<Size>() },
 					optionActiveFrameSpeed,
 					optionActiveProgressState
 				);
@@ -432,8 +432,8 @@ namespace AssistantPlus.View.AnimationViewer {
 		public async Task Unload (
 		) {
 			GF.AssertTest(this.Loaded && !this.Activated);
-			this.View.uImageList.DeselectRange(new (0, this.Animation.Image.Count.AsCast<SizeU>()));
-			this.View.uSpriteList.DeselectRange(new (0, this.Animation.Sprite.Count.AsCast<SizeU>()));
+			this.View.uImageList.DeselectRange(new (0, this.Animation.Image.Count.CastPrimitive<SizeU>()));
+			this.View.uSpriteList.DeselectRange(new (0, this.Animation.Sprite.Count.CastPrimitive<SizeU>()));
 			if (this.Animation.MainSprite != null) {
 				this.View.uMainSpriteList.DeselectRange(new (0, 1));
 			}
@@ -483,7 +483,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			GF.AssertTest(this.Loaded && !this.Activated);
 			var activeSprite = default(GameAnimationModel.Sprite);
 			if (!target.Item1) {
-				var originalTarget = GameAnimationHelper.SelectImage(this.Animation, target.Item2.AsCast<Size>());
+				var originalTarget = GameAnimationHelper.SelectImage(this.Animation, target.Item2.CastPrimitive<Size>());
 				activeSprite = new () {
 					Name = GameAnimationHelper.ParseImageFileName(originalTarget.Name),
 					FrameRate = null,
@@ -527,7 +527,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ActiveSprite = activeSprite;
 			this.ActiveFrameLabel = GameAnimationHelper.ParseSpriteFrameLabel(this.ActiveSprite);
 			this.ActiveFrameRange = frameRange ?? new () { Begin = 0, End = this.ActiveSprite.Frame.Count - 1 };
-			this.ActiveFrameSpeed = frameSpeed ?? this.ActiveSprite.FrameRate ?? this.Animation.FrameRate.AsCast<Floater>();
+			this.ActiveFrameSpeed = frameSpeed ?? this.ActiveSprite.FrameRate ?? this.Animation.FrameRate.CastPrimitive<Floater>();
 			this.ActiveProgressState = progressState ?? this.AutomaticPlay;
 			this.View.uSprite.Load(this.Animation, this.Texture, this.ImageFilter, this.SpriteFilter, this.ActiveSprite);
 			GF.AssertTest(this.View.uSprite.Loaded);
@@ -536,7 +536,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				sliderAnimation.KeyFrames.Add(
 					new DiscreteObjectKeyFrame() {
 						KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex)),
-						Value = (Floater)(frameIndex + 1),
+						Value = (frameIndex + 1).CastPrimitive<Floater>(),
 					}
 				);
 			}
@@ -1250,7 +1250,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				return;
 			}
 			if (Floater.IsFinite(args.NewValue)) {
-				var newBegin = args.NewValue.AsCast<Size>() - 1;
+				var newBegin = args.NewValue.CastPrimitive<Size>() - 1;
 				var newRange = new GameAnimationHelper.FrameRange() {
 					Begin = newBegin,
 					End = Math.Max(newBegin, this.ActiveFrameRange.End),
@@ -1318,7 +1318,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				return;
 			}
 			if (Floater.IsFinite(args.NewValue)) {
-				var newEnd = args.NewValue.AsCast<Size>() - 1;
+				var newEnd = args.NewValue.CastPrimitive<Size>() - 1;
 				var newRange = new GameAnimationHelper.FrameRange() {
 					Begin = Math.Min(newEnd, this.ActiveFrameRange.Begin),
 					End = newEnd,
@@ -2051,7 +2051,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				var model = this.Host.Animation.Sprite[this.Index];
 				var texture = default(ImageSource?);
 				if (model.Frame.Count == 1 && model.Frame[0].Append.Count == 1 && model.Frame[0].Change.Count == 1 && !model.Frame[0].Append[0].Sprite) {
-					texture = this.Host.Texture.GetValueOrDefault(GameAnimationHelper.SelectImage(this.Host.Animation, model.Frame[0].Append[0].Resource.AsCast<Size>()).Name);
+					texture = this.Host.Texture.GetValueOrDefault(GameAnimationHelper.SelectImage(this.Host.Animation, model.Frame[0].Append[0].Resource.CastPrimitive<Size>()).Name);
 				}
 				if (texture != null) {
 					return new Image() {

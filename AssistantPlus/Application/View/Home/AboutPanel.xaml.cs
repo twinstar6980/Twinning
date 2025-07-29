@@ -86,7 +86,7 @@ namespace AssistantPlus.View.Home {
 
 		public Size uSettingThemeBackdrop_SelectedIndex {
 			get {
-				return App.Setting.Data.ThemeBackdrop.AsCast<Size>();
+				return App.Setting.Data.ThemeBackdrop.CastPrimitive<Size>();
 			}
 		}
 
@@ -95,8 +95,8 @@ namespace AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ThemeBackdrop != senders.SelectedIndex.AsCast<CustomThemeBackdrop>()) {
-				App.Setting.Data.ThemeBackdrop = senders.SelectedIndex.AsCast<CustomThemeBackdrop>();
+			if (App.Setting.Data.ThemeBackdrop != senders.SelectedIndex.CastPrimitive<CustomThemeBackdrop>()) {
+				App.Setting.Data.ThemeBackdrop = senders.SelectedIndex.CastPrimitive<CustomThemeBackdrop>();
 				await App.Setting.Save();
 			}
 			return;
@@ -112,7 +112,7 @@ namespace AssistantPlus.View.Home {
 
 		public Size uSettingThemeMode_SelectedIndex {
 			get {
-				return App.Setting.Data.ThemeMode.AsCast<Size>();
+				return App.Setting.Data.ThemeMode.CastPrimitive<Size>();
 			}
 		}
 
@@ -121,8 +121,8 @@ namespace AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ThemeMode != senders.SelectedIndex.AsCast<CustomThemeMode>()) {
-				App.Setting.Data.ThemeMode = senders.SelectedIndex.AsCast<CustomThemeMode>();
+			if (App.Setting.Data.ThemeMode != senders.SelectedIndex.CastPrimitive<CustomThemeMode>()) {
+				App.Setting.Data.ThemeMode = senders.SelectedIndex.CastPrimitive<CustomThemeMode>();
 				await App.Setting.Save();
 			}
 			return;
@@ -228,7 +228,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowPositionX = senders.Value.AsCast<Integer>();
+				App.Setting.Data.WindowPositionX = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPositionX_Value),
@@ -255,7 +255,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowPositionY = senders.Value.AsCast<Integer>();
+				App.Setting.Data.WindowPositionY = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPositionY_Value),
@@ -310,7 +310,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowSizeWidth = senders.Value.AsCast<Integer>();
+				App.Setting.Data.WindowSizeWidth = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSizeWidth_Value),
@@ -337,7 +337,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowSizeHeight = senders.Value.AsCast<Integer>();
+				App.Setting.Data.WindowSizeHeight = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSizeHeight_Value),
@@ -400,7 +400,7 @@ namespace AssistantPlus.View.Home {
 
 		public Size uSettingForwarderDefaultTarget_SelectedIndex {
 			get {
-				return App.Setting.Data.ForwarderDefaultTarget.AsCast<Size>();
+				return App.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>();
 			}
 		}
 
@@ -409,8 +409,8 @@ namespace AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ForwarderDefaultTarget != senders.SelectedIndex.AsCast<ModuleType>()) {
-				App.Setting.Data.ForwarderDefaultTarget = senders.SelectedIndex.AsCast<ModuleType>();
+			if (App.Setting.Data.ForwarderDefaultTarget != senders.SelectedIndex.CastPrimitive<ModuleType>()) {
+				App.Setting.Data.ForwarderDefaultTarget = senders.SelectedIndex.CastPrimitive<ModuleType>();
 				await App.Setting.Save();
 			}
 			return;

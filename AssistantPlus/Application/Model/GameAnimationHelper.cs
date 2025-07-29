@@ -228,7 +228,7 @@ namespace AssistantPlus {
 				}
 				foreach (var action in frame.Append) {
 					GF.AssertTest(!layerList.ContainsKey(action.Index));
-					var skip = !action.Sprite ? !imageFilter[action.Resource.AsCast<Size>()] : !spriteFilter[action.Resource.AsCast<Size>()];
+					var skip = !action.Sprite ? !imageFilter[action.Resource.CastPrimitive<Size>()] : !spriteFilter[action.Resource.CastPrimitive<Size>()];
 					var layer = layerList[action.Index] = skip
 						? null
 						: new VisualLayer() {
@@ -243,15 +243,15 @@ namespace AssistantPlus {
 						continue;
 					}
 					if (!action.Sprite) {
-						var subVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, action.Resource.AsCast<Size>()));
+						var subVisual = GameAnimationHelper.VisualizeImage(animation, texture, GameAnimationHelper.SelectImage(animation, action.Resource.CastPrimitive<Size>()));
 						layer.Canvas = subVisual.Canvas;
 					}
 					else {
-						var subVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, action.Resource.AsCast<Size>()), imageFilter, spriteFilter);
+						var subVisual = GameAnimationHelper.VisualizeSprite(animation, texture, GameAnimationHelper.SelectSprite(animation, action.Resource.CastPrimitive<Size>()), imageFilter, spriteFilter);
 						layer.Canvas = subVisual.Canvas;
 						visual.Storyboard.Children.Add(subVisual.Storyboard);
 					}
-					Canvas.SetZIndex(layer.Canvas, action.Index.AsCast<Size>());
+					Canvas.SetZIndex(layer.Canvas, action.Index.CastPrimitive<Size>());
 					layer.Canvas.Visibility = Visibility.Collapsed;
 					layer.Canvas.RenderTransform = new MatrixTransform() {
 						Matrix = new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),

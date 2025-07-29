@@ -324,7 +324,7 @@ namespace AssistantPlus.View.CommandSender {
 				this.ValueOfInteger = null;
 			}
 			else if (Floater.IsFinite(senders.Value) && Integer.MinValue <= senders.Value && senders.Value <= Integer.MaxValue) {
-				this.ValueOfInteger = new () { Value = senders.Value.AsCast<Integer>() };
+				this.ValueOfInteger = new () { Value = senders.Value.CastPrimitive<Integer>() };
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uIntegerValue_Value),

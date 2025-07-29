@@ -126,7 +126,7 @@ namespace AssistantPlus {
 		public static ModuleInformation Query (
 			ModuleType type
 		) {
-			return ModuleHelper.Information[type.AsCast<Size>()];
+			return ModuleHelper.Information[type.CastPrimitive<Size>()];
 		}
 
 		// ----------------

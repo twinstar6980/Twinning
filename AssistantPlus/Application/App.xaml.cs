@@ -81,10 +81,10 @@ namespace AssistantPlus {
 				App.MainWindow = new ();
 				window = App.MainWindow;
 				if (App.Setting.Data.WindowSizeState) {
-					WindowHelper.Size(App.MainWindow, App.Setting.Data.WindowSizeWidth.AsCast<Size>(), App.Setting.Data.WindowSizeHeight.AsCast<Size>());
+					WindowHelper.Size(App.MainWindow, App.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), App.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
 				}
 				if (App.Setting.Data.WindowPositionState) {
-					WindowHelper.Position(App.MainWindow, App.Setting.Data.WindowPositionX.AsCast<Size>(), App.Setting.Data.WindowPositionY.AsCast<Size>());
+					WindowHelper.Position(App.MainWindow, App.Setting.Data.WindowPositionX.CastPrimitive<Size>(), App.Setting.Data.WindowPositionY.CastPrimitive<Size>());
 				}
 				else {
 					WindowHelper.Center(App.MainWindow);
@@ -327,14 +327,14 @@ namespace AssistantPlus {
 			List<String> resource
 		) {
 			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
-			var targetType = forwardOption[App.Setting.Data.ForwarderDefaultTarget.AsCast<Size>()] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
+			var targetType = forwardOption[App.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
 			var canContinue = (App.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new ItemsRepeater() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch,
 				ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					IsEnabled = forwardOption[item.AsCast<Size>()] != null,
+					IsEnabled = forwardOption[item.CastPrimitive<Size>()] != null,
 					IsChecked = item == targetType,
 					Content = ModuleHelper.Query(item).Name,
 				}.SelfAlso((it) => {
@@ -345,7 +345,7 @@ namespace AssistantPlus {
 				})).ToList(),
 			}, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary);
 			if (canContinue && targetType != null) {
-				await this.HandleLaunch(ModuleHelper.Query(targetType.AsNotNull()).Name, targetType.AsNotNull(), forwardOption[targetType.AsNotNull().AsCast<Size>()].AsNotNull());
+				await this.HandleLaunch(ModuleHelper.Query(targetType.AsNotNull()).Name, targetType.AsNotNull(), forwardOption[targetType.AsNotNull().CastPrimitive<Size>()].AsNotNull());
 			}
 			return;
 		}
@@ -386,10 +386,10 @@ namespace AssistantPlus {
 				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionWindowSize != null) {
-				WindowHelper.Size(App.MainWindow, optionWindowSize.Item1.AsCast<Size>(), optionWindowSize.Item2.AsCast<Size>());
+				WindowHelper.Size(App.MainWindow, optionWindowSize.Item1.CastPrimitive<Size>(), optionWindowSize.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition != null) {
-				WindowHelper.Position(App.MainWindow, optionWindowPosition.Item1.AsCast<Size>(), optionWindowPosition.Item2.AsCast<Size>());
+				WindowHelper.Position(App.MainWindow, optionWindowPosition.Item1.CastPrimitive<Size>(), optionWindowPosition.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition == null && optionWindowSize != null) {
 				WindowHelper.Center(App.MainWindow);

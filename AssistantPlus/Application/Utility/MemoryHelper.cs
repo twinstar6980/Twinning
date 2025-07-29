@@ -16,7 +16,7 @@ namespace AssistantPlus.Utility {
 		public static void* Allocate (
 			Size size
 		) {
-			var data = Win32.PInvoke.HeapAlloc(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_ZERO_MEMORY, size.AsCast<IntegerUN>());
+			var data = Win32.PInvoke.HeapAlloc(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_ZERO_MEMORY, size.CastPrimitive<IntegerUN>());
 			GF.AssertTest(data != null);
 			return data;
 		}

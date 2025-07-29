@@ -30,11 +30,11 @@ namespace AssistantPlus.Bridge {
 			var proxy = new MessageProxy();
 			var value = proxy.Value;
 			var dataPosition = 0;
-			var valueSize = (*(IntegerU32*)(instance->data + dataPosition)).AsCast<Size>();
+			var valueSize = (*(IntegerU32*)(instance->data + dataPosition)).CastPrimitive<Size>();
 			dataPosition += sizeof(IntegerU32);
 			value.Capacity = valueSize;
 			for (var valueIndex = 0; valueIndex < valueSize; valueIndex++) {
-				var valueItemSize = (*(IntegerU32*)(instance->data + dataPosition)).AsCast<Size>();
+				var valueItemSize = (*(IntegerU32*)(instance->data + dataPosition)).CastPrimitive<Size>();
 				dataPosition += sizeof(IntegerU32);
 				var valueItem = Encoding.UTF8.GetString(instance->data + dataPosition, valueItemSize);
 				dataPosition += sizeof(IntegerU8) * valueItemSize;
@@ -45,7 +45,7 @@ namespace AssistantPlus.Bridge {
 				}
 				dataPosition += dataPadding;
 			}
-			GF.AssertTest(dataPosition == instance->size.AsCast<Size>());
+			GF.AssertTest(dataPosition == instance->size.CastPrimitive<Size>());
 			return proxy;
 		}
 
@@ -66,15 +66,15 @@ namespace AssistantPlus.Bridge {
 				dataSize += dataPadding;
 			}
 			instance->data = MemoryHelper.Allocate<IntegerU8>(dataSize);
-			instance->size = dataSize.AsCast<IntegerU32>();
+			instance->size = dataSize.CastPrimitive<IntegerU32>();
 			var dataPosition = 0;
 			var valueSize = value.Count;
-			*(IntegerU32*)(instance->data + dataPosition) = valueSize.AsCast<IntegerU32>();
+			*(IntegerU32*)(instance->data + dataPosition) = valueSize.CastPrimitive<IntegerU32>();
 			dataPosition += sizeof(IntegerU32);
 			for (var valueIndex = 0; valueIndex < valueSize; valueIndex++) {
 				var valueItem = value[valueIndex];
 				var valueItemSize = valueItem.Length;
-				*(IntegerU32*)(instance->data + dataPosition) = valueItemSize.AsCast<IntegerU32>();
+				*(IntegerU32*)(instance->data + dataPosition) = valueItemSize.CastPrimitive<IntegerU32>();
 				dataPosition += sizeof(IntegerU32);
 				fixed (Byte* valueItemPointer = valueItem) {
 					MemoryHelper.Copy(valueItemPointer, instance->data + dataPosition, valueItemSize);
@@ -86,7 +86,7 @@ namespace AssistantPlus.Bridge {
 				}
 				dataPosition += dataPadding;
 			}
-			GF.AssertTest(dataPosition == instance->size.AsCast<Size>());
+			GF.AssertTest(dataPosition == instance->size.CastPrimitive<Size>());
 			return;
 		}
 

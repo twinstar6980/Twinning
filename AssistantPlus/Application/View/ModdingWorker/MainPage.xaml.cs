@@ -195,7 +195,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			SubmissionType type,
 			List<String>   option
 		) {
-			var history = this.SubmissionHistory[type.AsCast<Size>()];
+			var history = this.SubmissionHistory[type.CastPrimitive<Size>()];
 			this.SubmissionState = true;
 			this.NotifyPropertyChanged([
 				nameof(this.uProgress_ProgressPaused),
