@@ -137,11 +137,11 @@ class VisualHelper {
   static ColorFilter _makeColor(
     model.Color value,
   ) {
-    var result = ColorFilter.mode(Color.fromARGB(
-      (255.0 * value.alpha).toInt(),
-      (255.0 * value.red).toInt(),
-      (255.0 * value.green).toInt(),
-      (255.0 * value.blue).toInt(),
+    var result = ColorFilter.mode(Color.from(
+      alpha: value.alpha,
+      red: value.red,
+      green: value.green,
+      blue: value.blue,
     ), BlendMode.modulate);
     return result;
   }

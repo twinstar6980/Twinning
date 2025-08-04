@@ -31,7 +31,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 						result = {
 							address: Number.parseInt(field_match[5], 16),
 							access: field_match[1],
-							static: field_match[2] == 'static',
+							static: field_match[2] == ' static',
 							type: field_match[3],
 						};
 						break;
@@ -71,7 +71,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 						result.push({
 							address: Number.parseInt(comment_match[2], 16),
 							access: method_match[1],
-							static: method_match[2] == 'static',
+							static: method_match[2] == ' static',
 							result: method_match[3],
 							parameter: method_match[5],
 						});

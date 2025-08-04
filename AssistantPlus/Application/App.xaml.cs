@@ -186,8 +186,8 @@ namespace AssistantPlus {
 			Task task
 		) {
 			return task.ContinueWith((it) => {
-				if (task.Exception?.InnerException != null) {
-					this.HandleException(task.Exception.InnerException);
+				if (it.Exception?.InnerException != null) {
+					this.HandleException(it.Exception.InnerException);
 				}
 				return;
 			});
