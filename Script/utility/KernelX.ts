@@ -1540,7 +1540,7 @@ namespace Twinning.Script.KernelX {
 					data_file: string,
 					definition_file: string,
 					enable_string_index: boolean,
-					enable_rtid: boolean,
+					enable_reference: boolean,
 					version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
@@ -1548,7 +1548,7 @@ namespace Twinning.Script.KernelX {
 					let definition = JSON.read_fs<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
-					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_rtid), version_c);
+					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
@@ -1571,19 +1571,19 @@ namespace Twinning.Script.KernelX {
 					data_file: string,
 					definition_file: string,
 					enable_string_index: boolean,
-					enable_rtid: boolean,
+					enable_reference: boolean,
 					version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 					key: null | string,
 					data_buffer: Kernel.ByteListView | bigint,
 				): void {
 					if (key === null) {
-						return encode_fs(data_file, definition_file, enable_string_index, enable_rtid, version, data_buffer);
+						return encode_fs(data_file, definition_file, enable_string_index, enable_reference, version, data_buffer);
 					}
 					let version_c = Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value(version);
 					let definition = JSON.read_fs<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer instanceof Kernel.ByteListView ? data_buffer : data!.view());
-					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_rtid), version_c);
+					Kernel.Tool.PopCap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
 					let plain_stream = Kernel.ByteStreamView.watch(data_stream.stream_view());
 					let cipher_size = Kernel.Size.default();
 					Kernel.Tool.Miscellaneous.PvZ2CNCryptData.Encrypt.estimate(plain_stream.size(), cipher_size);

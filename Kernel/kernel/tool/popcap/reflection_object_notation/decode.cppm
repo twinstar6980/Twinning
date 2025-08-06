@@ -30,15 +30,19 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		using typename Common::TypeIdentifier;
 
-		using typename Common::RTIDTypeIdentifierEnumeration;
+		using typename Common::ReferenceTypeIdentifierEnumeration;
 
-		using typename Common::RTIDTypeIdentifier;
+		using typename Common::ReferenceTypeIdentifier;
 
-		using typename Common::RTIDFormat;
+		using Common::k_reference_expression_format_of_null;
 
-		using Common::analysis_rtid;
+		using Common::k_reference_expression_format_of_uid;
 
-		using Common::k_binary_blob_format;
+		using Common::k_reference_expression_format_of_alias;
+
+		using Common::analysis_reference;
+
+		using Common::k_binary_blob_expression_format;
 
 		// ----------------
 
@@ -212,26 +216,26 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					value.set_string(unicode_string_index[index]);
 					break;
 				}
-				case TypeIdentifier::Value::string_rtid : {
-					switch (data.read_of<RTIDTypeIdentifier>().value) {
-						case RTIDTypeIdentifier::Value::null : {
-							value.set_string(RTIDFormat::null());
+				case TypeIdentifier::Value::reference : {
+					switch (data.read_of<ReferenceTypeIdentifier>().value) {
+						case ReferenceTypeIdentifier::Value::null : {
+							value.set_string(k_reference_expression_format_of_null());
 							break;
 						}
-						case RTIDTypeIdentifier::Value::uid : {
+						case ReferenceTypeIdentifier::Value::uid : {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_content = CStringView{};
 							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), sheet_content, sheet_length);
 							assert_test(sheet_content.size() == sheet_size);
+							// TODO : unknown type of uid value , define them be 'int-var-u32'
 							auto uid_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto uid_first = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto uid_last = data.read_of<IntegerU32>();
-							// TODO : unknown type of uid 's value , define them be 'var-int-u32'
-							value.set_string(RTIDFormat::uid(uid_first, uid_middle, uid_last, sheet_content));
+							value.set_string(k_reference_expression_format_of_uid(uid_first, uid_middle, uid_last, sheet_content));
 							break;
 						}
-						case RTIDTypeIdentifier::Value::alias : {
+						case ReferenceTypeIdentifier::Value::alias : {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_content = CStringView{};
@@ -242,17 +246,17 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							auto alias_content = CStringView{};
 							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), alias_content, alias_length);
 							assert_test(alias_content.size() == alias_size);
-							value.set_string(RTIDFormat::alias(alias_content, sheet_content));
+							value.set_string(k_reference_expression_format_of_alias(alias_content, sheet_content));
 							break;
 						}
 						default : {
-							assert_fail(R"(data.read_of<RTIDTypeIdentifier>() == /* valid */)");
+							assert_fail(R"(data.read_of<ReferenceTypeIdentifier>() == /* valid */)");
 						}
 					}
 					break;
 				}
-				case TypeIdentifier::Value::string_rtid_null : {
-					value.set_string(RTIDFormat::null());
+				case TypeIdentifier::Value::reference_null : {
+					value.set_string(k_reference_expression_format_of_null());
 					break;
 				}
 				case TypeIdentifier::Value::array_begin : {

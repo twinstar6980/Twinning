@@ -54,24 +54,24 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				floater_signed_32_zero = 0x23,
 				floater_signed_64      = 0x42,
 				floater_signed_64_zero = 0x43,
-				// variable length integer
+				// integer variable length
 				integer_variable_length_unsigned_32            = 0x24,
 				integer_variable_length_signed_32              = 0x25,
 				integer_variable_length_unsigned_32_equivalent = 0x28,
 				integer_variable_length_unsigned_64            = 0x44,
 				integer_variable_length_signed_64              = 0x45,
 				integer_variable_length_unsigned_64_equivalent = 0x48,
-				// native string
+				// string native
 				string_native          = 0x81,
 				string_native_indexing = 0x90,
 				string_native_indexed  = 0x91,
-				// unicode string
+				// string unicode
 				string_unicode          = 0x82,
 				string_unicode_indexing = 0x92,
 				string_unicode_indexed  = 0x93,
-				// rtid string
-				string_rtid      = 0x83,
-				string_rtid_null = 0x84,
+				// reference
+				reference      = 0x83,
+				reference_null = 0x84,
 				// array
 				array_begin = 0x86,
 				array_size  = 0xFD,
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		// ----------------
 
-		struct RTIDTypeIdentifierEnumeration {
+		struct ReferenceTypeIdentifierEnumeration {
 			enum class Type : ZByte {
 				null  = 0x00,
 				uid   = 0x02,
@@ -110,27 +110,23 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			};
 		};
 
-		using RTIDTypeIdentifier = Enumeration<typename RTIDTypeIdentifierEnumeration::Type>;
+		using ReferenceTypeIdentifier = Enumeration<typename ReferenceTypeIdentifierEnumeration::Type>;
 
-		struct RTIDFormat {
+		inline static constexpr auto k_reference_expression_format_of_null = StringFormatter{"RTID(0)"_sf};
 
-			inline static constexpr auto null = StringFormatter{"RTID(0)"_sf};
+		inline static constexpr auto k_reference_expression_format_of_uid = StringFormatter{"RTID({:d}.{:d}.{:08x}@{:s})"_sf};
 
-			inline static constexpr auto uid = StringFormatter{"RTID({:d}.{:d}.{:08x}@{:s})"_sf};
+		inline static constexpr auto k_reference_expression_format_of_alias = StringFormatter{"RTID({:s}@{:s})"_sf};
 
-			inline static constexpr auto alias = StringFormatter{"RTID({:s}@{:s})"_sf};
-
-		};
-
-		inline static auto analysis_rtid (
+		inline static auto analysis_reference (
 			CStringView const & string
-		) -> Optional<RTIDTypeIdentifier> {
+		) -> Optional<ReferenceTypeIdentifier> {
 			if (!(string.size() > "RTID()"_sl && string.head("RTID("_sl) == "RTID("_sv && string.tail(")"_sl) == ")"_sv)) {
 				return k_null_optional;
 			}
 			auto content = string.sub("RTID("_sl, string.size() - "RTID()"_sl);
 			if (content == "0"_sv) {
-				return make_optional_of(RTIDTypeIdentifier{RTIDTypeIdentifier::Value::null});
+				return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::null});
 			}
 			auto at_position = Range::find_index(content, '@'_c);
 			if (!at_position.has()) {
@@ -138,16 +134,19 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			}
 			// TODO : should test the content is number or not ?
 			if (Range::count(content.head(at_position.get()), '.'_c) == 2_sz) {
-				return make_optional_of(RTIDTypeIdentifier{RTIDTypeIdentifier::Value::uid});
+				auto uid_part = split_string<String>(content.head(at_position.get()), StaticArray<Character, 1_sz>{{'.'_c}});
+				if (Range::all_of(uid_part[1_ix], &CharacterType::is_number_dec) &&
+					Range::all_of(uid_part[2_ix], &CharacterType::is_number_dec) &&
+					Range::all_of(uid_part[3_ix], &CharacterType::is_number_hex)) {
+					return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::uid});
+				}
 			}
-			else {
-				return make_optional_of(RTIDTypeIdentifier{RTIDTypeIdentifier::Value::alias});
-			}
+			return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::alias});
 		}
 
 		// ----------------
 
-		inline static constexpr auto k_binary_blob_format = StringFormatter{R"($BINARY("{:s}", {:d}))"_sf};
+		inline static constexpr auto k_binary_blob_expression_format = StringFormatter{R"($BINARY("{:s}", {:d}))"_sf};
 
 	};
 

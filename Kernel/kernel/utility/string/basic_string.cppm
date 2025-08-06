@@ -313,14 +313,14 @@ export namespace Twinning::Kernel {
 
 	template <typename Result, typename Source, typename Separator> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
-		&& (IsTemplateInstanceOfT<Result, List>)
+		&& (IsTemplateInstanceOfT<Result, BasicString>)
 		&& (IsConvertible<Source, CListView<typename Source::Element> const &>)
 		&& (IsRange<Separator>)
 	inline auto split_string (
 		Source const &    source,
 		Separator const & separator
-	) -> Result {
-		auto result = Result{};
+	) -> List<Result> {
+		auto result = List<Result>{};
 		if (!source.empty()) {
 			result.allocate_full(Range::count_many(source, separator) + 1_sz);
 			auto sub_count = k_none_size;
@@ -364,7 +364,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Result, typename Source, typename Separator> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
-		&& (IsTemplateInstanceOfT<Result, List>)
+		&& (IsTemplateInstanceOfT<Result, BasicString>)
 		&& (IsConvertible<Source, CListView<typename Source::Element> const &>)
 	inline auto catenate_string (
 		Source const &    source,

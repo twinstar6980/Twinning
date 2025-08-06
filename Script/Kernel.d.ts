@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 82
+ * @version 83
  */
 declare namespace Twinning.Kernel {
 
@@ -2865,14 +2865,14 @@ declare namespace Twinning.Kernel {
 					 * @param data 数据
 					 * @param definition 定义
 					 * @param enable_string_index 启用字符串索引，若是，确保同一字符串只会明文编码一次，之后只使用索引值，可减少编码出的数据的尺寸
-					 * @param enable_rtid 启用rtid，若是，符合RTID格式的字符串将编码为0x83系列的值单元
+					 * @param enable_reference 启用引用转义，若是，符合RTID格式的字符串将编码为0x83系列的值单元
 					 * @param version 版本
 					 */
 					function process(
 						data: OByteStreamView,
 						definition: JSON.Value<JS_ValidValue>,
 						enable_string_index: Boolean,
-						enable_rtid: Boolean,
+						enable_reference: Boolean,
 						version: Version,
 					): Void;
 

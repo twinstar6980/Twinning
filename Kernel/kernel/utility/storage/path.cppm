@@ -219,7 +219,7 @@ export namespace Twinning::Kernel::Storage {
 				thiz.m_absolute = k_true;
 				relative_path_begin += 1_sz;
 			}
-			thiz.m_relative = split_string<List<String>>(path.tail(path.size() - relative_path_begin), CharacterType::k_path_separator_set);
+			thiz.m_relative = split_string<String>(path.tail(path.size() - relative_path_begin), CharacterType::k_path_separator_set);
 			return;
 		}
 

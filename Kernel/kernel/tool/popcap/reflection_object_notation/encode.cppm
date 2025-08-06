@@ -7,6 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.reflection_object_notation.version;
 import twinning.kernel.tool.popcap.reflection_object_notation.common;
 import twinning.kernel.tool.common.protocol_buffer_variable_length_integer;
+import twinning.kernel.third.mscharconv;
 
 export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
@@ -30,15 +31,19 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		using typename Common::TypeIdentifier;
 
-		using typename Common::RTIDTypeIdentifierEnumeration;
+		using typename Common::ReferenceTypeIdentifierEnumeration;
 
-		using typename Common::RTIDTypeIdentifier;
+		using typename Common::ReferenceTypeIdentifier;
 
-		using typename Common::RTIDFormat;
+		using Common::k_reference_expression_format_of_null;
 
-		using Common::analysis_rtid;
+		using Common::k_reference_expression_format_of_uid;
 
-		using Common::k_binary_blob_format;
+		using Common::k_reference_expression_format_of_alias;
+
+		using Common::analysis_reference;
+
+		using Common::k_binary_blob_expression_format;
 
 		// ----------------
 
@@ -106,29 +111,34 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			OByteStreamView &                                 data,
 			JSON::String const &                              value,
 			Optional<std::unordered_map<CStringView, Size>> & native_string_index,
-			Boolean const &                                   enable_rtid
+			Boolean const &                                   enable_reference
 		) -> Void {
-			auto is_rtid = k_false;
-			if (enable_rtid) {
-				if (auto rtid_type = analysis_rtid(value); rtid_type.has()) {
-					is_rtid = k_true;
-					data.write(TypeIdentifier{TypeIdentifier::Value::string_rtid});
-					data.write(rtid_type.get());
-					switch (rtid_type.get().value) {
-						case RTIDTypeIdentifier::Value::null : {
+			auto is_reference = k_false;
+			if (enable_reference) {
+				if (auto reference_type = analysis_reference(value); reference_type.has()) {
+					is_reference = k_true;
+					data.write(TypeIdentifier{TypeIdentifier::Value::reference});
+					data.write(reference_type.get());
+					switch (reference_type.get().value) {
+						case ReferenceTypeIdentifier::Value::null : {
 							break;
 						}
-						case RTIDTypeIdentifier::Value::uid : {
+						case ReferenceTypeIdentifier::Value::uid : {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
 							auto uid = content.head(at_position);
+							auto uid_part = split_string<String>(uid, StaticArray<Character, 1_sz>{{'.'_c}});
+							assert_test(uid_part.size() == 3_sz);
+							assert_test(Range::all_of(uid_part[1_ix], &CharacterType::is_number_dec));
+							assert_test(Range::all_of(uid_part[2_ix], &CharacterType::is_number_dec));
+							assert_test(Range::all_of(uid_part[3_ix], &CharacterType::is_number_hex));
 							auto uid_first = IntegerU32{};
 							auto uid_middle = IntegerU32{};
 							auto uid_last = IntegerU32{};
-							// TODO : do not use scanf ?
-							auto scan_result = std::sscanf(cast_pointer<char>(make_null_terminated_string(uid).begin()).value, "%u.%u.%x", &uid_first.value, &uid_middle.value, &uid_last.value);
-							assert_test(scan_result == 3);
+							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[1_ix].begin()).value, cast_pointer<char>(uid_part[1_ix].end()).value, uid_first.value, 10).ec == std::errc{});
+							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[2_ix].begin()).value, cast_pointer<char>(uid_part[2_ix].end()).value, uid_middle.value, 10).ec == std::errc{});
+							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[3_ix].begin()).value, cast_pointer<char>(uid_part[3_ix].end()).value, uid_last.value, 16).ec == std::errc{});
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(sheet.size()));
 							data.write(sheet);
@@ -137,7 +147,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							data.write(uid_last);
 							break;
 						}
-						case RTIDTypeIdentifier::Value::alias : {
+						case ReferenceTypeIdentifier::Value::alias : {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
@@ -153,7 +163,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					}
 				}
 			}
-			if (!is_rtid) {
+			if (!is_reference) {
 				process_value(data, value, native_string_index);
 			}
 			return;
@@ -163,13 +173,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			OByteStreamView &                                 data,
 			JSON::Array const &                               value,
 			Optional<std::unordered_map<CStringView, Size>> & native_string_index,
-			Boolean const &                                   enable_rtid
+			Boolean const &                                   enable_reference
 		) -> Void {
 			data.write(TypeIdentifier{TypeIdentifier::Value::array_begin});
 			data.write_constant(TypeIdentifier{TypeIdentifier::Value::array_size});
 			ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(value.size()));
 			for (auto & element : value) {
-				process_value(data, element, native_string_index, enable_rtid);
+				process_value(data, element, native_string_index, enable_reference);
 			}
 			data.write(TypeIdentifier{TypeIdentifier::Value::array_end});
 			return;
@@ -179,12 +189,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			OByteStreamView &                                 data,
 			JSON::Object const &                              value,
 			Optional<std::unordered_map<CStringView, Size>> & native_string_index,
-			Boolean const &                                   enable_rtid
+			Boolean const &                                   enable_reference
 		) -> Void {
 			data.write(TypeIdentifier{TypeIdentifier::Value::object_begin});
 			for (auto & element : value) {
 				process_value(data, element.key, native_string_index);
-				process_value(data, element.value, native_string_index, enable_rtid);
+				process_value(data, element.value, native_string_index, enable_reference);
 			}
 			data.write(TypeIdentifier{TypeIdentifier::Value::object_end});
 			return;
@@ -194,7 +204,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			OByteStreamView &                                 data,
 			JSON::Value const &                               value,
 			Optional<std::unordered_map<CStringView, Size>> & native_string_index,
-			Boolean const &                                   enable_rtid
+			Boolean const &                                   enable_reference
 		) -> Void {
 			switch (value.type().value) {
 				case JSON::ValueType::Constant::null().value : {
@@ -210,15 +220,15 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					break;
 				}
 				case JSON::ValueType::Constant::string().value : {
-					process_value(data, value.get_string(), native_string_index, enable_rtid);
+					process_value(data, value.get_string(), native_string_index, enable_reference);
 					break;
 				}
 				case JSON::ValueType::Constant::array().value : {
-					process_value(data, value.get_array(), native_string_index, enable_rtid);
+					process_value(data, value.get_array(), native_string_index, enable_reference);
 					break;
 				}
 				case JSON::ValueType::Constant::object().value : {
-					process_value(data, value.get_object(), native_string_index, enable_rtid);
+					process_value(data, value.get_object(), native_string_index, enable_reference);
 					break;
 				}
 			}
@@ -231,7 +241,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			OByteStreamView &   data,
 			JSON::Value const & definition,
 			Boolean const &     enable_string_index,
-			Boolean const &     enable_rtid
+			Boolean const &     enable_reference
 		) -> Void {
 			data.write_constant(k_magic_identifier);
 			auto version_data = OByteStreamView{data.forward_view(bs_static_size<VersionNumber>())};
@@ -240,7 +250,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			if (enable_string_index) {
 				native_string_index.set();
 			}
-			process_value(data, definition.get_object(), native_string_index, enable_rtid);
+			process_value(data, definition.get_object(), native_string_index, enable_reference);
 			data.write_constant(k_done_identifier);
 			version_data.write_constant(cbox<VersionNumber>(version.number));
 			return;
@@ -252,10 +262,10 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			OByteStreamView &   data_,
 			JSON::Value const & definition,
 			Boolean const &     enable_string_index,
-			Boolean const &     enable_rtid
+			Boolean const &     enable_reference
 		) -> Void {
 			M_use_zps_of(data);
-			return process_whole(data, definition, enable_string_index, enable_rtid);
+			return process_whole(data, definition, enable_string_index, enable_reference);
 		}
 
 	};

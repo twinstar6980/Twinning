@@ -335,7 +335,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 						break;
 					}
 					default: {
-						throw new Error(`data:${data.p().toString(16)}h : invalid rtid type identifier`);
+						throw new Error(`data:${data.p().toString(16)}h : invalid reference type identifier`);
 					}
 				}
 				break;

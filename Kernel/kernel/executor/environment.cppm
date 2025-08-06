@@ -962,13 +962,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 							OByteStreamView &   data,
 							JSON::Value const & definition,
 							Boolean const &     enable_string_index,
-							Boolean const &     enable_rtid,
+							Boolean const &     enable_reference,
 							Version const &     version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReflectionObjectNotation::Encode<version>::process(data, definition, enable_string_index, enable_rtid);
+										Tool::PopCap::ReflectionObjectNotation::Encode<version>::process(data, definition, enable_string_index, enable_reference);
 									}
 								);
 							}
