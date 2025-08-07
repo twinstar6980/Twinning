@@ -13,11 +13,9 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 export {
 
 	class __declspec(uuid("BE4A1760-1939-4240-BB82-7199B184B702")) ForwarderExplorerCommand :
-		public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand, IObjectWithSite> {
+		public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand> {
 
 	private:
-
-		Microsoft::WRL::ComPtr<IUnknown> m_site;
 
 		std::wstring m_application_name;
 
@@ -31,8 +29,7 @@ export {
 
 		explicit ForwarderExplorerCommand (
 		) :
-			Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand, IObjectWithSite>{},
-			m_site{},
+			Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand>{},
 			m_application_name{},
 			m_application_logo{},
 			m_state_file{} {
@@ -136,24 +133,6 @@ export {
 		) override {
 			ppEnum = nullptr;
 			return S_OK;
-		}
-
-		#pragma endregion
-
-		#pragma region implement - IObjectWithSite
-
-		virtual IFACEMETHODIMP SetSite (
-			IUnknown * pUnkSite
-		) override {
-			thiz.m_site = pUnkSite;
-			return S_OK;
-		}
-
-		virtual IFACEMETHODIMP GetSite (
-			REFIID   riid,
-			void * * ppvSite
-		) override {
-			return thiz.m_site.CopyTo(riid, ppvSite);
 		}
 
 		#pragma endregion

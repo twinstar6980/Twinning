@@ -870,7 +870,7 @@ namespace Twinning.Script.KernelX {
 						level: Level,
 					): void {
 						let raw = Storage.read_file(raw_file);
-						let ripe_size_bound = Kernel.Size.value(raw.size().value + 128n); // TODO
+						let ripe_size_bound = Kernel.Size.value(BigInt(Math.ceil(Number(raw.size().value) * 1.1)) + 1024n * 16n);
 						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
 						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
