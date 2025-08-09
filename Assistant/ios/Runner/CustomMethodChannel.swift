@@ -56,9 +56,13 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
         guard let detailLocation = argument["location"] as? String else {
           throw NSError(domain: "invalid argument.", code: 0)
         }
+        guard let detailName = argument["name"] as? String else {
+          throw NSError(domain: "invalid argument.", code: 0)
+        }
         let detailTarget = try await self.handlePickStorageItem(
           type: detailType,
           location: detailLocation,
+          name: detailName,
         )
         result(detailTarget)
       default:
@@ -74,6 +78,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   private func handlePickStorageItem(
     type: String,
     location: String,
+    name: String,
   ) async throws -> String? {
     guard type == "load_file" || type == "load_directory" else {
       throw NSError(domain: "invalid type.", code: 0)

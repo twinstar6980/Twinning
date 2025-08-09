@@ -697,7 +697,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ),
               onTap: () async {
                 Navigator.pop(context);
-                var file = await StorageHelper.pickSaveFile(context, '@Application.SettingFile');
+                var file = await StorageHelper.pickSaveFile(context, '@Application.SettingFile', 'setting.json');
                 if (file != null) {
                   await setting.save(file: file, apply: false);
                   await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');

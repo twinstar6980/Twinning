@@ -704,7 +704,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       var target = switch (value) {
                         'load_file'      => await StorageHelper.pickLoadFile(context, '@ModdingWorker.Generic'),
                         'load_directory' => await StorageHelper.pickLoadDirectory(context, '@ModdingWorker.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, '@ModdingWorker.Generic'),
+                        'save_file'      => await StorageHelper.pickSaveFile(context, '@ModdingWorker.Generic', null),
                         _                => throw Exception(),
                       };
                       if (target != null) {

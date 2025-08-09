@@ -172,10 +172,16 @@ export {
 			auto state_d = DWORD{};
 			auto handle = reinterpret_cast<HMODULE>(&__ImageBase);
 			auto result = std::wstring{};
-			auto result_data = std::array<wchar_t, 1024>{};
-			state_d = GetModuleFileNameW(handle, result_data.data(), static_cast<DWORD>(result_data.size()));
-			// NOTE : assertion failed when ERROR_INSUFFICIENT_BUFFER
-			assert_test(state_d != 0 && state_d != result_data.size());
+			auto result_data = std::vector<wchar_t>{};
+			result_data.reserve(256);
+			while (true) {
+				state_d = GetModuleFileNameW(handle, result_data.data(), static_cast<DWORD>(result_data.capacity()));
+				if (state_d != 0 && state_d != result_data.capacity()) {
+					break;
+				}
+				assert_test(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
+				result_data.reserve(result_data.capacity() * 2);
+			}
 			result = std::wstring{result_data.data(), state_d};
 			return result;
 		}

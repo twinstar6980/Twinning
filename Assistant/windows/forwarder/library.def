@@ -1,5 +1,5 @@
 ﻿LIBRARY
 EXPORTS
-DllGetActivationFactory PRIVATE
-DllGetClassObject       PRIVATE
-DllCanUnloadNow         PRIVATE
+	DllGetActivationFactory PRIVATE
+	DllGetClassObject       PRIVATE
+	DllCanUnloadNow         PRIVATE

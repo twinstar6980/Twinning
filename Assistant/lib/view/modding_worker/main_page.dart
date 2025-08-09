@@ -486,7 +486,7 @@ class _MainPageBridgeClient implements bridge.Client {
         break;
       }
       case 'save_file': {
-        target = await StorageHelper.pickSaveFile(this._controller.context, '@ModdingWorker.Generic') ?? '';
+        target = await StorageHelper.pickSaveFile(this._controller.context, '@ModdingWorker.Generic', null) ?? '';
         break;
       }
       default: throw Exception();

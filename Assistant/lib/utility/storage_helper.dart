@@ -240,6 +240,7 @@ class StorageHelper {
     String       type,
     BuildContext context,
     String?      location,
+    String?      name,
   ) async {
     assertTest(type == 'load_file' || type == 'load_directory' || type == 'save_file');
     var target = null as String?;
@@ -252,6 +253,7 @@ class StorageHelper {
     if (locationPath != null && !await existDirectory(locationPath)) {
       locationPath = null;
     }
+    name ??= '';
     if (Platform.isWindows) {
       locationPath ??= 'C:/';
       if (type == 'load_file') {
@@ -262,7 +264,7 @@ class StorageHelper {
         target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(locationPath));
       }
       if (type == 'save_file') {
-        target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(locationPath)))?.path;
+        target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(locationPath), suggestedName: name))?.path;
       }
       if (target != null) {
         target = regularize(target);
@@ -280,19 +282,19 @@ class StorageHelper {
         target = await file_selector.getDirectoryPath(initialDirectory: locationPath);
       }
       if (type == 'save_file') {
-        target = (await file_selector.getSaveLocation(initialDirectory: locationPath))?.path;
+        target = (await file_selector.getSaveLocation(initialDirectory: locationPath, suggestedName: name))?.path;
       }
     }
     if (Platform.isAndroid) {
       locationPath ??= await PlatformMethod.queryExternalStoragePath();
       if (type == 'load_file') {
-        target = await PlatformMethod.pickStorageItem('load_file', locationPath);
+        target = await PlatformMethod.pickStorageItem('load_file', locationPath, name);
       }
       if (type == 'load_directory') {
-        target = await PlatformMethod.pickStorageItem('load_directory', locationPath);
+        target = await PlatformMethod.pickStorageItem('load_directory', locationPath, name);
       }
       if (type == 'save_file') {
-        target = await PlatformMethod.pickStorageItem('save_file', locationPath);
+        target = await PlatformMethod.pickStorageItem('save_file', locationPath, name);
       }
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), true);
@@ -301,10 +303,10 @@ class StorageHelper {
     if (Platform.isIOS) {
       locationPath ??= await queryApplicationSharedDirectory();
       if (type == 'load_file') {
-        target = await PlatformMethod.pickStorageItem('load_file', locationPath);
+        target = await PlatformMethod.pickStorageItem('load_file', locationPath, name);
       }
       if (type == 'load_directory') {
-        target = await PlatformMethod.pickStorageItem('load_directory', locationPath);
+        target = await PlatformMethod.pickStorageItem('load_directory', locationPath, name);
       }
       if (type == 'save_file') {
         throw UnimplementedError();
@@ -326,21 +328,22 @@ class StorageHelper {
     BuildContext context,
     String?      location,
   ) async {
-    return pick('load_file', context, location);
+    return pick('load_file', context, location, null);
   }
 
   static Future<String?> pickLoadDirectory(
     BuildContext context,
     String?      location,
   ) async {
-    return pick('load_directory', context, location);
+    return pick('load_directory', context, location, null);
   }
 
   static Future<String?> pickSaveFile(
     BuildContext context,
     String?      location,
+    String?      name,
   ) async {
-    return pick('save_file', context, location);
+    return pick('save_file', context, location, name);
   }
 
   // #endregion

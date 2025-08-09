@@ -22,6 +22,7 @@ if ($TargetPlatform -eq "linux.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
+	$Env:CXXFLAGS = "-stdlib=libc++"
 	flutter "build" "linux" "--release" "--no-tree-shake-icons" "--target-platform" "linux-x64"
 	My-PackZip -Name "assistant" -Source "${ModuleDirectory}/build/linux/x64/release/bundle" -Destination "${ModuleDistributionFile}"
 }

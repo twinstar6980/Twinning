@@ -21,9 +21,10 @@ class PlatformMethod {
   static Future<String?> pickStorageItem(
     String type,
     String location,
+    String name,
   ) async {
     assertTest(SystemChecker.isAndroid || SystemChecker.isIphone);
-    var result = (await _channel!.invokeMethod('pick_storage_item', <dynamic, dynamic>{ 'type': type, 'location': location }) as String?);
+    var result = (await _channel!.invokeMethod('pick_storage_item', <dynamic, dynamic>{ 'type': type, 'location': location, 'name': name }) as String?);
     return result;
   }
 

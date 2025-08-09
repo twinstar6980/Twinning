@@ -110,9 +110,11 @@ class CustomMethodChannel {
 				"pick_storage_item" -> {
 					val detailType = call.argument<String>("type")!!
 					val detailLocation = call.argument<String>("location")!!
+					val detailName = call.argument<String>("name")!!
 					val detailTarget = this.handlePickStorageItem(
 						detailType,
 						detailLocation,
+						detailName,
 					)
 					result.success(detailTarget)
 				}
@@ -151,6 +153,7 @@ class CustomMethodChannel {
 	private suspend fun handlePickStorageItem(
 		type: String,
 		location: String,
+		name: String,
 	): String? {
 		check(type == "load_file" || type == "load_directory" || type == "save_file")
 		val intent = Intent()
@@ -174,6 +177,9 @@ class CustomMethodChannel {
 			locationSafe = location.substring(primaryDirectory.length)
 		}
 		intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(locationSafe)}"))
+		if (type == "save_file") {
+			intent.putExtra(Intent.EXTRA_TITLE, name)
+		}
 		val timeBeforePick = Date().time
 		this.host.startActivityForResult(intent, REQUEST_PICK_STORAGE_ITEM)
 		val targetUri = this.continuation.receive() as Uri?
