@@ -37,7 +37,6 @@
 /**/.idea
 
 # Common
-/common/certificate
 
 # Module - Kernel
 /Kernel/.build

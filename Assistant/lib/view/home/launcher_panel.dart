@@ -245,6 +245,7 @@ class LauncherPanel extends StatelessWidget {
                   await setting.save();
                 },
               ),
+              SizedBox(width: 4),
               IconButton(
                 tooltip: 'Remove',
                 icon: Icon(IconSymbols.remove),
@@ -253,6 +254,7 @@ class LauncherPanel extends StatelessWidget {
                   await setting.save();
                 },
               ),
+              SizedBox(width: 4),
               IconButton(
                 tooltip: 'Edit',
                 icon: Icon(IconSymbols.edit),

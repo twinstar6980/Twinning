@@ -130,7 +130,7 @@ class OptionGroupItem extends StatelessWidget {
     required this.enableFilter,
     required this.enableBatch,
     required this.onSelect,
-    required this.collapse,
+    required this.expanded,
     required this.onToggle,
   });
 
@@ -141,7 +141,7 @@ class OptionGroupItem extends StatelessWidget {
   final Boolean                                      enableFilter;
   final Boolean                                      enableBatch;
   final Void Function(String?, Map<String, Object>?) onSelect;
-  final Boolean                                      collapse;
+  final Boolean                                      expanded;
   final Void Function()                              onToggle;
 
   // ----------------
@@ -167,16 +167,16 @@ class OptionGroupItem extends StatelessWidget {
                 Text(
                   '${this.configuration.item.length}',
                   overflow: TextOverflow.clip,
-                  style: theme.textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium!,
                 ),
                 SizedBox(width: 6),
-                Icon(!this.collapse ? IconSymbols.keyboard_arrow_left : IconSymbols.keyboard_arrow_down),
+                Icon(!this.expanded ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),
               ],
             ),
             onTap: this.onToggle,
           ),
           Visibility(
-            visible: !this.collapse,
+            visible: this.expanded,
             child: Column(
               children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => OptionItem(
                 configuration: optionItem,

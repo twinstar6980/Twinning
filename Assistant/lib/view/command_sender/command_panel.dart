@@ -17,7 +17,7 @@ class CommandPanel extends StatelessWidget {
     required this.itemConfiguration,
     required this.enableBatch,
     required this.argumentValue,
-    required this.collapse,
+    required this.expanded,
     required this.onRemove,
     required this.onForward,
   });
@@ -28,7 +28,7 @@ class CommandPanel extends StatelessWidget {
   final MethodConfiguration             itemConfiguration;
   final Wrapper<Boolean>                enableBatch;
   final List<Wrapper<ValueExpression?>> argumentValue;
-  final Wrapper<Boolean>                collapse;
+  final Wrapper<Boolean>                expanded;
   final Void Function()                 onRemove;
   final Void Function()                 onForward;
 
@@ -50,15 +50,15 @@ class CommandPanel extends StatelessWidget {
                   Text(
                     '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium,
+                    style: theme.textTheme.titleMedium!,
                   ).withExpanded(),
                   SizedBox(width: 8),
                   IconButton(
-                    tooltip: !this.collapse.value ? 'Collapse' : 'Expand',
+                    tooltip: !this.expanded.value ? 'Expand' : 'Collapse',
                     isSelected: false,
-                    icon: Icon(!this.collapse.value ? IconSymbols.keyboard_arrow_up : IconSymbols.keyboard_arrow_down),
+                    icon: Icon(!this.expanded.value ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_up),
                     onPressed: () async {
-                      this.collapse.value = !this.collapse.value;
+                      this.expanded.value = !this.expanded.value;
                       await refreshState(setState);
                     },
                   ),
@@ -77,7 +77,40 @@ class CommandPanel extends StatelessWidget {
                 ],
               ),
               Divider(),
-              if (!this.collapse.value)
+              if (!this.expanded.value)
+                ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argumentValue[argumentIndex].value == null
+                  ? SizedBox()
+                  : Container(
+                    margin: EdgeInsets.fromLTRB(8, 8, 8, 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: theme.textTheme.labelLarge!.textBaseline,
+                      children: [
+                        Text(
+                          argumentConfiguration.name,
+                          overflow: TextOverflow.clip,
+                          textAlign: TextAlign.start,
+                          style: theme.textTheme.labelLarge!.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
+                        ).withExpanded(),
+                        SizedBox(width: 8),
+                        Text(
+                          ValueExpressionHelper.makeString(this.argumentValue[argumentIndex].value!),
+                          overflow: TextOverflow.clip,
+                          textAlign: TextAlign.end,
+                          style: theme.textTheme.bodyMedium!,
+                        ).withSelectionArea(
+                        ).withExpanded(),
+                      ],
+                    ),
+                  ),
+                ),
+              if (!this.expanded.value && this.argumentValue.where((value) => value.value != null).isEmpty)
+                SizedBox(height: 16),
+              if (!this.expanded.value)
+                Divider(),
+              if (this.expanded.value)
                 ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => Container(
                   margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
                   child: ArgumentBar(
@@ -87,39 +120,6 @@ class CommandPanel extends StatelessWidget {
                     value: this.argumentValue[argumentIndex],
                   ),
                 )),
-              if (this.collapse.value)
-                ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argumentValue[argumentIndex].value == null
-                  ? SizedBox()
-                  : Container(
-                    margin: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: theme.textTheme.labelLarge?.textBaseline,
-                      children: [
-                        Text(
-                          argumentConfiguration.name,
-                          overflow: TextOverflow.clip,
-                          textAlign: TextAlign.start,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.primary,
-                          ),
-                        ).withExpanded(),
-                        SizedBox(width: 8),
-                        Text(
-                          ValueExpressionHelper.makeString(this.argumentValue[argumentIndex].value!),
-                          overflow: TextOverflow.clip,
-                          textAlign: TextAlign.end,
-                          style: theme.textTheme.bodyMedium,
-                        ).withSelectionArea(
-                        ).withExpanded(),
-                      ],
-                    ),
-                  ),
-                ),
-              if (this.collapse.value && this.argumentValue.where((value) => value.value != null).isEmpty)
-                SizedBox(height: 16),
-              if (this.collapse.value)
-                Divider(),
               SizedBox(height: 8),
               Row(
                 children: [

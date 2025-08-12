@@ -23,7 +23,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
@@ -36,7 +35,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 this.data.title,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
-                style: theme.textTheme.bodyMedium,
               ).withExpanded(),
             ],
             onTap: null,
@@ -70,7 +68,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 ModuleHelper.query(this.data.type).name,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
-                style: theme.textTheme.bodyMedium,
               ).withExpanded(),
             ],
             onTap: null,
@@ -104,7 +101,6 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 '${this.data.option.length}',
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
-                style: theme.textTheme.bodyMedium,
               ).withExpanded(),
             ],
             onTap: null,

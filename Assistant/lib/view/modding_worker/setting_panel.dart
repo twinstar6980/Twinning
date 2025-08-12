@@ -24,7 +24,6 @@ class SettingPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
@@ -36,7 +35,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !StorageHelper.existFileSync(this.data.kernel) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -52,17 +50,16 @@ class SettingPanel extends StatelessWidget {
                     border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
-                        IconButton(
-                          tooltip: 'Pick',
-                          icon: Icon(IconSymbols.open_in_new),
-                          onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, '@ModdingWorker.Kernel');
-                            if (target != null) {
-                              this.data.kernel = target;
-                              await refreshState(setStateForPanel);
-                              await refreshState(setState);
-                              this.onUpdate();
-                            }
+                        CustomStorageItemPickerButton(
+                          allowLoadFile: true,
+                          allowLoadDirectory: false,
+                          allowSaveFile: false,
+                          location: '@ModdingWorker.Kernel',
+                          onPicked: (target) async {
+                            this.data.kernel = target;
+                            await refreshState(setStateForPanel);
+                            await refreshState(setState);
+                            this.onUpdate();
                           },
                         ),
                       ],
@@ -86,7 +83,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !StorageHelper.existFileSync(this.data.script) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -102,17 +98,16 @@ class SettingPanel extends StatelessWidget {
                     border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
-                        IconButton(
-                          tooltip: 'Pick',
-                          icon: Icon(IconSymbols.open_in_new),
-                          onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, '@ModdingWorker.Script');
-                            if (target != null) {
-                              this.data.script = target;
-                              await refreshState(setStateForPanel);
-                              await refreshState(setState);
-                              this.onUpdate();
-                            }
+                        CustomStorageItemPickerButton(
+                          allowLoadFile: true,
+                          allowLoadDirectory: false,
+                          allowSaveFile: false,
+                          location: '@ModdingWorker.Script',
+                          onPicked: (target) async {
+                            this.data.script = target;
+                            await refreshState(setStateForPanel);
+                            await refreshState(setState);
+                            this.onUpdate();
                           },
                         ),
                       ],
@@ -136,7 +131,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.argument.isNotEmpty ? 'Empty' : 'Defined',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -152,6 +146,18 @@ class SettingPanel extends StatelessWidget {
                     border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
+                        CustomStorageItemPickerButton(
+                          allowLoadFile: true,
+                          allowLoadDirectory: true,
+                          allowSaveFile: false,
+                          location: '@ModdingWorker.Argument',
+                          onPicked: (target) async {
+                            this.data.argument = this.data.argument + [target];
+                            await refreshState(setStateForPanel);
+                            await refreshState(setState);
+                            this.onUpdate();
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -173,7 +179,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.immediateLaunch ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -203,7 +208,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.messageFont.isNotEmpty ? 'Default' : 'Custom',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -219,17 +223,16 @@ class SettingPanel extends StatelessWidget {
                     border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
-                        IconButton(
-                          tooltip: 'Pick',
-                          icon: Icon(IconSymbols.open_in_new),
-                          onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, '@ModdingWorker.MessageFont');
-                            if (target != null) {
-                              this.data.messageFont = this.data.messageFont + [target];
-                              await refreshState(setStateForPanel);
-                              await refreshState(setState);
-                              this.onUpdate();
-                            }
+                        CustomStorageItemPickerButton(
+                          allowLoadFile: true,
+                          allowLoadDirectory: false,
+                          allowSaveFile: false,
+                          location: '@ModdingWorker.MessageFont',
+                          onPicked: (target) async {
+                            this.data.messageFont = this.data.messageFont + [target];
+                            await refreshState(setStateForPanel);
+                            await refreshState(setState);
+                            this.onUpdate();
                           },
                         ),
                       ],

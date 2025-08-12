@@ -28,12 +28,12 @@ class MessageCard extends StatelessWidget {
     var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     var cardColor = this.type.color(theme);
-    var titleStyle = theme.textTheme.titleSmall?.copyWith(
+    var titleStyle = theme.textTheme.titleSmall!.copyWith(
       fontFamily: '',
       fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
       color: theme.colorScheme.onSurface,
     );
-    var descriptionStyle = theme.textTheme.bodySmall?.copyWith(
+    var descriptionStyle = theme.textTheme.bodySmall!.copyWith(
       fontFamily: '',
       fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
       color: theme.colorScheme.onSurfaceVariant,

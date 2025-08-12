@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   late List<MethodGroupConfiguration>                                                                                             _methodConfiguration;
   late Boolean                                                                                                                    _parallelForward;
-  late List<Boolean>                                                                                                              _methodCollapse;
+  late List<Boolean>                                                                                                              _methodExpanded;
   late List<(MethodGroupConfiguration, MethodConfiguration, Wrapper<Boolean>, List<Wrapper<ValueExpression?>>, Wrapper<Boolean>)> _command;
   late ScrollController                                                                                                           _commandListScrollController;
 
@@ -47,11 +47,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     String              methodId,
     Boolean             enableBatch,
     Map<String, Object> argumentValue,
-    Boolean             collapse,
+    Boolean             expanded,
   ) async {
     var groupConfiguration = this._methodConfiguration.firstWhere((value) => methodId.startsWith('${value.id}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => methodId == value.id);
-    this._command.add((groupConfiguration, itemConfiguration, Wrapper(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue), Wrapper(collapse)));
+    this._command.add((groupConfiguration, itemConfiguration, Wrapper(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue), Wrapper(expanded)));
     await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
     return;
@@ -145,12 +145,12 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     this._methodConfiguration = [];
     this._parallelForward = setting.data.commandSender.parallelForward;
-    this._methodCollapse = [];
+    this._methodExpanded = [];
     this._command = [];
     this._commandListScrollController = ScrollController();
     ControlHelper.postTask(() async {
       this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.commandSender.methodConfiguration));
-      this._methodCollapse = this._methodConfiguration.map((value) => true).toList();
+      this._methodExpanded = this._methodConfiguration.map((value) => false).toList();
       await this.modulePageApplyOption(this.widget.option);
     });
     return;
@@ -187,7 +187,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                 itemConfiguration: this._command[index].$2,
                 enableBatch: this._command[index].$3,
                 argumentValue: this._command[index].$4,
-                collapse: this._command[index].$5,
+                expanded: this._command[index].$5,
                 onRemove: () async {
                   await this._removeCommand(index);
                 },
@@ -225,11 +225,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                       configuration: this._methodConfiguration[index],
                       onSelect: (method) async {
                         Navigator.pop(context);
-                        await this._appendCommand(method, false, {}, false);
+                        await this._appendCommand(method, false, {}, true);
                       },
-                      collapse: this._methodCollapse[index],
+                      expanded: this._methodExpanded[index],
                       onToggle: () async {
-                        this._methodCollapse[index] = !this._methodCollapse[index];
+                        this._methodExpanded[index] = !this._methodExpanded[index];
                         await refreshState(setStateForPanel);
                       },
                     ),

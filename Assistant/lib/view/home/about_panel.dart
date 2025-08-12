@@ -23,7 +23,7 @@ class AboutPanel extends StatelessWidget {
             Text(
               '${ApplicationInformation.name} - v${ApplicationInformation.version}',
               overflow: TextOverflow.clip,
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleMedium!,
             ).withExpanded(),
           ],
         ),
@@ -33,7 +33,7 @@ class AboutPanel extends StatelessWidget {
             Text(
               '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
               overflow: TextOverflow.clip,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium!,
             ).withExpanded(),
           ],
         ),

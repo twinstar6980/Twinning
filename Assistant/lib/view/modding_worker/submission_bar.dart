@@ -57,7 +57,7 @@ class _BasicSubmissionBar extends StatelessWidget {
       ),
       secondary: [
         Badge.count(
-          textStyle: theme.textTheme.labelSmall?.copyWith(
+          textStyle: theme.textTheme.labelSmall!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -98,7 +98,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                           title: Text(
                             ValueExpressionHelper.makeString(value.$1),
                             overflow: TextOverflow.clip,
-                            style: theme.textTheme.labelLarge?.copyWith(
+                            style: theme.textTheme.labelLarge!.copyWith(
                               fontFamily: '',
                               fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                               color: value.$2 ? null : theme.disabledColor,
@@ -195,7 +195,7 @@ class _PauseSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.pause,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -251,7 +251,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.check_box,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -338,7 +338,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -405,7 +405,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -472,7 +472,7 @@ class _SizeSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.memory,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -497,7 +497,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                       child: Text(
                         ['B', 'K', 'M', 'G'][this.value.value!.exponent],
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
+                        style: theme.textTheme.labelLarge!.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
@@ -508,7 +508,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                     child: Text(
                       value,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelLarge?.copyWith(
+                      style: theme.textTheme.labelLarge!.copyWith(
                         fontFamily: '',
                         fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                       ),
@@ -573,7 +573,7 @@ class _StringSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.text_fields,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),
@@ -642,7 +642,7 @@ class _PathSubmissionBar extends StatelessWidget {
             await refreshState(setState);
           },
           child: CustomTextField(
-            style: theme.textTheme.bodyLarge?.copyWith(
+            style: theme.textTheme.bodyLarge!.copyWith(
               fontFamily: '',
               fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
             ),
@@ -669,7 +669,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       child: Text(
                         value.$2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
+                        style: theme.textTheme.labelLarge!.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
@@ -694,19 +694,14 @@ class _PathSubmissionBar extends StatelessWidget {
                       child: Text(
                         value.$2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge?.copyWith(
+                        style: theme.textTheme.labelLarge!.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
                       ),
                     )).toList(),
                     onSelected: (value) async {
-                      var target = switch (value) {
-                        'load_file'      => await StorageHelper.pickLoadFile(context, '@ModdingWorker.Generic'),
-                        'load_directory' => await StorageHelper.pickLoadDirectory(context, '@ModdingWorker.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, '@ModdingWorker.Generic', null),
-                        _                => throw Exception(),
-                      };
+                      var target = await StorageHelper.pick(value, context, '@ModdingWorker.Generic', null);
                       if (target != null) {
                         this.value.value = PathExpression(target);
                         await refreshState(setState);
@@ -767,7 +762,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.menu,
         content: CustomOptionField(
-          style: theme.textTheme.bodyLarge?.copyWith(
+          style: theme.textTheme.bodyLarge!.copyWith(
             fontFamily: '',
             fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
           ),

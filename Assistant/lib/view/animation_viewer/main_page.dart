@@ -663,7 +663,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               trailing: Text(
                                                 ConvertHelper.makeIntegerToString(value.$1, false),
                                                 overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                                                style: theme.textTheme.labelSmall!.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                ),
                                               ),
                                             ),
                                           )).toList(),
@@ -718,7 +720,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               trailing: Text(
                                                 ConvertHelper.makeIntegerToString(value.$1, false),
                                                 overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                                                style: theme.textTheme.labelSmall!.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                ),
                                               ),
                                             ),
                                           )).toList(),
@@ -838,7 +842,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               trailing: Text(
                                                 ConvertHelper.makeFloaterToString(value.$1, false),
                                                 overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                                                style: theme.textTheme.labelSmall!.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                ),
                                               ),
                                             ),
                                           )).toList(),

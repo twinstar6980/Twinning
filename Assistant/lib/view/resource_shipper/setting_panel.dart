@@ -23,7 +23,6 @@ class SettingPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
@@ -35,7 +34,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !StorageHelper.existFileSync(this.data.optionConfiguration) ? 'Invalid' : 'Available',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -51,17 +49,16 @@ class SettingPanel extends StatelessWidget {
                     border: OutlineInputBorder(),
                     suffixIcon: CustomTextFieldSuffixRegion(
                       children: [
-                        IconButton(
-                          tooltip: 'Pick',
-                          icon: Icon(IconSymbols.open_in_new),
-                          onPressed: () async {
-                            var target = await StorageHelper.pickLoadFile(context, '@ResourceShipper.OptionConfiguration');
-                            if (target != null) {
-                              this.data.optionConfiguration = target;
-                              await refreshState(setStateForPanel);
-                              await refreshState(setState);
-                              this.onUpdate();
-                            }
+                        CustomStorageItemPickerButton(
+                          allowLoadFile: true,
+                          allowLoadDirectory: false,
+                          allowSaveFile: false,
+                          location: '@ResourceShipper.OptionConfiguration',
+                          onPicked: (target) async {
+                            this.data.optionConfiguration = target;
+                            await refreshState(setStateForPanel);
+                            await refreshState(setState);
+                            this.onUpdate();
                           },
                         ),
                       ],
@@ -85,7 +82,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.parallelForward ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -115,7 +111,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.enableFilter ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -145,7 +140,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.enableBatch ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,

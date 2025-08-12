@@ -275,7 +275,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           ),
           secondary: [
             Badge.count(
-              textStyle: theme.textTheme.labelSmall?.copyWith(
+              textStyle: theme.textTheme.labelSmall!.copyWith(
                 fontFamily: '',
                 fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
               ),
@@ -299,7 +299,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                           filled: false,
                           border: OutlineInputBorder(),
                         ),
-                        style: theme.textTheme.bodyLarge?.copyWith(
+                        style: theme.textTheme.bodyLarge!.copyWith(
                           fontFamily: '',
                           fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                         ),
@@ -476,21 +476,13 @@ class _MainPageBridgeClient implements bridge.Client {
     String type,
   ) async {
     var target = '';
-    switch (type) {
-      case 'load_file': {
-        target = await StorageHelper.pickLoadFile(this._controller.context, '@ModdingWorker.Generic') ?? '';
-        break;
-      }
-      case 'load_directory': {
-        target = await StorageHelper.pickLoadDirectory(this._controller.context, '@ModdingWorker.Generic') ?? '';
-        break;
-      }
-      case 'save_file': {
-        target = await StorageHelper.pickSaveFile(this._controller.context, '@ModdingWorker.Generic', null) ?? '';
-        break;
-      }
-      default: throw Exception();
-    }
+    var typeValue = switch (type) {
+      'load_file'      => 'load_file',
+      'load_directory' => 'load_directory',
+      'save_file'      => 'save_file',
+      _                => throw Exception(),
+    };
+    target = await StorageHelper.pick(typeValue, this._controller.context, '@ModdingWorker.Generic', null) ?? '';
     return (target,);
   }
 

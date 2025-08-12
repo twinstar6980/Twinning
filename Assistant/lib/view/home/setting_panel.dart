@@ -116,7 +116,6 @@ class _SettingPanelState extends State<SettingPanel> {
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
-    var theme = Theme.of(context);
     return Column(
       children: [
         SizedBox(height: 4),
@@ -131,7 +130,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               ['System', 'Light', 'Dark'][setting.data.themeMode.index],
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
             ),
           ],
           onTap: null,
@@ -164,7 +162,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.themeColorState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
             ),
           ],
           onTap: null,
@@ -244,7 +241,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.themeFontState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
             ),
           ],
           onTap: null,
@@ -276,17 +272,16 @@ class _SettingPanelState extends State<SettingPanel> {
                   border: OutlineInputBorder(),
                   suffixIcon: CustomTextFieldSuffixRegion(
                     children: [
-                      IconButton(
-                        tooltip: 'Pick',
-                        icon: Icon(IconSymbols.open_in_new),
-                        onPressed: () async {
-                          var target = await StorageHelper.pickLoadFile(context, '@Application.ThemeFont');
-                          if (target != null) {
-                            setting.data.themeFontPath = setting.data.themeFontPath + [target];
-                            await refreshState(setStateForPanel);
-                            await refreshState(this.setState);
-                            await setting.save();
-                          }
+                      CustomStorageItemPickerButton(
+                        allowLoadFile: true,
+                        allowLoadDirectory: false,
+                        allowSaveFile: false,
+                        location: '@Application.ThemeFont',
+                        onPicked: (target) async {
+                          setting.data.themeFontPath = setting.data.themeFontPath + [target];
+                          await refreshState(setStateForPanel);
+                          await refreshState(this.setState);
+                          await setting.save();
                         },
                       ),
                     ],
@@ -315,9 +310,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.windowPositionState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh ? null : theme.disabledColor,
-              ),
             ),
           ],
           onTap: null,
@@ -388,9 +380,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.windowSizeState ? 'Default' : 'Custom',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh ? null : theme.disabledColor,
-              ),
             ),
           ],
           onTap: null,
@@ -465,9 +454,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !this._storagePermissionState ? 'Denied' : 'Granted',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: SystemChecker.isAndroid ? null : theme.disabledColor,
-              ),
             ),
           ],
           onTap: () async {
@@ -484,9 +470,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !StorageHelper.existDirectorySync(setting.data.storagePickerFallbackDirectory) ? 'Invalid' : 'Available',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: SystemChecker.isAndroid ? null : theme.disabledColor,
-              ),
             ),
           ],
           onTap: null,
@@ -502,17 +485,16 @@ class _SettingPanelState extends State<SettingPanel> {
                   border: OutlineInputBorder(),
                   suffixIcon: CustomTextFieldSuffixRegion(
                     children: [
-                      IconButton(
-                        tooltip: 'Pick',
-                        icon: Icon(IconSymbols.open_in_new),
-                        onPressed: () async {
-                          var target = await StorageHelper.pickLoadDirectory(context, '@Application.StoragePickerFallbackDirectory');
-                          if (target != null) {
-                            setting.data.storagePickerFallbackDirectory = target;
-                            await refreshState(setStateForPanel);
-                            await refreshState(this.setState);
-                            await setting.save();
-                          }
+                      CustomStorageItemPickerButton(
+                        allowLoadFile: false,
+                        allowLoadDirectory: true,
+                        allowSaveFile: false,
+                        location: '@Application.StoragePickerFallbackDirectory',
+                        onPicked: (target) async {
+                          setting.data.storagePickerFallbackDirectory = target;
+                          await refreshState(setStateForPanel);
+                          await refreshState(this.setState);
+                          await setting.save();
                         },
                       ),
                     ],
@@ -541,9 +523,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               this._forwarderExtensionState == null ? 'System' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: SystemChecker.isWindows || SystemChecker.isMacintosh ? null : theme.disabledColor,
-              ),
             ),
           ],
           onTap: null,
@@ -574,7 +553,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               ModuleHelper.query(setting.data.forwarderDefaultTarget).name,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
             ),
           ],
           onTap: null,
@@ -607,7 +585,6 @@ class _SettingPanelState extends State<SettingPanel> {
             Text(
               !setting.data.forwarderImmediateJump ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium,
             ),
           ],
           onTap: null,

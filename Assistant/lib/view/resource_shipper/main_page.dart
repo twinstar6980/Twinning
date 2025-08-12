@@ -41,7 +41,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   late Boolean                                 _enableBatch;
   late List<(String, Boolean?)>                _resource;
   late List<List<(Boolean, Boolean, Boolean)>> _optionMatch;
-  late List<Boolean>                           _optionCollapse;
+  late List<Boolean>                           _optionExpanded;
   late ScrollController                        _optionListScrollController;
 
   Future<Void> _refreshMatch(
@@ -198,11 +198,11 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._enableBatch = setting.data.resourceShipper.enableBatch;
     this._resource = [];
     this._optionMatch = [];
-    this._optionCollapse = [];
+    this._optionExpanded = [];
     this._optionListScrollController = ScrollController();
     ControlHelper.postTask(() async {
       this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.resourceShipper.optionConfiguration));
-      this._optionCollapse = this._optionConfiguration.map((value) => false).toList();
+      this._optionExpanded = this._optionConfiguration.map((value) => true).toList();
       await this._refreshMatch();
       await this.modulePageApplyOption(this.widget.option);
     });
@@ -240,9 +240,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
               enableFilter: this._enableFilter,
               enableBatch: this._enableBatch,
               onSelect: this._forwardResource,
-              collapse: this._optionCollapse[index],
+              expanded: this._optionExpanded[index],
               onToggle: () async {
-                this._optionCollapse[index] = !this._optionCollapse[index];
+                this._optionExpanded[index] = !this._optionExpanded[index];
                 await refreshState(this.setState);
               },
             ),

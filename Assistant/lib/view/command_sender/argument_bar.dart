@@ -38,7 +38,7 @@ class _BasicArgumentBar extends StatelessWidget {
             Text(
               this.name,
               overflow: TextOverflow.clip,
-              style: theme.textTheme.labelLarge?.copyWith(
+              style: theme.textTheme.labelLarge!.copyWith(
                 color: theme.colorScheme.primary,
               ),
             ).withExpanded(),
@@ -402,32 +402,14 @@ class _PathArgumentBar extends StatelessWidget {
               hintText: 'Path',
               suffixIcon: CustomTextFieldSuffixRegion(
                 children: [
-                  PopupMenuButton(
-                    tooltip: 'Pick',
-                    position: PopupMenuPosition.under,
-                    icon: Icon(IconSymbols.open_in_new),
-                    itemBuilder: (context) => [
-                      ('load_file', 'Load File'),
-                      ('load_directory', 'Load Directory'),
-                      ('save_file', 'Save File'),
-                    ].map((value) => PopupMenuItem(
-                      value: value.$1,
-                      child: Text(
-                        value.$2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )).toList(),
-                    onSelected: (value) async {
-                      var target = switch (value) {
-                        'load_file'      => await StorageHelper.pickLoadFile(context, '@CommandSender.Generic'),
-                        'load_directory' => await StorageHelper.pickLoadDirectory(context, '@CommandSender.Generic'),
-                        'save_file'      => await StorageHelper.pickSaveFile(context, '@CommandSender.Generic', null),
-                        _                => throw Exception(),
-                      };
-                      if (target != null) {
-                        this.value.value = PathExpression(target);
-                        await refreshState(setState);
-                      }
+                  CustomStorageItemPickerButton(
+                    allowLoadFile: true,
+                    allowLoadDirectory: true,
+                    allowSaveFile: true,
+                    location: '@CommandSender.Generic',
+                    onPicked: (target) async {
+                      this.value.value = PathExpression(target);
+                      await refreshState(setState);
                     },
                   ),
                 ],

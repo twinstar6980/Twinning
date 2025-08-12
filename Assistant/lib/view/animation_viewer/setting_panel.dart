@@ -22,7 +22,6 @@ class SettingPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => Column(
         children: [
@@ -34,7 +33,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.immediateSelect ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -64,7 +62,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.automaticPlay ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -94,7 +91,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.repeatPlay ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -124,7 +120,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.keepSpeed ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,
@@ -154,7 +149,6 @@ class SettingPanel extends StatelessWidget {
               Text(
                 !this.data.showBoundary ? 'Disabled' : 'Enabled',
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium,
               ),
             ],
             onTap: null,

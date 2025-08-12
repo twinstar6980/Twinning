@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/utility/control_helper.dart';
 import '/utility/system_overlay_helper.dart';
+import '/utility/storage_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -249,7 +250,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
               Text(
                 this.widget.title,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: theme.textTheme.titleMedium!.copyWith(
                   color: theme.colorScheme.primary,
                 ),
               ).withExpanded(),
@@ -305,7 +306,7 @@ class CustomTitleBar extends StatelessWidget {
         Text(
           this.title,
           overflow: TextOverflow.ellipsis,
-          style: theme.textTheme.titleLarge,
+          style: theme.textTheme.titleLarge!,
         ).withExpanded(),
         SizedBox(width: 8),
       ],
@@ -371,7 +372,7 @@ class CustomNavigationDrawerLabel extends StatelessWidget {
       child: Text(
         this.label,
         overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.titleSmall?.copyWith(
+        style: theme.textTheme.titleSmall!.copyWith(
           color: theme.colorScheme.primary,
         ),
       ),
@@ -421,7 +422,7 @@ class CustomNavigationDrawerItem extends StatelessWidget {
             Text(
               this.label,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: theme.textTheme.titleSmall!.copyWith(
                 color: !this.selected ? theme.colorScheme.onSurface : theme.colorScheme.surfaceTint,
               ),
             ).withExpanded(),
@@ -480,7 +481,7 @@ class CustomSettingLabel extends StatelessWidget {
       title: Text(
         this.label,
         overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.titleSmall?.copyWith(
+        style: theme.textTheme.titleSmall!.copyWith(
           color: theme.colorScheme.primary,
         ),
       ),
@@ -515,19 +516,28 @@ class CustomSettingItem extends StatelessWidget {
 
   @override
   build(context) {
+    var theme = Theme.of(context);
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
       enabled: this.enabled,
       leading: Icon(this.icon),
-      title: Row(
-        children: [
-          Text(
-            this.label,
-            overflow: TextOverflow.ellipsis,
-          ).withExpanded(),
-          SizedBox(width: 16),
-          ...this.content,
-        ],
+      title: DefaultTextStyle(
+        style: theme.textTheme.bodyMedium!.copyWith(
+          color: this.enabled ? null : theme.disabledColor,
+        ),
+        child: Row(
+          children: [
+            Text(
+              this.label,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyLarge!.copyWith(
+                color: this.enabled ? null : theme.disabledColor,
+              ),
+            ).withExpanded(),
+            SizedBox(width: 16),
+            ...this.content,
+          ],
+        ),
       ),
       onTap: () async {
         assertTest((this.onTap == null) != (this.panelBuilder == null));
@@ -753,7 +763,7 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
                 title: Text(
                   value.$2,
                   overflow: TextOverflow.clip,
-                  style: this.widget.style ?? theme.textTheme.bodyLarge,
+                  style: this.widget.style ?? theme.textTheme.bodyLarge!,
                 ),
               ),
             ),
@@ -786,6 +796,84 @@ class _CustomOptionFieldState extends State<CustomOptionField> {
         ),
       ),
     );
+  }
+
+}
+
+// ----------------
+
+class CustomStorageItemPickerButton extends StatelessWidget {
+
+  const CustomStorageItemPickerButton({
+    super.key,
+    required this.allowLoadFile,
+    required this.allowLoadDirectory,
+    required this.allowSaveFile,
+    required this.location,
+    required this.onPicked,
+  });
+
+  // ----------------
+
+  final Boolean               allowLoadFile;
+  final Boolean               allowLoadDirectory;
+  final Boolean               allowSaveFile;
+  final String                location;
+  final Void Function(String) onPicked;
+
+  // ----------------
+
+  @override
+  build(context) {
+    var allowedTypeCount = [this.allowLoadFile, this.allowLoadDirectory, this.allowSaveFile].where((value) => value).length;
+    assertTest(allowedTypeCount != 0);
+    return allowedTypeCount == 1
+      ? IconButton(
+        tooltip: 'Pick',
+        icon: Icon(IconSymbols.open_in_new),
+        onPressed: () async {
+          var type = null as String?;
+          if (this.allowLoadFile) {
+            type = 'load_file';
+          }
+          if (this.allowLoadDirectory) {
+            type = 'load_directory';
+          }
+          if (this.allowSaveFile) {
+            type = 'save_file';
+          }
+          type!;
+          var target = await StorageHelper.pick(type, context, this.location, null);
+          if (target != null) {
+            this.onPicked(target);
+          }
+        },
+      )
+      : PopupMenuButton(
+        tooltip: 'Pick',
+        position: PopupMenuPosition.under,
+        icon: Icon(IconSymbols.open_in_new),
+        itemBuilder: (context) => [
+          if (this.allowLoadFile)
+            ('load_file', 'Load File'),
+          if (this.allowLoadDirectory)
+            ('load_directory', 'Load Directory'),
+          if (this.allowSaveFile)
+            ('save_file', 'Save File'),
+        ].map((value) => PopupMenuItem(
+          value: value.$1,
+          child: Text(
+            value.$2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        )).toList(),
+        onSelected: (value) async {
+          var target = await StorageHelper.pick(value, context, this.location, null);
+          if (target != null) {
+            this.onPicked(target);
+          }
+        },
+      );
   }
 
 }

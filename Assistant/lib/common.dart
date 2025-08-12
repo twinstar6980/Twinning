@@ -20,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '88';
+  static const String version = '89';
 
   static const String developer = 'TwinStar';
 

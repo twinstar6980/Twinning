@@ -57,7 +57,7 @@ class MethodGroupItem extends StatelessWidget {
     super.key,
     required this.configuration,
     required this.onSelect,
-    required this.collapse,
+    required this.expanded,
     required this.onToggle,
   });
 
@@ -65,7 +65,7 @@ class MethodGroupItem extends StatelessWidget {
 
   final MethodGroupConfiguration configuration;
   final Void Function(String)    onSelect;
-  final Boolean                  collapse;
+  final Boolean                  expanded;
   final Void Function()          onToggle;
 
   // ----------------
@@ -88,16 +88,16 @@ class MethodGroupItem extends StatelessWidget {
               Text(
                 '${this.configuration.item.length}',
                 overflow: TextOverflow.clip,
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium!,
               ),
               SizedBox(width: 6),
-              Icon(!this.collapse ? IconSymbols.keyboard_arrow_left : IconSymbols.keyboard_arrow_down),
+              Icon(!this.expanded ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),
             ],
           ),
           onTap: this.onToggle,
         ),
         Visibility(
-          visible: !this.collapse,
+          visible: this.expanded,
           child: Column(
             children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItem(
               configuration: optionItem,
