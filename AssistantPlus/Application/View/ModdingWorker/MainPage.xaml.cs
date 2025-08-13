@@ -273,7 +273,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
 			}
 			else {
-				await this.SendMessage(MessageType.Error, "FAILED", [exception.ToString()]);
+				await this.SendMessage(MessageType.Error, "FAILED", [GF.GenerateExceptionMessage(exception)]);
 			}
 			this.SessionRunning = false;
 			this.NotifyPropertyChanged([

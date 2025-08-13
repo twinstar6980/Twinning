@@ -87,9 +87,7 @@ export namespace Twinning::Kernel {
 			{
 				message += "\n";
 				message += "@ ";
-				message += thiz.m_location.file_name()[0] == '\0'
-					? ("?")
-					: (Third::fmt::format("{}:{}:{} {}", parse_source_location_file_path(thiz.m_location), thiz.m_location.line(), thiz.m_location.column(), thiz.m_location.function_name()));
+				message += Third::fmt::format("{}:{}:{} {}", parse_source_location_file_path(thiz.m_location), thiz.m_location.line(), thiz.m_location.column(), thiz.m_location.function_name());
 			}
 			return message;
 		}

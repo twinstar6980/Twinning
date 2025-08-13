@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '127';
+	export const k_version = '128';
 
 	// ------------------------------------------------
 
@@ -22,6 +22,33 @@ namespace Twinning.Script {
 		message: string = ``,
 	): never {
 		assert_test(false, message);
+	}
+
+	export function generate_exception_message(
+		exception: any,
+	): [string, Array<string>] {
+		let title: string = '';
+		let description: Array<string> = [];
+		if (exception instanceof Error) {
+			if (exception.name === 'NativeError') {
+				title = `${exception.name}`;
+				description.push(...exception.message.split('\n'));
+			}
+			else {
+				title = `${exception.name}: ${exception.message}`;
+			}
+			if (exception.stack !== undefined) {
+				description.push(...exception.stack.split('\n').slice(0, -1)
+					.map((value) => (/^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(value)))
+					.filter((value) => (value !== null))
+					.map((value) => (`@ ${['native', 'missing', 'null'].includes(value[2]) ? `<${value[2]}>` : value[2]}:${value[3] === undefined ? '?' : value[3]}:${value[4] === undefined ? '?' : value[4]} ${value[1]}`))
+				);
+			}
+		}
+		else {
+			title = `${exception}`;
+		}
+		return [title, description];
 	}
 
 	// ------------------------------------------------

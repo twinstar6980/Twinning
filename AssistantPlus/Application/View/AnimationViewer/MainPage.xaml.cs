@@ -385,7 +385,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				texture = await GameAnimationHelper.LoadTexture(textureDirectory, animation);
 			}
 			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load animation.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load animation.", GF.GenerateExceptionMessage(e));
 				return;
 			}
 			this.AnimationFile = animationFile;

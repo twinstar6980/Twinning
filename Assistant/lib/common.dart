@@ -1,5 +1,6 @@
 import 'dart:core' as core;
 import 'dart:io';
+import 'package:stack_trace/stack_trace.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -20,7 +21,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '89';
+  static const String version = '90';
 
   static const String developer = 'TwinStar';
 
@@ -53,6 +54,22 @@ Void assertTest(
   }
   return;
 }
+
+String generateExceptionMessage(
+  core.Object      exception,
+  core.StackTrace? stack,
+) {
+  var result = '${exception}';
+  if (stack != null) {
+    var trace = Trace.from(stack);
+    for (var frame in trace.frames) {
+      result += '\n@ ${frame.library.selfLet((it) => it.startsWith('package:assistant') ? it.substring('package:'.length) : it)}:${frame.line ?? '?'}:${frame.column ?? '?'} ${frame.member ?? '?'}';
+    }
+  }
+  return result;
+}
+
+// ----------------
 
 extension CommonObjectExtension<TType extends core.Object> on TType {
 

@@ -343,52 +343,6 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export function split_error_stack(
-		string: undefined | string,
-	): Array<string> {
-		let list: Array<string>;
-		if (string === undefined) {
-			list = [`@ ?`];
-		}
-		else {
-			list = string.split('\n').slice(0, -1).map((e) => {
-				let result: string;
-				let regexp_result = /    at (.*) \((.*)\)/.exec(e);
-				if (regexp_result !== null) {
-					result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
-				}
-				else {
-					result = '@ ?';
-				}
-				return result;
-			});
-		}
-		return list;
-	}
-
-	export function parse_error_message(
-		error: any,
-	): [string, Array<string>] {
-		let title: string = '';
-		let description: Array<string> = [];
-		if (error instanceof Error) {
-			if (error.name === 'NativeError') {
-				title = `${error.name}`;
-				description.push(...error.message.split('\n'));
-			}
-			else {
-				title = `${error.name}: ${error.message}`;
-			}
-			description.push(...split_error_stack(error.stack));
-		}
-		else {
-			title = `${error}`;
-		}
-		return [title, description];
-	}
-
-	// ------------------------------------------------
-
 	export function string_data_maybe_utf16(
 		source: ArrayBuffer,
 	): boolean {

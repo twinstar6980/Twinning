@@ -1,5 +1,5 @@
 name: assistant
-version: 89.0.0+89
+version: 90.0.0+90
 publish_to: 'none'
 environment:
   sdk: ^3.8.1
@@ -10,6 +10,7 @@ dependencies:
   path: 1.9.1
   async: 2.13.0
   collection: 1.19.1
+  stack_trace: 1.12.1
   decimal: 3.2.4
   provider: 6.1.5
   path_provider: 2.1.5

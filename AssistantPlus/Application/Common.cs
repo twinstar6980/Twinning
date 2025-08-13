@@ -54,6 +54,12 @@ public static class GF {
 		return;
 	}
 
+	public static String GenerateExceptionMessage (
+		Exception exception
+	) {
+		return $"{exception.Message}\n{exception.StackTrace?.ReplaceLineEndings("\n")}";
+	}
+
 	// ----------------
 
 	public static TResult SelfLet<TType, TResult> (

@@ -110,7 +110,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   ) async {
     assertTest(!this._sessionRunning);
     var result = null as List<String>?;
-    var exception = null as Object?;
+    var exception = null as (Object, StackTrace)?;
     this._sessionRunning = true;
     this._messageList.clear();
     await refreshState(this.setState);
@@ -123,8 +123,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
         library.open(kernel);
         result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.moddingWorker.script, setting.data.moddingWorker.argument + this._additionalArgument);
       }
-      catch (e) {
-        exception = e;
+      catch (e, s) {
+        exception = (e, s);
       }
       if (library.state()) {
         library.close();
@@ -133,14 +133,14 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
         await StorageHelper.remove(kernel);
       }
     }
-    catch (e) {
-      exception = e;
+    catch (e, s) {
+      exception = (e, s);
     }
     if (exception == null) {
       this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
     }
     else {
-      this._sendMessage(MessageType.error, 'FAILED', [exception.toString()]);
+      this._sendMessage(MessageType.error, 'FAILED', [generateExceptionMessage(exception.$1, exception.$2)]);
     }
     this._sessionRunning = false;
     await refreshState(this.setState);

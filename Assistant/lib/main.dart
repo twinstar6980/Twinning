@@ -40,7 +40,7 @@ class _Main {
           Row(
             children: [
               Text(
-                '${exception}\n${stack}',
+                generateExceptionMessage(exception, stack),
                 overflow: TextOverflow.clip,
               ).withSelectionArea(
               ).withExpanded(),

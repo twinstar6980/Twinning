@@ -19,7 +19,7 @@ namespace Twinning.Script.Executable.JSShell {
 				break;
 			}
 			try {
-				let result = KernelX.Miscellaneous.evaluate(script, '<unnamed>', false);
+				let result = KernelX.Miscellaneous.evaluate(script, '<anonymous>', false);
 				Console.success(`> ${result}`, []);
 			}
 			catch (e) {

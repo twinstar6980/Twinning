@@ -198,7 +198,7 @@ namespace AssistantPlus.Bridge {
 					MessageProxy.Construct(exception, new ([]));
 				}
 				catch (Exception e) {
-					MessageProxy.Construct(exception, new ([e.ToString()]));
+					MessageProxy.Construct(exception, new ([GF.GenerateExceptionMessage(e)]));
 					MessageProxy.Construct(result, new ([]));
 				}
 				return;

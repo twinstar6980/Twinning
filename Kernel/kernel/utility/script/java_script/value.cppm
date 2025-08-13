@@ -45,7 +45,8 @@ export namespace Twinning::Kernel::JavaScript {
 	public:
 
 		explicit ExecutionException (
-			Value & exception
+			Value &                      exception,
+			std::source_location const & location = std::source_location::current()
 		);
 
 	};
@@ -1307,57 +1308,42 @@ export namespace Twinning::Kernel::JavaScript {
 	#pragma region type method implement
 
 	inline ExecutionException::ExecutionException (
-		Value & exception
+		Value &                      exception,
+		std::source_location const & location
 	) :
-		Exception{"JavaScript.Execution", {}, std::source_location{}} {
+		Exception{"JavaScript.Execution", {}, location} {
 		auto exception_message = exception.context().evaluate(
-			R"((error) => {
-				function split_error_stack(
-					string,
-				) {
-					let list;
-					if (string === undefined) {
-						list = [`@ ?`];
-					}
-					else {
-						list = string.split('\n').slice(0, -1).map((e) => {
-							let result;
-							let regexp_result = /    at (.*) \((.*)\)/.exec(e);
-							if (regexp_result !== null) {
-								result = `@ ${regexp_result[2] === 'native' ? ('<native>:?') : (regexp_result[2])} ${regexp_result[1]}`;
-							}
-							else {
-								result = '@ ?';
-							}
-							return result;
-						});
-					}
-					return list;
-				}
-				function parse_error_message(
-					error,
+			R"((exception) => {
+				function generate_exception_message(
+					exception,
 				) {
 					let title = '';
 					let description = [];
-					if (error instanceof Error) {
-						if (error.name === 'NativeError') {
-							title = `${error.name}`;
-							description.push(...error.message.split('\n'));
+					if (exception instanceof Error) {
+						if (exception.name === 'NativeError') {
+							title = `${exception.name}`;
+							description.push(...exception.message.split('\n'));
 						}
 						else {
-							title = `${error.name}: ${error.message}`;
+							title = `${exception.name}: ${exception.message}`;
 						}
-						description.push(...split_error_stack(error.stack));
+						if (exception.stack !== undefined) {
+							description.push(...exception.stack.split('\n').slice(0, -1)
+								.map((value) => (/^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(value)))
+								.filter((value) => (value !== null))
+								.map((value) => (`@ ${['native', 'missing', 'null'].includes(value[2]) ? `<${value[2]}>` : value[2]}:${value[3] === undefined ? '?' : value[3]}:${value[4] === undefined ? '?' : value[4]} ${value[1]}`))
+							);
+						}
 					}
 					else {
-						title = `${error}`;
+						title = `${exception}`;
 					}
 					return [title, description];
 				}
-				let message = parse_error_message(error);
+				let message = generate_exception_message(exception);
 				return [message[0], ...message[1]].join('\n');
 			})"_sv,
-			"<unnamed>"_s,
+			"<embedded>"_s,
 			k_false
 		).call(
 			make_list<Value>(

@@ -244,9 +244,9 @@ namespace Twinning.Script.Console {
 	}
 
 	export function error_of(
-		detail: any,
+		exception: any,
 	): void {
-		let [title, description] = parse_error_message(detail);
+		let [title, description] = generate_exception_message(exception);
 		error(title, description);
 		return;
 	}

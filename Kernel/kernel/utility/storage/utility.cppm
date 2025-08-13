@@ -40,31 +40,29 @@ export namespace Twinning::Kernel::Storage {
 
 		#if defined M_system_windows
 		inline auto make_regular_path (
-			Path & original
-		) -> Path & {
-			for (auto & element : as_variable(original.relative())) {
-				if (!element.empty()) {
-					if (element.last() == ' '_c) {
-						element.append_list("#"_sv);
-					}
-					if (element.last() == '.'_c && !((element.size() == 1_sz) || (element.size() == 2_sz && element.first() == '.'_c))) {
-						element.append_list("@"_sv);
-					}
-				}
-			}
-			return original;
-		}
-		inline auto make_regular_path (
 			Path const & original
 		) -> Path {
 			auto result = original;
-			make_regular_path(result);
+			for (auto & element : as_variable(result.relative())) {
+				while (!element.empty()) {
+					if (element.last() == ' '_c) {
+						element.remove_tail();
+						continue;
+					}
+					if (element.last() == '.'_c && !((element.size() == 1_sz) || (element.size() == 2_sz && element.first() == '.'_c))) {
+						element.remove_tail();
+						continue;
+					}
+					break;
+				}
+			}
 			return result;
 		}
-		#else
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		inline auto make_regular_path (
 			Path const & original
-		) -> Path const& {
+		) -> Path const & {
 			return original;
 		}
 		#endif

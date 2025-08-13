@@ -184,8 +184,8 @@ class ExecutorProxy {
         MessageProxy.construct(result, resultProxy);
         MessageProxy.construct(exception, MessageProxy([]));
       }
-      catch (e) {
-        MessageProxy.construct(exception, MessageProxy([e.toString()]));
+      catch (e, s) {
+        MessageProxy.construct(exception, MessageProxy([generateExceptionMessage(e, s)]));
         MessageProxy.construct(result, MessageProxy([]));
       }
       return null as Void;

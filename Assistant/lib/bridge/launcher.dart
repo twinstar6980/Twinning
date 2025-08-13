@@ -61,7 +61,7 @@ class Launcher {
         return null as Void;
       };
       var result = null as List<String>?;
-      var exception = null as Object?;
+      var exception = null as (Object, StackTrace)?;
       var service = portMessage[0] as Service;
       var script = portMessage[1] as String;
       var argument = portMessage[2] as List<String>;
@@ -72,8 +72,8 @@ class Launcher {
         ExecutorProxy.parse(service.executor).value(executorCallback, executorArgument, executorResult);
         result = executorResult.value;
       }
-      catch (e) {
-        exception = e;
+      catch (e, s) {
+        exception = (e, s);
       }
       await streamQueue.cancel();
       sendPort.send(null);
@@ -88,7 +88,7 @@ class Launcher {
       await Isolate.spawn(subWorker, receivePort.sendPort);
       var sendPort = await streamQueue.next as SendPort;
       var result = null as List<String>?;
-      var exception = null as Object?;
+      var exception = null as (Object, StackTrace)?;
       await client.start();
       sendPort.send([library.symbol(), script, argument]);
       while (await streamQueue.hasNext) {
@@ -109,9 +109,9 @@ class Launcher {
             MessageProxy.construct(callbackResult, MessageProxy(callbackResultProxy));
             MessageProxy.construct(callbackException, MessageProxy([]));
           }
-          catch (e) {
+          catch (e, s) {
+            MessageProxy.construct(callbackException, MessageProxy([generateExceptionMessage(e, s)]));
             MessageProxy.construct(callbackResult, MessageProxy([]));
-            MessageProxy.construct(callbackException, MessageProxy([e.toString()]));
           }
           callbackState.value = true;
         }
@@ -119,7 +119,7 @@ class Launcher {
       await client.finish();
       await streamQueue.cancel();
       if (exception != null) {
-        throw exception;
+        Error.throwWithStackTrace(exception.$1, exception.$2);
       }
       return result!;
     };

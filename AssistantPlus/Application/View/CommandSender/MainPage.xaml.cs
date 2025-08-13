@@ -85,7 +85,7 @@ namespace AssistantPlus.View.CommandSender {
 				this.MethodConfiguration = JsonHelper.DeserializeText<List<MethodGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.CommandSender.MethodConfiguration));
 			}
 			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load method configuration.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load method configuration.", GF.GenerateExceptionMessage(e));
 			}
 			this.uMethodList_ItemsSource = this.MethodConfiguration.Select((group) => (new MainPageMethodGroupItemController() {
 				Host = this,

@@ -92,7 +92,7 @@ namespace AssistantPlus.View.ResourceShipper {
 				this.OptionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.ResourceShipper.OptionConfiguration));
 			}
 			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load option configuration.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load option configuration.", GF.GenerateExceptionMessage(e));
 			}
 			this.uOptionList_ItemsSource = this.OptionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,

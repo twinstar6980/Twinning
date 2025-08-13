@@ -209,7 +209,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				descriptorMap = GameReflectionHelper.CompileDescriptorArchive(descriptorArchive);
 			}
 			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load descriptor.", e.ToString());
+				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load descriptor.", GF.GenerateExceptionMessage(e));
 				return;
 			}
 			this.DescriptorFile = descriptorFile;

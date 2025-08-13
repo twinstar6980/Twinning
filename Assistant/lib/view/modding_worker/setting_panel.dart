@@ -149,7 +149,7 @@ class SettingPanel extends StatelessWidget {
                         CustomStorageItemPickerButton(
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          allowSaveFile: false,
+                          allowSaveFile: true,
                           location: '@ModdingWorker.Argument',
                           onPicked: (target) async {
                             this.data.argument = this.data.argument + [target];
