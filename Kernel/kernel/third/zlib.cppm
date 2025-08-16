@@ -11,23 +11,23 @@ export module twinning.kernel.third.zlib;
 
 export namespace Twinning::Kernel::Third::zlib {
 
-	using $Bytef = ::Bytef;
+	using $Bytef = Bytef;
 
-	using $z_stream = ::z_stream;
+	using $z_stream = z_stream;
 
-	inline constexpr auto $deflateBound = ::deflateBound;
+	inline constexpr auto $deflateBound = deflateBound;
 
-	inline constexpr auto $deflateInit2_ = ::deflateInit2_;
+	inline constexpr auto $deflateInit2_ = deflateInit2_;
 
-	inline constexpr auto $deflate = ::deflate;
+	inline constexpr auto $deflate = deflate;
 
-	inline constexpr auto $deflateEnd = ::deflateEnd;
+	inline constexpr auto $deflateEnd = deflateEnd;
 
-	inline constexpr auto $inflateInit2_ = ::inflateInit2_;
+	inline constexpr auto $inflateInit2_ = inflateInit2_;
 
-	inline constexpr auto $inflate = ::inflate;
+	inline constexpr auto $inflate = inflate;
 
-	inline constexpr auto $inflateEnd = ::inflateEnd;
+	inline constexpr auto $inflateEnd = inflateEnd;
 
 	inline constexpr auto $ZLIB_VERSION = ZLIB_VERSION;
 

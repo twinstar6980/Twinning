@@ -288,7 +288,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			assert_test(raw.startsWith('/'));
 			return `Z:${raw}`;
 		}
-		assert_fail();
+		throw new Error();
 	};
 
 	export function encode_fs(
@@ -362,7 +362,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			KernelX.Process.list_environment_variable(),
 		);
 		if (program_result.code !== 0n) {
-			Console.error(`Wwise : ${program_result.code}`, [program_result.output]);
+			Console.error(`Wwise: ${program_result.code}`, [program_result.output]);
 		}
 		assert_test(program_result.code === 0n, `execute failed by Wwise`);
 		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);

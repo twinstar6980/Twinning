@@ -64,51 +64,51 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		else {
 			switch (character.value) {
-				case '\\' : {
+				case '\\': {
 					stream.write('\\'_c);
 					break;
 				}
-				case '\'' : {
+				case '\'': {
 					stream.write('\''_c);
 					break;
 				}
-				case '\"' : {
+				case '\"': {
 					stream.write('\"'_c);
 					break;
 				}
-				case '\a' : {
+				case '\a': {
 					stream.write('a'_c);
 					break;
 				}
-				case '\b' : {
+				case '\b': {
 					stream.write('b'_c);
 					break;
 				}
-				case '\f' : {
+				case '\f': {
 					stream.write('f'_c);
 					break;
 				}
-				case '\n' : {
+				case '\n': {
 					stream.write('n'_c);
 					break;
 				}
-				case '\r' : {
+				case '\r': {
 					stream.write('r'_c);
 					break;
 				}
-				case '\t' : {
+				case '\t': {
 					stream.write('t'_c);
 					break;
 				}
-				case '\v' : {
+				case '\v': {
 					stream.write('v'_c);
 					break;
 				}
-				case '\0' : {
+				case '\0': {
 					stream.write('0'_c);
 					break;
 				}
-				default : {
+				default: {
 					stream.write('x'_c);
 					stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
 					stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
@@ -124,79 +124,79 @@ export namespace Twinning::Kernel::StringParser {
 	) -> Void {
 		auto current = stream.read_of();
 		switch (current.value) {
-			case '\\' : {
+			case '\\': {
 				character = '\\'_u;
 				break;
 			}
-			case '\'' : {
+			case '\'': {
 				character = '\''_u;
 				break;
 			}
-			case '\"' : {
+			case '\"': {
 				character = '\"'_u;
 				break;
 			}
-			case 'a' : {
+			case 'a': {
 				character = '\a'_u;
 				break;
 			}
-			case 'b' : {
+			case 'b': {
 				character = '\b'_u;
 				break;
 			}
-			case 'f' : {
+			case 'f': {
 				character = '\f'_u;
 				break;
 			}
-			case 'n' : {
+			case 'n': {
 				character = '\n'_u;
 				break;
 			}
-			case 'r' : {
+			case 'r': {
 				character = '\r'_u;
 				break;
 			}
-			case 't' : {
+			case 't': {
 				character = '\t'_u;
 				break;
 			}
-			case 'v' : {
+			case 'v': {
 				character = '\v'_u;
 				break;
 			}
-			case '0' : {
+			case '0': {
 				character = '\0'_u;
 				break;
 			}
-			case 'o' : {
+			case 'o': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{3_sz}) {
 					character = character << 3_sz | cbox<Unicode>(CharacterType::from_number_oct(stream.read_of()));
 				}
 				break;
 			}
-			case 'x' : {
+			case 'x': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{2_sz}) {
 					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hex(stream.read_of()));
 				}
 				break;
 			}
-			case 'u' : {
+			case 'u': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{4_sz}) {
 					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hex(stream.read_of()));
 				}
 				break;
 			}
-			case 'U' : {
+			case 'U': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{8_sz}) {
 					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hex(stream.read_of()));
 				}
 				break;
 			}
-			default : {
+			default: {
 				assert_fail(R"(current == /* valid */)");
 			}
 		}
@@ -602,15 +602,15 @@ export namespace Twinning::Kernel::StringParser {
 	) -> CStringView {
 		auto result = CStringView{};
 		switch (stream.read_of().value) {
-			case '/' : {
+			case '/': {
 				result = read_line_comment_after_mark(stream);
 				break;
 			}
-			case '*' : {
+			case '*': {
 				result = read_block_comment_after_mark(stream);
 				break;
 			}
-			default : {
+			default: {
 				assert_fail(R"(stream.next() == /* valid */)");
 			}
 		}
@@ -714,20 +714,20 @@ export namespace Twinning::Kernel::StringParser {
 		while (!stream.full()) {
 			current = stream.read_of();
 			switch (current.value) {
-				case '0' :
-				case '1' :
-				case '2' :
-				case '3' :
-				case '4' :
-				case '5' :
-				case '6' :
-				case '7' :
-				case '8' :
-				case '9' : {
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9': {
 					continue;
 					break;
 				}
-				default : {
+				default: {
 					stream.backward();
 				}
 			}
@@ -782,20 +782,20 @@ export namespace Twinning::Kernel::StringParser {
 		while (!stream.full()) {
 			current = stream.read_of();
 			switch (current.value) {
-				case '0' :
-				case '1' :
-				case '2' :
-				case '3' :
-				case '4' :
-				case '5' :
-				case '6' :
-				case '7' :
-				case '8' :
-				case '9' : {
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9': {
 					continue;
 					break;
 				}
-				case '.' : {
+				case '.': {
 					assert_test(!is_floater);
 					is_floater = k_true;
 					current = stream.read_of();
@@ -803,7 +803,7 @@ export namespace Twinning::Kernel::StringParser {
 					continue;
 					break;
 				}
-				case 'e' : {
+				case 'e': {
 					assert_test(!is_scientific);
 					assert_test(is_floater);
 					is_scientific = k_true;
@@ -814,7 +814,7 @@ export namespace Twinning::Kernel::StringParser {
 					continue;
 					break;
 				}
-				default : {
+				default: {
 					stream.backward();
 				}
 			}
@@ -836,11 +836,11 @@ export namespace Twinning::Kernel::StringParser {
 		Boolean const &        disable_sign_when_positive = k_false
 	) -> Void {
 		switch (value.type().value) {
-			case NumberVariantType::Constant::integer().value : {
+			case NumberVariantType::Constant::integer().value: {
 				write_number(stream, value.get_integer(), disable_sign_when_positive);
 				break;
 			}
-			case NumberVariantType::Constant::floater().value : {
+			case NumberVariantType::Constant::floater().value: {
 				write_number(stream, value.get_floater(), disable_sign_when_positive);
 				break;
 			}
@@ -868,20 +868,20 @@ export namespace Twinning::Kernel::StringParser {
 		while (!stream.full()) {
 			current = stream.read_of();
 			switch (current.value) {
-				case '0' :
-				case '1' :
-				case '2' :
-				case '3' :
-				case '4' :
-				case '5' :
-				case '6' :
-				case '7' :
-				case '8' :
-				case '9' : {
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9': {
 					continue;
 					break;
 				}
-				case '.' : {
+				case '.': {
 					assert_test(!is_floater);
 					is_floater = k_true;
 					current = stream.read_of();
@@ -889,7 +889,7 @@ export namespace Twinning::Kernel::StringParser {
 					continue;
 					break;
 				}
-				case 'e' : {
+				case 'e': {
 					assert_test(!is_scientific);
 					assert_test(is_floater);
 					is_scientific = k_true;
@@ -900,7 +900,7 @@ export namespace Twinning::Kernel::StringParser {
 					continue;
 					break;
 				}
-				default : {
+				default: {
 					stream.backward();
 				}
 			}

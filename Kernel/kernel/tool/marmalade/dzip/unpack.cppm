@@ -79,12 +79,12 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					if (chunk_flag.get(Structure::ChunkFlag<version>::combuf)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::dzip)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
 						assert_test(!chunk_ok);
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "zlib"_s;
 						auto chunk_stream = OByteStreamView{chunk_data};
-						data.forward(10_sz); // TODO NOTE : skip gzip header
+						data.forward(10_sz); // NOTE: EXPLAIN: skip gzip header
 						Data::Compression::Deflate::Uncompress::process(data, chunk_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::none());
 						assert_test(chunk_stream.full());
 					}
@@ -108,12 +108,12 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::jpeg)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zerod_out)) {
 						assert_test(!chunk_ok);
@@ -141,7 +141,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					assert_test(chunk_ok);
 					package_data_end_position = maximum(package_data_end_position, data.position());

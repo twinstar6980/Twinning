@@ -2,7 +2,7 @@ module;
 
 #include "kernel/common.hpp"
 
-// TODO : remove make(_...)_range ?
+// TODO: remove make(_...)_range?
 
 export module twinning.kernel.utility.range.range_wrapper;
 import twinning.kernel.utility.builtin;

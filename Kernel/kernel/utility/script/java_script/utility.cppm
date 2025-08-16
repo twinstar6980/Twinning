@@ -16,7 +16,7 @@ import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.string.format;
 import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.support.fmt;
+import twinning.kernel.utility.support.std;
 import twinning.kernel.utility.thread.mutex;
 import twinning.kernel.utility.thread.unlocker;
 import twinning.kernel.third.quickjs_ng;
@@ -110,7 +110,7 @@ export namespace Twinning::Kernel::JavaScript {
 				return *thiz.m_value.template get<std::shared_ptr<Value>>();
 			}
 			else {
-				throw ImpossibleException{};
+				throw UnreachableException{};
 			}
 		}
 

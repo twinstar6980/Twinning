@@ -231,7 +231,7 @@ bool VCDiffCodeTableData::ValidateOpcode(int opcode,
 //
 bool VCDiffCodeTableData::Validate(unsigned char max_mode) const {
   const int kNumberOfTypesAndModes = VCD_LAST_INSTRUCTION_TYPE + max_mode + 1;
-  // TwinStar : changge
+  // TwinStar: changge
   // bool hasOpcodeForTypeAndMode[VCD_LAST_INSTRUCTION_TYPE + VCD_MAX_MODES];
   bool hasOpcodeForTypeAndMode[0 + VCD_LAST_INSTRUCTION_TYPE + VCD_MAX_MODES];
   bool no_errors_found = true;

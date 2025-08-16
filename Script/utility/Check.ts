@@ -9,7 +9,7 @@ namespace Twinning.Script.Check {
 	export function enumeration_checker_x<T>(
 		rule: Array<T>,
 	): CheckerX<T> {
-		return (value) => (rule.includes(value) ? null : los('check:enumeration_message', `[ ${rule.join(' , ')} ]`));
+		return (value) => (rule.includes(value) ? null : los('check:enumeration_message', `[ ${rule.join(', ')} ]`));
 	}
 
 	export function regexp_checker_x(

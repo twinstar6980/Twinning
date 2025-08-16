@@ -2,8 +2,6 @@ namespace Twinning.Script.Executor.Implement.text.xml {
 
 	// ------------------------------------------------
 
-	// format *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

@@ -159,7 +159,7 @@ export namespace Twinning::Shell::Bridge {
 		ExecutorProxy (
 		) :
 			value{[] (auto &, auto &, auto &) -> auto {
-				throw std::runtime_error{"incomplete"s};
+				throw std::runtime_error{std::format("UnimplementedException")};
 				return;
 			}} {
 		}
@@ -243,7 +243,7 @@ export namespace Twinning::Shell::Bridge {
 						delete exception;
 					}
 					if (!exception_proxy.value.empty()) {
-						throw exception_proxy.value.front();
+						throw std::runtime_error{exception_proxy.value.front()};
 					}
 					return;
 				};

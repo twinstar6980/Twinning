@@ -2,13 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-	// convert.flash.from *
-	// convert.flash.to *
-	// convert.flash.resize *
-	// convert.flash.link_media *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

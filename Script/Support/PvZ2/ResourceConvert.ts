@@ -87,13 +87,13 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 				}
 				let group = find_item_by_id_ignore_case(resource_manifest.group, package_group.id);
 				if (group === null) {
-					Console.warning(`group not found in resource manifest : ${package_group.id}`, []);
+					Console.warning(`group not found in resource manifest '${package_group.id}'`, []);
 					continue;
 				}
 				for (let package_subgroup of package_group.subgroup) {
 					let subgroup = find_item_by_id_ignore_case(group.subgroup, package_subgroup.id);
 					if (subgroup === null) {
-						Console.warning(`subgroup not found in resource manifest : ${package_subgroup.id}`, []);
+						Console.warning(`subgroup not found in resource manifest '${package_subgroup.id}'`, []);
 						continue;
 					}
 					for (let package_resource of package_subgroup.resource) {
@@ -103,7 +103,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 						}
 						let resource = find_item_by_path_ignore_case(subgroup.resource, resource_path);
 						if (resource === null) {
-							Console.warning(`resource not found in resource manifest : ${resource_path}`, []);
+							Console.warning(`resource not found in resource manifest '${resource_path}'`, []);
 							continue;
 						}
 						worker(
@@ -171,8 +171,8 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 					let size = atlas_image_additional.size;
 					let actual_size = texture_additional_source.size;
 					let format = option.ptx.format.find((value) => (value.index === texture_additional_source.format))?.format;
-					assert_test(format !== undefined, `unknown texture format : ${texture_additional_source.format}`);
-					Console.verbosity(`    size : [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ] , format : ${format}`, []);
+					assert_test(format !== undefined, `unknown texture format '${texture_additional_source.format}'`);
+					Console.verbosity(`    size = [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ], format = ${format}`, []);
 					let data = KernelX.Storage.read_file(`${resource_directory}/${path}.ptx`);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));

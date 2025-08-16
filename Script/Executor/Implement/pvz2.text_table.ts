@@ -2,8 +2,6 @@ namespace Twinning.Script.Executor.Implement.pvz2.text_table {
 
 	// ------------------------------------------------
 
-	// convert
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

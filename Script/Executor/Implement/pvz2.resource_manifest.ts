@@ -2,11 +2,6 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 
 	// ------------------------------------------------
 
-	// new_type_object_notation.encode
-	// new_type_object_notation.decode
-	// regular.from
-	// regular.to
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

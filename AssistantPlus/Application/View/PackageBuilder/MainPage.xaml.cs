@@ -396,7 +396,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				nameof(this.uLoadedAction_IsEnabled),
 				nameof(this.uProjectDirectory_Text),
 			]);
-			// NOTE : refresh CollectionViewSource to prevent exception when virtual node loading
+			// refresh CollectionViewSource to prevent exception when virtual node loading
 			this.NotifyPropertyChanged([
 				nameof(this.uGroupList_ItemsSource),
 				nameof(this.uResourceList_ItemsSource),

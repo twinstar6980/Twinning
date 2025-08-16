@@ -56,7 +56,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>library.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>main.def</ModuleDefinitionFile>
       <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -80,7 +80,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>library.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>main.def</ModuleDefinitionFile>
       <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -92,13 +92,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="forwarder_explorer_command.cppm" />
-    <ClCompile Include="library.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="library.def" />
+    <None Include="main.def" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="library.manifest" />
+    <Manifest Include="main.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\resource.rc" />

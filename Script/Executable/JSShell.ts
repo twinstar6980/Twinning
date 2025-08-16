@@ -1,4 +1,3 @@
-// 提供JS交互模式命令行
 namespace Twinning.Script.Executable.JSShell {
 
 	export function execute(

@@ -97,7 +97,7 @@ function apply_common_setting()
 	set_policy('check.auto_ignore_flags', false)
 	set_policy('build.warning', true)
 	set_encodings('utf-8')
-	set_languages('c17', 'cxx23')
+	set_languages('c23', 'cxx26')
 	set_symbols('hidden')
 end
 
@@ -163,42 +163,43 @@ function apply_compiler_option_warning_regular(target)
 	target:add(
 		'cxflags',
 		'-Weverything',
+		'-Wno-c99-extensions',
 		'-Wno-c++98-compat',
 		'-Wno-c++98-compat-pedantic',
+		'-Wno-c++20-compat',
 		'-Wno-pre-c++14-compat',
 		'-Wno-pre-c++17-compat',
-		'-Wno-c++20-compat',
-		'-Wno-c99-extensions',
+		'-Wno-pre-c++26-compat',
 		'-Wno-padded',
 		'-Wno-redundant-parens',
+		'-Wno-unreachable-code-return',
+		'-Wno-unreachable-code-break',
+		'-Wno-missing-noreturn',
 		'-Wno-missing-field-initializers',
 		'-Wno-unused-parameter',
 		'-Wno-unused-variable',
 		'-Wno-unused-local-typedef',
-		'-Wno-missing-noreturn',
-		'-Wno-gnu-zero-variadic-macro-arguments',
 		'-Wno-ctad-maybe-unsupported',
 		'-Wno-global-constructors',
 		'-Wno-exit-time-destructors',
 		'-Wno-weak-vtables',
-		'-Wno-self-assign',
-		'-Wno-switch-enum',
-		'-Wno-switch-default',
-		'-Wno-covered-switch-default',
+		'-Wno-shadow',
 		'-Wno-shadow-field',
 		'-Wno-shadow-field-in-constructor',
 		'-Wno-shadow-uncaptured-local',
+		'-Wno-switch-enum',
+		'-Wno-switch-default',
+		'-Wno-covered-switch-default',
+		'-Wno-self-assign',
+		'-Wno-float-equal',
 		'-Wno-unsafe-buffer-usage',
 		'-Wno-gnu-line-marker',
+		'-Wno-gnu-zero-variadic-macro-arguments',
 		'-Wno-disabled-macro-expansion',
+		'-Wno-dollar-in-identifier-extension',
 		'-Wno-language-extension-token',
-		'-Wno-shadow', -- TODO : shadow the member
-		'-Wno-float-equal', -- TODO : float compare
-		'-Wno-deprecated-declarations', -- TODO : suppress codecvt warning
-		'-Wno-dollar-in-identifier-extension', -- NOTE : use dollar sign in module for third library
-		'-Wno-reserved-user-defined-literal', -- NOTE : suppress error when using std module of libc++
-		'-Wno-unreachable-code-return', -- NOTE : use explicit return in unreachable code
-		'-Wno-unreachable-code-break', -- NOTE : use explicit break in unreachable code
+		'-Wno-deprecated-declarations',
+		'-Wno-reserved-user-defined-literal',
 		{ private = true }
 	)
 end

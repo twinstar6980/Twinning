@@ -120,10 +120,10 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					data.write(TypeIdentifier{TypeIdentifier::Value::reference});
 					data.write(reference_type.get());
 					switch (reference_type.get().value) {
-						case ReferenceTypeIdentifier::Value::null : {
+						case ReferenceTypeIdentifier::Value::null: {
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::uid : {
+						case ReferenceTypeIdentifier::Value::uid: {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							data.write(uid_last);
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::alias : {
+						case ReferenceTypeIdentifier::Value::alias: {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
@@ -207,27 +207,27 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			Boolean const &                                   enable_reference
 		) -> Void {
 			switch (value.type().value) {
-				case JSON::ValueType::Constant::null().value : {
+				case JSON::ValueType::Constant::null().value: {
 					assert_fail(R"(value.type() == /* non-null */)");
 					break;
 				}
-				case JSON::ValueType::Constant::boolean().value : {
+				case JSON::ValueType::Constant::boolean().value: {
 					process_value(data, value.get_boolean());
 					break;
 				}
-				case JSON::ValueType::Constant::number().value : {
+				case JSON::ValueType::Constant::number().value: {
 					process_value(data, value.get_number());
 					break;
 				}
-				case JSON::ValueType::Constant::string().value : {
+				case JSON::ValueType::Constant::string().value: {
 					process_value(data, value.get_string(), native_string_index, enable_reference);
 					break;
 				}
-				case JSON::ValueType::Constant::array().value : {
+				case JSON::ValueType::Constant::array().value: {
 					process_value(data, value.get_array(), native_string_index, enable_reference);
 					break;
 				}
-				case JSON::ValueType::Constant::object().value : {
+				case JSON::ValueType::Constant::object().value: {
 					process_value(data, value.get_object(), native_string_index, enable_reference);
 					break;
 				}

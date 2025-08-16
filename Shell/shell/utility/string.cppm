@@ -6,34 +6,6 @@ export module twinning.shell.utility.string;
 
 export namespace Twinning::Shell {
 
-	#pragma region encoding
-
-	inline auto utf8_to_utf16 (
-		std::u8string_view const & source
-	) -> std::u16string {
-		auto converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
-		auto result = converter.from_bytes(
-			reinterpret_cast<char const *>(source.data()),
-			reinterpret_cast<char const *>(source.data() + source.size())
-		);
-		assert_test(converter.converted() == source.size());
-		return result;
-	}
-
-	inline auto utf16_to_utf8 (
-		std::u16string_view const & source
-	) -> std::u8string {
-		auto converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
-		auto result = converter.to_bytes(
-			source.data(),
-			source.data() + source.size()
-		);
-		assert_test(converter.converted() == source.size());
-		return reinterpret_cast<std::u8string &>(result);
-	}
-
-	#pragma endregion
-
 	#pragma region hash
 
 	inline constexpr auto hash_string (

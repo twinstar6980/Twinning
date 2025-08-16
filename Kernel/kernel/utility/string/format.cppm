@@ -11,7 +11,6 @@ import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_static_string;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.third.fmt;
 
 export namespace Twinning::Kernel {
 
@@ -23,7 +22,7 @@ export namespace Twinning::Kernel {
 		CStringView const & format,
 		Argument && ...     argument
 	) -> String {
-		return make_string(Third::fmt::format(Third::fmt::runtime(make_std_string_view(format)), as_forward<Argument>(argument) ...));
+		return make_string(std::format(std::runtime_format(make_std_string_view(format)), as_forward<Argument>(argument) ...));
 	}
 
 	#pragma endregion

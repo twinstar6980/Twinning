@@ -19,41 +19,45 @@ export module twinning.kernel.third.system.windows;
 
 export namespace Twinning::Kernel::Third::system::windows {
 
-	using $BOOL = ::BOOL;
+	using $BOOL = BOOL;
 
-	using $DWORD = ::DWORD;
+	using $DWORD = DWORD;
 
-	using $WCHAR = ::WCHAR;
+	using $CHAR = CHAR;
 
-	using $SECURITY_ATTRIBUTES = ::SECURITY_ATTRIBUTES;
+	using $WCHAR = WCHAR;
 
-	using $STARTUPINFOW = ::STARTUPINFOW;
+	using $SECURITY_ATTRIBUTES = SECURITY_ATTRIBUTES;
 
-	using $PROCESS_INFORMATION = ::PROCESS_INFORMATION;
+	using $STARTUPINFOW = STARTUPINFOW;
 
-	inline auto const $_wgetenv = ::_wgetenv;
+	using $PROCESS_INFORMATION = PROCESS_INFORMATION;
 
-	inline auto const $_wfopen = ::_wfopen;
+	inline auto const $_wgetenv = _wgetenv;
 
-	inline auto const $_wsystem = ::_wsystem;
+	inline auto const $_wfopen = _wfopen;
 
-	inline auto const $GetLastError = ::GetLastError;
+	inline auto const $_wsystem = _wsystem;
 
-	inline auto const $GetEnvironmentVariableW = ::GetEnvironmentVariableW;
+	inline auto const $GetLastError = GetLastError;
 
-	inline auto const $SetEnvironmentVariableW = ::SetEnvironmentVariableW;
+	inline auto const $GetEnvironmentVariableW = GetEnvironmentVariableW;
 
-	inline auto const $MultiByteToWideChar = ::MultiByteToWideChar;
+	inline auto const $SetEnvironmentVariableW = SetEnvironmentVariableW;
 
-	inline auto const $CloseHandle = ::CloseHandle;
+	inline auto const $WideCharToMultiByte = WideCharToMultiByte;
 
-	inline auto const $CreateFileW = ::CreateFileW;
+	inline auto const $MultiByteToWideChar = MultiByteToWideChar;
 
-	inline auto const $CreateProcessW = ::CreateProcessW;
+	inline auto const $CloseHandle = CloseHandle;
 
-	inline auto const $GetExitCodeProcess = ::GetExitCodeProcess;
+	inline auto const $CreateFileW = CreateFileW;
 
-	inline auto const $WaitForSingleObject = ::WaitForSingleObject;
+	inline auto const $CreateProcessW = CreateProcessW;
+
+	inline auto const $GetExitCodeProcess = GetExitCodeProcess;
+
+	inline auto const $WaitForSingleObject = WaitForSingleObject;
 
 	inline constexpr auto $FALSE = FALSE;
 
@@ -61,7 +65,11 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $INFINITE = INFINITE;
 
+	inline constexpr auto $CP_UTF8 = CP_UTF8;
+
 	inline constexpr auto $CP_ACP = CP_ACP;
+
+	inline constexpr auto $WC_ERR_INVALID_CHARS = WC_ERR_INVALID_CHARS;
 
 	inline constexpr auto $MB_ERR_INVALID_CHARS = MB_ERR_INVALID_CHARS;
 

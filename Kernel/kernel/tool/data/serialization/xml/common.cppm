@@ -54,7 +54,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 			TinyXML2DynArrayImitator<char, 20>         _buffer;
 		};
 
-		// NOTE : EXPLAIN - maybe failed if api changed
+		// NOTE: EXPLAIN: maybe failed if api changed
 		static_assert(sizeof(TinyXML2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));
 
 		inline static auto move_printer_buffer_if_can (

@@ -11,11 +11,11 @@ export module twinning.kernel.third.lzma;
 
 export namespace Twinning::Kernel::Third::lzma {
 
-	using $Byte = ::Byte;
+	using $Byte = Byte;
 
-	inline constexpr auto $LzmaCompress = ::LzmaCompress;
+	inline constexpr auto $LzmaCompress = LzmaCompress;
 
-	inline constexpr auto $LzmaUncompress = ::LzmaUncompress;
+	inline constexpr auto $LzmaUncompress = LzmaUncompress;
 
 	inline constexpr auto $SZ_OK = SZ_OK;
 

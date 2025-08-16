@@ -2,10 +2,6 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 
 	// ------------------------------------------------
 
-	// exor.encrypt *
-	// rijndael.encrypt *
-	// rijndael.decrypt *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

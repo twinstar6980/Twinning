@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 
 	// ------------------------------------------------
 
-	// encrypt *
-	// decrypt *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

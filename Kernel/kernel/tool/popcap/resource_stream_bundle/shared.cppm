@@ -2,7 +2,7 @@ module;
 
 #include "kernel/common.hpp"
 
-// TODO : refactor
+// TODO: refactor
 
 export module twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 import twinning.kernel.utility;
@@ -273,7 +273,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 
 }
 
-// NOTE : USING
+// NOTE: USING
 
 export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 	using namespace ResourceStreamBundle::Shared;

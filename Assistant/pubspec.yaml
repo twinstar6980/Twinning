@@ -1,5 +1,5 @@
 name: assistant
-version: 90.0.0+90
+version: 91.0.0+91
 publish_to: 'none'
 environment:
   sdk: ^3.8.1
@@ -18,7 +18,7 @@ dependencies:
   window_manager: 0.5.1
   dynamic_color: 1.8.1
   url_launcher: 6.3.2
-  app_links: 6.4.0
+  app_links: 6.4.1
   file_selector: 1.0.3
   flutter_local_notifications: 19.4.0
   super_drag_and_drop: 0.9.1

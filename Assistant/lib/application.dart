@@ -27,7 +27,7 @@ class Application extends StatelessWidget {
       child: Consumer<SettingProvider>(
         builder: (context, setting, child) => DynamicColorBuilder(
           builder: (lightColor, darkColor) {
-            // NOTE : fix for dynamic color error on flutter 3.22+. see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
+            // fix for dynamic color error on flutter 3.22+, see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
             if (SystemChecker.isAndroid) {
               if (lightColor != null) {
                 lightColor = ColorScheme.fromSeed(seedColor: lightColor.primary, brightness: Brightness.light);

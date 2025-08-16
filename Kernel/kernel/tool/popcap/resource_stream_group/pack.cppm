@@ -44,12 +44,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
 					resource_information_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
 					switch (resource_definition.additional.type().value) {
-						case ResourceType::Constant::general().value : {
+						case ResourceType::Constant::general().value: {
 							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::general;
 							resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::general()>();
 							break;
 						}
-						case ResourceType::Constant::texture().value : {
+						case ResourceType::Constant::texture().value: {
 							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::texture;
 							resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::texture()>();
 							break;
@@ -92,11 +92,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 				}
 				auto compress_resource_data_section = k_false;
 				switch (current_resource_type.value) {
-					case ResourceType::Constant::general().value : {
+					case ResourceType::Constant::general().value: {
 						compress_resource_data_section = definition.compression.general;
 						break;
 					}
-					case ResourceType::Constant::texture().value : {
+					case ResourceType::Constant::texture().value: {
 						compress_resource_data_section = definition.compression.texture;
 						break;
 					}
@@ -120,13 +120,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					resource_information_structure.value.offset = cbox<IntegerU32>(resource_data_section_stream.position());
 					resource_information_structure.value.size = cbox<IntegerU32>(Storage::read_stream_file(resource_path_full, resource_data_section_stream));
 					switch (resource_definition.additional.type().value) {
-						case ResourceType::Constant::general().value : {
+						case ResourceType::Constant::general().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
 							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::general;
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::general()>();
 							break;
 						}
-						case ResourceType::Constant::texture().value : {
+						case ResourceType::Constant::texture().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::texture;
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::texture()>();
@@ -147,13 +147,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 				}
 				auto resource_data_section_size = data.position() - resource_data_section_offset;
 				switch (current_resource_type.value) {
-					case ResourceType::Constant::general().value : {
+					case ResourceType::Constant::general().value: {
 						information_structure.header.general_resource_data_section_offset = cbox<IntegerU32>(resource_data_section_offset);
 						information_structure.header.general_resource_data_section_size = cbox<IntegerU32>(resource_data_section_size);
 						information_structure.header.general_resource_data_section_size_original = cbox<IntegerU32>(resource_data_section_size_original);
 						break;
 					}
-					case ResourceType::Constant::texture().value : {
+					case ResourceType::Constant::texture().value: {
 						information_structure.header.texture_resource_data_section_offset = cbox<IntegerU32>(resource_data_section_offset);
 						information_structure.header.texture_resource_data_section_size = cbox<IntegerU32>(resource_data_section_size);
 						information_structure.header.texture_resource_data_section_size_original = cbox<IntegerU32>(resource_data_section_size_original);

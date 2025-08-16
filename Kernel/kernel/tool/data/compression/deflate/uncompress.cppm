@@ -27,15 +27,15 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			assert_test(Math::between(window_bits, 8_sz, mbox<Size>(Third::zlib::$MAX_WBITS)));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
 			switch (wrapper.value) {
-				case Wrapper::Constant::none().value : {
+				case Wrapper::Constant::none().value: {
 					actual_window_bits = -actual_window_bits;
 					break;
 				}
-				case Wrapper::Constant::zlib().value : {
+				case Wrapper::Constant::zlib().value: {
 					actual_window_bits = actual_window_bits;
 					break;
 				}
-				case Wrapper::Constant::gzip().value : {
+				case Wrapper::Constant::gzip().value: {
 					actual_window_bits = actual_window_bits + 16;
 					break;
 				}

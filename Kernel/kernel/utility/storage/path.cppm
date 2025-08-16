@@ -256,7 +256,7 @@ export namespace Twinning::Kernel::Storage {
 
 }
 
-// NOTE : USING
+// NOTE: USING
 
 export namespace Twinning::Kernel {
 	using Storage::Path;

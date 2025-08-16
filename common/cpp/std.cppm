@@ -1,10 +1,8 @@
 module;
-// ReSharper disable All
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include <typeinfo>
 #include <type_traits>
 #include <source_location>
 #include <exception>
@@ -31,9 +29,8 @@ module;
 #include <string_view>
 #include <mutex>
 #include <thread>
-#include <codecvt>
+#include <format>
 #include <locale>
-#include <clocale>
 #include <cstdio>
 #include <iostream>
 #include <filesystem>
@@ -130,13 +127,10 @@ export {
 		using ::std::strlen;
 		using ::std::string;
 		using ::std::string_view;
+		using ::std::wstring;
+		using ::std::wstring_view;
 		using ::std::u8string;
 		using ::std::u8string_view;
-		using ::std::u16string;
-		using ::std::u16string_view;
-		using ::std::codecvt_utf8_utf16;
-		using ::std::wstring_convert;
-		using ::std::sscanf;
 	}
 	namespace std::inline literals::inline string_literals {
 		using ::std::literals::string_literals::operator ""s;
@@ -148,6 +142,7 @@ export {
 	namespace std {
 		using ::std::initializer_list;
 		using ::std::optional;
+		using ::std::nullopt;
 		using ::std::variant;
 		using ::std::holds_alternative;
 		using ::std::any;
@@ -213,6 +208,12 @@ export {
 	namespace std::chrono {
 		using ::std::chrono::milliseconds;
 	}
+	// format
+	namespace std {
+		using ::std::format;
+		using ::std::formatter;
+		using ::std::runtime_format;
+	}
 	// io
 	namespace std {
 		using ::std::cin;
@@ -223,10 +224,7 @@ export {
 	}
 	// locale
 	namespace std {
-		using ::std::setlocale;
-	}
-	namespace stddef {
-		inline constexpr auto $LC_ALL = LC_ALL;
+		using ::std::locale;
 	}
 	// miscellaneous
 	namespace std {

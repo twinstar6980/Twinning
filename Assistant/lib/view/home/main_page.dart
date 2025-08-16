@@ -220,7 +220,7 @@ class _MainPageState extends State<MainPage> {
           if (this._tabList.isEmpty)
             SizedBox(height: 16),
           ...this._tabList.mapIndexed((index, item) => CustomNavigationDrawerItem(
-            key: ObjectKey(item), // NOTE : fix button ripple effect error when remove item
+            key: ObjectKey(item), // fix button ripple effect error when remove item
             selected: index == this._tabIndex,
             icon: ModuleHelper.query(item.$2).icon,
             label: item.$1,
@@ -248,11 +248,11 @@ class _MainPageState extends State<MainPage> {
                 )).toList(),
                 onSelected: (value) async {
                   switch (value) {
-                    case 'remove':{
+                    case 'remove': {
                       await this._removeTabItem(index);
                       break;
                     }
-                    case 'rename':{
+                    case 'rename': {
                       var title = item.$1;
                       var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
                         title: 'Tab Rename',
@@ -288,11 +288,11 @@ class _MainPageState extends State<MainPage> {
                       }
                       break;
                     }
-                    case 'keep':{
+                    case 'keep': {
                       await this._keepTabItem(index);
                       break;
                     }
-                    case 'duplicate':{
+                    case 'duplicate': {
                       await this._duplicateTabItem(index);
                       break;
                     }

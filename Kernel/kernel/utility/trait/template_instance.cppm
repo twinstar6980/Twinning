@@ -1,6 +1,6 @@
 module;
 
-// NOTE : EXPLAIN - T = typename, V = auto, M = template, N = ...
+// NOTE: EXPLAIN: T = typename, V = auto, M = template, N = ...
 
 #include "kernel/common.hpp"
 

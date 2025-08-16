@@ -82,7 +82,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 				if (option.specialize_ptx) {
 					Console.warning(`Transpiling by specialize_ptx ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.ptx.find((value) => (value.index === resource_property.format));
-					assert_test(conversion_setting !== undefined, `unknown texture format : ${resource_property.format}`);
+					assert_test(conversion_setting !== undefined, `unknown texture format '${resource_property.format}'`);
 					let new_source_data_directory = make_scope_child_path(resource_directory, 'source.sprite');
 					let new_sprite_property_list: Array<SpecialPTXResourcePropertySpriteProperty> = [];
 					let data = KernelX.Storage.read_file(source_file);

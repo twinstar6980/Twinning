@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "85"
+#define M_version "86"
 
 #pragma endregion
 
@@ -77,8 +77,9 @@
 
 // ----------------
 
-// NOTE : M_map_0 will be triggered if empty va is passed
-// NOTE : ignore the item 1 to support trailing comma style
+// NOTE: EXPLAIN
+// M_map_0 will be triggered if empty va is passed
+// ignore the item 1 to support trailing comma style
 #define M_map_00(_m,     ...) 
 #define M_map_01(_m, _1, ...) 
 #define M_map_02(_m, _1, ...) _m(_1) M_map_01(_m, ##__VA_ARGS__)
@@ -217,8 +218,8 @@
 	}\
 	static_assert(true)
 
-#define assert_fail(_message)\
-	throw AssertionException{_message};\
+#define assert_fail(_expression)\
+	throw AssertionException{_expression};\
 	static_assert(true)
 
 #pragma endregion

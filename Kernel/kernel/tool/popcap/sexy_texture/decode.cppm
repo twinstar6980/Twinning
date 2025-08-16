@@ -44,52 +44,52 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 			auto format = Texture::Encoding::Format{};
 			auto opacity = Boolean{};
 			switch (image_format.value) {
-				case FormatFlag::argb_8888.value : {
+				case FormatFlag::argb_8888.value: {
 					format = Texture::Encoding::Format::Constant::argb_8888();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::argb_4444.value : {
+				case FormatFlag::argb_4444.value: {
 					format = Texture::Encoding::Format::Constant::argb_4444();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::argb_1555.value : {
+				case FormatFlag::argb_1555.value: {
 					format = Texture::Encoding::Format::Constant::argb_1555();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::rgb_565.value : {
+				case FormatFlag::rgb_565.value: {
 					format = Texture::Encoding::Format::Constant::rgb_565();
 					opacity = k_true;
 					break;
 				}
-				case FormatFlag::rgba_8888_o.value : {
+				case FormatFlag::rgba_8888_o.value: {
 					format = Texture::Encoding::Format::Constant::rgba_8888_o();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::rgba_4444.value : {
+				case FormatFlag::rgba_4444.value: {
 					format = Texture::Encoding::Format::Constant::rgba_4444();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::rgba_5551.value : {
+				case FormatFlag::rgba_5551.value: {
 					format = Texture::Encoding::Format::Constant::rgba_5551();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::xrgb_8888.value : {
+				case FormatFlag::xrgb_8888.value: {
 					format = Texture::Encoding::Format::Constant::argb_8888();
 					opacity = k_true;
 					break;
 				}
-				case FormatFlag::la_88.value : {
+				case FormatFlag::la_88.value: {
 					format = Texture::Encoding::Format::Constant::la_88();
 					opacity = k_false;
 					break;
 				}
-				default : {
+				default: {
 					assert_fail(R"(image_format == /* valid */)");
 				}
 			}

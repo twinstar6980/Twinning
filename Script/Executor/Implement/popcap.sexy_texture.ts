@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

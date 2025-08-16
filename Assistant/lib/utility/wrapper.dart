@@ -12,11 +12,13 @@ class Wrapper<TValue> {
 
   Wrapper._of(
     _WrapperData data,
-  ) : this._data = data;
+  ) :
+    this._data = data;
 
   Wrapper(
     TValue value,
-  ) : this._of(_WrapperData(value));
+  ) :
+    this._of(_WrapperData(value));
 
   // #endregion
 

@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.particle {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

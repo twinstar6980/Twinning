@@ -6,7 +6,6 @@ export module twinning.kernel.tool.wwise.sound_bank.common;
 import twinning.kernel.utility;
 import twinning.kernel.tool.wwise.sound_bank.version;
 import twinning.kernel.tool.wwise.sound_bank.definition;
-import twinning.kernel.tool.common.wave_structure;
 
 export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
@@ -17,37 +16,43 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		using ChunkSign = WaveStructure::ChunkSign;
-
-		struct ChunkSignFlag {
-
-			inline static constexpr auto bkhd = FourCC{"BKHD"_fourcc};
-
-			inline static constexpr auto didx = FourCC{"DIDX"_fourcc};
-
-			inline static constexpr auto data = FourCC{"DATA"_fourcc};
-
-			inline static constexpr auto init = FourCC{"INIT"_fourcc};
-
-			inline static constexpr auto stmg = FourCC{"STMG"_fourcc};
-
-			inline static constexpr auto hirc = FourCC{"HIRC"_fourcc};
-
-			inline static constexpr auto stid = FourCC{"STID"_fourcc};
-
-			inline static constexpr auto envs = FourCC{"ENVS"_fourcc};
-
-			inline static constexpr auto plat = FourCC{"PLAT"_fourcc};
-
-		};
-
-		// ----------------
-
 		using VersionNumber = IntegerU32;
 
 		// ----------------
 
 		inline static constexpr auto k_data_block_padding_size = Size{0x10_sz};
+
+		// ----------------
+
+		M_record_of_data(
+			M_wrap(ChunkSign),
+			M_wrap(
+				(FourCharacterCode) id,
+				(IntegerU32) size,
+			),
+		);
+
+		struct ChunkSignFlag {
+
+			inline static constexpr auto bkhd = FourCharacterCode{four_character_code_from_string("BKHD"_sv)};
+
+			inline static constexpr auto didx = FourCharacterCode{four_character_code_from_string("DIDX"_sv)};
+
+			inline static constexpr auto data = FourCharacterCode{four_character_code_from_string("DATA"_sv)};
+
+			inline static constexpr auto init = FourCharacterCode{four_character_code_from_string("INIT"_sv)};
+
+			inline static constexpr auto stmg = FourCharacterCode{four_character_code_from_string("STMG"_sv)};
+
+			inline static constexpr auto hirc = FourCharacterCode{four_character_code_from_string("HIRC"_sv)};
+
+			inline static constexpr auto stid = FourCharacterCode{four_character_code_from_string("STID"_sv)};
+
+			inline static constexpr auto envs = FourCharacterCode{four_character_code_from_string("ENVS"_sv)};
+
+			inline static constexpr auto plat = FourCharacterCode{four_character_code_from_string("PLAT"_sv)};
+
+		};
 
 		// ----------------
 
@@ -1685,7 +1690,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						// bidirectional,
 						1_e,
 						// bidirectional_ranged,
-						2_e, // maybe, see playback_speed
+						2_e, // TODO: maybe, see playback_speed
 						// boolean,
 						3_e
 					>;
@@ -1698,7 +1703,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						// bidirectional,
 						2_e,
 						// bidirectional_ranged,
-						3_e, // maybe, see playback_speed
+						3_e, // TODO: maybe, see playback_speed
 						// boolean,
 						4_e
 					>;
@@ -1711,7 +1716,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						// bidirectional,
 						2_e,
 						// bidirectional_ranged,
-						3_e, // maybe, see playback_speed
+						3_e, // TODO: maybe, see playback_speed
 						// boolean,
 						6_e,
 						// unknown_6,
@@ -1850,7 +1855,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		struct EnumerationAttribute<typename Definition::AudioPositioningSettingListenerRoutingSpatialization> {
 			inline static constexpr auto size = Size{[] {
 				if constexpr (check_version(version, {128})) {
-					return 3_sz; // NOTE : EXPLAIN - use 3 byte even only need 2 byte
+					return 3_sz; // NOTE: EXPLAIN: use 3 byte even only need 2 byte
 				}
 				return k_none_size;
 			}()};

@@ -16,8 +16,8 @@ class CommandLineReader {
   CommandLineReader(
     List<String> view,
   ) :
-    _view = view,
-    _position = 0;
+    this._view = view,
+    this._position = 0;
 
   // #endregion
 

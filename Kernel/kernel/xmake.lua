@@ -19,7 +19,6 @@ target('kernel', function()
 	)
 	add_deps(
 		'third.mscharconv',
-		'third.fmt',
 		'third.tinyxml2',
 		'third.md5',
 		'third.Rijndael',

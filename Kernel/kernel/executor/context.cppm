@@ -122,8 +122,8 @@ export namespace Twinning::Kernel::Executor {
 				);
 			}
 			#if defined M_build_release
-			catch (String & exception) {
-				throw InvocationException{mss("<callback>"_sv), mss(exception)};
+			catch (String & e) {
+				throw InvocationException{mss("<callback>"_sv), mss(e)};
 			}
 			#endif
 			return result;

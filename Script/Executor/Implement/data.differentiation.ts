@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.data.differentiation {
 
 	// ------------------------------------------------
 
-	// vcdiff.encode
-	// vcdiff.decode
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

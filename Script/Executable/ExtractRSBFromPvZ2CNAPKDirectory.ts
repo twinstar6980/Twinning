@@ -1,4 +1,3 @@
-// 从 PvZ-2 安卓中国版的 APK 解压目录中提取经过压缩的 RSB 文件
 namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 
 	export function execute(

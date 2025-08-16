@@ -17,11 +17,11 @@ export module twinning.shell.third.system.posix;
 
 export namespace Twinning::Shell::Third::system::posix {
 
-	inline constexpr auto $dlopen = ::dlopen;
+	inline constexpr auto $dlopen = dlopen;
 
-	inline constexpr auto $dlclose = ::dlclose;
+	inline constexpr auto $dlclose = dlclose;
 
-	inline constexpr auto $dlsym = ::dlsym;
+	inline constexpr auto $dlsym = dlsym;
 
 	inline constexpr auto $RTLD_LAZY = RTLD_LAZY;
 

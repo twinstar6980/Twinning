@@ -9,7 +9,7 @@ import android.widget.Toast
 
 class ForwarderActivity : Activity() {
 
-	// region implement - Activity
+	// region implement Activity
 
 	protected override fun onCreate(
 		savedInstanceState: Bundle?,

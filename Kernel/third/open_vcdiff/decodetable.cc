@@ -26,7 +26,7 @@ namespace open_vcdiff {
 
 VCDiffCodeTableReader::VCDiffCodeTableReader()
     : code_table_data_(&VCDiffCodeTableData::kDefaultCodeTableData),
-      // TwinStar : change
+      // TwinStar: change
       // non_default_code_table_data_(NULL),
       non_default_code_table_data_(nullptr),
       instructions_and_sizes_(NULL),

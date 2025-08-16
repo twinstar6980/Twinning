@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.data.encoding {
 
 	// ------------------------------------------------
 
-	// base64.encode *
-	// base64.decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

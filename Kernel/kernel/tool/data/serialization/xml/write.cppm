@@ -2,7 +2,7 @@ module;
 
 #include "kernel/common.hpp"
 
-// TODO : refactor, use stream style api ?
+// TODO: refactor, use stream style api?
 
 export module twinning.kernel.tool.data.serialization.xml.write;
 import twinning.kernel.utility;
@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 		) -> ZPointer<Third::tinyxml2::XMLNode> {
 			auto raw_node = ZPointer<Third::tinyxml2::XMLNode>{};
 			switch (node.type().value) {
-				case NodeType::Constant::element().value : {
+				case NodeType::Constant::element().value: {
 					auto & node_value = node.get_element();
 					raw_node = raw_document.NewElement(cast_pointer<char>(make_null_terminated_string(node_value.name).begin()).value);
 					auto raw_element = raw_node->ToElement();
@@ -36,14 +36,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 					}
 					break;
 				}
-				case NodeType::Constant::text().value : {
+				case NodeType::Constant::text().value: {
 					auto & node_value = node.get_text();
 					raw_node = raw_document.NewText(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
 					auto raw_text = raw_node->ToText();
 					raw_text->SetCData(node_value.cdata.value);
 					break;
 				}
-				case NodeType::Constant::comment().value : {
+				case NodeType::Constant::comment().value: {
 					auto & node_value = node.get_comment();
 					raw_node = raw_document.NewComment(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
 					break;

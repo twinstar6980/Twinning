@@ -108,7 +108,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							subgroup_manifest.category.locale.reset();
 						}
 						else {
-							subgroup_manifest.category.locale.set().from(fourcc_from_integer(subgroup_manifest_information_structure.locale));
+							subgroup_manifest.category.locale.set().from(four_character_code_from_integer(subgroup_manifest_information_structure.locale));
 						}
 					}
 					subgroup_manifest.resource.allocate_full(subgroup_manifest_information_structure.resource_information.size());
@@ -235,7 +235,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							subgroup_definition.category.locale.reset();
 						}
 						else {
-							subgroup_definition.category.locale.set().from(fourcc_from_integer(simple_subgroup_information_structure.locale));
+							subgroup_definition.category.locale.set().from(four_character_code_from_integer(simple_subgroup_information_structure.locale));
 						}
 					}
 					auto make_formatted_path = [&] (
@@ -270,12 +270,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						auto & resource_definition = subgroup_definition.resource[resource_index];
 						resource_definition.path = packet_resource_definition.path;
 						switch (packet_resource_definition.additional.type().value) {
-							case ResourceType::Constant::general().value : {
+							case ResourceType::Constant::general().value: {
 								auto & packet_resource_additional_definition = packet_resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
 								auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::general()>();
 								break;
 							}
-							case ResourceType::Constant::texture().value : {
+							case ResourceType::Constant::texture().value: {
 								auto & packet_resource_additional_definition = packet_resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
 								auto & texture_information_structure = information_structure.texture_resource_information[texture_resource_begin + cbox<Size>(packet_resource_additional_definition.index)];

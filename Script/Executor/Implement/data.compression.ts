@@ -2,17 +2,6 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 
 	// ------------------------------------------------
 
-	// deflate.compress *
-	// deflate.uncompress *
-	// zlib.compress *
-	// zlib.uncompress *
-	// gzip.compress *
-	// gzip.uncompress *
-	// bzip2.compress *
-	// bzip2.uncompress *
-	// lzma.compress *
-	// lzma.uncompress *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

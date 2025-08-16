@@ -162,7 +162,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup::Structure 
 
 }
 
-// NOTE : MORESPACE
+// NOTE: MORESPACE
 
 export namespace Twinning::Kernel {
 

@@ -17,33 +17,47 @@ export module twinning.shell.third.system.windows;
 
 export namespace Twinning::Shell::Third::system::windows {
 
-	using $BOOL = ::BOOL;
+	using $BOOL = BOOL;
 
-	using $DWORD = ::DWORD;
+	using $DWORD = DWORD;
 
-	using $LPCWSTR = ::LPCWSTR;
+	using $HMODULE = HMODULE;
 
-	using $HMODULE = ::HMODULE;
+	inline auto const $WideCharToMultiByte = WideCharToMultiByte;
 
-	inline auto const $LoadLibraryW = ::LoadLibraryW;
+	inline auto const $MultiByteToWideChar = MultiByteToWideChar;
 
-	inline auto const $FreeLibrary = ::FreeLibrary;
+	inline auto const $GetStdHandle = GetStdHandle;
 
-	inline auto const $GetProcAddress = ::GetProcAddress;
+	inline auto const $GetConsoleMode = GetConsoleMode;
 
-	inline auto const $GetStdHandle = ::GetStdHandle;
+	inline auto const $ReadConsoleW = ReadConsoleW;
 
-	inline auto const $GetConsoleMode = ::GetConsoleMode;
+	inline auto const $WriteConsoleW = WriteConsoleW;
 
-	inline auto const $ReadConsoleW = ::ReadConsoleW;
+	inline auto const $LoadLibraryW = LoadLibraryW;
 
-	inline auto const $WriteConsoleW = ::WriteConsoleW;
+	inline auto const $FreeLibrary = FreeLibrary;
+
+	inline auto const $GetProcAddress = GetProcAddress;
+
+	inline auto const $SetProcessPreferredUILanguages = SetProcessPreferredUILanguages;
 
 	inline constexpr auto $FALSE = FALSE;
+
+	inline constexpr auto $CP_UTF8 = CP_UTF8;
+
+	inline constexpr auto $CP_ACP = CP_ACP;
+
+	inline constexpr auto $WC_ERR_INVALID_CHARS = WC_ERR_INVALID_CHARS;
+
+	inline constexpr auto $MB_ERR_INVALID_CHARS = MB_ERR_INVALID_CHARS;
 
 	inline constexpr auto $STD_INPUT_HANDLE = STD_INPUT_HANDLE;
 
 	inline constexpr auto $STD_OUTPUT_HANDLE = STD_OUTPUT_HANDLE;
+
+	inline constexpr auto $MUI_LANGUAGE_NAME = MUI_LANGUAGE_NAME;
 
 }
 

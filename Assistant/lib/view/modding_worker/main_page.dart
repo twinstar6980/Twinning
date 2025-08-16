@@ -144,7 +144,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     }
     this._sessionRunning = false;
     await refreshState(this.setState);
-    return exception == null ? result! : null;
+    return exception != null ? null : result!;
   }
 
   // ----------------
@@ -337,8 +337,8 @@ class _MainPageBridgeClient implements bridge.Client {
   _MainPageBridgeClient(
     _MainPageState controller,
   ) :
-    _controller = controller,
-    _running = false;
+    this._controller = controller,
+    this._running = false;
 
   // #endregion
 

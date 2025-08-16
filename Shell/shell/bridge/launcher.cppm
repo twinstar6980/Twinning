@@ -34,15 +34,11 @@ export namespace Twinning::Shell::Bridge {
 					return;
 				};
 				auto executor_argument = MessageProxy{};
-				executor_argument.value.emplace_back("execute"s);
+				executor_argument.value.emplace_back("execute");
 				executor_argument.value.emplace_back(script);
-				executor_argument.value.insert(executor_argument.value.end(), argument.begin(), argument.end());
+				executor_argument.value.append_range(argument);
 				auto executor_result = MessageProxy{};
-				ExecutorProxy::parse(*library.symbol().executor).value(
-					executor_callback,
-					executor_argument,
-					executor_result
-				);
+				ExecutorProxy::parse(*library.symbol().executor).value(executor_callback, executor_argument, executor_result);
 				result = std::move(executor_result.value);
 			}
 			#if defined M_build_release

@@ -41,27 +41,27 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 			auto format = Texture::Encoding::Format{};
 			auto opacity = Boolean{};
 			switch (image_format.value) {
-				case FormatFlag::rgba_8888_o.value : {
+				case FormatFlag::rgba_8888_o.value: {
 					format = Texture::Encoding::Format::Constant::rgba_8888_o();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::rgba_4444.value : {
+				case FormatFlag::rgba_4444.value: {
 					format = Texture::Encoding::Format::Constant::rgba_4444();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::rgba_5551.value : {
+				case FormatFlag::rgba_5551.value: {
 					format = Texture::Encoding::Format::Constant::rgba_5551();
 					opacity = k_false;
 					break;
 				}
-				case FormatFlag::rgb_565.value : {
+				case FormatFlag::rgb_565.value: {
 					format = Texture::Encoding::Format::Constant::rgb_565();
 					opacity = k_true;
 					break;
 				}
-				default : {
+				default: {
 					assert_fail(R"(image_format == /* valid */)");
 				}
 			}

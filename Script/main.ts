@@ -2,26 +2,20 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '128';
+	export const k_version = '129';
 
 	// ------------------------------------------------
 
 	export function assert_test(
 		condition: boolean,
-		message: string = ``,
+		expression: string = ``,
 	): asserts condition {
 		if (!condition) {
-			let error = new Error(message);
+			let error = new Error(expression);
 			error.name = 'AssertionError';
 			throw error;
 		}
 		return;
-	}
-
-	export function assert_fail(
-		message: string = ``,
-	): never {
-		assert_test(false, message);
 	}
 
 	export function generate_exception_message(
@@ -327,20 +321,20 @@ namespace Twinning.Script {
 		): Promise<Array<string>> {
 			Detail.output(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`, argument);
 			assert_test(argument.length >= 1, `argument too few`);
-			// 获取主目录
+			// set home directory
 			let home_path = argument[0].replaceAll(`\\`, '/');
 			if (/^\.{1,2}[\/]/.test(home_path)) {
 				home_path = `${Detail.get_working_directory()}/${home_path}`;
 			}
 			Home.path = home_path;
-			// 设置模块主目录
+			// set module home directory
 			Kernel.Miscellaneous.g_context.query_module_home().value = Home.script();
-			// 加载脚本分区
+			// load script partition
 			let timer_begin = Date.now();
 			PartitionLoader.load(g_partition_list, Home.script());
 			let timer_end = Date.now();
 			let result = '';
-			// 执行模块入口函数
+			// execute entry
 			try {
 				Console.success(los('main:partition_load_finish'), [
 					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
@@ -352,7 +346,7 @@ namespace Twinning.Script {
 				Console.error_of(e);
 				throw '';
 			}
-			// 释放资源
+			// release resource
 			g_thread_manager.resize(0);
 			return [result];
 		}

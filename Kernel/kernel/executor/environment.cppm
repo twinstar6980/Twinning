@@ -133,17 +133,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	enum class GenericClassDefinitionFlag : ZIntegerU8 {
 		// generic operation
-		// - static default(): T;
 		default_constructor = 1 << 0,
-		// - static copy(it: T): T;
-		copy_constructor = 1 << 1,
+		copy_constructor    = 1 << 1,
 		// value operation
-		// - static value(it: typeof T.Value) : T;
 		value_constructor = 1 << 2,
-		// - get value(): typeof T.Value;
-		value_getter = 1 << 3,
-		// - set value(it: typeof T.Value);
-		value_setter = 1 << 4,
+		value_getter      = 1 << 3,
+		value_setter      = 1 << 4,
 		// mask
 		none_mask    = 0b000'00,
 		all_mask     = 0b111'11,
@@ -152,37 +147,34 @@ export namespace Twinning::Kernel::Executor::Environment {
 		default_mask = generic_mask | value_mask,
 	};
 
-	// NOTE : ALIAS
-	using GCDF = GenericClassDefinitionFlag;
-
 	// ----------------
 
 	inline constexpr auto operator | (
-		GCDF const & thix,
-		GCDF const & that
-	) -> GCDF {
-		return static_cast<GCDF>(static_cast<std::underlying_type_t<GCDF>>(thix) | static_cast<std::underlying_type_t<GCDF>>(that));
+		GenericClassDefinitionFlag const & thix,
+		GenericClassDefinitionFlag const & that
+	) -> GenericClassDefinitionFlag {
+		return static_cast<GenericClassDefinitionFlag>(static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(thix) | static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(that));
 	}
 
 	inline constexpr auto operator & (
-		GCDF const & thix,
-		GCDF const & that
-	) -> GCDF {
-		return static_cast<GCDF>(static_cast<std::underlying_type_t<GCDF>>(thix) & static_cast<std::underlying_type_t<GCDF>>(that));
+		GenericClassDefinitionFlag const & thix,
+		GenericClassDefinitionFlag const & that
+	) -> GenericClassDefinitionFlag {
+		return static_cast<GenericClassDefinitionFlag>(static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(thix) & static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(that));
 	}
 
 	inline constexpr auto operator * (
-		GCDF const & thix,
-		GCDF const & that
+		GenericClassDefinitionFlag const & thix,
+		GenericClassDefinitionFlag const & that
 	) -> Boolean {
-		return mbox<Boolean>(static_cast<std::underlying_type_t<GCDF>>(thix) & static_cast<std::underlying_type_t<GCDF>>(that));
+		return mbox<Boolean>(static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(thix) & static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(that));
 	}
 
 	// ----------------
 
-	template <typename Class, auto flag = GCDF::default_mask> requires
+	template <typename Class, auto flag = GenericClassDefinitionFlag::default_mask> requires
 		CategoryConstraint<IsPureInstance<Class>>
-		&& (IsSameV<flag, GCDF>)
+		&& (IsSameV<flag, GenericClassDefinitionFlag>)
 	inline auto define_generic_class (
 		JavaScript::NativeSpaceBuilder & space,
 		String const &                   name
@@ -192,17 +184,20 @@ export namespace Twinning::Kernel::Executor::Environment {
 			&normalized_lambda<
 				[] (
 			) -> JavaScript::NativeValueHandler<Class> {
-					throw UnnamedException{mss("java-script style constructor is not allowed"_sf())};
+					throw UnsupportedException{};
 				}
 			>
 		>();
-		if constexpr (flag * GCDF::default_constructor) {
+		if constexpr (flag * GenericClassDefinitionFlag::default_constructor) {
+			// NOTE: EXPLAIN: static default(): T;
 			builder.template add_constructor_allocate_proxy<>("default"_s);
 		}
-		if constexpr (flag * GCDF::copy_constructor) {
+		if constexpr (flag * GenericClassDefinitionFlag::copy_constructor) {
+			// NOTE: EXPLAIN: static copy(it: T): T;
 			builder.template add_constructor_allocate_proxy<Class const &>("copy"_s);
 		}
-		if constexpr (flag * GCDF::value_constructor) {
+		if constexpr (flag * GenericClassDefinitionFlag::value_constructor) {
+			// NOTE: EXPLAIN: static value(it: typeof T.Value) : T;
 			builder.template add_constructor<
 				&normalized_lambda<
 					[] (
@@ -213,26 +208,28 @@ export namespace Twinning::Kernel::Executor::Environment {
 				>
 			>("value"_s);
 		}
-		if constexpr (flag * GCDF::value_getter || flag * GCDF::value_setter) {
-			static_assert(flag * GCDF::value_getter);
-			// NOTE : EXPLAIN - return reference is cheap
+		if constexpr (flag * GenericClassDefinitionFlag::value_getter || flag * GenericClassDefinitionFlag::value_setter) {
+			static_assert(flag * GenericClassDefinitionFlag::value_getter);
+			// NOTE: EXPLAIN: get value(): typeof T.Value;
 			constexpr auto & getter = normalized_lambda<
 				[] (
 				JavaScript::NativeValueHandler<Class> & thix
 			) -> Class & {
+					// NOTE: EXPLAIN: return reference is cheap
 					return thix.value();
 				}
 			>;
-			if constexpr (!(flag * GCDF::value_setter)) {
+			if constexpr (!(flag * GenericClassDefinitionFlag::value_setter)) {
 				builder.template add_getter<&getter>("value"_s);
 			}
 			else {
+				// NOTE: EXPLAIN: set value(it: typeof T.Value);
 				constexpr auto & setter = normalized_lambda<
 					[] (
 					JavaScript::NativeValueHandler<Class> & thix,
 					Class &                                 value
 				) -> Void {
-						// NOTE : EXPLAIN - some type has not copy assignment
+						// NOTE: EXPLAIN: some type has not copy assignment
 						restruct(thix.value(), value);
 						return;
 					}
@@ -243,15 +240,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 		return builder;
 	}
 
-	// json operation
-	// - static json(json: JSON.Value, version: Version): T;
-	// - get_json(version: Version): JSON.Value;
-	// - set_json(version: Version, value: JSON.Value);
 	template <typename Version, typename VersionPackage, typename Class> requires
 		CategoryConstraint<IsPureInstance<Version> && IsPureInstance<VersionPackage> && IsPureInstance<Class>>
 	inline auto define_variant_class_version_method (
 		JavaScript::NativeClassBuilder<Class> & builder
 	) -> JavaScript::NativeClassBuilder<Class> & {
+		// NOTE: EXPLAIN: static json(json: JSON.Value, version: Version): T;
 		constexpr auto & json_constructor = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
@@ -269,6 +263,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 				}
 			>
 		>;
+		// NOTE: EXPLAIN: get_json(version: Version): JSON.Value;
 		constexpr auto & json_getter = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
@@ -286,6 +281,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 				}
 			>
 		>;
+		// NOTE: EXPLAIN: set_json(version: Version, value: JSON.Value);
 		constexpr auto & json_setter = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
@@ -311,16 +307,15 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	#pragma endregion
 
-	#pragma region proxy function with special type promotion
+	#pragma region proxy function with promotion
 
-	// NOTE : EXPLAIN
-	// 为了简化接口，对部分类型进行提升
-	// (V|C)StringView          -> String                : String
-	// (C)ByteListView          -> VByteListView         : ByteListView
-	// (I|O)ByteStreamView      -> IOByteStreamView      : ByteStreamView
-	// (C)CharacterListView     -> VCharacterListView    : CharacterListView
-	// (I|O)CharacterStreamView -> IOCharacterStreamView : CharacterStreamView
-	// Image::(C)ImageView      -> Image::VImageView     : Image::ImageView
+	// NOTE: EXPLAIN: promotion these type to simplify interface
+	// - (V|C)StringView          -> String                : String
+	// - (C)ByteListView          -> VByteListView         : ByteListView
+	// - (I|O)ByteStreamView      -> IOByteStreamView      : ByteStreamView
+	// - (C)CharacterListView     -> VCharacterListView    : CharacterListView
+	// - (I|O)CharacterStreamView -> IOCharacterStreamView : CharacterStreamView
+	// - Image::(C)ImageView      -> Image::VImageView     : Image::ImageView
 
 	namespace Detail {
 
@@ -354,7 +349,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 		template <auto function, auto ... index> requires
 			NoneConstraint
-		inline constexpr auto make_proxy_function_with_special_type_promotion (
+		inline constexpr auto make_proxy_function_with_promotion (
 			ValuePackage<index ...>
 		) -> auto {
 			if constexpr ((IsSame<AsPromotion<AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>>, AsPure<typename CallableTraitOf<function>::Argument::template Element<index>>> && ...)) {
@@ -372,23 +367,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 	template <auto function> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(function)>)
-	inline constexpr auto & proxy_global_function_with_special_type_promotion = *Detail::make_proxy_function_with_special_type_promotion<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	inline constexpr auto & proxy_global_function_with_promotion = *Detail::make_proxy_function_with_promotion<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
 
 	template <typename Class, auto function> requires
 		CategoryConstraint<>
 		&& (IsMemberFunction<decltype(function)>)
 		&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
-	inline constexpr auto & proxy_member_function_with_special_type_promotion = proxy_global_function_with_special_type_promotion<normalized_member_function<function, Class>>;
-
-	// NOTE : ALIAS
-	template <auto function> requires
-		AutoConstraint
-	inline constexpr auto & stpg = proxy_global_function_with_special_type_promotion<function>;
-
-	// NOTE : ALIAS
-	template <typename Class, auto function> requires
-		AutoConstraint
-	inline constexpr auto & stpm = proxy_member_function_with_special_type_promotion<Class, function>;
+	inline constexpr auto & proxy_member_function_with_promotion = proxy_global_function_with_promotion<normalized_member_function<function, Class>>;
 
 	#pragma endregion
 
@@ -421,10 +406,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 		// ByteArray
 		define_generic_class<ByteArray>(s_Kernel, "ByteArray"_s)
 			.add_constructor_allocate_proxy<Size const &>("allocate"_s)
-			.add_member_function_proxy<&stpm<ByteArray, &ByteArray::allocate>>("allocate"_s)
-			.add_member_function_proxy<&stpm<ByteArray, &ByteArray::reset>>("reset"_s)
-			.add_member_function_proxy<&stpm<ByteArray, &ByteArray::size>>("size"_s)
-			.add_member_function_proxy<&stpm<ByteArray, AsVMemberFunction<ByteArray, ByteArray::View>{&ByteArray::view}>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::allocate>>("allocate"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::reset>>("reset"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, AsVMemberFunction<ByteArray, ByteArray::View>{&ByteArray::view}>>("view"_s)
 			.add_member_function<
 				&normalized_lambda<
 					[] (
@@ -436,28 +421,28 @@ export namespace Twinning::Kernel::Executor::Environment {
 			>("release"_s);
 		// ByteListView
 		define_generic_class<VByteListView>(s_Kernel, "ByteListView"_s)
-			.add_member_function_proxy<&stpm<VByteListView, &VByteListView::size>>("size"_s)
-			.add_member_function_proxy<&stpm<VByteListView, AsCMemberFunction<VByteListView, VByteListView, Size const &, Size const &>{&VByteListView::sub}>>("sub"_s);
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VByteListView, &VByteListView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VByteListView, AsCMemberFunction<VByteListView, VByteListView, Size const &, Size const &>{&VByteListView::sub}>>("sub"_s);
 		// ByteStreamView
-		define_generic_class<IOByteStreamView, GCDF::generic_mask>(s_Kernel, "ByteStreamView"_s)
+		define_generic_class<IOByteStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "ByteStreamView"_s)
 			.add_constructor_allocate_proxy<VByteListView const &>("watch"_s)
-			.add_member_function_proxy<&stpm<IOByteStreamView, &IOByteStreamView::size>>("size"_s)
-			.add_member_function_proxy<&stpm<IOByteStreamView, &IOByteStreamView::position>>("position"_s)
-			.add_member_function_proxy<&stpm<IOByteStreamView, &IOByteStreamView::set_position>>("set_position"_s)
-			.add_member_function_proxy<&stpm<IOByteStreamView, &IOByteStreamView::view>>("view"_s)
-			.add_member_function_proxy<&stpm<IOByteStreamView, &IOByteStreamView::stream_view>>("stream_view"_s);
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::position>>("position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::set_position>>("set_position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::view>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::stream_view>>("stream_view"_s);
 		// CharacterListView
-		define_generic_class<VCharacterListView, GCDF::generic_mask>(s_Kernel, "CharacterListView"_s)
-			.add_member_function_proxy<&stpm<VCharacterListView, &VCharacterListView::size>>("size"_s)
-			.add_member_function_proxy<&stpm<VCharacterListView, AsCMemberFunction<VCharacterListView, VCharacterListView, Size const &, Size const &>{&VCharacterListView::sub}>>("sub"_s);
+		define_generic_class<VCharacterListView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterListView"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VCharacterListView, &VCharacterListView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VCharacterListView, AsCMemberFunction<VCharacterListView, VCharacterListView, Size const &, Size const &>{&VCharacterListView::sub}>>("sub"_s);
 		// CharacterStreamView
-		define_generic_class<IOCharacterStreamView, GCDF::generic_mask>(s_Kernel, "CharacterStreamView"_s)
+		define_generic_class<IOCharacterStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterStreamView"_s)
 			.add_constructor_allocate_proxy<VCharacterListView const &>("watch"_s)
-			.add_member_function_proxy<&stpm<IOCharacterStreamView, &IOCharacterStreamView::size>>("size"_s)
-			.add_member_function_proxy<&stpm<IOCharacterStreamView, &IOCharacterStreamView::position>>("position"_s)
-			.add_member_function_proxy<&stpm<IOCharacterStreamView, &IOCharacterStreamView::set_position>>("set_position"_s)
-			.add_member_function_proxy<&stpm<IOCharacterStreamView, &IOCharacterStreamView::view>>("view"_s)
-			.add_member_function_proxy<&stpm<IOCharacterStreamView, &IOCharacterStreamView::stream_view>>("stream_view"_s);
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::position>>("position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::set_position>>("set_position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::view>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::stream_view>>("stream_view"_s);
 		// JSON
 		{
 			auto s_JSON = s_Kernel.add_space("JSON"_s);
@@ -476,68 +461,68 @@ export namespace Twinning::Kernel::Executor::Environment {
 			define_generic_class<Image::Color>(s_Image, "Color"_s);
 			define_generic_class<List<Image::Color>>(s_Image, "ColorList"_s);
 			define_generic_class<Image::Pixel>(s_Image, "Pixel"_s);
-			define_generic_class<Image::VImageView, GCDF::generic_mask>(s_Image, "ImageView"_s)
-				.add_member_function_proxy<&stpm<Image::VImageView, &Image::VImageView::size>>("size"_s)
-				.add_member_function_proxy<&stpm<Image::VImageView, &Image::VImageView::fill>>("fill"_s)
-				.add_member_function_proxy<&stpm<Image::VImageView, &Image::VImageView::draw>>("draw"_s)
-				.add_member_function_proxy<&stpm<Image::VImageView, &Image::VImageView::sub>>("sub"_s);
-			define_generic_class<Image::Image, GCDF::generic_mask>(s_Image, "Image"_s)
+			define_generic_class<Image::VImageView, GenericClassDefinitionFlag::generic_mask>(s_Image, "ImageView"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::size>>("size"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::fill>>("fill"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::draw>>("draw"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::sub>>("sub"_s);
+			define_generic_class<Image::Image, GenericClassDefinitionFlag::generic_mask>(s_Image, "Image"_s)
 				.add_constructor_allocate_proxy<Image::ImageSize const &>("allocate"_s)
-				.add_member_function_proxy<&stpm<Image::Image, &Image::Image::allocate>>("allocate"_s)
-				.add_member_function_proxy<&stpm<Image::Image, &Image::Image::reset>>("reset"_s)
-				.add_member_function_proxy<&stpm<Image::Image, &Image::Image::size>>("size"_s)
-				.add_member_function_proxy<&stpm<Image::Image, AsVMemberFunction<Image::Image, Image::VImageView>{&Image::Image::view}>>("view"_s);
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::allocate>>("allocate"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::reset>>("reset"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::size>>("size"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, AsVMemberFunction<Image::Image, Image::VImageView>{&Image::Image::view}>>("view"_s);
 		}
 		// Storage
 		{
 			auto s_Storage = s_Kernel.add_space("Storage"_s);
 			s_Storage
 				// exist
-				.add_function_proxy<&stpg<&Storage::exist>>("exist"_s)
-				.add_function_proxy<&stpg<&Storage::exist_file>>("exist_file"_s)
-				.add_function_proxy<&stpg<&Storage::exist_directory>>("exist_directory"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist>>("exist"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_file>>("exist_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_directory>>("exist_directory"_s)
 				// generic
-				.add_function_proxy<&stpg<&Storage::copy>>("copy"_s)
-				.add_function_proxy<&stpg<&Storage::rename>>("rename"_s)
-				.add_function_proxy<&stpg<&Storage::remove>>("remove"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::copy>>("copy"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::rename>>("rename"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::remove>>("remove"_s)
 				// link
-				.add_function_proxy<&stpg<&Storage::create_link>>("create_link"_s)
-				.add_function_proxy<&stpg<&Storage::parse_link>>("parse_link"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_link>>("create_link"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::parse_link>>("parse_link"_s)
 				// hard link
-				.add_function_proxy<&stpg<&Storage::create_hard_link>>("create_hard_link"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_hard_link>>("create_hard_link"_s)
 				// file
-				.add_function_proxy<&stpg<&Storage::create_file>>("create_file"_s)
-				.add_function_proxy<&stpg<&Storage::size_file>>("size_file"_s)
-				.add_function_proxy<&stpg<&Storage::resize_file>>("resize_file"_s)
-				.add_function_proxy<&stpg<&Storage::read_file>>("read_file"_s)
-				.add_function_proxy<&stpg<&Storage::write_file>>("write_file"_s)
-				.add_function_proxy<&stpg<&Storage::read_stream_file>>("read_stream_file"_s)
-				.add_function_proxy<&stpg<&Storage::write_stream_file>>("write_stream_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_file>>("create_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::size_file>>("size_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::resize_file>>("resize_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::read_file>>("read_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::write_file>>("write_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::read_stream_file>>("read_stream_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::write_stream_file>>("write_stream_file"_s)
 				// directory
-				.add_function_proxy<&stpg<&Storage::create_directory>>("create_directory"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_directory>>("create_directory"_s)
 				// iterate
-				.add_function_proxy<&stpg<&Storage::count>>("count"_s)
-				.add_function_proxy<&stpg<&Storage::count_file>>("count_file"_s)
-				.add_function_proxy<&stpg<&Storage::count_directory>>("count_directory"_s)
-				.add_function_proxy<&stpg<&Storage::list>>("list"_s)
-				.add_function_proxy<&stpg<&Storage::list_file>>("list_file"_s)
-				.add_function_proxy<&stpg<&Storage::list_directory>>("list_directory"_s);
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::count>>("count"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::count_file>>("count_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::count_directory>>("count_directory"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::list>>("list"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::list_file>>("list_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::list_directory>>("list_directory"_s);
 		}
 		// Process
 		{
 			auto s_Process = s_Kernel.add_space("Process"_s);
 			s_Process
 				// working directory
-				.add_function_proxy<&stpg<&Process::get_working_directory>>("get_working_directory"_s)
-				.add_function_proxy<&stpg<&Process::set_working_directory>>("set_working_directory"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_working_directory>>("get_working_directory"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_working_directory>>("set_working_directory"_s)
 				// environment variable
-				.add_function_proxy<&stpg<&Process::get_environment_variable>>("get_environment_variable"_s)
-				.add_function_proxy<&stpg<&Process::set_environment_variable>>("set_environment_variable"_s)
-				.add_function_proxy<&stpg<&Process::list_environment_variable>>("list_environment_variable"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_environment_variable>>("get_environment_variable"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_environment_variable>>("set_environment_variable"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::list_environment_variable>>("list_environment_variable"_s)
 				// child
-				.add_function_proxy<&stpg<&Process::spawn_child>>("spawn_child"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::spawn_child>>("spawn_child"_s)
 				// system command
-				.add_function_proxy<&stpg<&Process::execute_system_command>>("execute_system_command"_s);
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::execute_system_command>>("execute_system_command"_s);
 		}
 		// Tool
 		{
@@ -552,12 +537,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_generic_class<Tool::Data::Hash::FNV::Mode>(s_FNV, "Mode"_s);
 						define_generic_class<Tool::Data::Hash::FNV::BitCount>(s_FNV, "BitCount"_s);
 						s_FNV.add_space("Hash"_s)
-							.add_function_proxy<&stpg<Tool::Data::Hash::FNV::Hash::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hash::FNV::Hash::process>>("process"_s);
 					}
 					{
 						auto s_MD5 = s_Hash.add_space("MD5"_s);
 						s_MD5.add_space("Hash"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Hash::MD5::Hash::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hash::MD5::Hash::process>>("process"_s);
 					}
 				}
 				{
@@ -565,11 +550,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					{
 						auto s_Base64 = s_Encoding.add_space("Base64"_s);
 						s_Base64.add_space("Encode"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encoding::Base64::Encode::process>>("process"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encoding::Base64::Encode::estimate>>("estimate"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Encode::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Encode::estimate>>("estimate"_s);
 						s_Base64.add_space("Decode"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encoding::Base64::Decode::process>>("process"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encoding::Base64::Decode::estimate>>("estimate"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Decode::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Decode::estimate>>("estimate"_s);
 					}
 				}
 				{
@@ -577,15 +562,15 @@ export namespace Twinning::Kernel::Executor::Environment {
 					{
 						auto s_EXOR = s_Encryption.add_space("EXOR"_s);
 						s_EXOR.add_space("Encrypt"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encryption::EXOR::Encrypt::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encryption::EXOR::Encrypt::process>>("process"_s);
 					}
 					{
 						auto s_Rijndael = s_Encryption.add_space("Rijndael"_s);
 						define_generic_class<Tool::Data::Encryption::Rijndael::Mode>(s_Rijndael, "Mode"_s);
 						s_Rijndael.add_space("Encrypt"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encryption::Rijndael::Encrypt::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encryption::Rijndael::Encrypt::process>>("process"_s);
 						s_Rijndael.add_space("Decrypt"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Encryption::Rijndael::Decrypt::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encryption::Rijndael::Decrypt::process>>("process"_s);
 					}
 				}
 				{
@@ -595,24 +580,24 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_generic_class<Tool::Data::Compression::Deflate::Strategy>(s_Deflate, "Strategy"_s);
 						define_generic_class<Tool::Data::Compression::Deflate::Wrapper>(s_Deflate, "Wrapper"_s);
 						s_Deflate.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::Deflate::Compress::process>>("process"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::Deflate::Compress::estimate>>("estimate"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Compress::estimate>>("estimate"_s);
 						s_Deflate.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::Deflate::Uncompress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_BZip2 = s_Compression.add_space("BZip2"_s);
 						s_BZip2.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::BZip2::Compress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::BZip2::Compress::process>>("process"_s);
 						s_BZip2.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::BZip2::Uncompress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::BZip2::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_Lzma = s_Compression.add_space("Lzma"_s);
 						s_Lzma.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::Lzma::Compress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma::Compress::process>>("process"_s);
 						s_Lzma.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Compression::Lzma::Uncompress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma::Uncompress::process>>("process"_s);
 					}
 				}
 				{
@@ -620,9 +605,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					{
 						auto s_VCDiff = s_Differentiation.add_space("VCDiff"_s);
 						s_VCDiff.add_space("Encode"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Differentiation::VCDiff::Encode::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Differentiation::VCDiff::Encode::process>>("process"_s);
 						s_VCDiff.add_space("Decode"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Differentiation::VCDiff::Decode::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Differentiation::VCDiff::Decode::process>>("process"_s);
 					}
 				}
 				{
@@ -630,16 +615,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 					{
 						auto s_JSON = s_Serialization.add_space("JSON"_s);
 						s_JSON.add_space("Write"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Serialization::JSON::Write::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::JSON::Write::process>>("process"_s);
 						s_JSON.add_space("Read"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Serialization::JSON::Read::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::JSON::Read::process>>("process"_s);
 					}
 					{
 						auto s_XML = s_Serialization.add_space("XML"_s);
 						s_XML.add_space("Write"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Serialization::XML::Write::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::XML::Write::process>>("process"_s);
 						s_XML.add_space("Read"_s)
-							.add_function_proxy<&stpg<&Tool::Data::Serialization::XML::Read::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::XML::Read::process>>("process"_s);
 					}
 				}
 			}
@@ -649,17 +634,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Transformation = s_Texture.add_space("Transformation"_s);
 					s_Transformation.add_space("Flip"_s)
-						.add_function_proxy<&stpg<&Tool::Texture::Transformation::Flip::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Flip::process>>("process"_s);
 					s_Transformation.add_space("Scale"_s)
-						.add_function_proxy<&stpg<&Tool::Texture::Transformation::Scale::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Scale::process>>("process"_s);
 				}
 				{
 					auto s_Encoding = s_Texture.add_space("Encoding"_s);
 					define_generic_class<Tool::Texture::Encoding::Format>(s_Encoding, "Format"_s);
 					s_Encoding.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&Tool::Texture::Encoding::Encode::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Encoding::Encode::process>>("process"_s);
 					s_Encoding.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&Tool::Texture::Encoding::Decode::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Encoding::Decode::process>>("process"_s);
 				}
 				{
 					auto s_Compression = s_Texture.add_space("Compression"_s);
@@ -667,17 +652,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 						auto s_ETC = s_Compression.add_space("ETC"_s);
 						define_generic_class<Tool::Texture::Compression::ETC::Format>(s_ETC, "Format"_s);
 						s_ETC.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC::Compress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::ETC::Compress::process>>("process"_s);
 						s_ETC.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::ETC::Uncompress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::ETC::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_PVRTC = s_Compression.add_space("PVRTC"_s);
 						define_generic_class<Tool::Texture::Compression::PVRTC::Format>(s_PVRTC, "Format"_s);
 						s_PVRTC.add_space("Compress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::PVRTC::Compress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::PVRTC::Compress::process>>("process"_s);
 						s_PVRTC.add_space("Uncompress"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::Compression::PVRTC::Uncompress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::PVRTC::Uncompress::process>>("process"_s);
 					}
 				}
 				{
@@ -685,10 +670,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 					{
 						auto s_PNG = s_File.add_space("PNG"_s);
 						s_PNG.add_space("Write"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::File::PNG::Write::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::PNG::Write::process>>("process"_s);
 						s_PNG.add_space("Read"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::File::PNG::Read::process>>("process"_s)
-							.add_function_proxy<&stpg<&Tool::Texture::File::PNG::Read::estimate>>("estimate"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::PNG::Read::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::PNG::Read::estimate>>("estimate"_s);
 					}
 				}
 			}
@@ -719,11 +704,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_SoundBank, "Version"_s);
 					{
 						auto s_Definition = s_SoundBank.add_space("Definition"_s);
-						auto c_SoundBank = define_generic_class<SoundBankDefinition, GCDF::generic_mask>(s_Definition, "SoundBank"_s);
+						auto c_SoundBank = define_generic_class<SoundBankDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "SoundBank"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_SoundBank);
 					}
 					s_SoundBank.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &           data,
 							SoundBankDefinition const & definition,
@@ -739,7 +724,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_SoundBank.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &      data,
 							SoundBankDefinition &  definition,
@@ -770,11 +755,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_DZip, "Version"_s);
 					{
 						auto s_Definition = s_DZip.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_DZip.add_space("Pack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &         data,
 							PackageDefinition const & definition,
@@ -790,7 +775,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_DZip.add_space("Unpack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &      data,
 							PackageDefinition &    definition,
@@ -816,7 +801,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_ZLib = s_PopCap.add_space("ZLib"_s);
 					define_generic_class<Version>(s_ZLib, "Version"_s);
 					s_ZLib.add_space("Compress"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &                                  raw,
 							OByteStreamView &                                  ripe,
@@ -834,7 +819,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							Size const &    raw_size,
 							Size &          ripe_size_bound,
@@ -851,7 +836,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("estimate"_s);
 					s_ZLib.add_space("Uncompress"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & ripe,
 							OByteStreamView & raw,
@@ -866,7 +851,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							CByteListView const & ripe,
 							Size &                raw_size,
@@ -887,7 +872,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_CryptData = s_PopCap.add_space("CryptData"_s);
 					define_generic_class<Version>(s_CryptData, "Version"_s);
 					s_CryptData.add_space("Encrypt"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & plain,
 							OByteStreamView & cipher,
@@ -903,7 +888,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							Size const &    plain_size,
 							Size &          cipher_size,
@@ -919,7 +904,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("estimate"_s);
 					s_CryptData.add_space("Decrypt"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & cipher,
 							OByteStreamView & plain,
@@ -935,7 +920,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							CByteListView const & cipher,
 							Size &                plain_size,
@@ -957,7 +942,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_ReflectionObjectNotation = s_PopCap.add_space("ReflectionObjectNotation"_s);
 					define_generic_class<Version>(s_ReflectionObjectNotation, "Version"_s);
 					s_ReflectionObjectNotation.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &   data,
 							JSON::Value const & definition,
@@ -974,7 +959,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_ReflectionObjectNotation.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & data,
 							JSON::Value &     definition,
@@ -995,7 +980,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_UTexture = s_PopCap.add_space("UTexture"_s);
 					define_generic_class<Version>(s_UTexture, "Version"_s);
 					s_UTexture.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &                       data,
 							Image::CImageView const &               image,
@@ -1010,7 +995,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							Size &                                  data_size_bound,
 							Image::ImageSize const &                image_size,
@@ -1026,7 +1011,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("estimate"_s);
 					s_UTexture.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &         data,
 							Image::VImageView const & image,
@@ -1040,7 +1025,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							CByteListView &    data,
 							Image::ImageSize & image_size,
@@ -1061,7 +1046,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_SexyTexture = s_PopCap.add_space("SexyTexture"_s);
 					define_generic_class<Version>(s_SexyTexture, "Version"_s);
 					s_SexyTexture.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &                       data,
 							Image::CImageView const &               image,
@@ -1077,7 +1062,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							Size &                                  data_size_bound,
 							Image::ImageSize const &                image_size,
@@ -1094,7 +1079,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("estimate"_s);
 					s_SexyTexture.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &         data,
 							Image::VImageView const & image,
@@ -1108,7 +1093,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								);
 							}
 						>>>("process"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							CByteListView &    data,
 							Image::ImageSize & image_size,
@@ -1139,11 +1124,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Animation, "Version"_s);
 					{
 						auto s_Definition = s_Animation.add_space("Definition"_s);
-						auto c_Animation = define_generic_class<AnimationDefinition, GCDF::generic_mask>(s_Definition, "Animation"_s);
+						auto c_Animation = define_generic_class<AnimationDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
 					s_Animation.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &           data,
 							AnimationDefinition const & definition,
@@ -1158,7 +1143,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_Animation.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &     data,
 							AnimationDefinition & definition,
@@ -1187,11 +1172,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ReAnimation, "Version"_s);
 					{
 						auto s_Definition = s_ReAnimation.add_space("Definition"_s);
-						auto c_Animation = define_generic_class<AnimationDefinition, GCDF::generic_mask>(s_Definition, "Animation"_s);
+						auto c_Animation = define_generic_class<AnimationDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
 					s_ReAnimation.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &           data,
 							AnimationDefinition const & definition,
@@ -1206,7 +1191,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_ReAnimation.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &     data,
 							AnimationDefinition & definition,
@@ -1235,11 +1220,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Particle, "Version"_s);
 					{
 						auto s_Definition = s_Particle.add_space("Definition"_s);
-						auto c_Particle = define_generic_class<ParticleDefinition, GCDF::generic_mask>(s_Definition, "Particle"_s);
+						auto c_Particle = define_generic_class<ParticleDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Particle"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
 					}
 					s_Particle.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &          data,
 							ParticleDefinition const & definition,
@@ -1254,7 +1239,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_Particle.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &    data,
 							ParticleDefinition & definition,
@@ -1283,11 +1268,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Trail, "Version"_s);
 					{
 						auto s_Definition = s_Trail.add_space("Definition"_s);
-						auto c_Trail = define_generic_class<TrailDefinition, GCDF::generic_mask>(s_Definition, "Trail"_s);
+						auto c_Trail = define_generic_class<TrailDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Trail"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Trail);
 					}
 					s_Trail.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &       data,
 							TrailDefinition const & definition,
@@ -1302,7 +1287,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_Trail.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & data,
 							TrailDefinition & definition,
@@ -1330,11 +1315,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_RenderEffect, "Version"_s);
 					{
 						auto s_Definition = s_RenderEffect.add_space("Definition"_s);
-						auto c_Effect = define_generic_class<EffectDefinition, GCDF::generic_mask>(s_Definition, "Effect"_s);
+						auto c_Effect = define_generic_class<EffectDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Effect"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
 					s_RenderEffect.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &        data,
 							EffectDefinition const & definition,
@@ -1349,7 +1334,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_RenderEffect.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &  data,
 							EffectDefinition & definition,
@@ -1375,11 +1360,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ParticleEffect, "Version"_s);
 					{
 						auto s_Definition = s_ParticleEffect.add_space("Definition"_s);
-						auto c_Effect = define_generic_class<EffectDefinition, GCDF::generic_mask>(s_Definition, "Effect"_s);
+						auto c_Effect = define_generic_class<EffectDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Effect"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
 					s_ParticleEffect.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &        data,
 							EffectDefinition const & definition,
@@ -1394,7 +1379,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_ParticleEffect.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &  data,
 							EffectDefinition & definition,
@@ -1420,11 +1405,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_CharacterFontWidget2, "Version"_s);
 					{
 						auto s_Definition = s_CharacterFontWidget2.add_space("Definition"_s);
-						auto c_FontWidget = define_generic_class<FontWidgetDefinition, GCDF::generic_mask>(s_Definition, "FontWidget"_s);
+						auto c_FontWidget = define_generic_class<FontWidgetDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "FontWidget"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
 					}
 					s_CharacterFontWidget2.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &            data,
 							FontWidgetDefinition const & definition,
@@ -1439,7 +1424,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_CharacterFontWidget2.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &      data,
 							FontWidgetDefinition & definition,
@@ -1466,11 +1451,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Package, "Version"_s);
 					{
 						auto s_Definition = s_Package.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_Package.add_space("Pack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &         data,
 							PackageDefinition const & definition,
@@ -1486,7 +1471,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_Package.add_space("Unpack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &      data,
 							PackageDefinition &    definition,
@@ -1515,11 +1500,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ResourceStreamGroup, "Version"_s);
 					{
 						auto s_Definition = s_ResourceStreamGroup.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_ResourceStreamGroup.add_space("Pack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &         data,
 							PackageDefinition const & definition,
@@ -1535,7 +1520,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_ResourceStreamGroup.add_space("Unpack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &      data,
 							PackageDefinition &    definition,
@@ -1576,16 +1561,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);
 					{
 						auto s_Definition = s_ResourceStreamBundle.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GCDF::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					{
 						auto s_Manifest = s_ResourceStreamBundle.add_space("Manifest"_s);
-						auto c_PackageOptional = define_generic_class<PackageManifestOptional, GCDF::generic_mask>(s_Manifest, "PackageOptional"_s);
+						auto c_PackageOptional = define_generic_class<PackageManifestOptional, GenericClassDefinitionFlag::generic_mask>(s_Manifest, "PackageOptional"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_PackageOptional);
 					}
 					s_ResourceStreamBundle.add_space("Pack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OByteStreamView &               data,
 							PackageDefinition const &       definition,
@@ -1604,7 +1589,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_ResourceStreamBundle.add_space("Unpack"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView &         data,
 							PackageDefinition &       definition,
@@ -1628,7 +1613,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_ResourceStreamBundlePatch = s_PopCap.add_space("ResourceStreamBundlePatch"_s);
 					define_generic_class<Version>(s_ResourceStreamBundlePatch, "Version"_s);
 					s_ResourceStreamBundlePatch.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & before,
 							IByteStreamView & after,
@@ -1645,7 +1630,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 							}
 						>>>("process"_s);
 					s_ResourceStreamBundlePatch.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&normalized_lambda<
+						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							IByteStreamView & before,
 							OByteStreamView & after,
@@ -1669,38 +1654,38 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_XboxTiledTexture = s_Miscellaneous.add_space("XboxTiledTexture"_s);
 					s_XboxTiledTexture.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::XboxTiledTexture::Encode::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::XboxTiledTexture::Encode::process>>("process"_s);
 					s_XboxTiledTexture.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::XboxTiledTexture::Decode::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::XboxTiledTexture::Decode::process>>("process"_s);
 				}
 				{
 					auto s_PvZ2CNAlphaPaletteTexture = s_Miscellaneous.add_space("PvZ2CNAlphaPaletteTexture"_s);
 					s_PvZ2CNAlphaPaletteTexture.add_space("Encode"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Encode::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Encode::process>>("process"_s);
 					s_PvZ2CNAlphaPaletteTexture.add_space("Decode"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Decode::process>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Decode::process>>("process"_s);
 				}
 				{
 					auto s_PvZ2CNCryptData = s_Miscellaneous.add_space("PvZ2CNCryptData"_s);
 					s_PvZ2CNCryptData.add_space("Encrypt"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::process>>("process"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::estimate>>("estimate"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::process>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::estimate>>("estimate"_s);
 					s_PvZ2CNCryptData.add_space("Decrypt"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::process>>("process"_s)
-						.add_function_proxy<&stpg<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::estimate>>("estimate"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::process>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::estimate>>("estimate"_s);
 				}
 			}
 		}
 		// Miscellaneous
 		{
 			auto s_Miscellaneous = s_Kernel.add_space("Miscellaneous"_s);
-			define_generic_class<Thread::Thread, GCDF::default_constructor>(s_Miscellaneous, "Thread"_s)
-				.add_member_function_proxy<&stpm<Thread::Thread, &Thread::Thread::joinable>>("joinable"_s)
-				.add_member_function_proxy<&stpm<Thread::Thread, &Thread::Thread::join>>("join"_s)
-				.add_member_function_proxy<&stpm<Thread::Thread, &Thread::Thread::detach>>("detach"_s)
-				.add_static_function_proxy<&stpg<&Thread::Thread::yield>>("yield"_s)
-				.add_static_function_proxy<&stpg<&Thread::Thread::sleep>>("sleep"_s);
-			define_generic_class<Context, GCDF::none_mask>(s_Miscellaneous, "Context"_s)
+			define_generic_class<Thread::Thread, GenericClassDefinitionFlag::default_constructor>(s_Miscellaneous, "Thread"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Thread::Thread, &Thread::Thread::joinable>>("joinable"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Thread::Thread, &Thread::Thread::join>>("join"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Thread::Thread, &Thread::Thread::detach>>("detach"_s)
+				.add_static_function_proxy<&proxy_global_function_with_promotion<&Thread::Thread::yield>>("yield"_s)
+				.add_static_function_proxy<&proxy_global_function_with_promotion<&Thread::Thread::sleep>>("sleep"_s);
+			define_generic_class<Context, GenericClassDefinitionFlag::none_mask>(s_Miscellaneous, "Context"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[] (
@@ -1827,7 +1812,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						[] (
 						JavaScript::NativeValueHandler<VCharacterListView> & it
 					) -> VStringView & {
-							// NOTE : EXPLAIN - return StringView is cheap
+							// NOTE: EXPLAIN: return StringView is cheap
 							return down_cast<VStringView>(it.value());
 						}
 					>

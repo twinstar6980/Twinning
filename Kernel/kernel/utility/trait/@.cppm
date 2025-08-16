@@ -16,7 +16,7 @@ export import twinning.kernel.utility.trait.generalization;
 export import twinning.kernel.utility.trait.range;
 export import twinning.kernel.utility.trait.callable;
 
-// NOTE : USING
+// NOTE: USING
 
 export namespace Twinning::Kernel {
 	using namespace Trait;

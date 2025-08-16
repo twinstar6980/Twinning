@@ -2,10 +2,6 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 
 	// ------------------------------------------------
 
-	// pack *
-	// unpack *
-	// pack_automatic
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

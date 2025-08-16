@@ -50,7 +50,7 @@ namespace Twinning.Script.KernelX {
 			return value;
 		}
 
-		/** NOTE : result is a view of buffer */
+		/** result is a view of buffer */
 		export function write<Constraint extends Kernel.JSON.JS_Value>(
 			value: Kernel.JSON.Value<Constraint>,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
@@ -118,7 +118,7 @@ namespace Twinning.Script.KernelX {
 			return read<Constraint>(data).value;
 		}
 
-		/** NOTE : result is a view of buffer */
+		/** result is a view of buffer */
 		export function write_js<Constraint extends Kernel.JSON.JS_Value>(
 			value: Constraint,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
@@ -267,7 +267,7 @@ namespace Twinning.Script.KernelX {
 
 				// ------------------------------------------------
 
-				// NOTE : avoid use this function
+				// avoid use this function
 				export function size_fs(
 					file: string,
 				): ImageSize {
@@ -366,7 +366,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.remove(Kernel.Path.value(source));
 		}
 
-		// NOTE : extension
+		// extension
 		export function remove_if(
 			source: string,
 		): void {

@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 
 	// ------------------------------------------------
 
-	// encrypt_record
-	// modify_program
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

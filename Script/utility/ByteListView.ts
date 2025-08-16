@@ -6,7 +6,7 @@ namespace Twinning.Script {
 
 		// ------------------------------------------------
 
-		private m_view: DataView;
+		private m_view: DataView<ArrayBuffer>;
 
 		private m_endian_little: boolean;
 

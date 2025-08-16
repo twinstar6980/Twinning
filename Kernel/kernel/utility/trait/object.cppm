@@ -141,7 +141,7 @@ export namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	// TODO : maybe bug ? use assignment instead of constructor if in consteval context
+	// TODO: maybe bug, use assignment instead of constructor if in consteval context
 	template <typename It, typename ... Argument> requires
 		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
 		&& (IsConstructible<AsPure<It>, Argument && ...>)

@@ -1,4 +1,3 @@
-// 对比语言文本文件
 namespace Twinning.Script.Executable.CompareLanguageFile {
 
 	function compare(
@@ -13,7 +12,7 @@ namespace Twinning.Script.Executable.CompareLanguageFile {
 		let line_count = Math.min(original_key.length, translation_key.length);
 		for (let line = 0; line < line_count; line++) {
 			if (original_key[line] !== translation_key[line]) {
-				line_warning.push(`line ${line} : ${original_key[line]} <==> ${translation_key[line]}`);
+				line_warning.push(`line ${line}: ${original_key[line]} <==> ${translation_key[line]}`);
 			}
 		}
 		Console.error(`missing key ${missing_key.length}`, missing_key);

@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [TypeScript 5.8](https://www.typescriptlang.org/)
+	* [TypeScript 5.9](https://www.typescriptlang.org/)
 
 ## 第三方库使用
 

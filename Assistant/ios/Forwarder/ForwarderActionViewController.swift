@@ -20,7 +20,7 @@ class ForwarderActionViewController: UIViewController {
 		super.init(coder: coder)
 	}
 
-	// MARK: - implement - UIViewController
+	// MARK: - implement UIViewController
 
 	public override func viewDidLoad(
 	) -> Void {

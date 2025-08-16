@@ -32,7 +32,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 					}
 					else {
 						let destination_group_if = destination.group.find((value) => (value.id === source_subgroup.parent));
-						assert_test(destination_group_if !== undefined, `subgroup's parent is not found : ${source_group.id}`);
+						assert_test(destination_group_if !== undefined, `subgroup's parent is not found '${source_group.id}'`);
 						destination_group = destination_group_if;
 					}
 					let destination_subgroup: RegularResourceManifest.Subgroup = {
@@ -75,8 +75,8 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 							}
 							else if ('parent' in source_resource) {
 								let texture_atlas = destination_subgroup.resource.find((value) => (value.id === (source_resource as ResourceManifest.SpriteImageResourceAdditional).parent));
-								assert_test(texture_atlas !== undefined, `sprite's parent is not found : ${source_resource.parent}`);
-								assert_test(texture_atlas.additional.type === 'texture', `sprite's parent is not texture : ${source_resource.parent}`);
+								assert_test(texture_atlas !== undefined, `sprite's parent is not found '${source_resource.parent}'`);
+								assert_test(texture_atlas.additional.type === 'texture', `sprite's parent is not texture '${source_resource.parent}'`);
 								texture_atlas.additional.value.sprite.push({
 									id: source_resource.id,
 									path: destination_resource_path,

@@ -171,7 +171,7 @@ namespace Twinning.Script {
 		if (text === 'y') {
 			return true;
 		}
-		assert_fail(`invalid confirmation boolean string`);
+		throw new Error(`invalid confirmation boolean string`);
 	}
 
 	export function make_integer_string(

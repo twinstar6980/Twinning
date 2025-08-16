@@ -136,23 +136,23 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					auto & chunk_information_structure = information_structure.chunk_information.append();
 					auto   chunk_flag = BitSet<Structure::ChunkFlag<version>::k_count>{};
 					switch (chunk_definition.flag.hash().value) {
-						case "zlib"_shz : {
+						case "zlib"_shz: {
 							chunk_flag.set(Structure::ChunkFlag<version>::zlib);
 							break;
 						}
-						case "zerod_out"_shz : {
+						case "zerod_out"_shz: {
 							chunk_flag.set(Structure::ChunkFlag<version>::zerod_out);
 							break;
 						}
-						case "copy_coded"_shz : {
+						case "copy_coded"_shz: {
 							chunk_flag.set(Structure::ChunkFlag<version>::copy_coded);
 							break;
 						}
-						case "lzma"_shz : {
+						case "lzma"_shz: {
 							chunk_flag.set(Structure::ChunkFlag<version>::lzma);
 							break;
 						}
-						default : {
+						default: {
 							assert_fail(R"(chunk.flag == /* valid */)");
 						}
 					}
@@ -160,18 +160,18 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					auto chunk_size_compressed = Size{};
 					chunk_information_structure.offset = cbox<IntegerU32>(data.position());
 					if (chunk_flag.get(Structure::ChunkFlag<version>::combuf)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::unused_2)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::dzip)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
 						auto chunk_data = Storage::read_file(resource_path);
 						Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{chunk_data}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
-						data.backward(8_sz); // NOTE : EXPLAIN - overwrite gzip trail
+						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
@@ -182,13 +182,13 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::jpeg)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zerod_out)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 						// TODO
 						// chunk_size_uncompressed = ;
 						// chunk_size_compressed = k_none_size;
@@ -204,7 +204,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
-						throw IncompleteException{};
+						throw UnimplementedException{};
 					}
 					chunk_information_structure.size_compressed = cbox<IntegerU32>(chunk_size_compressed);
 					chunk_information_structure.size_uncompressed = cbox<IntegerU32>(chunk_size_uncompressed);

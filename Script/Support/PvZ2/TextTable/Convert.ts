@@ -3,9 +3,9 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 	// ------------------------------------------------
 
 	const VersionX = [
-		'text',      // 文本形式，早期版本（6.?及之前）
-		'json_map',  // JSON键值对形式，中期版本
-		'json_list', // JSON数组形式，当前版本
+		'text',
+		'json_map',
+		'json_list',
 	] as const;
 
 	export type Version = typeof VersionX[number];
@@ -30,11 +30,13 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 					source_map = source_variant;
 					source_version = 'json_map';
 				}
-				if (is_object_of_array(source_variant)) {
+				else if (is_object_of_array(source_variant)) {
 					source_list = source_variant;
 					source_version = 'json_list';
 				}
-				assert_fail(`invalid source`);
+				else {
+					throw new Error(`invalid source`);
+				}
 			}
 			catch (e) {
 				source_version = 'text';
@@ -42,7 +44,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		}
 		switch (source_version) {
 			case 'text': {
-				assert_test(!string_data_maybe_utf16(source_data), `invalid charset UTF-16`);
+				assert_test(!string_data_maybe_utf16(source_data), `unsupported charset UTF-16`);
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;
 				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;

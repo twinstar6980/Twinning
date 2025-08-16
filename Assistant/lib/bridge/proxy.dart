@@ -17,7 +17,7 @@ class MessageProxy {
   MessageProxy(
     List<String>? value,
   ) :
-    value = value ?? [];
+    this.value = value ?? [];
 
   // #endregion
 
@@ -110,7 +110,7 @@ class ExecutorProxy {
   ExecutorProxy(
     Void Function(ExecutorProxy, MessageProxy, MessageProxy)? value,
   ) :
-    value = value ?? ((a1, a2, a3) => throw UnimplementedError());
+    this.value = value ?? ((_, _, _) => throw UnimplementedError());
 
   // #endregion
 

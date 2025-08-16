@@ -2,11 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 
 	// ------------------------------------------------
 
-	// pack *
-	// unpack *
-	// pack_automatic
-	// encrypt *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

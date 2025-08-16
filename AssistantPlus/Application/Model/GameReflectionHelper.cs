@@ -329,7 +329,7 @@ namespace AssistantPlus {
 						}
 						ripeValue.Property.Add(ripePropertyGroup);
 					}
-					// TODO : extra property
+					// TODO: extra property
 					//foreach (var extraItem in sourceValue) {
 					//	var extraName = extraItem.Key;
 					//	var extraValue = extraItem.Value;

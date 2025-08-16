@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.wwise.sound_bank {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

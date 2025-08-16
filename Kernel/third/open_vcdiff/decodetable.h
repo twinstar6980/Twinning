@@ -133,7 +133,7 @@ class VCDiffCodeTableReader {
   // management for the non-standard code table, whose contents have
   // been read as part of the encoded data file/stream.
   //
-  // TwinStar : change
+  // TwinStar: change
   // std::auto_ptr<VCDiffCodeTableData> non_default_code_table_data_;
   std::unique_ptr<VCDiffCodeTableData> non_default_code_table_data_;
 

@@ -2,7 +2,7 @@ module;
 
 #include "kernel/common.hpp"
 
-// TODO : refactor, use stream style api ?
+// TODO: refactor, use stream style api?
 
 export module twinning.kernel.tool.data.serialization.xml.read;
 import twinning.kernel.utility;

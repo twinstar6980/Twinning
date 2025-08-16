@@ -744,7 +744,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewStringLen(thiz._context(), cast_pointer<char>(value.begin()).value, value.size().value));
 		}
 
-		// TODO : sv remove
+		// TODO: sv remove
 		auto set_string (
 			CStringView const & value
 		) -> Void {
@@ -840,7 +840,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
 		}
 
-		// TODO : sv remove
+		// TODO: sv remove
 		auto is_object_of_class (
 			CStringView const & name
 		) -> Boolean {
@@ -971,7 +971,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		// TODO : sv remove
+		// TODO: sv remove
 		auto get_object_property (
 			CStringView const & name
 		) -> Value {
@@ -1004,7 +1004,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		// TODO : sv remove
+		// TODO: sv remove
 		auto set_object_property (
 			CStringView const & name,
 			Value &&            value

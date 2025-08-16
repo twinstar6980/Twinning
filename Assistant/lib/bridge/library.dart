@@ -16,8 +16,8 @@ class Library {
 
   Library(
   ) :
-    _handle = null,
-    _symbol = null;
+    this._handle = null,
+    this._symbol = null;
 
   // #endregion
 

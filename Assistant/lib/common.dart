@@ -1,4 +1,4 @@
-import 'dart:core' as core;
+import 'dart:core';
 import 'dart:io';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +8,9 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 // ----------------
 
 typedef Void = void;
-typedef Boolean = core.bool;
-typedef Integer = core.int;
-typedef Floater = core.double;
-typedef String = core.String;
+typedef Boolean = bool;
+typedef Integer = int;
+typedef Floater = double;
 
 typedef IconSymbols = Symbols;
 
@@ -21,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '90';
+  static const String version = '91';
 
   static const String developer = 'TwinStar';
 
@@ -45,19 +44,46 @@ final class SystemChecker {
 
 // ----------------
 
+class _AssertionException implements Exception {
+
+  // #region structor
+
+  final String? expression;
+
+  // ----------------
+
+  _AssertionException(
+    String? expression,
+  ) :
+    this.expression = expression;
+
+  // #endregion
+
+  // #region string
+
+  @override
+  String toString(
+  ) {
+    return 'AssertionException${this.expression == null ? '' : ': ${this.expression}'}';
+  }
+
+  // #endregion
+
+}
+
 Void assertTest(
   Boolean condition, {
-  String? message = null,
+  String? expression = null,
 }) {
   if (!condition) {
-    throw core.AssertionError(message);
+    throw _AssertionException(expression);
   }
   return;
 }
 
 String generateExceptionMessage(
-  core.Object      exception,
-  core.StackTrace? stack,
+  Object      exception,
+  StackTrace? stack,
 ) {
   var result = '${exception}';
   if (stack != null) {
@@ -71,7 +97,7 @@ String generateExceptionMessage(
 
 // ----------------
 
-extension CommonObjectExtension<TType extends core.Object> on TType {
+extension CommonObjectExtension<TType extends Object> on TType {
 
   TResult selfLet<TResult>(
     TResult Function(TType) action,
@@ -97,7 +123,7 @@ extension CommonObjectExtension<TType extends core.Object> on TType {
 
 // ----------------
 
-core.Future<Void> refreshState(
+Future<Void> refreshState(
   Void Function(Void Function()) setState,
 ) async {
   setState(() {});

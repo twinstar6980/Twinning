@@ -2,10 +2,6 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 
 	// ------------------------------------------------
 
-	// flip *
-	// scale *
-	// scale_rate *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

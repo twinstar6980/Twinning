@@ -2,7 +2,7 @@ module;
 
 #include "kernel/common.hpp"
 
-// NOTE : DEFINE
+// NOTE: DEFINE
 #if defined M_system_linux
 #define si_status _sifields._sigchld.si_status
 #endif
@@ -16,7 +16,6 @@ import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.string.encoding;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.storage.utility;
 import twinning.kernel.utility.range.number_range;
@@ -26,6 +25,7 @@ import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.container.optional.optional;
+import twinning.kernel.utility.miscellaneous.system_native_string_extended;
 import twinning.kernel.third.system.windows;
 import twinning.kernel.third.system.posix;
 
@@ -37,9 +37,7 @@ export namespace Twinning::Kernel::Process {
 
 		#pragma region windows command line
 
-		// NOTE : EXPLAIN
-		// see https://learn.microsoft.com/cpp/c-language/parsing-c-command-line-arguments?view=msvc-170
-		// the first string of command line is program path, should not encode as argument string, and must use '\' be path separator
+		// NOTE: EXPLAIN: see https://learn.microsoft.com/cpp/c-language/parsing-c-command-line-arguments?view=msvc-170
 
 		inline auto encode_windows_command_line_program_string (
 			Path const & source,
@@ -103,8 +101,7 @@ export namespace Twinning::Kernel::Process {
 
 		#pragma region windows environment variable
 
-		// NOTE : EXPLAIN
-		// see https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
+		// NOTE: EXPLAIN: see https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
 
 		inline auto encode_windows_environment_variable_string (
 			List<String> const & environment
@@ -154,17 +151,17 @@ export namespace Twinning::Kernel::Process {
 		auto value = Optional<String>{};
 		#if defined M_system_windows
 		auto state_d = Third::system::windows::$DWORD{};
-		auto name_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(name)));
-		state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_16.begin()).value, nullptr, 0);
+		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(name)));
+		state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, nullptr, 0);
 		if (state_d == 0) {
 			assert_test(Third::system::windows::$GetLastError() == Third::system::windows::$ERROR_ENVVAR_NOT_FOUND);
 			value.reset();
 		}
 		else {
-			auto buffer = Array<Character16>{mbox<Size>(state_d)};
-			state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_16.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(buffer.begin()).value, static_cast<Third::system::windows::$DWORD>(buffer.size().value));
+			auto buffer = Array<CharacterW>{mbox<Size>(state_d)};
+			state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(buffer.begin()).value, static_cast<Third::system::windows::$DWORD>(buffer.size().value));
 			assert_test(state_d == static_cast<Third::system::windows::$DWORD>((buffer.size() - 1_sz).value));
-			value.set(self_cast<String>(StringEncoding::utf8_from_utf16(CBasicStringView<Character16>{buffer.begin(), buffer.size() - 1_sz})));
+			value.set(self_cast<String>(SystemNativeString::wide_to_utf8(CBasicStringView<CharacterW>{buffer.begin(), buffer.size() - 1_sz})));
 		}
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
@@ -185,13 +182,13 @@ export namespace Twinning::Kernel::Process {
 	) -> Void {
 		#if defined M_system_windows
 		auto state_b = Third::system::windows::$BOOL{};
-		auto name_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(name)));
+		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(name)));
 		if (!value.has()) {
-			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_16.begin()).value, nullptr);
+			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, nullptr);
 		}
 		else {
-			auto value_16 = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(value.get())));
-			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_16.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(value_16.begin()).value);
+			auto value_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(value.get())));
+			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(value_w.begin()).value);
 		}
 		assert_test(state_b != Third::system::windows::$FALSE);
 		#endif
@@ -218,8 +215,8 @@ export namespace Twinning::Kernel::Process {
 			Third::system::windows::$_wgetenv(L"");
 		}
 		for (auto element_pointer_raw = Third::system::windows::$_wenviron(); *element_pointer_raw != nullptr; ++element_pointer_raw) {
-			auto element_pointer = cast_pointer<Character16>(make_pointer(*element_pointer_raw));
-			auto element = self_cast<String>(StringEncoding::utf8_from_utf16(CBasicStringView<Character16>{element_pointer, null_terminated_string_size_of(element_pointer)}));
+			auto element_pointer = cast_pointer<CharacterW>(make_pointer(*element_pointer_raw));
+			auto element = self_cast<String>(SystemNativeString::wide_to_utf8(CBasicStringView<CharacterW>{element_pointer, null_terminated_string_size_of(element_pointer)}));
 			result.append(as_moveable(element));
 		}
 		#endif
@@ -237,7 +234,7 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma region child
 
-	// NOTE : EXPLAIN
+	// NOTE: EXPLAIN
 	// the return value is process's exit code, see the following webpage to understand
 	// Windows - https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess
 	// POSIX   - https://pubs.opengroup.org/onlinepubs/9699919799/functions/waitid.html
@@ -260,22 +257,22 @@ export namespace Twinning::Kernel::Process {
 		auto state_b = Third::system::windows::$BOOL{};
 		auto state_d = Third::system::windows::$DWORD{};
 		auto null_device = Path{"/NUL"_s};
-		auto program_string = BasicString<Character16>{};
-		auto argument_string = BasicString<Character16>{};
-		auto environment_string = BasicString<Character16>{};
-		auto input_string = BasicString<Character16>{};
-		auto output_string = BasicString<Character16>{};
-		auto error_string = BasicString<Character16>{};
+		auto program_string = BasicString<CharacterW>{};
+		auto argument_string = BasicString<CharacterW>{};
+		auto environment_string = BasicString<CharacterW>{};
+		auto input_string = BasicString<CharacterW>{};
+		auto output_string = BasicString<CharacterW>{};
+		auto error_string = BasicString<CharacterW>{};
 		auto security_attribute = Third::system::windows::$SECURITY_ATTRIBUTES{};
 		auto startup_information = Third::system::windows::$STARTUPINFOW{};
 		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
 		auto exit_code_d = Third::system::windows::$DWORD{};
-		program_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(program.to_string(CharacterType::k_path_separator_windows))));
-		argument_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(Detail::encode_windows_command_line_string(program, argument))));
-		environment_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<CBasicStringView<Character8>>(Detail::encode_windows_environment_variable_string(environment))));
-		input_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((!input.has() ? (null_device) : (input.get())).to_string())));
-		output_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((!output.has() ? (null_device) : (output.get())).to_string())));
-		error_string = make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>((!error.has() ? (null_device) : (error.get())).to_string())));
+		program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(program.to_string(CharacterType::k_path_separator_windows))));
+		argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(Detail::encode_windows_command_line_string(program, argument))));
+		environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(Detail::encode_windows_environment_variable_string(environment))));
+		input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).to_string())));
+		output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).to_string())));
+		error_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).to_string())));
 		security_attribute.nLength = sizeof(Third::system::windows::$SECURITY_ATTRIBUTES);
 		security_attribute.lpSecurityDescriptor = nullptr;
 		security_attribute.bInheritHandle = Third::system::windows::$TRUE;
@@ -400,7 +397,7 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma region system command
 
-	// NOTE : EXPLAIN
+	// NOTE: EXPLAIN
 	// implement defined
 	// on iphone, std::system is not available, this function will throw exception
 	inline auto execute_system_command (
@@ -408,13 +405,13 @@ export namespace Twinning::Kernel::Process {
 	) -> IntegerU32 {
 		auto result = IntegerU32{};
 		#if defined M_system_windows
-		result = mbox<IntegerU32>(Third::system::windows::$_wsystem(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>(command))).begin()).value));
+		result = mbox<IntegerU32>(Third::system::windows::$_wsystem(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(command))).begin()).value));
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android
 		result = mbox<IntegerU32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
 		#endif
 		#if defined M_system_iphone
-		throw IncompleteException{};
+		throw UnsupportedException{};
 		#endif
 		return result;
 	}

@@ -3,7 +3,7 @@
 #pragma region keyword
 
 #define implicit\
-
+	
 
 #define thiz\
 	(*this)
@@ -14,7 +14,7 @@
 
 #define assert_test(...)\
 	if (!(__VA_ARGS__)) {\
-		throw std::runtime_error{"assertion failed : " #__VA_ARGS__};\
+		throw std::runtime_error{"AssertionException: " #__VA_ARGS__};\
 	}\
 	static_assert(true)
 

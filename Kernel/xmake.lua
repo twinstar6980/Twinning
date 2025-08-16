@@ -7,7 +7,6 @@ includes('./../common/xmake/helper.lua')
 apply_common_setting()
 
 includes('./third/mscharconv')
-includes('./third/fmt')
 includes('./third/tinyxml2')
 includes('./third/md5')
 includes('./third/Rijndael')

@@ -40,7 +40,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			extra_size = 0;
 		}
 		else if (current < 0b11000000n) {
-			throw new Error(`data:${data.p().toString(16)}h : invalid utf-8 first character`);
+			throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 first character`);
 		}
 		else if (current < 0b11100000n) {
 			value = current & 0b00011111n;
@@ -55,14 +55,14 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			extra_size = 3;
 		}
 		else {
-			throw new Error(`data:${data.p().toString(16)}h : invalid utf-8 first character`);
+			throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 first character`);
 		}
 		size.value = 1 + extra_size;
 		while (extra_size > 0) {
 			--extra_size;
 			current = data.u8();
 			if ((current & 0b11000000n) != 0b10000000n) {
-				throw new Error(`data:${data.p().toString(16)}h : invalid utf-8 extra character`);
+				throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 extra character`);
 			}
 			value = value << 6n | (current & 0b00111111n);
 		}
@@ -98,7 +98,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			count += character_size.value;
 		}
 		if (count > Number(size)) {
-			throw new Error(`data:${data.p().toString(16)}h : utf-8 string too long`);
+			throw new Error(`data@${data.p().toString(16)}h: utf-8 string too long`);
 		}
 		return value;
 	}
@@ -260,7 +260,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			case 0x91n: {
 				let index = read_pb_varint_unsigned(data);
 				if (Number(index) >= native_string_index.length) {
-					throw new Error(`data:${data.p().toString(16)}h : invalid string index`);
+					throw new Error(`data@${data.p().toString(16)}h: invalid string index`);
 				}
 				value = native_string_index[Number(index)];
 				break;
@@ -271,7 +271,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				let actual_size = { value: undefined! };
 				let content = read_utf8_string(data, length, actual_size);
 				if (actual_size.value !== Number(size)) {
-					Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${size} but actual ${actual_size.value}`, []);
+					Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${size} but actual ${actual_size.value}`, []);
 				}
 				value = content;
 				break;
@@ -282,7 +282,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				let actual_size = { value: undefined! };
 				let content = read_utf8_string(data, length, actual_size);
 				if (actual_size.value !== Number(size)) {
-					Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${size} but actual ${actual_size.value}`, []);
+					Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${size} but actual ${actual_size.value}`, []);
 				}
 				value = content;
 				unicode_string_index.push(value);
@@ -291,7 +291,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			case 0x93n: {
 				let index = read_pb_varint_unsigned(data);
 				if (Number(index) >= unicode_string_index.length) {
-					throw new Error(`data:${data.p().toString(16)}h : invalid string index`);
+					throw new Error(`data@${data.p().toString(16)}h: invalid string index`);
 				}
 				value = unicode_string_index[Number(index)];
 				break;
@@ -308,7 +308,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 						let sheet_actual_size = { value: undefined! };
 						let sheet_content = read_utf8_string(data, sheet_length, sheet_actual_size);
 						if (sheet_actual_size.value !== Number(sheet_size)) {
-							Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
+							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
 						}
 						let uid_middle = read_pb_varint_unsigned(data);
 						let uid_first = read_pb_varint_unsigned(data);
@@ -322,20 +322,20 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 						let sheet_actual_size = { value: undefined! };
 						let sheet_content = read_utf8_string(data, sheet_length, sheet_actual_size);
 						if (sheet_actual_size.value !== Number(sheet_size)) {
-							Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
+							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
 						}
 						let alias_length = read_pb_varint_unsigned(data);
 						let alias_size = read_pb_varint_unsigned(data);
 						let alias_actual_size = { value: undefined! };
 						let alias_content = read_utf8_string(data, alias_length, alias_actual_size);
 						if (alias_actual_size.value !== Number(alias_size)) {
-							Console.warning(`data:${data.p().toString(16)}h : invalid utf-8 string size : except ${alias_size} but actual ${alias_actual_size.value}`, []);
+							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${alias_size} but actual ${alias_actual_size.value}`, []);
 						}
 						value = `RTID(${alias_content}@${sheet_content})`;
 						break;
 					}
 					default: {
-						throw new Error(`data:${data.p().toString(16)}h : invalid reference type identifier`);
+						throw new Error(`data@${data.p().toString(16)}h: invalid reference type identifier`);
 					}
 				}
 				break;
@@ -347,7 +347,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			case 0x86n: {
 				value = [];
 				if (data.u8() !== 0xFDn) {
-					throw new Error(`data:${data.p().toString(16)}h : invalid array size identifier`);
+					throw new Error(`data@${data.p().toString(16)}h: invalid array size identifier`);
 				}
 				let size = read_pb_varint_unsigned(data);
 				while (true) {
@@ -359,7 +359,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					value.push(element_value);
 				}
 				if (value.length !== Number(size)) {
-					Console.warning(`data:${data.p().toString(16)}h : invalid array size : except ${size} but actual ${value.length}`, []);
+					Console.warning(`data@${data.p().toString(16)}h: invalid array size, except ${size} but actual ${value.length}`, []);
 				}
 				break;
 			}
@@ -378,7 +378,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 				break;
 			}
 			default: {
-				throw new Error(`data:${data.p().toString(16)}h : invalid type identifier`);
+				throw new Error(`data@${data.p().toString(16)}h: invalid type identifier`);
 			}
 		}
 		return value;
@@ -389,14 +389,14 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): Kernel.JSON.JS_Value {
 		if (data.u32() !== 0x4E4F5452n) {
-			Console.warning(`data:${data.p().toString(16)}h : invalid magic`, []);
+			Console.warning(`data@${data.p().toString(16)}h: invalid magic`, []);
 		}
 		if (data.u32() !== version.number) {
-			Console.warning(`data:${data.p().toString(16)}h : invalid version`, []);
+			Console.warning(`data@${data.p().toString(16)}h: invalid version`, []);
 		}
 		let definition = process_unit(data, [], [], 0x85n, version);
 		if (data.u32() !== 0x454E4F44n) {
-			Console.warning(`data:${data.p().toString(16)}h : invalid done`, []);
+			Console.warning(`data@${data.p().toString(16)}h: invalid done`, []);
 		}
 		return definition;
 	}

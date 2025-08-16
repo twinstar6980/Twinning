@@ -20,7 +20,7 @@ import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
 import twinning.kernel.utility.miscellaneous.character_series.type;
 import twinning.kernel.utility.miscellaneous.record;
-import twinning.kernel.utility.miscellaneous.fourcc;
+import twinning.kernel.utility.miscellaneous.four_character_code;
 import twinning.kernel.utility.miscellaneous.constant_block;
 import twinning.kernel.utility.miscellaneous.string_block;
 import twinning.kernel.utility.string.basic_string;
@@ -32,7 +32,7 @@ export namespace Twinning::Kernel {
 
 	#pragma region basic
 
-	// TODO : should be member variable ?
+	// TODO: should be member variable?
 	inline thread_local auto g_byte_stream_use_big_endian = Boolean{k_false};
 
 	template <typename TValue> requires
@@ -599,13 +599,13 @@ export namespace Twinning::Kernel {
 	#pragma region miscellaneous
 
 	template <>
-	struct ByteStreamAdapter<FourCC> {
+	struct ByteStreamAdapter<FourCharacterCode> {
 
 		using ThisI = IByteStreamView;
 
 		using ThisO = OByteStreamView;
 
-		using That = FourCC;
+		using That = FourCharacterCode;
 
 		// ----------------
 

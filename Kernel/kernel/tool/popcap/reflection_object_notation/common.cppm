@@ -79,7 +79,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				// object
 				object_begin = 0x85,
 				object_end   = 0xFF,
-				// TODO : never appeared in known rton file
+				// TODO: never appeared in known rton file
 				_string_literal_star         = 0x02,
 				_string_binary_blob          = 0x87,
 				_string_native_x1            = 0xB0,
@@ -132,7 +132,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			if (!at_position.has()) {
 				return k_null_optional;
 			}
-			// TODO : should test the content is number or not ?
+			// TODO: should test the content is number or not?
 			if (Range::count(content.head(at_position.get()), '.'_c) == 2_sz) {
 				auto uid_part = split_string<String>(content.head(at_position.get()), StaticArray<Character, 1_sz>{{'.'_c}});
 				if (Range::all_of(uid_part[1_ix], &CharacterType::is_number_dec) &&

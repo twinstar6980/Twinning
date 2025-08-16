@@ -13,7 +13,7 @@ class CommandLineWriter {
 
   CommandLineWriter(
   ) :
-    _view = [];
+    this._view = [];
 
   // #endregion
 

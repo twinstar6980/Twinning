@@ -135,7 +135,7 @@ export namespace Twinning::Kernel::JSON {
 		}
 
 		// ----------------
-		// TODO : sv remove
+		// TODO: sv remove
 
 		auto operator [] (
 			CStringView const & key

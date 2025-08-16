@@ -95,6 +95,8 @@ export namespace Twinning::Kernel {
 
 	using ZCharacter = ZCharacterN;
 
+	using ZUnicode = ZCharacter32;
+
 	using ZByte = ZByte8;
 
 	using ZSize = ZSizeU;

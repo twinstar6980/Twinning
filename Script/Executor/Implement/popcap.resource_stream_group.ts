@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_group {
 
 	// ------------------------------------------------
 
-	// pack *
-	// unpack *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

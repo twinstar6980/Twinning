@@ -2,11 +2,6 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 
 	// ------------------------------------------------
 
-	// transpile
-	// compile
-	// link
-	// parse
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 		default_conversion_setting: Support.PvZ2.PackageProject.ConversionSetting;

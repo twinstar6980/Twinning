@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Trait {
 		NoneConstraint
 	inline constexpr auto declare (
 	) -> It {
-		throw ImpossibleException{};
+		throw UnreachableException{};
 	}
 
 	#pragma endregion

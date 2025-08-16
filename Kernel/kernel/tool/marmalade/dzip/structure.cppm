@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip::Structure {
 
 }
 
-// NOTE : MORESPACE
+// NOTE: MORESPACE
 
 export namespace Twinning::Kernel {
 

@@ -51,11 +51,6 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 
 	// ------------------------------------------------
 
-	// pack *
-	// unpack *
-	// resource_convert *
-	// unpack_lenient *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 		ptx_format_list: Record<string, Support.PvZ2.ResourceConvert.PTXFormatMap>;

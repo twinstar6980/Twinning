@@ -366,7 +366,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 		M_wrap(ResourcePropertyDetailManifestInformation<t_version>),
 		M_wrap(
 			(IntegerU32) key_offset,
-			(ConstantBlock<0x00000000_iu32>) unknown_2, // TODO : value type ?
+			(ConstantBlock<0x00000000_iu32>) unknown_2, // TODO: maybe value type?
 			(IntegerU32) value_offset,
 		),
 	);
@@ -499,7 +499,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 
 }
 
-// NOTE : MORESPACE
+// NOTE: MORESPACE
 
 export namespace Twinning::Kernel {
 

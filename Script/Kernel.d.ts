@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 85
+ * @version 86
  */
 declare namespace Twinning.Kernel {
 
@@ -4868,37 +4868,63 @@ declare namespace Twinning.Kernel {
 		}
 
 		// ------------------------------------------------
-		// ByteListView <-> CharacterListView
 
+		/**
+		 * 将 ByteListView 解释为 CharacterListView
+		 * @param t 目标
+		 * @returns 结果
+		 */
 		function cast_ByteListView_to_CharacterListView(
 			t: ByteListView,
 		): CharacterListView;
 
+		/**
+		 * 将 CharacterListView 解释为 ByteListView
+		 * @param t 目标
+		 * @returns 结果
+		 */
 		function cast_CharacterListView_to_ByteListView(
 			t: CharacterListView,
 		): ByteListView;
 
 		// ------------------------------------------------
-		// ByteArray <-> String
 
+		/**
+		 * 移动 ByteArray 所持有的内存到新的 String
+		 * @param t 目标
+		 * @returns 结果
+		 */
 		function cast_moveable_ByteArray_to_String(
 			t: ByteArray,
 		): String;
 
+		/**
+		 * 移动 String 所持有的内存到新的 ByteArray
+		 * @param t 目标
+		 * @returns 结果
+		 */
 		function cast_moveable_String_to_ByteArray(
 			t: String,
 		): ByteArray;
 
 		// ------------------------------------------------
-		// String -> CharacterListView
 
+		/**
+		 * 获取 String 的内存视图为 CharacterListView
+		 * @param t 目标
+		 * @returns 结果
+		 */
 		function cast_String_to_CharacterListView(
 			t: String,
 		): CharacterListView;
 
 		// ------------------------------------------------
-		// CharacterListView -> JS_String
 
+		/**
+		 * 通过 CharacterListView 指向的内存构造新的字符串
+		 * @param t 目标
+		 * @returns 结果
+		 */
 		function cast_CharacterListView_to_JS_String(
 			t: CharacterListView,
 		): string;

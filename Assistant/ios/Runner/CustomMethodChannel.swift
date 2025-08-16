@@ -51,7 +51,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       switch call.method {
       case "pick_storage_item":
         guard let detailType = argument["type"] as? String else {
-          throw NSError(domain: "invalid arg`ument.", code: 0)
+          throw NSError(domain: "invalid argument.", code: 0)
         }
         guard let detailLocation = argument["location"] as? String else {
           throw NSError(domain: "invalid argument.", code: 0)
@@ -102,7 +102,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     return target
   }
 
-  // MARK: - implement - UIDocumentPickerDelegate
+  // MARK: - implement UIDocumentPickerDelegate
 
   public func documentPicker(
     _ controller: UIDocumentPickerViewController,

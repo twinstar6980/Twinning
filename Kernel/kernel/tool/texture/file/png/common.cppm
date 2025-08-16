@@ -14,7 +14,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::$png_structp     png_ptr,
 			Third::libpng::$png_const_charp error_message
 		) -> Void {
-			throw UnnamedException{mss("libpng error : {}"_sf(error_message))};
+			throw UnnamedException{mss("libpng: {}"_sf(error_message))};
 			return;
 		}
 
@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::$png_structp     png_ptr,
 			Third::libpng::$png_const_charp error_message
 		) -> Void {
-			// NOTE : DEBUG
+			// NOTE: DEBUG
 			return;
 		}
 

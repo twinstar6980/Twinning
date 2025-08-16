@@ -25,7 +25,7 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (is_string(source)) {
 			return source !== '';
 		}
-		assert_fail(`type error`);
+		throw new Error(`type error`);
 	}
 
 	export function number<T = never>(
@@ -47,7 +47,7 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (is_string(source)) {
 			return Number(source);
 		}
-		assert_fail(`type error`);
+		throw new Error(`type error`);
 	}
 
 	export function integer<T = never>(
@@ -69,7 +69,7 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (is_string(source)) {
 			return BigInt(Math.trunc(Number(source)));
 		}
-		assert_fail(`type error`);
+		throw new Error(`type error`);
 	}
 
 	export function string<T = never>(
@@ -82,7 +82,7 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (is_string(source)) {
 			return source;
 		}
-		assert_fail(`type error`);
+		throw new Error(`type error`);
 	}
 
 	// ------------------------------------------------

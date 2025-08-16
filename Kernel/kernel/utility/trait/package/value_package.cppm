@@ -28,25 +28,7 @@ export namespace Twinning::Kernel::Trait {
 			CategoryConstraint<>
 			&& (IsSameV<index, ZSize>)
 			&& (index < size)
-		inline static constexpr auto element =
-			[] <auto ... element_index> (
-			std::index_sequence<element_index ...>,
-			auto ... element_value
-		) -> auto {
-				auto result = ValuePackage::Element<index>{};
-				auto iterate =
-					[&] (
-					auto current_index,
-					auto current_value
-				) -> auto {
-					if (current_index == index) {
-						result = current_value;
-					}
-					return;
-				};
-				(iterate(element_index, element_value), ...);
-				return result;
-			}(std::make_index_sequence<size>{}, t_element ...);
+		inline static constexpr auto element = t_element...[index];
 
 		template <typename Value> requires
 			CategoryConstraint<>

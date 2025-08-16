@@ -25,16 +25,9 @@ namespace AssistantPlus.Bridge {
 					resultProxy.Value = client.Callback(argumentProxy.Value);
 					return;
 				};
-				var executorArgument = new MessageProxy();
-				executorArgument.Value.Add("execute");
-				executorArgument.Value.Add(script);
-				executorArgument.Value.AddRange(argument);
+				var executorArgument = new MessageProxy(["execute", script, ..argument]);
 				var executorResult = new MessageProxy();
-				ExecutorProxy.Parse(library.Symbol().executor).Value(
-					executorCallback,
-					executorArgument,
-					executorResult
-				);
+				ExecutorProxy.Parse(library.Symbol().executor).Value(executorCallback, executorArgument, executorResult);
 				result = executorResult.Value;
 			}
 			catch (Exception e) {

@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 add_library(${PROJECT_NAME} SHARED
   "common.hpp"
   "forwarder_explorer_command.cppm"
-  "library.cpp"
-  "library.def"
-  "library.manifest"
+  "main.cpp"
+  "main.def"
+  "main.manifest"
   "resource/resource.rc"
 )
 

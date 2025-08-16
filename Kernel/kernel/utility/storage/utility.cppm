@@ -12,10 +12,10 @@ import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.string.encoding;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.null_optional;
 import twinning.kernel.utility.container.list.list;
+import twinning.kernel.utility.miscellaneous.system_native_string_extended;
 import twinning.kernel.third.system.windows;
 
 export namespace Twinning::Kernel::Storage {
@@ -36,9 +36,10 @@ export namespace Twinning::Kernel::Storage {
 
 	namespace Detail {
 
-		#pragma region utility for std::path
+		#pragma region utility for std::filesystem::path
 
 		#if defined M_system_windows
+
 		inline auto make_regular_path (
 			Path const & original
 		) -> Path {
@@ -58,14 +59,20 @@ export namespace Twinning::Kernel::Storage {
 			}
 			return result;
 		}
+
 		#endif
+
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+
 		inline auto make_regular_path (
 			Path const & original
 		) -> Path const & {
 			return original;
 		}
+
 		#endif
+
+		// ----------------
 
 		inline auto make_std_path (
 			Path const & value
@@ -108,9 +115,7 @@ export namespace Twinning::Kernel::Storage {
 			~FileHandler (
 			) {
 				if (thiz.m_value != k_null_pointer) {
-					auto state = std::fclose(thiz.m_value.value);
-					// NOTE : SKIP
-					// assert_test(state == 0);
+					std::fclose(thiz.m_value.value); // NOTE: EXPLAIN: skip result check
 					thiz.m_value = k_null_pointer;
 				}
 			}
@@ -160,7 +165,7 @@ export namespace Twinning::Kernel::Storage {
 				ZConstantString const & mode
 			) -> FileHandler {
 				#if defined M_system_windows
-				auto file = Third::system::windows::$_wfopen(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>(make_regular_path(target).to_string()))).begin()).value, cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(StringEncoding::utf8_to_utf16(self_cast<BasicString<Character8>>(make_string_view(mode)))).begin()).value);
+				auto file = Third::system::windows::$_wfopen(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(make_regular_path(target).to_string()))).begin()).value, cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin()).value);
 				#endif
 				#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 				auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(make_regular_path(target).to_string()).begin()).value, mode);
@@ -223,19 +228,19 @@ export namespace Twinning::Kernel::Storage {
 		) -> ObjectType {
 			auto result = ObjectType{};
 			switch (type) {
-				case std::filesystem::file_type::not_found : {
+				case std::filesystem::file_type::not_found: {
 					result = ObjectType::Constant::none();
 					break;
 				}
-				case std::filesystem::file_type::regular : {
+				case std::filesystem::file_type::regular: {
 					result = ObjectType::Constant::file();
 					break;
 				}
-				case std::filesystem::file_type::directory : {
+				case std::filesystem::file_type::directory: {
 					result = ObjectType::Constant::directory();
 					break;
 				}
-				default : {
+				default: {
 					result = ObjectType::Constant::other();
 				}
 			}

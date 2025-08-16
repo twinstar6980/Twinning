@@ -25,7 +25,7 @@ const char MD5::HEX_NUMBERS[16] = {
  * @param {message} the message will be transformed.
  *
  */
-// TwinStar : change
+// TwinStar: change
 // MD5::MD5(const string& message) {
 MD5::MD5(const span<const byte>& message) {
   finished = false;
@@ -38,7 +38,7 @@ MD5::MD5(const span<const byte>& message) {
   state[3] = 0x10325476;
 
   /* Initialization the object according to message. */
-  // TwinStar : change
+  // TwinStar: change
   // init((const byte*)message.c_str(), message.length());
   init(message.data(), message.size());
 }

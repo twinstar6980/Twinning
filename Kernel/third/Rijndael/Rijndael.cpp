@@ -942,15 +942,15 @@ CRijndael::~CRijndael()
 void CRijndael::MakeKey(char const* key, char const* chain, int keylength, int blockSize)
 {
 	if(NULL == key)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception("Empty key");
 		throw std::runtime_error("Empty key");
 	if(!(16==keylength || 24==keylength || 32==keylength))
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception("Incorrect key length");
 		throw std::runtime_error("Incorrect key length");
 	if(!(16==blockSize || 24==blockSize || 32==blockSize))
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception("Incorrect block length");
 		throw std::runtime_error("Incorrect block length");
 	m_keylength = keylength;
@@ -1055,7 +1055,7 @@ void CRijndael::MakeKey(char const* key, char const* chain, int keylength, int b
 void CRijndael::DefEncryptBlock(char const* in, char* result)
 {
 	if(false==m_bKeyInit)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg1);
 		throw std::runtime_error(sm_szErrorMsg1);
 	int* Ker = m_Ke[0];
@@ -1132,7 +1132,7 @@ void CRijndael::DefEncryptBlock(char const* in, char* result)
 void CRijndael::DefDecryptBlock(char const* in, char* result)
 {
 	if(false==m_bKeyInit)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg1);
 		throw std::runtime_error(sm_szErrorMsg1);
 	int* Kdr = m_Kd[0];
@@ -1207,7 +1207,7 @@ void CRijndael::DefDecryptBlock(char const* in, char* result)
 void CRijndael::EncryptBlock(char const* in, char* result)
 {
 	if(false==m_bKeyInit)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg1);
 		throw std::runtime_error(sm_szErrorMsg1);
     if(DEFAULT_BLOCK_SIZE == m_blockSize)
@@ -1259,7 +1259,7 @@ void CRijndael::EncryptBlock(char const* in, char* result)
 void CRijndael::DecryptBlock(char const* in, char* result)
 {
 	if(false==m_bKeyInit)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg1);
 		throw std::runtime_error(sm_szErrorMsg1);
 	if(DEFAULT_BLOCK_SIZE == m_blockSize)
@@ -1308,12 +1308,12 @@ void CRijndael::DecryptBlock(char const* in, char* result)
 void CRijndael::Encrypt(char const* in, char* result, size_t n, int iMode)
 {
 	if(false==m_bKeyInit)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg1);
 		throw std::runtime_error(sm_szErrorMsg1);
 	//n should be > 0 and multiple of m_blockSize
 	if(0==n || n%m_blockSize!=0)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg2);
 		throw std::runtime_error(sm_szErrorMsg2);
 	int i;
@@ -1355,12 +1355,12 @@ void CRijndael::Encrypt(char const* in, char* result, size_t n, int iMode)
 void CRijndael::Decrypt(char const* in, char* result, size_t n, int iMode)
 {
 	if(false==m_bKeyInit)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg1);
 		throw std::runtime_error(sm_szErrorMsg1);
 	//n should be > 0 and multiple of m_blockSize
 	if(0==n || n%m_blockSize!=0)
-		// TwinStar : change
+		// TwinStar: change
 		// throw exception(sm_szErrorMsg2);
 		throw std::runtime_error(sm_szErrorMsg2);
 	int i;

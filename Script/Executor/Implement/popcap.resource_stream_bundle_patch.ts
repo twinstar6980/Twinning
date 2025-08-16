@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 
 	// ------------------------------------------------
 
-	// encode
-	// decode
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

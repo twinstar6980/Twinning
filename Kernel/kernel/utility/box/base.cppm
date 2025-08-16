@@ -90,7 +90,7 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	// NOTE : ALIAS - make_box
+	// NOTE: ALIAS: make_box
 	template <typename Box, typename Value> requires
 		CategoryConstraint<IsPureInstance<Box> && IsPureInstance<Value>>
 		&& (IsBaseBox<Box>)
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	// NOTE : ALIAS - cast_box
+	// NOTE: ALIAS: cast_box
 	template <typename Destination, typename Source> requires
 		CategoryConstraint<IsPureInstance<Destination> && IsPureInstance<Source>>
 		&& (IsBaseBox<Destination>)

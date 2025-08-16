@@ -2,8 +2,6 @@ namespace Twinning.Script.Executor.Implement.data.hash {
 
 	// ------------------------------------------------
 
-	// md5 *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

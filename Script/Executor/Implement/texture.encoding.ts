@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.texture.encoding {
 
 	// ------------------------------------------------
 
-	// encode
-	// decode
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

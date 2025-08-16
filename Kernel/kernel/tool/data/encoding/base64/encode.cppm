@@ -46,22 +46,22 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 				ripe.write(k_table[cbox<Size>(clip_bit(buffer[3_ix], 1_ix, 6_sz) << 0_sz)]);
 			}
 			switch ((raw_size % k_raw_block_size).value) {
-				case 0_sz .value : {
+				case 0_sz .value: {
 					break;
 				}
-				case 1_sz .value : {
+				case 1_sz .value: {
 					ripe.backward(2_sz);
 					ripe.write(k_padding_character);
 					ripe.write(k_padding_character);
 					break;
 				}
-				case 2_sz .value : {
+				case 2_sz .value: {
 					ripe.backward(1_sz);
 					ripe.write(k_padding_character);
 					break;
 				}
-				default : {
-					throw ImpossibleException{};
+				default: {
+					throw UnreachableException{};
 				}
 			}
 			return;

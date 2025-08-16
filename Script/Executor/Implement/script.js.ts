@@ -2,8 +2,6 @@ namespace Twinning.Script.Executor.Implement.script.js {
 
 	// ------------------------------------------------
 
-	// execute *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

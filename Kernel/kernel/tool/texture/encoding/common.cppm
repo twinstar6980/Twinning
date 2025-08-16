@@ -54,67 +54,67 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 	) -> Size {
 		auto result = Size{};
 		switch (format.value) {
-			case Format::Constant::a_8().value : {
+			case Format::Constant::a_8().value: {
 				result = 8_sz;
 				break;
 			}
-			case Format::Constant::rgb_332().value : {
+			case Format::Constant::rgb_332().value: {
 				result = 8_sz;
 				break;
 			}
-			case Format::Constant::rgb_565().value : {
+			case Format::Constant::rgb_565().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::rgba_5551().value : {
+			case Format::Constant::rgba_5551().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::rgba_4444().value : {
+			case Format::Constant::rgba_4444().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::rgba_8888().value : {
+			case Format::Constant::rgba_8888().value: {
 				result = 32_sz;
 				break;
 			}
-			case Format::Constant::argb_1555().value : {
+			case Format::Constant::argb_1555().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::argb_4444().value : {
+			case Format::Constant::argb_4444().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::argb_8888().value : {
+			case Format::Constant::argb_8888().value: {
 				result = 32_sz;
 				break;
 			}
-			case Format::Constant::l_8().value : {
+			case Format::Constant::l_8().value: {
 				result = 8_sz;
 				break;
 			}
-			case Format::Constant::la_44().value : {
+			case Format::Constant::la_44().value: {
 				result = 8_sz;
 				break;
 			}
-			case Format::Constant::la_88().value : {
+			case Format::Constant::la_88().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::al_44().value : {
+			case Format::Constant::al_44().value: {
 				result = 8_sz;
 				break;
 			}
-			case Format::Constant::al_88().value : {
+			case Format::Constant::al_88().value: {
 				result = 16_sz;
 				break;
 			}
-			case Format::Constant::rgb_888_o().value : {
+			case Format::Constant::rgb_888_o().value: {
 				result = 24_sz;
 				break;
 			}
-			case Format::Constant::rgba_8888_o().value : {
+			case Format::Constant::rgba_8888_o().value: {
 				result = 32_sz;
 				break;
 			}

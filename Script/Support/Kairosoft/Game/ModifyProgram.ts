@@ -225,7 +225,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			metadata_file = `${target_directory}/assets/bin/Data/Managed/Metadata/global-metadata.dat`;
 		}
 		else {
-			assert_fail();
+			throw new Error();
 		}
 		let program_backup_file = `${target_directory}/.backup/program`;
 		Console.information(`Phase : check game file`, []);

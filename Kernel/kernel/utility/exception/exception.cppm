@@ -3,8 +3,6 @@ module;
 #include "kernel/common.hpp"
 
 export module twinning.kernel.utility.exception.exception;
-import twinning.kernel.utility.exception.source_location;
-import twinning.kernel.third.fmt;
 
 export namespace Twinning::Kernel {
 
@@ -76,18 +74,17 @@ export namespace Twinning::Kernel {
 		) const -> std::string {
 			auto message = std::string{};
 			{
-				message += "# ";
-				message += thiz.m_title;
+				message += std::format("# {}", thiz.m_title);
 			}
 			for (auto & description : thiz.m_description) {
-				message += "\n";
-				message += "$ ";
-				message += description;
+				message += '\n';
+				message += std::format("$ {}", description);
 			}
 			{
-				message += "\n";
-				message += "@ ";
-				message += Third::fmt::format("{}:{}:{} {}", parse_source_location_file_path(thiz.m_location), thiz.m_location.line(), thiz.m_location.column(), thiz.m_location.function_name());
+				auto file_path = std::string{thiz.m_location.file_name() + (std::string_view{std::source_location::current().file_name()}.size() - std::string_view{"kernel/utility/exception/exception.cppm"}.size())};
+				std::replace(file_path.begin(), file_path.end(), '\\', '/');
+				message += '\n';
+				message += std::format("@ {}:{}:{} {}", file_path, thiz.m_location.line(), thiz.m_location.column(), thiz.m_location.function_name());
 			}
 			return message;
 		}

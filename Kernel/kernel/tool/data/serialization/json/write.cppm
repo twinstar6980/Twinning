@@ -35,25 +35,25 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 				return;
 			};
 			switch (value.type().value) {
-				case ValueType::Constant::null().value : {
+				case ValueType::Constant::null().value: {
 					StringParser::write_null(data, value.get_null());
 					break;
 				}
-				case ValueType::Constant::boolean().value : {
+				case ValueType::Constant::boolean().value: {
 					StringParser::write_boolean(data, value.get_boolean());
 					break;
 				}
-				case ValueType::Constant::number().value : {
+				case ValueType::Constant::number().value: {
 					StringParser::write_number(data, value.get_number(), k_true);
 					break;
 				}
-				case ValueType::Constant::string().value : {
+				case ValueType::Constant::string().value: {
 					data.write('"'_c);
 					StringParser::write_escape_utf8_string_until(data, as_lvalue(ICharacterStreamView{value.get_string()}), '"'_c);
 					data.write('"'_c);
 					break;
 				}
-				case ValueType::Constant::array().value : {
+				case ValueType::Constant::array().value: {
 					auto & array = value.get_array();
 					data.write('['_c);
 					for (auto & element : array) {
@@ -68,7 +68,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 					data.write(']'_c);
 					break;
 				}
-				case ValueType::Constant::object().value : {
+				case ValueType::Constant::object().value: {
 					auto & object = value.get_object();
 					data.write('{'_c);
 					for (auto & member : object) {

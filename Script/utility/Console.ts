@@ -906,7 +906,7 @@ namespace Twinning.Script.Console {
 			type = enumeration(option_string(['load_file', 'load_directory', 'save_file']), null, null) as 'load_file' | 'load_directory' | 'save_file';
 		}
 		if (Shell.is_basic) {
-			// NOTE : unavailable, silently fail
+			// unavailable, silently fail
 			result = null;
 		}
 		if (Shell.is_assistant) {
@@ -923,7 +923,7 @@ namespace Twinning.Script.Console {
 		description: string,
 	): void {
 		if (Shell.is_basic) {
-			// NOTE : unavailable, silently fail
+			// unavailable, silently fail
 		}
 		if (Shell.is_assistant) {
 			Shell.assistant_push_system_notification(title, description);

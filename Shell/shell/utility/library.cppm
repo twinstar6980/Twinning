@@ -3,9 +3,9 @@ module;
 #include "shell/common.hpp"
 
 export module twinning.shell.utility.library;
-import twinning.shell.utility.string;
-import twinning.shell.third.system.posix;
+import twinning.shell.utility.system_native_string;
 import twinning.shell.third.system.windows;
+import twinning.shell.third.system.posix;
 
 export namespace Twinning::Shell {
 
@@ -71,15 +71,15 @@ export namespace Twinning::Shell {
 		) -> void {
 			assert_test(!thiz.state());
 			#if defined M_system_windows
-			auto path_absolute = std::string{path} + "."s;
-			auto path_absolute_16 = utf8_to_utf16(reinterpret_cast<std::u8string const &>(path_absolute));
-			thiz.m_handle = static_cast<void *>(Third::system::windows::$LoadLibraryW(reinterpret_cast<Third::system::windows::$LPCWSTR>(path_absolute_16.data())));
+			auto path_absolute = std::string{path} + ".";
+			auto path_absolute_w = SystemNativeString::wide_from_utf8(path_absolute);
+			thiz.m_handle = static_cast<void *>(Third::system::windows::$LoadLibraryW(path_absolute_w.data()));
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			thiz.m_handle = Third::system::posix::$dlopen(path.data(), Third::system::posix::$RTLD_LAZY | Third::system::posix::$RTLD_LOCAL);
 			#endif
 			if (thiz.m_handle == nullptr) {
-				throw std::runtime_error{"library can not open : "s + path.data()};
+				throw std::runtime_error{std::format("Exception: can not open library '{}'", path)};
 			}
 			return;
 		}
@@ -95,7 +95,7 @@ export namespace Twinning::Shell {
 			state = Third::system::posix::$dlclose(thiz.m_handle) == 0;
 			#endif
 			if (state == false) {
-				throw std::runtime_error{"library can not close"s};
+				throw std::runtime_error{std::format("Exception: can not close library")};
 			}
 			thiz.m_handle = nullptr;
 			return;
@@ -116,7 +116,7 @@ export namespace Twinning::Shell {
 			address = Third::system::posix::$dlsym(thiz.m_handle, name.data());
 			#endif
 			if (address == nullptr) {
-				throw std::runtime_error{"can not get symbol : "s + name.data()};
+				throw std::runtime_error{std::format("Exception: can not lookup symbol '{}'", name)};
 			}
 			return static_cast<Symbol *>(address);
 		}

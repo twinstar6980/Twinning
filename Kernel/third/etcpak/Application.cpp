@@ -2,7 +2,7 @@
 #include <math.h>
 #include <memory>
 #include <string.h>
-// TwinStar : remove
+// TwinStar: remove
 // #include <tracy/Tracy.hpp>
 
 #ifdef _MSC_VER
@@ -51,7 +51,7 @@ void Usage()
 
 int main( int argc, char** argv )
 {
-    // TwinStar : remove
+    // TwinStar: remove
     // TracyNoop;
 
     DebugLog::AddCallback( &DebugCallback );

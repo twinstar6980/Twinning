@@ -52,14 +52,14 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 				auto resource_data_section_size_original = Size{};
 				auto compress_resource_data_section = k_false;
 				switch (current_resource_type.value) {
-					case ResourceType::Constant::general().value : {
+					case ResourceType::Constant::general().value: {
 						resource_data_section_offset = cbox<Size>(information_structure.header.general_resource_data_section_offset);
 						resource_data_section_size = cbox<Size>(information_structure.header.general_resource_data_section_size);
 						resource_data_section_size_original = cbox<Size>(information_structure.header.general_resource_data_section_size_original);
 						compress_resource_data_section = definition.compression.general;
 						break;
 					}
-					case ResourceType::Constant::texture().value : {
+					case ResourceType::Constant::texture().value: {
 						resource_data_section_offset = cbox<Size>(information_structure.header.texture_resource_data_section_offset);
 						resource_data_section_size = cbox<Size>(information_structure.header.texture_resource_data_section_size);
 						resource_data_section_size_original = cbox<Size>(information_structure.header.texture_resource_data_section_size_original);
@@ -88,12 +88,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					auto & resource_definition = definition.resource[resource_index];
 					resource_definition.path.from_string(resource_information_structure.key);
 					switch (resource_information_structure.value.additional.type().value) {
-						case ResourceType::Constant::general().value : {
+						case ResourceType::Constant::general().value: {
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template get_of_type<ResourceType::Constant::general()>();
 							auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::general()>();
 							break;
 						}
-						case ResourceType::Constant::texture().value : {
+						case ResourceType::Constant::texture().value: {
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template get_of_type<ResourceType::Constant::texture()>();
 							auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
 							resource_additional_definition.index = cbox<Integer>(resource_additional_information_structure.index);

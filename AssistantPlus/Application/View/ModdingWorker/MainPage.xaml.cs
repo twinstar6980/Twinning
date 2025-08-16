@@ -281,7 +281,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				nameof(this.uSubmissionBar_Visibility),
 				nameof(this.uProgress_ProgressIndeterminate),
 			]);
-			return exception == null ? result.AsNotNull() : null;
+			return exception != null ? null : result.AsNotNull();
 		}
 
 		#endregion
@@ -524,7 +524,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			GF.AssertTest(this.mRunning);
 			var result = new List<String>();
 			GF.AssertTest(argument.Count >= 1);
-			Task.WaitAll(this.mController.View.DispatcherQueue.EnqueueAsync(async () => {
+			this.mController.View.DispatcherQueue.EnqueueAsync(async () => {
 				switch (argument[0]) {
 					case "name": {
 						GF.AssertTest(argument.Count == 1);
@@ -576,7 +576,7 @@ namespace AssistantPlus.View.ModdingWorker {
 						throw new ("invalid method");
 					}
 				}
-			}));
+			}).Wait();
 			return result;
 		}
 

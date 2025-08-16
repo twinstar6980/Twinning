@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.wwise.media {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

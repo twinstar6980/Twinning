@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

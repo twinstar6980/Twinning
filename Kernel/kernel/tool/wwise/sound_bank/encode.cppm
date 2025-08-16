@@ -8,7 +8,6 @@ import twinning.kernel.tool.wwise.sound_bank.version;
 import twinning.kernel.tool.wwise.sound_bank.definition;
 import twinning.kernel.tool.wwise.sound_bank.common;
 import twinning.kernel.tool.common.byte_stream;
-import twinning.kernel.tool.common.wave_structure;
 
 export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
@@ -23,11 +22,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		using typename Common::VersionNumber;
 
+		using Common::k_data_block_padding_size;
+
 		using typename Common::ChunkSign;
 
 		using typename Common::ChunkSignFlag;
-
-		using Common::k_data_block_padding_size;
 
 		using typename Common::IDWrapper;
 
@@ -583,7 +582,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			Boolean const &   randomizable,
 			Parser const &    parser
 		) -> Void {
-			// NOTE : HERE
+			// NOTE: HERE
 			auto map = CommonPropertyMap<Type>{};
 			parser(map);
 			exchange_list(
@@ -977,7 +976,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {72, 112})) {
 				exchange_bit_multi<IntegerU8>(data, positioning_override);
 				if (positioning_override) {
-					// NOTE : HERE
+					// NOTE: HERE
 					auto b1 = Boolean{};
 					auto b2 = Boolean{};
 					auto b3 = Boolean{};
@@ -1475,8 +1474,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							exchange_id(data, value.id);
 						}
 						if constexpr (check_version(version, {72, 150})) {
-							// TODO : in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
-							// TODO : if render, mode value will be changed ?
+							// TODO: in typical, render = 1 -> mode = 0 & u2 = 1, render = 0 -> mode = 1 & u2 = 0
+							// TODO: if render, mode value will be changed?
 							exchange_bit_multi<IntegerU8>(data, value.use_share_set);
 						}
 						if constexpr (check_version(version, {72, 150})) {
@@ -1692,12 +1691,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			Boolean const &                               time_setting_override
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
-				// TODO : test frequency mode-preset time and offset
-				// NOTE : EXPLAIN - time = 960000 * signature / tempo, then with frequency mode-preset
+				// TODO: test frequency mode-preset time and offset
+				// NOTE: EXPLAIN: time = 960000 * signature / tempo, then with frequency mode-preset
 				exchange_floater_fixed<FloaterS64>(data, time_setting_value.time);
 			}
 			if constexpr (check_version(version, {72})) {
-				// NOTE : EXPLAIN - 0 if mode.no, millisecond if mode.custom, else by mode-preset
+				// NOTE: EXPLAIN: 0 if mode.no, millisecond if mode.custom, else by mode-preset
 				exchange_floater_fixed<FloaterS64>(data, time_setting_value.offset);
 			}
 			if constexpr (check_version(version, {72})) {
@@ -2023,7 +2022,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					association_value.path,
 					[&] (auto & data, auto & value) {
-						// NOTE : HERE
+						// NOTE: HERE
 						exchange_size_fixed<IntegerU32>(data, value * 12_sz);
 						if constexpr (check_version(version, {72, 88})) {
 							exchange_integer_fixed<IntegerU8>(data, association_value.probability);
@@ -2376,7 +2375,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							exchange_integer_fixed<IntegerU16>(data, value.random_setting.avoid_repeat);
 						}
 						if constexpr (check_version(version, {72})) {
-							exchange_bit_multi<IntegerU8>(data, value.group); // TODO : maybe
+							exchange_bit_multi<IntegerU8>(data, value.group); // TODO: maybe
 						}
 						if constexpr (check_version(version, {72})) {
 							exchange_bit_multi<IntegerU8>(data, value.random_setting.type);
@@ -2578,7 +2577,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			typename Definition::EventAction const & value
 		) -> Void {
 			exchange_id(data, value.id);
-			// NOTE : HERE
+			// NOTE: HERE
 			auto type = Enumerated{};
 			auto type_data_begin = Size{};
 			if constexpr (check_version(version, {72})) {
@@ -3294,7 +3293,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						);
 					}
 					if constexpr (check_version(version, {113})) {
-						exchange_raw_constant(data, 4_iu8); // TODO : maybe fade curve ?
+						exchange_raw_constant(data, 4_iu8); // TODO: maybe fade curve
 					}
 					if constexpr (check_version(version, {113, 115})) {
 						exchange_raw_constant(data, 0_iu32);
@@ -3703,18 +3702,18 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_bit_multi<IntegerU8>(data, value.override_positioning, value.positioning.speaker_panning.enable);
 			}
 			if constexpr (check_version(version, {125})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				auto override_positioning = Boolean{k_true};
 				exchange_section_sub(data, value.positioning, override_positioning);
 			}
 			if constexpr (check_version(version, {125, 135})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				auto override_game_defined_auxiliary_send = Boolean{k_true};
 				auto override_user_defined_auxiliary_send = Boolean{k_true};
 				exchange_section_sub(data, value.auxiliary_send, override_game_defined_auxiliary_send, override_user_defined_auxiliary_send);
 			}
 			if constexpr (check_version(version, {135})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				auto override_game_defined_auxiliary_send = Boolean{k_true};
 				auto override_user_defined_auxiliary_send = Boolean{k_true};
 				auto override_early_reflection_auxiliary_send = Boolean{k_true};
@@ -4772,7 +4771,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_id(data, value.language);
 			}
 			if constexpr (check_version(version, {72})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				data.write(value.header_expand);
 			}
 			return;
@@ -4786,7 +4785,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			Size const &                          data_begin_position
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				exchange_list_element(
 					didx_data,
 					value,
@@ -4913,7 +4912,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					value,
 					&exchange_size_fixed<IntegerU32>,
 					[] (auto & data, auto & value) {
-						// NOTE : HERE
+						// NOTE: HERE
 						auto type = Enumerated{};
 						auto type_data = OByteStreamView{data.forward_view(bs_static_size<IntegerU8>())};
 						auto size_data = OByteStreamView{data.forward_view(bs_static_size<IntegerU32>())};
@@ -4976,7 +4975,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			typename Definition::Setting const & value
 		) -> Void {
 			if constexpr (check_version(version, {72, 112})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				exchange_list_element(
 					data,
 					as_lvalue(
@@ -5017,7 +5016,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				);
 			}
 			if constexpr (check_version(version, {112})) {
-				// NOTE : HERE
+				// NOTE: HERE
 				exchange_list_element(
 					data,
 					as_lvalue(

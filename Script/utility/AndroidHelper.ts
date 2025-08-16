@@ -23,7 +23,7 @@ namespace Twinning.Script.AndroidHelper {
 		assert_test(program_path !== null, `could not find 'sh' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(program_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
-			throw new Error(`sh execute failed : ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
+			throw new Error(`sh execute failed: ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
 		}
 		return execute_result.output;
 	}
@@ -35,7 +35,7 @@ namespace Twinning.Script.AndroidHelper {
 		assert_test(program_path !== null, `could not find 'adb' program from PATH environment`);
 		let execute_result = ProcessHelper.execute(program_path, argument, KernelX.Process.list_environment_variable());
 		if (execute_result.code !== 0n) {
-			throw new Error(`adb execute failed : ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
+			throw new Error(`adb execute failed: ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
 		}
 		return execute_result.output;
 	}

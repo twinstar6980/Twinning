@@ -54,113 +54,113 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			TypeIdentifier const & type_identifier
 		) -> Void {
 			switch (type_identifier.value) {
-				case TypeIdentifier::Value::boolean_false : {
+				case TypeIdentifier::Value::boolean_false: {
 					value.set_boolean(k_false);
 					break;
 				}
-				case TypeIdentifier::Value::boolean_true : {
+				case TypeIdentifier::Value::boolean_true: {
 					value.set_boolean(k_true);
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_8 : {
+				case TypeIdentifier::Value::integer_signed_8: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerS8>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_8_zero : {
+				case TypeIdentifier::Value::integer_signed_8_zero: {
 					value.set_number(cbox<Integer>(0_is8));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_8 : {
+				case TypeIdentifier::Value::integer_unsigned_8: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerU8>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_8_zero : {
+				case TypeIdentifier::Value::integer_unsigned_8_zero: {
 					value.set_number(cbox<Integer>(0_iu8));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_16 : {
+				case TypeIdentifier::Value::integer_signed_16: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerS16>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_16_zero : {
+				case TypeIdentifier::Value::integer_signed_16_zero: {
 					value.set_number(cbox<Integer>(0_is16));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_16 : {
+				case TypeIdentifier::Value::integer_unsigned_16: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerU16>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_16_zero : {
+				case TypeIdentifier::Value::integer_unsigned_16_zero: {
 					value.set_number(cbox<Integer>(0_iu16));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_32 : {
+				case TypeIdentifier::Value::integer_signed_32: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerS32>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_32_zero : {
+				case TypeIdentifier::Value::integer_signed_32_zero: {
 					value.set_number(cbox<Integer>(0_is32));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_32 : {
+				case TypeIdentifier::Value::integer_unsigned_32: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerU32>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_32_zero : {
+				case TypeIdentifier::Value::integer_unsigned_32_zero: {
 					value.set_number(cbox<Integer>(0_iu32));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_64 : {
+				case TypeIdentifier::Value::integer_signed_64: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerS64>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_signed_64_zero : {
+				case TypeIdentifier::Value::integer_signed_64_zero: {
 					value.set_number(cbox<Integer>(0_is64));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_64 : {
+				case TypeIdentifier::Value::integer_unsigned_64: {
 					value.set_number(cbox<Integer>(data.read_of<IntegerU64>()));
 					break;
 				}
-				case TypeIdentifier::Value::integer_unsigned_64_zero : {
+				case TypeIdentifier::Value::integer_unsigned_64_zero: {
 					value.set_number(cbox<Integer>(0_iu64));
 					break;
 				}
-				case TypeIdentifier::Value::floater_signed_32 : {
+				case TypeIdentifier::Value::floater_signed_32: {
 					value.set_number(cbox<Floater>(data.read_of<FloaterS32>()));
 					break;
 				}
-				case TypeIdentifier::Value::floater_signed_32_zero : {
+				case TypeIdentifier::Value::floater_signed_32_zero: {
 					value.set_number(cbox<Floater>(0.0_fs32));
 					break;
 				}
-				case TypeIdentifier::Value::floater_signed_64 : {
+				case TypeIdentifier::Value::floater_signed_64: {
 					value.set_number(cbox<Floater>(data.read_of<FloaterS64>()));
 					break;
 				}
-				case TypeIdentifier::Value::floater_signed_64_zero : {
+				case TypeIdentifier::Value::floater_signed_64_zero: {
 					value.set_number(cbox<Floater>(0.0_fs64));
 					break;
 				}
-				case TypeIdentifier::Value::integer_variable_length_unsigned_32 :
-				case TypeIdentifier::Value::integer_variable_length_unsigned_32_equivalent : {
+				case TypeIdentifier::Value::integer_variable_length_unsigned_32:
+				case TypeIdentifier::Value::integer_variable_length_unsigned_32_equivalent: {
 					value.set_number(cbox<Integer>(ProtocolBufferVariableLengthInteger::decode_u32(data)));
 					break;
 				}
-				case TypeIdentifier::Value::integer_variable_length_signed_32 : {
+				case TypeIdentifier::Value::integer_variable_length_signed_32: {
 					value.set_number(cbox<Integer>(ProtocolBufferVariableLengthInteger::decode_s32(data)));
 					break;
 				}
-				case TypeIdentifier::Value::integer_variable_length_unsigned_64 :
-				case TypeIdentifier::Value::integer_variable_length_unsigned_64_equivalent : {
+				case TypeIdentifier::Value::integer_variable_length_unsigned_64:
+				case TypeIdentifier::Value::integer_variable_length_unsigned_64_equivalent: {
 					value.set_number(cbox<Integer>(ProtocolBufferVariableLengthInteger::decode_u64(data)));
 					break;
 				}
-				case TypeIdentifier::Value::integer_variable_length_signed_64 : {
+				case TypeIdentifier::Value::integer_variable_length_signed_64: {
 					value.set_number(cbox<Integer>(ProtocolBufferVariableLengthInteger::decode_s64(data)));
 					break;
 				}
-				case TypeIdentifier::Value::string_native : {
+				case TypeIdentifier::Value::string_native: {
 					auto   size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
 					if constexpr (check_version(version, {}, {false})) {
@@ -173,7 +173,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					}
 					break;
 				}
-				case TypeIdentifier::Value::string_native_indexing : {
+				case TypeIdentifier::Value::string_native_indexing: {
 					auto   size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
 					if constexpr (check_version(version, {}, {false})) {
@@ -187,12 +187,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					native_string_index.append(content);
 					break;
 				}
-				case TypeIdentifier::Value::string_native_indexed : {
+				case TypeIdentifier::Value::string_native_indexed: {
 					auto index = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					value.set_string(native_string_index[index]);
 					break;
 				}
-				case TypeIdentifier::Value::string_unicode : {
+				case TypeIdentifier::Value::string_unicode: {
 					auto length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto content = CStringView{};
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					value.set_string(content);
 					break;
 				}
-				case TypeIdentifier::Value::string_unicode_indexing : {
+				case TypeIdentifier::Value::string_unicode_indexing: {
 					auto length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto content = CStringView{};
@@ -211,31 +211,31 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					unicode_string_index.append(content);
 					break;
 				}
-				case TypeIdentifier::Value::string_unicode_indexed : {
+				case TypeIdentifier::Value::string_unicode_indexed: {
 					auto index = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					value.set_string(unicode_string_index[index]);
 					break;
 				}
-				case TypeIdentifier::Value::reference : {
+				case TypeIdentifier::Value::reference: {
 					switch (data.read_of<ReferenceTypeIdentifier>().value) {
-						case ReferenceTypeIdentifier::Value::null : {
+						case ReferenceTypeIdentifier::Value::null: {
 							value.set_string(k_reference_expression_format_of_null());
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::uid : {
+						case ReferenceTypeIdentifier::Value::uid: {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_content = CStringView{};
 							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), sheet_content, sheet_length);
 							assert_test(sheet_content.size() == sheet_size);
-							// TODO : unknown type of uid value , define them be 'int-var-u32'
+							// TODO: unknown type of uid value, define them be 'int-var-u32'
 							auto uid_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto uid_first = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto uid_last = data.read_of<IntegerU32>();
 							value.set_string(k_reference_expression_format_of_uid(uid_first, uid_middle, uid_last, sheet_content));
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::alias : {
+						case ReferenceTypeIdentifier::Value::alias: {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_content = CStringView{};
@@ -249,17 +249,17 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							value.set_string(k_reference_expression_format_of_alias(alias_content, sheet_content));
 							break;
 						}
-						default : {
+						default: {
 							assert_fail(R"(data.read_of<ReferenceTypeIdentifier>() == /* valid */)");
 						}
 					}
 					break;
 				}
-				case TypeIdentifier::Value::reference_null : {
+				case TypeIdentifier::Value::reference_null: {
 					value.set_string(k_reference_expression_format_of_null());
 					break;
 				}
-				case TypeIdentifier::Value::array_begin : {
+				case TypeIdentifier::Value::array_begin: {
 					auto & array = value.set_array();
 					data.read_constant(TypeIdentifier{TypeIdentifier::Value::array_size});
 					auto size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
@@ -275,7 +275,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					assert_test(array.size() == size);
 					break;
 				}
-				case TypeIdentifier::Value::object_begin : {
+				case TypeIdentifier::Value::object_begin: {
 					auto & object = value.set_object();
 					auto   member_list = std::list<JSON::Object::Element>{};
 					while (k_true) {
@@ -298,7 +298,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					);
 					break;
 				}
-				default : {
+				default: {
 					assert_fail(R"(type_identifier == /* valid */)");
 				}
 			}
@@ -317,16 +317,16 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			auto unicode_string_upper_bound = k_none_size;
 			for (auto & element : data.reserve_view()) {
 				switch (self_cast<TypeIdentifier>(element).value) {
-					case TypeIdentifier::Value::string_native_indexing : {
+					case TypeIdentifier::Value::string_native_indexing: {
 						++native_string_upper_bound;
 						break;
 					}
-					case TypeIdentifier::Value::string_unicode_indexing : {
+					case TypeIdentifier::Value::string_unicode_indexing: {
 						++unicode_string_upper_bound;
 						break;
 					}
 						[[likely]]
-					default : {
+					default: {
 					}
 				}
 			}

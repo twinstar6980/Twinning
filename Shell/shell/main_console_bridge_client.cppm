@@ -80,35 +80,35 @@ export namespace Twinning::Shell {
 			auto result = std::vector<std::string>{};
 			assert_test(argument.size() >= 1);
 			switch (hash_string(argument[0])) {
-				case hash_string("name"sv) : {
+				case hash_string("name"sv): {
 					assert_test(argument.size() == 1);
 					auto   detail = thiz.callback_name();
 					auto & detail_name = std::get<0>(detail);
 					result.emplace_back(std::move(detail_name));
 					break;
 				}
-				case hash_string("version"sv) : {
+				case hash_string("version"sv): {
 					assert_test(argument.size() == 1);
 					auto   detail = thiz.callback_version();
 					auto & detail_version = std::get<0>(detail);
 					result.emplace_back(std::move(detail_version));
 					break;
 				}
-				case hash_string("output_text"sv) : {
+				case hash_string("output_text"sv): {
 					assert_test(argument.size() == 2);
 					auto & detail_text = argument[1];
 					auto   detail = thiz.callback_output_text(detail_text);
 					break;
 				}
-				case hash_string("input_text"sv) : {
+				case hash_string("input_text"sv): {
 					assert_test(argument.size() == 1);
 					auto   detail = thiz.callback_input_text();
 					auto & detail_text = std::get<0>(detail);
 					result.emplace_back(std::move(detail_text));
 					break;
 				}
-				default : {
-					throw std::runtime_error{"invalid method"s};
+				default: {
+					throw std::runtime_error{std::format("Exception: invalid method")};
 				}
 			}
 			return result;

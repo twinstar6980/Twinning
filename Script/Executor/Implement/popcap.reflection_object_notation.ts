@@ -2,14 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-	// encrypt *
-	// decrypt *
-	// encode_cipher *
-	// decode_cipher *
-	// decode_lenient *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

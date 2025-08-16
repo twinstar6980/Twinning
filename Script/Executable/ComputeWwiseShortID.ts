@@ -1,4 +1,3 @@
-// 计算 Wwise Short ID
 namespace Twinning.Script.Executable.ComputeWwiseShortID {
 
 	export function execute(

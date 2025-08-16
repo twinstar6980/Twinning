@@ -120,7 +120,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 			result = [...transform];
 		}
 		else {
-			assert_fail(`invalid transform size`);
+			throw new Error(`invalid transform size`);
 		}
 		return result;
 	}

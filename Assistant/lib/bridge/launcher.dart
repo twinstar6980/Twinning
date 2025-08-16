@@ -60,11 +60,11 @@ class Launcher {
         }
         return null as Void;
       };
-      var result = null as List<String>?;
-      var exception = null as (Object, StackTrace)?;
       var service = portMessage[0] as Service;
       var script = portMessage[1] as String;
       var argument = portMessage[2] as List<String>;
+      var result = null as List<String>?;
+      var exception = null as (Object, StackTrace)?;
       try {
         var executorCallback = ExecutorProxy(callbackProxy);
         var executorArgument = MessageProxy(['execute', script, ...argument]);

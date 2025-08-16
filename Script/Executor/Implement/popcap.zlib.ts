@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.zlib {
 
 	// ------------------------------------------------
 
-	// compress *
-	// uncompress *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

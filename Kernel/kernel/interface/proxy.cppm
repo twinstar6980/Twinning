@@ -159,7 +159,7 @@ export namespace Twinning::Kernel::Interface {
 		ExecutorProxy (
 		) :
 			value{[] (auto &, auto &, auto &) -> auto {
-				throw IncompleteException{};
+				throw UnimplementedException{};
 				return;
 			}} {
 		}

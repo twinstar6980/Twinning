@@ -2,9 +2,6 @@ namespace Twinning.Script.Executor.Implement.popcap.u_texture {
 
 	// ------------------------------------------------
 
-	// encode *
-	// decode *
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

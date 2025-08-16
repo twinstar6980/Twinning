@@ -94,7 +94,7 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	// NOTE : ALIAS - make_std_string
+	// NOTE: ALIAS: make_std_string
 	inline auto mss (
 		CStringView const & string
 	) -> std::string {

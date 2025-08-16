@@ -33,15 +33,15 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			assert_test(!(window_bits == 8_sz && wrapper != Wrapper::Constant::zlib()));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
 			switch (wrapper.value) {
-				case Wrapper::Constant::none().value : {
+				case Wrapper::Constant::none().value: {
 					actual_window_bits = -actual_window_bits;
 					break;
 				}
-				case Wrapper::Constant::zlib().value : {
+				case Wrapper::Constant::zlib().value: {
 					actual_window_bits = actual_window_bits;
 					break;
 				}
-				case Wrapper::Constant::gzip().value : {
+				case Wrapper::Constant::gzip().value: {
 					actual_window_bits = actual_window_bits + 16;
 					break;
 				}
@@ -107,15 +107,15 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		) -> Void {
 			auto wrap_size = k_none_size;
 			switch (wrapper.value) {
-				case Wrapper::Constant::none().value : {
+				case Wrapper::Constant::none().value: {
 					wrap_size = 0_sz;
 					break;
 				}
-				case Wrapper::Constant::zlib().value : {
+				case Wrapper::Constant::zlib().value: {
 					wrap_size = 2_sz + 4_sz + 4_sz;
 					break;
 				}
-				case Wrapper::Constant::gzip().value : {
+				case Wrapper::Constant::gzip().value: {
 					wrap_size = 10_sz + 8_sz;
 					break;
 				}

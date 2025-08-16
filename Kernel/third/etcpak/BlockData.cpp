@@ -908,7 +908,7 @@ static etcpak_force_inline uint64_t ConvertByteOrder( uint64_t d )
     return d;
 }
 
-// TwinStar : change
+// TwinStar: change
 // static etcpak_force_inline void DecodeRGBPart( uint64_t d, uint32_t* dst, uint32_t w )
 void DecodeRGBPart( uint64_t d, uint32_t* dst, uint32_t w )
 {
@@ -1046,7 +1046,7 @@ void DecodeRGBPart( uint64_t d, uint32_t* dst, uint32_t w )
     }
 }
 
-// TwinStar : change
+// TwinStar: change
 // static etcpak_force_inline void DecodeRGBAPart( uint64_t d, uint64_t alpha, uint32_t* dst, uint32_t w )
 void DecodeRGBAPart( uint64_t d, uint64_t alpha, uint32_t* dst, uint32_t w )
 {

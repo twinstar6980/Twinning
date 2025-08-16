@@ -95,8 +95,8 @@ class SettingProvider with ChangeNotifier {
 
   SettingProvider(
   ) :
-    data = _createDefaultData(),
-    state = _createDefaultState();
+    this.data = _createDefaultData(),
+    this.state = _createDefaultState();
 
   // #endregion
 

@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Range {
 
 }
 
-// NOTE : USING
+// NOTE: USING
 
 export namespace Twinning::Kernel {
 	using Range::SizeRange;

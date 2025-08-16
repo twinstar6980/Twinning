@@ -19,7 +19,7 @@ class ForwarderFinderSync: FIFinderSync {
 		FIFinderSyncController.default().directoryURLs = [URL(fileURLWithPath: "/")]
 	}
 
-	// MARK: - implement - FIFinderSync
+	// MARK: - implement FIFinderSync
 
 	public override func menu(
 		for menuKind: FIMenuKind,

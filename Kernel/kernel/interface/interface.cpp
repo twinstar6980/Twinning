@@ -1,4 +1,4 @@
-//
+// twinning.kernel.interface
 
 #include "kernel/common.hpp"
 
@@ -37,11 +37,11 @@ namespace Twinning::Kernel::Interface {
 		MessageProxy const &  argument_proxy,
 		MessageProxy &        result_proxy
 	) -> Void {
-		std::setlocale(stddef::$LC_ALL, "C");
+		std::locale::global(std::locale::classic());
 		auto & argument = argument_proxy.value;
 		auto & result = result_proxy.value;
 		switch (argument[1_ix].hash().value) {
-			case "execute"_shz : {
+			case "execute"_shz: {
 				auto & detail_script = argument[2_ix];
 				auto   detail_argument = List<String>{argument.tail(argument.size() - 3_ix)};
 				auto   detail = service_executor_execute(
@@ -53,7 +53,7 @@ namespace Twinning::Kernel::Interface {
 				result.append_list(detail_result);
 				break;
 			}
-			default : {
+			default: {
 				throw UnnamedException{mss("invalid method"_sv)};
 			}
 		}
@@ -65,7 +65,6 @@ namespace Twinning::Kernel::Interface {
 	#pragma region interface
 
 	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wextern-initializer"
 	#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 
 	__attribute__((visibility("default")))

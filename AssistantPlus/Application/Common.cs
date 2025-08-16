@@ -13,6 +13,7 @@ global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Threading;
 global using System.Threading.Tasks;
+global using System.Runtime.CompilerServices;
 global using System.ComponentModel;
 global using System.Runtime.InteropServices;
 global using Microsoft.UI.Xaml;
@@ -45,11 +46,11 @@ global using FloaterS64 = System.Double;
 public static class GF {
 
 	public static void AssertTest (
-		[DoesNotReturnIf(false)] Boolean condition,
-		String?                          message = null
+		[DoesNotReturnIf(false)]                      Boolean condition,
+		[CallerArgumentExpression(nameof(condition))] String  expression = ""
 	) {
 		if (!condition) {
-			throw new ($"Assertion failed{(message == null ? "" : $" : {message}")}.");
+			throw new ($"AssertionException: '{expression}'.");
 		}
 		return;
 	}

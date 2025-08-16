@@ -260,7 +260,7 @@ class StorageHelper {
         target = (await file_selector.openFile(initialDirectory: toWindowsStyle(locationPath)))?.path;
       }
       if (type == 'load_directory') {
-        // NOTE : use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start.
+        // use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start
         target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(locationPath));
       }
       if (type == 'save_file') {

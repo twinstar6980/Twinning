@@ -24,7 +24,7 @@ namespace Twinning.Script.Language {
 		...argumant: any[]
 	): string {
 		let format = g_map[id];
-		assert_test(format !== undefined, `locale id not found : ${id}`);
+		assert_test(format !== undefined, `locale id not found '${id}'`);
 		let result = '';
 		let argument_index = 0;
 		for (let index = 0; index < format.length; index++) {

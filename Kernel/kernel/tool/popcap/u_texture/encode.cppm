@@ -38,23 +38,23 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 			auto header_stream = OByteStreamView{data.forward_view(bs_static_size<Header>())};
 			auto image_format = Integer{};
 			switch (format.value) {
-				case Texture::Encoding::Format::Constant::rgba_8888_o().value : {
+				case Texture::Encoding::Format::Constant::rgba_8888_o().value: {
 					image_format = FormatFlag::rgba_8888_o;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_4444().value : {
+				case Texture::Encoding::Format::Constant::rgba_4444().value: {
 					image_format = FormatFlag::rgba_4444;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_5551().value : {
+				case Texture::Encoding::Format::Constant::rgba_5551().value: {
 					image_format = FormatFlag::rgba_5551;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgb_565().value : {
+				case Texture::Encoding::Format::Constant::rgb_565().value: {
 					image_format = FormatFlag::rgb_565;
 					break;
 				}
-				default : {
+				default: {
 					assert_fail(R"(format == /* valid */)");
 				}
 			}

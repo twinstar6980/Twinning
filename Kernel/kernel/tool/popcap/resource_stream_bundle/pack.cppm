@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							subgroup_manifest_information_structure.locale = 0x00000000_iu32;
 						}
 						else {
-							subgroup_manifest_information_structure.locale = fourcc_to_integer(subgroup_manifest.category.locale.get().template to_of<FourCC>());
+							subgroup_manifest_information_structure.locale = four_character_code_to_integer(subgroup_manifest.category.locale.get().template to_of<FourCharacterCode>());
 						}
 					}
 					subgroup_manifest_information_structure.id_offset = set_string(subgroup_manifest.id);
@@ -212,11 +212,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						global_resource_count += subgroup_definition.resource.size();
 						for (auto & resource_definition : subgroup_definition.resource) {
 							switch (resource_definition.additional.type().value) {
-								case ResourceType::Constant::general().value : {
+								case ResourceType::Constant::general().value: {
 									++global_general_resource_count;
 									break;
 								}
-								case ResourceType::Constant::texture().value : {
+								case ResourceType::Constant::texture().value: {
 									++global_texture_resource_count;
 									break;
 								}
@@ -250,12 +250,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
 							resource_path_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
 							switch (resource_definition.additional.type().value) {
-								case ResourceType::Constant::general().value : {
+								case ResourceType::Constant::general().value: {
 									auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
 									++global_general_resource_index;
 									break;
 								}
-								case ResourceType::Constant::texture().value : {
+								case ResourceType::Constant::texture().value: {
 									auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 									auto & texture_information_structure = information_structure.texture_resource_information[global_texture_resource_index];
 									++global_texture_resource_index;
@@ -322,11 +322,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 					global_resource_count += subgroup_definition.resource.size();
 					for (auto & resource_definition : subgroup_definition.resource) {
 						switch (resource_definition.additional.type().value) {
-							case ResourceType::Constant::general().value : {
+							case ResourceType::Constant::general().value: {
 								++global_general_resource_count;
 								break;
 							}
-							case ResourceType::Constant::texture().value : {
+							case ResourceType::Constant::texture().value: {
 								++global_texture_resource_count;
 								break;
 							}
@@ -408,7 +408,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							simple_subgroup_information_structure.locale = 0x00000000_iu32;
 						}
 						else {
-							simple_subgroup_information_structure.locale = fourcc_to_integer(subgroup_definition.category.locale.get().template to_of<FourCC>());
+							simple_subgroup_information_structure.locale = four_character_code_to_integer(subgroup_definition.category.locale.get().template to_of<FourCharacterCode>());
 						}
 					}
 					subgroup_id_structure.key = subgroup_definition.id;
@@ -435,13 +435,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						resource_path_structure.value = cbox<IntegerU32>(global_subgroup_index);
 						packet_resource_definition.path = resource_definition.path;
 						switch (resource_definition.additional.type().value) {
-							case ResourceType::Constant::general().value : {
+							case ResourceType::Constant::general().value: {
 								auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
 								auto & packet_resource_additional_definition = packet_resource_definition.additional.template set_of_type<ResourceType::Constant::general()>();
 								++global_general_resource_index;
 								break;
 							}
-							case ResourceType::Constant::texture().value : {
+							case ResourceType::Constant::texture().value: {
 								auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & texture_information_structure = information_structure.texture_resource_information[global_texture_resource_index];
 								auto & packet_resource_additional_definition = packet_resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();

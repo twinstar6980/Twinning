@@ -1,6 +1,5 @@
 module;
 
-#include <typeinfo>
 #include <Shlwapi.h>
 #include <ShlObj_core.h>
 #include <wrl/implements.h>
@@ -8,9 +7,11 @@ module;
 
 export module twinning.assistant_plus.forwarder.forwarder_explorer_command;
 
-EXTERN_C IMAGE_DOS_HEADER __ImageBase;
+extern "C" IMAGE_DOS_HEADER __ImageBase;
 
-export {
+export namespace Twinning::AssistantPlus::Forwarder {
+
+	#pragma region type
 
 	class __declspec(uuid("BE4A1760-1939-4240-BB82-7199B184B702")) ForwarderExplorerCommand :
 		public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand> {
@@ -141,28 +142,76 @@ export {
 
 		#pragma region utility
 
-		auto utf8_to_utf16 (
-			std::u8string_view const & source
-		) -> std::u16string {
-			auto converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
-			auto result = converter.from_bytes(
-				reinterpret_cast<char const *>(source.data()),
-				reinterpret_cast<char const *>(source.data() + source.size())
-			);
-			assert_test(converter.converted() == source.size());
-			return result;
+		auto wide_to_utf8 (
+			std::wstring_view const & source
+		) -> std::string {
+			auto destination = std::string{};
+			if (!source.empty()) {
+				auto destination_size = std::size_t{};
+				destination_size = static_cast<std::size_t>(
+					WideCharToMultiByte(
+						CP_UTF8,
+						WC_ERR_INVALID_CHARS,
+						source.data(),
+						static_cast<int>(source.size()),
+						nullptr,
+						0,
+						nullptr,
+						nullptr
+					)
+				);
+				assert_test(destination_size != 0);
+				destination.reserve(destination_size + 1);
+				destination.resize(destination_size);
+				destination_size = static_cast<std::size_t>(
+					WideCharToMultiByte(
+						CP_UTF8,
+						WC_ERR_INVALID_CHARS,
+						source.data(),
+						static_cast<int>(source.size()),
+						destination.data(),
+						static_cast<int>(destination.size()),
+						nullptr,
+						nullptr
+					)
+				);
+				assert_test(destination_size == destination.size());
+			}
+			return destination;
 		}
 
-		auto utf16_to_utf8 (
-			std::u16string_view const & source
-		) -> std::u8string {
-			auto converter = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{};
-			auto result = converter.to_bytes(
-				source.data(),
-				source.data() + source.size()
-			);
-			assert_test(converter.converted() == source.size());
-			return reinterpret_cast<std::u8string &>(result);
+		auto wide_from_utf8 (
+			std::string_view const & source
+		) -> std::wstring {
+			auto destination = std::wstring{};
+			if (!source.empty()) {
+				auto destination_size = std::size_t{};
+				destination_size = static_cast<std::size_t>(
+					MultiByteToWideChar(
+						CP_UTF8,
+						MB_ERR_INVALID_CHARS,
+						source.data(),
+						static_cast<int>(source.size()),
+						nullptr,
+						0
+					)
+				);
+				assert_test(destination_size != 0);
+				destination.reserve(destination_size + 1);
+				destination.resize(destination_size);
+				destination_size = static_cast<std::size_t>(
+					MultiByteToWideChar(
+						CP_UTF8,
+						MB_ERR_INVALID_CHARS,
+						source.data(),
+						static_cast<int>(source.size()),
+						destination.data(),
+						static_cast<int>(destination.size())
+					)
+				);
+				assert_test(destination_size == destination.size());
+			}
+			return destination;
 		}
 
 		// ----------------
@@ -217,25 +266,25 @@ export {
 		auto encode_percent_string (
 			std::wstring const & source
 		) -> std::wstring {
-			auto data = thiz.utf16_to_utf8(reinterpret_cast<std::u16string const &>(source));
+			auto data = thiz.wide_to_utf8(source);
 			auto destination = std::wstring{};
 			destination.reserve(data.size() * 3);
 			for (auto & character : data) {
-				if ((u8'0' <= character && character <= u8'9') ||
-					(u8'a' <= character && character <= u8'z') ||
-					(u8'A' <= character && character <= u8'Z') ||
-					(character == u8'-') ||
-					(character == u8'.') ||
-					(character == u8'_') ||
-					(character == u8'~')) {
+				if (('0' <= character && character <= '9') ||
+					('a' <= character && character <= 'z') ||
+					('A' <= character && character <= 'Z') ||
+					(character == '-') ||
+					(character == '.') ||
+					(character == '_') ||
+					(character == '~')) {
 					destination.push_back(character);
 				}
 				else {
 					auto high_digit = character / 0x10u;
 					auto low_digit = character % 0x10u;
-					destination.push_back(u8'%');
-					destination.push_back(static_cast<char8_t>((high_digit < 0xAu) ? (u8'0' + high_digit) : (u8'A' + high_digit - 0xAu)));
-					destination.push_back(static_cast<char8_t>((low_digit < 0xAu) ? (u8'0' + low_digit) : (u8'A' + low_digit - 0xAu)));
+					destination.push_back('%');
+					destination.push_back(static_cast<char>((high_digit < 0xAu) ? ('0' + high_digit) : ('A' + high_digit - 0xAu)));
+					destination.push_back(static_cast<char>((low_digit < 0xAu) ? ('0' + low_digit) : ('A' + low_digit - 0xAu)));
 				}
 			}
 			return destination;
@@ -283,15 +332,15 @@ export {
 				std::rethrow_exception(exception);
 			}
 			catch (std::exception & e) {
-				message = std::format("{} : {}", typeid(e).name(), e.what());
+				message = e.what();
 			}
 			catch (...) {
-				message = "?";
+				message = "UnknownException";
 			}
-			auto message_16 = thiz.utf8_to_utf16(reinterpret_cast<std::u8string const &>(message));
+			auto message_w = thiz.wide_from_utf8(message);
 			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
 			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-			TaskDialog(nullptr, nullptr, L"Twinning Assistant Plus", L"Exception", reinterpret_cast<wchar_t const *>(message_16.data()), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
+			TaskDialog(nullptr, nullptr, L"Twinning Assistant Plus", L"Exception", message_w.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
 			SetThreadDpiAwarenessContext(original_thread_dpi_awareness_context);
 			return;
 		}
@@ -299,5 +348,7 @@ export {
 		#pragma endregion
 
 	};
+
+	#pragma endregion
 
 }

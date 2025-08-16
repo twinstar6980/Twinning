@@ -136,7 +136,7 @@ export namespace Twinning::Kernel::Trait {
 		&& (requires { typename CallableTrait<It>::Result; })
 		;
 
-	// NOTE : EXPLAIN - just a name, generic callable object can not test
+	// NOTE: EXPLAIN: just a name, generic callable object can not test
 	template <typename It>
 	concept IsGenericCallable =
 		CategoryConstraint<IsPureInstance<It>>

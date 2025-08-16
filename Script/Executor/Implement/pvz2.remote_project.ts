@@ -2,8 +2,6 @@ namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 
 	// ------------------------------------------------
 
-	// execute
-
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
 	};

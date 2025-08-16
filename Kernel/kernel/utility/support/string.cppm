@@ -16,8 +16,8 @@ import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
 import twinning.kernel.utility.storage.path;
-import twinning.kernel.utility.miscellaneous.fourcc;
 import twinning.kernel.utility.miscellaneous.number_variant;
+import twinning.kernel.utility.miscellaneous.four_character_code;
 import twinning.kernel.utility.support.character_stream.extend;
 import twinning.kernel.utility.null;
 
@@ -442,11 +442,11 @@ export namespace Twinning::Kernel {
 	#pragma region miscellaneous
 
 	template <>
-	struct BasicStringAdapter<Character, FourCC> {
+	struct BasicStringAdapter<Character, FourCharacterCode> {
 
 		using This = BasicString<Character>;
 
-		using That = FourCC;
+		using That = FourCharacterCode;
 
 		// ----------------
 
