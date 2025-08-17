@@ -1,6 +1,6 @@
 // test.main
 
-#define M_kernel_library_linked
 #include "kernel/interface/interface.hpp"
+#define M_kernel_library_symbol &Twinning::Kernel::Interface::service
 
 #include "shell/main.cpp"

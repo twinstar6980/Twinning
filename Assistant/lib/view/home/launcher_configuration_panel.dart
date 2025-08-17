@@ -72,23 +72,25 @@ class LauncherConfigurationPanel extends StatelessWidget {
             ],
             onTap: null,
             panelBuilder: (context, setStateForPanel) => [
-              ...ModuleType.values.map(
-                (item) => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Radio(
-                    value: item,
-                    groupValue: this.data.type,
-                    onChanged: (value) async {
-                      this.data.type = value!;
-                      await refreshState(setStateForPanel);
-                      await refreshState(setState);
-                      this.onUpdate();
-                    },
-                  ),
-                  title: Text(
-                    ModuleHelper.query(item).name,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              RadioGroup<ModuleType>(
+                groupValue: this.data.type,
+                onChanged: (value) async {
+                  this.data.type = value!;
+                  await refreshState(setStateForPanel);
+                  await refreshState(setState);
+                  this.onUpdate();
+                },
+                child: Column(
+                  children: ModuleType.values.map((item) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Radio(
+                      value: item,
+                    ),
+                    title: Text(
+                      ModuleHelper.query(item).name,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )).toList(),
                 ),
               ),
             ],

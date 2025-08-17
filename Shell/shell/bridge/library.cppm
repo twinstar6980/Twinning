@@ -56,11 +56,11 @@ export namespace Twinning::Shell::Bridge {
 		}
 
 		explicit Library (
-			void * const & symbol
+			Service * const & symbol
 		) :
 			m_handle{},
 			m_symbol{} {
-			thiz.m_symbol = static_cast<Service *>(symbol);
+			thiz.m_symbol = symbol;
 			thiz.m_symbol->initialize();
 		}
 

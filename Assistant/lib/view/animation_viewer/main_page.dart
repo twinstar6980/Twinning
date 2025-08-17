@@ -651,24 +651,26 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             (1, 'whole'),
                                             null,
                                             ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
-                                          ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
-                                            value: value.$1,
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              dense: true,
-                                              title: Text(
-                                                value.$2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              trailing: Text(
-                                                ConvertHelper.makeIntegerToString(value.$1, false),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall!.copyWith(
-                                                  color: theme.colorScheme.onSurfaceVariant,
+                                          ].map((value) => value == null
+                                            ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
+                                            : PopupMenuItem(
+                                              value: value.$1,
+                                              child: ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                dense: true,
+                                                title: Text(
+                                                  value.$2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                trailing: Text(
+                                                  ConvertHelper.makeIntegerToString(value.$1, false),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.labelSmall!.copyWith(
+                                                    color: theme.colorScheme.onSurfaceVariant,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          )).toList(),
+                                            )).toList(),
                                           onSelected: (value) async {
                                             value as Integer;
                                             value -= 1;
@@ -708,24 +710,26 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             (this._activeSprite!.frame.length, 'whole'),
                                             null,
                                             ...this._activeFrameLabel!.map((value) => (value.$3 + 1, value.$1)),
-                                          ].map((value) => value == null ? PopupMenuDivider().as<PopupMenuEntry<Object>>() : PopupMenuItem(
-                                            value: value.$1,
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              dense: true,
-                                              title: Text(
-                                                value.$2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              trailing: Text(
-                                                ConvertHelper.makeIntegerToString(value.$1, false),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall!.copyWith(
-                                                  color: theme.colorScheme.onSurfaceVariant,
+                                          ].map((value) => value == null
+                                            ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
+                                            : PopupMenuItem(
+                                              value: value.$1,
+                                              child: ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                dense: true,
+                                                title: Text(
+                                                  value.$2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                trailing: Text(
+                                                  ConvertHelper.makeIntegerToString(value.$1, false),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.labelSmall!.copyWith(
+                                                    color: theme.colorScheme.onSurfaceVariant,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          )).toList(),
+                                            )).toList(),
                                           onSelected: (value) async {
                                             value as Integer;
                                             value -= 1;

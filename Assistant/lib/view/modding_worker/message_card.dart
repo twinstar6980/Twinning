@@ -71,16 +71,14 @@ class MessageCard extends StatelessWidget {
                   overflow: TextOverflow.clip,
                   style: titleStyle,
                 ),
-                ...this.description.map(
-                  (value) => Container(
-                    padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                    child: Text(
-                      value,
-                      overflow: TextOverflow.clip,
-                      style: descriptionStyle,
-                    ),
+                ...this.description.map((item) => Container(
+                  padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
+                  child: Text(
+                    item,
+                    overflow: TextOverflow.clip,
+                    style: descriptionStyle,
                   ),
-                ),
+                )),
               ],
             ).withExpanded(),
           ],

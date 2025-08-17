@@ -77,24 +77,25 @@ class _Main {
     var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await ControlHelper.showDialogAsModal<Boolean>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
       title: 'Forward',
       contentBuilder: (context, setStateForPanel) => [
-        ...ModuleType.values.map(
-          (item) => ListTile(
-            contentPadding: EdgeInsets.zero,
-            enabled: forwardOption[item.index] != null,
-            leading: Radio(
-              value: item,
-              groupValue: targetType,
-              onChanged: forwardOption[item.index] == null
-                ? null
-                : (value) async {
-                  targetType = item;
-                  await refreshState(setStateForPanel);
-                },
-            ),
-            title: Text(
-              ModuleHelper.query(item).name,
-              overflow: TextOverflow.ellipsis,
-            ),
+        RadioGroup<ModuleType>(
+          groupValue: targetType,
+          onChanged: (value) async {
+            targetType = value;
+            await refreshState(setStateForPanel);
+          },
+          child: Column(
+            children: ModuleType.values.map((item) => ListTile(
+              contentPadding: EdgeInsets.zero,
+              enabled: forwardOption[item.index] != null,
+              leading: Radio(
+                enabled: forwardOption[item.index] != null,
+                value: item,
+              ),
+              title: Text(
+                ModuleHelper.query(item).name,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )).toList(),
           ),
         ),
       ],

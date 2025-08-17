@@ -100,6 +100,35 @@
 						AcceptsReturn="True"
 						Text="{x:Bind Controller.uArgumentText_Text}"
 						/>
+					<Button
+						ToolTipService.ToolTip="Pick"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Top"
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
+						>
+						<Button.Flyout>
+							<MenuFlyout Placement="TopEdgeAlignedRight">
+								<MenuFlyoutItem
+									Tag="LoadFile"
+									Click="{x:Bind Controller.uArgumentPick_Click}"
+									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
+									Text="Load File"
+									/>
+								<MenuFlyoutItem
+									Tag="LoadDirectory"
+									Click="{x:Bind Controller.uArgumentPick_Click}"
+									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}"
+									Text="Load Directory"
+									/>
+								<MenuFlyoutItem
+									Tag="SaveFile"
+									Click="{x:Bind Controller.uArgumentPick_Click}"
+									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
+									Text="Save File"
+									/>
+							</MenuFlyout>
+						</Button.Flyout>
+					</Button>
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

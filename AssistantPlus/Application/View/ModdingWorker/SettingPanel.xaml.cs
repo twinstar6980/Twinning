@@ -179,6 +179,21 @@ namespace AssistantPlus.View.ModdingWorker {
 			}
 		}
 
+		public async void uArgumentPick_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<MenuFlyoutItem>();
+			var value = await StorageHelper.Pick(senders.Tag.As<String>(), WindowHelper.Find(this.View), $"@{nameof(ModdingWorker)}.Argument", null);
+			if (value != null) {
+				this.Data.Argument = [..this.Data.Argument, value];
+				this.NotifyPropertyChanged([
+					nameof(this.uArgumentText_Text),
+				]);
+			}
+			return;
+		}
+
 		#endregion
 
 		#region automatic scroll

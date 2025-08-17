@@ -134,23 +134,25 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
           onTap: null,
           panelBuilder: (context, setStateForPanel) => [
-            ...ThemeMode.values.map(
-              (item) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Radio(
-                  value: item,
-                  groupValue: setting.data.themeMode,
-                  onChanged: (value) async {
-                    setting.data.themeMode = value!;
-                    await refreshState(setStateForPanel);
-                    await refreshState(this.setState);
-                    await setting.save();
-                  },
-                ),
-                title: Text(
-                  ['System', 'Light', 'Dark'][item.index],
-                  overflow: TextOverflow.ellipsis,
-                ),
+            RadioGroup<ThemeMode>(
+              groupValue: setting.data.themeMode,
+              onChanged: (value) async {
+                setting.data.themeMode = value!;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+              child: Column(
+                children: ThemeMode.values.map((item) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Radio(
+                    value: item,
+                  ),
+                  title: Text(
+                    ['System', 'Light', 'Dark'][item.index],
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )).toList(),
               ),
             ),
           ],
@@ -557,23 +559,25 @@ class _SettingPanelState extends State<SettingPanel> {
           ],
           onTap: null,
           panelBuilder: (context, setStateForPanel) => [
-            ...ModuleType.values.map(
-              (item) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Radio(
-                  value: item,
-                  groupValue: setting.data.forwarderDefaultTarget,
-                  onChanged: (value) async {
-                    setting.data.forwarderDefaultTarget = value!;
-                    await refreshState(setStateForPanel);
-                    await refreshState(this.setState);
-                    await setting.save();
-                  },
-                ),
-                title: Text(
-                  ModuleHelper.query(item).name,
-                  overflow: TextOverflow.ellipsis,
-                ),
+            RadioGroup<ModuleType>(
+              groupValue: setting.data.forwarderDefaultTarget,
+              onChanged: (value) async {
+                setting.data.forwarderDefaultTarget = value!;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+              child: Column(
+                children: ModuleType.values.map((item) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Radio(
+                    value: item,
+                  ),
+                  title: Text(
+                    ModuleHelper.query(item).name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )).toList(),
               ),
             ),
           ],
