@@ -20,7 +20,7 @@ namespace AssistantPlus.View.CommandSender {
 				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
 				StringExpression values  => values.Value,
 				PathExpression values    => $"{values.Content}",
-				_                        => throw new (),
+				_                        => throw new UnreachableException(),
 			};
 		}
 
@@ -48,7 +48,7 @@ namespace AssistantPlus.View.CommandSender {
 				ArgumentType.Path => new PathExpression() {
 					Content = json.As<String>(),
 				},
-				_ => throw new (),
+				_ => throw new UnreachableException(),
 			};
 		}
 

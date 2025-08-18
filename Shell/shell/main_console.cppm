@@ -113,9 +113,7 @@ export namespace Twinning::Shell {
 					result.emplace_back(std::move(detail_text));
 					break;
 				}
-				default: {
-					throw std::runtime_error{std::format("Exception: invalid method")};
-				}
+				default: throw std::runtime_error{std::format("Exception: invalid method")};
 			}
 			return result;
 		}

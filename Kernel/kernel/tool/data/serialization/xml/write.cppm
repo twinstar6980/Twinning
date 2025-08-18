@@ -48,6 +48,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 					raw_node = raw_document.NewComment(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			return raw_node;
 		}

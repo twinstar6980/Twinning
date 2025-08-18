@@ -191,7 +191,7 @@ namespace AssistantPlus.View.ModdingWorker {
 					]);
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}

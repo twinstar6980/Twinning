@@ -1258,6 +1258,7 @@ export namespace Twinning::Kernel::JavaScript {
 					thix.from(that.get_object());
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			return;
 		}
@@ -1333,6 +1334,7 @@ export namespace Twinning::Kernel::JavaScript {
 					node_value_js.set_object_property("value"_sv, thix.new_value(node_value.value));
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			thix.set_object_property("value"_sv, as_moveable(node_value_js));
 			return;
@@ -1369,6 +1371,7 @@ export namespace Twinning::Kernel::JavaScript {
 					node_value_js.get_object_property("value"_sv).to(node_value.value);
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			return;
 		}

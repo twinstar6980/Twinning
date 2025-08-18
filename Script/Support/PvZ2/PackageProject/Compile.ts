@@ -360,6 +360,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 			}
 			default: {
 				throw new Error('unknown resource type');
+				break;
 			}
 		}
 		return;

@@ -242,6 +242,7 @@ export namespace Twinning::Kernel::Storage {
 				}
 				default: {
 					result = ObjectType::Constant::other();
+					break;
 				}
 			}
 			return result;

@@ -556,6 +556,7 @@ namespace Twinning.Script.Console {
 					}
 					default: {
 						return los('console:input_command_invalid');
+						break;
 					}
 				}
 			}
@@ -733,6 +734,7 @@ namespace Twinning.Script.Console {
 					}
 					default: {
 						return los('console:input_command_invalid');
+						break;
 					}
 				}
 			}

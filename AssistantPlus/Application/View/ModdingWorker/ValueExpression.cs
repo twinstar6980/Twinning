@@ -53,15 +53,15 @@ namespace AssistantPlus.View.ModdingWorker {
 			ValueExpression value
 		) {
 			return value switch {
-				PauseExpression values       => "",
-				BooleanExpression values     => ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values.Value),
-				IntegerExpression values     => ConvertHelper.MakeIntegerToString(values.Value, true),
-				FloaterExpression values     => ConvertHelper.MakeFloaterToString(values.Value, true),
+				PauseExpression values       => $"",
+				BooleanExpression values     => $"{ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values.Value)}",
+				IntegerExpression values     => $"{ConvertHelper.MakeIntegerToString(values.Value, true)}",
+				FloaterExpression values     => $"{ConvertHelper.MakeFloaterToString(values.Value, true)}",
 				SizeExpression values        => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
-				StringExpression values      => values.Value,
+				StringExpression values      => $"{values.Value}",
 				PathExpression values        => $"{values.Content}",
 				EnumerationExpression values => $"{values.Item}",
-				_                            => throw new (),
+				_                            => throw new UnreachableException(),
 			};
 		}
 

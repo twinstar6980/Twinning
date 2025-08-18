@@ -206,7 +206,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		enable_debug_mode: boolean,
 	): void {
 		assert_test(KernelX.is_windows, `unsupported system, this function only avaliable for windows`);
-		Console.information(`Phase : detect game platform`, []);
+		Console.information(`Phase: detect game platform`, []);
 		let platform = detect_platform(target_directory);
 		assert_test(platform !== null);
 		Console.information(`The game platform is '${platform}'`, []);
@@ -228,15 +228,15 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			throw new Error();
 		}
 		let program_backup_file = `${target_directory}/.backup/program`;
-		Console.information(`Phase : check game file`, []);
+		Console.information(`Phase: check game file`, []);
 		assert_test(KernelX.Storage.exist_file(program_file) || KernelX.Storage.exist_file(program_backup_file));
 		assert_test(KernelX.Storage.exist_file(metadata_file));
 		if (!KernelX.Storage.exist_file(program_backup_file)) {
-			Console.information(`Phase : backup original program`, []);
+			Console.information(`Phase: backup original program`, []);
 			KernelX.Storage.copy(program_file, program_backup_file);
 		}
 		let dump_data: Array<string> = [];
-		Console.information(`Phase : dump program information via Il2CppDumper`, []);
+		Console.information(`Phase: dump program information via Il2CppDumper`, []);
 		if (disable_record_encryption || enable_debug_mode) {
 			let il2cpp_dumper_program_file = g_il2cpp_dumper_program_file !== null ? g_il2cpp_dumper_program_file : ProcessHelper.search_path('Il2CppDumper-x86');
 			assert_test(il2cpp_dumper_program_file !== null, `could not find 'Il2CppDumper-x86' program from PATH environment`);
@@ -270,7 +270,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			},
 		};
 		if (disable_record_encryption || enable_debug_mode) {
-			Console.information(`Phase : parse symbol address from program information`, []);
+			Console.information(`Phase: parse symbol address from program information`, []);
 			{
 				let search_result = search_method_from_dump_data(dump_data, 'CRC64', 'GetValue');
 				assert_test(search_result.length === 1);
@@ -316,11 +316,11 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				`MyConfig.DEBUG          +${symbol_address.MyConfig.DEBUG.toString(16)}`,
 			]);
 		}
-		Console.information(`Phase : load original program`, []);
+		Console.information(`Phase: load original program`, []);
 		let program_data = KernelX.Storage.read_file(program_backup_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
-			Console.information(`Phase : modify method 'RecordStore.ReadRecord'`, []);
+			Console.information(`Phase: modify method 'RecordStore.ReadRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.ReadRecord);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
@@ -360,13 +360,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			}
 		}
 		if (disable_record_encryption) {
-			Console.information(`Phase : modify method 'RecordStore.WriteRecord'`, []);
+			Console.information(`Phase: modify method 'RecordStore.WriteRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.WriteRecord);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
 		}
 		if (enable_debug_mode) {
-			Console.information(`Phase : modify method 'MyConfig..cctor'`, []);
+			Console.information(`Phase: modify method 'MyConfig..cctor'`, []);
 			program_stream.p(symbol_address.MyConfig._cctor);
 			let search_limit = 512;
 			if (platform === 'windows_x32') {
@@ -394,7 +394,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 					}
 					program_stream.pr(-1);
 					program_stream.u8(0x01n);
-					Console.warning(`Warning : the STR instruction for 'MyConfig.DEBUG' was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG' was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
 					break;
 				}
 				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
@@ -411,7 +411,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 					}
 					program_stream.pr(-4);
 					program_stream.u32(instruction_code & 0b111111111111_1111_0000_000000000000n | 14n << 12n | BigInt(symbol_address.MyConfig.DEBUG) << 0n);
-					Console.warning(`Warning : the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
 					break;
 				}
 				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
@@ -428,13 +428,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 					}
 					program_stream.pr(-4);
 					program_stream.u32(instruction_code & 0b1111111111_000000000000_11111_00000n | BigInt(symbol_address.MyConfig.DEBUG) << 10n | 30n << 0n);
-					Console.warning(`Warning : the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
 					break;
 				}
 				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
 			}
 		}
-		Console.information(`Phase : save modified program`, []);
+		Console.information(`Phase: save modified program`, []);
 		KernelX.Storage.write_file(program_file, program_data);
 		return;
 	}

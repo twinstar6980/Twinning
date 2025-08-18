@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '129';
+	export const k_version = '130';
 
 	// ------------------------------------------------
 
@@ -193,16 +193,16 @@ namespace Twinning.Script {
 			partition_list: Array<string>,
 			directory: string,
 		): void {
-			assert_test(Detail.exist_directory(directory), `directory is not found : <${directory}>`);
+			assert_test(Detail.exist_directory(directory), `directory is not found: <${directory}>`);
 			for (let partition of partition_list) {
 				let script_name = `script/${partition}.js`;
 				let script_file = `${directory}/${partition}.js`;
 				let configuration_file = `${directory}/${partition}.json`;
-				assert_test(Detail.exist_file(script_file), `partition script file not found : <${partition}>`);
+				assert_test(Detail.exist_file(script_file), `partition script file not found: <${partition}>`);
 				let configuration: null | Configuration = null;
 				if (Detail.exist_file(configuration_file)) {
 					let raw_configuration = Detail.read_json(configuration_file);
-					assert_test(is_object_of_object(raw_configuration), `partition configuration must be object : <${partition}>`);
+					assert_test(is_object_of_object(raw_configuration), `partition configuration must be object: <${partition}>`);
 					configuration = raw_configuration as Configuration;
 				}
 				let injector = Detail.evaluate(script_file, script_name) as undefined | Injector;

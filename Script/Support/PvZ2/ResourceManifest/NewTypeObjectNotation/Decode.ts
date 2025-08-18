@@ -23,6 +23,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 			}
 			default: {
 				throw new Error(`invalid boolean integer`);
+				break;
 			}
 		}
 		return value;

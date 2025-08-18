@@ -54,6 +54,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 							resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::texture()>();
 							break;
 						}
+						default: throw UnreachableException{};
 					}
 				}
 				CompiledMapData::adjust_sequence(information_structure.resource_information);
@@ -100,6 +101,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 						compress_resource_data_section = definition.compression.texture;
 						break;
 					}
+					default: throw UnreachableException{};
 				}
 				if (!compress_resource_data_section) {
 					resource_data_section_view = data.next_view(resource_data_section_size_original);
@@ -135,6 +137,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 							resource_additional_information_structure.size_height = cbox<IntegerU32>(resource_additional_definition.size.height);
 							break;
 						}
+						default: throw UnreachableException{};
 					}
 					resource_data_section_stream.write_space(k_null_byte, compute_padding_size(resource_data_section_stream.position(), k_padding_unit_size));
 				}
@@ -159,6 +162,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 						information_structure.header.texture_resource_data_section_size_original = cbox<IntegerU32>(resource_data_section_size_original);
 						break;
 					}
+					default: throw UnreachableException{};
 				}
 			}
 			information_structure.header.resource_information_section_offset = cbox<IntegerU32>(information_data.resource_information_offset);

@@ -175,7 +175,7 @@ namespace AssistantPlus.View.AnimationViewer {
 							this.Storyboard.Pause();
 							break;
 						}
-						default: throw new ();
+						default: throw new UnreachableException();
 					}
 				}
 				this.mState = value;

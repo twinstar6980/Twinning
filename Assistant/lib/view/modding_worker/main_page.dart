@@ -412,9 +412,7 @@ class _MainPageBridgeClient implements bridge.Client {
         var detail = await this.callbackPushSystemNotification(detailTitle, detailDescription); // ignore: unused_local_variable
         break;
       }
-      default: {
-        throw Exception('invalid method');
-      }
+      default: throw Exception('invalid method');
     }
     return result;
   }

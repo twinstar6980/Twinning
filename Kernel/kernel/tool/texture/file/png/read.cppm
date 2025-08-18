@@ -57,9 +57,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 					}
 					break;
 				}
-				default: {
-					throw UnreachableException{};
-				}
+				default: throw UnreachableException{};
 			}
 			auto png_trans_alpha = Third::libpng::$png_bytep{};
 			auto png_num_trans = int{};

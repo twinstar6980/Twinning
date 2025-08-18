@@ -508,7 +508,7 @@ namespace AssistantPlus.View.Home {
 					}
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			if (changed) {
 				this.NotifyPropertyChanged([

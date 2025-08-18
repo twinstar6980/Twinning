@@ -91,6 +91,7 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 				}
 				default: {
 					assert_fail(R"(image_format == /* valid */)");
+					break;
 				}
 			}
 			auto compress_texture_data = cbox<Boolean>(header.compress_data);

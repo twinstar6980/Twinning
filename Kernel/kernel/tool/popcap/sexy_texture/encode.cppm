@@ -74,9 +74,7 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 					image_format = FormatFlag::la_88;
 					break;
 				}
-				default: {
-					assert_fail(R"(format == /* valid */)");
-				}
+				default: throw UnsupportedException{};
 			}
 			auto compress_texture_data_size = Size{};
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;

@@ -76,7 +76,7 @@ namespace AssistantPlus {
 					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
 					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
 					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
-					_                                  => throw new (),
+					_                                  => throw new UnreachableException(),
 				};
 				App.MainWindow.uBackground.Visibility = this.Data.ThemeBackdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
 				this.State.ThemeBackdrop = this.Data.ThemeBackdrop;
@@ -87,13 +87,13 @@ namespace AssistantPlus {
 					CustomThemeMode.System => ElementTheme.Default,
 					CustomThemeMode.Light  => ElementTheme.Light,
 					CustomThemeMode.Dark   => ElementTheme.Dark,
-					_                      => throw new (),
+					_                      => throw new UnreachableException(),
 				};
 				App.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.ThemeMode switch {
 					CustomThemeMode.System => null,
 					CustomThemeMode.Light  => Colors.Black,
 					CustomThemeMode.Dark   => Colors.White,
-					_                      => throw new (),
+					_                      => throw new UnreachableException(),
 				};
 				await ControlHelper.IterateDialog(async (it) => {
 					it.RequestedTheme = App.MainWindow.Content.As<FrameworkElement>().RequestedTheme;

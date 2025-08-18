@@ -292,6 +292,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 								}
 								break;
 							}
+							default: throw UnreachableException{};
 						}
 					}
 					package_data_end_position = maximum(package_data_end_position, cbox<Size>(subgroup_information_structure.offset + subgroup_information_structure.size));

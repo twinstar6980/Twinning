@@ -1250,7 +1250,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.WorkerDoLink(true);
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1302,7 +1302,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					}
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1406,7 +1406,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList());
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1521,7 +1521,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList());
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1606,7 +1606,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList());
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1765,7 +1765,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.SaveSetting();
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1973,7 +1973,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.SaveSetting();
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -2225,7 +2225,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.SaveSetting();
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -2444,7 +2444,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					ResourceType.SpecialPtx  => FluentIconGlyph.Picture,
 					ResourceType.SpecialPam  => FluentIconGlyph.HomeGroup,
 					ResourceType.SpecialWem  => FluentIconGlyph.Audio,
-					_                        => throw new (),
+					_                        => throw new UnreachableException(),
 				};
 			}
 		}
@@ -2460,7 +2460,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					ResourceType.SpecialPtx  => "PTX",
 					ResourceType.SpecialPam  => "PAM",
 					ResourceType.SpecialWem  => "WEM",
-					_                        => throw new (),
+					_                        => throw new UnreachableException(),
 				};
 			}
 		}
@@ -2479,7 +2479,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				ResourceType.SpecialPtx  => JsonHelper.DeserializeNode<SpecialPtxResourceProperty>(this.Setting.Property),
 				ResourceType.SpecialPam  => JsonHelper.DeserializeNode<SpecialPamResourceProperty>(this.Setting.Property),
 				ResourceType.SpecialWem  => JsonHelper.DeserializeNode<SpecialWemResourceProperty>(this.Setting.Property),
-				_                        => throw new (),
+				_                        => throw new UnreachableException(),
 			};
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
 				ResourceType.Dummy => new DummyResourcePropertyPanel() {
@@ -2514,7 +2514,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					Value = property.As<SpecialWemResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
-				_ => throw new (),
+				_ => throw new UnreachableException(),
 			}, null);
 			this.Setting.Property = JsonHelper.SerializeNode(property);
 			await this.SaveSetting();
@@ -2602,7 +2602,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.wav"));
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			await this.SaveSetting();
 			this.NotifyPropertyChanged([
@@ -2678,7 +2678,7 @@ namespace AssistantPlus.View.PackageBuilder {
 					await this.SaveSetting();
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}

@@ -296,7 +296,7 @@ class _MainPageState extends State<MainPage> {
                       await this._duplicateTabItem(index);
                       break;
                     }
-                    default: throw Exception();
+                    default: throw UnreachableException();
                   }
                 },
               ),

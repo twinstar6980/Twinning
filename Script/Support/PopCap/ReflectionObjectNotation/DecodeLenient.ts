@@ -336,6 +336,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 					}
 					default: {
 						throw new Error(`data@${data.p().toString(16)}h: invalid reference type identifier`);
+						break;
 					}
 				}
 				break;
@@ -379,6 +380,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 			}
 			default: {
 				throw new Error(`data@${data.p().toString(16)}h: invalid type identifier`);
+				break;
 			}
 		}
 		return value;

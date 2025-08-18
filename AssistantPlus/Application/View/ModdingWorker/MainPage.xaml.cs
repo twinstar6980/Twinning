@@ -572,9 +572,7 @@ namespace AssistantPlus.View.ModdingWorker {
 						var detail = await this.CallbackPushSystemNotification(detailType, detailDescription);
 						break;
 					}
-					default: {
-						throw new ("invalid method");
-					}
+					default: throw new ("invalid method");
 				}
 			}).Wait();
 			return result;

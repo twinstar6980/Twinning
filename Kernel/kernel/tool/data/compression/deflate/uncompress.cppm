@@ -22,8 +22,6 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Size const &      window_bits,
 			Wrapper const &   wrapper
 		) -> Void {
-			#pragma clang diagnostic push
-			#pragma clang diagnostic ignored "-Wold-style-cast"
 			assert_test(Math::between(window_bits, 8_sz, mbox<Size>(Third::zlib::$MAX_WBITS)));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
 			switch (wrapper.value) {
@@ -32,13 +30,14 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 					break;
 				}
 				case Wrapper::Constant::zlib().value: {
-					actual_window_bits = actual_window_bits;
+					actual_window_bits = +actual_window_bits;
 					break;
 				}
 				case Wrapper::Constant::gzip().value: {
-					actual_window_bits = actual_window_bits + 16;
+					actual_window_bits = +actual_window_bits + 16;
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			auto z_stream = Third::zlib::$z_stream{
 				.next_in = cast_pointer<Third::zlib::$Bytef>(as_variable_pointer(ripe.current_pointer())).value,
@@ -76,7 +75,6 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			ripe.forward(mbox<Size>(z_stream.total_in));
 			raw.forward(mbox<Size>(z_stream.total_out));
 			return;
-			#pragma clang diagnostic pop
 		}
 
 		// ----------------

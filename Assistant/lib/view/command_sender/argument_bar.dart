@@ -512,51 +512,40 @@ class ArgumentBar extends StatelessWidget {
   @override
   build(context) {
     if (this.option == null) {
-      if (this.type == ArgumentType.boolean) {
-        return _BooleanArgumentBar(
+      return switch (this.type) {
+        ArgumentType.boolean => _BooleanArgumentBar(
           name: this.name,
           value: this.value.cast(),
-        );
-      }
-      if (this.type == ArgumentType.integer) {
-        return _IntegerArgumentBar(
+        ),
+        ArgumentType.integer => _IntegerArgumentBar(
           name: this.name,
           value: this.value.cast(),
-        );
-      }
-      if (this.type == ArgumentType.floater) {
-        return _FloaterArgumentBar(
+        ),
+        ArgumentType.floater => _FloaterArgumentBar(
           name: this.name,
           value: this.value.cast(),
-        );
-      }
-      if (this.type == ArgumentType.size) {
-        return _SizeArgumentBar(
+        ),
+        ArgumentType.size => _SizeArgumentBar(
           name: this.name,
           value: this.value.cast(),
-        );
-      }
-      if (this.type == ArgumentType.string) {
-        return _StringArgumentBar(
+        ),
+        ArgumentType.string => _StringArgumentBar(
           name: this.name,
           value: this.value.cast(),
-        );
-      }
-      if (this.type == ArgumentType.path) {
-        return _PathArgumentBar(
+        ),
+        ArgumentType.path => _PathArgumentBar(
           name: this.name,
           value: this.value.cast(),
-        );
-      }
+        ),
+      };
     }
-    if (this.option != null) {
+    else {
       return _EnumerationArgumentBar(
         name: this.name,
         option: this.option!,
         value: this.value,
       );
     }
-    throw UnimplementedError();
   }
 
 }

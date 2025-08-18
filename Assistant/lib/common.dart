@@ -8,8 +8,11 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 // ----------------
 
 typedef Void = void;
+
 typedef Boolean = bool;
+
 typedef Integer = int;
+
 typedef Floater = double;
 
 typedef IconSymbols = Symbols;
@@ -20,7 +23,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '92';
+  static const String version = '93';
 
   static const String developer = 'TwinStar';
 
@@ -44,7 +47,76 @@ final class SystemChecker {
 
 // ----------------
 
-class _AssertionException implements Exception {
+class UnreachableException implements Exception {
+
+  // #region structor
+
+  // ----------------
+
+  UnreachableException(
+  );
+
+  // #endregion
+
+  // #region string
+
+  @override
+  String toString(
+  ) {
+    return 'UnreachableException';
+  }
+
+  // #endregion
+
+}
+
+class UnimplementedException implements Exception {
+
+  // #region structor
+
+  // ----------------
+
+  UnimplementedException(
+  );
+
+  // #endregion
+
+  // #region string
+
+  @override
+  String toString(
+  ) {
+    return 'UnimplementedException';
+  }
+
+  // #endregion
+
+}
+
+class UnsupportedException implements Exception {
+
+  // #region structor
+
+  // ----------------
+
+  UnsupportedException(
+  );
+
+  // #endregion
+
+  // #region string
+
+  @override
+  String toString(
+  ) {
+    return 'UnsupportedException';
+  }
+
+  // #endregion
+
+}
+
+class AssertionException implements Exception {
 
   // #region structor
 
@@ -52,7 +124,7 @@ class _AssertionException implements Exception {
 
   // ----------------
 
-  _AssertionException(
+  AssertionException(
     String? expression,
   ) :
     this.expression = expression;
@@ -76,7 +148,7 @@ Void assertTest(
   String? expression = null,
 }) {
   if (!condition) {
-    throw _AssertionException(expression);
+    throw AssertionException(expression);
   }
   return;
 }

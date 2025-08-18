@@ -160,6 +160,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							data.write(alias);
 							break;
 						}
+						default: throw UnreachableException{};
 					}
 				}
 			}
@@ -231,6 +232,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					process_value(data, value.get_object(), native_string_index, enable_reference);
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			return;
 		}

@@ -205,7 +205,7 @@ namespace AssistantPlus.View.ResourceShipper {
 								FilterType.Any       => resource.Item2 != null,
 								FilterType.File      => resource.Item2 == false,
 								FilterType.Directory => resource.Item2 == true,
-								_                    => throw new (),
+								_                    => throw new UnreachableException(),
 							};
 							item.BatchMatched &= item.Configuration.Batchable && resource.Item2 == true;
 							item.NameMatched &= nameRule.IsMatch(resource.Item1);
@@ -436,6 +436,7 @@ namespace AssistantPlus.View.ResourceShipper {
 					}
 					break;
 				}
+				default: throw new UnreachableException();
 			}
 			return;
 		}

@@ -66,6 +66,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 						compress_resource_data_section = definition.compression.texture;
 						break;
 					}
+					default: throw UnreachableException{};
 				}
 				auto resource_data_section_view_stored = data.sub_view(resource_data_section_offset, resource_data_section_size);
 				if (!compress_resource_data_section) {
@@ -101,6 +102,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 							resource_additional_definition.size.height = cbox<Integer>(resource_additional_information_structure.size_height);
 							break;
 						}
+						default: throw UnreachableException{};
 					}
 					auto resource_data = resource_data_section_view.sub(cbox<Size>(resource_information_structure.value.offset), cbox<Size>(resource_information_structure.value.size));
 					if (resource_directory.has()) {

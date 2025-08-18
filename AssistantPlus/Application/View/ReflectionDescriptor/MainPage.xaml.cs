@@ -290,7 +290,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 					await this.Unload();
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}

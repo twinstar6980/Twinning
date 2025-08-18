@@ -102,7 +102,7 @@ namespace Twinning.Script {
 			executor: () => any,
 		): void {
 			assert_test(this.m_pool.length !== 0, `thread pool is empty`);
-			let index = null;
+			let index: null | number = null;
 			while (index === null) {
 				index = this.m_pool.findIndex((value, index) => (this.idle(index)));
 				if (index === -1) {

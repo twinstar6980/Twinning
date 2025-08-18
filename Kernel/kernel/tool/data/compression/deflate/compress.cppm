@@ -25,8 +25,6 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Strategy const &  strategy,
 			Wrapper const &   wrapper
 		) -> Void {
-			#pragma clang diagnostic push
-			#pragma clang diagnostic ignored "-Wold-style-cast"
 			assert_test(Math::between(level, 0_sz, mbox<Size>(Third::zlib::$Z_BEST_COMPRESSION)));
 			assert_test(Math::between(window_bits, 8_sz, mbox<Size>(Third::zlib::$MAX_WBITS)));
 			assert_test(Math::between(memory_level, 1_sz, mbox<Size>(Third::zlib::$MAX_MEM_LEVEL)));
@@ -38,13 +36,14 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 					break;
 				}
 				case Wrapper::Constant::zlib().value: {
-					actual_window_bits = actual_window_bits;
+					actual_window_bits = +actual_window_bits;
 					break;
 				}
 				case Wrapper::Constant::gzip().value: {
-					actual_window_bits = actual_window_bits + 16;
+					actual_window_bits = +actual_window_bits + 16;
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			auto z_stream = Third::zlib::$z_stream{
 				.next_in = cast_pointer<Third::zlib::$Bytef>(as_variable_pointer(raw.current_pointer())).value,
@@ -93,7 +92,6 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			ripe.forward(mbox<Size>(z_stream.total_out));
 			assert_test(raw.full());
 			return;
-			#pragma clang diagnostic pop
 		}
 
 		// ----------------
@@ -119,6 +117,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 					wrap_size = 10_sz + 8_sz;
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			if (window_bits == 15_sz && memory_level == 8_sz) {
 				ripe_size_bound = wrap_size + (raw_size + (raw_size >> 12_sz) + (raw_size >> 14_sz) + (raw_size >> 25_sz) + 13_sz - 6_sz);

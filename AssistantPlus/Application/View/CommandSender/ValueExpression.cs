@@ -46,13 +46,13 @@ namespace AssistantPlus.View.CommandSender {
 			ValueExpression value
 		) {
 			return value switch {
-				BooleanExpression values => ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values.Value),
-				IntegerExpression values => ConvertHelper.MakeIntegerToString(values.Value, true),
-				FloaterExpression values => ConvertHelper.MakeFloaterToString(values.Value, true),
+				BooleanExpression values => $"{ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values.Value)}",
+				IntegerExpression values => $"{ConvertHelper.MakeIntegerToString(values.Value, true)}",
+				FloaterExpression values => $"{ConvertHelper.MakeFloaterToString(values.Value, true)}",
 				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
-				StringExpression values  => values.Value,
+				StringExpression values  => $"{values.Value}",
 				PathExpression values    => $"{values.Content}",
-				_                        => throw new (),
+				_                        => throw new UnreachableException(),
 			};
 		}
 

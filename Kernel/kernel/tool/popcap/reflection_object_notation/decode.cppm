@@ -251,6 +251,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 						}
 						default: {
 							assert_fail(R"(data.read_of<ReferenceTypeIdentifier>() == /* valid */)");
+							break;
 						}
 					}
 					break;
@@ -300,6 +301,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				}
 				default: {
 					assert_fail(R"(type_identifier == /* valid */)");
+					break;
 				}
 			}
 			return;
@@ -327,6 +329,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					}
 						[[likely]]
 					default: {
+						break;
 					}
 				}
 			}

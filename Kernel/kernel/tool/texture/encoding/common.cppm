@@ -118,6 +118,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 				result = 32_sz;
 				break;
 			}
+			default: throw UnreachableException{};
 		}
 		return result;
 	}

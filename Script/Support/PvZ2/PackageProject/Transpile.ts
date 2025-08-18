@@ -232,6 +232,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 			}
 			default: {
 				throw new Error('unknown resource type');
+				break;
 			}
 		}
 		if (resource_setting.type !== resource_type_old) {

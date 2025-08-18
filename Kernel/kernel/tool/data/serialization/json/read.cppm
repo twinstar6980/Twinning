@@ -127,6 +127,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 									item_list.emplace_back();
 									process_value(data, item_list.back(), buffer);
 									has_comma = k_false;
+									break;
 								}
 							}
 						}
@@ -199,11 +200,13 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 											}
 											default: {
 												throw SyntaxException{data.position().value, mss("key's next non-space character must be ':'"_sf())};
+												break;
 											}
 										}
 									}
 									process_value(data, item_list.back().value, buffer);
 									has_comma = k_false;
+									break;
 								}
 							}
 						}
@@ -218,6 +221,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 					}
 					default: {
 						throw SyntaxException{data.position().value, mss("invalid character '{:02X}h'"_sf(character))};
+						break;
 					}
 				}
 				break;

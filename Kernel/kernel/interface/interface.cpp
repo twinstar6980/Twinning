@@ -55,6 +55,7 @@ namespace Twinning::Kernel::Interface {
 			}
 			default: {
 				throw UnnamedException{mss("invalid method"_sv)};
+				break;
 			}
 		}
 		return;

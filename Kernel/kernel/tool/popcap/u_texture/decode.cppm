@@ -63,6 +63,7 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 				}
 				default: {
 					assert_fail(R"(image_format == /* valid */)");
+					break;
 				}
 			}
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;

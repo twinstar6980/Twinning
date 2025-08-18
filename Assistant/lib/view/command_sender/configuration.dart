@@ -82,7 +82,7 @@ class ConfigurationHelper {
       SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count, false)}${['b', 'k', 'm', 'g'][value.exponent]}',
       StringExpression  _ => value.value,
       PathExpression    _ => '${value.content}',
-      _                   => throw Exception(),
+      _                   => throw UnreachableException(),
     };
   }
 
@@ -100,14 +100,14 @@ class ConfigurationHelper {
       ArgumentType.floater => FloaterExpression(
         json.as<Floater>(),
       ),
-      ArgumentType.size    => SizeExpression(
+      ArgumentType.size => SizeExpression(
         json.as<String>().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
         json.as<String>().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) { assertTest(it != -1); }),
       ),
-      ArgumentType.string  => StringExpression(
+      ArgumentType.string => StringExpression(
         json.as<String>(),
       ),
-      ArgumentType.path    => PathExpression(
+      ArgumentType.path => PathExpression(
         json.as<String>(),
       ),
     };

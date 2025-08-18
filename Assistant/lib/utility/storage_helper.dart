@@ -225,7 +225,7 @@ class StorageHelper {
       revealed = await launchUrl(Uri.file(target), mode: LaunchMode.externalApplication);
     }
     if (Platform.isAndroid) {
-      throw UnimplementedError();
+      throw UnsupportedException();
     }
     if (Platform.isIOS) {
       revealed = await launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: LaunchMode.externalApplication);
@@ -309,7 +309,7 @@ class StorageHelper {
         target = await PlatformMethod.pickStorageItem('load_directory', locationPath, name);
       }
       if (type == 'save_file') {
-        throw UnimplementedError();
+        throw UnsupportedException();
       }
     }
     if (locationTag != null && target != null) {
@@ -317,7 +317,7 @@ class StorageHelper {
         'load_file'      => parent(target),
         'load_directory' => target,
         'save_file'      => parent(target),
-        _                => throw UnimplementedError(),
+        _                => throw UnreachableException(),
       };
       await setting.save(apply: false);
     }

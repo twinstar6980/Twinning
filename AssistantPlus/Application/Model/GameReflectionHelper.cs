@@ -126,7 +126,7 @@ namespace AssistantPlus {
 				GameReflectionModel.PrimitiveType.List        => $"{ripe.Primitive} • {GameReflectionHelper.MakeTypeName(ripe.Element.AsNotNull())}",
 				GameReflectionModel.PrimitiveType.Map         => $"{ripe.Primitive} • {GameReflectionHelper.MakeTypeName(ripe.Element.AsNotNull())}",
 				GameReflectionModel.PrimitiveType.Object      => $"{ripe.Primitive} • {ripe.Class.AsNotNull()}",
-				_                                             => throw new (),
+				_                                             => throw new UnreachableException(),
 			};
 		}
 
@@ -244,7 +244,7 @@ namespace AssistantPlus {
 					raw = rawValue;
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return raw;
 		}
@@ -339,7 +339,7 @@ namespace AssistantPlus {
 					ripe = ripeValue;
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return ripe;
 		}
@@ -408,7 +408,7 @@ namespace AssistantPlus {
 					};
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return value;
 		}

@@ -54,9 +54,7 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 					image_format = FormatFlag::rgb_565;
 					break;
 				}
-				default: {
-					assert_fail(R"(format == /* valid */)");
-				}
+				default: throw UnsupportedException{};
 			}
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_view = VByteListView{};

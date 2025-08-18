@@ -60,9 +60,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 					ripe.write(k_padding_character);
 					break;
 				}
-				default: {
-					throw UnreachableException{};
-				}
+				default: throw UnreachableException{};
 			}
 			return;
 		}

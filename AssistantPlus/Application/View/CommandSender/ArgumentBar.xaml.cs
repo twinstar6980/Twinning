@@ -164,7 +164,7 @@ namespace AssistantPlus.View.CommandSender {
 							]);
 							break;
 						}
-						default: throw new ();
+						default: throw new UnreachableException();
 					}
 				}
 				else {

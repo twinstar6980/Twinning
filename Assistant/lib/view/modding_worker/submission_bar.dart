@@ -826,72 +826,52 @@ class SubmissionBar extends StatelessWidget {
       assertTest(this.option == null && this.history == null && this.value == null && this.completer == null);
       return _IdleSubmissionBar();
     }
-    if (this.type == SubmissionType.pause) {
+    else {
       assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _PauseSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
+      return switch (this.type!) {
+        SubmissionType.pause => _PauseSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.boolean => _BooleanSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.integer => _IntegerSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.floater => _FloaterSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.size => _SizeSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.string => _StringSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.path => _PathSubmissionBar(
+          completer: this.completer!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+        SubmissionType.enumeration => _EnumerationSubmissionBar(
+          completer: this.completer!,
+          option: this.option!,
+          history: this.history!.cast(),
+          value: this.value!.cast(),
+        ),
+      };
     }
-    if (this.type == SubmissionType.boolean) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _BooleanSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    if (this.type == SubmissionType.integer) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _IntegerSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    if (this.type == SubmissionType.floater) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _FloaterSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    if (this.type == SubmissionType.size) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _SizeSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    if (this.type == SubmissionType.string) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _StringSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    if (this.type == SubmissionType.path) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _PathSubmissionBar(
-        completer: this.completer!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    if (this.type == SubmissionType.enumeration) {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
-      return _EnumerationSubmissionBar(
-        completer: this.completer!,
-        option: this.option!,
-        history: this.history!.cast(),
-        value: this.value!.cast(),
-      );
-    }
-    throw UnimplementedError();
   }
 
 }

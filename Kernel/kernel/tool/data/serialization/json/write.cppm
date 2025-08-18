@@ -90,6 +90,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 					data.write('}'_c);
 					break;
 				}
+				default: throw UnreachableException{};
 			}
 			return;
 		}

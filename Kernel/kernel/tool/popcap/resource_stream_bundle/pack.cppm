@@ -220,6 +220,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 									++global_texture_resource_count;
 									break;
 								}
+								default: throw UnreachableException{};
 							}
 						}
 					}
@@ -261,6 +262,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 									++global_texture_resource_index;
 									break;
 								}
+								default: throw UnreachableException{};
 							}
 							++global_resource_index;
 						}
@@ -330,6 +332,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 								++global_texture_resource_count;
 								break;
 							}
+							default: throw UnreachableException{};
 						}
 					}
 				}
@@ -461,6 +464,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 								++global_texture_resource_index;
 								break;
 							}
+							default: throw UnreachableException{};
 						}
 						++global_resource_index;
 					}

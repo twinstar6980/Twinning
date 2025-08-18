@@ -64,13 +64,13 @@ class ValueExpressionHelper {
     ValueExpression value,
   ) {
     return switch (value) {
-      BooleanExpression _ => ConvertHelper.makeBooleanToStringOfConfirmationCharacter(value.value),
-      IntegerExpression _ => ConvertHelper.makeIntegerToString(value.value, true),
-      FloaterExpression _ => ConvertHelper.makeFloaterToString(value.value, true),
+      BooleanExpression _ => '${ConvertHelper.makeBooleanToStringOfConfirmationCharacter(value.value)}',
+      IntegerExpression _ => '${ConvertHelper.makeIntegerToString(value.value, true)}',
+      FloaterExpression _ => '${ConvertHelper.makeFloaterToString(value.value, true)}',
       SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count, false)}${['b', 'k', 'm', 'g'][value.exponent]}',
-      StringExpression  _ => value.value,
+      StringExpression  _ => '${value.value}',
       PathExpression    _ => '${value.content}',
-      _                   => throw Exception(),
+      _                   => throw UnreachableException(),
     };
   }
 

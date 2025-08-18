@@ -112,6 +112,7 @@ export namespace Twinning::Kernel::StringParser {
 					stream.write('x'_c);
 					stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
 					stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+					break;
 				}
 			}
 		}
@@ -198,6 +199,7 @@ export namespace Twinning::Kernel::StringParser {
 			}
 			default: {
 				assert_fail(R"(current == /* valid */)");
+				break;
 			}
 		}
 		return;
@@ -612,6 +614,7 @@ export namespace Twinning::Kernel::StringParser {
 			}
 			default: {
 				assert_fail(R"(stream.next() == /* valid */)");
+				break;
 			}
 		}
 		return result;
@@ -729,6 +732,7 @@ export namespace Twinning::Kernel::StringParser {
 				}
 				default: {
 					stream.backward();
+					break;
 				}
 			}
 			break;
@@ -816,6 +820,7 @@ export namespace Twinning::Kernel::StringParser {
 				}
 				default: {
 					stream.backward();
+					break;
 				}
 			}
 			break;
@@ -844,6 +849,7 @@ export namespace Twinning::Kernel::StringParser {
 				write_number(stream, value.get_floater(), disable_sign_when_positive);
 				break;
 			}
+			default: throw UnreachableException{};
 		}
 		return;
 	}
@@ -902,6 +908,7 @@ export namespace Twinning::Kernel::StringParser {
 				}
 				default: {
 					stream.backward();
+					break;
 				}
 			}
 			break;

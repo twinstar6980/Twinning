@@ -316,7 +316,7 @@ namespace AssistantPlus.View.Home {
 					await this.Host.InsertTabItem(configuration);
 					break;
 				}
-				default: throw new ();
+				default: throw new UnreachableException();
 			}
 			return;
 		}

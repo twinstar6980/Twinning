@@ -154,6 +154,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						}
 						default: {
 							assert_fail(R"(chunk.flag == /* valid */)");
+							break;
 						}
 					}
 					auto chunk_size_uncompressed = Size{};
