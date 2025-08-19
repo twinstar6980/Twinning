@@ -179,6 +179,20 @@ namespace AssistantPlus.View.Home {
 			return;
 		}
 
+		public void uTab_SelectionChanged (
+			Object                    sender,
+			SelectionChangedEventArgs args
+		) {
+			var senders = sender.As<TabView>();
+			foreach (var item in args.RemovedItems.Cast<MainWindowTabItemController>()) {
+				item.Frame.Content.As<IModulePage>().ModulePageExitView();
+			}
+			foreach (var item in args.AddedItems.Cast<MainWindowTabItemController>()) {
+				item.Frame.Content.As<IModulePage>().ModulePageEnterView();
+			}
+			return;
+		}
+
 		// ----------------
 
 		public async void uTabKeyboardAccelerator_Invoked (
@@ -334,6 +348,12 @@ namespace AssistantPlus.View.Home {
 		Task<List<String>> ModulePageCollectOption (
 		);
 
+		Task ModulePageEnterView (
+		);
+
+		Task ModulePageExitView (
+		);
+
 		Task<Boolean> ModulePageRequestClose (
 		);
 
@@ -349,6 +369,12 @@ namespace AssistantPlus.View.Home {
 		);
 
 		Task<List<String>> CollectOption (
+		);
+
+		Task EnterView (
+		);
+
+		Task ExitView (
 		);
 
 		Task<Boolean> RequestClose (

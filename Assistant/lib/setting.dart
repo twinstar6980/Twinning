@@ -4,6 +4,8 @@ import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
+import '/view/modding_worker/submission_type.dart' as modding_worker;
+import '/view/modding_worker/value_expression.dart' as modding_worker;
 import '/view/command_sender/setting.dart' as command_sender;
 import '/view/resource_shipper/setting.dart' as resource_shipper;
 import '/view/animation_viewer/setting.dart' as animation_viewer;
@@ -70,6 +72,7 @@ class SettingState {
   Future<Void> Function()?                                 homeShowLauncherPanel;
   Future<Void> Function(ModuleLauncherConfiguration)?      homeInsertTabItem;
   List<String>                                             moddingWorkerMessageFontFamily;
+  List<List<modding_worker.ValueExpression>>               moddingWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
     required this.handleForward,
@@ -80,6 +83,7 @@ class SettingState {
     required this.homeShowLauncherPanel,
     required this.homeInsertTabItem,
     required this.moddingWorkerMessageFontFamily,
+    required this.moddingWorkerSubmissionHistory,
   });
 }
 
@@ -223,6 +227,7 @@ class SettingProvider with ChangeNotifier {
     homeShowLauncherPanel: null,
     homeInsertTabItem: null,
     moddingWorkerMessageFontFamily: [],
+    moddingWorkerSubmissionHistory: modding_worker.SubmissionType.values.map((value) => <modding_worker.ValueExpression>[]).toList(),
   );
 
   // ----------------

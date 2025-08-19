@@ -444,6 +444,16 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   }
 
   @override
+  modulePageEnterView() async {
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageRequestClose() async {
     return true;
   }

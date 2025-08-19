@@ -45,7 +45,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   late List<String>                _additionalArgument;
   late List<Widget>                _messageList;
   late ScrollController            _messageListScrollController;
-  late List<List<ValueExpression>> _submissionHistory;
   late SubmissionBar               _submissionBar;
   late _MainPageBridgeClient       _sessionClient;
   late Boolean                     _sessionRunning;
@@ -77,7 +76,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     SubmissionType type,
     List<String>   option,
   ) async {
-    var history = this._submissionHistory[type.index];
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    var history = setting.state.moddingWorkerSubmissionHistory[type.index];
     var completer = Completer<Void>();
     var valueWrapper = Wrapper<ValueExpression?>(null);
     this._submissionBar = SubmissionBar(
@@ -187,6 +187,26 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   }
 
   @override
+  modulePageEnterView() async {
+    if (this._submissionBar.type != null) {
+      this._submissionBar = SubmissionBar(
+        type: this._submissionBar.type,
+        option: this._submissionBar.option,
+        history: this._submissionBar.history,
+        value: this._submissionBar.value,
+        completer: this._submissionBar.completer,
+      );
+      await refreshState(this.setState);
+    }
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageRequestClose() async {
     if (this._sessionRunning) {
       await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
@@ -207,7 +227,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._additionalArgument = [];
     this._messageList = [];
     this._messageListScrollController = ScrollController();
-    this._submissionHistory = SubmissionType.values.map((value) => <ValueExpression>[]).toList();
     this._submissionBar = SubmissionBar(
       type: null,
       option: null,

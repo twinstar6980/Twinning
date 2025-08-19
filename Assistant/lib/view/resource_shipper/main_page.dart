@@ -182,6 +182,16 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   }
 
   @override
+  modulePageEnterView() async {
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageRequestClose() async {
     return true;
   }

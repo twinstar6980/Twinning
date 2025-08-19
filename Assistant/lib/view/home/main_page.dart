@@ -41,8 +41,12 @@ class _MainPageState extends State<MainPage> {
       Navigator.pop(context);
     }
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
+    if (this._tabIndex != -1) {
+      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageExitView();
+    }
     this._tabIndex = this._tabList.length - 1;
     await refreshState(this.setState);
+    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageEnterView();
     await Future.delayed(Duration(milliseconds: 10));
     return;
   }
@@ -51,15 +55,24 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
-    var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
-    if (!await itemState.modulePageRequestClose()) {
+    if (!await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageRequestClose()) {
       return;
+    }
+    if (this._tabIndex == index) {
+      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageExitView();
     }
     this._tabList.removeAt(index);
     if (this._tabIndex > index) {
       this._tabIndex--;
     }
-    this._tabIndex = min(this._tabIndex, this._tabList.length - 1);
+    else if (this._tabIndex == index) {
+      if (this._tabIndex == this._tabList.length) {
+        this._tabIndex--;
+      }
+      if (this._tabIndex != -1) {
+        await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageEnterView();
+      }
+    }
     await refreshState(this.setState);
     return;
   }
@@ -82,11 +95,10 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
-    var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
     var configuration = ModuleLauncherConfiguration(
       title: this._tabList[index].$1,
       type: this._tabList[index].$2,
-      option: await itemState.modulePageCollectOption(),
+      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageCollectOption(),
     );
     var setting = Provider.of<SettingProvider>(context, listen: false);
     setting.data.moduleLauncher.pinned.add(configuration);
@@ -98,11 +110,10 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
-    var itemState = this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>();
     var configuration = ModuleLauncherConfiguration(
       title: this._tabList[index].$1,
       type: this._tabList[index].$2,
-      option: await itemState.modulePageCollectOption(),
+      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageCollectOption(),
     );
     await this._insertTabItem(configuration);
     return;
@@ -112,8 +123,10 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
+    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageExitView();
     this._tabIndex = index;
     await refreshState(this.setState);
+    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageEnterView();
     return;
   }
 

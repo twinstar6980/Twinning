@@ -1000,6 +1000,14 @@ abstract class CustomModulePageState {
 
   // ----------------
 
+  Future<Void> modulePageEnterView(
+  );
+
+  Future<Void> modulePageExitView(
+  );
+
+  // ----------------
+
   Future<Boolean> modulePageRequestClose(
   );
 

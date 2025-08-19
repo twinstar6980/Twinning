@@ -49,6 +49,16 @@ namespace AssistantPlus.View.ResourceShipper {
 			return this.Controller.CollectOption();
 		}
 
+		public Task ModulePageEnterView (
+		) {
+			return this.Controller.EnterView();
+		}
+
+		public Task ModulePageExitView (
+		) {
+			return this.Controller.ExitView();
+		}
+
 		public Task<Boolean> ModulePageRequestClose (
 		) {
 			return this.Controller.RequestClose();
@@ -179,6 +189,16 @@ namespace AssistantPlus.View.ResourceShipper {
 				}
 			}
 			return option.Done();
+		}
+
+		public async Task EnterView (
+		) {
+			return;
+		}
+
+		public async Task ExitView (
+		) {
+			return;
 		}
 
 		public async Task<Boolean> RequestClose (

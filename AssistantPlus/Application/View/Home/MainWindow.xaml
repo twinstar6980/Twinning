@@ -35,6 +35,7 @@
 			TabItemsSource="{x:Bind Controller.uTab_TabItemsSource}"
 			TabCloseRequested="{x:Bind Controller.uTab_TabCloseRequested}"
 			AddTabButtonClick="{x:Bind Controller.uTab_AddTabButtonClick}"
+			SelectionChanged="{x:Bind Controller.uTab_SelectionChanged}"
 			>
 			<TabView.KeyboardAccelerators>
 				<KeyboardAccelerator

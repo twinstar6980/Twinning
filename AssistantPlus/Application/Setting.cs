@@ -4,7 +4,6 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
-using Windows.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
 using Colors = Microsoft.UI.Colors;
@@ -37,8 +36,9 @@ namespace AssistantPlus {
 	}
 
 	public record SettingState {
-		public CustomThemeBackdrop? ThemeBackdrop = default!;
-		public CustomThemeMode?     ThemeMode     = default!;
+		public CustomThemeBackdrop?                           ThemeBackdrop                  = default!;
+		public CustomThemeMode?                               ThemeMode                      = default!;
+		public List<List<View.ModdingWorker.ValueExpression>> ModdingWorkerSubmissionHistory = default!;
 	}
 
 	public class SettingProvider {
@@ -236,6 +236,7 @@ namespace AssistantPlus {
 			return new () {
 				ThemeBackdrop = null,
 				ThemeMode = null,
+				ModdingWorkerSubmissionHistory = Enum.GetValues<View.ModdingWorker.SubmissionType>().Select((value) => (new List<View.ModdingWorker.ValueExpression>())).ToList(),
 			};
 		}
 

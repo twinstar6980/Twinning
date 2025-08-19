@@ -62,6 +62,16 @@ namespace AssistantPlus.View.ModdingWorker {
 			return this.Controller.CollectOption();
 		}
 
+		public Task ModulePageEnterView (
+		) {
+			return this.Controller.EnterView();
+		}
+
+		public Task ModulePageExitView (
+		) {
+			return this.Controller.ExitView();
+		}
+
 		public Task<Boolean> ModulePageRequestClose (
 		) {
 			return this.Controller.RequestClose();
@@ -90,8 +100,6 @@ namespace AssistantPlus.View.ModdingWorker {
 		public Boolean SessionRunning { get; set; } = false;
 
 		public Boolean SubmissionState { get; set; } = false;
-
-		public List<List<ValueExpression>> SubmissionHistory { get; set; } = Enum.GetValues<SubmissionType>().Select((value) => (new List<ValueExpression>())).ToList();
 
 		#endregion
 
@@ -160,6 +168,21 @@ namespace AssistantPlus.View.ModdingWorker {
 			return option.Done();
 		}
 
+		public async Task EnterView (
+		) {
+			if (this.SubmissionState) {
+				this.NotifyPropertyChanged([
+					nameof(this.uSubmissionBar_Stamp),
+				]);
+			}
+			return;
+		}
+
+		public async Task ExitView (
+		) {
+			return;
+		}
+
 		public async Task<Boolean> RequestClose (
 		) {
 			if (this.SessionRunning) {
@@ -195,7 +218,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			SubmissionType type,
 			List<String>   option
 		) {
-			var history = this.SubmissionHistory[type.CastPrimitive<Size>()];
+			var history = App.Setting.State.ModdingWorkerSubmissionHistory[type.CastPrimitive<Size>()];
 			this.SubmissionState = true;
 			this.NotifyPropertyChanged([
 				nameof(this.uProgress_ProgressPaused),
@@ -524,57 +547,65 @@ namespace AssistantPlus.View.ModdingWorker {
 			GF.AssertTest(this.mRunning);
 			var result = new List<String>();
 			GF.AssertTest(argument.Count >= 1);
-			this.mController.View.DispatcherQueue.EnqueueAsync(async () => {
-				switch (argument[0]) {
-					case "name": {
-						GF.AssertTest(argument.Count == 1);
-						var detail = await this.CallbackName();
-						var detailName = detail.Item1;
-						result.Add(detailName);
-						break;
+			try {
+				this.mController.View.DispatcherQueue.EnqueueAsync(async () => {
+					switch (argument[0]) {
+						case "name": {
+							GF.AssertTest(argument.Count == 1);
+							var detail = await this.CallbackName();
+							var detailName = detail.Item1;
+							result.Add(detailName);
+							break;
+						}
+						case "version": {
+							GF.AssertTest(argument.Count == 1);
+							var detail = await this.CallbackVersion();
+							var detailVersion = detail.Item1;
+							result.Add(detailVersion);
+							break;
+						}
+						case "send_message": {
+							GF.AssertTest(argument.Count >= 3);
+							var detailType = argument[1];
+							var detailTitle = argument[2];
+							var detailDescription = argument[3..];
+							await this.CallbackSendMessage(detailType, detailTitle, detailDescription);
+							break;
+						}
+						case "receive_submission": {
+							GF.AssertTest(argument.Count >= 2);
+							var detailType = argument[1];
+							var detailOption = argument[2..];
+							var detail = await this.CallbackReceiveSubmission(detailType, detailOption);
+							var detailValue = detail.Item1;
+							result.Add(detailValue);
+							break;
+						}
+						case "pick_storage_item": {
+							GF.AssertTest(argument.Count == 2);
+							var detailType = argument[1];
+							var detail = await this.CallbackPickStorageItem(detailType);
+							var detailTarget = detail.Item1;
+							result.Add(detailTarget);
+							break;
+						}
+						case "push_system_notification": {
+							GF.AssertTest(argument.Count == 3);
+							var detailType = argument[1];
+							var detailDescription = argument[2];
+							var detail = await this.CallbackPushSystemNotification(detailType, detailDescription);
+							break;
+						}
+						default: throw new ("invalid method");
 					}
-					case "version": {
-						GF.AssertTest(argument.Count == 1);
-						var detail = await this.CallbackVersion();
-						var detailVersion = detail.Item1;
-						result.Add(detailVersion);
-						break;
-					}
-					case "send_message": {
-						GF.AssertTest(argument.Count >= 3);
-						var detailType = argument[1];
-						var detailTitle = argument[2];
-						var detailDescription = argument[3..];
-						await this.CallbackSendMessage(detailType, detailTitle, detailDescription);
-						break;
-					}
-					case "receive_submission": {
-						GF.AssertTest(argument.Count >= 2);
-						var detailType = argument[1];
-						var detailOption = argument[2..];
-						var detail = await this.CallbackReceiveSubmission(detailType, detailOption);
-						var detailValue = detail.Item1;
-						result.Add(detailValue);
-						break;
-					}
-					case "pick_storage_item": {
-						GF.AssertTest(argument.Count == 2);
-						var detailType = argument[1];
-						var detail = await this.CallbackPickStorageItem(detailType);
-						var detailTarget = detail.Item1;
-						result.Add(detailTarget);
-						break;
-					}
-					case "push_system_notification": {
-						GF.AssertTest(argument.Count == 3);
-						var detailType = argument[1];
-						var detailDescription = argument[2];
-						var detail = await this.CallbackPushSystemNotification(detailType, detailDescription);
-						break;
-					}
-					default: throw new ("invalid method");
+				}).Wait();
+			}
+			catch (Exception e) {
+				if (e is AggregateException && e.InnerException != null) {
+					throw e.InnerException;
 				}
-			}).Wait();
+				throw;
+			}
 			return result;
 		}
 
