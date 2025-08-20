@@ -44,7 +44,9 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		}
 		switch (source_version) {
 			case 'text': {
-				assert_test(!string_data_maybe_utf16(source_data), `unsupported charset UTF-16`);
+				if (string_data_maybe_utf16(source_data)) {
+					throw new Error(`unsupport charset UTF-16`);
+				}
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;
 				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
@@ -62,11 +64,15 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 				if (source_map === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues;
-					assert_test(is_object_of_object(source_map), `invalid source`);
+					if (!is_object_of_object(source_map)) {
+						throw new Error(`invalid source`);
+					}
 				}
 				for (let key in source_map) {
 					let value = source_map[key];
-					assert_test(is_string(value), `invalid map element`);
+					if (!is_string(value)) {
+						throw new Error(`invalid map element`);
+					}
 					string_map[key] = value;
 				}
 				break;
@@ -75,13 +81,19 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 				if (source_list === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues;
-					assert_test(is_object_of_array(source_list), `invalid source`);
+					if (!is_object_of_array(source_list)) {
+						throw new Error(`invalid source`);
+					}
 				}
-				assert_test(source_list.length % 2 === 0, `invalid list size`);
+				if (source_list.length % 2 !== 0) {
+					throw new Error(`invalid list size`);
+				}
 				for (let index = 0; index < source_list.length; index += 2) {
 					let key = source_list[index + 0];
 					let value = source_list[index + 1];
-					assert_test(is_string(key) && is_string(value), `invalid list element`);
+					if (!is_string(key) || !is_string(value)) {
+						throw new Error(`invalid list element`);
+					}
 					string_map[key] = value;
 				}
 				break;

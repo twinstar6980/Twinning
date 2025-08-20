@@ -257,7 +257,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return CustomModulePageRegion(
       onDropFile: null,
@@ -294,10 +293,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           ),
           secondary: [
             Badge.count(
-              textStyle: theme.textTheme.labelSmall!.copyWith(
-                fontFamily: '',
-                fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-              ),
+              textStyle: theme.textTheme.labelSmall!.selfLet((it) => withSpecialFontTextStyle(context, it)),
               count: this._additionalArgument.length,
               child: IconButton.filledTonal(
                 tooltip: 'Additional Argument',
@@ -318,10 +314,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                           filled: false,
                           border: OutlineInputBorder(),
                         ),
-                        style: theme.textTheme.bodyLarge!.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-                        ),
+                        style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
                         value: ConvertHelper.makeStringListToStringWithLine(this._additionalArgument),
                         onChanged: (value) async {
                           this._additionalArgument.clear();
@@ -513,4 +506,15 @@ class _MainPageBridgeClient implements bridge.Client {
 
   // #endregion
 
+}
+
+TextStyle withSpecialFontTextStyle(
+  BuildContext context,
+  TextStyle    style,
+) {
+  var setting = Provider.of<SettingProvider>(context, listen: false);
+  return style.copyWith(
+    fontFamily: '',
+    fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
+  );
 }

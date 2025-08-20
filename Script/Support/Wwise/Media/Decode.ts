@@ -10,9 +10,10 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		ripe_file: string,
 		raw_file: string,
 	): Format {
-		assert_test(KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh, `unsupported system, this function only avaliable for windows or linux or macintosh`);
-		let vgmstream_program_file = g_vgmstream_program_file !== null ? g_vgmstream_program_file : ProcessHelper.search_path('vgmstream-cli');
-		assert_test(vgmstream_program_file !== null, `could not find 'vgmstream-cli' program from PATH environment`);
+		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
+			throw new Error(`unsupported system, this function only avaliable for windows or linux or macintosh`);
+		}
+		let vgmstream_program_file = g_vgmstream_program_file !== null ? g_vgmstream_program_file : ProcessHelper.search_path_ensure('vgmstream-cli');
 		let program_result: ProcessHelper.ExecuteResult;
 		let ripe_file_fallback_temporary: null | string = null;
 		let ripe_file_fallback = ripe_file;
@@ -37,7 +38,9 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (ripe_file_fallback_temporary !== null) {
 			KernelX.Storage.remove(ripe_file_fallback_temporary);
 		}
-		assert_test(program_result.code === 0n, `execute failed by vgmstream`);
+		if (program_result.code !== 0n) {
+			throw new Error(`execute failed by vgmstream-cli`);
+		}
 		let regex_result = /^encoding: (.+)$/m.exec(program_result.output);
 		assert_test(regex_result !== null);
 		let encoding = regex_result[1];
@@ -60,7 +63,9 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (encoding === 'libopus Opus') {
 			format = 'wemopus'; // or opus
 		}
-		assert_test(format !== null, `unknown wem format ${encoding}`);
+		if (format === null) {
+			throw new Error(`unknown wem format '${encoding}'`);
+		}
 		return format;
 	}
 

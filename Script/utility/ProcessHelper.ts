@@ -34,12 +34,16 @@ namespace Twinning.Script.ProcessHelper {
 		let result: null | string = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
 		let path_environment = KernelX.Process.get_environment_variable('PATH');
-		assert_test(path_environment !== null, `environment PATH not found`);
+		if (path_environment === null) {
+			throw new Error(`could not find 'PATH' environment`);
+		}
 		let path_list = path_environment.split(item_delimiter);
 		let path_extension_list = [''];
 		if (KernelX.is_windows) {
 			let path_extension_environment = KernelX.Process.get_environment_variable('PATHEXT');
-			assert_test(path_extension_environment !== null, `environment PATHEXT not found`);
+			if (path_extension_environment === null) {
+				throw new Error(`could not find 'PATHEXT' environment`);
+			}
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
 		}
 		for (let path of path_list) {
@@ -51,6 +55,16 @@ namespace Twinning.Script.ProcessHelper {
 			}
 		}
 		return result;
+	}
+
+	export function search_path_ensure(
+		name: string,
+	): string {
+		let path = search_path(name);
+		if (path === null) {
+			throw new Error(`could not find '${path}' program from 'PATH' environment`);
+		}
+		return path;
 	}
 
 	// ------------------------------------------------

@@ -296,7 +296,9 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		ripe_file: string,
 		format: Format,
 	): void {
-		assert_test(KernelX.is_windows || KernelX.is_macintosh, `unsupported system, this function only avaliable for windows or macintosh`);
+		if (!KernelX.is_windows && !KernelX.is_macintosh) {
+			throw new Error(`unsupported system, this function only avaliable for windows or macintosh`);
+		}
 		let wwise_program_name: string = undefined!;
 		if (KernelX.is_windows) {
 			wwise_program_name = 'WwiseConsole.exe';
@@ -304,8 +306,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		if (KernelX.is_macintosh) {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
-		let wwise_program_file = g_wwise_program_file !== null ? g_wwise_program_file : ProcessHelper.search_path(wwise_program_name);
-		assert_test(wwise_program_file !== null, `could not find '${wwise_program_name}' program from PATH environment`);
+		let wwise_program_file = g_wwise_program_file !== null ? g_wwise_program_file : ProcessHelper.search_path_ensure(wwise_program_name);
 		let program_result: ProcessHelper.ExecuteResult;
 		let temporary_directory = Home.new_temporary(null, null);
 		let wwise_project_directory = `${temporary_directory}/Sample`;
@@ -322,7 +323,9 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				],
 				KernelX.Process.list_environment_variable(),
 			);
-			assert_test(program_result.code === 0n, `execute failed by Wwise`);
+			if (program_result.code !== 0n) {
+				throw new Error(`execute failed by Wwise`);
+			}
 			if (KernelX.Storage.exist_file(wwise_wproj_file)) {
 				break;
 			}
@@ -362,9 +365,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			KernelX.Process.list_environment_variable(),
 		);
 		if (program_result.code !== 0n) {
-			Console.error(`Wwise: ${program_result.code}`, [program_result.output]);
+			throw new Error(`execute failed by Wwise`);
 		}
-		assert_test(program_result.code === 0n, `execute failed by Wwise`);
 		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);
 		KernelX.Storage.remove(temporary_directory);
 		return;

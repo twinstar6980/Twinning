@@ -52,7 +52,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 			group.subgroups = not_undefined_or(group.subgroups, []);
 			group.resources = not_undefined_or(group.resources, []);
 			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index!;
-			assert_test(group.type !== undefined, `unknown group type value ${group.type}`);
+			if (group.type === undefined) {
+				throw new Error(`unknown group type value ${group.type}`);
+			}
 			write_enumeration(data, group_type_index);
 			write_integer(data, not_undefined_or(group.res, 0n));
 			write_integer(data, BigInt(group.subgroups.length));
@@ -74,7 +76,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 					resource.y = 0x7FFFFFFFn;
 				}
 				let resource_type_index = ResourceTypeEnumeration.find((item) => (item.value === resource.type))?.index!;
-				assert_test(resource.type !== undefined, `unknown resource type value ${resource_type_index}`);
+				if (resource.type === undefined) {
+					throw new Error(`unknown resource type value ${resource_type_index}`);
+				}
 				write_enumeration(data, resource_type_index);
 				write_integer(data, resource.slot);
 				write_integer(data, not_undefined_or(resource.width, 0n));

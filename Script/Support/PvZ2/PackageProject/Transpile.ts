@@ -36,7 +36,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 				if (option.specialize_rton && resource_property.path.toLowerCase().endsWith('.rton')) {
 					Console.warning(`Transpiling by specialize_rton ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.rton.find((value) => (true));
-					assert_test(conversion_setting !== undefined);
+					if (conversion_setting === undefined) {
+						throw new Error(`conversion setting for rton is not found`);
+					}
 					let new_source_file = make_scope_child_path(resource_directory, 'source.json');
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(source_file, new_source_file, conversion_setting.version, conversion_setting.key);
 					KernelX.Storage.remove(source_file);
@@ -49,7 +51,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 				if (option.specialize_pam && resource_property.path.toLowerCase().endsWith('.pam')) {
 					Console.warning(`Transpiling by specialize_pam ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.pam.find((value) => (true));
-					assert_test(conversion_setting !== undefined);
+					if (conversion_setting === undefined) {
+						throw new Error(`conversion setting for pam is not found`);
+					}
 					let new_source_file = make_scope_child_path(resource_directory, 'source.json');
 					KernelX.Tool.PopCap.Animation.decode_fs(source_file, new_source_file, conversion_setting.version);
 					KernelX.Storage.remove(source_file);
@@ -82,7 +86,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 				if (option.specialize_ptx) {
 					Console.warning(`Transpiling by specialize_ptx ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.ptx.find((value) => (value.index === resource_property.format));
-					assert_test(conversion_setting !== undefined, `unknown texture format '${resource_property.format}'`);
+					if (conversion_setting === undefined) {
+						throw new Error(`conversion setting for ptx '${resource_property.format}' is not found`);
+					}
 					let new_source_data_directory = make_scope_child_path(resource_directory, 'source.sprite');
 					let new_sprite_property_list: Array<SpecialPTXResourcePropertySpriteProperty> = [];
 					let data = KernelX.Storage.read_file(source_file);

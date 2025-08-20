@@ -1,15 +1,14 @@
 import '/common.dart';
-import '/setting.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/view/home/common.dart';
 import '/view/modding_worker/submission_type.dart';
 import '/view/modding_worker/value_expression.dart';
+import '/view/modding_worker/main_page.dart';
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -36,7 +35,6 @@ class _BasicSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return CustomBottomBarContent(
       primary: FloatingActionButton(
@@ -57,10 +55,7 @@ class _BasicSubmissionBar extends StatelessWidget {
       ),
       secondary: [
         Badge.count(
-          textStyle: theme.textTheme.labelSmall!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          textStyle: theme.textTheme.labelSmall!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           isLabelVisible: this.history != null,
           count: this.history == null ? 0 : this.history!.length,
           child: IconButton.filledTonal(
@@ -99,10 +94,8 @@ class _BasicSubmissionBar extends StatelessWidget {
                             ValueExpressionHelper.makeString(value.$1),
                             overflow: TextOverflow.clip,
                             style: theme.textTheme.labelLarge!.copyWith(
-                              fontFamily: '',
-                              fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
                               color: value.$2 ? null : theme.disabledColor,
-                            ),
+                            ).selfLet((it) => withSpecialFontTextStyle(context, it)),
                           ),
                         ),
                       )),
@@ -183,7 +176,6 @@ class _PauseSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -195,10 +187,7 @@ class _PauseSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.pause,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           keyboardType: TextInputType.none,
           inputFormatters: [],
           decoration: InputDecoration(
@@ -239,7 +228,6 @@ class _BooleanSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -251,10 +239,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.check_box,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           keyboardType: TextInputType.text,
           inputFormatters: [],
           decoration: InputDecoration(
@@ -326,7 +311,6 @@ class _IntegerSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -338,10 +322,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
           inputFormatters: [],
           decoration: InputDecoration(
@@ -393,7 +374,6 @@ class _FloaterSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -405,10 +385,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.speed_1_2,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
           inputFormatters: [],
           decoration: InputDecoration(
@@ -460,7 +437,6 @@ class _SizeSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -472,10 +448,7 @@ class _SizeSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.memory,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
           inputFormatters: [],
           decoration: InputDecoration(
@@ -497,10 +470,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                       child: Text(
                         ['B', 'K', 'M', 'G'][this.value.value!.exponent],
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-                        ),
+                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
                       ),
                     ),
                   itemBuilder: (context) => ['B', 'K', 'M', 'G'].mapIndexed((index, value) => PopupMenuItem(
@@ -508,10 +478,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                     child: Text(
                       value,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelLarge!.copyWith(
-                        fontFamily: '',
-                        fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-                      ),
+                      style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
                     ),
                   )).toList(),
                   onSelected: (value) async {
@@ -561,7 +528,6 @@ class _StringSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -573,10 +539,7 @@ class _StringSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.text_fields,
         content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           keyboardType: TextInputType.text,
           inputFormatters: [],
           decoration: InputDecoration(
@@ -625,7 +588,6 @@ class _PathSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -642,10 +604,7 @@ class _PathSubmissionBar extends StatelessWidget {
             await refreshState(setState);
           },
           child: CustomTextField(
-            style: theme.textTheme.bodyLarge!.copyWith(
-              fontFamily: '',
-              fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-            ),
+            style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
             keyboardType: TextInputType.text,
             inputFormatters: [],
             decoration: InputDecoration(
@@ -669,10 +628,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       child: Text(
                         value.$2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-                        ),
+                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
                       ),
                     )).toList(),
                     onSelected: (value) async {
@@ -694,10 +650,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       child: Text(
                         value.$2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.copyWith(
-                          fontFamily: '',
-                          fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-                        ),
+                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
                       ),
                     )).toList(),
                     onSelected: (value) async {
@@ -750,7 +703,6 @@ class _EnumerationSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
@@ -762,10 +714,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         },
         icon: IconSymbols.menu,
         content: CustomOptionField(
-          style: theme.textTheme.bodyLarge!.copyWith(
-            fontFamily: '',
-            fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-          ),
+          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
             filled: false,

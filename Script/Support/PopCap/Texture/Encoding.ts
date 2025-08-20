@@ -105,7 +105,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 				break;
 			}
 			case 'rgb_etc1_a_palette': {
-				assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
+				assert_test(option.rgb_etc1_a_palette !== null);
 				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1');
 				data_size += KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
 				break;
@@ -189,7 +189,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 				break;
 			}
 			case 'rgb_etc1_a_palette': {
-				assert_test(option.rgb_etc1_a_palette !== null, `option is null`);
+				assert_test(option.rgb_etc1_a_palette !== null);
 				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgb_etc1');
 				KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
 				break;

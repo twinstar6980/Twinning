@@ -89,7 +89,9 @@ namespace Twinning.Script.XML {
 		name: string,
 	): Kernel.XML.JS_Element {
 		let list = find_child_element(parent, name);
-		assert_test(list.length === 1, 'xml element is not unique');
+		if (list.length !== 1) {
+			throw new Error(`xml element is not unique`);
+		}
 		return list[0];
 	}
 
@@ -98,7 +100,9 @@ namespace Twinning.Script.XML {
 		name: string,
 	): null | Kernel.XML.JS_Element {
 		let list = find_child_element(parent, name);
-		assert_test(list.length <= 1, 'xml element is not unique or none');
+		if (list.length > 1) {
+			throw new Error(`xml element is not unique or none`);
+		}
 		return list.length === 0 ? null : list[0];
 	}
 

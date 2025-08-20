@@ -7,7 +7,6 @@ import '/view/home/common.dart';
 import '/view/home/blank_page.dart';
 import '/view/home/launcher_panel.dart';
 import '/view/home/setting_panel.dart';
-import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';

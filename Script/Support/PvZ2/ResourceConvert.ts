@@ -165,13 +165,17 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			if (option.ptx !== null && resource[1].additional.type === 'texture') {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					assert_test(resource[2].additional.type === 'texture', `invalid image resource`);
+					if (resource[2].additional.type !== 'texture') {
+						throw new Error(`not a texture resource`);
+					}
 					let atlas_image_additional = resource[1].additional.value;
 					let texture_additional_source = resource[2].additional.value;
 					let size = atlas_image_additional.size;
 					let actual_size = texture_additional_source.size;
 					let format = option.ptx.format.find((value) => (value.index === texture_additional_source.format))?.format;
-					assert_test(format !== undefined, `unknown texture format '${texture_additional_source.format}'`);
+					if (format === undefined) {
+						throw new Error(`unknown texture format '${texture_additional_source.format}'`);
+					}
 					Console.verbosity(`    size = [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ], format = ${format}`, []);
 					let data = KernelX.Storage.read_file(`${resource_directory}/${path}.ptx`);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
@@ -265,13 +269,21 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		let resource_manifest: ResourceManifest.Package;
 		{
 			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.id)));
-			assert_test(group_list.length === 1, `package must contain MANIFEST group`);
+			if (group_list.length !== 1) {
+				throw new Error(`package must contain unique MANIFEST group`);
+			}
 			let group = group_list[0];
-			assert_test(group.subgroup.length === 1, `MANIFEST group must contain one subgroup`);
+			if (group.subgroup.length !== 1) {
+				throw new Error(`MANIFEST group must contain unique subgroup`);
+			}
 			let subgroup = group.subgroup[0];
-			assert_test(subgroup.id === group.id, `MANIFEST subgroup id must equal group id`);
+			if (subgroup.id !== group.id) {
+				throw new Error(`MANIFEST subgroup id must equal the group id`);
+			}
 			let resource_list = subgroup.resource.filter((value) => (/^properties\/resources(.+)?\.(rton|newton)$/i.test(value.path)));
-			assert_test(resource_list.length !== 0, `MANIFEST subgroup must contains manifest file`);
+			if (resource_list.length === 0) {
+				throw new Error(`MANIFEST subgroup must contain manifest file`);
+			}
 			let resource_path_list = resource_list.map((value) => (value.path));
 			let resource_path: string;
 			if (resource_list.length === 1) {

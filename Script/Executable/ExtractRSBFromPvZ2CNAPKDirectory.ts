@@ -12,7 +12,7 @@ namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 			los('executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory', input_directory),
 			los('executable.extract_rsb_from_pvz2_cn_apk_directory:output_directory', output_directory),
 		]);
-		Entry.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
+		Runner.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
 			let input_file = `${input_directory}/${item}`;
 			let output_file = `${output_directory}/${item.slice(0, -4)}`;
 			KernelX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, { variant_64: false });

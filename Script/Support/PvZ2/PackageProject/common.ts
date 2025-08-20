@@ -127,7 +127,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 			if (character === '}') {
 				assert_test(variable_name !== null);
 				let variable_value = find_variable_value(variable_list, variable_name);
-				assert_test(variable_value !== null, `could not find variable '${variable_name}'`);
+				if (variable_value === null) {
+					throw new Error(`could not find variable '${variable_name}'`);
+				}
 				result += variable_value;
 				variable_name = null;
 				continue;

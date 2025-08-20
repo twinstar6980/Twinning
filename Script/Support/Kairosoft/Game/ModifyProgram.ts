@@ -205,7 +205,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		assert_test(KernelX.is_windows, `unsupported system, this function only avaliable for windows`);
+		if (!KernelX.is_windows) {
+			throw new Error(`unsupported system, this function only avaliable for windows`);
+		}
 		Console.information(`Phase: detect game platform`, []);
 		let platform = detect_platform(target_directory);
 		assert_test(platform !== null);
@@ -238,8 +240,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		let dump_data: Array<string> = [];
 		Console.information(`Phase: dump program information via Il2CppDumper`, []);
 		if (disable_record_encryption || enable_debug_mode) {
-			let il2cpp_dumper_program_file = g_il2cpp_dumper_program_file !== null ? g_il2cpp_dumper_program_file : ProcessHelper.search_path('Il2CppDumper-x86');
-			assert_test(il2cpp_dumper_program_file !== null, `could not find 'Il2CppDumper-x86' program from PATH environment`);
+			let il2cpp_dumper_program_file = g_il2cpp_dumper_program_file !== null ? g_il2cpp_dumper_program_file : ProcessHelper.search_path_ensure('Il2CppDumper-x86');
 			let dump_result = ProcessHelper.execute(
 				il2cpp_dumper_program_file,
 				[
@@ -248,8 +249,10 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				],
 				KernelX.Process.list_environment_variable(),
 			);
-			Console.warning(`The output of Il2CppDumper :`, [dump_result.output]);
-			assert_test(normalize_string_line_feed(dump_result.output).endsWith(`Done!\nPress any key to exit...\n`), `execute failed by il2cpp_dumper`);
+			Console.warning(`The output of Il2CppDumper:`, [dump_result.output]);
+			if (!normalize_string_line_feed(dump_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
+				throw new Error(`execute failed by Il2CppDumper`);
+			}
 			dump_data = KernelX.Storage.read_file_s(`${PathUtility.parent(il2cpp_dumper_program_file)}/dump.cs`).split('\n');
 		}
 		let symbol_address = {

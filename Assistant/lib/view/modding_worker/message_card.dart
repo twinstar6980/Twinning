@@ -1,8 +1,7 @@
 import '/common.dart';
-import '/setting.dart';
 import '/view/modding_worker/message_type.dart';
+import '/view/modding_worker/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -25,19 +24,14 @@ class MessageCard extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
     var theme = Theme.of(context);
     var cardColor = this.type.color(theme);
     var titleStyle = theme.textTheme.titleSmall!.copyWith(
-      fontFamily: '',
-      fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
       color: theme.colorScheme.onSurface,
-    );
+    ).selfLet((it) => withSpecialFontTextStyle(context, it));
     var descriptionStyle = theme.textTheme.bodySmall!.copyWith(
-      fontFamily: '',
-      fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
       color: theme.colorScheme.onSurfaceVariant,
-    );
+    ).selfLet((it) => withSpecialFontTextStyle(context, it));
     return Card(
       margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
       color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), theme.colorScheme.surfaceContainerLow),

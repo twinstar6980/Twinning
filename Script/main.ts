@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '130';
+	export const k_version = '131';
 
 	// ------------------------------------------------
 
@@ -193,16 +193,22 @@ namespace Twinning.Script {
 			partition_list: Array<string>,
 			directory: string,
 		): void {
-			assert_test(Detail.exist_directory(directory), `directory is not found: <${directory}>`);
+			if (!Detail.exist_directory(directory)) {
+				throw new Error(`directory is not found: <${directory}>`);
+			}
 			for (let partition of partition_list) {
 				let script_name = `script/${partition}.js`;
 				let script_file = `${directory}/${partition}.js`;
 				let configuration_file = `${directory}/${partition}.json`;
-				assert_test(Detail.exist_file(script_file), `partition script file not found: <${partition}>`);
+				if (!Detail.exist_file(script_file)) {
+					throw new Error(`partition script file not found: <${partition}>`);
+				}
 				let configuration: null | Configuration = null;
 				if (Detail.exist_file(configuration_file)) {
 					let raw_configuration = Detail.read_json(configuration_file);
-					assert_test(is_object_of_object(raw_configuration), `partition configuration must be object: <${partition}>`);
+					if (raw_configuration === null || typeof raw_configuration !== 'object' || raw_configuration.constructor.name !== 'Object') {
+						throw new Error(`partition configuration must be object: <${partition}>`);
+					}
 					configuration = raw_configuration as Configuration;
 				}
 				let injector = Detail.evaluate(script_file, script_name) as undefined | Injector;
@@ -311,7 +317,7 @@ namespace Twinning.Script {
 			`Executor/Implement/pvz2.package_project`,
 			`Executor/Implement/pvz2.remote_project`,
 			`Executor/Implement/kairosoft.game`,
-			`Entry/Entry`,
+			`Runner/Runner`,
 		];
 
 		// ------------------------------------------------
@@ -320,7 +326,9 @@ namespace Twinning.Script {
 			argument: Array<string>,
 		): Promise<Array<string>> {
 			Detail.output(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`, argument);
-			assert_test(argument.length >= 1, `argument too few`);
+			if (argument.length < 1) {
+				throw new Error(`argument too few`);
+			}
 			// set home directory
 			let home_path = argument[0].replaceAll(`\\`, '/');
 			if (/^\.{1,2}[\/]/.test(home_path)) {
@@ -334,13 +342,13 @@ namespace Twinning.Script {
 			PartitionLoader.load(g_partition_list, Home.script());
 			let timer_end = Date.now();
 			let result = '';
-			// execute entry
+			// execute runner
 			try {
 				Console.success(los('main:partition_load_finish'), [
 					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
 				]);
 				Home.initialize();
-				result = Entry.entry(argument.slice(1));
+				result = Runner.run(argument.slice(1));
 			}
 			catch (e) {
 				Console.error_of(e);

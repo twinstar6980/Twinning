@@ -29,7 +29,7 @@ namespace Twinning.Script {
 	export function is_object(
 		value: unknown,
 	): value is object {
-		return typeof value === 'object';
+		return typeof value === 'object' && value !== null;
 	}
 
 	export function is_object_of_object(

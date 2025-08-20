@@ -41,7 +41,7 @@ namespace Twinning.Script {
 		idle(
 			index: number
 		): boolean {
-			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			assert_test(0 <= index && index < this.m_pool.length);
 			let item = this.m_pool[index];
 			return !item.context.busy().value;
 		}
@@ -50,9 +50,9 @@ namespace Twinning.Script {
 			index: number,
 			executor: () => any,
 		): void {
-			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			assert_test(0 <= index && index < this.m_pool.length);
 			let item = this.m_pool[index];
-			assert_test(!item.context.busy().value, `context is busy`);
+			assert_test(!item.context.busy().value);
 			item.context.execute(item.thread, this.make_executor(index, executor));
 			item.thread.detach();
 			return;
@@ -61,9 +61,9 @@ namespace Twinning.Script {
 		result(
 			index: number,
 		): [boolean, any] {
-			assert_test(0 <= index && index < this.m_pool.length, `invalid thread index`);
+			assert_test(0 <= index && index < this.m_pool.length);
 			let item = this.m_pool[index];
-			assert_test(!item.context.busy().value, `context is busy`);
+			assert_test(!item.context.busy().value);
 			return item.result;
 		}
 
@@ -101,7 +101,7 @@ namespace Twinning.Script {
 		push_execute(
 			executor: () => any,
 		): void {
-			assert_test(this.m_pool.length !== 0, `thread pool is empty`);
+			assert_test(this.m_pool.length !== 0);
 			let index: null | number = null;
 			while (index === null) {
 				index = this.m_pool.findIndex((value, index) => (this.idle(index)));

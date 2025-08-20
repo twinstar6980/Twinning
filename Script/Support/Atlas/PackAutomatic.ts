@@ -206,7 +206,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 			box_pathological_multiplier,
 		],
 	): [Box, Record<string, Rect>] {
-		assert_test(item_weighter.length !== 0, `item_weighter list must be not empty`);
+		assert_test(item_weighter.length !== 0);
 		let candidate = item_weighter.map((value) => (pack_automatic(item_map, container_expander, value)));
 		let best = candidate[0];
 		for (let e of candidate.slice(1)) {

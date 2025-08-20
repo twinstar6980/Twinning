@@ -20,17 +20,14 @@ namespace Twinning.Script.Executor {
 	};
 
 	export type Command = {
+		/** 附加输入值 */
+		input: null | string;
+		/** 关闭功能的筛选；若指定，则所有功能都可供用户选择 */
+		filterless: boolean;
 		/** 需要应用的功能，若未指定，则需由用户选择 */
 		method: null | string;
 		/** 传递给所应用功能工作函数的参数 */
 		argument: Argument;
-		/** 附加输入 */
-		input: null | {
-			/** 输入值 */
-			value: string;
-			/** 关闭功能的过滤功能；若指定，则（在未指定建议时）在筛选可用功能时不使用过滤功能，所有功能都会进入待选表 */
-			filterless: boolean;
-		};
 	};
 
 	// ------------------------------------------------
@@ -42,31 +39,37 @@ namespace Twinning.Script.Executor {
 		let index = 0;
 		while (index < raw_command.length) {
 			let command: Command = {
+				input: null,
+				filterless: false,
 				method: null,
 				argument: {},
-				input: null,
 			};
 			{
 				let input_value = raw_command[index++];
 				if (input_value !== '?') {
-					command.input = {
-						value: input_value,
-						filterless: false,
-					};
-					if (index < raw_command.length && raw_command[index] === '-filterless') {
-						index++;
-						command.input.filterless = true;
-					}
+					command.input = input_value;
 				}
+			}
+			if (index < raw_command.length && raw_command[index] === '-filterless') {
+				index++;
+				command.filterless = true;
 			}
 			if (index < raw_command.length && raw_command[index] === '-method') {
 				index++;
+				if (index === raw_command.length) {
+					throw new Error(`command truncated, expected method`);
+				}
 				command.method = raw_command[index++];
 			}
 			if (index < raw_command.length && raw_command[index] === '-argument') {
 				index++;
+				if (index === raw_command.length) {
+					throw new Error(`command truncated, expected argument`);
+				}
 				let argument = KernelX.JSON.read_s_js(raw_command[index++]);
-				assert_test(is_object_of_object(argument), `argument must be a object`);
+				if (!is_object_of_object(argument)) {
+					throw new Error(`argument must be a object`);
+				}
 				command.argument = argument as Argument;
 			}
 			result.push(command);
@@ -80,82 +83,54 @@ namespace Twinning.Script.Executor {
 		fallback_method: Array<Method>,
 	): null | [boolean, number] {
 		let state: [boolean, number] | string = undefined!;
-		let selected_method: null | Method;
-		if (command.method !== null) {
+		do {
+			if (command.method === null) {
+				if (command.input === null) {
+					state = los('executor.generic:input_required');
+					break;
+				}
+				for (let method_source of [method, fallback_method]) {
+					let valid_method: Array<[bigint, Method]> = [];
+					for (let index in method_source) {
+						if (command.filterless || method_source[index].input_filter(command.input)) {
+							valid_method.push([BigInt(index) + 1n, method_source[index]]);
+						}
+					}
+					if (valid_method.length !== 0) {
+						Console.information(los('executor.generic:method_select'), [
+							los('executor.generic:method_select_null_to_skip'),
+						]);
+						command.method = Console.enumeration(valid_method.map((value) => ([value[1].id, `${value[0]}`, value[1].name()])), true, null);
+						if (command.method !== null) {
+							break;
+						}
+					}
+				}
+			}
+			if (command.method === null) {
+				state = los('executor.generic:method_unavailable');
+				break;
+			}
 			let target_method = method.find((value) => (value.id === command.method));
 			if (target_method === undefined) {
 				target_method = fallback_method.find((value) => (value.id === command.method));
 			}
 			if (target_method === undefined) {
-				selected_method = null;
 				state = los('executor.generic:method_invalid');
+				break;
 			}
-			else {
-				selected_method = target_method;
-			}
-		}
-		else {
-			if (command.input === null) {
-				Console.information(los('executor.generic:no_input'), [
-				]);
-				let input_value = Console.string(null, null);
-				Console.information(los('executor.generic:should_filterless_or_not'), [
-				]);
-				let input_filterless = Console.boolean(null, null);
-				command.input = {
-					value: input_value,
-					filterless: input_filterless,
-				};
-			}
-			let valid_method: Array<[bigint, Method]> = [];
-			for (let index in method) {
-				if (command.input.filterless || method[index].input_filter(command.input.value)) {
-					valid_method.push([BigInt(index) + 1n, method[index]]);
-				}
-			}
-			if (valid_method.length === 0) {
-				selected_method = null;
-				state = los('executor.generic:method_unavailable');
-			}
-			else {
-				Console.information(los('executor.generic:method_select'), [
-					los('executor.generic:method_select_null_to_skip'),
-				]);
-				selected_method = Console.enumeration(valid_method.map((value) => ([value[1], `${value[0]}`, value[1].name()])), true, null);
-				if (selected_method === null) {
-					state = los('executor.generic:method_select_null');
-				}
-			}
-			if (selected_method === null) {
-				valid_method = [];
-				for (let index in fallback_method) {
-					if (command.input.filterless || fallback_method[index].input_filter(command.input.value)) {
-						valid_method.push([BigInt(index) + 1n, fallback_method[index]]);
-					}
-				}
-				if (valid_method.length !== 0) {
-					Console.information(los('executor.generic:method_select'), [
-						los('executor.generic:method_select_null_to_skip'),
-					]);
-					selected_method = Console.enumeration(valid_method.map((value) => ([value[1], `${value[0]}`, value[1].name()])), true, null);
-					if (selected_method !== null) {
-						state = undefined!;
-					}
-				}
-			}
-		}
-		if (selected_method !== null) {
 			let argument = { ...command.argument };
 			if (command.input !== null) {
-				argument[selected_method.input_forwarder] = command.input.value;
+				argument[target_method.input_forwarder] = command.input;
 			}
-			for (let key in selected_method.default_argument) {
+			for (let key in target_method.default_argument) {
 				if (argument[key] === undefined) {
-					argument[key] = selected_method.default_argument[key];
+					argument[key] = target_method.default_argument[key];
 				}
 			}
-			state = selected_method.worker(argument);
+			state = target_method.worker(argument);
 		}
+		while (false);
 		if (is_string(state)) {
 			Console.warning(los('executor.generic:finish_skipped'), [state]);
 		}

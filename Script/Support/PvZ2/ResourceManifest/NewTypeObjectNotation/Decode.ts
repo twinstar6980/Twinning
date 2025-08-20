@@ -68,7 +68,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 			};
 			let group_type_index = read_enumeration(data);
 			group_base.type = GroupTypeEnumeration.find((item) => (item.index === group_type_index))?.value!;
-			assert_test(group_base.type !== undefined, `unknown group type index ${group_type_index}`);
+			if (group_base.type === undefined) {
+				throw new Error(`unknown group type index ${group_type_index}`);
+			}
 			group_simple.res = not_or(read_integer(data), 0n, undefined);
 			group_composite.subgroups.length = Number(read_integer(data));
 			group_simple.resources.length = Number(read_integer(data));
@@ -115,7 +117,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 				};
 				let resource_type_index = read_enumeration(data);
 				resource_base.type = ResourceTypeEnumeration.find((item) => (item.index === resource_type_index))?.value!;
-				assert_test(resource_base.type !== undefined, `unknown resource type index ${resource_type_index}`);
+				if (resource_base.type === undefined) {
+					throw new Error(`unknown resource type index ${resource_type_index}`);
+				}
 				resource_base.slot = read_integer(data);
 				resource_atlas.width = read_integer(data);
 				resource_atlas.height = read_integer(data);
