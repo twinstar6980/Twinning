@@ -32,14 +32,14 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 		// ----------------
 
 		inline static auto process_image (
-			OByteStreamView &                 data,
-			Image::CImageView const &         image,
+			OutputByteStreamView &            data,
+			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format,
 			Boolean const &                   compress_texture_data
 		) -> Void {
 			data.write_constant(k_magic_identifier);
 			data.write_constant(cbox<VersionNumber>(version.number));
-			auto header_stream = OByteStreamView{data.forward_view(bs_static_size<Header>())};
+			auto header_stream = OutputByteStreamView{data.forward_view(bs_static_size<Header>())};
 			auto image_format = Integer{};
 			switch (format.value) {
 				case Texture::Encoding::Format::Constant::argb_8888().value: {
@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 			}
 			auto compress_texture_data_size = Size{};
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
-			auto texture_data_view = VByteListView{};
+			auto texture_data_view = VariableByteListView{};
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
 				texture_data_view = data.forward_view(texture_data_size);
@@ -88,10 +88,10 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
-			Texture::Encoding::Encode::process(as_lvalue(OByteStreamView{texture_data_view}), image, format);
+			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, format);
 			if (compress_texture_data) {
-				auto texture_data_stream = IByteStreamView{texture_data_container};
-				auto ripe_texture_data_stream = OByteStreamView{data.reserve_view()};
+				auto texture_data_stream = InputByteStreamView{texture_data_container};
+				auto ripe_texture_data_stream = OutputByteStreamView{data.reserve_view()};
 				Data::Compression::Deflate::Compress::process(texture_data_stream, ripe_texture_data_stream, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 				compress_texture_data_size = ripe_texture_data_stream.position();
 				data.forward(ripe_texture_data_stream.position());
@@ -133,8 +133,8 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                 data_,
-			Image::CImageView const &         image,
+			OutputByteStreamView &            data_,
+			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format,
 			Boolean const &                   compress_texture_data
 		) -> Void {

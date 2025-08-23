@@ -14,7 +14,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TValue, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TValue>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 	class OptionalView {
 
 	public:
@@ -23,13 +23,13 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QValue = AsConstantIf<Value, constant.value>;
+		using QualifyValue = AsConstantIf<Value, constant.value>;
 
 	protected:
 
 		Boolean m_has;
 
-		Pointer<QValue> m_value;
+		Pointer<QualifyValue> m_value;
 
 	public:
 
@@ -57,7 +57,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		explicit constexpr OptionalView (
-			QValue & value
+			QualifyValue & value
 		) :
 			m_has{k_true},
 			m_value{&value} {
@@ -104,17 +104,17 @@ export namespace Twinning::Kernel {
 		}
 
 		constexpr auto set (
-			QValue & value
-		) -> QValue & {
+			QualifyValue & value
+		) -> QualifyValue & {
 			thiz.m_has = k_true;
-			thiz.m_value = make_pointer(&value);
+			thiz.m_value = make_pointer_of(value);
 			return thiz.m_value.dereference();
 		}
 
 		// ----------------
 
 		constexpr auto get (
-		) const -> QValue & {
+		) const -> QualifyValue & {
 			assert_test(thiz.has());
 			return thiz.m_value.dereference();
 		}
@@ -142,11 +142,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		AutoConstraint
-	using VOptionalView = OptionalView<Value, k_false>;
+	using VariableOptionalView = OptionalView<Value, k_false>;
 
 	template <typename Value> requires
 		AutoConstraint
-	using COptionalView = OptionalView<Value, k_true>;
+	using ConstantOptionalView = OptionalView<Value, k_true>;
 
 	#pragma endregion
 

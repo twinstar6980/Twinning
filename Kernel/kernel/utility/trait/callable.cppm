@@ -21,16 +21,16 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename Class, typename Result, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-	using AsVMemberFunction = ZMemberPointer<Class, Result  (Argument ...)>;
+	using AsVariableMemberFunction = ZMemberPointer<Class, Result  (Argument ...)>;
 
 	template <typename Class, typename Result, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-	using AsCMemberFunction = ZMemberPointer<Class, Result  (Argument ...) const>;
+	using AsConstantMemberFunction = ZMemberPointer<Class, Result  (Argument ...) const>;
 
 	template <typename Class, auto constant, typename Result, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-		&& (IsSameV<constant, ZBoolean>)
-	using AsMemberFunction = AsSwitch<!constant, AsVMemberFunction<Class, Result, Argument ...>, AsCMemberFunction<Class, Result, Argument ...>>;
+		&& (IsSameOf<constant, ZBoolean>)
+	using AsMemberFunction = AsSwitch<!constant, AsVariableMemberFunction<Class, Result, Argument ...>, AsConstantMemberFunction<Class, Result, Argument ...>>;
 
 	template <typename Class> requires
 		CategoryConstraint<IsPureInstance<Class>>
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename TClass, auto t_constant, typename TResult, typename ... TArgument> requires
 		CategoryConstraint<IsPureInstance<TClass> && IsAnything<TResult> && IsValid<TArgument ...>>
-		&& (IsSameV<t_constant, ZBoolean>)
+		&& (IsSameOf<t_constant, ZBoolean>)
 	struct MemberFunctionTrait {
 
 		using Class = TClass;
@@ -101,14 +101,14 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename TClass, typename TResult, typename ... TArgument> requires
 		AutoConstraint
-	struct CallableTrait<AsVMemberFunction<TClass, TResult, TArgument ...>> :
+	struct CallableTrait<AsVariableMemberFunction<TClass, TResult, TArgument ...>> :
 		MemberFunctionTrait<TClass, false, TResult, TArgument ...> {
 
 	};
 
 	template <typename TClass, typename TResult, typename ... TArgument> requires
 		AutoConstraint
-	struct CallableTrait<AsCMemberFunction<TClass, TResult, TArgument ...>> :
+	struct CallableTrait<AsConstantMemberFunction<TClass, TResult, TArgument ...>> :
 		MemberFunctionTrait<TClass, true, TResult, TArgument ...> {
 
 	};

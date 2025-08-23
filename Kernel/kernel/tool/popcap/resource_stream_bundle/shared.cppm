@@ -75,7 +75,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 	// ----------------
 
 	inline auto string_block_fixed_128_from_string (
-		CStringView const & block
+		ConstantStringView const & block
 	) -> StringBlockFixed128 {
 		assert_test(block.size() < 128_sz);
 		return StringBlockFixed128{block};
@@ -164,9 +164,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 			CategoryConstraint<IsPureInstance<Value>>
 		inline auto encode (
 			Map<String, Value> const & map,
-			OByteStreamView &          data
+			OutputByteStreamView &     data
 		) -> Void {
-			auto stream = IOByteStreamView{data.reserve_view()};
+			auto stream = AccessByteStreamView{data.reserve_view()};
 			struct WorkOption {
 				Size inherit_length{};
 				Size parent_offset{};
@@ -223,12 +223,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 		template <typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 		inline auto decode (
-			Map<String, Value> & map,
-			IByteStreamView &    data
+			Map<String, Value> &  map,
+			InputByteStreamView & data
 		) -> Void {
-			auto stream = IByteStreamView{data.reserve_view()};
+			auto stream = InputByteStreamView{data.reserve_view()};
 			map.allocate(stream.reserve() / k_block_size);
-			auto parent_string_list = Array<Optional<CStringView>>{stream.reserve() / k_block_size};
+			auto parent_string_list = Array<Optional<ConstantStringView>>{stream.reserve() / k_block_size};
 			while (!stream.full()) {
 				map.append();
 				auto & element = map.last();

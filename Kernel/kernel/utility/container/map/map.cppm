@@ -40,25 +40,25 @@ export namespace Twinning::Kernel {
 
 		using View = MapView<Key, Value, k_false>;
 
-		using VKey = Key;
+		using VariableKey = Key;
 
-		using VValue = Value;
+		using VariableValue = Value;
 
-		using typename List::VElement;
+		using typename List::VariableElement;
 
-		using typename List::VIterator;
+		using typename List::VariableIterator;
 
-		using VView = MapView<Key, Value, k_false>;
+		using VariableView = MapView<Key, Value, k_false>;
 
-		using CKey = TKey const;
+		using ConstantKey = TKey const;
 
-		using CValue = TValue const;
+		using ConstantValue = TValue const;
 
-		using typename List::CElement;
+		using typename List::ConstantElement;
 
-		using typename List::CIterator;
+		using typename List::ConstantIterator;
 
-		using CView = MapView<Key, Value, k_true>;
+		using ConstantView = MapView<Key, Value, k_true>;
 
 	public:
 
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		auto operator = (
-			CView const & that
+			ConstantView const & that
 		) -> Map & {
 			thiz.as_list() = that.as_list();
 			return thiz;
@@ -111,7 +111,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto operator [] (
 			KeyObject const & key
-		) -> VValue & {
+		) -> VariableValue & {
 			return thiz.query(key).value;
 		}
 
@@ -119,7 +119,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto operator [] (
 			KeyObject const & key
-		) const -> CValue & {
+		) const -> ConstantValue & {
 			return thiz.query(key).value;
 		}
 
@@ -129,17 +129,17 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto operator () (
 			KeyObject const & key
-		) -> VValue & {
+		) -> VariableValue & {
 			return thiz.query_force(key).value;
 		}
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -162,24 +162,24 @@ export namespace Twinning::Kernel {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const & {
-			return self_cast<VView>(thiz);
+		) -> VariableView const & {
+			return self_cast<VariableView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const & {
-			return self_cast<CView>(thiz);
+		) const -> ConstantView const & {
+			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
 		auto view (
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view();
 		}
 
 		auto view (
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view();
 		}
 
@@ -249,7 +249,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query (
 			KeyObject const & key
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.as_view().query(key);
 		}
 
@@ -257,7 +257,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query_if (
 			KeyObject const & key
-		) -> VOptionalView<Element> {
+		) -> VariableOptionalView<Element> {
 			return thiz.as_view().query_if(key);
 		}
 
@@ -267,7 +267,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query (
 			KeyObject const & key
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.as_view().query(key);
 		}
 
@@ -275,7 +275,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query_if (
 			KeyObject const & key
-		) const -> COptionalView<Element> {
+		) const -> ConstantOptionalView<Element> {
 			return thiz.as_view().query_if(key);
 		}
 
@@ -286,19 +286,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -307,19 +307,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -427,7 +427,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		auto query_force (
 			KeyObject const & key
-		) -> VElement & {
+		) -> VariableElement & {
 			auto index = thiz.find_key(key);
 			return index.has() ? (thiz.at(index.get())) : (thiz.append(key, Value{}));
 		}

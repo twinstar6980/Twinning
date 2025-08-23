@@ -18,12 +18,12 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & plain,
-			OByteStreamView & cipher,
-			String const &    key
+			InputByteStreamView &  plain,
+			OutputByteStreamView & cipher,
+			String const &         key
 		) -> Void {
 			auto rijndael_plain_container = ByteArray{};
-			auto rijndael_plain = IByteStreamView{};
+			auto rijndael_plain = InputByteStreamView{};
 			auto plain_data = plain.forward_view(plain.reserve());
 			auto rijndael_data_size = compute_padded_size(plain_data.size(), k_crypt_block_size);
 			if (plain_data.size() == rijndael_data_size) {
@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 				rijndael_plain.set(rijndael_plain_container);
 			}
 			cipher.write_constant(k_magic_identifier);
-			auto rijndael_cipher = OByteStreamView{cipher.forward_view(rijndael_data_size)};
+			auto rijndael_cipher = OutputByteStreamView{cipher.forward_view(rijndael_data_size)};
 			auto rijndael_key = compute_rijndael_key(key);
 			auto rijndael_iv = compute_rijndael_iv(rijndael_key);
 			Data::Encryption::Rijndael::Encrypt::process(rijndael_plain, rijndael_cipher, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
@@ -57,9 +57,9 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & plain_,
-			OByteStreamView & cipher_,
-			String const &    key
+			InputByteStreamView &  plain_,
+			OutputByteStreamView & cipher_,
+			String const &         key
 		) -> Void {
 			M_use_zps_of(plain);
 			M_use_zps_of(cipher);

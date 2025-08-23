@@ -16,9 +16,9 @@ export namespace Twinning::Kernel {
 	M_enumeration(
 		M_wrap(StreamMode),
 		M_wrap(
-			io,
-			i,
-			o,
+			access,
+			input,
+			output,
 		),
 	);
 

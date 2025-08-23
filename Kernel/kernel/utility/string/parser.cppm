@@ -28,9 +28,9 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region character
 
 	inline auto write_character_repeat (
-		OCharacterStreamView & stream,
-		Character const &      character,
-		Size const &           count
+		OutputCharacterStreamView & stream,
+		Character const &           character,
+		Size const &                count
 	) -> Void {
 		for (auto & index : SizeRange{count}) {
 			stream.write(character);
@@ -43,8 +43,8 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region escape character
 
 	inline auto write_escape_character (
-		OCharacterStreamView & stream,
-		Unicode const &        character
+		OutputCharacterStreamView & stream,
+		Unicode const &             character
 	) -> Void {
 		if (character >= 0x100_u) {
 			if (character >= 0x10000_u) {
@@ -120,8 +120,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_escape_character (
-		ICharacterStreamView & stream,
-		Unicode &              character
+		InputCharacterStreamView & stream,
+		Unicode &                  character
 	) -> Void {
 		auto current = stream.read_of();
 		switch (current.value) {
@@ -210,8 +210,8 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region e-ascii character
 
 	inline auto write_eascii_character (
-		OCharacterStreamView & stream,
-		Unicode const &        character
+		OutputCharacterStreamView & stream,
+		Unicode const &             character
 	) -> Void {
 		assert_test(character < 0x100_u);
 		stream.write(self_cast<Character>(cbox<Character8>(character)));
@@ -219,8 +219,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_eascii_character (
-		ICharacterStreamView & stream,
-		Unicode &              character
+		InputCharacterStreamView & stream,
+		Unicode &                  character
 	) -> Void {
 		character = cbox<Unicode>(self_cast<Character8>(stream.read_of()));
 		return;
@@ -231,8 +231,8 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region utf-8 character
 
 	inline auto write_utf8_character (
-		OCharacterStreamView & stream,
-		Unicode const &        character
+		OutputCharacterStreamView & stream,
+		Unicode const &             character
 	) -> Void {
 		auto extra_size = Size{};
 		if (character < 0x80_u) {
@@ -262,8 +262,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_utf8_character (
-		ICharacterStreamView & stream,
-		Unicode &              character
+		InputCharacterStreamView & stream,
+		Unicode &                  character
 	) -> Void {
 		auto current = self_cast<Character8>(stream.read_of());
 		auto extra_size = Size{};
@@ -330,9 +330,9 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region string
 
 	inline auto write_string (
-		OCharacterStreamView & stream,
-		CStringView const &    string,
-		Size &                 length
+		OutputCharacterStreamView & stream,
+		ConstantStringView const &  string,
+		Size &                      length
 	) -> Void {
 		length = string.size();
 		stream.write(string);
@@ -340,11 +340,11 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_string (
-		ICharacterStreamView & stream,
-		CStringView &          string,
-		Size const &           length
+		InputCharacterStreamView & stream,
+		ConstantStringView &       string,
+		Size const &               length
 	) -> Void {
-		string = down_cast<CStringView>(stream.forward_view(length));
+		string = down_cast<ConstantStringView>(stream.forward_view(length));
 		return;
 	}
 
@@ -353,11 +353,11 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region e-ascii string
 
 	inline auto write_eascii_string (
-		OCharacterStreamView & stream,
-		String const &         string,
-		Size &                 length
+		OutputCharacterStreamView & stream,
+		String const &              string,
+		Size &                      length
 	) -> Void {
-		auto string_stream = ICharacterStreamView{string};
+		auto string_stream = InputCharacterStreamView{string};
 		while (!string_stream.full()) {
 			auto character = Unicode{};
 			read_utf8_character(string_stream, character);
@@ -369,13 +369,13 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_eascii_string (
-		ICharacterStreamView & stream,
-		String &               string,
-		Size const &           length
+		InputCharacterStreamView & stream,
+		String &                   string,
+		Size const &               length
 	) -> Void {
 		string.allocate_full(length * 2_sz);
-		auto string_stream = ICharacterStreamView{stream.reserve_view()};
-		auto output_stream = OCharacterStreamView{string.view()};
+		auto string_stream = InputCharacterStreamView{stream.reserve_view()};
+		auto output_stream = OutputCharacterStreamView{string.view()};
 		for (auto & index : SizeRange{length}) {
 			auto current = self_cast<Character8>(string_stream.read_of());
 			write_utf8_character(output_stream, cbox<Unicode>(current));
@@ -390,11 +390,11 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region utf-8 string
 
 	inline auto write_utf8_string (
-		OCharacterStreamView & stream,
-		CStringView const &    string,
-		Size &                 length
+		OutputCharacterStreamView & stream,
+		ConstantStringView const &  string,
+		Size &                      length
 	) -> Void {
-		auto string_stream = ICharacterStreamView{string};
+		auto string_stream = InputCharacterStreamView{string};
 		while (!string_stream.full()) {
 			auto current = self_cast<Character8>(string_stream.read_of());
 			auto extra_size = compute_utf8_character_extra_size(current);
@@ -413,11 +413,11 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_utf8_string (
-		ICharacterStreamView & stream,
-		CStringView &          string,
-		Size const &           length
+		InputCharacterStreamView & stream,
+		ConstantStringView &       string,
+		Size const &               length
 	) -> Void {
-		auto string_stream = ICharacterStreamView{stream.reserve_view()};
+		auto string_stream = InputCharacterStreamView{stream.reserve_view()};
 		for (auto & index : SizeRange{length}) {
 			auto current = self_cast<Character8>(string_stream.read_of());
 			auto extra_size = compute_utf8_character_extra_size(current);
@@ -429,18 +429,18 @@ export namespace Twinning::Kernel::StringParser {
 				}
 			}
 		}
-		string = down_cast<CStringView>(string_stream.stream_view());
+		string = down_cast<ConstantStringView>(string_stream.stream_view());
 		stream.forward(string_stream.position());
 		return;
 	}
 
 	inline auto read_utf8_string_by_size (
-		ICharacterStreamView & stream,
-		CStringView &          string,
-		Size &                 length,
-		Size const &           size
+		InputCharacterStreamView & stream,
+		ConstantStringView &       string,
+		Size &                     length,
+		Size const &               size
 	) -> Void {
-		auto string_stream = ICharacterStreamView{stream.next_view(size)};
+		auto string_stream = InputCharacterStreamView{stream.next_view(size)};
 		length = k_none_size;
 		while (!string_stream.full()) {
 			auto current = self_cast<Character8>(string_stream.read_of());
@@ -454,17 +454,17 @@ export namespace Twinning::Kernel::StringParser {
 			}
 			++length;
 		}
-		string = down_cast<CStringView>(string_stream.stream_view());
+		string = down_cast<ConstantStringView>(string_stream.stream_view());
 		stream.forward(string_stream.position());
 		return;
 	}
 
 	inline auto compute_utf8_string_length (
-		CStringView const & string
+		ConstantStringView const & string
 	) -> Size {
-		auto string_stream = ICharacterStreamView{string};
+		auto string_stream = InputCharacterStreamView{string};
 		auto length = Size{};
-		read_utf8_string_by_size(string_stream, as_lvalue(CStringView{}), length, string.size());
+		read_utf8_string_by_size(string_stream, as_left(ConstantStringView{}), length, string.size());
 		return length;
 	}
 
@@ -473,9 +473,9 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region string until
 
 	inline auto write_string_until (
-		OCharacterStreamView & stream,
-		CStringView const &    string,
-		Character const &      end_identifier
+		OutputCharacterStreamView & stream,
+		ConstantStringView const &  string,
+		Character const &           end_identifier
 	) -> Void {
 		for (auto & character : string) {
 			stream.write(character);
@@ -484,11 +484,11 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_string_until (
-		ICharacterStreamView & stream,
-		CStringView &          string,
-		Character const &      end_identifier
+		InputCharacterStreamView & stream,
+		ConstantStringView &       string,
+		Character const &          end_identifier
 	) -> Void {
-		auto string_stream = ICharacterStreamView{stream.reserve_view()};
+		auto string_stream = InputCharacterStreamView{stream.reserve_view()};
 		while (k_true) {
 			auto character = string_stream.read_of();
 			if (character == end_identifier) {
@@ -496,7 +496,7 @@ export namespace Twinning::Kernel::StringParser {
 				break;
 			}
 		}
-		string = down_cast<CStringView>(string_stream.stream_view());
+		string = down_cast<ConstantStringView>(string_stream.stream_view());
 		stream.forward(string_stream.position());
 		return;
 	}
@@ -506,9 +506,9 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region escape utf-8 string until
 
 	inline auto write_escape_utf8_string_until (
-		OCharacterStreamView & stream,
-		ICharacterStreamView & string,
-		Character const &      end_identifier
+		OutputCharacterStreamView & stream,
+		InputCharacterStreamView &  string,
+		Character const &           end_identifier
 	) -> Void {
 		while (!string.full()) {
 			auto current = string.read_of();
@@ -533,9 +533,9 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_escape_utf8_string_until (
-		ICharacterStreamView & stream,
-		OCharacterStreamView & string,
-		Character const &      end_identifier
+		InputCharacterStreamView &  stream,
+		OutputCharacterStreamView & string,
+		Character const &           end_identifier
 	) -> Void {
 		while (k_true) {
 			auto current = stream.read_of();
@@ -569,8 +569,8 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region comment
 
 	inline auto read_line_comment_after_mark (
-		ICharacterStreamView & stream
-	) -> CStringView {
+		InputCharacterStreamView & stream
+	) -> ConstantStringView {
 		auto begin = stream.current_pointer();
 		auto length = k_none_size;
 		while (!stream.full()) {
@@ -579,12 +579,12 @@ export namespace Twinning::Kernel::StringParser {
 			}
 			++length;
 		}
-		return CStringView{begin, length};
+		return ConstantStringView{begin, length};
 	}
 
 	inline auto read_block_comment_after_mark (
-		ICharacterStreamView & stream
-	) -> CStringView {
+		InputCharacterStreamView & stream
+	) -> ConstantStringView {
 		auto begin = stream.current_pointer();
 		auto length = k_none_size;
 		while (!stream.full()) {
@@ -596,13 +596,13 @@ export namespace Twinning::Kernel::StringParser {
 			}
 			++length;
 		}
-		return CStringView{begin, length};
+		return ConstantStringView{begin, length};
 	}
 
 	inline auto read_comment_after_first_mark (
-		ICharacterStreamView & stream
-	) -> CStringView {
-		auto result = CStringView{};
+		InputCharacterStreamView & stream
+	) -> ConstantStringView {
+		auto result = ConstantStringView{};
 		switch (stream.read_of().value) {
 			case '/': {
 				result = read_line_comment_after_mark(stream);
@@ -625,16 +625,16 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region null
 
 	inline auto write_null (
-		OCharacterStreamView & stream,
-		Null const &           value
+		OutputCharacterStreamView & stream,
+		Null const &                value
 	) -> Void {
 		stream.write("null"_sv);
 		return;
 	}
 
 	inline auto read_null (
-		ICharacterStreamView & stream,
-		Null &                 value
+		InputCharacterStreamView & stream,
+		Null &                     value
 	) -> Void {
 		assert_test(stream.read_of<Character>() == 'n'_c);
 		assert_test(stream.read_of<Character>() == 'u'_c);
@@ -648,16 +648,16 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region boolean
 
 	inline auto write_boolean (
-		OCharacterStreamView & stream,
-		Boolean const &        value
+		OutputCharacterStreamView & stream,
+		Boolean const &             value
 	) -> Void {
 		stream.write(value ? ("true"_sv) : ("false"_sv));
 		return;
 	}
 
 	inline auto read_boolean (
-		ICharacterStreamView & stream,
-		Boolean &              value
+		InputCharacterStreamView & stream,
+		Boolean &                  value
 	) -> Void {
 		auto first = stream.read_of<Character>();
 		if (first == 't'_c) {
@@ -684,9 +684,9 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region number
 
 	inline auto write_number (
-		OCharacterStreamView & stream,
-		Integer const &        value,
-		Boolean const &        disable_sign_when_positive = k_false
+		OutputCharacterStreamView & stream,
+		Integer const &             value,
+		Boolean const &             disable_sign_when_positive = k_false
 	) -> Void {
 		if (value > 0_i && !disable_sign_when_positive) {
 			stream.write('+'_c);
@@ -700,8 +700,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_number (
-		ICharacterStreamView & stream,
-		Integer &              value
+		InputCharacterStreamView & stream,
+		Integer &                  value
 	) -> Void {
 		auto valid_begin = stream.current_pointer();
 		auto current = Character{};
@@ -747,9 +747,9 @@ export namespace Twinning::Kernel::StringParser {
 	// ----------------
 
 	inline auto write_number (
-		OCharacterStreamView & stream,
-		Floater const &        value,
-		Boolean const &        disable_sign_when_positive = k_false
+		OutputCharacterStreamView & stream,
+		Floater const &             value,
+		Boolean const &             disable_sign_when_positive = k_false
 	) -> Void {
 		if (value > 0.0_f && !disable_sign_when_positive) {
 			stream.write('+'_c);
@@ -767,8 +767,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_number (
-		ICharacterStreamView & stream,
-		Floater &              value
+		InputCharacterStreamView & stream,
+		Floater &                  value
 	) -> Void {
 		auto is_floater = k_false;
 		auto is_scientific = k_false;
@@ -836,9 +836,9 @@ export namespace Twinning::Kernel::StringParser {
 	// ----------------
 
 	inline auto write_number (
-		OCharacterStreamView & stream,
-		NumberVariant const &  value,
-		Boolean const &        disable_sign_when_positive = k_false
+		OutputCharacterStreamView & stream,
+		NumberVariant const &       value,
+		Boolean const &             disable_sign_when_positive = k_false
 	) -> Void {
 		switch (value.type().value) {
 			case NumberVariantType::Constant::integer().value: {
@@ -855,8 +855,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_number (
-		ICharacterStreamView & stream,
-		NumberVariant &        value
+		InputCharacterStreamView & stream,
+		NumberVariant &            value
 	) -> Void {
 		auto is_floater = k_false;
 		auto is_scientific = k_false;
@@ -931,8 +931,8 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region byte
 
 	inline auto write_byte (
-		OCharacterStreamView & stream,
-		Byte const &           value
+		OutputCharacterStreamView & stream,
+		Byte const &                value
 	) -> Void {
 		stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(value, 5_ix, 4_sz))));
 		stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(value, 1_ix, 4_sz))));
@@ -940,8 +940,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_byte (
-		ICharacterStreamView & stream,
-		Byte &                 value
+		InputCharacterStreamView & stream,
+		Byte &                     value
 	) -> Void {
 		value = 0x00_b;
 		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hex(stream.read_of()));
@@ -954,8 +954,8 @@ export namespace Twinning::Kernel::StringParser {
 	#pragma region byte list
 
 	inline auto write_byte_list (
-		OCharacterStreamView & stream,
-		CByteListView const &  value
+		OutputCharacterStreamView &  stream,
+		ConstantByteListView const & value
 	) -> Void {
 		if (!value.empty()) {
 			write_byte(stream, value.first());
@@ -968,8 +968,8 @@ export namespace Twinning::Kernel::StringParser {
 	}
 
 	inline auto read_byte_list (
-		ICharacterStreamView & stream,
-		VByteListView const &  value
+		InputCharacterStreamView &   stream,
+		VariableByteListView const & value
 	) -> Void {
 		if (!value.empty()) {
 			read_byte(stream, value.first());

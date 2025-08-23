@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation {
 		// ----------------
 
 		inline static auto process_image (
-			Image::VImageView const & target,
-			Boolean const &           horizontal,
-			Boolean const &           vertical
+			Image::VariableImageView const & target,
+			Boolean const &                  horizontal,
+			Boolean const &                  vertical
 		) -> Void {
 			if (horizontal) {
 				for (auto & row : SizeRange{target.size().height}) {
@@ -40,9 +40,9 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation {
 		// ----------------
 
 		inline static auto process (
-			Image::VImageView const & target,
-			Boolean const &           horizontal,
-			Boolean const &           vertical
+			Image::VariableImageView const & target,
+			Boolean const &                  horizontal,
+			Boolean const &                  vertical
 		) -> Void {
 			return process_image(target, horizontal, vertical);
 		}

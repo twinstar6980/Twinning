@@ -16,16 +16,16 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_mode, template <typename, auto> typename TMListView = ListView> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_mode, StreamMode>)
+		&& (IsSameOf<t_mode, StreamMode>)
 	class StreamView {
 
 	private:
 
-		using IOStream = StreamView<TElement, StreamMode::Constant::io(), TMListView>;
+		using AccessStream = StreamView<TElement, StreamMode::Constant::access(), TMListView>;
 
-		using IStream = StreamView<TElement, StreamMode::Constant::i(), TMListView>;
+		using InputStream = StreamView<TElement, StreamMode::Constant::input(), TMListView>;
 
-		using OStream = StreamView<TElement, StreamMode::Constant::o(), TMListView>;
+		using OutputStream = StreamView<TElement, StreamMode::Constant::output(), TMListView>;
 
 	public:
 
@@ -33,11 +33,11 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto mode = StreamMode{t_mode};
 
-		using ListView = TMListView<Element, mbox<Boolean>(t_mode == StreamMode::Constant::i())>;
+		using ListView = TMListView<Element, mbox<Boolean>(t_mode == StreamMode::Constant::input())>;
 
-		using QElement = typename ListView::QElement;
+		using QualifyElement = typename ListView::QualifyElement;
 
-		using QIterator = typename ListView::QIterator;
+		using QualifyIterator = typename ListView::QualifyIterator;
 
 	protected:
 
@@ -93,13 +93,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator IStream & () requires
-			(mode == StreamMode::Constant::io()) {
+		implicit operator InputStream & () requires
+			(mode == StreamMode::Constant::access()) {
 			return thiz.as_input_stream();
 		}
 
-		implicit operator OStream & () requires
-			(mode == StreamMode::Constant::io()) {
+		implicit operator OutputStream & () requires
+			(mode == StreamMode::Constant::access()) {
 			return thiz.as_output_stream();
 		}
 
@@ -129,7 +129,7 @@ export namespace Twinning::Kernel {
 		#pragma region data
 
 		auto data (
-		) const -> QIterator {
+		) const -> QualifyIterator {
 			return thiz.m_view.begin();
 		}
 
@@ -253,7 +253,7 @@ export namespace Twinning::Kernel {
 		#pragma region query
 
 		auto current_pointer (
-		) -> QIterator {
+		) -> QualifyIterator {
 			assert_test(thiz.position() <= thiz.size());
 			return thiz.data() + thiz.position();
 		}
@@ -261,13 +261,13 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		auto current (
-		) -> QElement & {
+		) -> QualifyElement & {
 			assert_test(!thiz.full());
 			return thiz.m_view[thiz.m_position];
 		}
 
 		auto next (
-		) -> QElement & {
+		) -> QualifyElement & {
 			auto & current = thiz.current();
 			thiz.forward();
 			return current;
@@ -290,7 +290,7 @@ export namespace Twinning::Kernel {
 		auto write (
 			Element const & value
 		) -> Void requires
-			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			assert_test(!thiz.full());
 			thiz.next() = value;
 			return;
@@ -299,7 +299,7 @@ export namespace Twinning::Kernel {
 		auto read (
 			Element & value
 		) -> Void requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			assert_test(!thiz.full());
 			value = thiz.next();
 			return;
@@ -310,7 +310,7 @@ export namespace Twinning::Kernel {
 		auto write_constant (
 			Element const & value
 		) -> Void requires
-			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			thiz.write(value);
 			return;
 		}
@@ -318,7 +318,7 @@ export namespace Twinning::Kernel {
 		auto read_constant (
 			Element const & value
 		) -> Void requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			auto temporary_value = Element{};
 			thiz.read(temporary_value);
 			assert_test(temporary_value == value);
@@ -329,7 +329,7 @@ export namespace Twinning::Kernel {
 
 		auto read_of (
 		) -> Element requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			auto value = Element{};
 			thiz.read(value);
 			return value;
@@ -343,7 +343,7 @@ export namespace Twinning::Kernel {
 			Element const & value,
 			Size const &    size
 		) -> Void requires
-			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			assert_test(size <= thiz.reserve());
 			auto space = thiz.forward_view(size);
 			for (auto & element : space) {
@@ -356,7 +356,7 @@ export namespace Twinning::Kernel {
 			Element const & value,
 			Size const &    size
 		) -> Void requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			assert_test(size <= thiz.reserve());
 			auto space = thiz.forward_view(size);
 			for (auto & element : space) {
@@ -367,18 +367,18 @@ export namespace Twinning::Kernel {
 
 		#pragma endregion
 
-		#pragma region method cast
+		#pragma region mode cast
 
 		auto as_input_stream (
-		) -> IStream & requires
-			(mode == StreamMode::Constant::io()) {
-			return self_cast<IStream>(thiz);
+		) -> InputStream & requires
+			(mode == StreamMode::Constant::access()) {
+			return self_cast<InputStream>(thiz);
 		}
 
 		auto as_output_stream (
-		) -> OStream & requires
-			(mode == StreamMode::Constant::io()) {
-			return self_cast<OStream>(thiz);
+		) -> OutputStream & requires
+			(mode == StreamMode::Constant::access()) {
+			return self_cast<OutputStream>(thiz);
 		}
 
 		#pragma endregion
@@ -391,15 +391,15 @@ export namespace Twinning::Kernel {
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using IOStreamView = StreamView<Element, StreamMode::Constant::io(), ListView>;
+	using AccessStreamView = StreamView<Element, StreamMode::Constant::access(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using IStreamView = StreamView<Element, StreamMode::Constant::i(), ListView>;
+	using InputStreamView = StreamView<Element, StreamMode::Constant::input(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
 		AutoConstraint
-	using OStreamView = StreamView<Element, StreamMode::Constant::o(), ListView>;
+	using OutputStreamView = StreamView<Element, StreamMode::Constant::output(), ListView>;
 
 	#pragma endregion
 

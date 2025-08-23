@@ -79,7 +79,7 @@ export namespace Twinning::Kernel {
 
 		template <auto type> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enumeration>)
+			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto is_of_type (
 		) const -> Boolean {
@@ -90,7 +90,7 @@ export namespace Twinning::Kernel {
 
 		template <auto type, typename ... Argument> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enumeration>)
+			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 			&& (IsConstructible<AsSelect<static_cast<ZSize>(type.value), TValue ...>, Argument && ...>)
 		constexpr auto set_of_type (
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel {
 
 		template <auto type> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enumeration>)
+			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto get_of_type (
 		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
@@ -112,7 +112,7 @@ export namespace Twinning::Kernel {
 
 		template <auto type> requires
 			CategoryConstraint<>
-			&& (IsSameV<type, Enumeration>)
+			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 		constexpr auto get_of_type (
 		) const -> AsSelect<static_cast<ZSize>(type.value), TValue ...> const & {

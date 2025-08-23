@@ -37,17 +37,17 @@ export namespace Twinning::Kernel {
 
 		using View = BasicStringView<TElement, k_false>;
 
-		using typename BasicCharacterList::VElement;
+		using typename BasicCharacterList::VariableElement;
 
-		using typename BasicCharacterList::VIterator;
+		using typename BasicCharacterList::VariableIterator;
 
-		using VView = BasicStringView<TElement, k_false>;
+		using VariableView = BasicStringView<TElement, k_false>;
 
-		using typename BasicCharacterList::CElement;
+		using typename BasicCharacterList::ConstantElement;
 
-		using typename BasicCharacterList::CIterator;
+		using typename BasicCharacterList::ConstantIterator;
 
-		using CView = BasicStringView<TElement, k_true>;
+		using ConstantView = BasicStringView<TElement, k_true>;
 
 	public:
 
@@ -88,7 +88,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		auto operator = (
-			CView const & that
+			ConstantView const & that
 		) -> BasicString & {
 			thiz.assign(that);
 			return thiz;
@@ -96,11 +96,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -114,8 +114,8 @@ export namespace Twinning::Kernel {
 		}
 
 		auto as_view (
-		) const -> CView const & {
-			return self_cast<CView>(thiz);
+		) const -> ConstantView const & {
+			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
@@ -126,7 +126,7 @@ export namespace Twinning::Kernel {
 		}
 
 		auto view (
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view();
 		}
 
@@ -151,14 +151,14 @@ export namespace Twinning::Kernel {
 		#pragma region comparison
 
 		auto equal_icase (
-			CView const & that
+			ConstantView const & that
 		) const -> Boolean requires
 			(IsSame<Element, Character>) {
 			return thiz.as_view().equal_icase(that);
 		}
 
 		auto compare_3way (
-			CView const & that
+			ConstantView const & that
 		) const -> StrongOrdering requires
 			(IsSame<Element, Character>) {
 			return thiz.as_view().compare_3way(that);
@@ -201,19 +201,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -260,8 +260,8 @@ export namespace Twinning::Kernel {
 		#pragma region operator
 
 		inline friend auto operator + (
-			CView const & thix,
-			CView const & that
+			ConstantView const & thix,
+			ConstantView const & that
 		) -> BasicString {
 			auto result = BasicString{thix.size() + that.size()};
 			result.append_list(thix);
@@ -270,8 +270,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline friend auto operator += (
-			BasicString & thix,
-			CView const & that
+			BasicString &        thix,
+			ConstantView const & that
 		) -> BasicString & {
 			thix.append_list(that);
 			return thix;
@@ -314,7 +314,7 @@ export namespace Twinning::Kernel {
 	template <typename Result, typename Source, typename Separator> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
 		&& (IsTemplateInstanceOfT<Result, BasicString>)
-		&& (IsConvertible<Source, CListView<typename Source::Element> const &>)
+		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
 		&& (IsRange<Separator>)
 	inline auto split_string (
 		Source const &    source,
@@ -348,7 +348,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Source> requires
 		CategoryConstraint<IsPureInstance<Source>>
-		&& (IsConvertible<Source, CListView<typename Source::Element> const &>)
+		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
 	inline auto compute_catenate_string_size (
 		Source const & source
 	) -> Size {
@@ -365,7 +365,7 @@ export namespace Twinning::Kernel {
 	template <typename Result, typename Source, typename Separator> requires
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
 		&& (IsTemplateInstanceOfT<Result, BasicString>)
-		&& (IsConvertible<Source, CListView<typename Source::Element> const &>)
+		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
 	inline auto catenate_string (
 		Source const &    source,
 		Separator const & separator

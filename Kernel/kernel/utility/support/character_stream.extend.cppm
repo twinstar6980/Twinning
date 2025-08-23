@@ -23,16 +23,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<Null> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = Null;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			StringParser::write_null(thix, that);
@@ -40,8 +40,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			StringParser::read_null(thix, that);
 			return;
@@ -56,16 +56,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<Boolean> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = Boolean;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			StringParser::write_boolean(thix, that);
@@ -73,8 +73,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			StringParser::read_boolean(thix, that);
 			return;
@@ -89,16 +89,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<Integer> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = Integer;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &         thix,
+			ThisOutput &    thix,
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
@@ -107,8 +107,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			StringParser::read_number(thix, that);
 			return;
@@ -119,16 +119,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<Floater> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = Floater;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &         thix,
+			ThisOutput &    thix,
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
@@ -137,8 +137,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			StringParser::read_number(thix, that);
 			return;
@@ -151,16 +151,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<NumberVariant> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = NumberVariant;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &         thix,
+			ThisOutput &    thix,
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
@@ -169,8 +169,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			StringParser::read_number(thix, that);
 			return;
@@ -185,16 +185,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<Byte> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = Byte;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			StringParser::write_byte(thix, that);
@@ -202,8 +202,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			StringParser::read_byte(thix, that);
 			return;
@@ -219,16 +219,16 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct CharacterStreamAdapter<ByteListView<t_constant>> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = ByteListView<t_constant>;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			StringParser::write_byte_list(thix, that);
@@ -236,7 +236,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI &      thix,
+			ThisInput &  thix,
 			That const & that
 		) -> Void requires
 			(!t_constant.value) {

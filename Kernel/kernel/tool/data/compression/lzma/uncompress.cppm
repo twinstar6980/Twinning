@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & ripe,
-			OByteStreamView & raw
+			InputByteStreamView &  ripe,
+			OutputByteStreamView & raw
 		) -> Void {
 			auto property = ripe.forward_view(mbox<Size>(Third::lzma::$LZMA_PROPS_SIZE));
 			auto raw_size_recorded = ripe.read_of<IntegerU64>();
@@ -45,8 +45,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & ripe_,
-			OByteStreamView & raw_
+			InputByteStreamView &  ripe_,
+			OutputByteStreamView & raw_
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);

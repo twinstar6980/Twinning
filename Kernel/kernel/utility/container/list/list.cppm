@@ -28,17 +28,17 @@ export namespace Twinning::Kernel {
 
 		using View = ListView<Element, k_false>;
 
-		using VElement = Element;
+		using VariableElement = Element;
 
-		using VIterator = Pointer<Element>;
+		using VariableIterator = Pointer<Element>;
 
-		using VView = ListView<Element, k_false>;
+		using VariableView = ListView<Element, k_false>;
 
-		using CElement = Element const;
+		using ConstantElement = Element const;
 
-		using CIterator = Pointer<Element const>;
+		using ConstantIterator = Pointer<Element const>;
 
-		using CView = ListView<Element, k_true>;
+		using ConstantView = ListView<Element, k_true>;
 
 	protected:
 
@@ -90,17 +90,17 @@ export namespace Twinning::Kernel {
 		}
 
 		explicit List (
-			CView const & view
+			ConstantView const & view
 		) :
 			List{} {
 			thiz = view;
 		}
 
 		explicit List (
-			CIterator const & begin,
-			Size const &      size
+			ConstantIterator const & begin,
+			Size const &             size
 		) :
-			List{CView{begin, size}} {
+			List{ConstantView{begin, size}} {
 		}
 
 		#pragma endregion
@@ -125,7 +125,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		auto operator = (
-			CView const & that
+			ConstantView const & that
 		) -> List & {
 			thiz.assign(that);
 			return thiz;
@@ -135,13 +135,13 @@ export namespace Twinning::Kernel {
 
 		auto operator [] (
 			Size const & index
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.at(index);
 		}
 
 		auto operator [] (
 			Size const & index
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.at(index);
 		}
 
@@ -149,17 +149,17 @@ export namespace Twinning::Kernel {
 
 		auto operator () (
 			Size const & index
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.at_force(index);
 		}
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -168,24 +168,24 @@ export namespace Twinning::Kernel {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const & {
-			return self_cast<VView>(thiz);
+		) -> VariableView const & {
+			return self_cast<VariableView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const & {
-			return self_cast<CView>(thiz);
+		) const -> ConstantView const & {
+			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
 		auto view (
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view();
 		}
 
 		auto view (
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view();
 		}
 
@@ -233,17 +233,17 @@ export namespace Twinning::Kernel {
 
 		auto iterator (
 			Size const & index
-		) -> VIterator {
+		) -> VariableIterator {
 			return thiz.as_view().iterator(index);
 		}
 
 		auto begin (
-		) -> VIterator {
+		) -> VariableIterator {
 			return thiz.as_view().begin();
 		}
 
 		auto end (
-		) -> VIterator {
+		) -> VariableIterator {
 			return thiz.as_view().end();
 		}
 
@@ -251,17 +251,17 @@ export namespace Twinning::Kernel {
 
 		auto iterator (
 			Size const & index
-		) const -> CIterator {
+		) const -> ConstantIterator {
 			return thiz.as_view().iterator(index);
 		}
 
 		auto begin (
-		) const -> CIterator {
+		) const -> ConstantIterator {
 			return thiz.as_view().begin();
 		}
 
 		auto end (
-		) const -> CIterator {
+		) const -> ConstantIterator {
 			return thiz.as_view().end();
 		}
 
@@ -271,17 +271,17 @@ export namespace Twinning::Kernel {
 
 		auto at (
 			Size const & index
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.as_view().at(index);
 		}
 
 		auto first (
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.as_view().first();
 		}
 
 		auto last (
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.as_view().last();
 		}
 
@@ -289,17 +289,17 @@ export namespace Twinning::Kernel {
 
 		auto at (
 			Size const & index
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.as_view().at(index);
 		}
 
 		auto first (
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.as_view().first();
 		}
 
 		auto last (
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.as_view().last();
 		}
 
@@ -310,19 +310,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -331,19 +331,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -550,7 +550,7 @@ export namespace Twinning::Kernel {
 		auto insert (
 			Size const &    position,
 			Argument && ... argument
-		) -> VElement & {
+		) -> VariableElement & {
 			thiz.insert_space(position, 1_sz);
 			restruct(thiz.at(position), as_forward<Argument>(argument) ...);
 			return thiz.at(position);
@@ -576,7 +576,7 @@ export namespace Twinning::Kernel {
 			&& (IsConstructible<Element, Argument && ...>)
 		auto prepend (
 			Argument && ... argument
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.insert(thiz.begin_index(), as_forward<Argument>(argument) ...);
 		}
 
@@ -596,7 +596,7 @@ export namespace Twinning::Kernel {
 			&& (IsConstructible<Element, Argument && ...>)
 		auto append (
 			Argument && ... argument
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.insert(thiz.end_index(), as_forward<Argument>(argument) ...);
 		}
 
@@ -649,7 +649,7 @@ export namespace Twinning::Kernel {
 
 		auto at_force (
 			Size const & index
-		) -> VElement & {
+		) -> VariableElement & {
 			if (index >= thiz.end_index()) {
 				auto new_size = index + k_next_index;
 				if (new_size > thiz.capacity()) {

@@ -28,19 +28,19 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 		// ----------------
 
 		inline static auto process_package (
-			OByteStreamView &                    data,
+			OutputByteStreamView &               data,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_identifier);
 			struct {
-				OByteStreamView archive_setting{};
-				OByteStreamView resource_file{};
-				OByteStreamView resource_directory{};
-				OByteStreamView resource_information{};
-				OByteStreamView chunk_setting{};
-				OByteStreamView chunk_information{};
-				OByteStreamView archive_resource_information{};
+				OutputByteStreamView archive_setting{};
+				OutputByteStreamView resource_file{};
+				OutputByteStreamView resource_directory{};
+				OutputByteStreamView resource_information{};
+				OutputByteStreamView chunk_setting{};
+				OutputByteStreamView chunk_information{};
+				OutputByteStreamView archive_resource_information{};
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
@@ -67,10 +67,10 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						++global_chunk_index;
 					}
 				}
-				information_data.archive_setting = OByteStreamView{
+				information_data.archive_setting = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.archive_setting))
 				};
-				information_data.resource_file = OByteStreamView{
+				information_data.resource_file = OutputByteStreamView{
 					data.forward_view(
 						[&] {
 							auto size = k_none_size;
@@ -82,7 +82,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						}()
 					)
 				};
-				information_data.resource_directory = OByteStreamView{
+				information_data.resource_directory = OutputByteStreamView{
 					data.forward_view(
 						[&] {
 							auto size = k_none_size;
@@ -94,16 +94,16 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						}()
 					)
 				};
-				information_data.resource_information = OByteStreamView{
+				information_data.resource_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.resource_information))
 				};
-				information_data.chunk_setting = OByteStreamView{
+				information_data.chunk_setting = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.chunk_setting))
 				};
-				information_data.chunk_information = OByteStreamView{
+				information_data.chunk_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.chunk_information))
 				};
-				information_data.archive_resource_information = OByteStreamView{
+				information_data.archive_resource_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.archive_resource_information))
 				};
 			}
@@ -171,14 +171,14 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{chunk_data}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
+						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
 						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::bzip2)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::BZip2::Compress::process(as_lvalue(IByteStreamView{chunk_data}), data, 9_sz, 0_sz);
+						Data::Compression::BZip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 0_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
@@ -200,7 +200,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::lzma)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::Lzma::Compress::process(as_lvalue(IByteStreamView{chunk_data}), data, 9_sz);
+						Data::Compression::Lzma::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
@@ -221,12 +221,12 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 			{
 				information_data.archive_setting.write(information_structure.archive_setting);
 				for (auto & element : information_structure.resource_file) {
-					StringParser::write_string_until(self_cast<OCharacterStreamView>(information_data.resource_file), element, CharacterType::k_null);
-					self_cast<OCharacterStreamView>(information_data.resource_file).write_constant(CharacterType::k_null);
+					StringParser::write_string_until(self_cast<OutputCharacterStreamView>(information_data.resource_file), element, CharacterType::k_null);
+					self_cast<OutputCharacterStreamView>(information_data.resource_file).write_constant(CharacterType::k_null);
 				}
 				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
-					StringParser::write_string_until(self_cast<OCharacterStreamView>(information_data.resource_directory), element, CharacterType::k_null);
-					self_cast<OCharacterStreamView>(information_data.resource_directory).write_constant(CharacterType::k_null);
+					StringParser::write_string_until(self_cast<OutputCharacterStreamView>(information_data.resource_directory), element, CharacterType::k_null);
+					self_cast<OutputCharacterStreamView>(information_data.resource_directory).write_constant(CharacterType::k_null);
 				}
 				information_data.resource_information.write(information_structure.resource_information);
 				information_data.chunk_setting.write(information_structure.chunk_setting);
@@ -239,7 +239,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                    data_,
+			OutputByteStreamView &               data_,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {

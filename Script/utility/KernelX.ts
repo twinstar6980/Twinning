@@ -253,14 +253,14 @@ namespace Twinning.Script.KernelX {
 
 				export function read(
 					data: Kernel.ByteStreamView,
-					image: Kernel.Image.VImageView,
+					image: Kernel.Image.VariableImageView,
 				): void {
 					return Kernel.Tool.Texture.File.PNG.Read.process(data, image);
 				}
 
 				export function write(
 					data: Kernel.ByteStreamView,
-					image: Kernel.Image.CImageView,
+					image: Kernel.Image.ConstantImageView,
 				): void {
 					return Kernel.Tool.Texture.File.PNG.Write.process(data, image);
 				}
@@ -278,7 +278,7 @@ namespace Twinning.Script.KernelX {
 
 				export function read_fs(
 					file: string,
-					image: Kernel.Image.VImageView,
+					image: Kernel.Image.VariableImageView,
 				): void {
 					let data = Storage.read_file(file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
@@ -288,7 +288,7 @@ namespace Twinning.Script.KernelX {
 
 				export function write_fs(
 					file: string,
-					image: Kernel.Image.CImageView,
+					image: Kernel.Image.ConstantImageView,
 					data_buffer: Kernel.ByteListView | bigint = g_common_buffer.view(),
 				): void {
 					let data = is_bigint(data_buffer) ? Kernel.ByteArray.allocate(Kernel.Size.value(data_buffer)) : null;
@@ -948,7 +948,7 @@ namespace Twinning.Script.KernelX {
 			export namespace Transformation {
 
 				export function flip(
-					target: Kernel.Image.VImageView,
+					target: Kernel.Image.VariableImageView,
 					horizontal: boolean,
 					vertical: boolean,
 				): void {
@@ -956,8 +956,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function scale(
-					source: Kernel.Image.CImageView,
-					destination: Kernel.Image.VImageView,
+					source: Kernel.Image.ConstantImageView,
+					destination: Kernel.Image.VariableImageView,
 				): void {
 					return Kernel.Tool.Texture.Transformation.Scale.process(source, destination);
 				}
@@ -1201,8 +1201,8 @@ namespace Twinning.Script.KernelX {
 				// ------------------------------------------------
 
 				export function encode(
-					data: Kernel.OByteStreamView,
-					image: Kernel.Image.CImageView,
+					data: Kernel.OutputByteStreamView,
+					image: Kernel.Image.ConstantImageView,
 					format: CompositeFormat,
 				): void {
 					switch (format) {
@@ -1250,8 +1250,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode(
-					data: Kernel.IByteStreamView,
-					image: Kernel.Image.VImageView,
+					data: Kernel.InputByteStreamView,
+					image: Kernel.Image.VariableImageView,
 					format: CompositeFormat,
 				): void {
 					switch (format) {
@@ -2214,16 +2214,16 @@ namespace Twinning.Script.KernelX {
 			export namespace XboxTiledTexture {
 
 				export function encode(
-					data: Kernel.OByteStreamView,
-					image: Kernel.Image.CImageView,
+					data: Kernel.OutputByteStreamView,
+					image: Kernel.Image.ConstantImageView,
 					format: Texture.Encoding.Format,
 				): void {
 					return Kernel.Tool.Miscellaneous.XboxTiledTexture.Encode.process(data, image, Kernel.Tool.Texture.Encoding.Format.value(format));
 				}
 
 				export function decode(
-					data: Kernel.IByteStreamView,
-					image: Kernel.Image.VImageView,
+					data: Kernel.InputByteStreamView,
+					image: Kernel.Image.VariableImageView,
 					format: Texture.Encoding.Format,
 				): void {
 					return Kernel.Tool.Miscellaneous.XboxTiledTexture.Decode.process(data, image, Kernel.Tool.Texture.Encoding.Format.value(format));
@@ -2266,7 +2266,7 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function evaluate_palette(
-					image: Kernel.Image.CImageView,
+					image: Kernel.Image.ConstantImageView,
 				): typeof Kernel.Image.ColorList.Value {
 					let image_size = image.size().value;
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(image_size[0] * image_size[1] * 8n / 8n));
@@ -2295,8 +2295,8 @@ namespace Twinning.Script.KernelX {
 				// ------------------------------------------------
 
 				export function encode_with_palette(
-					data: Kernel.OByteStreamView,
-					image: Kernel.Image.CImageView,
+					data: Kernel.OutputByteStreamView,
+					image: Kernel.Image.ConstantImageView,
 					palette: KernelX.Image.ColorList,
 				): void {
 					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
@@ -2316,8 +2316,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_with_palette(
-					data: Kernel.IByteStreamView,
-					image: Kernel.Image.VImageView,
+					data: Kernel.InputByteStreamView,
+					image: Kernel.Image.VariableImageView,
 				): void {
 					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
 					let index_count = palette_data.u8();

@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	template <auto t_size> requires
 		CategoryConstraint<>
-		&& (IsSameV<t_size, ZSize>)
+		&& (IsSameOf<t_size, ZSize>)
 	struct String {
 
 		inline static constexpr auto size = ZSize{t_size};
@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	template <auto size> requires
 		CategoryConstraint<>
-		&& (IsSameV<size, ZSize>)
+		&& (IsSameOf<size, ZSize>)
 	inline constexpr auto make_string (
 		ZArray<ZCharacter, size> const & source
 	) -> String<size - 1_szz> {

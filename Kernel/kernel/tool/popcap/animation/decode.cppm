@@ -43,8 +43,8 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 			&& (IsIntegerBox<RawShortValue>)
 			&& (IsIntegerBox<RawLongValue>)
 		inline static auto exchange_size_variant (
-			IByteStreamView & data,
-			Size &            value
+			InputByteStreamView & data,
+			Size &                value
 		) -> Void {
 			auto value_integer = Integer{};
 			exchange_integer_variant<RawShortValue, RawLongValue>(data, value_integer);
@@ -57,8 +57,8 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 			&& (IsIntegerBox<RawShortValue>)
 			&& (IsIntegerBox<RawLongValue>)
 		inline static auto exchange_integer_variant (
-			IByteStreamView & data,
-			Integer &         value
+			InputByteStreamView & data,
+			Integer &             value
 		) -> Void {
 			auto value_short_maximum = ~mbox<RawShortValue>(0);
 			auto value_short = data.read_of<RawShortValue>();
@@ -77,11 +77,11 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 			CategoryConstraint<IsPureInstance<RawShortValue> && IsPureInstance<RawLongValue>>
 			&& (IsIntegerBox<RawShortValue>)
 			&& (IsIntegerBox<RawLongValue>)
-			&& (IsSameV<flag_count, Size>)
+			&& (IsSameOf<flag_count, Size>)
 		inline static auto exchange_integer_variant_with_flag (
-			IByteStreamView &    data,
-			Integer &            value,
-			BitSet<flag_count> & flag
+			InputByteStreamView & data,
+			Integer &             value,
+			BitSet<flag_count> &  flag
 		) -> Void {
 			auto value_short_bit_count = k_type_bit_count<RawShortValue> - flag_count;
 			auto value_short_maximum = ~(~mbox<RawShortValue>(0) << value_short_bit_count);
@@ -103,10 +103,10 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		template <typename RawValue, auto rate> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsIntegerBox<RawValue>)
-			&& (IsSameV<rate, Floater>)
+			&& (IsSameOf<rate, Floater>)
 		inline static auto exchange_floater_with_rate (
-			IByteStreamView & data,
-			Floater &         value
+			InputByteStreamView & data,
+			Floater &             value
 		) -> Void {
 			auto value_integer = cbox<Floater>(data.read_of<RawValue>());
 			value = value_integer / rate;
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		// ----------------
 
 		inline static auto exchange_layer_remove (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::LayerRemove & value
 		) -> Void {
 			auto flag = BitSet<LayerRemoveFlag::k_count>{};
@@ -125,7 +125,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		}
 
 		inline static auto exchange_layer_append (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::LayerAppend & value
 		) -> Void {
 			auto flag = BitSet<LayerAppendFlag::k_count>{};
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		}
 
 		inline static auto exchange_layer_change (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::LayerChange & value
 		) -> Void {
 			auto flag = BitSet<LayerChangeFlag::k_count>{};
@@ -272,7 +272,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		}
 
 		inline static auto exchange_frame (
-			IByteStreamView &            data,
+			InputByteStreamView &        data,
 			typename Definition::Frame & value
 		) -> Void {
 			auto flag_integer = Integer{};
@@ -327,7 +327,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		}
 
 		inline static auto exchange_sprite (
-			IByteStreamView &             data,
+			InputByteStreamView &         data,
 			typename Definition::Sprite & value
 		) -> Void {
 			if constexpr (check_version(version, {4})) {
@@ -347,7 +347,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		}
 
 		inline static auto exchange_image (
-			IByteStreamView &            data,
+			InputByteStreamView &        data,
 			typename Definition::Image & value
 		) -> Void {
 			exchange_string_block<IntegerU16>(data, value.name);
@@ -370,7 +370,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		}
 
 		inline static auto exchange_animation (
-			IByteStreamView &                data,
+			InputByteStreamView &            data,
 			typename Definition::Animation & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU8>(data, value.frame_rate);
@@ -392,7 +392,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView &                data,
+			InputByteStreamView &            data,
 			typename Definition::Animation & definition
 		) -> Void {
 			data.read_constant(k_magic_identifier);
@@ -404,7 +404,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &                data_,
+			InputByteStreamView &            data_,
 			typename Definition::Animation & definition
 		) -> Void {
 			M_use_zps_of(data);

@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 		// ----------------
 
 		inline static auto process_package (
-			IByteStreamView &              data,
+			InputByteStreamView &          data,
 			typename Definition::Package & definition,
 			Optional<Path> const &         resource_directory
 		) -> Void {
@@ -60,8 +60,8 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 				}
 				if constexpr (check_version(version, {}, {true})) {
 					auto resource_data_original = ByteArray{cbox<Size>(resource_information_structure.size_original)};
-					auto resource_data_stream = IByteStreamView{resource_data};
-					auto resource_data_original_stream = OByteStreamView{resource_data_original};
+					auto resource_data_stream = InputByteStreamView{resource_data};
+					auto resource_data_original_stream = OutputByteStreamView{resource_data_original};
 					Data::Compression::Deflate::Uncompress::process(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					assert_test(resource_data_stream.full() && resource_data_original_stream.full());
 					if (resource_directory.has()) {
@@ -75,7 +75,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &              data_,
+			InputByteStreamView &          data_,
 			typename Definition::Package & definition,
 			Optional<Path> const &         resource_directory
 		) -> Void {

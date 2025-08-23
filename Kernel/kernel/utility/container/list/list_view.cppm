@@ -16,12 +16,12 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 	class ListView {
 
 	private:
 
-		using CView = ListView<TElement, k_true>;
+		using ConstantView = ListView<TElement, k_true>;
 
 	public:
 
@@ -29,13 +29,13 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QElement = AsConstantIf<Element, constant.value>;
+		using QualifyElement = AsConstantIf<Element, constant.value>;
 
-		using QIterator = Pointer<AsConstantIf<Element, constant.value>>;
+		using QualifyIterator = Pointer<AsConstantIf<Element, constant.value>>;
 
 	protected:
 
-		QIterator m_data;
+		QualifyIterator m_data;
 
 		Size m_size;
 
@@ -65,8 +65,8 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		explicit constexpr ListView (
-			QIterator const & begin,
-			Size const &      size
+			QualifyIterator const & begin,
+			Size const &            size
 		) :
 			m_data{begin},
 			m_size{size} {
@@ -88,20 +88,20 @@ export namespace Twinning::Kernel {
 
 		constexpr auto operator [] (
 			Size const & index
-		) const -> QElement & {
+		) const -> QualifyElement & {
 			return thiz.at(index);
 		}
 
 		// ----------------
 
-		implicit operator CView & () requires
+		implicit operator ConstantView & () requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator CView const & () const requires
+		implicit operator ConstantView const & () const requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -116,8 +116,8 @@ export namespace Twinning::Kernel {
 		}
 
 		constexpr auto set (
-			QIterator const & data,
-			Size const &      size
+			QualifyIterator const & data,
+			Size const &            size
 		) -> Void {
 			thiz.m_data = data;
 			thiz.m_size = size;
@@ -170,19 +170,19 @@ export namespace Twinning::Kernel {
 
 		constexpr auto iterator (
 			Size const & index
-		) const -> QIterator {
+		) const -> QualifyIterator {
 			assert_test(index <= thiz.end_index());
-			return QIterator{thiz.m_data + index};
+			return QualifyIterator{thiz.m_data + index};
 		}
 
 		constexpr auto begin (
-		) const -> QIterator {
-			return QIterator{thiz.m_data + thiz.begin_index()};
+		) const -> QualifyIterator {
+			return QualifyIterator{thiz.m_data + thiz.begin_index()};
 		}
 
 		constexpr auto end (
-		) const -> QIterator {
-			return QIterator{thiz.m_data + thiz.end_index()};
+		) const -> QualifyIterator {
+			return QualifyIterator{thiz.m_data + thiz.end_index()};
 		}
 
 		#pragma endregion
@@ -191,18 +191,18 @@ export namespace Twinning::Kernel {
 
 		constexpr auto at (
 			Size const & index
-		) const -> QElement & {
+		) const -> QualifyElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data.dereference(index);
 		}
 
 		constexpr auto first (
-		) const -> QElement & {
+		) const -> QualifyElement & {
 			return thiz.at(thiz.first_index());
 		}
 
 		constexpr auto last (
-		) const -> QElement & {
+		) const -> QualifyElement & {
 			return thiz.at(thiz.last_index());
 		}
 
@@ -255,11 +255,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Element> requires
 		AutoConstraint
-	using VListView = ListView<Element, k_false>;
+	using VariableListView = ListView<Element, k_false>;
 
 	template <typename Element> requires
 		AutoConstraint
-	using CListView = ListView<Element, k_true>;
+	using ConstantListView = ListView<Element, k_true>;
 
 	#pragma endregion
 

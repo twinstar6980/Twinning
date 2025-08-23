@@ -13,7 +13,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TValue, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TValue>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 	class WrapperView {
 
 	public:
@@ -22,11 +22,11 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QValue = AsConstantIf<Value, constant.value>;
+		using QualifyValue = AsConstantIf<Value, constant.value>;
 
 	protected:
 
-		Pointer<QValue> m_value;
+		Pointer<QualifyValue> m_value;
 
 	public:
 
@@ -53,7 +53,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		explicit constexpr WrapperView (
-			QValue & value
+			QualifyValue & value
 		) :
 			m_value{&value} {
 		}
@@ -75,16 +75,16 @@ export namespace Twinning::Kernel {
 		#pragma region value
 
 		constexpr auto set (
-			QValue & value
-		) -> QValue & {
-			thiz.m_value = make_pointer(&value);
+			QualifyValue & value
+		) -> QualifyValue & {
+			thiz.m_value = make_pointer_of(value);
 			return thiz.m_value.dereference();
 		}
 
 		// ----------------
 
 		constexpr auto get (
-		) const -> QValue & {
+		) const -> QualifyValue & {
 			return thiz.m_value.dereference();
 		}
 
@@ -111,11 +111,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		AutoConstraint
-	using VWrapperView = WrapperView<Value, k_false>;
+	using VariableWrapperView = WrapperView<Value, k_false>;
 
 	template <typename Value> requires
 		AutoConstraint
-	using CWrapperView = WrapperView<Value, k_true>;
+	using ConstantWrapperView = WrapperView<Value, k_true>;
 
 	#pragma endregion
 

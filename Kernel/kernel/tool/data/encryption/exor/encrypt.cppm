@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::EXOR {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView &     plain,
-			OByteStreamView &     cipher,
-			CByteListView const & key
+			InputByteStreamView &        plain,
+			OutputByteStreamView &       cipher,
+			ConstantByteListView const & key
 		) -> Void {
 			if (key.size() == 0_sz) {
 				while (!plain.full()) {
@@ -46,9 +46,9 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::EXOR {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &     plain_,
-			OByteStreamView &     cipher_,
-			CByteListView const & key
+			InputByteStreamView &        plain_,
+			OutputByteStreamView &       cipher_,
+			ConstantByteListView const & key
 		) -> Void {
 			M_use_zps_of(plain);
 			M_use_zps_of(cipher);

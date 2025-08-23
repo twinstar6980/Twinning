@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		// ----------------
 
 		inline static auto exchange_track_node_list (
-			OByteStreamView &                            data,
+			OutputByteStreamView &                       data,
 			List<typename Definition::TrackNode> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		}
 
 		inline static auto exchange_field_list (
-			OByteStreamView &                        data,
+			OutputByteStreamView &                   data,
 			List<typename Definition::Field> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		}
 
 		inline static auto exchange_emitter_list (
-			OByteStreamView &                          data,
+			OutputByteStreamView &                     data,
 			List<typename Definition::Emitter> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -158,7 +158,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		}
 
 		inline static auto exchange_particle (
-			OByteStreamView &                     data,
+			OutputByteStreamView &                data,
 			typename Definition::Particle const & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		// ----------------
 
 		inline static auto process_whole (
-			OByteStreamView &                     data,
+			OutputByteStreamView &                data,
 			typename Definition::Particle const & definition
 		) -> Void {
 			data.write_constant(k_magic_identifier);
@@ -181,7 +181,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                     data_,
+			OutputByteStreamView &                data_,
 			typename Definition::Particle const & definition
 		) -> Void {
 			M_use_zps_of(data);

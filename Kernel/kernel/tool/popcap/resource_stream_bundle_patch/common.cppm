@@ -57,7 +57,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 		inline static constexpr auto package_version = ResourceStreamBundle::Version{.number = 4_i, .extended_texture_information_for_pvz2_cn = 0_i};
 
 		inline static auto read_package_information_structure (
-			IByteStreamView &                                               data,
+			InputByteStreamView &                                           data,
 			ResourceStreamBundle::Structure::Information<package_version> & information_structure
 		) -> Void {
 			data.read_constant(ResourceStreamBundle::Structure::k_magic_identifier);
@@ -67,9 +67,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			assert_test(cbox<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::SubgroupInformation<package_version>>());
 			assert_test(cbox<Size>(information_structure.header.pool_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::PoolInformation<package_version>>());
 			assert_test(cbox<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::TextureResourceInformation<package_version>>());
-			CompiledMapData::decode(information_structure.group_id, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.group_id_section_offset), cbox<Size>(information_structure.header.group_id_section_size))}));
-			CompiledMapData::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.subgroup_id_section_offset), cbox<Size>(information_structure.header.subgroup_id_section_size))}));
-			CompiledMapData::decode(information_structure.resource_path, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_path_section_offset), cbox<Size>(information_structure.header.resource_path_section_size))}));
+			CompiledMapData::decode(information_structure.group_id, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.group_id_section_offset), cbox<Size>(information_structure.header.group_id_section_size))}));
+			CompiledMapData::decode(information_structure.subgroup_id, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.subgroup_id_section_offset), cbox<Size>(information_structure.header.subgroup_id_section_size))}));
+			CompiledMapData::decode(information_structure.resource_path, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_path_section_offset), cbox<Size>(information_structure.header.resource_path_section_size))}));
 			data.set_position(cbox<Size>(information_structure.header.group_information_section_offset));
 			data.read(information_structure.group_information, cbox<Size>(information_structure.header.group_information_section_block_count));
 			data.set_position(cbox<Size>(information_structure.header.subgroup_information_section_offset));
@@ -88,15 +88,15 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 		inline static constexpr auto packet_version = ResourceStreamGroup::Version{.number = 4_i};
 
 		inline static auto compress_packet (
-			IByteStreamView & raw,
-			OByteStreamView & ripe
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe
 		) -> ResourceStreamGroup::Structure::Information<packet_version> {
 			raw.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
 			raw.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 			auto information_structure = ResourceStreamGroup::Structure::Information<packet_version>{};
 			{
 				raw.read(information_structure.header);
-				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{raw.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{raw.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			raw.set_position(
 				cbox<Size>(
@@ -121,7 +121,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					ripe.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
 				information_structure.header.general_resource_data_section_size = cbox<IntegerU32>(ripe.position()) - information_structure.header.general_resource_data_section_offset;
@@ -133,25 +133,25 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					ripe.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
 				information_structure.header.texture_resource_data_section_size = cbox<IntegerU32>(ripe.position()) - information_structure.header.texture_resource_data_section_offset;
 			}
-			OByteStreamView{ripe.sub_view(bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>(), bs_size(information_structure.header))}.write(information_structure.header);
+			OutputByteStreamView{ripe.sub_view(bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>(), bs_size(information_structure.header))}.write(information_structure.header);
 			return information_structure;
 		}
 
 		inline static auto uncompress_packet (
-			IByteStreamView & ripe,
-			OByteStreamView & raw
+			InputByteStreamView &  ripe,
+			OutputByteStreamView & raw
 		) -> ResourceStreamGroup::Structure::Information<packet_version> {
 			ripe.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
 			ripe.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 			auto information_structure = ResourceStreamGroup::Structure::Information<packet_version>{};
 			{
 				ripe.read(information_structure.header);
-				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{ripe.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{ripe.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			ripe.set_position(
 				cbox<Size>(
@@ -175,7 +175,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					raw.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Uncompress::process(as_lvalue(IByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Uncompress::process(as_left(InputByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				}
 				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
 			}
@@ -185,7 +185,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					raw.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Uncompress::process(as_lvalue(IByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Uncompress::process(as_left(InputByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				}
 				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
 			}

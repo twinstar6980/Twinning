@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 		// ----------------
 
 		inline static auto process_image (
-			IByteStreamView &         data,
-			Image::VImageView const & image
+			InputByteStreamView &            data,
+			Image::VariableImageView const & image
 		) -> Void {
 			auto png_struct = Third::libpng::$png_create_read_struct(Third::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 			Third::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
@@ -91,10 +91,10 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 		// ----------------
 
 		inline static auto estimate_image (
-			CByteListView const & data,
-			Image::ImageSize &    image_size
+			ConstantByteListView const & data,
+			Image::ImageSize &           image_size
 		) -> Void {
-			auto stream = IByteStreamView{data};
+			auto stream = InputByteStreamView{data};
 			auto png_struct = Third::libpng::$png_create_read_struct(Third::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 			Third::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
 			Third::libpng::$png_set_read_fn(png_struct, &stream, &png_read_data);
@@ -108,16 +108,16 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &         data_,
-			Image::VImageView const & image
+			InputByteStreamView &            data_,
+			Image::VariableImageView const & image
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image);
 		}
 
 		inline static auto estimate (
-			CByteListView const & data,
-			Image::ImageSize &    image_size
+			ConstantByteListView const & data,
+			Image::ImageSize &           image_size
 		) -> Void {
 			restruct(image_size);
 			return estimate_image(data, image_size);

@@ -138,19 +138,19 @@ export namespace Twinning::Kernel::JSON {
 		// TODO: sv remove
 
 		auto operator [] (
-			CStringView const & key
+			ConstantStringView const & key
 		) -> Value & {
 			return thiz.get_object()[key];
 		}
 
 		auto operator [] (
-			CStringView const & key
+			ConstantStringView const & key
 		) const -> Value const & {
 			return thiz.get_object()[key];
 		}
 
 		auto operator () (
-			CStringView const & key
+			ConstantStringView const & key
 		) -> Value & {
 			return thiz.get_object()(key);
 		}

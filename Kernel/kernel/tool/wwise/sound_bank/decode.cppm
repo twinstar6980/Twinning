@@ -488,7 +488,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		inline static auto exchange_id (
-			IByteStreamView &         data,
+			InputByteStreamView &     data,
 			typename Definition::ID & value
 		) -> Void {
 			auto raw_value = IntegerU32{};
@@ -500,11 +500,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <typename RawValue, auto ignore_reserve = k_false, typename ... Value> requires
 			CategoryConstraint<IsPureInstance<RawValue> && IsInstance<Value ...>>
 			&& (IsIntegerBox<RawValue>)
-			&& (IsSameV<ignore_reserve, Boolean>)
+			&& (IsSameOf<ignore_reserve, Boolean>)
 			&& ((IsSame<Value, Boolean const> || IsSame<Value, Boolean> || IsEnumerationBox<Value>) && ...)
 		inline static auto exchange_bit_multi (
-			IByteStreamView & data,
-			Value & ...       value
+			InputByteStreamView & data,
+			Value & ...           value
 		) -> Void {
 			auto raw_value = RawValue{};
 			data.read(raw_value);
@@ -543,15 +543,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <typename RawSizeValue, auto is_zeroed = k_false> requires
 			CategoryConstraint<IsPure<RawSizeValue>>
 			&& (IsVoid<RawSizeValue> || IsIntegerBox<RawSizeValue>)
-			&& (IsSameV<is_zeroed, Boolean>)
+			&& (IsSameOf<is_zeroed, Boolean>)
 		inline static auto exchange_string (
-			IByteStreamView & data,
-			String &          value
+			InputByteStreamView & data,
+			String &              value
 		) -> Void {
 			if constexpr (IsVoid<RawSizeValue>) {
-				auto value_view = CStringView{};
-				StringParser::read_string_until(self_cast<ICharacterStreamView>(data), value_view, CharacterType::k_null);
-				self_cast<ICharacterStreamView>(data).read_constant(CharacterType::k_null);
+				auto value_view = ConstantStringView{};
+				StringParser::read_string_until(self_cast<InputCharacterStreamView>(data), value_view, CharacterType::k_null);
+				self_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
 				value = value_view;
 			}
 			if constexpr (IsIntegerBox<RawSizeValue>) {
@@ -562,7 +562,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				else {
 					assert_test(cbox<Size>(length) >= 1_sz);
 					data.read(value, cbox<Size>(length) - 1_sz);
-					self_cast<ICharacterStreamView>(data).read_constant(CharacterType::k_null);
+					self_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
 				}
 			}
 			return;
@@ -572,7 +572,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<>
 			&& (IsSame<ActualValue, Boolean, Integer, Floater, Enumerated, IDWrapper>)
 		inline static auto exchange_common_property_value (
-			IByteStreamView &     data,
+			InputByteStreamView & data,
 			CommonPropertyValue & value
 		) -> Void {
 			if constexpr (IsSame<ActualValue, Boolean>) {
@@ -600,9 +600,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			&& (IsEnumerationBox<Type>)
 			&& (IsGenericCallable<Parser>)
 		inline static auto exchange_section_sub (
-			IByteStreamView & data,
-			Boolean const &   randomizable,
-			Parser const &    parser
+			InputByteStreamView & data,
+			Boolean const &       randomizable,
+			Parser const &        parser
 		) -> Void {
 			// NOTE: HERE
 			auto map = CommonPropertyMap<Type>{};
@@ -679,7 +679,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPureInstance<RawSizeValue>>
 			&& (IsIntegerBox<RawSizeValue>)
 		inline static auto exchange_section_sub (
-			IByteStreamView &               data,
+			InputByteStreamView &           data,
 			List<typename Definition::ID> & value_list
 		) -> Void {
 			exchange_list(
@@ -694,7 +694,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                      data,
+			InputByteStreamView &                                  data,
 			typename Definition::RealTimeParameterControlSetting & real_time_parameter_control_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -749,7 +749,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                   data,
+			InputByteStreamView &               data,
 			typename Definition::StateSetting & state_value
 		) -> Void {
 			if constexpr (check_version(version, {72, 125})) {
@@ -832,7 +832,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                     data,
+			InputByteStreamView &                 data,
 			List<typename Definition::EffectU1> & u1_value
 		) -> Void {
 			if constexpr (check_version(version, {112})) {
@@ -857,7 +857,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                  data,
+			InputByteStreamView &                              data,
 			typename Definition::AudioVoiceVolumeGainSetting & voice_volume_gain_value,
 			typename Definition::AudioHDRSetting &             hdr_value,
 			Boolean &                                          voice_volume_loudness_normalization_override,
@@ -888,7 +888,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                            data,
+			InputByteStreamView &                        data,
 			typename Definition::AudioOutputBusSetting & output_bus_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -898,7 +898,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                        data,
+			InputByteStreamView &                    data,
 			typename Definition::AudioMixerSetting & mixer_value,
 			Boolean &                                mixer_override
 		) -> Void {
@@ -912,7 +912,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                data,
+			InputByteStreamView &                            data,
 			typename Definition::AudioAuxiliarySendSetting & auxiliary_send_value,
 			Boolean &                                        game_defined_auxiliary_send_override,
 			Boolean &                                        user_defined_auxiliary_send_override
@@ -952,7 +952,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                data,
+			InputByteStreamView &                            data,
 			typename Definition::AudioAuxiliarySendSetting & auxiliary_send_value,
 			Boolean &                                        game_defined_auxiliary_send_override,
 			Boolean &                                        user_defined_auxiliary_send_override,
@@ -991,7 +991,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                              data,
+			InputByteStreamView &                          data,
 			typename Definition::AudioPositioningSetting & positioning_value,
 			Boolean &                                      positioning_override
 		) -> Void {
@@ -1305,7 +1305,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                       data,
+			InputByteStreamView &                   data,
 			typename Definition::MusicMIDISetting & midi_value,
 			Boolean &                               midi_target_override,
 			Boolean &                               midi_clip_tempo_override
@@ -1322,7 +1322,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                   data,
+			InputByteStreamView &                               data,
 			typename Definition::SoundMIDISetting &             midi_value,
 			typename Definition::AudioPlaybackPrioritySetting & playback_priority_value,
 			Boolean &                                           midi_event_override,
@@ -1344,7 +1344,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                   data,
+			InputByteStreamView &                               data,
 			typename Definition::AudioPlaybackPrioritySetting & playback_priority_value,
 			Boolean &                                           playback_priority_override
 		) -> Void {
@@ -1363,7 +1363,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                data,
+			InputByteStreamView &                            data,
 			typename Definition::AudioPlaybackLimitSetting & playback_limit_value,
 			Boolean &                                        playback_limit_override
 		) -> Void {
@@ -1383,7 +1383,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                     data,
+			InputByteStreamView &                                 data,
 			typename Definition::AudioPlaybackLimitSetting &      playback_limit_value,
 			typename Definition::AudioBusMuteForBackgroundMusic & mute_for_background_music_value,
 			Boolean &                                             playback_limit_override
@@ -1404,7 +1404,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                data,
+			InputByteStreamView &                            data,
 			typename Definition::AudioPlaybackLimitSetting & playback_limit_value,
 			typename Definition::AudioVirtualVoiceSetting &  virtual_voice_value,
 			Boolean &                                        playback_limit_override,
@@ -1457,7 +1457,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                         data,
+			InputByteStreamView &                     data,
 			typename Definition::AudioEffectSetting & effect_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1509,7 +1509,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                         data,
+			InputByteStreamView &                     data,
 			typename Definition::AudioEffectSetting & effect_value,
 			Boolean &                                 effect_override
 		) -> Void {
@@ -1521,7 +1521,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                           data,
+			InputByteStreamView &                       data,
 			typename Definition::AudioMetadataSetting & metadata_value
 		) -> Void {
 			if constexpr (check_version(version, {140})) {
@@ -1546,7 +1546,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                           data,
+			InputByteStreamView &                       data,
 			typename Definition::AudioMetadataSetting & metadata_value,
 			Boolean &                                   metadata_override
 		) -> Void {
@@ -1558,7 +1558,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                         data,
+			InputByteStreamView &                     data,
 			typename Definition::AudioSourceSetting & value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1613,7 +1613,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                               data,
+			InputByteStreamView &                           data,
 			List<typename Definition::AudioSourceSetting> & value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1630,7 +1630,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                 data,
+			InputByteStreamView &                             data,
 			typename Definition::BusAutomaticDuckingSetting & automatic_ducking_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1670,7 +1670,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                            data,
+			InputByteStreamView &                        data,
 			typename Definition::AudioBusConfiguration & bus_configuration_value
 		) -> Void {
 			if constexpr (check_version(version, {88})) {
@@ -1680,7 +1680,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                    data,
+			InputByteStreamView &                data,
 			typename Definition::BusHDRSetting & hdr_value
 		) -> Void {
 			if constexpr (check_version(version, {88, 112})) {
@@ -1704,7 +1704,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                       data,
+			InputByteStreamView &                   data,
 			typename Definition::AudioTimeSetting & time_setting_value,
 			Boolean &                               time_setting_override
 		) -> Void {
@@ -1744,7 +1744,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                     data,
+			InputByteStreamView &                 data,
 			typename Definition::MusicTrackClip & clip_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1819,7 +1819,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                          data,
+			InputByteStreamView &                      data,
 			typename Definition::MusicStingerSetting & stinger_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1853,7 +1853,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                     data,
+			InputByteStreamView &                                 data,
 			typename Definition::MusicTransitionSettingItemFade & fade_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1869,7 +1869,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                             data,
+			InputByteStreamView &                         data,
 			typename Definition::MusicTransitionSetting & transition_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -1971,7 +1971,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                  data,
+			InputByteStreamView &                              data,
 			typename Definition::MusicTrackTransitionSetting & transition_value
 		) -> Void {
 			if constexpr (check_version(version, {112})) {
@@ -1996,7 +1996,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                           data,
+			InputByteStreamView &                       data,
 			typename Definition::AudioSwitcherSetting & switcher_value
 		) -> Void {
 			if constexpr (check_version(version, {72, 112})) {
@@ -2015,7 +2015,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                              data,
+			InputByteStreamView &                          data,
 			typename Definition::AudioAssociationSetting & association_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2074,7 +2074,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                  data,
+			InputByteStreamView &                              data,
 			typename Definition::SoundPlaylistContainerScope & scope_value,
 			typename Definition::AudioPlayType &               play_type_value,
 			typename Definition::AudioPlayTypeSetting &        play_type_setting_value,
@@ -2140,7 +2140,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                               data,
+			InputByteStreamView &                                           data,
 			List<typename Definition::SoundPlaylistContainerPlaylistItem> & playlist_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2162,7 +2162,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                                    data,
+			InputByteStreamView &                                                data,
 			List<typename Definition::SoundSwitchContainerObjectAttributeItem> & object_attribute_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2202,7 +2202,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                                 data,
+			InputByteStreamView &                                             data,
 			List<typename Definition::SoundSwitchContainerObjectAssignItem> & assigned_object_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2233,7 +2233,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                         data,
+			InputByteStreamView &                                     data,
 			List<typename Definition::SoundBlendContainerTrackItem> & track_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2291,7 +2291,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                          data,
+			InputByteStreamView &                      data,
 			typename Definition::MusicTrackTrackType & track_type_value
 		) -> Void {
 			if constexpr (check_version(version, {72, 112})) {
@@ -2301,7 +2301,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                  data,
+			InputByteStreamView &                              data,
 			typename Definition::MusicTrackTrackType &         track_type_value,
 			typename Definition::AudioSwitcherSetting &        switcher_value,
 			typename Definition::MusicTrackTransitionSetting & transition_value
@@ -2323,7 +2323,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                       data,
+			InputByteStreamView &                   data,
 			typename Definition::MusicTrackStream & stream_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2333,7 +2333,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                      data,
+			InputByteStreamView &                  data,
 			typename Definition::MusicSegmentCue & cue_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2361,7 +2361,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                               data,
+			InputByteStreamView &                                           data,
 			List<typename Definition::MusicPlaylistContainerPlaylistItem> & playlist_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2407,7 +2407,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                                                data,
+			InputByteStreamView &                                            data,
 			List<typename Definition::MusicSwitchContainerAssociationItem> & association_value
 		) -> Void {
 			if constexpr (check_version(version, {72, 88})) {
@@ -2429,7 +2429,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section_sub (
-			IByteStreamView &                    data,
+			InputByteStreamView &                data,
 			typename Definition::AudioPlayMode & play_mode_value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -2441,7 +2441,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		inline static auto exchange_section (
-			IByteStreamView &                 data,
+			InputByteStreamView &             data,
 			typename Definition::StateGroup & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -2470,7 +2470,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::SwitchGroup & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -2502,7 +2502,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                    data,
+			InputByteStreamView &                data,
 			typename Definition::GameParameter & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -2525,7 +2525,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                            data,
+			InputByteStreamView &                        data,
 			typename Definition::GameSynchronizationU1 & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -2551,7 +2551,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                              data,
+			InputByteStreamView &                          data,
 			typename Definition::StatefulPropertySetting & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -2593,7 +2593,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::EventAction & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3315,7 +3315,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &            data,
+			InputByteStreamView &        data,
 			typename Definition::Event & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3329,7 +3329,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                    data,
+			InputByteStreamView &                data,
 			typename Definition::DialogueEvent & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3346,7 +3346,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::Attenuation & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3453,7 +3453,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                                      data,
+			InputByteStreamView &                                  data,
 			typename Definition::LowFrequencyOscillatorModulator & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3497,7 +3497,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                        data,
+			InputByteStreamView &                    data,
 			typename Definition::EnvelopeModulator & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3544,7 +3544,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                    data,
+			InputByteStreamView &                data,
 			typename Definition::TimeModulator & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3585,7 +3585,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &             data,
+			InputByteStreamView &         data,
 			typename Definition::Effect & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3614,14 +3614,14 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &             data,
+			InputByteStreamView &         data,
 			typename Definition::Source & value
 		) -> Void {
 			return exchange_section(data, self_cast<typename Definition::Effect>(value));
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			typename Definition::AudioDevice & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3650,7 +3650,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &               data,
+			InputByteStreamView &           data,
 			typename Definition::AudioBus & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3768,14 +3768,14 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                        data,
+			InputByteStreamView &                    data,
 			typename Definition::AuxiliaryAudioBus & value
 		) -> Void {
 			return exchange_section(data, self_cast<typename Definition::AudioBus>(value));
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &            data,
+			InputByteStreamView &        data,
 			typename Definition::Sound & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3879,7 +3879,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                             data,
+			InputByteStreamView &                         data,
 			typename Definition::SoundPlaylistContainer & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -3986,7 +3986,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                           data,
+			InputByteStreamView &                       data,
 			typename Definition::SoundSwitchContainer & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4099,7 +4099,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                          data,
+			InputByteStreamView &                      data,
 			typename Definition::SoundBlendContainer & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4206,7 +4206,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                 data,
+			InputByteStreamView &             data,
 			typename Definition::ActorMixer & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4304,7 +4304,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                 data,
+			InputByteStreamView &             data,
 			typename Definition::MusicTrack & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4417,7 +4417,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                   data,
+			InputByteStreamView &               data,
 			typename Definition::MusicSegment & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4530,7 +4530,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                             data,
+			InputByteStreamView &                         data,
 			typename Definition::MusicPlaylistContainer & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4643,7 +4643,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_section (
-			IByteStreamView &                           data,
+			InputByteStreamView &                       data,
 			typename Definition::MusicSwitchContainer & value
 		) -> Void {
 			exchange_id(data, value.id);
@@ -4764,7 +4764,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		inline static auto exchange_chunk_bkhd (
-			IByteStreamView &                data,
+			InputByteStreamView &            data,
 			typename Definition::SoundBank & value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -4787,8 +4787,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_didx_data (
-			IByteStreamView &               didx_data,
-			IByteStreamView &               data_data,
+			InputByteStreamView &           didx_data,
+			InputByteStreamView &           data_data,
 			List<typename Definition::ID> & value,
 			Optional<Path> const &          embedded_media_directory
 		) -> Void {
@@ -4824,7 +4824,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_init (
-			IByteStreamView &              data,
+			InputByteStreamView &          data,
 			typename Definition::Setting & value
 		) -> Void {
 			if constexpr (check_version(version, {118})) {
@@ -4849,7 +4849,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_stmg (
-			IByteStreamView &                          data,
+			InputByteStreamView &                      data,
 			typename Definition::Setting &             value,
 			typename Definition::GameSynchronization & game_synchronization_value
 		) -> Void {
@@ -4916,7 +4916,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_hirc (
-			IByteStreamView &                      data,
+			InputByteStreamView &                  data,
 			List<typename Definition::Hierarchy> & value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -4930,7 +4930,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						auto item_size = Integer{};
 						exchange_enumerated_fixed<IntegerU8>(data, type);
 						exchange_integer_fixed<IntegerU32>(data, item_size);
-						auto item_data = IByteStreamView{data.forward_view(cbox<Size>(item_size))};
+						auto item_data = InputByteStreamView{data.forward_view(cbox<Size>(item_size))};
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<typename Definition::HierarchyType>::Index>(
 							[&] <auto index, auto value_index> (ValuePackage<index>, ValuePackage<value_index>) {
@@ -4958,7 +4958,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_stid (
-			IByteStreamView &                               data,
+			InputByteStreamView &                           data,
 			List<typename Definition::SoundBankReference> & value
 		) -> Void {
 			if constexpr (check_version(version, {72})) {
@@ -4983,15 +4983,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_envs (
-			IByteStreamView &              data,
+			InputByteStreamView &          data,
 			typename Definition::Setting & value
 		) -> Void {
 			if constexpr (check_version(version, {72, 112})) {
 				// NOTE: HERE
 				exchange_list_element(
 					data,
-					as_lvalue(
-						make_list<VWrapperView<typename Definition::ObstructionSetting>>(
+					as_left(
+						make_list<VariableWrapperView<typename Definition::ObstructionSetting>>(
 							value.obstruction.volume,
 							value.obstruction.low_pass_filter,
 							value.occlusion.volume,
@@ -5031,8 +5031,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				// NOTE: HERE
 				exchange_list_element(
 					data,
-					as_lvalue(
-						make_list<VWrapperView<typename Definition::ObstructionSetting>>(
+					as_left(
+						make_list<VariableWrapperView<typename Definition::ObstructionSetting>>(
 							value.obstruction.volume,
 							value.obstruction.low_pass_filter,
 							value.obstruction.high_pass_filter,
@@ -5074,7 +5074,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		}
 
 		inline static auto exchange_chunk_plat (
-			IByteStreamView &              data,
+			InputByteStreamView &          data,
 			typename Definition::Setting & value
 		) -> Void {
 			if constexpr (check_version(version, {113, 118})) {
@@ -5092,20 +5092,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		inline static auto exchange_sound_bank (
-			IByteStreamView &                data,
+			InputByteStreamView &            data,
 			typename Definition::SoundBank & value,
 			Optional<Path> const &           embedded_media_directory
 		) -> Void {
 			auto state = k_false;
 			auto sign = ChunkSign{};
-			auto chunk = IByteStreamView{};
+			auto chunk = InputByteStreamView{};
 			auto next_chunk = [&] (
 			) -> Void {
 				assert_test(chunk.full());
 				state = !data.full();
 				if (state) {
 					sign = data.read_of<ChunkSign>();
-					chunk = IByteStreamView{data.forward_view(cbox<Size>(sign.size))};
+					chunk = InputByteStreamView{data.forward_view(cbox<Size>(sign.size))};
 				}
 				return;
 			};
@@ -5188,7 +5188,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView &                data,
+			InputByteStreamView &            data,
 			typename Definition::SoundBank & definition,
 			Optional<Path> const &           embedded_media_directory
 		) -> Void {
@@ -5199,7 +5199,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &                data_,
+			InputByteStreamView &            data_,
 			typename Definition::SoundBank & definition,
 			Optional<Path> const &           embedded_media_directory
 		) -> Void {

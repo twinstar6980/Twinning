@@ -16,14 +16,14 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTextur
 		// ----------------
 
 		inline static auto process_image (
-			OByteStreamView &          data,
-			Image::CImageView const &  image,
-			List<Image::Color> const & palette
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image,
+			List<Image::Color> const &       palette
 		) -> Void {
 			auto bit_count = test_palette(palette);
-			auto index_data = OByteStreamView{data.forward_view(image.size().area() * bit_count / k_type_bit_count<Byte>)};
-			auto pixel_row_stream = IStreamView<CListView<Image::Pixel>>{image.data()};
-			auto pixel_row = IStreamView<Image::Pixel>{};
+			auto index_data = OutputByteStreamView{data.forward_view(image.size().area() * bit_count / k_type_bit_count<Byte>)};
+			auto pixel_row_stream = InputStreamView<ConstantListView<Image::Pixel>>{image.data()};
+			auto pixel_row = InputStreamView<Image::Pixel>{};
 			auto index_table = Array<Optional<Size>>{0b1_sz << k_maximum_bit_count};
 			for (auto & index : SizeRange{palette.size()}) {
 				index_table[cbox<Size>(palette[index])].set(index);
@@ -64,9 +64,9 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNAlphaPaletteTextur
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &          data_,
-			Image::CImageView const &  image,
-			List<Image::Color> const & palette
+			OutputByteStreamView &           data_,
+			Image::ConstantImageView const & image,
+			List<Image::Color> const &       palette
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, palette);

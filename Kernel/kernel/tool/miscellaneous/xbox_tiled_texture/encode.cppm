@@ -19,11 +19,11 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 
 		template <auto format> requires
 			CategoryConstraint<>
-			&& (IsSameV<format, Texture::Encoding::Format>)
+			&& (IsSameOf<format, Texture::Encoding::Format>)
 			&& (Texture::Encoding::FormatPackage::has(format))
 		inline static auto process_image (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			auto image_size = image.size();
 			auto block_height = image_size.width / k_block_width;
@@ -31,10 +31,10 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 			auto data_view = data.forward_view(image_size.area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>);
 			for (auto & block_y : SizeRange{chunk_height}) {
 				for (auto & block_x : SizeRange{k_chunk_width}) {
-					auto image_row = IStreamView<Image::Pixel>{image[block_y * k_chunk_width + block_x]};
+					auto image_row = InputStreamView<Image::Pixel>{image[block_y * k_chunk_width + block_x]};
 					for (auto & block_row : SizeRange{block_height}) {
 						auto position = (block_y * block_height + block_row) * (k_block_width * k_chunk_width) + (block_x * k_block_width);
-						auto block_data = OByteStreamView{data_view.sub(position * bpp_of(format) / k_type_bit_count<Byte>, k_block_width * bpp_of(format) / k_type_bit_count<Byte>)};
+						auto block_data = OutputByteStreamView{data_view.sub(position * bpp_of(format) / k_type_bit_count<Byte>, k_block_width * bpp_of(format) / k_type_bit_count<Byte>)};
 						for (auto & block_column : SizeRange{k_block_width}) {
 							Texture::Encoding::Encode::process_pixel<format>(block_data, image_row.next());
 						}
@@ -45,8 +45,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 		}
 
 		inline static auto process_image (
-			OByteStreamView &                 data,
-			Image::CImageView const &         image,
+			OutputByteStreamView &            data,
+			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format
 		) -> Void {
 			Generalization::match<Texture::Encoding::FormatPackage>(
@@ -61,8 +61,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                 data_,
-			Image::CImageView const &         image,
+			OutputByteStreamView &            data_,
+			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format
 		) -> Void {
 			M_use_zps_of(data);

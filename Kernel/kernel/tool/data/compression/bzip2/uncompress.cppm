@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::BZip2 {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & ripe,
-			OByteStreamView & raw,
-			Boolean const &   small
+			InputByteStreamView &  ripe,
+			OutputByteStreamView & raw,
+			Boolean const &        small
 		) -> Void {
 			auto bz_stream = Third::bzip2::$bz_stream{
 				.next_in = cast_pointer<char>(as_variable_pointer(ripe.current_pointer())).value,
@@ -58,9 +58,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::BZip2 {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & ripe_,
-			OByteStreamView & raw_,
-			Boolean const &   small
+			InputByteStreamView &  ripe_,
+			OutputByteStreamView & raw_,
+			Boolean const &        small
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);

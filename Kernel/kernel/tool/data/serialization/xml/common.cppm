@@ -67,7 +67,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 			auto   result = String{};
 			assert_test(buffer_size > 0_sz);
 			if (printer_imitator._buffer._mem == printer_imitator._buffer._pool) {
-				result.assign(CStringView{buffer_data, buffer_size - 1_sz});
+				result.assign(ConstantStringView{buffer_data, buffer_size - 1_sz});
 			}
 			else {
 				printer_imitator._buffer._mem = printer_imitator._buffer._pool;

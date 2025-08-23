@@ -46,8 +46,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 		// ----------------
 
 		inline static auto test_hash (
-			CByteListView const &    data,
-			StaticByteArray<16_sz> & hash
+			ConstantByteListView const & data,
+			StaticByteArray<16_sz> &     hash
 		) -> Void {
 			auto hash_test = ByteArray{};
 			Data::Hash::MD5::Hash::process(data, hash_test);
@@ -56,13 +56,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 		}
 
 		inline static auto process_sub (
-			CByteListView const & before,
-			CByteListView const & after,
-			OByteStreamView &     patch,
-			Size &                patch_size
+			ConstantByteListView const & before,
+			ConstantByteListView const & after,
+			OutputByteStreamView &       patch,
+			Size &                       patch_size
 		) -> Void {
-			auto before_stream = IByteStreamView{before};
-			auto after_stream = IByteStreamView{after};
+			auto before_stream = InputByteStreamView{before};
+			auto after_stream = InputByteStreamView{after};
 			auto patch_begin_position = patch.position();
 			Data::Differentiation::VCDiff::Encode::process(before_stream, after_stream, patch, k_true);
 			patch_size = patch.position() - patch_begin_position;
@@ -70,19 +70,19 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 		}
 
 		inline static auto process_whole (
-			IByteStreamView & before,
-			IByteStreamView & after,
-			OByteStreamView & patch,
-			Boolean const &   use_raw_packet
+			InputByteStreamView &  before,
+			InputByteStreamView &  after,
+			OutputByteStreamView & patch,
+			Boolean const &        use_raw_packet
 		) -> Void {
 			patch.write_constant(k_magic_identifier);
 			patch.write_constant(cbox<VersionNumber>(version.number));
-			auto package_information_stream = OByteStreamView{patch.forward_view(bs_static_size<PackageInformation>())};
+			auto package_information_stream = OutputByteStreamView{patch.forward_view(bs_static_size<PackageInformation>())};
 			auto package_information = PackageInformation{};
 			auto information_section_before_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			auto information_section_after_structure = ResourceStreamBundle::Structure::Information<package_version>{};
-			read_package_information_structure(as_lvalue(IByteStreamView{before.view()}), information_section_before_structure);
-			read_package_information_structure(as_lvalue(IByteStreamView{after.view()}), information_section_after_structure);
+			read_package_information_structure(as_left(InputByteStreamView{before.view()}), information_section_before_structure);
+			read_package_information_structure(as_left(InputByteStreamView{after.view()}), information_section_after_structure);
 			auto information_section_before = before.sub_view(k_begin_index, cbox<Size>(information_section_before_structure.header.information_section_size));
 			auto information_section_after = after.sub_view(k_begin_index, cbox<Size>(information_section_after_structure.header.information_section_size));
 			test_hash(information_section_before, package_information.before_hash);
@@ -106,16 +106,16 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			package_information.packet_count = cbox<IntegerU32>(packet_count);
 			for (auto & packet_index : SizeRange{packet_count}) {
 				auto & packet_after_subgroup_information = information_section_after_structure.subgroup_information[packet_index];
-				auto   packet_information_stream = OByteStreamView{patch.forward_view(bs_static_size<PacketInformation>())};
+				auto   packet_information_stream = OutputByteStreamView{patch.forward_view(bs_static_size<PacketInformation>())};
 				auto   packet_information = PacketInformation{};
 				auto   packet_name = String{};
 				auto   packet_patch_exist = Boolean{};
 				auto   packet_patch_size = Size{};
 				packet_name = String{packet_after_subgroup_information.id.begin(), null_terminated_string_size_of(packet_after_subgroup_information.id.begin())};
-				auto packet_before = CByteListView{};
+				auto packet_before = ConstantByteListView{};
 				if (auto packet_before_subgroup_information_index = packet_before_subgroup_information_index_map.query_if(packet_name)) {
 					auto & packet_before_subgroup_information = information_section_before_structure.subgroup_information[cbox<Size>(packet_before_subgroup_information_index.get().value)];
-					auto   packet_before_ripe = IByteStreamView{before.sub_view(cbox<Size>(packet_before_subgroup_information.offset), cbox<Size>(packet_before_subgroup_information.size))};
+					auto   packet_before_ripe = InputByteStreamView{before.sub_view(cbox<Size>(packet_before_subgroup_information.offset), cbox<Size>(packet_before_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_before = packet_before_ripe.view();
 					}
@@ -124,7 +124,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 						if (packet_before_raw_size > packet_before_raw_container.size()) {
 							packet_before_raw_container.allocate(packet_before_raw_size);
 						}
-						auto packet_before_raw = OByteStreamView{packet_before_raw_container};
+						auto packet_before_raw = OutputByteStreamView{packet_before_raw_container};
 						uncompress_packet(packet_before_ripe, packet_before_raw);
 						assert_test(packet_before_ripe.full());
 						packet_before = packet_before_raw.stream_view();
@@ -132,9 +132,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 					before_end_position = maximum(before_end_position, cbox<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
 				}
 				test_hash(packet_before, packet_information.before_hash);
-				auto packet_after = CByteListView{};
+				auto packet_after = ConstantByteListView{};
 				{
-					auto packet_after_ripe = IByteStreamView{after.sub_view(cbox<Size>(packet_after_subgroup_information.offset), cbox<Size>(packet_after_subgroup_information.size))};
+					auto packet_after_ripe = InputByteStreamView{after.sub_view(cbox<Size>(packet_after_subgroup_information.offset), cbox<Size>(packet_after_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_after = packet_after_ripe.view();
 					}
@@ -143,7 +143,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 						if (packet_after_raw_size > packet_after_raw_container.size()) {
 							packet_after_raw_container.allocate(packet_after_raw_size);
 						}
-						auto packet_after_raw = OByteStreamView{packet_after_raw_container};
+						auto packet_after_raw = OutputByteStreamView{packet_after_raw_container};
 						uncompress_packet(packet_after_ripe, packet_after_raw);
 						assert_test(packet_after_ripe.full());
 						packet_after = packet_after_raw.stream_view();
@@ -175,10 +175,10 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & before_,
-			IByteStreamView & after_,
-			OByteStreamView & patch_,
-			Boolean const &   use_raw_packet
+			InputByteStreamView &  before_,
+			InputByteStreamView &  after_,
+			OutputByteStreamView & patch_,
+			Boolean const &        use_raw_packet
 		) -> Void {
 			M_use_zps_of(before);
 			M_use_zps_of(after);

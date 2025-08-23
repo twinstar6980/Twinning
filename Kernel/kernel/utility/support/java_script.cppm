@@ -995,11 +995,11 @@ export namespace Twinning::Kernel::JavaScript {
 	};
 
 	template <>
-	struct ValueAdapter<VByteListView> {
+	struct ValueAdapter<VariableByteListView> {
 
 		using This = Value;
 
-		using That = VByteListView;
+		using That = VariableByteListView;
 
 		// ----------------
 

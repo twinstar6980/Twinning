@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process_package (
-			IByteStreamView &              data,
+			InputByteStreamView &          data,
 			typename Definition::Package & definition,
 			Optional<Path> const &         resource_directory
 		) -> Void {
@@ -40,12 +40,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 				if constexpr (check_version(version, {3})) {
 					assert_test(information_structure.header.unknown_1 == 0_iu32);
 				}
-				CompiledMapData::decode(information_structure.resource_information, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			definition.compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			definition.resource.allocate_full(information_structure.resource_information.size());
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
-				auto resource_data_section_view = CByteListView{};
+				auto resource_data_section_view = ConstantByteListView{};
 				auto resource_data_section_container = ByteArray{};
 				auto resource_data_section_offset = Size{};
 				auto resource_data_section_size = Size{};
@@ -75,8 +75,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 				else {
 					resource_data_section_container.allocate(resource_data_section_size_original);
 					if (resource_data_section_size_original != k_none_size) {
-						auto resource_data_section_stored_stream = IByteStreamView{resource_data_section_view_stored};
-						auto resource_data_section_original_stream = OByteStreamView{resource_data_section_container};
+						auto resource_data_section_stored_stream = InputByteStreamView{resource_data_section_view_stored};
+						auto resource_data_section_original_stream = OutputByteStreamView{resource_data_section_container};
 						Data::Compression::Deflate::Uncompress::process(resource_data_section_stored_stream, resource_data_section_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					}
 					resource_data_section_view = resource_data_section_container.view();
@@ -129,7 +129,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &              data_,
+			InputByteStreamView &          data_,
 			typename Definition::Package & definition,
 			Optional<Path> const &         resource_directory
 		) -> Void {

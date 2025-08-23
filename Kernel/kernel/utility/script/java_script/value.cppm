@@ -188,7 +188,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto finalizer> requires
 			CategoryConstraint<>
-			&& (IsSameV<finalizer, ClassFinalizer>)
+			&& (IsSameOf<finalizer, ClassFinalizer>)
 		auto register_class (
 			Integer &      id,
 			String const & name
@@ -320,9 +320,9 @@ export namespace Twinning::Kernel::JavaScript {
 		#pragma region evaluate
 
 		auto evaluate (
-			CStringView const & script,
-			String const &      name,
-			Boolean const &     is_module
+			ConstantStringView const & script,
+			String const &             name,
+			Boolean const &            is_module
 		) -> Value;
 
 		#pragma endregion
@@ -698,11 +698,11 @@ export namespace Twinning::Kernel::JavaScript {
 		// ----------------
 
 		auto get_object_of_array_buffer (
-		) -> VByteListView {
+		) -> VariableByteListView {
 			auto size = std::size_t{};
 			auto data = Third::quickjs_ng::$JS_GetArrayBuffer(thiz._context(), &size, thiz._value());
 			assert_test(data != nullptr);
-			return VByteListView{cast_pointer<Byte>(make_pointer(data)), mbox<Size>(size)};
+			return VariableByteListView{cast_pointer<Byte>(make_pointer(data)), mbox<Size>(size)};
 		}
 
 		#pragma endregion
@@ -746,7 +746,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// TODO: sv remove
 		auto set_string (
-			CStringView const & value
+			ConstantStringView const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewStringLen(thiz._context(), cast_pointer<char>(value.begin()).value, value.size().value));
 		}
@@ -764,7 +764,7 @@ export namespace Twinning::Kernel::JavaScript {
 		}
 
 		auto set_object_of_array_buffer (
-			CByteListView const & data
+			ConstantByteListView const & data
 		) -> Void {
 			return thiz._rebind_value(
 				Third::quickjs_ng::$JS_NewArrayBufferCopy(
@@ -776,8 +776,8 @@ export namespace Twinning::Kernel::JavaScript {
 		}
 
 		auto set_object_of_array_buffer (
-			VByteListView const & data,
-			Boolean const &       is_holder
+			VariableByteListView const & data,
+			Boolean const &              is_holder
 		) -> Void {
 			return thiz._rebind_value(
 				Third::quickjs_ng::$JS_NewArrayBuffer(
@@ -798,7 +798,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto function> requires
 			CategoryConstraint<>
-			&& (IsSameV<function, NativeFunction>)
+			&& (IsSameOf<function, NativeFunction>)
 		auto set_object_of_native_function (
 			String const &  name,
 			Boolean const & is_constructor
@@ -842,7 +842,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// TODO: sv remove
 		auto is_object_of_class (
-			CStringView const & name
+			ConstantStringView const & name
 		) -> Boolean {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
 		}
@@ -973,7 +973,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// TODO: sv remove
 		auto get_object_property (
-			CStringView const & name
+			ConstantStringView const & name
 		) -> Value {
 			assert_test(thiz.is_object());
 			auto atom = Third::quickjs_ng::$JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
@@ -1006,8 +1006,8 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// TODO: sv remove
 		auto set_object_property (
-			CStringView const & name,
-			Value &&            value
+			ConstantStringView const & name,
+			Value &&                   value
 		) -> Void {
 			assert_test(thiz.is_object());
 			auto atom = Third::quickjs_ng::$JS_NewAtomLen(thiz._context(), cast_pointer<char>(name.begin()).value, name.size().value);
@@ -1104,7 +1104,7 @@ export namespace Twinning::Kernel::JavaScript {
 			);
 			auto result = thiz.new_instance(thiz._context(), Third::quickjs_ng::$JS_Call(thiz._context(), thiz._value(), Third::quickjs_ng::$JS_UNDEFINED, static_cast<int>(argument.size().value), argument_value.begin().value));
 			if (result.is_exception()) {
-				throw ExecutionException{as_lvalue(thiz.context().catch_exception())};
+				throw ExecutionException{as_left(thiz.context().catch_exception())};
 			}
 			return result;
 		}
@@ -1124,7 +1124,7 @@ export namespace Twinning::Kernel::JavaScript {
 			);
 			auto result = thiz.new_instance(thiz._context(), Third::quickjs_ng::$JS_Call(thiz._context(), function._value(), thiz._value(), static_cast<int>(argument.size().value), argument_value.begin().value));
 			if (result.is_exception()) {
-				throw ExecutionException{as_lvalue(thiz.context().catch_exception())};
+				throw ExecutionException{as_left(thiz.context().catch_exception())};
 			}
 			return result;
 		}
@@ -1234,7 +1234,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto finalizer> requires
 			CategoryConstraint<>
-			&& (IsSameV<finalizer, ClassFinalizer>)
+			&& (IsSameOf<finalizer, ClassFinalizer>)
 		inline auto proxy_class_finalizer (
 			Third::quickjs_ng::$JSRuntime * rt,
 			Third::quickjs_ng::$JSValue     obj
@@ -1249,7 +1249,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto function> requires
 			CategoryConstraint<>
-			&& (IsSameV<function, NativeFunction>)
+			&& (IsSameOf<function, NativeFunction>)
 		inline auto proxy_native_function (
 			Third::quickjs_ng::$JSContext * ctx,
 			Third::quickjs_ng::$JSValue     this_val,
@@ -1375,7 +1375,7 @@ export namespace Twinning::Kernel::JavaScript {
 		assert_test(count != 0);
 		context = Context::new_reference(context_pointer);
 		if (count < 0) {
-			throw ExecutionException{as_lvalue(context.catch_exception())};
+			throw ExecutionException{as_left(context.catch_exception())};
 		}
 		return;
 	}
@@ -1409,7 +1409,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	template <auto finalizer> requires
 		CategoryConstraint<>
-		&& (IsSameV<finalizer, ClassFinalizer>)
+		&& (IsSameOf<finalizer, ClassFinalizer>)
 	inline auto Runtime::register_class (
 		Integer &      id,
 		String const & name
@@ -1448,9 +1448,9 @@ export namespace Twinning::Kernel::JavaScript {
 	// ----------------
 
 	inline auto Context::evaluate (
-		CStringView const & script,
-		String const &      name,
-		Boolean const &     is_module
+		ConstantStringView const & script,
+		String const &             name,
+		Boolean const &            is_module
 	) -> Value {
 		auto result = Third::quickjs_ng::$JS_Eval(
 			thiz._context(),
@@ -1460,7 +1460,7 @@ export namespace Twinning::Kernel::JavaScript {
 			Third::quickjs_ng::$JS_EVAL_FLAG_STRICT | (!is_module ? (Third::quickjs_ng::$JS_EVAL_TYPE_GLOBAL) : (Third::quickjs_ng::$JS_EVAL_TYPE_MODULE))
 		);
 		if (Third::quickjs_ng::$JS_IsException(result)) {
-			throw ExecutionException{as_lvalue(thiz.catch_exception())};
+			throw ExecutionException{as_left(thiz.catch_exception())};
 		}
 		return Value::new_instance(thiz._context(), result);
 	}
@@ -1506,7 +1506,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	template <auto function> requires
 		CategoryConstraint<>
-		&& (IsSameV<function, NativeFunction>)
+		&& (IsSameOf<function, NativeFunction>)
 	inline auto Value::set_object_of_native_function (
 		String const &  name,
 		Boolean const & is_constructor

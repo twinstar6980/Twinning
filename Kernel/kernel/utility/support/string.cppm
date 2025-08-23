@@ -107,7 +107,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			thix.allocate_full(6_sz);
-			auto thix_stream = OCharacterStreamView{thix};
+			auto thix_stream = OutputCharacterStreamView{thix};
 			StringParser::write_utf8_character(thix_stream, that);
 			thix.set_size(thix_stream.position());
 			return;
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			auto thix_stream = ICharacterStreamView{thix};
+			auto thix_stream = InputCharacterStreamView{thix};
 			StringParser::read_utf8_character(thix_stream, that);
 			assert_test(thix_stream.full());
 			return;
@@ -214,7 +214,7 @@ export namespace Twinning::Kernel {
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
 			thix.allocate_full(20_sz);
-			auto stream = OCharacterStreamView{thix};
+			auto stream = OutputCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);
 			thix.set_size(stream.position());
 			return;
@@ -224,7 +224,7 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			auto stream = ICharacterStreamView{thix};
+			auto stream = InputCharacterStreamView{thix};
 			stream.read(that);
 			assert_test(stream.full());
 			return;
@@ -247,7 +247,7 @@ export namespace Twinning::Kernel {
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
 			thix.allocate_full(32_sz);
-			auto stream = OCharacterStreamView{thix};
+			auto stream = OutputCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);
 			thix.set_size(stream.position());
 			return;
@@ -257,7 +257,7 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			auto stream = ICharacterStreamView{thix};
+			auto stream = InputCharacterStreamView{thix};
 			stream.read(that);
 			assert_test(stream.full());
 			return;
@@ -282,7 +282,7 @@ export namespace Twinning::Kernel {
 			Boolean const & disable_sign_when_positive = k_false
 		) -> Void {
 			thix.allocate_full(32_sz);
-			auto stream = OCharacterStreamView{thix};
+			auto stream = OutputCharacterStreamView{thix};
 			stream.write(that, disable_sign_when_positive);
 			thix.set_size(stream.position());
 			return;
@@ -292,7 +292,7 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			auto stream = ICharacterStreamView{thix};
+			auto stream = InputCharacterStreamView{thix};
 			stream.read(that);
 			assert_test(stream.full());
 			return;
@@ -383,7 +383,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			thix.allocate_full(2_sz);
-			auto stream = OCharacterStreamView{thix};
+			auto stream = OutputCharacterStreamView{thix};
 			stream.write(that);
 			thix.set_size(stream.position());
 			return;
@@ -393,7 +393,7 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			auto stream = ICharacterStreamView{thix};
+			auto stream = InputCharacterStreamView{thix};
 			stream.read(that);
 			assert_test(stream.full());
 			return;
@@ -419,7 +419,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			thix.allocate_full(that.size() * 2_sz + maximum(that.size(), 1_sz) - 1_sz);
-			auto stream = OCharacterStreamView{thix};
+			auto stream = OutputCharacterStreamView{thix};
 			stream.write(that.view());
 			return;
 		}
@@ -430,7 +430,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			assert_test(thix.size() == 0_sz || thix.size() % 3_sz == 2_sz);
 			that.allocate_full((thix.size() + 1_sz) / 3_sz);
-			auto stream = ICharacterStreamView{thix};
+			auto stream = InputCharacterStreamView{thix};
 			stream.read(that.view());
 			return;
 		}

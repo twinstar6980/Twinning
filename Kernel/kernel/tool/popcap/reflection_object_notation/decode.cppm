@@ -47,11 +47,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process_value (
-			IByteStreamView &      data,
-			JSON::Value &          value,
-			List<CStringView> &    native_string_index,
-			List<CStringView> &    unicode_string_index,
-			TypeIdentifier const & type_identifier
+			InputByteStreamView &      data,
+			JSON::Value &              value,
+			List<ConstantStringView> & native_string_index,
+			List<ConstantStringView> & unicode_string_index,
+			TypeIdentifier const &     type_identifier
 		) -> Void {
 			switch (type_identifier.value) {
 				case TypeIdentifier::Value::boolean_false: {
@@ -164,11 +164,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					auto   size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
 					if constexpr (check_version(version, {}, {false})) {
-						StringParser::read_eascii_string(self_cast<ICharacterStreamView>(data), content, size);
+						StringParser::read_eascii_string(self_cast<InputCharacterStreamView>(data), content, size);
 					}
 					if constexpr (check_version(version, {}, {true})) {
-						auto content_view = CStringView{};
-						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content_view, as_lvalue(Size{}), size);
+						auto content_view = ConstantStringView{};
+						StringParser::read_utf8_string_by_size(self_cast<InputCharacterStreamView>(data), content_view, as_left(Size{}), size);
 						content = content_view;
 					}
 					break;
@@ -177,11 +177,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					auto   size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
 					if constexpr (check_version(version, {}, {false})) {
-						StringParser::read_eascii_string(self_cast<ICharacterStreamView>(data), content, size);
+						StringParser::read_eascii_string(self_cast<InputCharacterStreamView>(data), content, size);
 					}
 					if constexpr (check_version(version, {}, {true})) {
-						auto content_view = CStringView{};
-						StringParser::read_utf8_string_by_size(self_cast<ICharacterStreamView>(data), content_view, as_lvalue(Size{}), size);
+						auto content_view = ConstantStringView{};
+						StringParser::read_utf8_string_by_size(self_cast<InputCharacterStreamView>(data), content_view, as_left(Size{}), size);
 						content = content_view;
 					}
 					native_string_index.append(content);
@@ -195,8 +195,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				case TypeIdentifier::Value::string_unicode: {
 					auto length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					auto content = CStringView{};
-					StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), content, length);
+					auto content = ConstantStringView{};
+					StringParser::read_utf8_string(self_cast<InputCharacterStreamView>(data), content, length);
 					assert_test(content.size() == size);
 					value.set_string(content);
 					break;
@@ -204,8 +204,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				case TypeIdentifier::Value::string_unicode_indexing: {
 					auto length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-					auto content = CStringView{};
-					StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), content, length);
+					auto content = ConstantStringView{};
+					StringParser::read_utf8_string(self_cast<InputCharacterStreamView>(data), content, length);
 					assert_test(content.size() == size);
 					value.set_string(content);
 					unicode_string_index.append(content);
@@ -225,8 +225,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 						case ReferenceTypeIdentifier::Value::uid: {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-							auto sheet_content = CStringView{};
-							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), sheet_content, sheet_length);
+							auto sheet_content = ConstantStringView{};
+							StringParser::read_utf8_string(self_cast<InputCharacterStreamView>(data), sheet_content, sheet_length);
 							assert_test(sheet_content.size() == sheet_size);
 							// TODO: unknown type of uid value, define them be 'int-var-u32'
 							auto uid_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
@@ -238,13 +238,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 						case ReferenceTypeIdentifier::Value::alias: {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-							auto sheet_content = CStringView{};
-							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), sheet_content, sheet_length);
+							auto sheet_content = ConstantStringView{};
+							StringParser::read_utf8_string(self_cast<InputCharacterStreamView>(data), sheet_content, sheet_length);
 							assert_test(sheet_content.size() == sheet_size);
 							auto alias_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto alias_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
-							auto alias_content = CStringView{};
-							StringParser::read_utf8_string(self_cast<ICharacterStreamView>(data), alias_content, alias_length);
+							auto alias_content = ConstantStringView{};
+							StringParser::read_utf8_string(self_cast<InputCharacterStreamView>(data), alias_content, alias_length);
 							assert_test(alias_content.size() == alias_size);
 							value.set_string(k_reference_expression_format_of_alias(alias_content, sheet_content));
 							break;
@@ -310,8 +310,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & data,
-			JSON::Value &     definition
+			InputByteStreamView & data,
+			JSON::Value &         definition
 		) -> Void {
 			data.read_constant(k_magic_identifier);
 			data.read_constant(cbox<VersionNumber>(version.number));
@@ -333,8 +333,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 					}
 				}
 			}
-			auto native_string_index_list = List<CStringView>{native_string_upper_bound};
-			auto unicode_string_index_list = List<CStringView>{unicode_string_upper_bound};
+			auto native_string_index_list = List<ConstantStringView>{native_string_upper_bound};
+			auto unicode_string_index_list = List<ConstantStringView>{unicode_string_upper_bound};
 			process_value(data, definition, native_string_index_list, unicode_string_index_list, TypeIdentifier{TypeIdentifier::Value::object_begin});
 			data.read_constant(k_done_identifier);
 			return;
@@ -343,8 +343,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & data_,
-			JSON::Value &     definition
+			InputByteStreamView & data_,
+			JSON::Value &         definition
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

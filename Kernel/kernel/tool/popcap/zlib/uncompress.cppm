@@ -28,9 +28,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & ripe,
-			OByteStreamView & raw,
-			Size const &      window_bits
+			InputByteStreamView &  ripe,
+			OutputByteStreamView & raw,
+			Size const &           window_bits
 		) -> Void {
 			ripe.read_constant(k_magic_identifier);
 			if constexpr (check_version(version, {true})) {
@@ -46,11 +46,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		// ----------------
 
 		inline static auto estimate_whole (
-			CByteListView const & ripe,
-			Size &                raw_size
+			ConstantByteListView const & ripe,
+			Size &                       raw_size
 		) -> Void {
 			raw_size = k_none_size;
-			auto ripe_stream = IByteStreamView{ripe};
+			auto ripe_stream = InputByteStreamView{ripe};
 			ripe_stream.read_constant(k_magic_identifier);
 			if constexpr (check_version(version, {true})) {
 				ripe_stream.read_constant(0x00000000_iu32);
@@ -64,9 +64,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & ripe_,
-			OByteStreamView & raw_,
-			Size const &      window_bits
+			InputByteStreamView &  ripe_,
+			OutputByteStreamView & raw_,
+			Size const &           window_bits
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
@@ -74,8 +74,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		}
 
 		inline static auto estimate (
-			CByteListView const & ripe,
-			Size &                raw_size
+			ConstantByteListView const & ripe,
+			Size &                       raw_size
 		) -> Void {
 			restruct(raw_size);
 			return estimate_whole(ripe, raw_size);

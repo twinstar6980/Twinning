@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation {
 		// ----------------
 
 		inline static auto process_image (
-			Image::CImageView const & source,
-			Image::VImageView const & destination
+			Image::ConstantImageView const & source,
+			Image::VariableImageView const & destination
 		) -> Void {
 			auto source_buffer = Array<Image::Pixel>{source.size().area()};
 			auto destination_buffer = Array<Image::Pixel>{destination.size().area()};
@@ -46,8 +46,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation {
 		// ----------------
 
 		inline static auto process (
-			Image::CImageView const & source,
-			Image::VImageView const & destination
+			Image::ConstantImageView const & source,
+			Image::VariableImageView const & destination
 		) -> Void {
 			return process_image(source, destination);
 		}

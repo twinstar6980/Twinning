@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & raw,
-			OByteStreamView & ripe,
-			Size const &      level
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe,
+			Size const &           level
 		) -> Void {
 			assert_test(Math::between(level, 0_sz, 9_sz));
 			auto property = ripe.forward_view(mbox<Size>(Third::lzma::$LZMA_PROPS_SIZE));
@@ -52,9 +52,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & raw_,
-			OByteStreamView & ripe_,
-			Size const &      level
+			InputByteStreamView &  raw_,
+			OutputByteStreamView & ripe_,
+			Size const &           level
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);

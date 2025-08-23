@@ -17,10 +17,10 @@ export namespace Twinning::Kernel::Tool::Data::Hash::FNV {
 
 		template <auto mode, auto bit_count> requires
 			CategoryConstraint<>
-			&& (IsSameV<mode, Mode>)
-			&& (IsSameV<bit_count, BitCount>)
+			&& (IsSameOf<mode, Mode>)
+			&& (IsSameOf<bit_count, BitCount>)
 		inline static auto process_whole_integer (
-			CByteListView const &                  data,
+			ConstantByteListView const &           data,
 			typename Parameter<bit_count>::Value & value
 		) -> Void {
 			using Parameter = Parameter<bit_count>;
@@ -48,10 +48,10 @@ export namespace Twinning::Kernel::Tool::Data::Hash::FNV {
 		}
 
 		inline static auto process_whole (
-			CByteListView const & data,
-			ByteArray &           value,
-			Mode const &          mode,
-			BitCount const &      bit_count
+			ConstantByteListView const & data,
+			ByteArray &                  value,
+			Mode const &                 mode,
+			BitCount const &             bit_count
 		) -> Void {
 			Generalization::match<ValuePackage<
 				Mode::Constant::m_0(),
@@ -70,7 +70,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::FNV {
 							auto value_integer = typename Parameter<bit_count_>::Value{};
 							process_whole_integer<mode, bit_count_>(data, value_integer);
 							value.allocate(k_type_size<typename Parameter<bit_count_>::Value>);
-							OByteStreamView{value}.write(value_integer);
+							OutputByteStreamView{value}.write(value_integer);
 						}
 					);
 				}
@@ -81,10 +81,10 @@ export namespace Twinning::Kernel::Tool::Data::Hash::FNV {
 		// ----------------
 
 		inline static auto process (
-			CByteListView const & data,
-			ByteArray &           value,
-			Mode const &          mode,
-			BitCount const &      bit_count
+			ConstantByteListView const & data,
+			ByteArray &                  value,
+			Mode const &                 mode,
+			BitCount const &             bit_count
 		) -> Void {
 			restruct(value);
 			return process_whole(data, value, mode, bit_count);

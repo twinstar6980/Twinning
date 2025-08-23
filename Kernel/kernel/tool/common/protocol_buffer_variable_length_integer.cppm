@@ -58,8 +58,8 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	#pragma region encode & decode for unsigned
 
 	inline auto encode_u32 (
-		OByteStreamView & stream,
-		IntegerU32        value
+		OutputByteStreamView & stream,
+		IntegerU32             value
 	) -> Void {
 		while (value >= cbox<IntegerU32>(k_b)) {
 			stream.write(cbox<Byte>(value) & k_x | k_b);
@@ -70,8 +70,8 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	}
 
 	inline auto encode_u64 (
-		OByteStreamView & stream,
-		IntegerU64        value
+		OutputByteStreamView & stream,
+		IntegerU64             value
 	) -> Void {
 		while (value >= cbox<IntegerU64>(k_b)) {
 			stream.write(cbox<Byte>(value) & k_x | k_b);
@@ -84,7 +84,7 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	// ----------------
 
 	inline auto decode_u32 (
-		IByteStreamView & stream
+		InputByteStreamView & stream
 	) -> IntegerU32 {
 		auto value = 0_iu32;
 		for (auto & shift_count : SizeRange{k_begin_index, k_type_bit_count<IntegerU32>, 7_sz}) {
@@ -101,7 +101,7 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	}
 
 	inline auto decode_u64 (
-		IByteStreamView & stream
+		InputByteStreamView & stream
 	) -> IntegerU64 {
 		auto value = 0_iu64;
 		for (auto & shift_count : SizeRange{k_begin_index, k_type_bit_count<IntegerU64>, 7_sz}) {
@@ -122,15 +122,15 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	#pragma region encode & decode for signed
 
 	inline auto encode_s32 (
-		OByteStreamView &  stream,
-		IntegerS32 const & value
+		OutputByteStreamView & stream,
+		IntegerS32 const &     value
 	) -> Void {
 		return encode_u32(stream, ZigZag::encode_32(value));
 	}
 
 	inline auto encode_s64 (
-		OByteStreamView &  stream,
-		IntegerS64 const & value
+		OutputByteStreamView & stream,
+		IntegerS64 const &     value
 	) -> Void {
 		return encode_u64(stream, ZigZag::encode_64(value));
 	}
@@ -138,13 +138,13 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	// ----------------
 
 	inline auto decode_s32 (
-		IByteStreamView & stream
+		InputByteStreamView & stream
 	) -> IntegerS32 {
 		return ZigZag::decode_32(decode_u32(stream));
 	}
 
 	inline auto decode_s64 (
-		IByteStreamView & stream
+		InputByteStreamView & stream
 	) -> IntegerS64 {
 		return ZigZag::decode_64(decode_u64(stream));
 	}

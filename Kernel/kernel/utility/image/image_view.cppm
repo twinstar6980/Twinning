@@ -20,12 +20,12 @@ export namespace Twinning::Kernel::Image {
 
 	template <typename TPixel, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TPixel>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 	class BasicImageView {
 
 	private:
 
-		using CView = BasicImageView<TPixel, k_true>;
+		using ConstantView = BasicImageView<TPixel, k_true>;
 
 	public:
 
@@ -33,13 +33,13 @@ export namespace Twinning::Kernel::Image {
 
 		inline static constexpr auto constant = Boolean{t_constant};
 
-		using QPixel = AsConstantIf<Pixel, constant.value>;
+		using QualifyPixel = AsConstantIf<Pixel, constant.value>;
 
-		using QPixelRow = ListView<Pixel, constant>;
+		using QualifyPixelRow = ListView<Pixel, constant>;
 
 	protected:
 
-		Array<QPixelRow> m_data;
+		Array<QualifyPixelRow> m_data;
 
 	public:
 
@@ -79,14 +79,14 @@ export namespace Twinning::Kernel::Image {
 
 		auto operator [] (
 			Size const & y
-		) const -> QPixelRow const & {
+		) const -> QualifyPixelRow const & {
 			assert_test(y < thiz.size().height);
 			return thiz.m_data[y];
 		}
 
 		auto operator [] (
 			ImagePosition const & position
-		) const -> QPixel & {
+		) const -> QualifyPixel & {
 			assert_test(position.y < thiz.size().height);
 			assert_test(position.x < thiz.size().width);
 			return thiz.m_data[position.y][position.x];
@@ -94,14 +94,14 @@ export namespace Twinning::Kernel::Image {
 
 		// ----------------
 
-		implicit operator CView & () requires
+		implicit operator ConstantView & () requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator CView const & () const requires
+		implicit operator ConstantView const & () const requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -126,7 +126,7 @@ export namespace Twinning::Kernel::Image {
 		#pragma region data & size
 
 		auto data (
-		) const -> CListView<QPixelRow> const & {
+		) const -> ConstantListView<QualifyPixelRow> const & {
 			return thiz.m_data;
 		}
 
@@ -150,7 +150,7 @@ export namespace Twinning::Kernel::Image {
 		}
 
 		auto draw (
-			CView const & image
+			ConstantView const & image
 		) const -> Void requires
 			(!constant.value) {
 			assert_test(thiz.size() == image.size());
@@ -196,11 +196,11 @@ export namespace Twinning::Kernel::Image {
 
 	template <typename Pixel> requires
 		AutoConstraint
-	using VBasicImageView = BasicImageView<Pixel, k_false>;
+	using VariableBasicImageView = BasicImageView<Pixel, k_false>;
 
 	template <typename Pixel> requires
 		AutoConstraint
-	using CBasicImageView = BasicImageView<Pixel, k_true>;
+	using ConstantBasicImageView = BasicImageView<Pixel, k_true>;
 
 	#pragma endregion
 

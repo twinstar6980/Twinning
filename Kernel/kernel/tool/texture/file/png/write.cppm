@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 		// ----------------
 
 		inline static auto process_image (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			auto png_struct = Third::libpng::$png_create_write_struct(Third::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 			Third::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
@@ -37,8 +37,8 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &         data_,
-			Image::CImageView const & image
+			OutputByteStreamView &           data_,
+			Image::ConstantImageView const & image
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image);

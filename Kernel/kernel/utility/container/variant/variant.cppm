@@ -130,7 +130,7 @@ export namespace Twinning::Kernel {
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, Size>)
+			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto is_of_index (
 		) const -> Boolean {
@@ -141,7 +141,7 @@ export namespace Twinning::Kernel {
 
 		template <auto index, typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsSameV<index, Size>)
+			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
 			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
 		constexpr auto set_of_index (
@@ -154,7 +154,7 @@ export namespace Twinning::Kernel {
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, Size>)
+			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto get_of_index (
 		) -> AsSelect<index.value, TValue ...> & {
@@ -163,7 +163,7 @@ export namespace Twinning::Kernel {
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, Size>)
+			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
 		constexpr auto get_of_index (
 		) const -> AsSelect<index.value, TValue ...> const & {

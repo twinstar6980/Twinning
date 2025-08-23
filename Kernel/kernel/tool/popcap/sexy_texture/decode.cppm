@@ -32,8 +32,8 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 		// ----------------
 
 		inline static auto process_image (
-			IByteStreamView &         data,
-			Image::VImageView const & image
+			InputByteStreamView &            data,
+			Image::VariableImageView const & image
 		) -> Void {
 			data.read_constant(k_magic_identifier);
 			data.read_constant(cbox<VersionNumber>(version.number));
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 			auto compress_texture_data = cbox<Boolean>(header.compress_data);
 			auto compress_texture_data_size = cbox<Size>(header.compress_data_size);
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
-			auto texture_data_view = CByteListView{};
+			auto texture_data_view = ConstantByteListView{};
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
 				texture_data_view = data.forward_view(texture_data_size);
@@ -108,14 +108,14 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 				texture_data_view = texture_data_container.as_view();
 			}
 			if (compress_texture_data) {
-				auto texture_data_stream = OByteStreamView{texture_data_container};
-				auto ripe_texture_data_stream = IByteStreamView{data.reserve_view()};
+				auto texture_data_stream = OutputByteStreamView{texture_data_container};
+				auto ripe_texture_data_stream = InputByteStreamView{data.reserve_view()};
 				Data::Compression::Deflate::Uncompress::process(ripe_texture_data_stream, texture_data_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(ripe_texture_data_stream.position() == compress_texture_data_size);
 				assert_test(texture_data_stream.full());
 				data.forward(ripe_texture_data_stream.position());
 			}
-			Texture::Encoding::Decode::process(as_lvalue(IByteStreamView{texture_data_view}), image, format);
+			Texture::Encoding::Decode::process(as_left(InputByteStreamView{texture_data_view}), image, format);
 			if (opacity) {
 				for (auto & row : image.data()) {
 					for (auto & pixel : row) {
@@ -129,10 +129,10 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 		// ----------------
 
 		inline static auto estimate_image (
-			CByteListView const & data,
-			Image::ImageSize &    image_size
+			ConstantByteListView const & data,
+			Image::ImageSize &           image_size
 		) -> Void {
-			auto data_stream = IByteStreamView{data};
+			auto data_stream = InputByteStreamView{data};
 			data_stream.read_constant(k_magic_identifier);
 			data_stream.read_constant(cbox<VersionNumber>(version.number));
 			auto header = Header{};
@@ -144,16 +144,16 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &         data_,
-			Image::VImageView const & image
+			InputByteStreamView &            data_,
+			Image::VariableImageView const & image
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image);
 		}
 
 		inline static auto estimate (
-			CByteListView const & data,
-			Image::ImageSize &    image_size
+			ConstantByteListView const & data,
+			Image::ImageSize &           image_size
 		) -> Void {
 			restruct(image_size);
 			return estimate_image(data, image_size);

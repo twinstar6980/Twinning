@@ -17,13 +17,13 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & raw,
-			OByteStreamView & ripe,
-			Size const &      level,
-			Size const &      window_bits,
-			Size const &      memory_level,
-			Strategy const &  strategy,
-			Wrapper const &   wrapper
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe,
+			Size const &           level,
+			Size const &           window_bits,
+			Size const &           memory_level,
+			Strategy const &       strategy,
+			Wrapper const &        wrapper
 		) -> Void {
 			assert_test(Math::between(level, 0_sz, mbox<Size>(Third::zlib::$Z_BEST_COMPRESSION)));
 			assert_test(Math::between(window_bits, 8_sz, mbox<Size>(Third::zlib::$MAX_WBITS)));
@@ -131,13 +131,13 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & raw_,
-			OByteStreamView & ripe_,
-			Size const &      level,
-			Size const &      window_bits,
-			Size const &      memory_level,
-			Strategy const &  strategy,
-			Wrapper const &   wrapper
+			InputByteStreamView &  raw_,
+			OutputByteStreamView & ripe_,
+			Size const &           level,
+			Size const &           window_bits,
+			Size const &           memory_level,
+			Strategy const &       strategy,
+			Wrapper const &        wrapper
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);

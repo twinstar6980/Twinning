@@ -17,13 +17,13 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & cipher,
-			OByteStreamView & plain,
-			Mode const &      mode,
-			Size const &      block_size,
-			Size const &      key_size,
-			String const &    key,
-			String const &    iv
+			InputByteStreamView &  cipher,
+			OutputByteStreamView & plain,
+			Mode const &           mode,
+			Size const &           block_size,
+			Size const &           key_size,
+			String const &         key,
+			String const &         iv
 		) -> Void {
 			assert_test(is_padded_size(cipher.reserve(), block_size));
 			assert_test(is_valid_block_size(block_size));
@@ -45,13 +45,13 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & cipher_,
-			OByteStreamView & plain_,
-			Mode const &      mode,
-			Size const &      block_size,
-			Size const &      key_size,
-			String const &    key,
-			String const &    iv
+			InputByteStreamView &  cipher_,
+			OutputByteStreamView & plain_,
+			Mode const &           mode,
+			Size const &           block_size,
+			Size const &           key_size,
+			String const &         key,
+			String const &         iv
 		) -> Void {
 			M_use_zps_of(cipher);
 			M_use_zps_of(plain);

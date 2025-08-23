@@ -38,9 +38,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto make_original_group_id_upper (
-			CStringView const & standard_id,
-			Boolean &           is_composite,
-			String &            original_id
+			ConstantStringView const & standard_id,
+			Boolean &                  is_composite,
+			String &                   original_id
 		) -> Void {
 			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell_upper);
 			if (is_composite) {
@@ -53,9 +53,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		}
 
 		inline static auto make_original_group_id (
-			CStringView const & standard_id,
-			Boolean &           is_composite,
-			String &            original_id
+			ConstantStringView const & standard_id,
+			Boolean &                  is_composite,
+			String &                   original_id
 		) -> Void {
 			is_composite = !Range::end_with(standard_id, k_suffix_of_composite_shell);
 			if (is_composite) {
@@ -70,17 +70,17 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process_package_manifest (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			Structure::Header<version> const & header_structure,
 			typename Manifest::Package &       manifest
 		) -> Void {
-			auto group_manifest_information_data = IByteStreamView{data.sub_view(cbox<Size>(header_structure.group_manifest_information_section_offset), cbox<Size>(header_structure.resource_manifest_information_section_offset - header_structure.group_manifest_information_section_offset))};
-			auto resource_manifest_information_data = IByteStreamView{data.sub_view(cbox<Size>(header_structure.resource_manifest_information_section_offset), cbox<Size>(header_structure.string_manifest_information_section_offset - header_structure.resource_manifest_information_section_offset))};
-			auto string_manifest_information_data = ICharacterStreamView{from_byte_view<Character, BasicCharacterListView>(data.sub_view(cbox<Size>(header_structure.string_manifest_information_section_offset), cbox<Size>(header_structure.information_section_size - header_structure.string_manifest_information_section_offset)))};
+			auto group_manifest_information_data = InputByteStreamView{data.sub_view(cbox<Size>(header_structure.group_manifest_information_section_offset), cbox<Size>(header_structure.resource_manifest_information_section_offset - header_structure.group_manifest_information_section_offset))};
+			auto resource_manifest_information_data = InputByteStreamView{data.sub_view(cbox<Size>(header_structure.resource_manifest_information_section_offset), cbox<Size>(header_structure.string_manifest_information_section_offset - header_structure.resource_manifest_information_section_offset))};
+			auto string_manifest_information_data = InputCharacterStreamView{from_byte_view<Character, BasicCharacterListView>(data.sub_view(cbox<Size>(header_structure.string_manifest_information_section_offset), cbox<Size>(header_structure.information_section_size - header_structure.string_manifest_information_section_offset)))};
 			auto get_string = [&] (
 				IntegerU32 const & offset
-			) -> CStringView {
-				auto result = CStringView{};
+			) -> ConstantStringView {
+				auto result = ConstantStringView{};
 				string_manifest_information_data.set_position(cbox<Size>(offset));
 				StringParser::read_string_until(string_manifest_information_data, result, CharacterType::k_null);
 				return result;
@@ -148,7 +148,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		}
 
 		inline static auto process_package (
-			IByteStreamView &                      data,
+			InputByteStreamView &                  data,
 			typename Definition::Package &         definition,
 			Optional<typename Manifest::Package> & manifest,
 			Optional<Path> const &                 resource_directory,
@@ -170,9 +170,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 				assert_test(cbox<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<version>>());
 				assert_test(cbox<Size>(information_structure.header.pool_information_section_block_size) == bs_static_size<Structure::PoolInformation<version>>());
 				assert_test(cbox<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<Structure::TextureResourceInformation<version>>());
-				CompiledMapData::decode(information_structure.group_id, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.group_id_section_offset), cbox<Size>(information_structure.header.group_id_section_size))}));
-				CompiledMapData::decode(information_structure.subgroup_id, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.subgroup_id_section_offset), cbox<Size>(information_structure.header.subgroup_id_section_size))}));
-				CompiledMapData::decode(information_structure.resource_path, as_lvalue(IByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_path_section_offset), cbox<Size>(information_structure.header.resource_path_section_size))}));
+				CompiledMapData::decode(information_structure.group_id, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.group_id_section_offset), cbox<Size>(information_structure.header.group_id_section_size))}));
+				CompiledMapData::decode(information_structure.subgroup_id, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.subgroup_id_section_offset), cbox<Size>(information_structure.header.subgroup_id_section_size))}));
+				CompiledMapData::decode(information_structure.resource_path, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_path_section_offset), cbox<Size>(information_structure.header.resource_path_section_size))}));
 				data.set_position(cbox<Size>(information_structure.header.group_information_section_offset));
 				data.read(information_structure.group_information, cbox<Size>(information_structure.header.group_information_section_block_count));
 				data.set_position(cbox<Size>(information_structure.header.subgroup_information_section_offset));
@@ -244,7 +244,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						return Path{format_string(path_format.to_string(), group_definition.id, subgroup_definition.id)};
 					};
 					auto packet_data = data.sub_view(cbox<Size>(subgroup_information_structure.offset), cbox<Size>(subgroup_information_structure.size));
-					auto packet_stream = IByteStreamView{packet_data};
+					auto packet_stream = InputByteStreamView{packet_data};
 					auto packet_package_definition = typename ResourceStreamGroup::Definition<packet_version>::Package{};
 					ResourceStreamGroup::Unpack<packet_version>::process(packet_stream, packet_package_definition, !resource_directory.has() ? (k_null_optional) : (make_optional_of(make_formatted_path(resource_directory.get()))));
 					assert_test(packet_stream.full());
@@ -305,7 +305,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &                      data_,
+			InputByteStreamView &                  data_,
 			typename Definition::Package &         definition,
 			Optional<typename Manifest::Package> & manifest,
 			Optional<Path> const &                 resource_directory,

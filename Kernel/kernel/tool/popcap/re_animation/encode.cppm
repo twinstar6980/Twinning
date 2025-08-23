@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 		// ----------------
 
 		inline static auto exchange_transform_list (
-			OByteStreamView &                            data,
+			OutputByteStreamView &                       data,
 			List<typename Definition::Transform> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 		}
 
 		inline static auto exchange_track_list (
-			OByteStreamView &                        data,
+			OutputByteStreamView &                   data,
 			List<typename Definition::Track> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 		}
 
 		inline static auto exchange_animation (
-			OByteStreamView &                      data,
+			OutputByteStreamView &                 data,
 			typename Definition::Animation const & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -112,7 +112,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 		// ----------------
 
 		inline static auto process_whole (
-			OByteStreamView &                      data,
+			OutputByteStreamView &                 data,
 			typename Definition::Animation const & definition
 		) -> Void {
 			data.write_constant(k_magic_identifier);
@@ -123,7 +123,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                      data_,
+			OutputByteStreamView &                 data_,
 			typename Definition::Animation const & definition
 		) -> Void {
 			M_use_zps_of(data);

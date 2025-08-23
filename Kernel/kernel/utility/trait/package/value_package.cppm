@@ -20,13 +20,13 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, ZSize>)
+			&& (IsSameOf<index, ZSize>)
 			&& (index < size)
 		using Element = AsSelect<index, decltype(t_element) ...>;
 
 		template <auto index> requires
 			CategoryConstraint<>
-			&& (IsSameV<index, ZSize>)
+			&& (IsSameOf<index, ZSize>)
 			&& (index < size)
 		inline static constexpr auto element = t_element...[index];
 
@@ -63,7 +63,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename Package, auto begin, auto size> requires
 		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package> && IsSameV<begin, ZSize> && IsSameV<size, ZSize>)
+		&& (IsValuePackage<Package> && IsSameOf<begin, ZSize> && IsSameOf<size, ZSize>)
 		&& (begin + size <= Package::size)
 	using AsValuePackageSub = decltype(
 		[] <ZSize ... index> (
@@ -75,13 +75,13 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename Package, auto size> requires
 		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package> && IsSameV<size, ZSize>)
+		&& (IsValuePackage<Package> && IsSameOf<size, ZSize>)
 		&& (size <= Package::size)
 	using AsValuePackageRemoveHead = AsValuePackageSub<Package, size, Package::size - size>;
 
 	template <typename Package, auto size> requires
 		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package> && IsSameV<size, ZSize>)
+		&& (IsValuePackage<Package> && IsSameOf<size, ZSize>)
 		&& (size <= Package::size)
 	using AsValuePackageRemoveTail = AsValuePackageSub<Package, 1_ixz, Package::size - size>;
 
@@ -113,7 +113,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <auto size> requires
 		CategoryConstraint<>
-		&& (IsSameV<size, ZSize>)
+		&& (IsSameOf<size, ZSize>)
 	using AsValuePackageOfIndex = decltype(
 		[] <auto ... index> (
 		std::index_sequence<index ...>

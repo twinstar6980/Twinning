@@ -38,8 +38,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto make_standard_group_id (
-			CStringView const & group_id,
-			Boolean const &     is_composite
+			ConstantStringView const & group_id,
+			Boolean const &            is_composite
 		) -> String {
 			auto standard_id = String{group_id};
 			if (!is_composite) {
@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process_package_manifest (
-			OByteStreamView &                  data,
+			OutputByteStreamView &             data,
 			Structure::Header<version> &       header_structure,
 			typename Manifest::Package const & manifest
 		) -> Void {
@@ -79,7 +79,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			};
 			set_string(""_s);
 			group_manifest_information_structure_list.allocate_full(manifest.group.size());
-			constexpr auto image_property_key_list = make_static_array<CStringView>("type"_sv, "flag"_sv, "x"_sv, "y"_sv, "ax"_sv, "ay"_sv, "aw"_sv, "ah"_sv, "rows"_sv, "cols"_sv, "parent"_sv);
+			constexpr auto image_property_key_list = make_static_array<ConstantStringView>("type"_sv, "flag"_sv, "x"_sv, "y"_sv, "ax"_sv, "ay"_sv, "aw"_sv, "ah"_sv, "rows"_sv, "cols"_sv, "parent"_sv);
 			for (auto & group_index : SizeRange{manifest.group.size()}) {
 				auto & group_manifest = manifest.group[group_index];
 				auto & group_manifest_information_structure = group_manifest_information_structure_list[group_index];
@@ -164,14 +164,14 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			data.write(resource_detail_manifest_information_structure_list);
 			header_structure.string_manifest_information_section_offset = cbox<IntegerU32>(data.position());
 			for (auto & element : string_list) {
-				StringParser::write_string_until(self_cast<OCharacterStreamView>(data), element, CharacterType::k_null);
+				StringParser::write_string_until(self_cast<OutputCharacterStreamView>(data), element, CharacterType::k_null);
 				data.write_constant(CharacterType::k_null);
 			}
 			return;
 		}
 
 		inline static auto process_package (
-			OByteStreamView &                            data,
+			OutputByteStreamView &                       data,
 			typename Definition::Package const &         definition,
 			Optional<typename Manifest::Package> const & manifest,
 			Path const &                                 resource_directory,
@@ -182,21 +182,21 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			data.write_constant(Structure::k_magic_identifier);
 			data.write_constant(cbox<Structure::VersionNumber>(version.number));
 			struct {
-				OByteStreamView header{};
-				Size            group_id_offset{};
-				OByteStreamView group_id{};
-				Size            subgroup_id_offset{};
-				OByteStreamView subgroup_id{};
-				Size            resource_path_offset{};
-				OByteStreamView resource_path{};
-				Size            group_information_offset{};
-				OByteStreamView group_information{};
-				Size            subgroup_information_offset{};
-				OByteStreamView subgroup_information{};
-				Size            pool_information_offset{};
-				OByteStreamView pool_information{};
-				Size            texture_resource_information_offset{};
-				OByteStreamView texture_resource_information{};
+				OutputByteStreamView header{};
+				Size                 group_id_offset{};
+				OutputByteStreamView group_id{};
+				Size                 subgroup_id_offset{};
+				OutputByteStreamView subgroup_id{};
+				Size                 resource_path_offset{};
+				OutputByteStreamView resource_path{};
+				Size                 group_information_offset{};
+				OutputByteStreamView group_information{};
+				Size                 subgroup_information_offset{};
+				OutputByteStreamView subgroup_information{};
+				Size                 pool_information_offset{};
+				OutputByteStreamView pool_information{};
+				Size                 texture_resource_information_offset{};
+				OutputByteStreamView texture_resource_information{};
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
@@ -273,35 +273,35 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 				CompiledMapData::adjust_sequence(information_structure.group_id);
 				CompiledMapData::adjust_sequence(information_structure.subgroup_id);
 				CompiledMapData::adjust_sequence(information_structure.resource_path);
-				information_data.header = OByteStreamView{
+				information_data.header = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.header))
 				};
 				information_data.resource_path_offset = data.position();
-				information_data.resource_path = OByteStreamView{
+				information_data.resource_path = OutputByteStreamView{
 					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_path))
 				};
 				information_data.subgroup_id_offset = data.position();
-				information_data.subgroup_id = OByteStreamView{
+				information_data.subgroup_id = OutputByteStreamView{
 					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.subgroup_id))
 				};
 				information_data.group_information_offset = data.position();
-				information_data.group_information = OByteStreamView{
+				information_data.group_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.group_information))
 				};
 				information_data.group_id_offset = data.position();
-				information_data.group_id = OByteStreamView{
+				information_data.group_id = OutputByteStreamView{
 					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.group_id))
 				};
 				information_data.subgroup_information_offset = data.position();
-				information_data.subgroup_information = OByteStreamView{
+				information_data.subgroup_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.subgroup_information))
 				};
 				information_data.pool_information_offset = data.position();
-				information_data.pool_information = OByteStreamView{
+				information_data.pool_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.pool_information))
 				};
 				information_data.texture_resource_information_offset = data.position();
-				information_data.texture_resource_information = OByteStreamView{
+				information_data.texture_resource_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.texture_resource_information))
 				};
 			}
@@ -468,13 +468,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						}
 						++global_resource_index;
 					}
-					auto packet_data = OByteStreamView{data.reserve_view()};
+					auto packet_data = OutputByteStreamView{data.reserve_view()};
 					auto use_legacy_packet = k_false;
 					auto packet_header_structure = ResourceStreamGroup::Structure::Header<packet_version>{};
 					if (packet_file.has()) {
 						if (Storage::exist_file(make_formatted_path(packet_file.get()))) {
 							auto legacy_packet_size = Storage::read_stream_file(make_formatted_path(packet_file.get()), packet_data);
-							auto legacy_packet_stream = IByteStreamView{packet_data.previous_view(legacy_packet_size)};
+							auto legacy_packet_stream = InputByteStreamView{packet_data.previous_view(legacy_packet_size)};
 							legacy_packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
 							legacy_packet_stream.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 							legacy_packet_stream.read(packet_header_structure);
@@ -486,7 +486,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						if (new_packet_file.has()) {
 							Storage::write_file(make_formatted_path(new_packet_file.get()), packet_data.stream_view());
 						}
-						auto legacy_packet_stream = IByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
+						auto legacy_packet_stream = InputByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
 						legacy_packet_stream.read(packet_header_structure);
 					}
 					subgroup_information_structure.offset = cbox<IntegerU32>(data.position());
@@ -537,7 +537,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                            data_,
+			OutputByteStreamView &                       data_,
 			typename Definition::Package const &         definition,
 			Optional<typename Manifest::Package> const & manifest,
 			Path const &                                 resource_directory,

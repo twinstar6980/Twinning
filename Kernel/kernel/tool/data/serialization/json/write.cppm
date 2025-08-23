@@ -16,13 +16,13 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 		// ----------------
 
 		inline static auto process_value (
-			OCharacterStreamView & data,
-			Value const &          value,
-			Boolean const &        disable_array_trailing_comma,
-			Boolean const &        disable_array_line_breaking,
-			Boolean const &        disable_object_trailing_comma,
-			Boolean const &        disable_object_line_breaking,
-			Size const &           indent_level
+			OutputCharacterStreamView & data,
+			Value const &               value,
+			Boolean const &             disable_array_trailing_comma,
+			Boolean const &             disable_array_line_breaking,
+			Boolean const &             disable_object_trailing_comma,
+			Boolean const &             disable_object_line_breaking,
+			Size const &                indent_level
 		) -> Void {
 			auto write_space = [&] (
 				Boolean const & disable_line_breaking,
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 				}
 				case ValueType::Constant::string().value: {
 					data.write('"'_c);
-					StringParser::write_escape_utf8_string_until(data, as_lvalue(ICharacterStreamView{value.get_string()}), '"'_c);
+					StringParser::write_escape_utf8_string_until(data, as_left(InputCharacterStreamView{value.get_string()}), '"'_c);
 					data.write('"'_c);
 					break;
 				}
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 					for (auto & member : object) {
 						write_space(disable_object_line_breaking, k_true);
 						data.write('"'_c);
-						StringParser::write_escape_utf8_string_until(data, as_lvalue(ICharacterStreamView{member.key}), '"'_c);
+						StringParser::write_escape_utf8_string_until(data, as_left(InputCharacterStreamView{member.key}), '"'_c);
 						data.write('"'_c);
 						data.write(':'_c);
 						if (!disable_object_line_breaking) {
@@ -96,12 +96,12 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 		}
 
 		inline static auto process_whole (
-			OCharacterStreamView & data,
-			Value const &          value,
-			Boolean const &        disable_array_trailing_comma,
-			Boolean const &        disable_array_line_breaking,
-			Boolean const &        disable_object_trailing_comma,
-			Boolean const &        disable_object_line_breaking
+			OutputCharacterStreamView & data,
+			Value const &               value,
+			Boolean const &             disable_array_trailing_comma,
+			Boolean const &             disable_array_line_breaking,
+			Boolean const &             disable_object_trailing_comma,
+			Boolean const &             disable_object_line_breaking
 		) -> Void {
 			process_value(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, k_begin_index);
 			return;
@@ -110,12 +110,12 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 		// ----------------
 
 		inline static auto process (
-			OCharacterStreamView & data_,
-			Value const &          value,
-			Boolean const &        disable_array_trailing_comma,
-			Boolean const &        disable_array_line_breaking,
-			Boolean const &        disable_object_trailing_comma,
-			Boolean const &        disable_object_line_breaking
+			OutputCharacterStreamView & data_,
+			Value const &               value,
+			Boolean const &             disable_array_trailing_comma,
+			Boolean const &             disable_array_line_breaking,
+			Boolean const &             disable_object_trailing_comma,
+			Boolean const &             disable_object_line_breaking
 		) -> Void {
 			M_use_zps_of(data);
 			return process_whole(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);

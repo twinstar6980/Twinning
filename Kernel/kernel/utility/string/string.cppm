@@ -19,9 +19,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	using StringView = BasicStringView<Character, constant>;
 
-	using VStringView = VBasicStringView<Character>;
+	using VariableStringView = VariableBasicStringView<Character>;
 
-	using CStringView = CBasicStringView<Character>;
+	using ConstantStringView = ConstantBasicStringView<Character>;
 
 	using String = BasicString<Character>;
 
@@ -29,7 +29,7 @@ export namespace Twinning::Kernel {
 
 	template <auto t_size> requires
 		CategoryConstraint<>
-		&& (IsSameV<t_size, ZSize>)
+		&& (IsSameOf<t_size, ZSize>)
 	struct StaticString :
 		BasicStaticString<Character, mbox<Size>(t_size)> {
 		implicit constexpr StaticString (
@@ -46,8 +46,8 @@ export namespace Twinning::Kernel {
 	inline auto make_string_view (
 		ZConstantString const & string,
 		ZSize const &           length
-	) -> CStringView {
-		return CStringView{cast_pointer<Character>(make_pointer(string)), mbox<Size>(length)};
+	) -> ConstantStringView {
+		return ConstantStringView{cast_pointer<Character>(make_pointer(string)), mbox<Size>(length)};
 	}
 
 	inline auto make_string (
@@ -61,7 +61,7 @@ export namespace Twinning::Kernel {
 
 	inline auto make_string_view (
 		std::string_view const & string
-	) -> CStringView {
+	) -> ConstantStringView {
 		return make_string_view(string.data(), string.length());
 	}
 
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	inline auto make_std_string_view (
-		CStringView const & string
+		ConstantStringView const & string
 	) -> std::string_view {
 		return std::string_view{cast_pointer<char>(string.begin()).value, string.size().value};
 	}
@@ -96,7 +96,7 @@ export namespace Twinning::Kernel {
 
 	// NOTE: ALIAS: make_std_string
 	inline auto mss (
-		CStringView const & string
+		ConstantStringView const & string
 	) -> std::string {
 		return std::string{cast_pointer<char>(string.begin()).value, string.size().value};
 	}
@@ -108,7 +108,7 @@ export namespace Twinning::Kernel {
 	template <StaticString string> requires
 		NoneConstraint
 	inline constexpr auto operator ""_sv (
-	) -> CStringView {
+	) -> ConstantStringView {
 		return string.view();
 	}
 

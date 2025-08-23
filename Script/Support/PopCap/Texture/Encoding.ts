@@ -154,8 +154,8 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 	// ------------------------------------------------
 
 	export function encode(
-		image: Kernel.Image.CImageView,
-		data: Kernel.OByteStreamView,
+		image: Kernel.Image.ConstantImageView,
+		data: Kernel.OutputByteStreamView,
 		format: Format,
 		option: EncodeOption,
 	): void {
@@ -199,8 +199,8 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 	}
 
 	export function decode(
-		data: Kernel.IByteStreamView,
-		image: Kernel.Image.VImageView,
+		data: Kernel.InputByteStreamView,
+		image: Kernel.Image.VariableImageView,
 		format: Format,
 	): void {
 		if (is_opacity_format(format)) {

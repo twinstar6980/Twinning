@@ -28,7 +28,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 
 	export function unpack_fsh(
 		definition: AtlasDefinition,
-		atlas: Kernel.Image.CImageView,
+		atlas: Kernel.Image.ConstantImageView,
 		sprite_directory: string,
 	): void {
 		for (let sprite_definition of definition.sprite) {

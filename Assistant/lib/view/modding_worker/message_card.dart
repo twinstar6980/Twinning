@@ -58,21 +58,23 @@ class MessageCard extends StatelessWidget {
             ),
             SizedBox(width: 8),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   this.title,
                   overflow: TextOverflow.clip,
                   style: titleStyle,
+                ).withSelectionArea(
                 ),
-                ...this.description.map((item) => Container(
-                  padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                  child: Text(
+                ...this.description.expand((item) => [
+                  SizedBox(height: 4),
+                  Text(
                     item,
                     overflow: TextOverflow.clip,
                     style: descriptionStyle,
+                  ).withSelectionArea(
                   ),
-                )),
+                ]),
               ],
             ).withExpanded(),
           ],

@@ -123,13 +123,13 @@ export namespace Twinning::Kernel::JavaScript {
 		inline static auto new_instance (
 			Value & value
 		) -> NativeValueHandler {
-			return NativeValueHandler{make_pointer(&value), k_true};
+			return NativeValueHandler{make_pointer_of(value), k_true};
 		}
 
 		inline static auto new_reference (
 			Value & value
 		) -> NativeValueHandler {
-			return NativeValueHandler{make_pointer(&value), k_false};
+			return NativeValueHandler{make_pointer_of(value), k_false};
 		}
 
 		template <typename ... Argument> requires
@@ -183,7 +183,7 @@ export namespace Twinning::Kernel::JavaScript {
 					using Class = AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>;
 					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<function>::Argument, 1_szz>;
 					return call_native_function_wrapper_inner<function>(
-						as_lvalue(object.to_of<Class>()),
+						as_left(object.to_of<Class>()),
 						as_forward<typename Argument::template Element<index>>(argument[mbox<Size>(index)].template to_of<AsPure<typename Argument::template Element<index>>>()) ...
 					);
 				}
@@ -193,7 +193,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function, auto forward_object> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameV<forward_object, Boolean>)
+			&& (IsSameOf<forward_object, Boolean>)
 		inline auto proxy_native_function_wrapper (
 			Context &     context,
 			Value &       object,
@@ -213,7 +213,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function, auto forward_object> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameV<forward_object, Boolean>)
+			&& (IsSameOf<forward_object, Boolean>)
 		inline constexpr auto make_proxy_native_function_wrapper (
 		) -> auto {
 			return &proxy_native_function_wrapper<function, forward_object>;
@@ -224,7 +224,7 @@ export namespace Twinning::Kernel::JavaScript {
 	template <auto function, auto forward_object> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsSameV<forward_object, Boolean>)
+		&& (IsSameOf<forward_object, Boolean>)
 	inline constexpr auto & proxy_native_function_wrapper = *Detail::make_proxy_native_function_wrapper<function, forward_object>();
 
 	// ----------------
@@ -261,7 +261,7 @@ export namespace Twinning::Kernel::JavaScript {
 	template <auto function> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsVoid<typename CallableTraitOf<function>::Result> || IsInstance<typename CallableTraitOf<function>::Result> || IsVReference<typename CallableTraitOf<function>::Result>)
+		&& (IsVoid<typename CallableTraitOf<function>::Result> || IsInstance<typename CallableTraitOf<function>::Result> || IsVariableReference<typename CallableTraitOf<function>::Result>)
 	inline constexpr auto & proxy_native_function_by_handler = *Detail::make_proxy_native_function_by_handler<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
 
 	// ----------------
@@ -304,7 +304,7 @@ export namespace Twinning::Kernel::JavaScript {
 	template <auto t_function, auto t_type> requires
 		CategoryConstraint<>
 		&& (IsGlobalFunction<decltype(t_function)>)
-		&& (IsSameV<t_type, NativeFunctionWrapperType>)
+		&& (IsSameOf<t_type, NativeFunctionWrapperType>)
 		&& ((t_type == NativeFunctionWrapperType::Constant::function()) ||
 			(t_type == NativeFunctionWrapperType::Constant::method() && CallableTraitOf<t_function>::Argument::size > 0_szz) ||
 			(t_type == NativeFunctionWrapperType::Constant::constructor() && IsValid<typename CallableTraitOf<t_function>::Result>))

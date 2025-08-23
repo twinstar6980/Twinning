@@ -15,18 +15,18 @@ export {
 	#pragma region hash
 
 	template <>
-	struct std::hash<Twinning::Kernel::CStringView> {
+	struct std::hash<Twinning::Kernel::ConstantStringView> {
 		auto operator () (
-			Twinning::Kernel::CStringView const & it
+			Twinning::Kernel::ConstantStringView const & it
 		) const noexcept -> std::size_t {
 			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
 		}
 	};
 
 	template <>
-	struct std::hash<Twinning::Kernel::VStringView> {
+	struct std::hash<Twinning::Kernel::VariableStringView> {
 		auto operator () (
-			Twinning::Kernel::VStringView const & it
+			Twinning::Kernel::VariableStringView const & it
 		) const noexcept -> std::size_t {
 			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
 		}
@@ -46,26 +46,26 @@ export {
 	#pragma region formatter
 
 	template <>
-	struct std::formatter<Twinning::Kernel::CStringView> :
+	struct std::formatter<Twinning::Kernel::ConstantStringView> :
 		std::formatter<std::string_view> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
 		auto format (
-			Twinning::Kernel::CStringView const & value,
-			Context &                             context
+			Twinning::Kernel::ConstantStringView const & value,
+			Context &                                    context
 		) const -> typename Context::iterator {
 			return std::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}
 	};
 
 	template <>
-	struct std::formatter<Twinning::Kernel::VStringView> :
+	struct std::formatter<Twinning::Kernel::VariableStringView> :
 		std::formatter<std::string_view> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
 		auto format (
-			Twinning::Kernel::VStringView const & value,
-			Context &                             context
+			Twinning::Kernel::VariableStringView const & value,
+			Context &                                    context
 		) const -> typename Context::iterator {
 			return std::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}

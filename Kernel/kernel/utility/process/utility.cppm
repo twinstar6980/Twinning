@@ -151,7 +151,7 @@ export namespace Twinning::Kernel::Process {
 		auto value = Optional<String>{};
 		#if defined M_system_windows
 		auto state_d = Third::system::windows::$DWORD{};
-		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(name)));
+		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(name)));
 		state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, nullptr, 0);
 		if (state_d == 0) {
 			assert_test(Third::system::windows::$GetLastError() == Third::system::windows::$ERROR_ENVVAR_NOT_FOUND);
@@ -161,7 +161,7 @@ export namespace Twinning::Kernel::Process {
 			auto buffer = Array<CharacterW>{mbox<Size>(state_d)};
 			state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(buffer.begin()).value, static_cast<Third::system::windows::$DWORD>(buffer.size().value));
 			assert_test(state_d == static_cast<Third::system::windows::$DWORD>((buffer.size() - 1_sz).value));
-			value.set(self_cast<String>(SystemNativeString::wide_to_utf8(CBasicStringView<CharacterW>{buffer.begin(), buffer.size() - 1_sz})));
+			value.set(self_cast<String>(SystemNativeString::wide_to_utf8(ConstantBasicStringView<CharacterW>{buffer.begin(), buffer.size() - 1_sz})));
 		}
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
@@ -182,12 +182,12 @@ export namespace Twinning::Kernel::Process {
 	) -> Void {
 		#if defined M_system_windows
 		auto state_b = Third::system::windows::$BOOL{};
-		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(name)));
+		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(name)));
 		if (!value.has()) {
 			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, nullptr);
 		}
 		else {
-			auto value_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(value.get())));
+			auto value_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(value.get())));
 			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(value_w.begin()).value);
 		}
 		assert_test(state_b != Third::system::windows::$FALSE);
@@ -216,7 +216,7 @@ export namespace Twinning::Kernel::Process {
 		}
 		for (auto element_pointer_raw = Third::system::windows::$_wenviron(); *element_pointer_raw != nullptr; ++element_pointer_raw) {
 			auto element_pointer = cast_pointer<CharacterW>(make_pointer(*element_pointer_raw));
-			auto element = self_cast<String>(SystemNativeString::wide_to_utf8(CBasicStringView<CharacterW>{element_pointer, null_terminated_string_size_of(element_pointer)}));
+			auto element = self_cast<String>(SystemNativeString::wide_to_utf8(ConstantBasicStringView<CharacterW>{element_pointer, null_terminated_string_size_of(element_pointer)}));
 			result.append(as_moveable(element));
 		}
 		#endif
@@ -267,9 +267,9 @@ export namespace Twinning::Kernel::Process {
 		auto startup_information = Third::system::windows::$STARTUPINFOW{};
 		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
 		auto exit_code_d = Third::system::windows::$DWORD{};
-		program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(program.to_string(CharacterType::k_path_separator_windows))));
-		argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(Detail::encode_windows_command_line_string(program, argument))));
-		environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<CBasicStringView<CharacterN>>(Detail::encode_windows_environment_variable_string(environment))));
+		program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(program.to_string(CharacterType::k_path_separator_windows))));
+		argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_command_line_string(program, argument))));
+		environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_environment_variable_string(environment))));
 		input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).to_string())));
 		output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).to_string())));
 		error_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).to_string())));

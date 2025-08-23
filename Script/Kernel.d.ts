@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 86
+ * @version 88
  */
 declare namespace Twinning.Kernel {
 
@@ -499,10 +499,10 @@ declare namespace Twinning.Kernel {
 	}
 
 	/** 变量字节序列视图 */
-	type VByteListView = ByteListView;
+	type VariableByteListView = ByteListView;
 
 	/** 常量字节序列视图 */
-	type CByteListView = ByteListView;
+	type ConstantByteListView = ByteListView;
 
 	// ------------------------------------------------
 
@@ -578,10 +578,10 @@ declare namespace Twinning.Kernel {
 	}
 
 	/** 字节输入流视图 */
-	type IByteStreamView = ByteStreamView;
+	type InputByteStreamView = ByteStreamView;
 
 	/** 字节输出流视图 */
-	type OByteStreamView = ByteStreamView;
+	type OutputByteStreamView = ByteStreamView;
 
 	// ------------------------------------------------
 
@@ -625,10 +625,10 @@ declare namespace Twinning.Kernel {
 	}
 
 	/** 变量字符序列视图 */
-	type VCharacterListView = CharacterListView;
+	type VariableCharacterListView = CharacterListView;
 
 	/** 常量字符序列视图 */
-	type CCharacterListView = CharacterListView;
+	type ConstantCharacterListView = CharacterListView;
 
 	// ------------------------------------------------
 
@@ -704,10 +704,10 @@ declare namespace Twinning.Kernel {
 	}
 
 	/** 字符输入流视图 */
-	type ICharacterStreamView = CharacterStreamView;
+	type InputCharacterStreamView = CharacterStreamView;
 
 	/** 字符输出流视图 */
-	type OCharacterStreamView = CharacterStreamView;
+	type OutputCharacterStreamView = CharacterStreamView;
 
 	// ------------------------------------------------
 
@@ -1098,10 +1098,10 @@ declare namespace Twinning.Kernel {
 		}
 
 		/** 变量图像视图 */
-		type VImageView = ImageView;
+		type VariableImageView = ImageView;
 
 		/** 常量图像视图 */
-		type CImageView = ImageView;
+		type ConstantImageView = ImageView;
 
 		// ------------------------------------------------
 
@@ -1257,7 +1257,7 @@ declare namespace Twinning.Kernel {
 		 */
 		function write_file(
 			target: Path,
-			data: CByteListView,
+			data: ConstantByteListView,
 		): Void;
 
 		/**
@@ -1268,7 +1268,7 @@ declare namespace Twinning.Kernel {
 		 */
 		function read_stream_file(
 			target: Path,
-			data: OByteStreamView,
+			data: OutputByteStreamView,
 		): Void;
 
 		/**
@@ -1279,7 +1279,7 @@ declare namespace Twinning.Kernel {
 		 */
 		function write_stream_file(
 			target: Path,
-			data: IByteStreamView,
+			data: InputByteStreamView,
 		): Void;
 
 		// ------------------------------------------------
@@ -1526,7 +1526,7 @@ declare namespace Twinning.Kernel {
 						 * @param bit_count 位数
 						 */
 						function process(
-							data: CByteListView,
+							data: ConstantByteListView,
 							value: ByteArray,
 							mode: Mode,
 							bit_count: BitCount,
@@ -1548,7 +1548,7 @@ declare namespace Twinning.Kernel {
 						 * @param value 散列值
 						 */
 						function process(
-							data: CByteListView,
+							data: ConstantByteListView,
 							value: ByteArray,
 						): Void;
 
@@ -1573,8 +1573,8 @@ declare namespace Twinning.Kernel {
 						 * @param ripe 成品数据
 						 */
 						function process(
-							raw: IByteStreamView,
-							ripe: OCharacterStreamView,
+							raw: InputByteStreamView,
+							ripe: OutputCharacterStreamView,
 						): Void;
 
 						/**
@@ -1598,8 +1598,8 @@ declare namespace Twinning.Kernel {
 						 * @param raw 原始数据
 						 */
 						function process(
-							ripe: ICharacterStreamView,
-							raw: OByteStreamView,
+							ripe: InputCharacterStreamView,
+							raw: OutputByteStreamView,
 						): Void;
 
 						/**
@@ -1608,7 +1608,7 @@ declare namespace Twinning.Kernel {
 						 * @param raw_size 原始数据尺寸
 						 */
 						function estimate(
-							ripe: CCharacterListView,
+							ripe: ConstantCharacterListView,
 							raw_size: Size,
 						): Void;
 
@@ -1634,9 +1634,9 @@ declare namespace Twinning.Kernel {
 						 * @param key 密钥
 						 */
 						function process(
-							plain: IByteStreamView,
-							cipher: OByteStreamView,
-							key: CByteListView,
+							plain: InputByteStreamView,
+							cipher: OutputByteStreamView,
+							key: ConstantByteListView,
 						): Void;
 
 					}
@@ -1687,8 +1687,8 @@ declare namespace Twinning.Kernel {
 						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
-							plain: IByteStreamView,
-							cipher: OByteStreamView,
+							plain: InputByteStreamView,
+							cipher: OutputByteStreamView,
 							mode: Mode,
 							block_size: Size,
 							key_size: Size,
@@ -1712,8 +1712,8 @@ declare namespace Twinning.Kernel {
 						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
-							cipher: IByteStreamView,
-							plain: OByteStreamView,
+							cipher: InputByteStreamView,
+							plain: OutputByteStreamView,
 							mode: Mode,
 							block_size: Size,
 							key_size: Size,
@@ -1801,8 +1801,8 @@ declare namespace Twinning.Kernel {
 						 * @param wrapper 封装
 						 */
 						function process(
-							raw: IByteStreamView,
-							ripe: OByteStreamView,
+							raw: InputByteStreamView,
+							ripe: OutputByteStreamView,
 							level: Size,
 							window_bits: Size,
 							memory_level: Size,
@@ -1839,8 +1839,8 @@ declare namespace Twinning.Kernel {
 						 * @param wrapper 封装
 						 */
 						function process(
-							ripe: IByteStreamView,
-							raw: OByteStreamView,
+							ripe: InputByteStreamView,
+							raw: OutputByteStreamView,
 							window_bits: Size,
 							wrapper: Wrapper,
 						): Void;
@@ -1863,8 +1863,8 @@ declare namespace Twinning.Kernel {
 						 * @param work_factor 工作因子(0~250，0==30)
 						 */
 						function process(
-							raw: IByteStreamView,
-							ripe: OByteStreamView,
+							raw: InputByteStreamView,
+							ripe: OutputByteStreamView,
 							block_size: Size,
 							work_factor: Size,
 						): Void;
@@ -1881,8 +1881,8 @@ declare namespace Twinning.Kernel {
 						 * @param small 是否使用少量内存
 						 */
 						function process(
-							ripe: IByteStreamView,
-							raw: OByteStreamView,
+							ripe: InputByteStreamView,
+							raw: OutputByteStreamView,
 							small: Boolean,
 						): Void;
 
@@ -1903,8 +1903,8 @@ declare namespace Twinning.Kernel {
 						 * @param level 压缩级别(0~9)
 						 */
 						function process(
-							raw: IByteStreamView,
-							ripe: OByteStreamView,
+							raw: InputByteStreamView,
+							ripe: OutputByteStreamView,
 							level: Size,
 						): Void;
 
@@ -1919,8 +1919,8 @@ declare namespace Twinning.Kernel {
 						 * @param raw 原始数据
 						 */
 						function process(
-							ripe: IByteStreamView,
-							raw: OByteStreamView,
+							ripe: InputByteStreamView,
+							raw: OutputByteStreamView,
 						): Void;
 
 					}
@@ -1946,9 +1946,9 @@ declare namespace Twinning.Kernel {
 						 * @param interleaved 使用交叉模式生成差异数据
 						 */
 						function process(
-							before: IByteStreamView,
-							after: IByteStreamView,
-							patch: OByteStreamView,
+							before: InputByteStreamView,
+							after: InputByteStreamView,
+							patch: OutputByteStreamView,
 							interleaved: Boolean,
 						): Void;
 
@@ -1965,9 +1965,9 @@ declare namespace Twinning.Kernel {
 						 * @param maximum_window_size 最大窗口尺寸
 						 */
 						function process(
-							before: IByteStreamView,
-							after: OByteStreamView,
-							patch: IByteStreamView,
+							before: InputByteStreamView,
+							after: OutputByteStreamView,
+							patch: InputByteStreamView,
 							maximum_window_size: Size,
 						): Void;
 
@@ -1996,7 +1996,7 @@ declare namespace Twinning.Kernel {
 						 * @param disable_object_line_breaking 禁用对象换行
 						 */
 						function process(
-							data: OCharacterStreamView,
+							data: OutputCharacterStreamView,
 							value: Kernel.JSON.Value,
 							disable_array_trailing_comma: Boolean,
 							disable_array_line_breaking: Boolean,
@@ -2016,9 +2016,9 @@ declare namespace Twinning.Kernel {
 						 * @param buffer 缓冲区
 						 */
 						function process(
-							data: ICharacterStreamView,
+							data: InputCharacterStreamView,
 							value: Kernel.JSON.Value,
-							buffer: OCharacterStreamView,
+							buffer: OutputCharacterStreamView,
 						): Void;
 
 					}
@@ -2080,7 +2080,7 @@ declare namespace Twinning.Kernel {
 					 * @param vertical 垂直翻转
 					 */
 					function process(
-						target: Image.VImageView,
+						target: Image.VariableImageView,
 						horizontal: Boolean,
 						vertical: Boolean,
 					): Void;
@@ -2096,8 +2096,8 @@ declare namespace Twinning.Kernel {
 					 * @param destination 目的
 					 */
 					function process(
-						source: Image.CImageView,
-						destination: Image.VImageView,
+						source: Image.ConstantImageView,
+						destination: Image.VariableImageView,
 					): Void;
 
 				}
@@ -2144,8 +2144,8 @@ declare namespace Twinning.Kernel {
 					 * @param format 格式
 					 */
 					function process(
-						data: OByteStreamView,
-						image: Image.CImageView,
+						data: OutputByteStreamView,
+						image: Image.ConstantImageView,
 						format: Format,
 					): Void;
 
@@ -2161,8 +2161,8 @@ declare namespace Twinning.Kernel {
 					 * @param format 格式
 					 */
 					function process(
-						data: IByteStreamView,
-						image: Image.VImageView,
+						data: InputByteStreamView,
+						image: Image.VariableImageView,
 						format: Format,
 					): Void;
 
@@ -2213,8 +2213,8 @@ declare namespace Twinning.Kernel {
 						 * @param format 格式
 						 */
 						function process(
-							data: OByteStreamView,
-							image: Image.CImageView,
+							data: OutputByteStreamView,
+							image: Image.ConstantImageView,
 							format: Format,
 						): Void;
 
@@ -2230,8 +2230,8 @@ declare namespace Twinning.Kernel {
 						 * @param format 格式
 						 */
 						function process(
-							data: IByteStreamView,
-							image: Image.VImageView,
+							data: InputByteStreamView,
+							image: Image.VariableImageView,
 							format: Format,
 						): Void;
 
@@ -2279,8 +2279,8 @@ declare namespace Twinning.Kernel {
 						 * @param format 格式
 						 */
 						function process(
-							data: OByteStreamView,
-							image: Image.CImageView,
+							data: OutputByteStreamView,
+							image: Image.ConstantImageView,
 							format: Format,
 						): Void;
 
@@ -2296,8 +2296,8 @@ declare namespace Twinning.Kernel {
 						 * @param format 格式
 						 */
 						function process(
-							data: IByteStreamView,
-							image: Image.VImageView,
+							data: InputByteStreamView,
+							image: Image.VariableImageView,
 							format: Format,
 						): Void;
 
@@ -2322,8 +2322,8 @@ declare namespace Twinning.Kernel {
 						 * @param image 图像
 						 */
 						function process(
-							data: OByteStreamView,
-							image: Image.CImageView,
+							data: OutputByteStreamView,
+							image: Image.ConstantImageView,
 						): Void;
 
 					}
@@ -2337,8 +2337,8 @@ declare namespace Twinning.Kernel {
 						 * @param image 图像
 						 */
 						function process(
-							data: IByteStreamView,
-							image: Image.VImageView,
+							data: InputByteStreamView,
+							image: Image.VariableImageView,
 						): Void;
 
 						/**
@@ -2347,7 +2347,7 @@ declare namespace Twinning.Kernel {
 						 * @param image_size 图像尺寸
 						 */
 						function estimate(
-							data: CByteListView,
+							data: ConstantByteListView,
 							image_size: Image.ImageSize,
 						): Void;
 
@@ -2447,7 +2447,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.SoundBank,
 						embedded_media_directory: Path,
 						version: Version,
@@ -2466,7 +2466,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.SoundBank,
 						embedded_media_directory: PathOptional,
 						version: Version,
@@ -2578,7 +2578,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
@@ -2597,7 +2597,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
@@ -2658,8 +2658,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						raw: IByteStreamView,
-						ripe: OByteStreamView,
+						raw: InputByteStreamView,
+						ripe: OutputByteStreamView,
 						level: Size,
 						window_bits: Size,
 						memory_level: Size,
@@ -2696,8 +2696,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						ripe: IByteStreamView,
-						raw: OByteStreamView,
+						ripe: InputByteStreamView,
+						raw: OutputByteStreamView,
 						window_bits: Size,
 						version: Version,
 					): Void;
@@ -2709,7 +2709,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function estimate(
-						ripe: CByteListView,
+						ripe: ConstantByteListView,
 						raw_size: Size,
 						version: Version,
 					): Void;
@@ -2761,8 +2761,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						plain: IByteStreamView,
-						cipher: OByteStreamView,
+						plain: InputByteStreamView,
+						cipher: OutputByteStreamView,
 						limit: Size,
 						key: String,
 						version: Version,
@@ -2796,8 +2796,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						cipher: IByteStreamView,
-						plain: OByteStreamView,
+						cipher: InputByteStreamView,
+						plain: OutputByteStreamView,
 						limit: Size,
 						key: String,
 						version: Version,
@@ -2811,7 +2811,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function estimate(
-						cipher: CByteListView,
+						cipher: ConstantByteListView,
 						plain_size: Size,
 						limit: Size,
 						version: Version,
@@ -2869,7 +2869,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: JSON.Value<JS_ValidValue>,
 						enable_string_index: Boolean,
 						enable_reference: Boolean,
@@ -2888,7 +2888,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: JSON.Value<JS_ValidValue>,
 						version: Version,
 					): Void;
@@ -2940,8 +2940,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
-						image: Image.CImageView,
+						data: OutputByteStreamView,
+						image: Image.ConstantImageView,
 						format: Texture.Encoding.Format,
 						version: Version,
 					): Void;
@@ -2972,8 +2972,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
-						image: Image.VImageView,
+						data: InputByteStreamView,
+						image: Image.VariableImageView,
 						version: Version,
 					): Void;
 
@@ -2984,7 +2984,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function estimate(
-						data: CByteListView,
+						data: ConstantByteListView,
 						image_size: Image.ImageSize,
 						version: Version,
 					): Void;
@@ -3037,8 +3037,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
-						image: Image.CImageView,
+						data: OutputByteStreamView,
+						image: Image.ConstantImageView,
 						format: Texture.Encoding.Format,
 						compress_texture_data: Boolean,
 						version: Version,
@@ -3072,8 +3072,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
-						image: Image.VImageView,
+						data: InputByteStreamView,
+						image: Image.VariableImageView,
 						version: Version,
 					): Void;
 
@@ -3084,7 +3084,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function estimate(
-						data: CByteListView,
+						data: ConstantByteListView,
 						image_size: Image.ImageSize,
 						version: Version,
 					): Void;
@@ -3324,7 +3324,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3341,7 +3341,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3447,7 +3447,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3464,7 +3464,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3550,7 +3550,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Particle,
 						version: Version,
 					): Void;
@@ -3567,7 +3567,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Particle,
 						version: Version,
 					): Void;
@@ -3653,7 +3653,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Trail,
 						version: Version,
 					): Void;
@@ -3670,7 +3670,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Trail,
 						version: Version,
 					): Void;
@@ -3756,7 +3756,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3773,7 +3773,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3858,7 +3858,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3875,7 +3875,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3959,7 +3959,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.FontWidget,
 						version: Version,
 					): Void;
@@ -3976,7 +3976,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.FontWidget,
 						version: Version,
 					): Void;
@@ -4077,7 +4077,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
@@ -4096,7 +4096,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
@@ -4235,7 +4235,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
@@ -4254,7 +4254,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
@@ -4464,7 +4464,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OByteStreamView,
+						data: OutputByteStreamView,
 						definition: Definition.Package,
 						manifest: Manifest.PackageOptional,
 						resource_directory: Path,
@@ -4488,7 +4488,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: IByteStreamView,
+						data: InputByteStreamView,
 						definition: Definition.Package,
 						manifest: Manifest.PackageOptional,
 						resource_directory: PathOptional,
@@ -4544,9 +4544,9 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						before: IByteStreamView,
-						after: IByteStreamView,
-						patch: OByteStreamView,
+						before: InputByteStreamView,
+						after: InputByteStreamView,
+						patch: OutputByteStreamView,
 						use_raw_packet: Boolean,
 						version: Version,
 					): Void;
@@ -4565,9 +4565,9 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						before: IByteStreamView,
-						after: OByteStreamView,
-						patch: IByteStreamView,
+						before: InputByteStreamView,
+						after: OutputByteStreamView,
+						patch: InputByteStreamView,
 						use_raw_packet: Boolean,
 						version: Version,
 					): Void;
@@ -4594,8 +4594,8 @@ declare namespace Twinning.Kernel {
 					 * @param format 格式
 					 */
 					function process(
-						data: OByteStreamView,
-						image: Image.CImageView,
+						data: OutputByteStreamView,
+						image: Image.ConstantImageView,
 						format: Texture.Encoding.Format,
 					): Void;
 
@@ -4611,8 +4611,8 @@ declare namespace Twinning.Kernel {
 					 * @param format 格式
 					 */
 					function process(
-						data: IByteStreamView,
-						image: Image.VImageView,
+						data: InputByteStreamView,
+						image: Image.VariableImageView,
 						format: Texture.Encoding.Format,
 					): Void;
 
@@ -4633,8 +4633,8 @@ declare namespace Twinning.Kernel {
 					 * @param palette 调色板
 					 */
 					function process(
-						data: OByteStreamView,
-						image: Image.CImageView,
+						data: OutputByteStreamView,
+						image: Image.ConstantImageView,
 						palette: Image.ColorList,
 					): Void;
 
@@ -4650,8 +4650,8 @@ declare namespace Twinning.Kernel {
 					 * @param palette 调色板
 					 */
 					function process(
-						data: IByteStreamView,
-						image: Image.VImageView,
+						data: InputByteStreamView,
+						image: Image.VariableImageView,
 						palette: Image.ColorList,
 					): Void;
 
@@ -4672,8 +4672,8 @@ declare namespace Twinning.Kernel {
 					 * @param key 密钥
 					 */
 					function process(
-						plain: IByteStreamView,
-						cipher: OByteStreamView,
+						plain: InputByteStreamView,
+						cipher: OutputByteStreamView,
 						key: String,
 					): Void;
 
@@ -4699,8 +4699,8 @@ declare namespace Twinning.Kernel {
 					 * @param key 密钥
 					 */
 					function process(
-						cipher: IByteStreamView,
-						plain: OByteStreamView,
+						cipher: InputByteStreamView,
+						plain: OutputByteStreamView,
 						key: String,
 					): Void;
 
@@ -4804,7 +4804,7 @@ declare namespace Twinning.Kernel {
 			 * @returns 计算值
 			 */
 			evaluate(
-				script: CCharacterListView,
+				script: ConstantCharacterListView,
 				name: String,
 				is_module: Boolean,
 			): any;

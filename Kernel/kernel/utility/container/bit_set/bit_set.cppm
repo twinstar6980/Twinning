@@ -15,7 +15,7 @@ export namespace Twinning::Kernel {
 
 	template <auto t_size> requires
 		CategoryConstraint<>
-		&& (IsSameV<t_size, Size>)
+		&& (IsSameOf<t_size, Size>)
 	class BitSet {
 
 	public:
@@ -174,7 +174,7 @@ export namespace Twinning::Kernel {
 
 		template <auto begin, auto size> requires
 			CategoryConstraint<>
-			&& (IsSameV<begin, Size> && IsSameV<size, Size>)
+			&& (IsSameOf<begin, Size> && IsSameOf<size, Size>)
 			&& (begin + size <= t_size)
 		auto sub (
 		) -> BitSet<size> {

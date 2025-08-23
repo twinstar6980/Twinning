@@ -17,10 +17,10 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 		template <auto format> requires
 			CategoryConstraint<>
-			&& (IsSameV<format, Format>)
+			&& (IsSameOf<format, Format>)
 		inline static auto process_pixel (
-			IByteStreamView & data,
-			Image::Pixel &    pixel
+			InputByteStreamView & data,
+			Image::Pixel &        pixel
 		) -> Void {
 			if constexpr (format == Format::Constant::a_8()) {
 				auto block = data.read_of<IntegerU8>();
@@ -132,10 +132,10 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 		template <auto format> requires
 			CategoryConstraint<>
-			&& (IsSameV<format, Format>)
+			&& (IsSameOf<format, Format>)
 		inline static auto process_image (
-			IByteStreamView &         data,
-			Image::VImageView const & image
+			InputByteStreamView &            data,
+			Image::VariableImageView const & image
 		) -> Void {
 			for (auto & row : image.data()) {
 				for (auto & pixel : row) {
@@ -146,9 +146,9 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		}
 
 		inline static auto process_image (
-			IByteStreamView &         data,
-			Image::VImageView const & image,
-			Format const &            format
+			InputByteStreamView &            data,
+			Image::VariableImageView const & image,
+			Format const &                   format
 		) -> Void {
 			Generalization::match<FormatPackage>(
 				format,
@@ -162,9 +162,9 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &         data_,
-			Image::VImageView const & image,
-			Format const &            format
+			InputByteStreamView &            data_,
+			Image::VariableImageView const & image,
+			Format const &                   format
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, format);

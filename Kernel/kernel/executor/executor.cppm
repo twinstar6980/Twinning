@@ -27,13 +27,13 @@ export namespace Twinning::Kernel::Executor {
 		data.define_object_property("exception"_s, context.context().new_value());
 		auto state = context.context().evaluate(script, "<main>"_s, k_false).call(make_list<JavaScript::Value>(data));
 		while (context.runtime().has_pending_job()) {
-			context.runtime().execute_pending_job(as_lvalue(JavaScript::Context::new_reference(nullptr)));
+			context.runtime().execute_pending_job(as_left(JavaScript::Context::new_reference(nullptr)));
 		}
 		assert_test(state.is_undefined());
 		auto result = data.get_object_property("result"_s).to_of<List<String>>();
 		auto exception = data.get_object_property("exception"_s);
 		if (!exception.is_undefined()) {
-			throw JavaScript::ExecutionException{as_lvalue(exception)};
+			throw JavaScript::ExecutionException{as_left(exception)};
 		}
 		return result;
 	}

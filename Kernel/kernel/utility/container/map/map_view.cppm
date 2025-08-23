@@ -20,13 +20,13 @@ export namespace Twinning::Kernel {
 
 	template <typename TKey, typename TValue, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TKey> && IsPureInstance<TValue>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 	class MapView :
 		protected ListView<KeyValuePair<TKey, TValue>, t_constant> {
 
 	private:
 
-		using CView = MapView<TKey, TValue, k_true>;
+		using ConstantView = MapView<TKey, TValue, k_true>;
 
 		using ListView = ListView<KeyValuePair<TKey, TValue>, t_constant>;
 
@@ -40,13 +40,13 @@ export namespace Twinning::Kernel {
 
 		using typename ListView::Element;
 
-		using QKey = AsConstantIf<Key, constant.value>;
+		using QualifyKey = AsConstantIf<Key, constant.value>;
 
-		using QValue = AsConstantIf<Value, constant.value>;
+		using QualifyValue = AsConstantIf<Value, constant.value>;
 
-		using typename ListView::QElement;
+		using typename ListView::QualifyElement;
 
-		using typename ListView::QIterator;
+		using typename ListView::QualifyIterator;
 
 	public:
 
@@ -90,20 +90,20 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		constexpr auto operator [] (
 			KeyObject const & key
-		) const -> QValue & {
+		) const -> QualifyValue & {
 			return thiz.query(key).value;
 		}
 
 		// ----------------
 
-		implicit operator CView & () requires
+		implicit operator ConstantView & () requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator CView const & () const requires
+		implicit operator ConstantView const & () const requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -199,7 +199,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<KeyObject>>
 		constexpr auto query (
 			KeyObject const & key
-		) const -> QElement & {
+		) const -> QualifyElement & {
 			auto index = thiz.find_key(key);
 			assert_test(index.has());
 			return thiz.at(index.get());
@@ -263,11 +263,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Key, typename Value> requires
 		AutoConstraint
-	using VMapView = MapView<Key, Value, k_false>;
+	using VariableMapView = MapView<Key, Value, k_false>;
 
 	template <typename Key, typename Value> requires
 		AutoConstraint
-	using CMapView = MapView<Key, Value, k_true>;
+	using ConstantMapView = MapView<Key, Value, k_true>;
 
 	#pragma endregion
 

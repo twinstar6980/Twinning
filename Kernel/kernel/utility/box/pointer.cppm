@@ -81,12 +81,12 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		implicit operator PointerBox<Target const> & () requires
-			(IsVInstance<Target>) {
+			(IsVariableInstance<Target>) {
 			return self_cast<PointerBox<Target const>>(thiz);
 		}
 
 		implicit operator PointerBox<Target const> const & () const requires
-			(IsVInstance<Target>) {
+			(IsVariableInstance<Target>) {
 			return self_cast<PointerBox<Target const>>(thiz);
 		}
 
@@ -288,14 +288,22 @@ export namespace Twinning::Kernel {
 		return PointerBox<Target>{value};
 	}
 
+	template <typename Target> requires
+		CategoryConstraint<IsPointable<Target>>
+	inline constexpr auto make_pointer_of (
+		Target & value
+	) -> PointerBox<Target> {
+		return PointerBox<Target>{&value};
+	}
+
 	// ----------------
 
 	template <typename DestinationTarget, typename SourceTarget> requires
 		CategoryConstraint<IsPure<DestinationTarget> && IsPointable<SourceTarget>>
 	inline auto cast_pointer (
 		PointerBox<SourceTarget> const & source
-	) -> PointerBox<AsConstantIf<DestinationTarget, IsCInstance<SourceTarget>>> {
-		return self_cast<PointerBox<AsConstantIf<DestinationTarget, IsCInstance<SourceTarget>>>>(source);
+	) -> PointerBox<AsConstantIf<DestinationTarget, IsConstantInstance<SourceTarget>>> {
+		return self_cast<PointerBox<AsConstantIf<DestinationTarget, IsConstantInstance<SourceTarget>>>>(source);
 	}
 
 	// ----------------

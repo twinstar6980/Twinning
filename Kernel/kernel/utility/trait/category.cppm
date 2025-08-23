@@ -41,14 +41,14 @@ export namespace Twinning::Kernel::Trait {
 		;
 
 	template <typename ... It>
-	concept IsVInstance =
+	concept IsVariableInstance =
 		CustomConstraint
 		&& (IsInstance<It ...>)
 		&& (!std::is_const_v<It> && ...)
 		;
 
 	template <typename ... It>
-	concept IsCInstance =
+	concept IsConstantInstance =
 		CustomConstraint
 		&& (IsInstance<It ...>)
 		&& (std::is_const_v<It> && ...)
@@ -64,37 +64,37 @@ export namespace Twinning::Kernel::Trait {
 		;
 
 	template <typename ... It>
-	concept IsLReference =
+	concept IsLeftReference =
 		CustomConstraint
 		&& (IsReference<It ...>)
 		&& (std::is_lvalue_reference_v<It> && ...)
 		;
 
 	template <typename ... It>
-	concept IsRReference =
+	concept IsRightReference =
 		CustomConstraint
 		&& (IsReference<It ...>)
 		&& (std::is_rvalue_reference_v<It> && ...)
 		;
 
 	template <typename ... It>
-	concept IsVReference =
+	concept IsVariableReference =
 		CustomConstraint
-		&& (IsLReference<It ...>)
+		&& (IsLeftReference<It ...>)
 		&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
 		;
 
 	template <typename ... It>
-	concept IsCReference =
+	concept IsConstantReference =
 		CustomConstraint
-		&& (IsLReference<It ...>)
+		&& (IsLeftReference<It ...>)
 		&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
 		;
 
 	template <typename ... It>
-	concept IsMReference =
+	concept IsMoveableReference =
 		CustomConstraint
-		&& (IsRReference<It ...>)
+		&& (IsRightReference<It ...>)
 		;
 
 	// ----------------
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Trait {
 		;
 
 	template <auto it, typename ... Alternative>
-	concept IsSameV =
+	concept IsSameOf =
 		CategoryConstraint<IsAnything<Alternative ...>>
 		&& (std::is_same_v<std::remove_cv_t<decltype(it)>, Alternative> || ...)
 		;
@@ -142,13 +142,13 @@ export namespace Twinning::Kernel::Trait {
 
 	template <auto index, typename ... Alternative> requires
 		CategoryConstraint<IsAnything<Alternative ...>>
-		&& (IsSameV<index, ZSize>)
+		&& (IsSameOf<index, ZSize>)
 		&& (index < sizeof...(Alternative))
 	using AsSelect = std::tuple_element_t<index, std::tuple<Alternative ...>>;
 
 	template <auto condition, typename TrulyAlternative, typename FalsyAlternative> requires
 		CategoryConstraint<IsAnything<TrulyAlternative> && IsAnything<FalsyAlternative>>
-		&& (IsSameV<condition, ZBoolean>)
+		&& (IsSameOf<condition, ZBoolean>)
 	using AsSwitch = std::conditional_t<condition, TrulyAlternative, FalsyAlternative>;
 
 	#pragma endregion
@@ -167,11 +167,11 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsAnything<It>>
-	using AsMakeLReference = std::add_lvalue_reference_t<It>;
+	using AsMakeLeftReference = std::add_lvalue_reference_t<It>;
 
 	template <typename It> requires
 		CategoryConstraint<IsAnything<It>>
-	using AsMakeRReference = std::add_rvalue_reference_t<It>;
+	using AsMakeRightReference = std::add_rvalue_reference_t<It>;
 
 	template <typename It> requires
 		CategoryConstraint<IsAnything<It>>
@@ -189,7 +189,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsValid<It>>
-	inline constexpr auto as_lvalue (
+	inline constexpr auto as_left (
 		It && it
 	) -> AsUnmakeReference<It> & {
 		return static_cast<AsUnmakeReference<It> &>(it);
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsValid<It>>
-	inline constexpr auto as_rvalue (
+	inline constexpr auto as_right (
 		It && it
 	) -> AsUnmakeReference<It> && {
 		return static_cast<AsUnmakeReference<It> &&>(it);
@@ -279,7 +279,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It, auto condition> requires
 		CategoryConstraint<IsAnything<It>>
-		&& (IsSameV<condition, ZBoolean>)
+		&& (IsSameOf<condition, ZBoolean>)
 	using AsConstantIf = AsSwitch<condition, AsMakeConstant<It>, It>;
 
 	#pragma endregion

@@ -19,8 +19,8 @@ export namespace Twinning::Kernel {
 	template <typename ... Argument> requires
 		CategoryConstraint<IsValid<Argument ...>>
 	inline auto format_string (
-		CStringView const & format,
-		Argument && ...     argument
+		ConstantStringView const & format,
+		Argument && ...            argument
 	) -> String {
 		return make_string(std::format(std::runtime_format(make_std_string_view(format)), as_forward<Argument>(argument) ...));
 	}
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel {
 
 	protected:
 
-		CStringView m_format;
+		ConstantStringView m_format;
 
 	public:
 
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		explicit constexpr StringFormatter (
-			CStringView const & format
+			ConstantStringView const & format
 		) :
 			m_format{format} {
 		}

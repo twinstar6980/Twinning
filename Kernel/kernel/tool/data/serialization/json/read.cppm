@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 		// ----------------
 
 		inline static auto process_value (
-			ICharacterStreamView & data,
-			Value &                value,
-			OCharacterStreamView & buffer
+			InputCharacterStreamView &  data,
+			Value &                     value,
+			OutputCharacterStreamView & buffer
 		) -> Void {
 			while (k_true) {
 				switch (auto character = data.read_of(); character.value) {
@@ -230,9 +230,9 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 		}
 
 		inline static auto process_whole (
-			ICharacterStreamView & data,
-			Value &                value,
-			OCharacterStreamView & buffer
+			InputCharacterStreamView &  data,
+			Value &                     value,
+			OutputCharacterStreamView & buffer
 		) -> Void {
 			process_value(data, value, buffer);
 			return;
@@ -241,9 +241,9 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
 		// ----------------
 
 		inline static auto process (
-			ICharacterStreamView & data_,
-			Value &                value,
-			OCharacterStreamView & buffer
+			InputCharacterStreamView &  data_,
+			Value &                     value,
+			OutputCharacterStreamView & buffer
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(value);

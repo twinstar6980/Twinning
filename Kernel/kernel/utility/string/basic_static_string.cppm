@@ -18,7 +18,7 @@ export namespace Twinning::Kernel {
 	template <typename TElement, auto t_size> requires
 		CategoryConstraint<IsPureInstance<TElement>>
 		&& (IsCharacterBox<TElement>)
-		&& (IsSameV<t_size, Size>)
+		&& (IsSameOf<t_size, Size>)
 	struct BasicStaticString {
 
 		using Element = TElement;
@@ -41,8 +41,8 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr auto view (
-		) const -> CBasicStringView<Element> {
-			return CBasicStringView<Element>{make_pointer(static_cast<decltype(&*thiz.data)>(thiz.data)), t_size - 1_sz};
+		) const -> ConstantBasicStringView<Element> {
+			return ConstantBasicStringView<Element>{make_pointer(static_cast<decltype(&*thiz.data)>(thiz.data)), t_size - 1_sz};
 		}
 
 	};

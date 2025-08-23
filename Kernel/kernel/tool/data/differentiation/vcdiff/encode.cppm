@@ -17,10 +17,10 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::VCDiff {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & before,
-			IByteStreamView & after,
-			OByteStreamView & patch,
-			Boolean const &   interleaved
+			InputByteStreamView &  before,
+			InputByteStreamView &  after,
+			OutputByteStreamView & patch,
+			Boolean const &        interleaved
 		) -> Void {
 			auto state = bool{};
 			auto patch_container = std::string{};
@@ -45,10 +45,10 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::VCDiff {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & before_,
-			IByteStreamView & after_,
-			OByteStreamView & patch_,
-			Boolean const &   interleaved
+			InputByteStreamView &  before_,
+			InputByteStreamView &  after_,
+			OutputByteStreamView & patch_,
+			Boolean const &        interleaved
 		) -> Void {
 			M_use_zps_of(before);
 			M_use_zps_of(after);

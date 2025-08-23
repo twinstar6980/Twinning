@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::$png_bytep   data,
 			Third::libpng::$size_t      length
 		) -> Void {
-			auto & stream = *static_cast<IByteStreamView *>(Third::libpng::$png_get_io_ptr(png_ptr));
+			auto & stream = *static_cast<InputByteStreamView *>(Third::libpng::$png_get_io_ptr(png_ptr));
 			if (stream.reserve() < mbox<Size>(length)) {
 				Third::libpng::$png_error(png_ptr, "Read Error");
 			}
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::PNG {
 			Third::libpng::$png_bytep   data,
 			Third::libpng::$size_t      length
 		) -> Void {
-			auto & stream = *static_cast<OByteStreamView *>(Third::libpng::$png_get_io_ptr(png_ptr));
+			auto & stream = *static_cast<OutputByteStreamView *>(Third::libpng::$png_get_io_ptr(png_ptr));
 			if (stream.reserve() < mbox<Size>(length)) {
 				Third::libpng::$png_error(png_ptr, "Write Error");
 			}

@@ -25,16 +25,16 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process_package (
-			OByteStreamView &                    data,
+			OutputByteStreamView &               data,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_identifier);
 			data.write_constant(cbox<Structure::VersionNumber>(version.number));
 			struct {
-				OByteStreamView header{};
-				OByteStreamView resource_information{};
-				Size            resource_information_offset{};
+				OutputByteStreamView header{};
+				OutputByteStreamView resource_information{};
+				Size                 resource_information_offset{};
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
@@ -58,11 +58,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					}
 				}
 				CompiledMapData::adjust_sequence(information_structure.resource_information);
-				information_data.header = OByteStreamView{
+				information_data.header = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.header))
 				};
 				information_data.resource_information_offset = data.position();
-				information_data.resource_information = OByteStreamView{
+				information_data.resource_information = OutputByteStreamView{
 					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_information))
 				};
 				data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 			information_structure.header.resource_data_section_compression = packet_compression_to_data(definition.compression);
 			information_structure.resource_information.allocate_full(definition.resource.size());
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
-				auto resource_data_section_view = VByteListView{};
+				auto resource_data_section_view = VariableByteListView{};
 				auto resource_data_section_container = ByteArray{};
 				auto resource_data_section_offset = data.position();
 				auto resource_data_section_size_original = k_none_size;
@@ -110,7 +110,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					resource_data_section_container.allocate(resource_data_section_size_original);
 					resource_data_section_view = resource_data_section_container.view();
 				}
-				auto resource_data_section_stream = OByteStreamView{resource_data_section_view};
+				auto resource_data_section_stream = OutputByteStreamView{resource_data_section_view};
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					if (resource_definition.additional.type() != current_resource_type) {
@@ -145,7 +145,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					data.forward(resource_data_section_view.size());
 				}
 				else {
-					Data::Compression::Deflate::Compress::process(as_lvalue(IByteStreamView{resource_data_section_view}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
 				}
 				auto resource_data_section_size = data.position() - resource_data_section_offset;
@@ -178,7 +178,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                    data_,
+			OutputByteStreamView &               data_,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {

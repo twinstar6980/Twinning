@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		// ----------------
 
 		inline static auto exchange_track_node_list (
-			IByteStreamView &                      data,
+			InputByteStreamView &                  data,
 			List<typename Definition::TrackNode> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		}
 
 		inline static auto exchange_field_list (
-			IByteStreamView &                  data,
+			InputByteStreamView &              data,
 			List<typename Definition::Field> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		}
 
 		inline static auto exchange_emitter_list (
-			IByteStreamView &                    data,
+			InputByteStreamView &                data,
 			List<typename Definition::Emitter> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -158,7 +158,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		}
 
 		inline static auto exchange_particle (
-			IByteStreamView &               data,
+			InputByteStreamView &           data,
 			typename Definition::Particle & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView &               data,
+			InputByteStreamView &           data,
 			typename Definition::Particle & definition
 		) -> Void {
 			data.read_constant(k_magic_identifier);
@@ -181,7 +181,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &               data_,
+			InputByteStreamView &           data_,
 			typename Definition::Particle & definition
 		) -> Void {
 			M_use_zps_of(data);

@@ -28,8 +28,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView &                            raw,
-			OByteStreamView &                            ripe,
+			InputByteStreamView &                        raw,
+			OutputByteStreamView &                       ripe,
 			Size const &                                 level,
 			Size const &                                 window_bits,
 			Size const &                                 memory_level,
@@ -69,8 +69,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &                            raw_,
-			OByteStreamView &                            ripe_,
+			InputByteStreamView &                        raw_,
+			OutputByteStreamView &                       ripe_,
 			Size const &                                 level,
 			Size const &                                 window_bits,
 			Size const &                                 memory_level,

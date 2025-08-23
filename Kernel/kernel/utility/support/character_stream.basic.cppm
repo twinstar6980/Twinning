@@ -20,27 +20,27 @@ export namespace Twinning::Kernel {
 	template <>
 	struct CharacterStreamAdapter<Character> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = Character;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			up_cast<OStreamView<Character, BasicCharacterListView>>(thix).write(that);
+			up_cast<OutputStreamView<Character, BasicCharacterListView>>(thix).write(that);
 			return;
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
-			up_cast<IStreamView<Character, BasicCharacterListView>>(thix).read(that);
+			up_cast<InputStreamView<Character, BasicCharacterListView>>(thix).read(that);
 			return;
 		}
 
@@ -54,31 +54,31 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct CharacterStreamAdapter<StringView<t_constant>> {
 
-		using ThisI = ICharacterStreamView;
+		using ThisInput = InputCharacterStreamView;
 
-		using ThisO = OCharacterStreamView;
+		using ThisOutput = OutputCharacterStreamView;
 
 		using That = StringView<t_constant>;
 
 		// ----------------
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			for (auto & element : that) {
-				up_cast<OStreamView<Character, BasicCharacterListView>>(thix).write(element);
+				up_cast<OutputStreamView<Character, BasicCharacterListView>>(thix).write(element);
 			}
 			return;
 		}
 
 		inline static auto read (
-			ThisI &      thix,
+			ThisInput &  thix,
 			That const & that
 		) -> Void requires
 			(!t_constant.value) {
 			for (auto & element : that) {
-				up_cast<IStreamView<Character, BasicCharacterListView>>(thix).read(element);
+				up_cast<InputStreamView<Character, BasicCharacterListView>>(thix).read(element);
 			}
 			return;
 		}

@@ -13,9 +13,9 @@ export namespace Twinning::Kernel::Tool {
 	struct CommonByteStreamExchangeBase;
 
 	template <>
-	struct CommonByteStreamExchangeBase<StreamMode::Constant::i()> {
+	struct CommonByteStreamExchangeBase<StreamMode::Constant::input()> {
 
-		using ExchangeableByteStreamView = IByteStreamView;
+		using ExchangeableByteStreamView = InputByteStreamView;
 
 		template <typename Type> requires
 			CategoryConstraint<IsPureInstance<Type>>
@@ -28,9 +28,9 @@ export namespace Twinning::Kernel::Tool {
 	};
 
 	template <>
-	struct CommonByteStreamExchangeBase<StreamMode::Constant::o()> {
+	struct CommonByteStreamExchangeBase<StreamMode::Constant::output()> {
 
-		using ExchangeableByteStreamView = OByteStreamView;
+		using ExchangeableByteStreamView = OutputByteStreamView;
 
 		template <typename Type> requires
 			CategoryConstraint<IsPureInstance<Type>>
@@ -173,10 +173,10 @@ export namespace Twinning::Kernel::Tool {
 			ContentExchanger const &     content_exchanger
 		) -> Void {
 			auto value_size = Size{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				size_exchanger(data, value_size);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				value_size = value.size();
 				size_exchanger(data, value_size);
 			}
@@ -195,7 +195,7 @@ export namespace Twinning::Kernel::Tool {
 			StateExchanger const &               state_exchanger
 		) -> Void {
 			auto value_state = Boolean{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				state_exchanger(data, value_state);
 				if (value_state) {
 					value.set();
@@ -204,7 +204,7 @@ export namespace Twinning::Kernel::Tool {
 					value.reset();
 				}
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				value_state = value.has();
 				state_exchanger(data, value_state);
 			}
@@ -251,11 +251,11 @@ export namespace Twinning::Kernel::Tool {
 			IndexExchanger const &                  index_exchanger
 		) -> Void {
 			auto value_index = Size{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				index_exchanger(data, value_index);
 				value.template set_of_index<value_index>();
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				value_index = value.index();
 				index_exchanger(data, value_index);
 			}
@@ -305,11 +305,11 @@ export namespace Twinning::Kernel::Tool {
 			SizeExchanger const &              size_exchanger
 		) -> Void {
 			auto value_size = Size{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				size_exchanger(data, value_size);
 				value.allocate_full(value_size);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				value_size = value.size();
 				size_exchanger(data, value_size);
 			}
@@ -361,12 +361,12 @@ export namespace Twinning::Kernel::Tool {
 			SizeExchanger const &         size_exchanger
 		) -> Void {
 			auto value_size = Size{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				size_exchanger(data, value_size);
 				value.allocate_full(value_size);
 				data.read(value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				value_size = value.size();
 				size_exchanger(data, value_size);
 				data.write(value);
@@ -384,10 +384,10 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableByteStreamView &  data,
 			ExchangeableValue<RawValue> & value
 		) -> Void {
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				data.read(value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				data.write(value);
 			}
 			return;
@@ -399,10 +399,10 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableByteStreamView &          data,
 			ExchangeableConstantValue<RawValue> & value
 		) -> Void {
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				data.read_constant(value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				data.write_constant(value);
 			}
 			return;
@@ -418,11 +418,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Boolean> & value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Boolean>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -437,11 +437,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Integer> & value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Integer>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -456,11 +456,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Floater> & value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Floater>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -475,11 +475,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Size> &    value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Size>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -494,11 +494,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Character> & value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Character>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -513,11 +513,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Unicode> & value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Unicode>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -532,11 +532,11 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableValue<Enumerated> & value
 		) -> Void {
 			auto raw_value = RawValue{};
-			if constexpr (t_mode == StreamMode::Constant::i()) {
+			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Enumerated>(raw_value);
 			}
-			if constexpr (t_mode == StreamMode::Constant::o()) {
+			if constexpr (t_mode == StreamMode::Constant::output()) {
 				raw_value = cbox<RawValue>(value);
 				exchange_raw(data, raw_value);
 			}
@@ -558,9 +558,9 @@ export namespace Twinning::Kernel::Tool {
 
 	};
 
-	using CommonByteStreamExchangeForInput = CommonByteStreamExchange<StreamMode::Constant::i()>;
+	using CommonByteStreamExchangeForInput = CommonByteStreamExchange<StreamMode::Constant::input()>;
 
-	using CommonByteStreamExchangeForOutput = CommonByteStreamExchange<StreamMode::Constant::o()>;
+	using CommonByteStreamExchangeForOutput = CommonByteStreamExchange<StreamMode::Constant::output()>;
 
 	#pragma endregion
 

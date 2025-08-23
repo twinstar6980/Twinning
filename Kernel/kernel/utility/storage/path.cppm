@@ -166,13 +166,32 @@ export namespace Twinning::Kernel::Storage {
 		#pragma region value
 
 		auto root (
+		) -> Optional<String> & {
+			return thiz.m_root;
+		}
+
+		auto root (
 		) const -> Optional<String> const & {
 			return thiz.m_root;
+		}
+
+		// ----------------
+
+		auto absolute (
+		) -> Boolean & {
+			return thiz.m_absolute;
 		}
 
 		auto absolute (
 		) const -> Boolean const & {
 			return thiz.m_absolute;
+		}
+
+		// ----------------
+
+		auto relative (
+		) -> List<String> & {
+			return thiz.m_relative;
 		}
 
 		auto relative (

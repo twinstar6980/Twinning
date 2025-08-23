@@ -17,7 +17,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_size> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_size, Size>)
+		&& (IsSameOf<t_size, Size>)
 	class StaticArray {
 
 	public:
@@ -28,17 +28,17 @@ export namespace Twinning::Kernel {
 
 		using View = ListView<Element, k_false>;
 
-		using VElement = Element;
+		using VariableElement = Element;
 
-		using VIterator = Pointer<Element>;
+		using VariableIterator = Pointer<Element>;
 
-		using VView = ListView<Element, k_false>;
+		using VariableView = ListView<Element, k_false>;
 
-		using CElement = Element const;
+		using ConstantElement = Element const;
 
-		using CIterator = Pointer<Element const>;
+		using ConstantIterator = Pointer<Element const>;
 
-		using CView = ListView<Element, k_true>;
+		using ConstantView = ListView<Element, k_true>;
 
 		using RawArray = ZArray<Element, t_size.value>;
 
@@ -79,23 +79,23 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		explicit constexpr StaticArray (
-			CView const & view
+			ConstantView const & view
 		) :
 			StaticArray{} {
 			Range::assign_from(Range::make_range_n(thiz.begin(), minimum(view.size(), thiz.size())), view);
 		}
 
 		explicit constexpr StaticArray (
-			CIterator const & begin,
-			Size const &      size
+			ConstantIterator const & begin,
+			Size const &             size
 		) :
-			StaticArray{CView{begin, size}} {
+			StaticArray{ConstantView{begin, size}} {
 		}
 
 		explicit constexpr StaticArray (
 			RawArray const & raw_array
 		) :
-			StaticArray{CView{make_pointer(static_cast<decltype(&*raw_array)>(raw_array)), t_size}} {
+			StaticArray{ConstantView{make_pointer(static_cast<decltype(&*raw_array)>(raw_array)), t_size}} {
 		}
 
 		#pragma endregion
@@ -120,13 +120,13 @@ export namespace Twinning::Kernel {
 
 		constexpr auto operator [] (
 			Size const & index
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.at(index);
 		}
 
 		constexpr auto operator [] (
 			Size const & index
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.at(index);
 		}
 
@@ -176,18 +176,18 @@ export namespace Twinning::Kernel {
 
 		constexpr auto iterator (
 			Size const & index
-		) -> VIterator {
+		) -> VariableIterator {
 			assert_test(index <= thiz.end_index());
 			return Iterator{thiz.m_data + index.value};
 		}
 
 		constexpr auto begin (
-		) -> VIterator {
+		) -> VariableIterator {
 			return Iterator{thiz.m_data + thiz.begin_index().value};
 		}
 
 		constexpr auto end (
-		) -> VIterator {
+		) -> VariableIterator {
 			return Iterator{thiz.m_data + thiz.end_index().value};
 		}
 
@@ -195,19 +195,19 @@ export namespace Twinning::Kernel {
 
 		constexpr auto iterator (
 			Size const & index
-		) const -> CIterator {
+		) const -> ConstantIterator {
 			assert_test(index <= thiz.end_index());
-			return CIterator{thiz.m_data + index.value};
+			return ConstantIterator{thiz.m_data + index.value};
 		}
 
 		constexpr auto begin (
-		) const -> CIterator {
-			return CIterator{thiz.m_data + thiz.begin_index().value};
+		) const -> ConstantIterator {
+			return ConstantIterator{thiz.m_data + thiz.begin_index().value};
 		}
 
 		constexpr auto end (
-		) const -> CIterator {
-			return CIterator{thiz.m_data + thiz.end_index().value};
+		) const -> ConstantIterator {
+			return ConstantIterator{thiz.m_data + thiz.end_index().value};
 		}
 
 		#pragma endregion
@@ -216,18 +216,18 @@ export namespace Twinning::Kernel {
 
 		constexpr auto at (
 			Size const & index
-		) -> VElement & {
+		) -> VariableElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
 		constexpr auto first (
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.at(thiz.first_index());
 		}
 
 		constexpr auto last (
-		) -> VElement & {
+		) -> VariableElement & {
 			return thiz.at(thiz.last_index());
 		}
 
@@ -235,18 +235,18 @@ export namespace Twinning::Kernel {
 
 		constexpr auto at (
 			Size const & index
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
 		constexpr auto first (
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.at(thiz.first_index());
 		}
 
 		constexpr auto last (
-		) const -> CElement & {
+		) const -> ConstantElement & {
 			return thiz.at(thiz.last_index());
 		}
 
@@ -255,13 +255,13 @@ export namespace Twinning::Kernel {
 		#pragma region view
 
 		constexpr auto view (
-		) -> VView {
-			return VView{thiz.begin(), thiz.size()};
+		) -> VariableView {
+			return VariableView{thiz.begin(), thiz.size()};
 		}
 
 		constexpr auto view (
-		) const -> CView {
-			return CView{thiz.begin(), thiz.size()};
+		) const -> ConstantView {
+			return ConstantView{thiz.begin(), thiz.size()};
 		}
 
 		#pragma endregion

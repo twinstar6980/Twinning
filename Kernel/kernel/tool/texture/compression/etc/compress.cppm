@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
 		// ----------------
 
 		inline static auto process_image_v1_rgb (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			assert_test(is_padded_size(image.size().width, k_block_width));
 			assert_test(is_padded_size(image.size().height, k_block_width));
@@ -43,8 +43,8 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
 		}
 
 		inline static auto process_image_v2_rgb (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			assert_test(is_padded_size(image.size().width, k_block_width));
 			assert_test(is_padded_size(image.size().height, k_block_width));
@@ -69,8 +69,8 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
 		}
 
 		inline static auto process_image_v2_rgba (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			assert_test(is_padded_size(image.size().width, k_block_width));
 			assert_test(is_padded_size(image.size().height, k_block_width));
@@ -97,9 +97,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
 		// ----------------
 
 		inline static auto process_image (
-			OByteStreamView &         data,
-			Image::CImageView const & image,
-			Format const &            format
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image,
+			Format const &                   format
 		) -> Void {
 			if (format == Format::Constant::v1_rgb()) {
 				process_image_v1_rgb(data, image);
@@ -116,9 +116,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &         data_,
-			Image::CImageView const & image,
-			Format const &            format
+			OutputByteStreamView &           data_,
+			Image::ConstantImageView const & image,
+			Format const &                   format
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, format);

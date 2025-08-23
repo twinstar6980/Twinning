@@ -26,17 +26,17 @@ export namespace Twinning::Kernel::Image {
 
 		using Pixel = TPixel;
 
-		using VPixel = Pixel;
+		using VariablePixel = Pixel;
 
-		using VPixelRow = ListView<Pixel, k_false>;
+		using VariablePixelRow = ListView<Pixel, k_false>;
 
-		using VView = BasicImageView<Pixel, k_false>;
+		using VariableView = BasicImageView<Pixel, k_false>;
 
-		using CPixel = Pixel const;
+		using ConstantPixel = Pixel const;
 
-		using CPixelRow = ListView<Pixel, k_true>;
+		using ConstantPixelRow = ListView<Pixel, k_true>;
 
-		using CView = BasicImageView<Pixel, k_true>;
+		using ConstantView = BasicImageView<Pixel, k_true>;
 
 	protected:
 
@@ -76,7 +76,7 @@ export namespace Twinning::Kernel::Image {
 		}
 
 		explicit BasicImage (
-			CView const & view
+			ConstantView const & view
 		) :
 			BasicImage{} {
 			thiz = view;
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Image {
 		// ----------------
 
 		auto operator = (
-			CView const & that
+			ConstantView const & that
 		) -> BasicImage & {
 			thiz.draw(that);
 			return thiz;
@@ -107,13 +107,13 @@ export namespace Twinning::Kernel::Image {
 
 		auto operator [] (
 			Size const & y
-		) -> VPixelRow const & {
+		) -> VariablePixelRow const & {
 			return thiz.as_view()[y];
 		}
 
 		auto operator [] (
 			Size const & y
-		) const -> CPixelRow const & {
+		) const -> ConstantPixelRow const & {
 			return thiz.as_view()[y];
 		}
 
@@ -131,11 +131,11 @@ export namespace Twinning::Kernel::Image {
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -144,24 +144,24 @@ export namespace Twinning::Kernel::Image {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const & {
-			return self_cast<VView>(thiz);
+		) -> VariableView const & {
+			return self_cast<VariableView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const & {
-			return self_cast<CView>(thiz);
+		) const -> ConstantView const & {
+			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
 		auto view (
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view();
 		}
 
 		auto view (
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view();
 		}
 
@@ -170,12 +170,12 @@ export namespace Twinning::Kernel::Image {
 		#pragma region data & size
 
 		auto data (
-		) -> CListView<VPixelRow> const & {
+		) -> ConstantListView<VariablePixelRow> const & {
 			return thiz.as_view().data();
 		}
 
 		auto data (
-		) const -> CListView<CPixelRow> const & {
+		) const -> ConstantListView<ConstantPixelRow> const & {
 			return thiz.as_view().data();
 		}
 
@@ -195,7 +195,7 @@ export namespace Twinning::Kernel::Image {
 		}
 
 		auto draw (
-			CView const & image
+			ConstantView const & image
 		) -> Void {
 			return thiz.as_view().draw(image);
 		}
@@ -207,14 +207,14 @@ export namespace Twinning::Kernel::Image {
 		auto sub (
 			ImagePosition const & position,
 			ImageSize const &     size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().sub(position, size);
 		}
 
 		auto sub (
 			ImagePosition const & position,
 			ImageSize const &     size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().sub(position, size);
 		}
 

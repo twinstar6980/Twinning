@@ -31,8 +31,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView &      raw,
-			OCharacterStreamView & ripe
+			InputByteStreamView &       raw,
+			OutputCharacterStreamView & ripe
 		) -> Void {
 			auto raw_size = raw.reserve();
 			auto buffer = Array<Byte>{k_raw_block_size};
@@ -78,8 +78,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView &      raw_,
-			OCharacterStreamView & ripe_
+			InputByteStreamView &       raw_,
+			OutputCharacterStreamView & ripe_
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);

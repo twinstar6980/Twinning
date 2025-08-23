@@ -21,11 +21,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto const k_suffix_of_composite_shell_upper = CStringView{"_COMPOSITESHELL"_sv};
+		inline static auto const k_suffix_of_composite_shell_upper = ConstantStringView{"_COMPOSITESHELL"_sv};
 
-		inline static auto const k_suffix_of_composite_shell = CStringView{"_CompositeShell"_sv};
+		inline static auto const k_suffix_of_composite_shell = ConstantStringView{"_CompositeShell"_sv};
 
-		inline static auto const k_suffix_of_automation_pool = CStringView{"_AutoPool"_sv};
+		inline static auto const k_suffix_of_automation_pool = ConstantStringView{"_AutoPool"_sv};
 
 	};
 

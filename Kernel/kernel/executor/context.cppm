@@ -99,9 +99,9 @@ export namespace Twinning::Kernel::Executor {
 		#pragma region basic
 
 		auto evaluate (
-			CStringView const & script,
-			String const &      name,
-			Boolean const &     is_module
+			ConstantStringView const & script,
+			String const &             name,
+			Boolean const &            is_module
 		) -> JavaScript::Value {
 			auto locker = Thread::Locker{JavaScript::g_mutex};
 			return thiz.m_context.evaluate(script, name, is_module);
@@ -154,10 +154,10 @@ export namespace Twinning::Kernel::Executor {
 			thiz.m_busy = k_true;
 			auto locker = Thread::Locker{JavaScript::g_mutex};
 			thread.run(
-				[&, executor] {
+				[&, executor] mutable {
 					auto locker = Thread::Locker{JavaScript::g_mutex};
-					JavaScript::Value::new_reference(thiz.m_context._context(), as_variable(executor)._value()).call(make_list<JavaScript::Value>());
-					as_variable(executor).set_undefined();
+					JavaScript::Value::new_reference(thiz.m_context._context(), executor._value()).call(make_list<JavaScript::Value>());
+					executor.set_undefined();
 					thiz.m_busy = k_false;
 					return;
 				}

@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 		// ----------------
 
 		inline static auto exchange_track_node_list (
-			OByteStreamView &                            data,
+			OutputByteStreamView &                       data,
 			List<typename Definition::TrackNode> const & value_list
 		) -> Void {
 			exchange_list_size(data, value_list, &exchange_size_fixed<IntegerU32>);
@@ -43,7 +43,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 		}
 
 		inline static auto exchange_trail (
-			OByteStreamView &                  data,
+			OutputByteStreamView &             data,
 			typename Definition::Trail const & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 		// ----------------
 
 		inline static auto process_whole (
-			OByteStreamView &                  data,
+			OutputByteStreamView &             data,
 			typename Definition::Trail const & value
 		) -> Void {
 			data.write_constant(k_magic_identifier);
@@ -89,7 +89,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                  data_,
+			OutputByteStreamView &             data_,
 			typename Definition::Trail const & value
 		) -> Void {
 			M_use_zps_of(data);

@@ -26,17 +26,17 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & plain,
-			OByteStreamView & cipher,
-			Size const &      limit,
-			String const &    key
+			InputByteStreamView &  plain,
+			OutputByteStreamView & cipher,
+			Size const &           limit,
+			String const &         key
 		) -> Void {
 			if (plain.reserve() >= limit) {
 				cipher.write_constant(k_magic_identifier);
 				auto header = Header{};
 				header.plain_size = cbox<IntegerU64>(plain.reserve());
 				cipher.write(header);
-				Data::Encryption::EXOR::Encrypt::process(as_lvalue(IByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
+				Data::Encryption::EXOR::Encrypt::process(as_left(InputByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
 			}
 			cipher.write(plain.forward_view(plain.reserve()));
 			return;
@@ -61,10 +61,10 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & plain_,
-			OByteStreamView & cipher_,
-			Size const &      limit,
-			String const &    key
+			InputByteStreamView &  plain_,
+			OutputByteStreamView & cipher_,
+			Size const &           limit,
+			String const &         key
 		) -> Void {
 			M_use_zps_of(plain);
 			M_use_zps_of(cipher);

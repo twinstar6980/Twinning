@@ -25,9 +25,9 @@ export namespace Twinning::Kernel::Image {
 
 	// ----------------
 
-	using VImageView = VBasicImageView<Pixel>;
+	using VariableImageView = VariableBasicImageView<Pixel>;
 
-	using CImageView = CBasicImageView<Pixel>;
+	using ConstantImageView = ConstantBasicImageView<Pixel>;
 
 	using Image = BasicImage<Pixel>;
 

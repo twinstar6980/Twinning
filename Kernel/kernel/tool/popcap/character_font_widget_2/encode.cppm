@@ -23,7 +23,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto exchange_character_item (
-			OByteStreamView &                          data,
+			OutputByteStreamView &                     data,
 			typename Definition::CharacterItem const & value
 		) -> Void {
 			exchange_unicode_fixed<Character16>(data, value.index);
@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_kerning (
-			OByteStreamView &                        data,
+			OutputByteStreamView &                   data,
 			typename Definition::FontKerning const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU16>(data, value.offset);
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_character (
-			OByteStreamView &                          data,
+			OutputByteStreamView &                     data,
 			typename Definition::FontCharacter const & value
 		) -> Void {
 			exchange_unicode_fixed<Character16>(data, value.index);
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_layer (
-			OByteStreamView &                      data,
+			OutputByteStreamView &                 data,
 			typename Definition::FontLayer const & value
 		) -> Void {
 			exchange_string_block<IntegerU32>(data, value.name);
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_widget (
-			OByteStreamView &                       data,
+			OutputByteStreamView &                  data,
 			typename Definition::FontWidget const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerS32>(data, value.ascent);
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto process_whole (
-			OByteStreamView &                       data,
+			OutputByteStreamView &                  data,
 			typename Definition::FontWidget const & definition
 		) -> Void {
 			exchange_font_widget(data, definition);
@@ -127,7 +127,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                       data_,
+			OutputByteStreamView &                  data_,
 			typename Definition::FontWidget const & definition
 		) -> Void {
 			M_use_zps_of(data);

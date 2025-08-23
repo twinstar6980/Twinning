@@ -17,13 +17,13 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC {
 		// ----------------
 
 		inline static auto process_image_v1_4bpp_rgb (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			assert_test(is_padded_size(image.size().width, k_block_width));
 			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto proxy_image = Third::PVRTCCompressor::RgbBitmap{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)};
-			auto proxy_image_data = VListView<Third::PVRTCCompressor::ColorRgb<unsigned char>>{make_pointer(proxy_image.GetData()), image.size().area()};
+			auto proxy_image_data = VariableListView<Third::PVRTCCompressor::ColorRgb<unsigned char>>{make_pointer(proxy_image.GetData()), image.size().area()};
 			for (auto & pixel_y : SizeRange{image.size().height}) {
 				for (auto & pixel_x : SizeRange{image.size().width}) {
 					auto & pixel = image[pixel_y][pixel_x];
@@ -39,13 +39,13 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC {
 		}
 
 		inline static auto process_image_v1_4bpp_rgba (
-			OByteStreamView &         data,
-			Image::CImageView const & image
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image
 		) -> Void {
 			assert_test(is_padded_size(image.size().width, k_block_width));
 			assert_test(is_padded_size(image.size().height, k_block_width));
 			auto proxy_image = Third::PVRTCCompressor::RgbaBitmap{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)};
-			auto proxy_image_data = VListView<Third::PVRTCCompressor::ColorRgba<unsigned char>>{make_pointer(proxy_image.GetData()), image.size().area()};
+			auto proxy_image_data = VariableListView<Third::PVRTCCompressor::ColorRgba<unsigned char>>{make_pointer(proxy_image.GetData()), image.size().area()};
 			for (auto & pixel_y : SizeRange{image.size().height}) {
 				for (auto & pixel_x : SizeRange{image.size().width}) {
 					auto & pixel = image[pixel_y][pixel_x];
@@ -64,9 +64,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC {
 		// ----------------
 
 		inline static auto process_image (
-			OByteStreamView &         data,
-			Image::CImageView const & image,
-			Format const &            format
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image,
+			Format const &                   format
 		) -> Void {
 			if (format == Format::Constant::v1_4bpp_rgb()) {
 				process_image_v1_4bpp_rgb(data, image);
@@ -80,9 +80,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &         data_,
-			Image::CImageView const & image,
-			Format const &            format
+			OutputByteStreamView &           data_,
+			Image::ConstantImageView const & image,
+			Format const &                   format
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, format);

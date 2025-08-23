@@ -46,8 +46,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto process_whole (
-			ICharacterStreamView & ripe,
-			OByteStreamView &      raw
+			InputCharacterStreamView & ripe,
+			OutputByteStreamView &     raw
 		) -> Void {
 			auto raw_size = Size{};
 			estimate_whole(ripe.reserve_view(), raw_size);
@@ -74,8 +74,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto estimate_whole (
-			CCharacterListView const & ripe,
-			Size &                     raw_size
+			ConstantCharacterListView const & ripe,
+			Size &                            raw_size
 		) -> Void {
 			assert_test(is_padded_size(ripe.size(), k_ripe_block_size));
 			auto padding_size = k_none_size;
@@ -94,8 +94,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto process (
-			ICharacterStreamView & ripe_,
-			OByteStreamView &      raw_
+			InputCharacterStreamView & ripe_,
+			OutputByteStreamView &     raw_
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
@@ -103,8 +103,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		}
 
 		inline static auto estimate (
-			CCharacterListView const & ripe,
-			Size &                     raw_size
+			ConstantCharacterListView const & ripe,
+			Size &                            raw_size
 		) -> Void {
 			restruct(raw_size);
 			return estimate_whole(ripe, raw_size);

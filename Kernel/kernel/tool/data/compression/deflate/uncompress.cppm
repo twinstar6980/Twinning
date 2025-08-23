@@ -17,10 +17,10 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & ripe,
-			OByteStreamView & raw,
-			Size const &      window_bits,
-			Wrapper const &   wrapper
+			InputByteStreamView &  ripe,
+			OutputByteStreamView & raw,
+			Size const &           window_bits,
+			Wrapper const &        wrapper
 		) -> Void {
 			assert_test(Math::between(window_bits, 8_sz, mbox<Size>(Third::zlib::$MAX_WBITS)));
 			auto actual_window_bits = static_cast<int>(window_bits.value);
@@ -80,10 +80,10 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & ripe_,
-			OByteStreamView & raw_,
-			Size const &      window_bits,
-			Wrapper const &   wrapper
+			InputByteStreamView &  ripe_,
+			OutputByteStreamView & raw_,
+			Size const &           window_bits,
+			Wrapper const &        wrapper
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);

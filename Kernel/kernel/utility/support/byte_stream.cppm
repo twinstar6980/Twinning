@@ -39,9 +39,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<BaseBox<TValue>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = BaseBox<TValue>;
 
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]] {
@@ -74,8 +74,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			std::memcpy(&that, thix.current_pointer().value, k_type_size<TValue>.value);
 			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]] {
@@ -93,9 +93,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<BooleanBox<TValue>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = BooleanBox<TValue>;
 
@@ -113,7 +113,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
@@ -123,8 +123,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
 			using RawBox = IntegerBox<std::make_unsigned_t<RawValueAlternative>>;
@@ -181,9 +181,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<EnumerationBox<TValue>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = EnumerationBox<TValue>;
 
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			thix.write(that.as_underlying());
@@ -209,8 +209,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			thix.read(that.as_underlying());
 			return;
@@ -252,9 +252,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<ListView<TElement, t_constant>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = ListView<TElement, t_constant>;
 
@@ -277,7 +277,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			for (auto & element : that) {
@@ -287,7 +287,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI &      thix,
+			ThisInput &  thix,
 			That const & that
 		) -> Void requires
 			(!t_constant.value) {
@@ -303,9 +303,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<List<TElement>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = List<TElement>;
 
@@ -324,7 +324,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			thix.write(that.as_view());
@@ -332,15 +332,15 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			thix.read(that.as_view());
 			return;
 		}
 
 		inline static auto read (
-			ThisI &      thix,
+			ThisInput &  thix,
 			That &       that,
 			Size const & size
 		) -> Void {
@@ -355,9 +355,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<Array<TElement>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = Array<TElement>;
 
@@ -376,7 +376,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			thix.write(that.as_view());
@@ -384,15 +384,15 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			thix.read(that.as_view());
 			return;
 		}
 
 		inline static auto read (
-			ThisI &      thix,
+			ThisInput &  thix,
 			That &       that,
 			Size const & size
 		) -> Void {
@@ -407,9 +407,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<StaticArray<TElement, t_size>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = StaticArray<TElement, t_size>;
 
@@ -427,7 +427,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			thix.write(that.view());
@@ -435,8 +435,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			thix.read(that.view());
 			return;
@@ -535,9 +535,9 @@ export namespace Twinning::Kernel {
 		&& (IsDerivedFrom<TType, Record>)
 	struct ByteStreamAdapter<TType> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = TType;
 
@@ -569,7 +569,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			Generalization::each<FieldPackage>(
@@ -581,8 +581,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			Generalization::each<FieldPackage>(
 				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
@@ -601,9 +601,9 @@ export namespace Twinning::Kernel {
 	template <>
 	struct ByteStreamAdapter<FourCharacterCode> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = FourCharacterCode;
 
@@ -631,7 +631,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			thix.write(that.first);
@@ -642,8 +642,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			thix.read(that.first);
 			thix.read(that.second);
@@ -660,9 +660,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<ConstantBlock<t_value>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = ConstantBlock<t_value>;
 
@@ -680,7 +680,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			thix.write_constant(t_value);
@@ -688,8 +688,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			thix.read_constant(t_value);
 			return;
@@ -703,9 +703,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<StringBlock<TLength>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = StringBlock<TLength>;
 
@@ -723,12 +723,12 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			if constexpr (IsVoid<TLength>) {
-				StringParser::write_string_until(self_cast<OCharacterStreamView>(thix), that.value.as_view(), CharacterType::k_null);
-				self_cast<OCharacterStreamView>(thix).write_constant(CharacterType::k_null);
+				StringParser::write_string_until(self_cast<OutputCharacterStreamView>(thix), that.value.as_view(), CharacterType::k_null);
+				self_cast<OutputCharacterStreamView>(thix).write_constant(CharacterType::k_null);
 			}
 			else {
 				thix.write(cbox<TLength>(that.value.size()));
@@ -738,13 +738,13 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			if constexpr (IsVoid<TLength>) {
-				auto that_view = CStringView{};
-				StringParser::read_string_until(self_cast<ICharacterStreamView>(thix), that_view, CharacterType::k_null);
-				self_cast<ICharacterStreamView>(thix).read_constant(CharacterType::k_null);
+				auto that_view = ConstantStringView{};
+				StringParser::read_string_until(self_cast<InputCharacterStreamView>(thix), that_view, CharacterType::k_null);
+				self_cast<InputCharacterStreamView>(thix).read_constant(CharacterType::k_null);
 				that.value = that_view;
 			}
 			else {

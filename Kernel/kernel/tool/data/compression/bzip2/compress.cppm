@@ -17,10 +17,10 @@ export namespace Twinning::Kernel::Tool::Data::Compression::BZip2 {
 		// ----------------
 
 		inline static auto process_whole (
-			IByteStreamView & raw,
-			OByteStreamView & ripe,
-			Size const &      block_size,
-			Size const &      work_factor
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe,
+			Size const &           block_size,
+			Size const &           work_factor
 		) -> Void {
 			assert_test(Math::between(block_size, 1_sz, 9_sz));
 			assert_test(Math::between(work_factor, 0_sz, 250_sz));
@@ -65,10 +65,10 @@ export namespace Twinning::Kernel::Tool::Data::Compression::BZip2 {
 		// ----------------
 
 		inline static auto process (
-			IByteStreamView & raw_,
-			OByteStreamView & ripe_,
-			Size const &      block_size,
-			Size const &      work_factor
+			InputByteStreamView &  raw_,
+			OutputByteStreamView & ripe_,
+			Size const &           block_size,
+			Size const &           work_factor
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);

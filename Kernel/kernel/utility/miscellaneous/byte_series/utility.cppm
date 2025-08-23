@@ -7,7 +7,9 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.range.number_range;
 import twinning.kernel.utility.container.list.list_view;
+import twinning.kernel.utility.container.static_array.static_array;
 import twinning.kernel.utility.container.stream.stream_view;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
 
@@ -39,15 +41,6 @@ export namespace Twinning::Kernel {
 	#pragma endregion bit
 
 	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
-	inline auto byte_nth_of (
-		It &         it,
-		Size const & index
-	) -> AsConstantIf<Byte, IsCInstance<It>> & {
-		return cast_pointer<Byte>(make_pointer(&it))[index];
-	}
-
-	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
 	inline auto clip_bit (
@@ -67,16 +60,12 @@ export namespace Twinning::Kernel {
 			return it;
 		}
 		else {
-			union {
-				It                        value;
-				ZArray<ZByte, sizeof(It)> byte;
+			auto forward = cast_pointer<ZByte>(make_pointer_of(it));
+			auto backward = StaticArray<ZByte, k_type_size<It>>{};
+			for (auto & index : SizeRange{k_type_size<It>}) {
+				backward[index] = forward[k_type_size<It> - 1_sz - index];
 			}
-				result = {};
-			auto pointer = reinterpret_cast<ZPointer<ZByte const>>(&it);
-			for (auto index = k_begin_index; index < k_type_size<It>; ++index) {
-				result.byte[index.value] = pointer[(k_type_size<It> - 1_sz - index).value];
-			}
-			return result.value;
+			return cast_pointer<It>(backward.begin()).dereference();
 		}
 	}
 
@@ -84,7 +73,7 @@ export namespace Twinning::Kernel {
 
 	template <typename SourceElement, auto constant> requires
 		CategoryConstraint<IsPureInstance<SourceElement>>
-		&& (IsSameV<constant, Boolean>)
+		&& (IsSameOf<constant, Boolean>)
 	inline auto to_byte_view (
 		ListView<SourceElement, constant> const & source
 	) -> ByteListView<constant> {
@@ -93,7 +82,7 @@ export namespace Twinning::Kernel {
 
 	template <typename DestinationElement, template <typename, auto> typename DestinationView = ListView, auto constant> requires
 		CategoryConstraint<IsPureInstance<DestinationElement>>
-		&& (IsSameV<constant, Boolean>)
+		&& (IsSameOf<constant, Boolean>)
 	inline auto from_byte_view (
 		ByteListView<constant> const & source
 	) -> DestinationView<DestinationElement, constant> {

@@ -507,9 +507,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = Tool::PopCap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>;
 
@@ -529,7 +529,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
@@ -542,8 +542,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
@@ -567,9 +567,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = Tool::PopCap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>;
 
@@ -585,7 +585,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
@@ -594,8 +594,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<ResourceBasicManifestInformation<t_version>>(that));
@@ -610,9 +610,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = Tool::PopCap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>;
 
@@ -629,7 +629,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
@@ -639,8 +639,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
@@ -656,9 +656,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = Tool::PopCap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>;
 
@@ -675,7 +675,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
@@ -685,8 +685,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<GroupBasicManifestInformation<t_version>>(that));

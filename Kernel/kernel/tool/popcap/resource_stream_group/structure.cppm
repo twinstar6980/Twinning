@@ -170,9 +170,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamGroup::Structure::ResourceInformation<t_version>> {
 
-		using ThisI = IByteStreamView;
+		using ThisInput = InputByteStreamView;
 
-		using ThisO = OByteStreamView;
+		using ThisOutput = OutputByteStreamView;
 
 		using That = Tool::PopCap::ResourceStreamGroup::Structure::ResourceInformation<t_version>;
 
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto write (
-			ThisO &      thix,
+			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
@@ -215,8 +215,8 @@ export namespace Twinning::Kernel {
 		}
 
 		inline static auto read (
-			ThisI & thix,
-			That &  that
+			ThisInput & thix,
+			That &      that
 		) -> Void {
 			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
 			thix.read(up_cast<ResourceBasicInformation<t_version>>(that));

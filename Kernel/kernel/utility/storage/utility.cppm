@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Storage {
 			Path const & original
 		) -> Path {
 			auto result = original;
-			for (auto & element : as_variable(result.relative())) {
+			for (auto & element : result.relative()) {
 				while (!element.empty()) {
 					if (element.last() == ' '_c) {
 						element.remove_tail();
@@ -272,7 +272,7 @@ export namespace Twinning::Kernel::Storage {
 
 		template <auto filter> requires
 			CategoryConstraint<>
-			&& (IsSameV<filter, FilterType>)
+			&& (IsSameOf<filter, FilterType>)
 		inline auto count (
 			Path const &           target,
 			Optional<Size> const & depth,
@@ -311,7 +311,7 @@ export namespace Twinning::Kernel::Storage {
 
 		template <auto filter> requires
 			CategoryConstraint<>
-			&& (IsSameV<filter, FilterType>)
+			&& (IsSameOf<filter, FilterType>)
 		inline auto list (
 			Path const &           target,
 			Optional<Size> const & depth,
@@ -497,8 +497,8 @@ export namespace Twinning::Kernel::Storage {
 	}
 
 	inline auto write_file (
-		Path const &          target,
-		CByteListView const & data
+		Path const &                 target,
+		ConstantByteListView const & data
 	) -> Void {
 		auto size = data.size();
 		auto handler = Detail::FileHandler::open_by_write(target);
@@ -510,8 +510,8 @@ export namespace Twinning::Kernel::Storage {
 	// ----------------
 
 	inline auto read_stream_file (
-		Path const &      target,
-		OByteStreamView & data
+		Path const &           target,
+		OutputByteStreamView & data
 	) -> Size {
 		auto size = size_file(target);
 		assert_test(data.reserve() >= size);
@@ -523,8 +523,8 @@ export namespace Twinning::Kernel::Storage {
 	}
 
 	inline auto write_stream_file (
-		Path const &      target,
-		IByteStreamView & data
+		Path const &          target,
+		InputByteStreamView & data
 	) -> Size {
 		auto size = data.reserve();
 		auto handler = Detail::FileHandler::open_by_write(target);

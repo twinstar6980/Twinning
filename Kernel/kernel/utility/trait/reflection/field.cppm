@@ -32,8 +32,8 @@ export namespace Twinning::Kernel::Trait::Reflection {
 	template <auto t_name, auto t_value, auto t_is_static, auto t_is_function> requires
 		CategoryConstraint<>
 		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
-		&& (IsSameV<t_is_static, ZBoolean>)
-		&& (IsSameV<t_is_function, ZBoolean>)
+		&& (IsSameOf<t_is_static, ZBoolean>)
+		&& (IsSameOf<t_is_function, ZBoolean>)
 		&& ((t_is_static && IsBuiltinPointer<decltype(t_value)>) || (!t_is_static && IsBuiltinMemberPointer<decltype(t_value)>))
 	struct ClassField :
 		Field<t_name, t_value> {

@@ -38,7 +38,7 @@ export namespace Twinning::Kernel {
 	#pragma region utility
 
 	inline constexpr auto four_character_code_from_string (
-		CStringView const & string
+		ConstantStringView const & string
 	) -> FourCharacterCode {
 		assert_test(string.size() == 4_sz);
 		auto data = FourCharacterCode{};

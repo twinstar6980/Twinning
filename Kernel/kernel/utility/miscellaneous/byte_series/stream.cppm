@@ -18,7 +18,7 @@ export namespace Twinning::Kernel {
 
 	template <auto t_mode> requires
 		CategoryConstraint<>
-		&& (IsSameV<t_mode, StreamMode>)
+		&& (IsSameOf<t_mode, StreamMode>)
 	class ByteStreamView :
 		public StreamView<Byte, t_mode, BasicByteListView> {
 
@@ -26,11 +26,11 @@ export namespace Twinning::Kernel {
 
 		using StreamView = StreamView<Byte, t_mode, BasicByteListView>;
 
-		using IOStream = ByteStreamView<StreamMode::Constant::io()>;
+		using AccessStream = ByteStreamView<StreamMode::Constant::access()>;
 
-		using IStream = ByteStreamView<StreamMode::Constant::i()>;
+		using InputStream = ByteStreamView<StreamMode::Constant::input()>;
 
-		using OStream = ByteStreamView<StreamMode::Constant::o()>;
+		using OutputStream = ByteStreamView<StreamMode::Constant::output()>;
 
 	public:
 
@@ -40,9 +40,9 @@ export namespace Twinning::Kernel {
 
 		using typename StreamView::ListView;
 
-		using typename StreamView::QElement;
+		using typename StreamView::QualifyElement;
 
-		using typename StreamView::QIterator;
+		using typename StreamView::QualifyIterator;
 
 	public:
 
@@ -82,13 +82,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator IStream & () requires
-			(mode == StreamMode::Constant::io()) {
+		implicit operator InputStream & () requires
+			(mode == StreamMode::Constant::access()) {
 			return thiz.as_input_stream();
 		}
 
-		implicit operator OStream & () requires
-			(mode == StreamMode::Constant::io()) {
+		implicit operator OutputStream & () requires
+			(mode == StreamMode::Constant::access()) {
 			return thiz.as_output_stream();
 		}
 
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel {
 			That &&       that,
 			Option && ... option
 		) -> Void requires
-			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			ByteStreamAdapter<AsPure<That>>::write(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
@@ -113,7 +113,7 @@ export namespace Twinning::Kernel {
 			That &&       that,
 			Option && ... option
 		) -> Void requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			ByteStreamAdapter<AsPure<That>>::read(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
 			return;
 		}
@@ -126,7 +126,7 @@ export namespace Twinning::Kernel {
 			That const &  that,
 			Option && ... option
 		) -> Void requires
-			(mode == StreamMode::Constant::o() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			thiz.write(that, as_forward<Option>(option) ...);
 			return;
 		}
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel {
 			That const &  that,
 			Option && ... option
 		) -> Void requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			auto temporary_that = That{};
 			thiz.read(temporary_that, as_forward<Option>(option) ...);
 			assert_test(temporary_that == that);
@@ -151,7 +151,7 @@ export namespace Twinning::Kernel {
 		auto read_of (
 			Option && ... option
 		) -> That requires
-			(mode == StreamMode::Constant::i() || mode == StreamMode::Constant::io()) {
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			auto that = That{};
 			thiz.read(that, as_forward<Option>(option) ...);
 			return that;
@@ -159,18 +159,18 @@ export namespace Twinning::Kernel {
 
 		#pragma endregion
 
-		#pragma region method cast
+		#pragma region mode cast
 
 		auto as_input_stream (
-		) -> IStream & requires
-			(mode == StreamMode::Constant::io()) {
-			return self_cast<IStream>(thiz);
+		) -> InputStream & requires
+			(mode == StreamMode::Constant::access()) {
+			return self_cast<InputStream>(thiz);
 		}
 
 		auto as_output_stream (
-		) -> OStream & requires
-			(mode == StreamMode::Constant::io()) {
-			return self_cast<OStream>(thiz);
+		) -> OutputStream & requires
+			(mode == StreamMode::Constant::access()) {
+			return self_cast<OutputStream>(thiz);
 		}
 
 		#pragma endregion
@@ -202,11 +202,11 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	using IOByteStreamView = ByteStreamView<StreamMode::Constant::io()>;
+	using AccessByteStreamView = ByteStreamView<StreamMode::Constant::access()>;
 
-	using IByteStreamView = ByteStreamView<StreamMode::Constant::i()>;
+	using InputByteStreamView = ByteStreamView<StreamMode::Constant::input()>;
 
-	using OByteStreamView = ByteStreamView<StreamMode::Constant::o()>;
+	using OutputByteStreamView = ByteStreamView<StreamMode::Constant::output()>;
 
 	#pragma endregion
 

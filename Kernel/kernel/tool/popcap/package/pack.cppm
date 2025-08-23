@@ -24,14 +24,14 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 		// ----------------
 
 		inline static auto process_package (
-			OByteStreamView &                    data,
+			OutputByteStreamView &               data,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_identifier);
 			data.write_constant(cbox<Structure::VersionNumber>(version.number));
 			struct {
-				OByteStreamView resource_information{};
+				OutputByteStreamView resource_information{};
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<version>{};
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
 					resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::k_path_separator_windows)};
 				}
-				information_data.resource_information = OByteStreamView{
+				information_data.resource_information = OutputByteStreamView{
 					data.forward_view(
 						[&] {
 							auto size = k_none_size;
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 				}
 				if constexpr (check_version(version, {}, {true})) {
 					auto resource_data = Storage::read_file(resource_path);
-					auto resource_data_stream = IByteStreamView{resource_data};
+					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_offset = data.position();
 					Data::Compression::Deflate::Compress::process(resource_data_stream, data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					resource_information_structure.size = cbox<IntegerU32>(data.position() - resource_offset);
@@ -89,7 +89,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 		// ----------------
 
 		inline static auto process (
-			OByteStreamView &                    data_,
+			OutputByteStreamView &               data_,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {

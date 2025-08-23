@@ -174,7 +174,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	template <typename Class, auto flag = GenericClassDefinitionFlag::default_mask> requires
 		CategoryConstraint<IsPureInstance<Class>>
-		&& (IsSameV<flag, GenericClassDefinitionFlag>)
+		&& (IsSameOf<flag, GenericClassDefinitionFlag>)
 	inline auto define_generic_class (
 		JavaScript::NativeSpaceBuilder & space,
 		String const &                   name
@@ -310,35 +310,35 @@ export namespace Twinning::Kernel::Executor::Environment {
 	#pragma region proxy function with promotion
 
 	// NOTE: EXPLAIN: promotion these type to simplify interface
-	// - (V|C)StringView          -> String                : String
-	// - (C)ByteListView          -> VByteListView         : ByteListView
-	// - (I|O)ByteStreamView      -> IOByteStreamView      : ByteStreamView
-	// - (C)CharacterListView     -> VCharacterListView    : CharacterListView
-	// - (I|O)CharacterStreamView -> IOCharacterStreamView : CharacterStreamView
-	// - Image::(C)ImageView      -> Image::VImageView     : Image::ImageView
+	// - *StringView          -> String                    -> String
+	// - *ByteListView        -> VariableByteListView      -> ByteListView
+	// - *ByteStreamView      -> AccessByteStreamView      -> ByteStreamView
+	// - *CharacterListView   -> VariableCharacterListView -> CharacterListView
+	// - *CharacterStreamView -> AccessCharacterStreamView -> CharacterStreamView
+	// - Image::*ImageView    -> Image::VariableImageView  -> Image::ImageView
 
 	namespace Detail {
 
 		template <typename Type> requires
 			NoneConstraint
 		using AsPromotion = AsSwitch<
-			IsSame<Type, CStringView, VStringView>,
+			IsSame<Type, ConstantStringView, VariableStringView>,
 			String,
 			AsSwitch<
-				IsSame<Type, CByteListView>,
-				VByteListView,
+				IsSame<Type, ConstantByteListView>,
+				VariableByteListView,
 				AsSwitch<
-					IsSame<Type, IByteStreamView, OByteStreamView>,
-					IOByteStreamView,
+					IsSame<Type, InputByteStreamView, OutputByteStreamView>,
+					AccessByteStreamView,
 					AsSwitch<
-						IsSame<Type, CCharacterListView>,
-						VCharacterListView,
+						IsSame<Type, ConstantCharacterListView>,
+						VariableCharacterListView,
 						AsSwitch<
-							IsSame<Type, ICharacterStreamView, OCharacterStreamView>,
-							IOCharacterStreamView,
+							IsSame<Type, InputCharacterStreamView, OutputCharacterStreamView>,
+							AccessCharacterStreamView,
 							AsSwitch<
-								IsSame<Type, Image::CImageView>,
-								Image::VImageView,
+								IsSame<Type, Image::ConstantImageView>,
+								Image::VariableImageView,
 								Type
 							>
 						>
@@ -384,7 +384,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 	) -> Void {
 		#pragma clang diagnostic push
 		#pragma clang diagnostic ignored "-Wshadow"
-		auto s_Twinning = JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_lvalue(context.context().global_object())};
+		auto s_Twinning = JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_left(context.context().global_object())};
 		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
 		// Boolean
 		define_generic_class<Boolean>(s_Kernel, "Boolean"_s);
@@ -409,7 +409,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::allocate>>("allocate"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::reset>>("reset"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, AsVMemberFunction<ByteArray, ByteArray::View>{&ByteArray::view}>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, AsVariableMemberFunction<ByteArray, ByteArray::View>{&ByteArray::view}>>("view"_s)
 			.add_member_function<
 				&normalized_lambda<
 					[] (
@@ -420,29 +420,29 @@ export namespace Twinning::Kernel::Executor::Environment {
 				>
 			>("release"_s);
 		// ByteListView
-		define_generic_class<VByteListView>(s_Kernel, "ByteListView"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VByteListView, &VByteListView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VByteListView, AsCMemberFunction<VByteListView, VByteListView, Size const &, Size const &>{&VByteListView::sub}>>("sub"_s);
+		define_generic_class<VariableByteListView>(s_Kernel, "ByteListView"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableByteListView, &VariableByteListView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableByteListView, AsConstantMemberFunction<VariableByteListView, VariableByteListView, Size const &, Size const &>{&VariableByteListView::sub}>>("sub"_s);
 		// ByteStreamView
-		define_generic_class<IOByteStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "ByteStreamView"_s)
-			.add_constructor_allocate_proxy<VByteListView const &>("watch"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::position>>("position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::set_position>>("set_position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::view>>("view"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOByteStreamView, &IOByteStreamView::stream_view>>("stream_view"_s);
+		define_generic_class<AccessByteStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "ByteStreamView"_s)
+			.add_constructor_allocate_proxy<VariableByteListView const &>("watch"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::position>>("position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::set_position>>("set_position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::view>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::stream_view>>("stream_view"_s);
 		// CharacterListView
-		define_generic_class<VCharacterListView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterListView"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VCharacterListView, &VCharacterListView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VCharacterListView, AsCMemberFunction<VCharacterListView, VCharacterListView, Size const &, Size const &>{&VCharacterListView::sub}>>("sub"_s);
+		define_generic_class<VariableCharacterListView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterListView"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableCharacterListView, &VariableCharacterListView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableCharacterListView, AsConstantMemberFunction<VariableCharacterListView, VariableCharacterListView, Size const &, Size const &>{&VariableCharacterListView::sub}>>("sub"_s);
 		// CharacterStreamView
-		define_generic_class<IOCharacterStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterStreamView"_s)
-			.add_constructor_allocate_proxy<VCharacterListView const &>("watch"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::position>>("position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::set_position>>("set_position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::view>>("view"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<IOCharacterStreamView, &IOCharacterStreamView::stream_view>>("stream_view"_s);
+		define_generic_class<AccessCharacterStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterStreamView"_s)
+			.add_constructor_allocate_proxy<VariableCharacterListView const &>("watch"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::position>>("position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::set_position>>("set_position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::view>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::stream_view>>("stream_view"_s);
 		// JSON
 		{
 			auto s_JSON = s_Kernel.add_space("JSON"_s);
@@ -461,17 +461,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 			define_generic_class<Image::Color>(s_Image, "Color"_s);
 			define_generic_class<List<Image::Color>>(s_Image, "ColorList"_s);
 			define_generic_class<Image::Pixel>(s_Image, "Pixel"_s);
-			define_generic_class<Image::VImageView, GenericClassDefinitionFlag::generic_mask>(s_Image, "ImageView"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::size>>("size"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::fill>>("fill"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::draw>>("draw"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VImageView, &Image::VImageView::sub>>("sub"_s);
+			define_generic_class<Image::VariableImageView, GenericClassDefinitionFlag::generic_mask>(s_Image, "ImageView"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::size>>("size"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::fill>>("fill"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::draw>>("draw"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::sub>>("sub"_s);
 			define_generic_class<Image::Image, GenericClassDefinitionFlag::generic_mask>(s_Image, "Image"_s)
 				.add_constructor_allocate_proxy<Image::ImageSize const &>("allocate"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::allocate>>("allocate"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::reset>>("reset"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::size>>("size"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, AsVMemberFunction<Image::Image, Image::VImageView>{&Image::Image::view}>>("view"_s);
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, AsVariableMemberFunction<Image::Image, Image::VariableImageView>{&Image::Image::view}>>("view"_s);
 		}
 		// Storage
 		{
@@ -710,7 +710,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_SoundBank.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &           data,
+							OutputByteStreamView &      data,
 							SoundBankDefinition const & definition,
 							Path const &                embedded_media_directory,
 							Version const &             version
@@ -726,7 +726,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_SoundBank.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &      data,
+							InputByteStreamView &  data,
 							SoundBankDefinition &  definition,
 							Optional<Path> const & embedded_media_directory,
 							Version const &        version
@@ -761,7 +761,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_DZip.add_space("Pack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &         data,
+							OutputByteStreamView &    data,
 							PackageDefinition const & definition,
 							Path const &              resource_directory,
 							Version const &           version
@@ -777,7 +777,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_DZip.add_space("Unpack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &      data,
+							InputByteStreamView &  data,
 							PackageDefinition &    definition,
 							Optional<Path> const & resource_directory,
 							Version const &        version
@@ -803,8 +803,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ZLib.add_space("Compress"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &                                  raw,
-							OByteStreamView &                                  ripe,
+							InputByteStreamView &                              raw,
+							OutputByteStreamView &                             ripe,
 							Size const &                                       level,
 							Size const &                                       window_bits,
 							Size const &                                       memory_level,
@@ -838,10 +838,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ZLib.add_space("Uncompress"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & ripe,
-							OByteStreamView & raw,
-							Size const &      window_bits,
-							Version const &   version
+							InputByteStreamView &  ripe,
+							OutputByteStreamView & raw,
+							Size const &           window_bits,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -853,9 +853,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							CByteListView const & ripe,
-							Size &                raw_size,
-							Version const &       version
+							ConstantByteListView const & ripe,
+							Size &                       raw_size,
+							Version const &              version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -874,11 +874,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CryptData.add_space("Encrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & plain,
-							OByteStreamView & cipher,
-							Size const &      limit,
-							String const &    key,
-							Version const &   version
+							InputByteStreamView &  plain,
+							OutputByteStreamView & cipher,
+							Size const &           limit,
+							String const &         key,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -906,11 +906,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CryptData.add_space("Decrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & cipher,
-							OByteStreamView & plain,
-							Size const &      limit,
-							String const &    key,
-							Version const &   version
+							InputByteStreamView &  cipher,
+							OutputByteStreamView & plain,
+							Size const &           limit,
+							String const &         key,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -922,10 +922,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							CByteListView const & cipher,
-							Size &                plain_size,
-							Size const &          limit,
-							Version const &       version
+							ConstantByteListView const & cipher,
+							Size &                       plain_size,
+							Size const &                 limit,
+							Version const &              version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -944,11 +944,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ReflectionObjectNotation.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &   data,
-							JSON::Value const & definition,
-							Boolean const &     enable_string_index,
-							Boolean const &     enable_reference,
-							Version const &     version
+							OutputByteStreamView & data,
+							JSON::Value const &    definition,
+							Boolean const &        enable_string_index,
+							Boolean const &        enable_reference,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -961,9 +961,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ReflectionObjectNotation.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & data,
-							JSON::Value &     definition,
-							Version const &   version
+							InputByteStreamView & data,
+							JSON::Value &         definition,
+							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -982,8 +982,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_UTexture.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &                       data,
-							Image::CImageView const &               image,
+							OutputByteStreamView &                  data,
+							Image::ConstantImageView const &        image,
 							Tool::Texture::Encoding::Format const & format,
 							Version const &                         version
 						) -> Void {
@@ -1013,9 +1013,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_UTexture.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &         data,
-							Image::VImageView const & image,
-							Version const &           version
+							InputByteStreamView &            data,
+							Image::VariableImageView const & image,
+							Version const &                  version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1027,9 +1027,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							CByteListView &    data,
-							Image::ImageSize & image_size,
-							Version const &    version
+							ConstantByteListView & data,
+							Image::ImageSize &     image_size,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1048,8 +1048,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_SexyTexture.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &                       data,
-							Image::CImageView const &               image,
+							OutputByteStreamView &                  data,
+							Image::ConstantImageView const &        image,
 							Tool::Texture::Encoding::Format const & format,
 							Boolean const &                         compress_texture_data,
 							Version const &                         version
@@ -1081,9 +1081,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_SexyTexture.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &         data,
-							Image::VImageView const & image,
-							Version const &           version
+							InputByteStreamView &            data,
+							Image::VariableImageView const & image,
+							Version const &                  version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1095,9 +1095,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							CByteListView &    data,
-							Image::ImageSize & image_size,
-							Version const &    version
+							ConstantByteListView & data,
+							Image::ImageSize &     image_size,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1130,7 +1130,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Animation.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &           data,
+							OutputByteStreamView &      data,
 							AnimationDefinition const & definition,
 							Version const &             version
 						) -> Void {
@@ -1145,7 +1145,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Animation.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &     data,
+							InputByteStreamView & data,
 							AnimationDefinition & definition,
 							Version const &       version
 						) -> Void {
@@ -1178,7 +1178,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ReAnimation.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &           data,
+							OutputByteStreamView &      data,
 							AnimationDefinition const & definition,
 							Version const &             version
 						) -> Void {
@@ -1193,7 +1193,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ReAnimation.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &     data,
+							InputByteStreamView & data,
 							AnimationDefinition & definition,
 							Version const &       version
 						) -> Void {
@@ -1226,7 +1226,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Particle.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &          data,
+							OutputByteStreamView &     data,
 							ParticleDefinition const & definition,
 							Version const &            version
 						) -> Void {
@@ -1241,9 +1241,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Particle.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &    data,
-							ParticleDefinition & definition,
-							Version const &      version
+							InputByteStreamView & data,
+							ParticleDefinition &  definition,
+							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1274,7 +1274,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Trail.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &       data,
+							OutputByteStreamView &  data,
 							TrailDefinition const & definition,
 							Version const &         version
 						) -> Void {
@@ -1289,9 +1289,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Trail.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & data,
-							TrailDefinition & definition,
-							Version const &   version
+							InputByteStreamView & data,
+							TrailDefinition &     definition,
+							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1321,7 +1321,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_RenderEffect.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &        data,
+							OutputByteStreamView &   data,
 							EffectDefinition const & definition,
 							Version const &          version
 						) -> Void {
@@ -1336,9 +1336,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_RenderEffect.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &  data,
-							EffectDefinition & definition,
-							Version const &    version
+							InputByteStreamView & data,
+							EffectDefinition &    definition,
+							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1366,7 +1366,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ParticleEffect.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &        data,
+							OutputByteStreamView &   data,
 							EffectDefinition const & definition,
 							Version const &          version
 						) -> Void {
@@ -1381,9 +1381,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ParticleEffect.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &  data,
-							EffectDefinition & definition,
-							Version const &    version
+							InputByteStreamView & data,
+							EffectDefinition &    definition,
+							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1411,7 +1411,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CharacterFontWidget2.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &            data,
+							OutputByteStreamView &       data,
 							FontWidgetDefinition const & definition,
 							Version const &              version
 						) -> Void {
@@ -1426,7 +1426,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CharacterFontWidget2.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &      data,
+							InputByteStreamView &  data,
 							FontWidgetDefinition & definition,
 							Version const &        version
 						) -> Void {
@@ -1457,7 +1457,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Package.add_space("Pack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &         data,
+							OutputByteStreamView &    data,
 							PackageDefinition const & definition,
 							Path const &              resource_directory,
 							Version const &           version
@@ -1473,7 +1473,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Package.add_space("Unpack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &      data,
+							InputByteStreamView &  data,
 							PackageDefinition &    definition,
 							Optional<Path> const & resource_directory,
 							Version const &        version
@@ -1506,7 +1506,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ResourceStreamGroup.add_space("Pack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &         data,
+							OutputByteStreamView &    data,
 							PackageDefinition const & definition,
 							Path const &              resource_directory,
 							Version const &           version
@@ -1522,7 +1522,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ResourceStreamGroup.add_space("Unpack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &      data,
+							InputByteStreamView &  data,
 							PackageDefinition &    definition,
 							Optional<Path> const & resource_directory,
 							Version const &        version
@@ -1572,7 +1572,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ResourceStreamBundle.add_space("Pack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							OByteStreamView &               data,
+							OutputByteStreamView &          data,
 							PackageDefinition const &       definition,
 							PackageManifestOptional const & manifest,
 							Path const &                    resource_directory,
@@ -1591,7 +1591,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ResourceStreamBundle.add_space("Unpack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView &         data,
+							InputByteStreamView &     data,
 							PackageDefinition &       definition,
 							PackageManifestOptional & manifest,
 							Optional<Path> const &    resource_directory,
@@ -1615,11 +1615,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ResourceStreamBundlePatch.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & before,
-							IByteStreamView & after,
-							OByteStreamView & patch,
-							Boolean const &   use_raw_packet,
-							Version const &   version
+							InputByteStreamView &  before,
+							InputByteStreamView &  after,
+							OutputByteStreamView & patch,
+							Boolean const &        use_raw_packet,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1632,11 +1632,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ResourceStreamBundlePatch.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
-							IByteStreamView & before,
-							OByteStreamView & after,
-							IByteStreamView & patch,
-							Boolean const &   use_raw_packet,
-							Version const &   version
+							InputByteStreamView &  before,
+							OutputByteStreamView & after,
+							InputByteStreamView &  patch,
+							Boolean const &        use_raw_packet,
+							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1689,12 +1689,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_member_function<
 					&normalized_lambda<
 						[] (
-						JavaScript::NativeValueHandler<Context> &            thix,
-						JavaScript::NativeValueHandler<VCharacterListView> & script,
-						JavaScript::NativeValueHandler<String> &             name,
-						JavaScript::NativeValueHandler<Boolean> &            is_module
+						JavaScript::NativeValueHandler<Context> &                   thix,
+						JavaScript::NativeValueHandler<VariableCharacterListView> & script,
+						JavaScript::NativeValueHandler<String> &                    name,
+						JavaScript::NativeValueHandler<Boolean> &                   is_module
 					) -> JavaScript::Value {
-							return thix.value().evaluate(down_cast<VStringView>(script.value()), name.value(), is_module.value());
+							return thix.value().evaluate(down_cast<VariableStringView>(script.value()), name.value(), is_module.value());
 						}
 					>
 				>("evaluate"_s)
@@ -1759,18 +1759,18 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<
 					&normalized_lambda<
 						[] (
-						VByteListView & it
-					) -> VCharacterListView {
-							return self_cast<VCharacterListView>(it);
+						VariableByteListView & it
+					) -> VariableCharacterListView {
+							return self_cast<VariableCharacterListView>(it);
 						}
 					>
 				>("cast_ByteListView_to_CharacterListView"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[] (
-						VCharacterListView & it
-					) -> VByteListView {
-							return self_cast<VByteListView>(it);
+						VariableCharacterListView & it
+					) -> VariableByteListView {
+							return self_cast<VariableByteListView>(it);
 						}
 					>
 				>("cast_CharacterListView_to_ByteListView"_s)
@@ -1802,18 +1802,18 @@ export namespace Twinning::Kernel::Executor::Environment {
 					&normalized_lambda<
 						[] (
 						String & it
-					) -> VCharacterListView {
-							return up_cast<VCharacterListView>(it.view());
+					) -> VariableCharacterListView {
+							return up_cast<VariableCharacterListView>(it.view());
 						}
 					>
 				>("cast_String_to_CharacterListView"_s)
 				.add_function<
 					&normalized_lambda<
 						[] (
-						JavaScript::NativeValueHandler<VCharacterListView> & it
-					) -> VStringView & {
+						JavaScript::NativeValueHandler<VariableCharacterListView> & it
+					) -> VariableStringView & {
 							// NOTE: EXPLAIN: return StringView is cheap
-							return down_cast<VStringView>(it.value());
+							return down_cast<VariableStringView>(it.value());
 						}
 					>
 				>("cast_CharacterListView_to_JS_String"_s);

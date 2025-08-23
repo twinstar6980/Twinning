@@ -268,7 +268,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
             children: [...this._messageList],
           ).withScrollbar(
             controller: this._messageListScrollController,
-          ).withSelectionArea(
           ).withExpanded(),
           LinearProgressIndicator(
             value: !this._sessionRunning ? 1 : this._submissionBar.type == null ? null : 1,

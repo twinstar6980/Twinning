@@ -18,7 +18,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 		&& (IsCharacterBox<TElement>)
 	class BasicStringView :
 		public BasicCharacterListView<TElement, t_constant> {
@@ -27,7 +27,7 @@ export namespace Twinning::Kernel {
 
 		using BasicCharacterListView = BasicCharacterListView<TElement, t_constant>;
 
-		using CView = BasicStringView<TElement, k_true>;
+		using ConstantView = BasicStringView<TElement, k_true>;
 
 	public:
 
@@ -35,9 +35,9 @@ export namespace Twinning::Kernel {
 
 		using BasicCharacterListView::constant;
 
-		using typename BasicCharacterListView::QElement;
+		using typename BasicCharacterListView::QualifyElement;
 
-		using typename BasicCharacterListView::QIterator;
+		using typename BasicCharacterListView::QualifyIterator;
 
 	public:
 
@@ -77,14 +77,14 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator CView & () requires
+		implicit operator ConstantView & () requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator CView const & () const requires
+		implicit operator ConstantView const & () const requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -112,14 +112,14 @@ export namespace Twinning::Kernel {
 		#pragma region comparison
 
 		constexpr auto equal_icase (
-			CView const & that
+			ConstantView const & that
 		) const -> Boolean requires
 			(IsSame<Element, Character>) {
 			return Range::equal(thiz, that, CharacterType::equal_icase);
 		}
 
 		constexpr auto compare_3way (
-			CView const & that
+			ConstantView const & that
 		) const -> StrongOrdering requires
 			(IsSame<Element, Character>) {
 			auto common_size = minimum(thiz.size(), that.size());
@@ -204,11 +204,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Element> requires
 		AutoConstraint
-	using VBasicStringView = BasicStringView<Element, k_false>;
+	using VariableBasicStringView = BasicStringView<Element, k_false>;
 
 	template <typename Element> requires
 		AutoConstraint
-	using CBasicStringView = BasicStringView<Element, k_true>;
+	using ConstantBasicStringView = BasicStringView<Element, k_true>;
 
 	#pragma endregion
 

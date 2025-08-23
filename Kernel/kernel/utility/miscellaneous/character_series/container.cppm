@@ -18,14 +18,14 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_constant, Boolean>)
+		&& (IsSameOf<t_constant, Boolean>)
 		&& (IsCharacterBox<TElement>)
 	class BasicCharacterListView :
 		public ListView<TElement, t_constant> {
 
 	private:
 
-		using CView = BasicCharacterListView<TElement, k_true>;
+		using ConstantView = BasicCharacterListView<TElement, k_true>;
 
 		using ListView = ListView<TElement, t_constant>;
 
@@ -35,9 +35,9 @@ export namespace Twinning::Kernel {
 
 		using ListView::constant;
 
-		using typename ListView::QElement;
+		using typename ListView::QualifyElement;
 
-		using typename ListView::QIterator;
+		using typename ListView::QualifyIterator;
 
 	public:
 
@@ -77,14 +77,14 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator CView & () requires
+		implicit operator ConstantView & () requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator CView const & () const requires
+		implicit operator ConstantView const & () const requires
 			(!constant.value) {
-			return self_cast<CView>(thiz);
+			return self_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -119,11 +119,11 @@ export namespace Twinning::Kernel {
 
 	template <typename Element> requires
 		AutoConstraint
-	using VBasicCharacterListView = BasicCharacterListView<Element, k_false>;
+	using VariableBasicCharacterListView = BasicCharacterListView<Element, k_false>;
 
 	template <typename Element> requires
 		AutoConstraint
-	using CBasicCharacterListView = BasicCharacterListView<Element, k_true>;
+	using ConstantBasicCharacterListView = BasicCharacterListView<Element, k_true>;
 
 	// ----------------
 
@@ -145,17 +145,17 @@ export namespace Twinning::Kernel {
 
 		using View = BasicCharacterListView<Element, k_false>;
 
-		using typename List::VElement;
+		using typename List::VariableElement;
 
-		using typename List::VIterator;
+		using typename List::VariableIterator;
 
-		using VView = BasicCharacterListView<Element, k_false>;
+		using VariableView = BasicCharacterListView<Element, k_false>;
 
-		using typename List::CElement;
+		using typename List::ConstantElement;
 
-		using typename List::CIterator;
+		using typename List::ConstantIterator;
 
-		using CView = BasicCharacterListView<Element, k_true>;
+		using ConstantView = BasicCharacterListView<Element, k_true>;
 
 	public:
 
@@ -196,7 +196,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		auto operator = (
-			CView const & that
+			ConstantView const & that
 		) -> BasicCharacterList & {
 			thiz.assign(that);
 			return thiz;
@@ -204,11 +204,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -217,24 +217,24 @@ export namespace Twinning::Kernel {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const & {
-			return self_cast<VView>(thiz);
+		) -> VariableView const & {
+			return self_cast<VariableView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const & {
-			return self_cast<CView>(thiz);
+		) const -> ConstantView const & {
+			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
 		auto view (
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view();
 		}
 
 		auto view (
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view();
 		}
 
@@ -245,19 +245,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -266,19 +266,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -304,17 +304,17 @@ export namespace Twinning::Kernel {
 
 		using View = BasicCharacterListView<Element, k_false>;
 
-		using typename Array::VElement;
+		using typename Array::VariableElement;
 
-		using typename Array::VIterator;
+		using typename Array::VariableIterator;
 
-		using VView = BasicCharacterListView<Element, k_false>;
+		using VariableView = BasicCharacterListView<Element, k_false>;
 
-		using typename Array::CElement;
+		using typename Array::ConstantElement;
 
-		using typename Array::CIterator;
+		using typename Array::ConstantIterator;
 
-		using CView = BasicCharacterListView<Element, k_true>;
+		using ConstantView = BasicCharacterListView<Element, k_true>;
 
 	public:
 
@@ -355,7 +355,7 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		auto operator = (
-			CView const & that
+			ConstantView const & that
 		) -> BasicCharacterArray & {
 			thiz.assign(that);
 			return thiz;
@@ -363,11 +363,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -376,24 +376,24 @@ export namespace Twinning::Kernel {
 		#pragma region view
 
 		auto as_view (
-		) -> VView const & {
-			return self_cast<VView>(thiz);
+		) -> VariableView const & {
+			return self_cast<VariableView>(thiz);
 		}
 
 		auto as_view (
-		) const -> CView const & {
-			return self_cast<CView>(thiz);
+		) const -> ConstantView const & {
+			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
 		auto view (
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view();
 		}
 
 		auto view (
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view();
 		}
 
@@ -404,19 +404,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) -> VView {
+		) -> VariableView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -425,19 +425,19 @@ export namespace Twinning::Kernel {
 		auto sub (
 			Size const & begin,
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
 		auto head (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
 		auto tail (
 			Size const & size
-		) const -> CView {
+		) const -> ConstantView {
 			return thiz.as_view().tail(size);
 		}
 
@@ -447,7 +447,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TElement, auto t_size> requires
 		CategoryConstraint<IsPureInstance<TElement>>
-		&& (IsSameV<t_size, Size>)
+		&& (IsSameOf<t_size, Size>)
 		&& (IsCharacterBox<TElement>)
 	class BasicStaticCharacterArray :
 		public StaticArray<TElement, t_size> {
@@ -464,17 +464,17 @@ export namespace Twinning::Kernel {
 
 		using View = BasicCharacterListView<Element, k_false>;
 
-		using typename StaticArray::VElement;
+		using typename StaticArray::VariableElement;
 
-		using typename StaticArray::VIterator;
+		using typename StaticArray::VariableIterator;
 
-		using VView = BasicCharacterListView<Element, k_false>;
+		using VariableView = BasicCharacterListView<Element, k_false>;
 
-		using typename StaticArray::CElement;
+		using typename StaticArray::ConstantElement;
 
-		using typename StaticArray::CIterator;
+		using typename StaticArray::ConstantIterator;
 
-		using CView = BasicCharacterListView<Element, k_true>;
+		using ConstantView = BasicCharacterListView<Element, k_true>;
 
 	public:
 
@@ -514,11 +514,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VView const & () {
+		implicit operator VariableView const & () {
 			return thiz.as_view();
 		}
 
-		implicit operator CView const & () const {
+		implicit operator ConstantView const & () const {
 			return thiz.as_view();
 		}
 
@@ -527,13 +527,13 @@ export namespace Twinning::Kernel {
 		#pragma region view
 
 		constexpr auto view (
-		) -> VView {
-			return VView{thiz.begin(), thiz.size()};
+		) -> VariableView {
+			return VariableView{thiz.begin(), thiz.size()};
 		}
 
 		constexpr auto view (
-		) const -> CView {
-			return CView{thiz.begin(), thiz.size()};
+		) const -> ConstantView {
+			return ConstantView{thiz.begin(), thiz.size()};
 		}
 
 		#pragma endregion
@@ -548,9 +548,9 @@ export namespace Twinning::Kernel {
 		AutoConstraint
 	using CharacterListView = BasicCharacterListView<Character, constant>;
 
-	using VCharacterListView = VBasicCharacterListView<Character>;
+	using VariableCharacterListView = VariableBasicCharacterListView<Character>;
 
-	using CCharacterListView = CBasicCharacterListView<Character>;
+	using ConstantCharacterListView = ConstantBasicCharacterListView<Character>;
 
 	using CharacterList = BasicCharacterList<Character>;
 
