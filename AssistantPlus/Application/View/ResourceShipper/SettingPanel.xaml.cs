@@ -105,7 +105,7 @@ namespace AssistantPlus.View.ResourceShipper {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var value = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(ResourceShipper)}.OptionConfiguration");
+			var value = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(ResourceShipper)}.OptionConfiguration");
 			if (value != null) {
 				this.Data.OptionConfiguration = value;
 				this.NotifyPropertyChanged([

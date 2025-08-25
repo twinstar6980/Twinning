@@ -24,7 +24,11 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
+			_ = ((Func<Task>)(async () => {
+				await ControlHelper.WaitUntilLoaded(this);
+				await this.ModulePageOpenView();
+				await this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -37,15 +41,14 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region module page
 
-		public Task ModulePageApplyOption (
-			List<String> optionView
+		public Task ModulePageOpenView (
 		) {
-			return this.Controller.ApplyOption(optionView);
+			return this.Controller.OpenView();
 		}
 
-		public Task<List<String>> ModulePageCollectOption (
+		public Task<Boolean> ModulePageCloseView (
 		) {
-			return this.Controller.CollectOption();
+			return this.Controller.CloseView();
 		}
 
 		public Task ModulePageEnterView (
@@ -58,9 +61,15 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			return this.Controller.ExitView();
 		}
 
-		public Task<Boolean> ModulePageRequestClose (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return this.Controller.RequestClose();
+			return this.Controller.ApplyOption(optionView);
+		}
+
+		public Task<List<String>> ModulePageCollectOption (
+		) {
+			return this.Controller.CollectOption();
 		}
 
 		#endregion
@@ -103,6 +112,26 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			return;
 		}
 
+		public async Task OpenView (
+		) {
+			return;
+		}
+
+		public async Task<Boolean> CloseView (
+		) {
+			return true;
+		}
+
+		public async Task EnterView (
+		) {
+			return;
+		}
+
+		public async Task ExitView (
+		) {
+			return;
+		}
+
 		public async Task ApplyOption (
 			List<String> optionView
 		) {
@@ -128,21 +157,6 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				option.NextString(this.DescriptorFile.AsNotNull());
 			}
 			return option.Done();
-		}
-
-		public async Task EnterView (
-		) {
-			return;
-		}
-
-		public async Task ExitView (
-		) {
-			return;
-		}
-
-		public async Task<Boolean> RequestClose (
-		) {
-			return true;
 		}
 
 		// ----------------
@@ -299,7 +313,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var senders = sender.As<MenuFlyoutItem>();
 			switch (senders.Tag.As<String>()) {
 				case "Load": {
-					var file = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(ReflectionDescriptor)}.DescriptorFile");
+					var file = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(ReflectionDescriptor)}.DescriptorFile");
 					if (file != null) {
 						await this.ApplyLoad(file);
 					}

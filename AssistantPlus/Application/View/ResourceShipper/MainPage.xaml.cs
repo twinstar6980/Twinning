@@ -25,7 +25,11 @@ namespace AssistantPlus.View.ResourceShipper {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
+			_ = ((Func<Task>)(async () => {
+				await ControlHelper.WaitUntilLoaded(this);
+				await this.ModulePageOpenView();
+				await this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -38,15 +42,14 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		#region module page
 
-		public Task ModulePageApplyOption (
-			List<String> optionView
+		public Task ModulePageOpenView (
 		) {
-			return this.Controller.ApplyOption(optionView);
+			return this.Controller.OpenView();
 		}
 
-		public Task<List<String>> ModulePageCollectOption (
+		public Task<Boolean> ModulePageCloseView (
 		) {
-			return this.Controller.CollectOption();
+			return this.Controller.CloseView();
 		}
 
 		public Task ModulePageEnterView (
@@ -59,9 +62,15 @@ namespace AssistantPlus.View.ResourceShipper {
 			return this.Controller.ExitView();
 		}
 
-		public Task<Boolean> ModulePageRequestClose (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return this.Controller.RequestClose();
+			return this.Controller.ApplyOption(optionView);
+		}
+
+		public Task<List<String>> ModulePageCollectOption (
+		) {
+			return this.Controller.CollectOption();
 		}
 
 		#endregion
@@ -98,12 +107,13 @@ namespace AssistantPlus.View.ResourceShipper {
 			this.ParallelForward = App.Setting.Data.ResourceShipper.ParallelForward;
 			this.EnableFilter = App.Setting.Data.ResourceShipper.EnableFilter;
 			this.EnableBatch = App.Setting.Data.ResourceShipper.EnableBatch;
-			try {
-				this.OptionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(StorageHelper.ReadFileTextSync(App.Setting.Data.ResourceShipper.OptionConfiguration));
-			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load option configuration.", GF.GenerateExceptionMessage(e));
-			}
+			this.uOptionList_ItemsSource = [];
+			return;
+		}
+
+		public async Task OpenView (
+		) {
+			this.OptionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(await StorageHelper.ReadFileText(App.Setting.Data.ResourceShipper.OptionConfiguration));
 			this.uOptionList_ItemsSource = this.OptionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,
 				Configuration = group,
@@ -115,13 +125,30 @@ namespace AssistantPlus.View.ResourceShipper {
 					NameMatched = false,
 				})).ToList(),
 			})).ToList();
+			this.NotifyPropertyChanged([
+				nameof(this.uOptionList_ItemsSource),
+			]);
+			return;
+		}
+
+		public async Task<Boolean> CloseView (
+		) {
+			return true;
+		}
+
+		public async Task EnterView (
+		) {
+			return;
+		}
+
+		public async Task ExitView (
+		) {
 			return;
 		}
 
 		public async Task ApplyOption (
 			List<String> optionView
 		) {
-			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionParallelForward = default(Boolean?);
 			var optionEnableFilter = default(Boolean?);
 			var optionEnableBatch = default(Boolean?);
@@ -189,21 +216,6 @@ namespace AssistantPlus.View.ResourceShipper {
 				}
 			}
 			return option.Done();
-		}
-
-		public async Task EnterView (
-		) {
-			return;
-		}
-
-		public async Task ExitView (
-		) {
-			return;
-		}
-
-		public async Task<Boolean> RequestClose (
-		) {
-			return true;
 		}
 
 		// ----------------
@@ -443,14 +455,14 @@ namespace AssistantPlus.View.ResourceShipper {
 					break;
 				}
 				case "PickFile": {
-					var item = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(ResourceShipper)}.Resource");
+					var item = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(ResourceShipper)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);
 					}
 					break;
 				}
 				case "PickDirectory": {
-					var item = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"@{nameof(ResourceShipper)}.Resource");
+					var item = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{nameof(ResourceShipper)}.Resource");
 					if (item != null) {
 						await this.AppendResource([item]);
 					}

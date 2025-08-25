@@ -121,7 +121,6 @@ namespace AssistantPlus {
 					},
 				};
 			}
-			WindowHelper.Track(window);
 			WindowHelper.Title(window, Package.Current.DisplayName);
 			WindowHelper.Icon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
 			WindowHelper.Activate(window);

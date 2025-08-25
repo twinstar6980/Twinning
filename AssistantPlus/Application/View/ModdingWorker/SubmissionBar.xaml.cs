@@ -702,7 +702,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			var value = await StorageHelper.Pick(senders.Tag.As<String>(), WindowHelper.Find(this.View), $"@{nameof(ModdingWorker)}.Generic", null);
+			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{nameof(ModdingWorker)}.Generic", null);
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
 				this.NotifyPropertyChanged([

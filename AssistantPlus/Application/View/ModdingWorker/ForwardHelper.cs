@@ -13,11 +13,11 @@ namespace AssistantPlus.View.ModdingWorker {
 		public static async Task Forward (
 			List<String> argument
 		) {
-			await App.MainWindow.InsertTabItem(new () {
-				Title = ModuleHelper.Query(ModuleType.ModdingWorker).Name,
-				Type = ModuleType.ModdingWorker,
-				Option = ["-AdditionalArgument", ..argument],
-			});
+			await App.Instance.HandleLaunch(
+				ModuleHelper.Query(ModuleType.ModdingWorker).Name,
+				ModuleType.ModdingWorker,
+				["-AdditionalArgument", ..argument]
+			);
 			return;
 		}
 

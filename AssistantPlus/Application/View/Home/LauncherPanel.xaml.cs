@@ -91,9 +91,10 @@ namespace AssistantPlus.View.Home {
 				VerticalAlignment = VerticalAlignment.Stretch,
 				TextWrapping = TextWrapping.Wrap,
 				AcceptsReturn = true,
+				Text = "",
 			}.SelfAlso((it) => {
 				it.LostFocus += (_, _) => {
-					command = ConvertHelper.ParseStringListFromStringWithLine((it.Text));
+					command = ConvertHelper.ParseStringListFromStringWithLine(it.Text);
 					it.Text = ConvertHelper.MakeStringListToStringWithLine(command);
 					return;
 				};
@@ -119,9 +120,10 @@ namespace AssistantPlus.View.Home {
 				VerticalAlignment = VerticalAlignment.Stretch,
 				TextWrapping = TextWrapping.Wrap,
 				AcceptsReturn = true,
+				Text = "",
 			}.SelfAlso((it) => {
 				it.LostFocus += (_, _) => {
-					resource = ConvertHelper.ParseStringListFromStringWithLine((it.Text));
+					resource = ConvertHelper.ParseStringListFromStringWithLine(it.Text);
 					it.Text = ConvertHelper.MakeStringListToStringWithLine(resource);
 					return;
 				};

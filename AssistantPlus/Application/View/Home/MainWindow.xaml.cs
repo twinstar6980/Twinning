@@ -119,7 +119,7 @@ namespace AssistantPlus.View.Home {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
 			var lastSelectedItem = this.View.uTab.SelectedItem;
 			this.View.uTab.SelectedItem = item;
-			var state = await item.Frame.Content.As<IModulePage>().ModulePageRequestClose();
+			var state = await item.Frame.Content.As<IModulePage>().ModulePageCloseView();
 			if (!state) {
 				this.View.uTab.SelectedItem = lastSelectedItem;
 			}
@@ -133,6 +133,47 @@ namespace AssistantPlus.View.Home {
 					]);
 				}
 			}
+			return;
+		}
+
+		public async Task RenameTabItem (
+			Page   content,
+			String title
+		) {
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			item.Title = title;
+			item.NotifyPropertyChanged([
+				nameof(item.uRoot_Header),
+			]);
+			return;
+		}
+
+		public async Task KeepTabItem (
+			Page content
+		) {
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			var configuration = new ModuleLauncherConfiguration() {
+				Title = item.Title,
+				Type = item.Type,
+				Option = await item.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
+				Command = [],
+			};
+			await App.Instance.AppendPinnedLauncherItem(configuration);
+			await App.Setting.Save();
+			return;
+		}
+
+		public async Task DuplicateTabItem (
+			Page content
+		) {
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			var configuration = new ModuleLauncherConfiguration() {
+				Title = item.Title,
+				Type = item.Type,
+				Option = await item.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
+				Command = [],
+			};
+			await this.InsertTabItem(configuration);
 			return;
 		}
 
@@ -179,16 +220,16 @@ namespace AssistantPlus.View.Home {
 			return;
 		}
 
-		public void uTab_SelectionChanged (
+		public async void uTab_SelectionChanged (
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<TabView>();
 			foreach (var item in args.RemovedItems.Cast<MainWindowTabItemController>()) {
-				item.Frame.Content.As<IModulePage>().ModulePageExitView();
+				await item.Frame.Content.As<IModulePage>().ModulePageExitView();
 			}
 			foreach (var item in args.AddedItems.Cast<MainWindowTabItemController>()) {
-				item.Frame.Content.As<IModulePage>().ModulePageEnterView();
+				await item.Frame.Content.As<IModulePage>().ModulePageEnterView();
 			}
 			return;
 		}
@@ -305,29 +346,31 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
 			switch (senders.Tag.As<String>()) {
+				case "Rename": {
+					var title = "";
+					var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Tab Rename", new TextBox() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
+						TextWrapping = TextWrapping.NoWrap,
+						AcceptsReturn = false,
+						Text = "",
+					}.SelfAlso((it) => {
+						it.LostFocus += (_, _) => {
+							title = it.Text;
+							return;
+						};
+					}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
+					if (canContinue) {
+						await this.Host.RenameTabItem(this.Frame.Content.As<Page>(), title);
+					}
+					break;
+				}
 				case "Keep": {
-					var configuration = new ModuleLauncherConfiguration() {
-						Title = "Untitled",
-						Type = this.Type,
-						Option = await this.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
-						Command = [],
-					};
-					await ControlHelper.ShowDialogAsFixed(this.Host.View.Content, "Launcher Configuration", new LauncherConfigurationPanel() {
-						Data = configuration,
-						Stamp = UniqueStamp.Create(),
-					}, null);
-					await App.Instance.AppendPinnedLauncherItem(configuration);
-					await App.Setting.Save();
+					await this.Host.KeepTabItem(this.Frame.Content.As<Page>());
 					break;
 				}
 				case "Duplicate": {
-					var configuration = new ModuleLauncherConfiguration() {
-						Title = this.Title,
-						Type = this.Type,
-						Option = await this.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
-						Command = [],
-					};
-					await this.Host.InsertTabItem(configuration);
+					await this.Host.DuplicateTabItem(this.Frame.Content.As<Page>());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -341,12 +384,13 @@ namespace AssistantPlus.View.Home {
 
 	public interface IModulePage {
 
-		Task ModulePageApplyOption (
-			List<String> optionView
+		Task ModulePageOpenView (
 		);
 
-		Task<List<String>> ModulePageCollectOption (
+		Task<Boolean> ModulePageCloseView (
 		);
+
+		// ----------------
 
 		Task ModulePageEnterView (
 		);
@@ -354,7 +398,13 @@ namespace AssistantPlus.View.Home {
 		Task ModulePageExitView (
 		);
 
-		Task<Boolean> ModulePageRequestClose (
+		// ----------------
+
+		Task ModulePageApplyOption (
+			List<String> optionView
+		);
+
+		Task<List<String>> ModulePageCollectOption (
 		);
 
 	}
@@ -364,12 +414,15 @@ namespace AssistantPlus.View.Home {
 		void Initialize (
 		);
 
-		Task ApplyOption (
-			List<String> optionView
+		// ----------------
+
+		Task OpenView (
 		);
 
-		Task<List<String>> CollectOption (
+		Task<Boolean> CloseView (
 		);
+
+		// ----------------
 
 		Task EnterView (
 		);
@@ -377,7 +430,13 @@ namespace AssistantPlus.View.Home {
 		Task ExitView (
 		);
 
-		Task<Boolean> RequestClose (
+		// ----------------
+
+		Task ApplyOption (
+			List<String> optionView
+		);
+
+		Task<List<String>> CollectOption (
 		);
 
 	}

@@ -991,11 +991,10 @@ abstract class CustomModulePageState {
 
   // #region action
 
-  Future<Void> modulePageApplyOption(
-    List<String> optionView,
+  Future<Void> modulePageOpenView(
   );
 
-  Future<List<String>> modulePageCollectOption(
+  Future<Boolean> modulePageCloseView(
   );
 
   // ----------------
@@ -1008,7 +1007,11 @@ abstract class CustomModulePageState {
 
   // ----------------
 
-  Future<Boolean> modulePageRequestClose(
+  Future<Void> modulePageApplyOption(
+    List<String> optionView,
+  );
+
+  Future<List<String>> modulePageCollectOption(
   );
 
   // #endregion

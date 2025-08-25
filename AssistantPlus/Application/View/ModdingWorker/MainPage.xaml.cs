@@ -25,7 +25,11 @@ namespace AssistantPlus.View.ModdingWorker {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
+			_ = ((Func<Task>)(async () => {
+				await ControlHelper.WaitUntilLoaded(this);
+				await this.ModulePageOpenView();
+				await this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -51,15 +55,14 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region module page
 
-		public Task ModulePageApplyOption (
-			List<String> optionView
+		public Task ModulePageOpenView (
 		) {
-			return this.Controller.ApplyOption(optionView);
+			return this.Controller.OpenView();
 		}
 
-		public Task<List<String>> ModulePageCollectOption (
+		public Task<Boolean> ModulePageCloseView (
 		) {
-			return this.Controller.CollectOption();
+			return this.Controller.CloseView();
 		}
 
 		public Task ModulePageEnterView (
@@ -72,9 +75,15 @@ namespace AssistantPlus.View.ModdingWorker {
 			return this.Controller.ExitView();
 		}
 
-		public Task<Boolean> ModulePageRequestClose (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return this.Controller.RequestClose();
+			return this.Controller.ApplyOption(optionView);
+		}
+
+		public Task<List<String>> ModulePageCollectOption (
+		) {
+			return this.Controller.CollectOption();
 		}
 
 		#endregion
@@ -109,6 +118,35 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			this.AutomaticScroll = App.Setting.Data.ModdingWorker.AutomaticScroll;
 			this.SessionClient = new (this);
+			return;
+		}
+
+		public async Task OpenView (
+		) {
+			return;
+		}
+
+		public async Task<Boolean> CloseView (
+		) {
+			if (this.SessionRunning) {
+				await ControlHelper.ShowDialogAsAutomatic(this.View, "Session In Progress", null, null);
+				return false;
+			}
+			return true;
+		}
+
+		public async Task EnterView (
+		) {
+			if (this.SubmissionState) {
+				this.NotifyPropertyChanged([
+					nameof(this.uSubmissionBar_Stamp),
+				]);
+			}
+			return;
+		}
+
+		public async Task ExitView (
+		) {
 			return;
 		}
 
@@ -166,30 +204,6 @@ namespace AssistantPlus.View.ModdingWorker {
 				option.NextStringList(this.AdditionalArgument);
 			}
 			return option.Done();
-		}
-
-		public async Task EnterView (
-		) {
-			if (this.SubmissionState) {
-				this.NotifyPropertyChanged([
-					nameof(this.uSubmissionBar_Stamp),
-				]);
-			}
-			return;
-		}
-
-		public async Task ExitView (
-		) {
-			return;
-		}
-
-		public async Task<Boolean> RequestClose (
-		) {
-			if (this.SessionRunning) {
-				await ControlHelper.ShowDialogAsAutomatic(this.View, "Session In Progress", null, null);
-				return false;
-			}
-			return true;
 		}
 
 		// ----------------
@@ -672,7 +686,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				"save_file"      => "SaveFile",
 				_                => throw new (),
 			};
-			target = await StorageHelper.Pick(typeValue, WindowHelper.Find(this.mController.View), $"@{nameof(ModdingWorker)}.Generic", null) ?? "";
+			target = await StorageHelper.Pick(typeValue, App.MainWindow, $"@{nameof(ModdingWorker)}.Generic", null) ?? "";
 			return new (target);
 		}
 

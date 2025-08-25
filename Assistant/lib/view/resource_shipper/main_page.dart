@@ -119,6 +119,30 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   // ----------------
 
   @override
+  modulePageOpenView() async {
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.resourceShipper.optionConfiguration));
+    this._optionExpanded = this._optionConfiguration.map((value) => true).toList();
+    await this._refreshMatch();
+    return;
+  }
+
+  @override
+  modulePageCloseView() async {
+    return true;
+  }
+
+  @override
+  modulePageEnterView() async {
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageApplyOption(optionView) async {
     var optionParallelForward = null as Boolean?;
     var optionEnableFilter = null as Boolean?;
@@ -181,21 +205,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     return option.done();
   }
 
-  @override
-  modulePageEnterView() async {
-    return;
-  }
-
-  @override
-  modulePageExitView() async {
-    return;
-  }
-
-  @override
-  modulePageRequestClose() async {
-    return true;
-  }
-
   // ----------------
 
   @override
@@ -211,9 +220,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._optionExpanded = [];
     this._optionListScrollController = ScrollController();
     ControlHelper.postTask(() async {
-      this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.resourceShipper.optionConfiguration));
-      this._optionExpanded = this._optionConfiguration.map((value) => true).toList();
-      await this._refreshMatch();
+      await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
     return;

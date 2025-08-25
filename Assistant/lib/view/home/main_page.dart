@@ -54,7 +54,7 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
-    if (!await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageRequestClose()) {
+    if (!await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageCloseView()) {
       return;
     }
     if (this._tabIndex == index) {

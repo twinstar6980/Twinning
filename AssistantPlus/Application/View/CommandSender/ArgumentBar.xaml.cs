@@ -590,7 +590,7 @@ namespace AssistantPlus.View.CommandSender {
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
-			var value = await StorageHelper.Pick(senders.Tag.As<String>(), WindowHelper.Find(this.View), $"@{nameof(CommandSender)}.Generic", null);
+			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{nameof(CommandSender)}.Generic", null);
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
 				this.NotifyPropertyChanged([

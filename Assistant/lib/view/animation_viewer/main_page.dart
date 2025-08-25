@@ -294,6 +294,26 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   // ----------------
 
   @override
+  modulePageOpenView() async {
+    return;
+  }
+
+  @override
+  modulePageCloseView() async {
+    return true;
+  }
+
+  @override
+  modulePageEnterView() async {
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageApplyOption(optionView) async {
     var optionImmediateSelect = null as Boolean?;
     var optionAutomaticPlay = null as Boolean?;
@@ -443,21 +463,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return option.done();
   }
 
-  @override
-  modulePageEnterView() async {
-    return;
-  }
-
-  @override
-  modulePageExitView() async {
-    return;
-  }
-
-  @override
-  modulePageRequestClose() async {
-    return true;
-  }
-
   // ----------------
 
   @override
@@ -501,6 +506,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._stageHorizontalScrollSontroller = ScrollController();
     this._stageVerticalScrollSontroller = ScrollController();
     ControlHelper.postTask(() async {
+      await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
     return;

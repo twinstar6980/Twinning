@@ -150,6 +150,44 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   // ----------------
 
   @override
+  modulePageOpenView() async {
+    return;
+  }
+
+  @override
+  modulePageCloseView() async {
+    if (this._sessionRunning) {
+      await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+        title: 'Session In Progress',
+        contentBuilder: (context, setStaate) => [],
+        actionBuilder: null,
+      ));
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  modulePageEnterView() async {
+    if (this._submissionBar.type != null) {
+      this._submissionBar = SubmissionBar(
+        type: this._submissionBar.type,
+        option: this._submissionBar.option,
+        history: this._submissionBar.history,
+        value: this._submissionBar.value,
+        completer: this._submissionBar.completer,
+      );
+      await refreshState(this.setState);
+    }
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageApplyOption(optionView) async {
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var optionImmediateLaunch = null as Boolean?;
@@ -186,39 +224,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     return option.done();
   }
 
-  @override
-  modulePageEnterView() async {
-    if (this._submissionBar.type != null) {
-      this._submissionBar = SubmissionBar(
-        type: this._submissionBar.type,
-        option: this._submissionBar.option,
-        history: this._submissionBar.history,
-        value: this._submissionBar.value,
-        completer: this._submissionBar.completer,
-      );
-      await refreshState(this.setState);
-    }
-    return;
-  }
-
-  @override
-  modulePageExitView() async {
-    return;
-  }
-
-  @override
-  modulePageRequestClose() async {
-    if (this._sessionRunning) {
-      await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-        title: 'Session In Progress',
-        contentBuilder: (context, setStaate) => [],
-        actionBuilder: null,
-      ));
-      return false;
-    }
-    return true;
-  }
-
   // ----------------
 
   @override
@@ -237,6 +242,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._sessionClient = _MainPageBridgeClient(this);
     this._sessionRunning = false;
     ControlHelper.postTask(() async {
+      await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
     return;

@@ -30,7 +30,11 @@ namespace AssistantPlus.View.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = this.ModulePageApplyOption(args.Parameter.As<List<String>>()).SelfLet(App.Instance.WithTaskExceptionHandler);
+			_ = ((Func<Task>)(async () => {
+				await ControlHelper.WaitUntilLoaded(this);
+				await this.ModulePageOpenView();
+				await this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -43,15 +47,14 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region module page
 
-		public Task ModulePageApplyOption (
-			List<String> optionView
+		public Task ModulePageOpenView (
 		) {
-			return this.Controller.ApplyOption(optionView);
+			return this.Controller.OpenView();
 		}
 
-		public Task<List<String>> ModulePageCollectOption (
+		public Task<Boolean> ModulePageCloseView (
 		) {
-			return this.Controller.CollectOption();
+			return this.Controller.CloseView();
 		}
 
 		public Task ModulePageEnterView (
@@ -64,9 +67,15 @@ namespace AssistantPlus.View.AnimationViewer {
 			return this.Controller.ExitView();
 		}
 
-		public Task<Boolean> ModulePageRequestClose (
+		public Task ModulePageApplyOption (
+			List<String> optionView
 		) {
-			return this.Controller.RequestClose();
+			return this.Controller.ApplyOption(optionView);
+		}
+
+		public Task<List<String>> ModulePageCollectOption (
+		) {
+			return this.Controller.CollectOption();
 		}
 
 		#endregion
@@ -165,6 +174,26 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.View.uSprite.ShowBoundary = this.ShowBoundary;
 			this.View.uActiveProgress.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(this.uActiveProgress_PointerPressed), true);
 			this.View.uActiveProgress.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(this.uActiveProgress_PointerReleased), true);
+			return;
+		}
+
+		public async Task OpenView (
+		) {
+			return;
+		}
+
+		public async Task<Boolean> CloseView (
+		) {
+			return true;
+		}
+
+		public async Task EnterView (
+		) {
+			return;
+		}
+
+		public async Task ExitView (
+		) {
 			return;
 		}
 
@@ -334,21 +363,6 @@ namespace AssistantPlus.View.AnimationViewer {
 				option.NextBoolean(this.ActiveProgressState.AsNotNull());
 			}
 			return option.Done();
-		}
-
-		public async Task EnterView (
-		) {
-			return;
-		}
-
-		public async Task ExitView (
-		) {
-			return;
-		}
-
-		public async Task<Boolean> RequestClose (
-		) {
-			return true;
 		}
 
 		#endregion
@@ -1018,7 +1032,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var animationFile = await StorageHelper.PickLoadFile(WindowHelper.Find(this.View), $"@{nameof(AnimationViewer)}.AnimationFile");
+			var animationFile = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(AnimationViewer)}.AnimationFile");
 			if (animationFile != null) {
 				await this.ApplyLoad(animationFile, null, null, null, null, null);
 			}
@@ -1071,7 +1085,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (isPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 			}
-			var textureDirectory = await StorageHelper.PickLoadDirectory(WindowHelper.Find(this.View), $"@{nameof(AnimationViewer)}.TextureDirectory");
+			var textureDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{nameof(AnimationViewer)}.TextureDirectory");
 			if (textureDirectory != null) {
 				await this.ApplyLoad(this.AnimationFile, textureDirectory, null, null, null, null);
 			}

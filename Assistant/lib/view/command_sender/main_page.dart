@@ -82,6 +82,29 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   // ----------------
 
   @override
+  modulePageOpenView() async {
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.commandSender.methodConfiguration));
+    this._methodExpanded = this._methodConfiguration.map((value) => false).toList();
+    return;
+  }
+
+  @override
+  modulePageCloseView() async {
+    return true;
+  }
+
+  @override
+  modulePageEnterView() async {
+    return;
+  }
+
+  @override
+  modulePageExitView() async {
+    return;
+  }
+
+  @override
   modulePageApplyOption(optionView) async {
     var optionParallelForward = null as Boolean?;
     var optionCommand = null as List<(String, Boolean, Map<String, Object>, Boolean)>?;
@@ -132,21 +155,6 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     return option.done();
   }
 
-  @override
-  modulePageEnterView() async {
-    return;
-  }
-
-  @override
-  modulePageExitView() async {
-    return;
-  }
-
-  @override
-  modulePageRequestClose() async {
-    return true;
-  }
-
   // ----------------
 
   @override
@@ -159,8 +167,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._command = [];
     this._commandListScrollController = ScrollController();
     ControlHelper.postTask(() async {
-      this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.commandSender.methodConfiguration));
-      this._methodExpanded = this._methodConfiguration.map((value) => false).toList();
+      await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
     return;

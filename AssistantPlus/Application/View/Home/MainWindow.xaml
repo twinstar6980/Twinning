@@ -59,6 +59,12 @@
 						<TabViewItem.ContextFlyout>
 							<MenuFlyout Placement="Bottom">
 								<MenuFlyoutItem
+									Tag="Rename"
+									Click="{x:Bind uCommand_Click}"
+									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
+									Text="Rename"
+									/>
+								<MenuFlyoutItem
 									Tag="Keep"
 									Click="{x:Bind uCommand_Click}"
 									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Pin}}"
