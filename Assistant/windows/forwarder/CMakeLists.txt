@@ -17,4 +17,6 @@ apply_standard_settings(${PROJECT_NAME})
 
 target_compile_options(${PROJECT_NAME} PRIVATE "/wd4324" "/wd4996")
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE "_HAS_EXCEPTIONS=1")
+
 target_link_libraries(${PROJECT_NAME} PRIVATE "Shlwapi.lib" "RuntimeObject.lib" "Comctl32.lib")
