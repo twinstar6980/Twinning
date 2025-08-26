@@ -114,6 +114,7 @@ namespace AssistantPlus {
 							new TextBlock() {
 								HorizontalAlignment = HorizontalAlignment.Center,
 								VerticalAlignment = VerticalAlignment.Center,
+								IsTextSelectionEnabled = true,
 								TextWrapping = TextWrapping.Wrap,
 								Text = GF.GenerateExceptionMessage(e),
 							},
