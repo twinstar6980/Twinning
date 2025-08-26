@@ -95,7 +95,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                             overflow: TextOverflow.clip,
                             style: theme.textTheme.labelLarge!.copyWith(
                               color: value.$2 ? null : theme.disabledColor,
-                            ).selfLet((it) => withSpecialFontTextStyle(context, it)),
+                            ).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
                           ),
                         ),
                       )),
@@ -478,7 +478,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                     child: Text(
                       value,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
+                      style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
                     ),
                   )).toList(),
                   onSelected: (value) async {
@@ -628,7 +628,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       child: Text(
                         value.$2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
+                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
                       ),
                     )).toList(),
                     onSelected: (value) async {
@@ -650,7 +650,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       child: Text(
                         value.$2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
+                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
                       ),
                     )).toList(),
                     onSelected: (value) async {

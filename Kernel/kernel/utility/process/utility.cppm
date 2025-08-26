@@ -238,7 +238,7 @@ export namespace Twinning::Kernel::Process {
 	// the return value is process's exit code, see the following webpage to understand
 	// Windows - https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess
 	// POSIX   - https://pubs.opengroup.org/onlinepubs/9699919799/functions/waitid.html
-	// in Windows, the complete 32-bit exit code can always be obtained
+	// for Windows, the complete 32-bit exit code can always be obtained
 	// for POSIX, although the standard states that the waitid function should obtain the full exit code, this is not actually the case in Linux and Macintosh
 	// the following are the number of return bits that can be obtained in each system
 	// Windows   : all 32 bit
@@ -397,9 +397,6 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma region system command
 
-	// NOTE: EXPLAIN
-	// implement defined
-	// on iphone, std::system is not available, this function will throw exception
 	inline auto execute_system_command (
 		String const & command
 	) -> IntegerU32 {

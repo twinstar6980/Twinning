@@ -26,8 +26,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		) {
 			_ = ((Func<Task>)(async () => {
 				await ControlHelper.WaitUntilLoaded(this);
-				await this.ModulePageOpenView();
-				await this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+				await this.Controller.OpenView();
+				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
@@ -41,35 +41,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region module page
 
-		public Task ModulePageOpenView (
+		public Home.IModulePageController ModulePageGetController (
 		) {
-			return this.Controller.OpenView();
-		}
-
-		public Task<Boolean> ModulePageCloseView (
-		) {
-			return this.Controller.CloseView();
-		}
-
-		public Task ModulePageEnterView (
-		) {
-			return this.Controller.EnterView();
-		}
-
-		public Task ModulePageExitView (
-		) {
-			return this.Controller.ExitView();
-		}
-
-		public Task ModulePageApplyOption (
-			List<String> optionView
-		) {
-			return this.Controller.ApplyOption(optionView);
-		}
-
-		public Task<List<String>> ModulePageCollectOption (
-		) {
-			return this.Controller.CollectOption();
+			return this.Controller;
 		}
 
 		#endregion
@@ -236,16 +210,8 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			String descriptorFile
 		) {
 			GF.AssertTest(!this.IsLoaded);
-			var descriptorArchive = default(GameReflectionModel.DescriptorArchive);
-			var descriptorMap = default(GameReflectionModel.DescriptorMap);
-			try {
-				descriptorArchive = await GameReflectionHelper.LoadDescriptorArchive(descriptorFile);
-				descriptorMap = GameReflectionHelper.CompileDescriptorArchive(descriptorArchive);
-			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load descriptor.", GF.GenerateExceptionMessage(e));
-				return;
-			}
+			var descriptorArchive = await GameReflectionHelper.LoadDescriptorArchive(descriptorFile);
+			var descriptorMap = GameReflectionHelper.CompileDescriptorArchive(descriptorArchive);
 			this.DescriptorFile = descriptorFile;
 			this.DescriptorArchive = descriptorArchive;
 			this.DescriptorMap = descriptorMap;

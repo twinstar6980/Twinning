@@ -240,7 +240,7 @@ class SettingPanel extends StatelessWidget {
                   ),
                   value: ConvertHelper.makeStringListToStringWithLine(this.data.messageFont),
                   onChanged: (value) async {
-                    this.data.messageFont = ConvertHelper.parseStringListFromStringWithLine(value);
+                    this.data.messageFont = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
                     await refreshState(setStateForPanel);
                     await refreshState(setState);
                     this.onUpdate();

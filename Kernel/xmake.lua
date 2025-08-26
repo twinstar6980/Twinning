@@ -8,7 +8,7 @@ apply_common_setting()
 
 includes('./third/mscharconv')
 includes('./third/tinyxml2')
-includes('./third/md5')
+includes('./third/cpp_md5_lib')
 includes('./third/Rijndael')
 includes('./third/zlib')
 includes('./third/bzip2')

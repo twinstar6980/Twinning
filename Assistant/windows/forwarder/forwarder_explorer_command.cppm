@@ -41,7 +41,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma endregion
 
-		#pragma region implement - IExplorerCommand
+		#pragma region implement IExplorerCommand
 
 		virtual IFACEMETHODIMP GetTitle (
 			IShellItemArray * psiItemArray,

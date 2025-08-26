@@ -119,7 +119,7 @@ namespace AssistantPlus.View.Home {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
 			var lastSelectedItem = this.View.uTab.SelectedItem;
 			this.View.uTab.SelectedItem = item;
-			var state = await item.Frame.Content.As<IModulePage>().ModulePageCloseView();
+			var state = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CloseView();
 			if (!state) {
 				this.View.uTab.SelectedItem = lastSelectedItem;
 			}
@@ -155,7 +155,7 @@ namespace AssistantPlus.View.Home {
 			var configuration = new ModuleLauncherConfiguration() {
 				Title = item.Title,
 				Type = item.Type,
-				Option = await item.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
+				Option = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CollectOption(),
 				Command = [],
 			};
 			await App.Instance.AppendPinnedLauncherItem(configuration);
@@ -170,7 +170,7 @@ namespace AssistantPlus.View.Home {
 			var configuration = new ModuleLauncherConfiguration() {
 				Title = item.Title,
 				Type = item.Type,
-				Option = await item.Frame.Content.As<IModulePage>().ModulePageCollectOption(),
+				Option = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CollectOption(),
 				Command = [],
 			};
 			await this.InsertTabItem(configuration);
@@ -226,10 +226,10 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<TabView>();
 			foreach (var item in args.RemovedItems.Cast<MainWindowTabItemController>()) {
-				await item.Frame.Content.As<IModulePage>().ModulePageExitView();
+				await item.Frame.Content.As<IModulePage>().ModulePageGetController().ExitView();
 			}
 			foreach (var item in args.AddedItems.Cast<MainWindowTabItemController>()) {
-				await item.Frame.Content.As<IModulePage>().ModulePageEnterView();
+				await item.Frame.Content.As<IModulePage>().ModulePageGetController().EnterView();
 			}
 			return;
 		}
@@ -384,27 +384,7 @@ namespace AssistantPlus.View.Home {
 
 	public interface IModulePage {
 
-		Task ModulePageOpenView (
-		);
-
-		Task<Boolean> ModulePageCloseView (
-		);
-
-		// ----------------
-
-		Task ModulePageEnterView (
-		);
-
-		Task ModulePageExitView (
-		);
-
-		// ----------------
-
-		Task ModulePageApplyOption (
-			List<String> optionView
-		);
-
-		Task<List<String>> ModulePageCollectOption (
+		IModulePageController ModulePageGetController (
 		);
 
 	}

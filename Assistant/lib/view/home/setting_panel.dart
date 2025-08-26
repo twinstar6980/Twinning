@@ -291,7 +291,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 ),
                 value: ConvertHelper.makeStringListToStringWithLine(setting.data.themeFontPath),
                 onChanged: (value) async {
-                  setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value);
+                  setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                   await setting.save();

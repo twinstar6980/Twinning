@@ -22,21 +22,21 @@
 
 ## 第三方库使用
 
-| 库                                                                         | 用途                |
-|:--------------------------------------------------------------------------:|:-------------------:|
-| [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                     | charconv 支持       |
-| [tinyxml2 11.0.0](https://github.com/leethomason/tinyxml2)                 | XML 读写            |
-| [md5 1.0](https://github.com/JieweiWei/md5)                                | MD5 哈希计算        |
-| [Rijndael ?](#)                                                            | Rijndael 加密与解密 |
-| [zlib 1.3.1](https://github.com/madler/zlib)                               | ZLib 压缩与解压     |
-| [bzip2 1.0.8](https://sourceware.org/bzip2/)                               | BZip2 压缩与解压    |
-| [lzma 25.01](https://github.com/ip7z/7zip)                                 | Lzma 压缩与解压     |
-| [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)                 | VCDiff 差异分析     |
-| [avir 3.1](https://github.com/avaneev/avir)                                | 图像缩放            |
-| [etcpak 2.0](https://github.com/wolfpld/etcpak)                            | ETC1 压缩           |
-| [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)           | PVRTC4 压缩与解压   |
-| [libpng 1.6.50](https://github.com/pnggroup/libpng)                        | PNG 读写            |
-| [quickjs_ng 0.10.1](https://github.com/quickjs-ng/quickjs)                 | JS 引擎             |
+| 库                                                                       | 用途                |
+|:------------------------------------------------------------------------:|:-------------------:|
+| [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                   | charconv 支持       |
+| [tinyxml2 11.0.0](https://github.com/leethomason/tinyxml2)               | XML 读写            |
+| [cpp_md5_lib ?](https://github.com/tiankonguse/cpp-md5-lib)              | MD5 哈希计算        |
+| [Rijndael ?](#)                                                          | Rijndael 加密与解密 |
+| [zlib 1.3.1](https://github.com/madler/zlib)                             | ZLib 压缩与解压     |
+| [bzip2 1.0.8](https://sourceware.org/bzip2/)                             | BZip2 压缩与解压    |
+| [lzma 25.01](https://github.com/ip7z/7zip)                               | Lzma 压缩与解压     |
+| [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)               | VCDiff 差异分析     |
+| [avir 3.1](https://github.com/avaneev/avir)                              | 图像缩放            |
+| [etcpak 2.0](https://github.com/wolfpld/etcpak)                          | ETC1 压缩           |
+| [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)         | PVRTC4 压缩与解压   |
+| [libpng 1.6.50](https://github.com/pnggroup/libpng)                      | PNG 读写            |
+| [quickjs_ng 0.10.1](https://github.com/quickjs-ng/quickjs)               | JS 引擎             |
 
 ## 说明
 
@@ -58,7 +58,7 @@
 	
 	本项目对引用的第三方库做出了少许修改，如下：
 	
-	* `md5`：修改接口的参数类型。
+	* `cpp_md5_lib`：暴露所需的接口。
 	
 	* `Rijndael`：修正非标准代码，避免符号冲突。
 	

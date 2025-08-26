@@ -20,7 +20,7 @@ target('kernel', function()
 	add_deps(
 		'third.mscharconv',
 		'third.tinyxml2',
-		'third.md5',
+		'third.cpp_md5_lib',
 		'third.Rijndael',
 		'third.zlib',
 		'third.bzip2',

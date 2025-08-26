@@ -71,7 +71,7 @@ class LauncherPanel extends StatelessWidget {
                     ],
                   )) ?? false;
                   if (canContinue) {
-                    await Provider.of<SettingProvider>(context, listen: false).state.handleCommand!(command);
+                    await setting.state.handleCommand!(command);
                   }
                 },
               ).withExpanded(),
@@ -114,7 +114,7 @@ class LauncherPanel extends StatelessWidget {
                     ],
                   )) ?? false;
                   if (canContinue) {
-                    await Provider.of<SettingProvider>(context, listen: false).state.handleForward!(resource);
+                    await setting.state.handleForward!(resource);
                   }
                 },
               ).withExpanded(),

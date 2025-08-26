@@ -515,9 +515,10 @@ class _MainPageBridgeClient implements bridge.Client {
 
 TextStyle withSpecialFontTextStyle(
   BuildContext context,
-  TextStyle    style,
-) {
-  var setting = Provider.of<SettingProvider>(context, listen: false);
+  TextStyle    style, {
+  Boolean      listen = true,
+}) {
+  var setting = Provider.of<SettingProvider>(context, listen: listen);
   return style.copyWith(
     fontFamily: '',
     fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],

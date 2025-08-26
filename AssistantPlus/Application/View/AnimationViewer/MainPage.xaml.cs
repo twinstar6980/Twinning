@@ -32,8 +32,8 @@ namespace AssistantPlus.View.AnimationViewer {
 		) {
 			_ = ((Func<Task>)(async () => {
 				await ControlHelper.WaitUntilLoaded(this);
-				await this.ModulePageOpenView();
-				await this.ModulePageApplyOption(args.Parameter.As<List<String>>());
+				await this.Controller.OpenView();
+				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
 			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
@@ -47,35 +47,9 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region module page
 
-		public Task ModulePageOpenView (
+		public Home.IModulePageController ModulePageGetController (
 		) {
-			return this.Controller.OpenView();
-		}
-
-		public Task<Boolean> ModulePageCloseView (
-		) {
-			return this.Controller.CloseView();
-		}
-
-		public Task ModulePageEnterView (
-		) {
-			return this.Controller.EnterView();
-		}
-
-		public Task ModulePageExitView (
-		) {
-			return this.Controller.ExitView();
-		}
-
-		public Task ModulePageApplyOption (
-			List<String> optionView
-		) {
-			return this.Controller.ApplyOption(optionView);
-		}
-
-		public Task<List<String>> ModulePageCollectOption (
-		) {
-			return this.Controller.CollectOption();
+			return this.Controller;
 		}
 
 		#endregion
@@ -412,16 +386,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			String textureDirectory
 		) {
 			GF.AssertTest(!this.Loaded && !this.Activated);
-			var animation = default(GameAnimationModel.Animation);
-			var texture = default(Dictionary<String, BitmapSource>);
-			try {
-				animation = await GameAnimationHelper.LoadAnimation(animationFile);
-				texture = await GameAnimationHelper.LoadTexture(textureDirectory, animation);
-			}
-			catch (Exception e) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to load animation.", GF.GenerateExceptionMessage(e));
-				return;
-			}
+			var animation = await GameAnimationHelper.LoadAnimation(animationFile);
+			var texture = await GameAnimationHelper.LoadTexture(textureDirectory, animation);
 			this.AnimationFile = animationFile;
 			this.TextureDirectory = textureDirectory;
 			this.Animation = animation;
