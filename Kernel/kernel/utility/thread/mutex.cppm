@@ -30,6 +30,7 @@ export namespace Twinning::Kernel::Thread {
 		Mutex (
 		) :
 			m_mutex{} {
+			return;
 		}
 
 		Mutex (

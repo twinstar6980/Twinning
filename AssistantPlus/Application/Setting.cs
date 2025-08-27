@@ -4,6 +4,7 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
+using Windows.UI.StartScreen;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
 using Colors = Microsoft.UI.Colors;
@@ -55,6 +56,7 @@ namespace AssistantPlus {
 		) {
 			this.Data = SettingProvider.CreateDefaultData();
 			this.State = SettingProvider.CreateDefaultState();
+			return;
 		}
 
 		#endregion
@@ -123,7 +125,24 @@ namespace AssistantPlus {
 			}
 			// ModuleLauncher
 			{
-				await App.Instance.RegisterShellJumpList();
+				var list = new List<JumpListItem>();
+				var generateItem = (ModuleLauncherCategory category, ModuleLauncherConfiguration configuration) => {
+					return JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(configuration)), "").SelfAlso((it) => {
+						it.Logo = new ("ms-appx:///Asset/Logo.png");
+						it.GroupName = category switch {
+							ModuleLauncherCategory.Module => "",
+							ModuleLauncherCategory.Pinned => "Pinned",
+							ModuleLauncherCategory.Recent => "Recent",
+							_                             => throw new UnreachableException(),
+						};
+						it.DisplayName = configuration.Title;
+						it.Description = "";
+					});
+				};
+				list.AddRange(App.Setting.Data.ModuleLauncher.Module.Select((it) => generateItem(ModuleLauncherCategory.Module, it)));
+				list.AddRange(App.Setting.Data.ModuleLauncher.Pinned.Select((it) => generateItem(ModuleLauncherCategory.Pinned, it)));
+				list.AddRange(App.Setting.Data.ModuleLauncher.Recent.Select((it) => generateItem(ModuleLauncherCategory.Recent, it)));
+				await JumpListHelper.Apply(list);
 			}
 			// ModdingWorker.MessageFont
 			{

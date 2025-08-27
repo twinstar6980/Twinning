@@ -17,6 +17,7 @@ class ForwarderFinderSync: FIFinderSync {
 		self.applicationLogo = NSImage(named: "Logo")!
 		super.init()
 		FIFinderSyncController.default().directoryURLs = [URL(fileURLWithPath: "/")]
+		return
 	}
 
 	// MARK: - implement FIFinderSync

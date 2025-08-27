@@ -14,20 +14,24 @@ namespace AssistantPlus.Utility {
 
 		// ----------------
 
-		private Wrapper (
-			WrapperData data
-		) {
-			this.mData = data;
-		}
-
 		public Wrapper (
-		) : this(new WrapperData()) {
+		) {
+			this.mData = new ();
+			return;
 		}
 
 		public Wrapper (
 			TValue? value
-		) : this() {
-			this.Value = value;
+		) {
+			this.mData = new () { Value = value };
+			return;
+		}
+
+		private Wrapper (
+			WrapperData data
+		) {
+			this.mData = data;
+			return;
 		}
 
 		#endregion

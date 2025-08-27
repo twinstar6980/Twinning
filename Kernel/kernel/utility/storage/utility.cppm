@@ -104,6 +104,7 @@ export namespace Twinning::Kernel::Storage {
 				Pointer<std::FILE> const & value
 			) :
 				m_value{value} {
+				return;
 			}
 
 			#pragma endregion
@@ -118,6 +119,7 @@ export namespace Twinning::Kernel::Storage {
 					std::fclose(thiz.m_value.value); // NOTE: EXPLAIN: skip result check
 					thiz.m_value = k_null_pointer;
 				}
+				return;
 			}
 
 			// ----------------

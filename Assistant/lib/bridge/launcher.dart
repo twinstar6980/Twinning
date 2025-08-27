@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/exception_helper.dart';
 import '/bridge/data.dart';
 import '/bridge/proxy.dart';
 import '/bridge/service.dart';
@@ -110,7 +111,7 @@ class Launcher {
             MessageProxy.construct(callbackException, MessageProxy([]));
           }
           catch (e, s) {
-            MessageProxy.construct(callbackException, MessageProxy([generateExceptionMessage(e, s)]));
+            MessageProxy.construct(callbackException, MessageProxy([ExceptionHelper.generateMessage(e, s)]));
             MessageProxy.construct(callbackResult, MessageProxy([]));
           }
           callbackState.value = true;

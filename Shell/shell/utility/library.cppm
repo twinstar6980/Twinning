@@ -26,6 +26,7 @@ export namespace Twinning::Shell {
 			if (thiz.state()) {
 				thiz.close();
 			}
+			return;
 		}
 
 		// ----------------
@@ -33,6 +34,7 @@ export namespace Twinning::Shell {
 		LibraryLoader (
 		) :
 			m_handle{} {
+			return;
 		}
 
 		LibraryLoader (

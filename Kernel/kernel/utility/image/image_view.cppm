@@ -53,6 +53,7 @@ export namespace Twinning::Kernel::Image {
 		BasicImageView (
 		) :
 			m_data{} {
+			return;
 		}
 
 		BasicImageView (

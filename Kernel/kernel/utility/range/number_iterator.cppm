@@ -40,6 +40,7 @@ export namespace Twinning::Kernel::Range {
 		) :
 			m_value{},
 			m_step{} {
+			return;
 		}
 
 		constexpr NumberIterator (
@@ -58,6 +59,7 @@ export namespace Twinning::Kernel::Range {
 		) :
 			m_value{value},
 			m_step{step} {
+			return;
 		}
 
 		#pragma endregion

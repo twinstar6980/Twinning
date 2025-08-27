@@ -28,6 +28,7 @@ export namespace Twinning::Kernel::Interface {
 		MessageProxy (
 		) :
 			value{} {
+			return;
 		}
 
 		MessageProxy (
@@ -44,6 +45,7 @@ export namespace Twinning::Kernel::Interface {
 			List<String> const & value
 		) :
 			value{value} {
+			return;
 		}
 
 		#pragma endregion
@@ -162,6 +164,7 @@ export namespace Twinning::Kernel::Interface {
 				throw UnimplementedException{};
 				return;
 			}} {
+			return;
 		}
 
 		ExecutorProxy (
@@ -178,6 +181,7 @@ export namespace Twinning::Kernel::Interface {
 			std::function<Void  (ExecutorProxy const &, MessageProxy const &, MessageProxy &)> const & value
 		) :
 			value{value} {
+			return;
 		}
 
 		#pragma endregion

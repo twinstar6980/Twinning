@@ -68,6 +68,7 @@ namespace Twinning.Script.TextGenerator {
 			this.m_limit = limit;
 			this.m_current = current;
 			this.m_step = step;
+			return;
 		}
 
 		// ------------------------------------------------

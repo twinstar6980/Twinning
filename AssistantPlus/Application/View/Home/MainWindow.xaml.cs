@@ -158,7 +158,7 @@ namespace AssistantPlus.View.Home {
 				Option = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CollectOption(),
 				Command = [],
 			};
-			await App.Instance.AppendPinnedLauncherItem(configuration);
+			App.Setting.Data.ModuleLauncher.Pinned.Add(configuration);
 			await App.Setting.Save();
 			return;
 		}

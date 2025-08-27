@@ -43,6 +43,7 @@ class CustomMethodChannel {
 	) {
 		this.host = host
 		this.continuation = Channel()
+		return
 	}
 
 	// endregion

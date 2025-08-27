@@ -20,6 +20,7 @@ namespace AssistantPlus.Utility {
 		) {
 			this.mView = view;
 			this.mPosition = 0;
+			return;
 		}
 
 		#endregion

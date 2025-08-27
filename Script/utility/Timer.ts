@@ -16,6 +16,7 @@ namespace Twinning.Script {
 		) {
 			this.m_duration = 0;
 			this.m_last_begin = null;
+			return;
 		}
 
 		// ------------------------------------------------

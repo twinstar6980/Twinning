@@ -51,6 +51,7 @@ export namespace Twinning::Kernel {
 			Value const & value
 		) :
 			BaseBox{value} {
+			return;
 		}
 
 		#pragma endregion

@@ -20,6 +20,7 @@ namespace AssistantPlus.Bridge {
 		) {
 			this.mHandle = null;
 			this.mSymbol = null;
+			return;
 		}
 
 		#endregion

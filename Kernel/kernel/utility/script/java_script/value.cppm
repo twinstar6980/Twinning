@@ -77,6 +77,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) :
 			m_runtime{raw_value},
 			m_is_holder{is_holder} {
+			return;
 		}
 
 		#pragma endregion
@@ -107,6 +108,7 @@ export namespace Twinning::Kernel::JavaScript {
 			if (thiz.m_is_holder) {
 				Third::quickjs_ng::$JS_FreeRuntime(thiz._runtime());
 			}
+			return;
 		}
 
 		// ----------------
@@ -124,6 +126,7 @@ export namespace Twinning::Kernel::JavaScript {
 			m_runtime{},
 			m_is_holder{} {
 			thiz = as_moveable(that);
+			return;
 		}
 
 		#pragma endregion
@@ -216,6 +219,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) :
 			m_context{raw_value},
 			m_is_holder{is_holder} {
+			return;
 		}
 
 		#pragma endregion
@@ -247,6 +251,7 @@ export namespace Twinning::Kernel::JavaScript {
 			if (thiz.m_is_holder) {
 				Third::quickjs_ng::$JS_FreeContext(thiz._context());
 			}
+			return;
 		}
 
 		// ----------------
@@ -264,6 +269,7 @@ export namespace Twinning::Kernel::JavaScript {
 			m_context{},
 			m_is_holder{} {
 			thiz = as_moveable(that);
+			return;
 		}
 
 		#pragma endregion
@@ -377,6 +383,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) :
 			m_context{},
 			m_value{value} {
+			return;
 		}
 
 		explicit Value (
@@ -385,6 +392,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) :
 			m_context{context},
 			m_value{value} {
+			return;
 		}
 
 		#pragma endregion
@@ -444,6 +452,7 @@ export namespace Twinning::Kernel::JavaScript {
 		~Value (
 		) {
 			thiz._reset_value();
+			return;
 		}
 
 		// ----------------
@@ -451,6 +460,7 @@ export namespace Twinning::Kernel::JavaScript {
 		Value (
 		) :
 			Value{Third::quickjs_ng::$JS_UNINITIALIZED} {
+			return;
 		}
 
 		Value (
@@ -459,6 +469,7 @@ export namespace Twinning::Kernel::JavaScript {
 			Value{} {
 			thiz.m_context = that.m_context;
 			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (Third::quickjs_ng::$JS_DupValue(as_variable(that)._context(), as_variable(that)._value()));
+			return;
 		}
 
 		Value (
@@ -467,6 +478,7 @@ export namespace Twinning::Kernel::JavaScript {
 			Value{} {
 			thiz.m_context = that.m_context;
 			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (that._release_value());
+			return;
 		}
 
 		#pragma endregion

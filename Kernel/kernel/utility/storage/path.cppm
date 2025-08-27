@@ -42,6 +42,7 @@ export namespace Twinning::Kernel::Storage {
 			m_root{},
 			m_absolute{},
 			m_relative{} {
+			return;
 		}
 
 		Path (
@@ -59,6 +60,7 @@ export namespace Twinning::Kernel::Storage {
 		) :
 			Path{} {
 			thiz.from_string(path);
+			return;
 		}
 
 		#pragma endregion

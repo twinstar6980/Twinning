@@ -75,5 +75,5 @@
 # Miscellaneous
 /.local
 
-# git clean -fdx -e /.local
+# git clean -fdx -e /.local -e /.vscode
 # git update-index --assume-unchanged ./AssistantPlus/Application/Asset/Library/Forwarder.dll

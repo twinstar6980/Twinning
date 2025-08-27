@@ -12,18 +12,18 @@ export namespace Twinning::Kernel {
 
 	#pragma region type
 
-	template <typename TFunction> requires
-		CategoryConstraint<IsPureInstance<TFunction>>
-		&& (IsInvocable<TFunction>)
+	template <typename TAction> requires
+		CategoryConstraint<IsPureInstance<TAction>>
+		&& (IsInvocable<TAction>)
 	class Finalizer {
 
 	public:
 
-		using Function = TFunction;
+		using Action = TAction;
 
 	protected:
 
-		Function m_function;
+		Action m_action;
 
 	public:
 
@@ -31,7 +31,8 @@ export namespace Twinning::Kernel {
 
 		constexpr ~Finalizer (
 		) {
-			thiz.m_function();
+			thiz.m_action();
+			return;
 		}
 
 		// ----------------
@@ -50,9 +51,10 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		explicit constexpr Finalizer (
-			Function const & function
+			Action const & action
 		) :
-			m_function{function} {
+			m_action{action} {
+			return;
 		}
 
 		#pragma endregion
@@ -75,24 +77,24 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename FinalizerFunction> requires
-		CategoryConstraint<IsPureInstance<FinalizerFunction>>
-		&& (IsInvocable<FinalizerFunction>)
+	template <typename FinalizerAction> requires
+		CategoryConstraint<IsPureInstance<FinalizerAction>>
+		&& (IsInvocable<FinalizerAction>)
 	inline constexpr auto make_finalizer (
-		FinalizerFunction const & finalizer
-	) -> Finalizer<FinalizerFunction> {
-		return Finalizer<FinalizerFunction>{finalizer};
+		FinalizerAction const & finalizer
+	) -> Finalizer<FinalizerAction> {
+		return Finalizer<FinalizerAction>{finalizer};
 	}
 
-	template <typename InitializerFunction, typename FinalizerFunction> requires
-		CategoryConstraint<IsPureInstance<InitializerFunction> && IsPureInstance<FinalizerFunction>>
-		&& (IsInvocable<InitializerFunction> && IsInvocable<FinalizerFunction>)
+	template <typename InitializerAction, typename FinalizerAction> requires
+		CategoryConstraint<IsPureInstance<InitializerAction> && IsPureInstance<FinalizerAction>>
+		&& (IsInvocable<InitializerAction> && IsInvocable<FinalizerAction>)
 	inline constexpr auto make_finalizer (
-		InitializerFunction const & initializer,
-		FinalizerFunction const &   finalizer
-	) -> Finalizer<FinalizerFunction> {
+		InitializerAction const & initializer,
+		FinalizerAction const &   finalizer
+	) -> Finalizer<FinalizerAction> {
 		initializer();
-		return Finalizer<FinalizerFunction>{finalizer};
+		return Finalizer<FinalizerAction>{finalizer};
 	}
 
 	#pragma endregion

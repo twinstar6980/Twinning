@@ -49,6 +49,7 @@ export namespace Twinning::Kernel::Image {
 		~BasicImage (
 		) {
 			thiz.reset();
+			return;
 		}
 
 		// ----------------
@@ -56,6 +57,7 @@ export namespace Twinning::Kernel::Image {
 		BasicImage (
 		) :
 			m_data{} {
+			return;
 		}
 
 		BasicImage (
@@ -73,6 +75,7 @@ export namespace Twinning::Kernel::Image {
 		) :
 			BasicImage{} {
 			thiz.allocate(size);
+			return;
 		}
 
 		explicit BasicImage (
@@ -80,6 +83,7 @@ export namespace Twinning::Kernel::Image {
 		) :
 			BasicImage{} {
 			thiz = view;
+			return;
 		}
 
 		#pragma endregion

@@ -16,6 +16,7 @@ namespace AssistantPlus.Utility {
 		public CommandLineWriter (
 		) {
 			this.mView = [];
+			return;
 		}
 
 		#endregion

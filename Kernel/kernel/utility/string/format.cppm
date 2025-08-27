@@ -47,6 +47,7 @@ export namespace Twinning::Kernel {
 		constexpr StringFormatter (
 		) :
 			m_format{} {
+			return;
 		}
 
 		constexpr StringFormatter (
@@ -63,6 +64,7 @@ export namespace Twinning::Kernel {
 			ConstantStringView const & format
 		) :
 			m_format{format} {
+			return;
 		}
 
 		#pragma endregion

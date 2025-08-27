@@ -44,6 +44,7 @@ export namespace Twinning::Kernel {
 		) :
 			m_has{},
 			m_value{} {
+			return;
 		}
 
 		constexpr OptionalView (
@@ -61,6 +62,7 @@ export namespace Twinning::Kernel {
 		) :
 			m_has{k_true},
 			m_value{&value} {
+			return;
 		}
 
 		#pragma endregion

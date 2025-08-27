@@ -58,6 +58,7 @@ export namespace Twinning::Kernel::JavaScript {
 			else {
 				thiz.m_value.template set<Pointer<Value>>(value);
 			}
+			return;
 		}
 
 		#pragma endregion
@@ -74,6 +75,7 @@ export namespace Twinning::Kernel::JavaScript {
 		NativeValueHandler (
 		) :
 			m_value{} {
+			return;
 		}
 
 		NativeValueHandler (
@@ -399,6 +401,7 @@ export namespace Twinning::Kernel::JavaScript {
 			thiz.m_proto.set_object_of_object();
 			thiz.m_parent.context().runtime().template register_class<&Detail::free_native_class<Class>>(Detail::g_native_class_id<Class>, name);
 			thiz.m_parent.context().set_class_proto(Detail::g_native_class_id<Class>, Value{thiz.m_proto});
+			return;
 		}
 
 		#pragma endregion
@@ -611,6 +614,7 @@ export namespace Twinning::Kernel::JavaScript {
 			thiz.m_object = parent.new_value();
 			thiz.m_object.set_object_of_object();
 			parent.define_object_property(thiz.m_name, Value{thiz.m_object});
+			return;
 		}
 
 		#pragma endregion

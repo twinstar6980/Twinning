@@ -57,6 +57,7 @@ export namespace Twinning::Kernel {
 		constexpr BitSet (
 		) :
 			m_data{} {
+			return;
 		}
 
 		constexpr BitSet (

@@ -30,6 +30,7 @@ export namespace Twinning::Kernel::Thread {
 		Thread (
 		) :
 			m_thread{} {
+			return;
 		}
 
 		Thread (

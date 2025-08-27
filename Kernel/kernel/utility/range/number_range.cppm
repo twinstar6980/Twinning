@@ -46,6 +46,7 @@ export namespace Twinning::Kernel::Range {
 			m_begin{},
 			m_end{},
 			m_step{} {
+			return;
 		}
 
 		constexpr NumberRange (
@@ -66,6 +67,7 @@ export namespace Twinning::Kernel::Range {
 			m_begin{begin},
 			m_end{(end - begin) % step == mbox<Number>(0) ? (end) : (end + step - (end - begin) % step)},
 			m_step{step} {
+			return;
 		}
 
 		explicit constexpr NumberRange (
@@ -74,6 +76,7 @@ export namespace Twinning::Kernel::Range {
 			m_begin{mbox<Number>(0)},
 			m_end{size},
 			m_step{mbox<Number>(1)} {
+			return;
 		}
 
 		#pragma endregion

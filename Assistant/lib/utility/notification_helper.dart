@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHelper {
 
-  // #region interface
+  // #region utility
 
   static FlutterLocalNotificationsPlugin? _flutterLocalNotificationsPlugin = null;
 

@@ -55,6 +55,7 @@ export namespace Twinning::Kernel {
 		~List (
 		) {
 			thiz.reset();
+			return;
 		}
 
 		// ----------------
@@ -64,6 +65,7 @@ export namespace Twinning::Kernel {
 			m_data{},
 			m_size{},
 			m_capacity{} {
+			return;
 		}
 
 		List (
@@ -71,6 +73,7 @@ export namespace Twinning::Kernel {
 		) :
 			List{} {
 			thiz = that;
+			return;
 		}
 
 		List (
@@ -78,6 +81,7 @@ export namespace Twinning::Kernel {
 		) :
 			List{} {
 			thiz = as_moveable(that);
+			return;
 		}
 
 		// ----------------
@@ -87,6 +91,7 @@ export namespace Twinning::Kernel {
 		) :
 			List{} {
 			thiz.allocate(capacity);
+			return;
 		}
 
 		explicit List (
@@ -94,6 +99,7 @@ export namespace Twinning::Kernel {
 		) :
 			List{} {
 			thiz = view;
+			return;
 		}
 
 		explicit List (
@@ -101,6 +107,7 @@ export namespace Twinning::Kernel {
 			Size const &             size
 		) :
 			List{ConstantView{begin, size}} {
+			return;
 		}
 
 		#pragma endregion

@@ -60,6 +60,7 @@ export namespace Twinning::Kernel {
 		constexpr StaticArray (
 		) :
 			m_data{Element{}} {
+			return;
 		}
 
 		constexpr StaticArray (
@@ -67,6 +68,7 @@ export namespace Twinning::Kernel {
 		) :
 			StaticArray{} {
 			thiz = that;
+			return;
 		}
 
 		constexpr StaticArray (
@@ -74,6 +76,7 @@ export namespace Twinning::Kernel {
 		) :
 			StaticArray{} {
 			thiz = as_moveable(that);
+			return;
 		}
 
 		// ----------------
@@ -83,6 +86,7 @@ export namespace Twinning::Kernel {
 		) :
 			StaticArray{} {
 			Range::assign_from(Range::make_range_n(thiz.begin(), minimum(view.size(), thiz.size())), view);
+			return;
 		}
 
 		explicit constexpr StaticArray (
@@ -90,12 +94,14 @@ export namespace Twinning::Kernel {
 			Size const &             size
 		) :
 			StaticArray{ConstantView{begin, size}} {
+			return;
 		}
 
 		explicit constexpr StaticArray (
 			RawArray const & raw_array
 		) :
 			StaticArray{ConstantView{make_pointer(static_cast<decltype(&*raw_array)>(raw_array)), t_size}} {
+			return;
 		}
 
 		#pragma endregion

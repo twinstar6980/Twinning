@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 88
+ * @version 90
  */
 declare namespace Twinning.Kernel {
 

@@ -28,7 +28,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}

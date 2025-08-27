@@ -52,6 +52,7 @@ export namespace Twinning::Kernel {
 		) :
 			m_data{},
 			m_size{} {
+			return;
 		}
 
 		constexpr ListView (
@@ -70,6 +71,7 @@ export namespace Twinning::Kernel {
 		) :
 			m_data{begin},
 			m_size{size} {
+			return;
 		}
 
 		#pragma endregion

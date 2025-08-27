@@ -53,6 +53,7 @@ export namespace Twinning::Kernel {
 		~Array (
 		) {
 			thiz.reset();
+			return;
 		}
 
 		// ----------------
@@ -61,6 +62,7 @@ export namespace Twinning::Kernel {
 		) :
 			m_data{},
 			m_size{} {
+			return;
 		}
 
 		Array (
@@ -68,6 +70,7 @@ export namespace Twinning::Kernel {
 		) :
 			Array{} {
 			thiz = that;
+			return;
 		}
 
 		Array (
@@ -75,6 +78,7 @@ export namespace Twinning::Kernel {
 		) :
 			Array{} {
 			thiz = as_moveable(that);
+			return;
 		}
 
 		// ----------------
@@ -84,6 +88,7 @@ export namespace Twinning::Kernel {
 		) :
 			Array{} {
 			thiz.allocate(size);
+			return;
 		}
 
 		explicit Array (
@@ -91,6 +96,7 @@ export namespace Twinning::Kernel {
 		) :
 			Array{} {
 			thiz = view;
+			return;
 		}
 
 		explicit Array (
@@ -98,6 +104,7 @@ export namespace Twinning::Kernel {
 			Size const &             size
 		) :
 			Array{ConstantView{begin, size}} {
+			return;
 		}
 
 		#pragma endregion

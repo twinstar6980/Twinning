@@ -36,6 +36,7 @@ export namespace Twinning::Kernel {
 		constexpr Tuple (
 		) :
 			m_value{} {
+			return;
 		}
 
 		constexpr Tuple (
@@ -55,6 +56,7 @@ export namespace Twinning::Kernel {
 			ValueObject && ... value
 		) :
 			m_value{as_forward<ValueObject>(value) ...} {
+			return;
 		}
 
 		#pragma endregion

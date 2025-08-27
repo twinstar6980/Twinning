@@ -55,6 +55,7 @@ export namespace Twinning::Kernel::Executor {
 			m_busy{k_false},
 			m_module_home{k_null_optional} {
 			thiz.m_runtime.enable_module_loader(thiz.m_module_home);
+			return;
 		}
 
 		Context (
@@ -66,6 +67,7 @@ export namespace Twinning::Kernel::Executor {
 			m_callback{callback},
 			m_busy{k_false},
 			m_module_home{k_null_optional} {
+			return;
 		}
 
 		#pragma endregion

@@ -35,6 +35,7 @@ export namespace Twinning::Kernel {
 		constexpr Wrapper (
 		) :
 			m_value{} {
+			return;
 		}
 
 		constexpr Wrapper (
@@ -54,6 +55,7 @@ export namespace Twinning::Kernel {
 			ValueObject && value
 		) :
 			m_value{as_forward<ValueObject>(value)} {
+			return;
 		}
 
 		#pragma endregion

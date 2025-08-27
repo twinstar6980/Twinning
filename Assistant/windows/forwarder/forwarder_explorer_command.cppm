@@ -37,6 +37,7 @@ export namespace Twinning::Assistant::Forwarder {
 			thiz.m_application_name = L"Twinning Assistant";
 			thiz.m_application_logo = thiz.get_library_file_path();
 			thiz.m_state_file = thiz.get_roaming_directory_path() + L"\\TwinStar.Twinning.Assistant\\forwarder";
+			return;
 		}
 
 		#pragma endregion

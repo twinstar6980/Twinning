@@ -28,6 +28,7 @@ export namespace Twinning::Shell::Bridge {
 			if (thiz.m_handle.state()) {
 				thiz.m_handle.close();
 			}
+			return;
 		}
 
 		// ----------------
@@ -53,6 +54,7 @@ export namespace Twinning::Shell::Bridge {
 			thiz.m_handle.open(path);
 			thiz.m_symbol = thiz.m_handle.lookup<Service>("_ZN8Twinning6Kernel9Interface7serviceE");
 			thiz.m_symbol->initialize();
+			return;
 		}
 
 		explicit Library (
@@ -62,6 +64,7 @@ export namespace Twinning::Shell::Bridge {
 			m_symbol{} {
 			thiz.m_symbol = symbol;
 			thiz.m_symbol->initialize();
+			return;
 		}
 
 		#pragma endregion

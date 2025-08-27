@@ -12,12 +12,14 @@ class ForwarderActionViewController: UIViewController {
 		bundle nibBundleOrNil: Bundle?,
 	) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+		return
 	}
 
 	public required init?(
 		coder: NSCoder,
 	) {
 		super.init(coder: coder)
+		return
 	}
 
 	// MARK: - implement UIViewController

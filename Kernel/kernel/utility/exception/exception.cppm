@@ -32,6 +32,7 @@ export namespace Twinning::Kernel {
 			m_title{},
 			m_description{},
 			m_location{} {
+			return;
 		}
 
 		Exception (
@@ -52,6 +53,7 @@ export namespace Twinning::Kernel {
 			m_title{title},
 			m_description{description},
 			m_location{location} {
+			return;
 		}
 
 		#pragma endregion

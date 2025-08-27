@@ -30,6 +30,7 @@ export namespace Twinning::Shell {
 
 		virtual ~MainConsoleBridgeClient (
 		) override {
+			return;
 		}
 
 		// ----------------
@@ -37,6 +38,7 @@ export namespace Twinning::Shell {
 		MainConsoleBridgeClient (
 		) :
 			m_running{false} {
+			return;
 		}
 
 		MainConsoleBridgeClient (

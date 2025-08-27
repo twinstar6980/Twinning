@@ -3,6 +3,7 @@ import '/module.dart';
 import '/setting.dart';
 import '/application.dart';
 import '/utility/command_line_reader.dart';
+import '/utility/exception_helper.dart';
 import '/utility/control_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/storage_helper.dart';
@@ -40,7 +41,7 @@ class _Main {
           Row(
             children: [
               Text(
-                generateExceptionMessage(exception, stack),
+                ExceptionHelper.generateMessage(exception, stack),
                 overflow: TextOverflow.clip,
               ).withSelectionArea(
               ).withExpanded(),
@@ -174,15 +175,7 @@ class _Main {
   ) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
-        _handleException(error, stack);
-        return true;
-      };
-      FlutterError.onError = (details) {
-        FlutterError.presentError(details);
-        _handleException(details.exception, details.stack);
-        return;
-      };
+      ExceptionHelper.registerGlobalHandler(_handleException);
       try {
         await _setting.load();
       }

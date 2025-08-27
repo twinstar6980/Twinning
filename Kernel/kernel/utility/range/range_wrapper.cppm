@@ -43,6 +43,7 @@ export namespace Twinning::Kernel::Range {
 		) :
 			m_begin{},
 			m_end{} {
+			return;
 		}
 
 		constexpr RangeWrapper (
@@ -61,6 +62,7 @@ export namespace Twinning::Kernel::Range {
 		) :
 			m_begin{begin},
 			m_end{end} {
+			return;
 		}
 
 		#pragma endregion

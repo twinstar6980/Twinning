@@ -17,6 +17,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   ) {
     self.host = host
     self.continuation = nil
+    return
   }
 
   // MARK: - register

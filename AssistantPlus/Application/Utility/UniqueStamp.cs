@@ -11,6 +11,7 @@ namespace AssistantPlus.Utility {
 
 		public UniqueStamp (
 		) {
+			return;
 		}
 
 		#endregion
@@ -22,7 +23,7 @@ namespace AssistantPlus.Utility {
 			return new ();
 		}
 
-		public static UniqueStamp Default = UniqueStamp.Create();
+		public static readonly UniqueStamp Default = UniqueStamp.Create();
 
 		#endregion
 

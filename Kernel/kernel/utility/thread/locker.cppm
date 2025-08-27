@@ -26,6 +26,7 @@ export namespace Twinning::Kernel::Thread {
 		~Locker (
 		) {
 			thiz.m_mutex.unlock();
+			return;
 		}
 
 		// ----------------
@@ -48,6 +49,7 @@ export namespace Twinning::Kernel::Thread {
 		) :
 			m_mutex{mutex} {
 			thiz.m_mutex.lock();
+			return;
 		}
 
 		#pragma endregion

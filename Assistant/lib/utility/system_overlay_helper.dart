@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 class SystemOverlayHelper {
 
+  // #region utility
+
   static const SystemUiOverlayStyle _styleForLight = SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,
     systemNavigationBarDividerColor: Colors.transparent,
@@ -43,5 +45,7 @@ class SystemOverlayHelper {
     SystemChrome.setSystemUIOverlayStyle(query(brightness));
     return;
   }
+
+  // #endregion
 
 }

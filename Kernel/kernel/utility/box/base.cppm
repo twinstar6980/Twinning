@@ -47,6 +47,7 @@ export namespace Twinning::Kernel {
 		constexpr BaseBox (
 		) :
 			value{} {
+			return;
 		}
 
 		constexpr BaseBox (
@@ -63,6 +64,7 @@ export namespace Twinning::Kernel {
 			Value const & value
 		) :
 			value{value} {
+			return;
 		}
 
 		#pragma endregion

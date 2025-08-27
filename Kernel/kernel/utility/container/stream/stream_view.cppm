@@ -58,6 +58,7 @@ export namespace Twinning::Kernel {
 		) :
 			m_view{},
 			m_position{} {
+			return;
 		}
 
 		StreamView (
@@ -77,6 +78,7 @@ export namespace Twinning::Kernel {
 			m_view{view},
 			m_position{position} {
 			assert_test(position <= view.size());
+			return;
 		}
 
 		#pragma endregion

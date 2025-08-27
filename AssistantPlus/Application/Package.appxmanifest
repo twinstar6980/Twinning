@@ -10,7 +10,7 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="mp uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="78.0.0.0" />
+  <Identity Name="TwinStar.Twinning.AssistantPlus" Publisher="CN=TwinStar" Version="79.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="5C0BDFFA-0BC5-42FB-B680-8D184B26575C" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Twinning Assistant Plus</DisplayName>
@@ -18,10 +18,10 @@
     <Description>None</Description>
     <Logo>Asset\Logo\StoreLogo.png</Logo>
     <desktop6:FileSystemWriteVirtualization>disabled</desktop6:FileSystemWriteVirtualization>
+    <desktop6:RegistryWriteVirtualization>disabled</desktop6:RegistryWriteVirtualization>
   </Properties>
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
   </Dependencies>
   <Resources>
     <Resource Language="x-generate" />

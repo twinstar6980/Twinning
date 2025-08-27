@@ -31,6 +31,7 @@ export namespace Twinning::Kernel {
 		Any (
 		) :
 			m_value{} {
+			return;
 		}
 
 		Any (

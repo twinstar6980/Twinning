@@ -34,6 +34,7 @@ namespace Twinning.Script {
 		constructor(
 		) {
 			this.m_pool = [];
+			return;
 		}
 
 		// ------------------------------------------------

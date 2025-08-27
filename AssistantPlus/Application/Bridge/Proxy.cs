@@ -18,6 +18,7 @@ namespace AssistantPlus.Bridge {
 			List<String>? value = null
 		) {
 			this.Value = value ?? [];
+			return;
 		}
 
 		#endregion
@@ -115,6 +116,7 @@ namespace AssistantPlus.Bridge {
 			Action<ExecutorProxy, MessageProxy, MessageProxy>? value = null
 		) {
 			this.Value = value ?? ((_, _, _) => throw new NotImplementedException());
+			return;
 		}
 
 		#endregion
@@ -198,7 +200,7 @@ namespace AssistantPlus.Bridge {
 					MessageProxy.Construct(exception, new ([]));
 				}
 				catch (Exception e) {
-					MessageProxy.Construct(exception, new ([GF.GenerateExceptionMessage(e)]));
+					MessageProxy.Construct(exception, new ([ExceptionHelper.GenerateMessage(e)]));
 					MessageProxy.Construct(result, new ([]));
 				}
 				return;

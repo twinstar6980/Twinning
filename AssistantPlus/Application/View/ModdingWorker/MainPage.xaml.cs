@@ -29,7 +29,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(App.Instance.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -197,7 +197,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				_ = this.View.DispatcherQueue.EnqueueAsync(async () => {
 					await Task.Delay(40);
 					this.View.uMessageListScrollViewer.ChangeView(null, this.View.uMessageListScrollViewer.ScrollableHeight, null, true);
-				}).SelfLet(App.Instance.WithTaskExceptionHandler);
+				}).SelfLet(ExceptionHelper.WithTaskExceptionHandler);
 			}
 			return;
 		}
@@ -284,7 +284,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
 			}
 			else {
-				await this.SendMessage(MessageType.Error, "FAILED", [GF.GenerateExceptionMessage(exception)]);
+				await this.SendMessage(MessageType.Error, "FAILED", [ExceptionHelper.GenerateMessage(exception)]);
 			}
 			this.SessionRunning = false;
 			this.NotifyPropertyChanged([
@@ -383,7 +383,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			_ = this.LaunchSession().SelfLet(App.Instance.WithTaskExceptionHandler);
+			_ = this.LaunchSession().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
 			return;
 		}
 
@@ -507,6 +507,7 @@ namespace AssistantPlus.View.ModdingWorker {
 		) {
 			this.mController = controller;
 			this.mRunning = false;
+			return;
 		}
 
 		#endregion
@@ -668,7 +669,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			String title,
 			String description
 		) {
-			App.Instance.PushNotification(
+			NotificationHelper.Push(
 				new AppNotificationBuilder()
 					.AddText(title)
 					.AddText(description)

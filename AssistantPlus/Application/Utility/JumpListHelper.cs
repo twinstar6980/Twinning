@@ -1,0 +1,32 @@
+#pragma warning disable 0,
+// ReSharper disable
+
+using AssistantPlus;
+using Windows.UI.StartScreen;
+
+namespace AssistantPlus.Utility {
+
+	public static class JumpListHelper {
+
+		#region utility
+
+		public static async Task Apply (
+			List<JumpListItem> itemList
+		) {
+			if (!JumpList.IsSupported()) {
+				return;
+			}
+			var jumpList = await JumpList.LoadCurrentAsync();
+			jumpList.Items.Clear();
+			foreach (var item in itemList) {
+				jumpList.Items.Add(item);
+			}
+			await jumpList.SaveAsync();
+			return;
+		}
+
+		#endregion
+
+	}
+
+}

@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/setting.dart';
 import '/utility/wrapper.dart';
+import '/utility/exception_helper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/control_helper.dart';
 import '/utility/storage_helper.dart';
@@ -140,7 +141,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
     }
     else {
-      this._sendMessage(MessageType.error, 'FAILED', [generateExceptionMessage(exception.$1, exception.$2)]);
+      this._sendMessage(MessageType.error, 'FAILED', [ExceptionHelper.generateMessage(exception.$1, exception.$2)]);
     }
     this._sessionRunning = false;
     await refreshState(this.setState);

@@ -4,9 +4,7 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.Windows.AppNotifications;
 using Windows.ApplicationModel;
-using Windows.UI.StartScreen;
 
 namespace AssistantPlus {
 
@@ -55,11 +53,9 @@ namespace AssistantPlus {
 		protected override async void OnLaunched (
 			LaunchActivatedEventArgs args
 		) {
-			AppDomain.CurrentDomain.ProcessExit += this.OnProcessExit;
-			this.UnhandledException += this.OnUnhandledException;
-			TaskScheduler.UnobservedTaskException += this.OnUnobservedTaskException;
 			var window = default(Window);
 			try {
+				ExceptionHelper.RegisterGlobalHandler(this, this.HandleException);
 				var argument = Environment.GetCommandLineArgs();
 				App.PackageDirectory = StorageHelper.Parent(argument[0]).AsNotNull();
 				App.ProgramFile = $"{App.PackageDirectory}/Application.exe";
@@ -77,7 +73,7 @@ namespace AssistantPlus {
 				unsafe {
 					Win32.PInvoke.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
 				}
-				this.RegisterNotification();
+				NotificationHelper.Initialize();
 				App.MainWindow = new ();
 				window = App.MainWindow;
 				if (App.Setting.Data.WindowSizeState) {
@@ -100,7 +96,7 @@ namespace AssistantPlus {
 					else {
 						await App.MainWindow.ShowLauncherPanel();
 					}
-				}).SelfLet(App.Instance.WithTaskExceptionHandler);
+				}).SelfLet(ExceptionHelper.WithTaskExceptionHandler);
 				await App.Setting.Apply();
 			}
 			catch (Exception e) {
@@ -116,7 +112,7 @@ namespace AssistantPlus {
 								VerticalAlignment = VerticalAlignment.Center,
 								IsTextSelectionEnabled = true,
 								TextWrapping = TextWrapping.Wrap,
-								Text = GF.GenerateExceptionMessage(e),
+								Text = ExceptionHelper.GenerateMessage(e),
 							},
 						},
 					},
@@ -128,149 +124,9 @@ namespace AssistantPlus {
 			return;
 		}
 
-		// ----------------
-
-		private void OnProcessExit (
-			Object?   sender,
-			EventArgs args
-		) {
-			this.UnregisterNotification();
-			return;
-		}
-
-		private void OnUnhandledException (
-			Object                                        sender,
-			Microsoft.UI.Xaml.UnhandledExceptionEventArgs args
-		) {
-			args.Handled = true;
-			this.HandleException(args.Exception);
-			return;
-		}
-
-		private void OnUnobservedTaskException (
-			Object?                          sender,
-			UnobservedTaskExceptionEventArgs args
-		) {
-			args.SetObserved();
-			this.HandleException(args.Exception);
-			return;
-		}
-
 		#endregion
 
 		#region utility
-
-		private void HandleException (
-			Exception exception
-		) {
-			if (App.MainWindowIsInitialized) {
-				App.MainWindow.DispatcherQueue.EnqueueAsync(() => {
-					try {
-						_ = ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Unhandled Exception", new TextBlock() {
-							HorizontalAlignment = HorizontalAlignment.Stretch,
-							VerticalAlignment = VerticalAlignment.Stretch,
-							IsTextSelectionEnabled = true,
-							TextWrapping = TextWrapping.Wrap,
-							Text = GF.GenerateExceptionMessage(exception),
-						}, null);
-					}
-					catch (Exception) {
-						// ignored
-					}
-				});
-			}
-			return;
-		}
-
-		public Task WithTaskExceptionHandler (
-			Task task
-		) {
-			return task.ContinueWith((it) => {
-				if (it.Exception?.InnerException != null) {
-					this.HandleException(it.Exception.InnerException);
-				}
-				return;
-			});
-		}
-
-		// ----------------
-
-		private void OnNotificationInvoked (
-			AppNotificationManager            sender,
-			AppNotificationActivatedEventArgs args
-		) {
-			if (App.MainWindowIsInitialized) {
-				WindowHelper.ShowAsForeground(App.MainWindow);
-			}
-			return;
-		}
-
-		private void RegisterNotification (
-		) {
-			AppNotificationManager.Default.NotificationInvoked += this.OnNotificationInvoked;
-			AppNotificationManager.Default.Register();
-			return;
-		}
-
-		private void UnregisterNotification (
-		) {
-			AppNotificationManager.Default.Unregister();
-			return;
-		}
-
-		public void PushNotification (
-			AppNotification notification
-		) {
-			AppNotificationManager.Default.Show(notification);
-			return;
-		}
-
-		// ----------------
-
-		public async Task RegisterShellJumpList (
-		) {
-			if (!JumpList.IsSupported()) {
-				return;
-			}
-			var list = await JumpList.LoadCurrentAsync();
-			list.Items.Clear();
-			foreach (var launcher in App.Setting.Data.ModuleLauncher.Module) {
-				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").SelfAlso((it) => {
-					it.Logo = new ("ms-appx:///Asset/Logo.png");
-					it.GroupName = "";
-					it.DisplayName = launcher.Title;
-					it.Description = "";
-				}));
-			}
-			foreach (var launcher in App.Setting.Data.ModuleLauncher.Pinned) {
-				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").SelfAlso((it) => {
-					it.Logo = new ("ms-appx:///Asset/Logo.png");
-					it.GroupName = "Pinned";
-					it.DisplayName = launcher.Title;
-					it.Description = "";
-				}));
-			}
-			foreach (var launcher in App.Setting.Data.ModuleLauncher.Recent) {
-				list.Items.Add(JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(launcher)), "").SelfAlso((it) => {
-					it.Logo = new ("ms-appx:///Asset/Logo.png");
-					it.GroupName = "Recent";
-					it.DisplayName = launcher.Title;
-					it.Description = "";
-				}));
-			}
-			await list.SaveAsync();
-			return;
-		}
-
-		// ----------------
-
-		public async Task AppendPinnedLauncherItem (
-			ModuleLauncherConfiguration launcher
-		) {
-			App.Setting.Data.ModuleLauncher.Pinned.Add(launcher);
-			await App.Setting.Save();
-			return;
-		}
 
 		public async Task AppendRecentLauncherItem (
 			ModuleLauncherConfiguration launcher
@@ -291,8 +147,6 @@ namespace AssistantPlus {
 			return;
 		}
 
-		// ----------------
-
 		public async Task ExecuteLauncher (
 			ModuleLauncherConfiguration launcher,
 			Boolean                     forNewWindow
@@ -302,6 +156,30 @@ namespace AssistantPlus {
 			}
 			else {
 				await ProcessHelper.SpawnChild(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), false);
+			}
+			return;
+		}
+
+		// ----------------
+
+		private void HandleException (
+			Exception exception
+		) {
+			if (App.MainWindowIsInitialized) {
+				App.MainWindow.DispatcherQueue.EnqueueAsync(() => {
+					try {
+						_ = ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Unhandled Exception", new TextBlock() {
+							HorizontalAlignment = HorizontalAlignment.Stretch,
+							VerticalAlignment = VerticalAlignment.Stretch,
+							IsTextSelectionEnabled = true,
+							TextWrapping = TextWrapping.Wrap,
+							Text = ExceptionHelper.GenerateMessage(exception),
+						}, null);
+					}
+					catch (Exception) {
+						// ignored
+					}
+				});
 			}
 			return;
 		}

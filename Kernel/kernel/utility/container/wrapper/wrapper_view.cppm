@@ -40,6 +40,7 @@ export namespace Twinning::Kernel {
 		constexpr WrapperView (
 		) :
 			m_value{} {
+			return;
 		}
 
 		constexpr WrapperView (
@@ -56,6 +57,7 @@ export namespace Twinning::Kernel {
 			QualifyValue & value
 		) :
 			m_value{&value} {
+			return;
 		}
 
 		#pragma endregion

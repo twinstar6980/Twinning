@@ -19,6 +19,7 @@ namespace Twinning.Script {
 		) {
 			this.m_view = new DataView(data, offset, size);
 			this.m_endian_little = !Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
+			return;
 		}
 
 		// ------------------------------------------------
@@ -236,6 +237,7 @@ namespace Twinning.Script {
 		) {
 			this.m_view = new ByteListView(data, offset, size);
 			this.m_position = 0;
+			return;
 		}
 
 		// ------------------------------------------------
