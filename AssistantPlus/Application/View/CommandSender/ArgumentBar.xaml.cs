@@ -12,22 +12,23 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region life
 
-		public ArgumentBar (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private ArgumentBarController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public ArgumentBar (
+		) {
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
 		) {
 			VisualStateManager.GoToState(this, $"{(this.Type == null ? "Null" : this.Option == null ? this.Type : "Enumeration")}State", false);
-			this.Controller.Update();
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -111,9 +112,9 @@ namespace AssistantPlus.View.CommandSender {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uLabel_ToolTip),

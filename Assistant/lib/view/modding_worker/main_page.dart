@@ -342,7 +342,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
 }
 
-class _MainPageBridgeClient implements bridge.Client {
+class _MainPageBridgeClient extends bridge.Client {
 
   // #region structor
 

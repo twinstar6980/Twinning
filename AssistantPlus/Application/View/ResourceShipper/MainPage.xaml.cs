@@ -13,11 +13,16 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		#region life
 
+		private MainPageController Controller { get; }
+
+		// ----------------
+
 		public MainPage (
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
-			this.Controller.Initialize();
+			this.Controller.InitializeView();
+			return;
 		}
 
 		// ----------------
@@ -29,14 +34,10 @@ namespace AssistantPlus.View.ResourceShipper {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
-
-		// ----------------
-
-		private MainPageController Controller { get; }
 
 		#endregion
 
@@ -73,9 +74,9 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			this.OptionConfiguration = [];
 			this.ParallelForward = App.Setting.Data.ResourceShipper.ParallelForward;
@@ -192,7 +193,9 @@ namespace AssistantPlus.View.ResourceShipper {
 			return option.Done();
 		}
 
-		// ----------------
+		#endregion
+
+		#region action
 
 		public async Task RefreshMatch (
 		) {

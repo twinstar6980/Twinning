@@ -10,21 +10,22 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
-		public GeneralResourcePropertyPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private GeneralResourcePropertyPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public GeneralResourcePropertyPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -63,9 +64,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uPath_Text),

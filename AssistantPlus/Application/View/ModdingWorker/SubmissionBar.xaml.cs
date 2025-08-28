@@ -13,22 +13,23 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region life
 
-		public SubmissionBar (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private SubmissionBarController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public SubmissionBar (
+		) {
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
 		) {
 			VisualStateManager.GoToState(this, $"{(this.Type == null ? "Idle" : this.Type)}State", false);
-			this.Controller.Update();
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -121,9 +122,9 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uHistory_IsEnabled),
@@ -226,9 +227,9 @@ namespace AssistantPlus.View.ModdingWorker {
 					Text = ValueExpressionHelper.MakeString(item),
 					FontFamily = font,
 				}.SelfAlso((it) => {
-					it.Click += (_, _) => {
+					it.Click += async (_, _) => {
 						this.Value.Value = item;
-						this.Update();
+						await this.UpdateView();
 						return;
 					};
 					if (this.Type == SubmissionType.Enumeration) {

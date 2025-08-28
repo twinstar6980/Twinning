@@ -18,11 +18,16 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region life
 
+		private MainPageController Controller { get; }
+
+		// ----------------
+
 		public MainPage (
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
-			this.Controller.Initialize();
+			this.Controller.InitializeView();
+			return;
 		}
 
 		// ----------------
@@ -34,14 +39,10 @@ namespace AssistantPlus.View.AnimationViewer {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
-
-		// ----------------
-
-		private MainPageController Controller { get; }
 
 		#endregion
 
@@ -132,9 +133,9 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			this.ImmediateSelect = App.Setting.Data.AnimationViewer.ImmediateSelect;
 			this.AutomaticPlay = App.Setting.Data.AnimationViewer.AutomaticPlay;
@@ -341,7 +342,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#endregion
 
-		#region load & activate
+		#region action
 
 		[MemberNotNullWhen(true, nameof(MainPageController.AnimationFile))]
 		[MemberNotNullWhen(true, nameof(MainPageController.TextureDirectory))]
@@ -805,12 +806,12 @@ namespace AssistantPlus.View.AnimationViewer {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var animationFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(animationFile)) {
-					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				await this.ApplyLoad(animationFile, null, null, null, null, null);

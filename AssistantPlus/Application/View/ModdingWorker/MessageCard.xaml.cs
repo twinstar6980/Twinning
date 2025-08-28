@@ -10,22 +10,23 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region life
 
-		public MessageCard (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private MessageCardController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public MessageCard (
+		) {
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
 		) {
 			VisualStateManager.GoToState(this, $"{this.Type}State", false);
-			this.Controller.Update();
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -93,9 +94,9 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uTitle_Text),

@@ -75,7 +75,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250602001" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
-    <PackageReference Include="WinUIEx" Version="2.5.1" />
   </ItemGroup>
 
   <!--

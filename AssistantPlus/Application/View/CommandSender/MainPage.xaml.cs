@@ -12,11 +12,16 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region life
 
+		private MainPageController Controller { get; }
+
+		// ----------------
+
 		public MainPage (
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
-			this.Controller.Initialize();
+			this.Controller.InitializeView();
+			return;
 		}
 
 		// ----------------
@@ -28,14 +33,10 @@ namespace AssistantPlus.View.CommandSender {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
-
-		// ----------------
-
-		private MainPageController Controller { get; }
 
 		#endregion
 
@@ -68,9 +69,9 @@ namespace AssistantPlus.View.CommandSender {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			this.MethodConfiguration = [];
 			this.ParallelForward = App.Setting.Data.CommandSender.ParallelForward;
@@ -163,7 +164,9 @@ namespace AssistantPlus.View.CommandSender {
 			return option.Done();
 		}
 
-		// ----------------
+		#endregion
+
+		#region action
 
 		public async Task AppendCommand (
 			String                     methodId,

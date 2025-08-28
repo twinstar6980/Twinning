@@ -13,6 +13,7 @@ namespace AssistantPlus.Control {
 		public DividerProgress (
 		) {
 			this.DefaultStyleKey = typeof(DividerProgress);
+			return;
 		}
 
 		#endregion

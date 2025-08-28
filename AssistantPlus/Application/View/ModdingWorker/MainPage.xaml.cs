@@ -13,11 +13,16 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region life
 
+		private MainPageController Controller { get; }
+
+		// ----------------
+
 		public MainPage (
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
-			this.Controller.Initialize();
+			this.Controller.InitializeView();
+			return;
 		}
 
 		// ----------------
@@ -29,16 +34,23 @@ namespace AssistantPlus.View.ModdingWorker {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
 
-		// ----------------
+		#endregion
 
-		private MainPageController Controller { get; }
+		#region module page
 
-		// ----------------
+		public Home.IModulePageController ModulePageGetController (
+		) {
+			return this.Controller;
+		}
+
+		#endregion
+
+		#region action
 
 		public async Task<List<String>?> ExecuteCommand (
 			List<String> additionalArgument
@@ -49,15 +61,6 @@ namespace AssistantPlus.View.ModdingWorker {
 				nameof(this.Controller.uAdditionalArgumentContent_Text),
 			]);
 			return await this.Controller.LaunchSession();
-		}
-
-		#endregion
-
-		#region module page
-
-		public Home.IModulePageController ModulePageGetController (
-		) {
-			return this.Controller;
 		}
 
 		#endregion
@@ -86,9 +89,9 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			this.AutomaticScroll = App.Setting.Data.ModdingWorker.AutomaticScroll;
 			this.SessionClient = new (this);
@@ -162,7 +165,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			}
 			if (optionImmediateLaunch != null) {
 				if (optionImmediateLaunch.AsNotNull()) {
-					await this.LaunchSession();
+					_ = this.LaunchSession().SelfLet(ExceptionHelper.WrapTask);
 				}
 			}
 			return;
@@ -180,7 +183,9 @@ namespace AssistantPlus.View.ModdingWorker {
 			return option.Done();
 		}
 
-		// ----------------
+		#endregion
+
+		#region action
 
 		public async Task SendMessage (
 			MessageType  type,
@@ -197,7 +202,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				_ = this.View.DispatcherQueue.EnqueueAsync(async () => {
 					await Task.Delay(40);
 					this.View.uMessageListScrollViewer.ChangeView(null, this.View.uMessageListScrollViewer.ScrollableHeight, null, true);
-				}).SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+				}).SelfLet(ExceptionHelper.WrapTask);
 			}
 			return;
 		}
@@ -383,7 +388,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			_ = this.LaunchSession().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			_ = this.LaunchSession().SelfLet(ExceptionHelper.WrapTask);
 			return;
 		}
 

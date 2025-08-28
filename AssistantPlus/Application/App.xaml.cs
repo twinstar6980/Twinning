@@ -46,6 +46,7 @@ namespace AssistantPlus {
 			App.Instance = this;
 			App.Setting = new ();
 			this.InitializeComponent();
+			return;
 		}
 
 		// ----------------
@@ -55,7 +56,7 @@ namespace AssistantPlus {
 		) {
 			var window = default(Window);
 			try {
-				ExceptionHelper.RegisterGlobalHandler(this, this.HandleException);
+				ExceptionHelper.Initialize(this, this.HandleException);
 				var argument = Environment.GetCommandLineArgs();
 				App.PackageDirectory = StorageHelper.Parent(argument[0]).AsNotNull();
 				App.ProgramFile = $"{App.PackageDirectory}/Application.exe";
@@ -77,13 +78,13 @@ namespace AssistantPlus {
 				App.MainWindow = new ();
 				window = App.MainWindow;
 				if (App.Setting.Data.WindowSizeState) {
-					WindowHelper.Size(App.MainWindow, App.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), App.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
+					WindowHelper.SetSize(App.MainWindow, App.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), App.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
 				}
 				if (App.Setting.Data.WindowPositionState) {
-					WindowHelper.Position(App.MainWindow, App.Setting.Data.WindowPositionX.CastPrimitive<Size>(), App.Setting.Data.WindowPositionY.CastPrimitive<Size>());
+					WindowHelper.SetPosition(App.MainWindow, App.Setting.Data.WindowPositionX.CastPrimitive<Size>(), App.Setting.Data.WindowPositionY.CastPrimitive<Size>());
 				}
 				else {
-					WindowHelper.Center(App.MainWindow);
+					WindowHelper.SetAsCenter(App.MainWindow);
 				}
 				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
 					await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
@@ -96,12 +97,11 @@ namespace AssistantPlus {
 					else {
 						await App.MainWindow.ShowLauncherPanel();
 					}
-				}).SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+				}).SelfLet(ExceptionHelper.WrapTask);
 				await App.Setting.Apply();
 			}
 			catch (Exception e) {
 				window = new () {
-					ExtendsContentIntoTitleBar = true,
 					SystemBackdrop = new MicaBackdrop(),
 					Content = new Control.Box() {
 						RequestedTheme = ElementTheme.Default,
@@ -117,9 +117,10 @@ namespace AssistantPlus {
 						},
 					},
 				};
+				WindowHelper.SetTitleBar(window, true, null, false);
 			}
-			WindowHelper.Title(window, Package.Current.DisplayName);
-			WindowHelper.Icon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
+			WindowHelper.SetIcon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
+			WindowHelper.SetTitle(window, Package.Current.DisplayName);
 			WindowHelper.Activate(window);
 			return;
 		}
@@ -264,13 +265,13 @@ namespace AssistantPlus {
 				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionWindowSize != null) {
-				WindowHelper.Size(App.MainWindow, optionWindowSize.Item1.CastPrimitive<Size>(), optionWindowSize.Item2.CastPrimitive<Size>());
+				WindowHelper.SetSize(App.MainWindow, optionWindowSize.Item1.CastPrimitive<Size>(), optionWindowSize.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition != null) {
-				WindowHelper.Position(App.MainWindow, optionWindowPosition.Item1.CastPrimitive<Size>(), optionWindowPosition.Item2.CastPrimitive<Size>());
+				WindowHelper.SetPosition(App.MainWindow, optionWindowPosition.Item1.CastPrimitive<Size>(), optionWindowPosition.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition == null && optionWindowSize != null) {
-				WindowHelper.Center(App.MainWindow);
+				WindowHelper.SetAsCenter(App.MainWindow);
 			}
 			if (optionLaunch != null) {
 				await this.HandleLaunch(optionLaunch.Item1, optionLaunch.Item2, optionLaunch.Item3);

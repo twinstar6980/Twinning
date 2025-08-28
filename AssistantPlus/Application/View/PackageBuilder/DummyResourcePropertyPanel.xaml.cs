@@ -10,21 +10,22 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
-		public DummyResourcePropertyPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private DummyResourcePropertyPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public DummyResourcePropertyPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -61,9 +62,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			return;
 		}

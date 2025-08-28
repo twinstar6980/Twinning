@@ -15,11 +15,16 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
+		private MainPageController Controller { get; }
+
+		// ----------------
+
 		public MainPage (
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
-			this.Controller.Initialize();
+			this.Controller.InitializeView();
+			return;
 		}
 
 		// ----------------
@@ -31,14 +36,10 @@ namespace AssistantPlus.View.PackageBuilder {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
-
-		// ----------------
-
-		private MainPageController Controller { get; }
 
 		#endregion
 
@@ -77,9 +78,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			return;
 		}
@@ -131,29 +132,9 @@ namespace AssistantPlus.View.PackageBuilder {
 			return option.Done();
 		}
 
-		// ----------------
-
-		public async Task ApplyLoad (
-			String projectDirectory
-		) {
-			if (this.IsLoaded) {
-				await this.ProjectClose();
-			}
-			await this.ProjectOpen(projectDirectory);
-			if (this.IsLoaded) {
-				await App.Instance.AppendRecentLauncherItem(new () {
-					Title = Regex.Replace(StorageHelper.Name(projectDirectory), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
-					Type = ModuleType.PackageBuilder,
-					Option = await this.CollectOption(),
-					Command = [],
-				});
-			}
-			return;
-		}
-
 		#endregion
 
-		#region common
+		#region action
 
 		public static String DataViewFormatForGroup = $"{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Group";
 
@@ -174,10 +155,10 @@ namespace AssistantPlus.View.PackageBuilder {
 			this.View.uWorkerButton.Flyout.ShowAt(this.View.uWorkerButton);
 			var result = await this.View.uWorkerPage.ExecuteCommand(argument);
 			if (result != null && result.First() == "s") {
-				App.MainWindow.PushNotification(InfoBarSeverity.Success, "Execute succeeded", "");
+				await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Execute succeeded", "");
 			}
 			else {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Execute failed", "");
+				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Execute failed", "");
 			}
 			this.WorkerState = false;
 			this.NotifyPropertyChanged([
@@ -195,7 +176,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			GF.AssertTest(this.IsLoaded);
 			if (this.View.uPackageList.SelectedItems.Count != 1) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
+				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
 				return;
 			}
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
@@ -378,7 +359,7 @@ namespace AssistantPlus.View.PackageBuilder {
 		) {
 			GF.AssertTest(!this.IsLoaded);
 			if (!(await this.CheckVersionFile(projectDirectory))) {
-				App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
+				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
 			var hideDialog = await ControlHelper.ShowDialogForWait(this.View);
@@ -1112,6 +1093,26 @@ namespace AssistantPlus.View.PackageBuilder {
 			return;
 		}
 
+		// ----------------
+
+		public async Task ApplyLoad (
+			String projectDirectory
+		) {
+			if (this.IsLoaded) {
+				await this.ProjectClose();
+			}
+			await this.ProjectOpen(projectDirectory);
+			if (this.IsLoaded) {
+				await App.Instance.AppendRecentLauncherItem(new () {
+					Title = Regex.Replace(StorageHelper.Name(projectDirectory), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
+					Type = ModuleType.PackageBuilder,
+					Option = await this.CollectOption(),
+					Command = [],
+				});
+			}
+			return;
+		}
+
 		#endregion
 
 		#region page
@@ -1136,12 +1137,12 @@ namespace AssistantPlus.View.PackageBuilder {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var projectDirectory = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistDirectory(projectDirectory)) {
-					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
 					return;
 				}
 				await this.ApplyLoad(projectDirectory);

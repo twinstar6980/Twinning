@@ -10,21 +10,22 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
-		public VariableListPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private VariableListPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public VariableListPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -60,9 +61,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.uList_ItemsSource = this.Value.Select((value) => (new VariableListPanelItemController() { Host = this, Item = value })).ToObservableCollection();
 			this.NotifyPropertyChanged([

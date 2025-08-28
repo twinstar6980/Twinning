@@ -10,21 +10,22 @@ namespace AssistantPlus.View.Home {
 
 		#region life
 
-		public LauncherConfigurationPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private LauncherConfigurationPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public LauncherConfigurationPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -65,9 +66,9 @@ namespace AssistantPlus.View.Home {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uTitleText_Text),

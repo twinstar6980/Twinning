@@ -10,21 +10,22 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
-		public PackageSettingPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private PackageSettingPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public PackageSettingPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -81,9 +82,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uVersionNumber_SelectedItem),

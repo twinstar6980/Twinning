@@ -184,7 +184,7 @@ namespace AssistantPlus.Bridge {
 			Executor*     instance,
 			ExecutorProxy proxy
 		) {
-			var guardForInvoke = GCHandle.Alloc((ExecutorDelegate)(void (
+			var guardForInvoke = GCHandle.Alloc((ExecutorDelegate)((
 				Executor* self,
 				Executor* callback,
 				Message*  argument,
@@ -205,7 +205,7 @@ namespace AssistantPlus.Bridge {
 				}
 				return;
 			}));
-			var guardForClear = GCHandle.Alloc((ExecutorDelegate)(void (
+			var guardForClear = GCHandle.Alloc((ExecutorDelegate)((
 				Executor* self,
 				Executor* callback,
 				Message*  argument,

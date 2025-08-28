@@ -10,21 +10,22 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region life
 
-		public ArgumentPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private ArgumentPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public ArgumentPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -76,9 +77,9 @@ namespace AssistantPlus.View.CommandSender {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			GF.AssertTest(this.Configuration.Count == this.Value.Count);
 			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() { Host = this, Configuration = value, Value = this.Value[index] })).ToList();

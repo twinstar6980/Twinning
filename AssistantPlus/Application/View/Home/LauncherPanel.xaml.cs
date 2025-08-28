@@ -10,21 +10,22 @@ namespace AssistantPlus.View.Home {
 
 		#region life
 
-		public LauncherPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private LauncherPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public LauncherPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -60,9 +61,9 @@ namespace AssistantPlus.View.Home {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.uModuleLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Module.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value })).ToList();
 			this.uPinnedLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Pinned.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value })).ToObservableCollection();

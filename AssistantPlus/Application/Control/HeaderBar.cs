@@ -13,6 +13,7 @@ namespace AssistantPlus.Control {
 		public HeaderBar (
 		) {
 			this.DefaultStyleKey = typeof(HeaderBar);
+			return;
 		}
 
 		#endregion

@@ -10,21 +10,22 @@ namespace AssistantPlus.View.CommandSender {
 
 		#region life
 
-		public SettingPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private SettingPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public SettingPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -62,9 +63,9 @@ namespace AssistantPlus.View.CommandSender {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uMethodConfigurationText_Text),

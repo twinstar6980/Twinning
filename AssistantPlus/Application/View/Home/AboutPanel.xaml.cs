@@ -13,21 +13,22 @@ namespace AssistantPlus.View.Home {
 
 		#region life
 
-		public AboutPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private AboutPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public AboutPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -49,9 +50,9 @@ namespace AssistantPlus.View.Home {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 			]);
@@ -454,7 +455,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<SplitButton>();
 			await StorageHelper.Reveal(App.PackageDirectory);
-			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -466,7 +467,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<SplitButton>();
 			await StorageHelper.Reveal(App.Setting.File);
-			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -527,7 +528,7 @@ namespace AssistantPlus.View.Home {
 					nameof(this.uSettingWindowSizeWidth_Value),
 					nameof(this.uSettingWindowSizeHeight_Value),
 				]);
-				App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+				await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			}
 			return;
 		}
@@ -540,7 +541,7 @@ namespace AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<Button>();
 			await StorageHelper.Reveal(App.SharedDirectory);
-			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -554,7 +555,7 @@ namespace AssistantPlus.View.Home {
 			if (StorageHelper.Exist(App.CacheDirectory)) {
 				StorageHelper.Remove(App.CacheDirectory);
 			}
-			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 

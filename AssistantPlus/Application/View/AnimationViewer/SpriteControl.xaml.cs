@@ -16,6 +16,7 @@ namespace AssistantPlus.View.AnimationViewer {
 		public SpriteControl (
 		) {
 			this.InitializeComponent();
+			return;
 		}
 
 		#endregion

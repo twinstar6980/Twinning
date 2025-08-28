@@ -382,8 +382,6 @@ export namespace Twinning::Kernel::Executor::Environment {
 	inline auto inject (
 		Context & context
 	) -> Void {
-		#pragma clang diagnostic push
-		#pragma clang diagnostic ignored "-Wshadow"
 		auto s_Twinning = JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_left(context.context().global_object())};
 		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
 		// Boolean
@@ -1823,7 +1821,6 @@ export namespace Twinning::Kernel::Executor::Environment {
 			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
 		}
 		return;
-		#pragma clang diagnostic pop
 	}
 
 	#pragma endregion

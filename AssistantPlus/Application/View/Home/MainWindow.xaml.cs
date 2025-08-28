@@ -4,7 +4,6 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.System;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 
@@ -14,39 +13,52 @@ namespace AssistantPlus.View.Home {
 
 		#region life
 
-		public MainWindow (
-		) {
-			this.InitializeComponent();
-			this.ExtendsContentIntoTitleBar = true;
-			this.SetTitleBar(this.uTab.TabStripFooter.As<UIElement>());
-			this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Standard;
-			this.Controller = new () { View = this };
-			this.Controller.Initialize();
-		}
-
-		// ----------------
-
 		private MainWindowController Controller { get; }
 
 		// ----------------
 
-		public async void PushNotification (
+		public MainWindow (
+		) {
+			this.InitializeComponent();
+			WindowHelper.SetTitleBar(this, true, this.uTab.TabStripFooter.As<UIElement>(), false);
+			this.Controller = new () { View = this };
+			this.Controller.InitializeView();
+			return;
+		}
+
+		#endregion
+
+		#region action
+
+		public async Task PushNotification (
 			InfoBarSeverity severity,
 			String          title,
 			String          message,
 			Size            duration = 4000
-		) => this.Controller.PushNotification(severity, title, message, duration);
+		) {
+			await this.Controller.PushNotification(severity, title, message, duration);
+			return;
+		}
 
 		public async Task ShowLauncherPanel (
-		) => await this.Controller.ShowLauncherPanel();
+		) {
+			await this.Controller.ShowLauncherPanel();
+			return;
+		}
 
 		public async Task InsertTabItem (
 			ModuleLauncherConfiguration configuration
-		) => await this.Controller.InsertTabItem(configuration);
+		) {
+			await this.Controller.InsertTabItem(configuration);
+			return;
+		}
 
 		public async Task RemoveTabItem (
 			Page content
-		) => await this.Controller.RemoveTabItem(content);
+		) {
+			await this.Controller.RemoveTabItem(content);
+			return;
+		}
 
 		#endregion
 
@@ -62,16 +74,18 @@ namespace AssistantPlus.View.Home {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			return;
 		}
 
-		// ----------------
+		#endregion
 
-		public async void PushNotification (
+		#region action
+
+		public async Task PushNotification (
 			InfoBarSeverity severity,
 			String          title,
 			String          message,
@@ -384,14 +398,20 @@ namespace AssistantPlus.View.Home {
 
 	public interface IModulePage {
 
+		#region interface
+
 		IModulePageController ModulePageGetController (
 		);
+
+		#endregion
 
 	}
 
 	public interface IModulePageController {
 
-		void Initialize (
+		#region life
+
+		void InitializeView (
 		);
 
 		// ----------------
@@ -418,6 +438,8 @@ namespace AssistantPlus.View.Home {
 
 		Task<List<String>> CollectOption (
 		);
+
+		#endregion
 
 	}
 

@@ -11,21 +11,22 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
-		public TextureResourcePropertyPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private TextureResourcePropertyPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public TextureResourcePropertyPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -68,9 +69,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uPath_Text),

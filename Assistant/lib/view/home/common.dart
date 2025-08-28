@@ -989,7 +989,7 @@ class CustomModulePageRegion extends StatelessWidget {
 
 abstract class CustomModulePageState {
 
-  // #region action
+  // #region life
 
   Future<Void> modulePageOpenView(
   );

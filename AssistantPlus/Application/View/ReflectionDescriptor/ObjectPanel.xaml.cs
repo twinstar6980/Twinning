@@ -11,21 +11,22 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region life
 
-		public ObjectPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private ObjectPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public ObjectPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -93,7 +94,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		// ----------------
 
-		public void Update (
+		public async Task UpdateView (
 		) {
 			if (this.Type.Length == 0) {
 				this.DescriptorList = null;
@@ -185,7 +186,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			GF.AssertTest(this.Host.IsLoaded);
 			var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(model.Name); }));
-			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
+			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}
 

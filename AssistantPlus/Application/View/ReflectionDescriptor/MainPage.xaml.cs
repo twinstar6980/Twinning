@@ -12,11 +12,16 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region life
 
+		private MainPageController Controller { get; }
+
+		// ----------------
+
 		public MainPage (
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
-			this.Controller.Initialize();
+			this.Controller.InitializeView();
+			return;
 		}
 
 		// ----------------
@@ -28,14 +33,10 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				await ControlHelper.WaitUntilLoaded(this);
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WithTaskExceptionHandler);
+			}))().SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
-
-		// ----------------
-
-		private MainPageController Controller { get; }
 
 		#endregion
 
@@ -79,9 +80,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#endregion
 
-		#region initialize
+		#region life
 
-		public void Initialize (
+		public void InitializeView (
 		) {
 			return;
 		}
@@ -133,7 +134,9 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			return option.Done();
 		}
 
-		// ----------------
+		#endregion
+
+		#region action
 
 		public ObjectItemController CreateSource (
 			GameReflectionModel.ObjectDescriptor descriptor
@@ -189,12 +192,12 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var descriptorFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(descriptorFile)) {
-					App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				await this.ApplyLoad(descriptorFile);
@@ -393,7 +396,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			var resultValue = GameReflectionHelper.MakeDataValue(this.DescriptorMap, objectType, objectValue);
 			var resultText = JsonHelper.SerializeText(resultValue);
 			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(resultText); }));
-			App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
+			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}
 

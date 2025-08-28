@@ -13,6 +13,7 @@ namespace AssistantPlus.Control {
 		public SettingItem (
 		) {
 			this.DefaultStyleKey = typeof(SettingItem);
+			return;
 		}
 
 		#endregion

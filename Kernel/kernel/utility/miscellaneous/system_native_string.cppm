@@ -2,6 +2,9 @@ module;
 
 #include "kernel/common.hpp"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-macros"
+
 // NOTE: DEFINE
 #undef assert_test
 #define assert_test(...)\
@@ -9,6 +12,8 @@ module;
 		throw std::runtime_error{"AssertionException: " #__VA_ARGS__};\
 	}\
 	static_assert(true)
+
+#pragma clang diagnostic pop
 
 export module twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.third.system.windows;

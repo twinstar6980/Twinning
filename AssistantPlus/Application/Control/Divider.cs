@@ -13,6 +13,7 @@ namespace AssistantPlus.Control {
 		public Divider (
 		) {
 			this.DefaultStyleKey = typeof(Divider);
+			return;
 		}
 
 		#endregion

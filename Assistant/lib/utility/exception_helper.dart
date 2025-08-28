@@ -8,7 +8,7 @@ class ExceptionHelper {
 
   // #region utility
 
-  static Void registerGlobalHandler(
+  static Void initialize(
     Void Function(Object, StackTrace?) handler,
   ) {
       WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {

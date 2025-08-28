@@ -10,21 +10,22 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region life
 
-		public PackagePartPanel (
-		) {
-			this.InitializeComponent();
-			this.Controller = new () { View = this };
-		}
-
-		// ----------------
-
 		private PackagePartPanelController Controller { get; }
 
 		// ----------------
 
-		protected override void StampUpdate (
+		public PackagePartPanel (
 		) {
-			this.Controller.Update();
+			this.InitializeComponent();
+			this.Controller = new () { View = this };
+			return;
+		}
+
+		// ----------------
+
+		protected override async Task StampUpdate (
+		) {
+			await this.Controller.UpdateView();
 			return;
 		}
 
@@ -76,9 +77,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#endregion
 
-		#region update
+		#region life
 
-		public async void Update (
+		public async Task UpdateView (
 		) {
 			this.uList_ItemsSource = this.Source.Select((value) => (new PackagePartPanelItemController() { Host = this, Name = value })).ToList();
 			this.NotifyPropertyChanged([

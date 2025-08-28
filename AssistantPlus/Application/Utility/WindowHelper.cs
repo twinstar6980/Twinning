@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using AssistantPlus;
+using Microsoft.UI.Windowing;
 
 namespace AssistantPlus.Utility {
 
@@ -9,7 +10,7 @@ namespace AssistantPlus.Utility {
 
 		#region utility
 
-		public static IntPtr Handle (
+		public static IntPtr GetHandle (
 			Window window
 		) {
 			return WinRT.Interop.WindowNative.GetWindowHandle(window);
@@ -17,15 +18,7 @@ namespace AssistantPlus.Utility {
 
 		// ----------------
 
-		public static void Title (
-			Window window,
-			String title
-		) {
-			window.AppWindow.Title = title;
-			return;
-		}
-
-		public static void Icon (
+		public static void SetIcon (
 			Window window,
 			String icon
 		) {
@@ -33,32 +26,80 @@ namespace AssistantPlus.Utility {
 			return;
 		}
 
+		public static void SetTitle (
+			Window window,
+			String title
+		) {
+			window.AppWindow.Title = title;
+			return;
+		}
+
+		public static void SetTitleBar (
+			Window     window,
+			Boolean    extend,
+			UIElement? element,
+			Boolean?   mode
+		) {
+			if (!extend) {
+				window.ExtendsContentIntoTitleBar = false;
+				window.SetTitleBar(null);
+			}
+			else {
+				window.ExtendsContentIntoTitleBar = true;
+				window.SetTitleBar(element);
+				window.AppWindow.TitleBar.PreferredHeightOption = mode == null ? TitleBarHeightOption.Collapsed : !mode.AsNotNull() ? TitleBarHeightOption.Standard : TitleBarHeightOption.Tall;
+			}
+			return;
+		}
+
 		// ----------------
 
-		public static void Position (
+		public static void SetPosition (
 			Window window,
 			Size   x,
 			Size   y
 		) {
-			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
+			var handle = WindowHelper.GetHandle(window);
+			var ratio = Win32.PInvoke.GetDpiForWindow(new (handle)) / 96.0;
 			window.AppWindow.Move(new ((x * ratio).CastPrimitive<Int32>(), (y * ratio).CastPrimitive<Int32>()));
 			return;
 		}
 
-		public static void Center (
-			Window window
-		) {
-			WinUIEx.WindowExtensions.CenterOnScreen(window);
-			return;
-		}
-
-		public static void Size (
+		public static void SetSize (
 			Window window,
 			Size   width,
 			Size   height
 		) {
-			var ratio = WinUIEx.HwndExtensions.GetDpiForWindow(WindowHelper.Handle(window)) / 96.0;
+			var handle = WindowHelper.GetHandle(window);
+			var ratio = Win32.PInvoke.GetDpiForWindow(new (handle)) / 96.0;
 			window.AppWindow.Resize(new ((width * ratio).CastPrimitive<Int32>(), (height * ratio).CastPrimitive<Int32>()));
+			return;
+		}
+
+		public static void SetAsCenter (
+			Window window
+		) {
+			var handle = WindowHelper.GetHandle(window);
+			var monitor = Win32.PInvoke.MonitorFromWindow(new (handle), Win32.Graphics.Gdi.MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+			var monitorInformation = new Win32.Graphics.Gdi.MONITORINFO() {
+				cbSize = 40u,
+			};
+			GF.AssertTest(Win32.PInvoke.GetMonitorInfo(monitor, ref monitorInformation));
+			GF.AssertTest(Win32.PInvoke.GetWindowRect(new (handle), out var rect));
+			var x = (monitorInformation.rcMonitor.left + monitorInformation.rcMonitor.right - (rect.right - rect.left)) / 2;
+			var y = (monitorInformation.rcMonitor.bottom + monitorInformation.rcMonitor.top - (rect.bottom - rect.top)) / 2;
+			window.AppWindow.Move(new (x, y));
+			return;
+		}
+
+		// ----------------
+
+		public static void SetAsForeground (
+			Window window
+		) {
+			var handle = WindowHelper.GetHandle(window);
+			GF.AssertTest(Win32.PInvoke.ShowWindow(new (handle), Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_RESTORE));
+			GF.AssertTest(Win32.PInvoke.SetForegroundWindow(new (handle)));
 			return;
 		}
 
@@ -69,16 +110,6 @@ namespace AssistantPlus.Utility {
 		) {
 			window.Activate();
 			return;
-		}
-
-		public static Boolean ShowAsForeground (
-			Window window
-		) {
-			var state = true;
-			var handle = WindowHelper.Handle(window);
-			state &= Win32.PInvoke.ShowWindow(new (handle), Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_RESTORE);
-			state &= Win32.PInvoke.SetForegroundWindow(new (handle));
-			return state;
 		}
 
 		#endregion

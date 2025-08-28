@@ -17,7 +17,7 @@ namespace AssistantPlus.Utility {
 			}
 			AppNotificationManager.Default.NotificationInvoked += (_, _) => {
 				if (App.MainWindowIsInitialized) {
-					WindowHelper.ShowAsForeground(App.MainWindow);
+					WindowHelper.SetAsForeground(App.MainWindow);
 				}
 				return;
 			};

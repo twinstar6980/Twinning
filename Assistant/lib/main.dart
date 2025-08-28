@@ -20,15 +20,13 @@ import 'package:app_links/app_links.dart';
 Void main(
   List<String> argument,
 ) {
-  _Main.run(argument);
+  _MainApplication.run(argument);
   return;
 }
 
-class _Main {
+class _MainApplication {
 
-  static SettingProvider _setting = SettingProvider();
-
-  // ----------------
+  // #region utility
 
   static Void _handleException(
     Object      exception,
@@ -168,6 +166,12 @@ class _Main {
     return;
   }
 
+  // #endregion
+
+  // #region life
+
+  static SettingProvider _setting = SettingProvider();
+
   // ----------------
 
   static Future<Void> run(
@@ -175,7 +179,7 @@ class _Main {
   ) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      ExceptionHelper.registerGlobalHandler(_handleException);
+      ExceptionHelper.initialize(_handleException);
       try {
         await _setting.load();
       }
@@ -229,5 +233,7 @@ class _Main {
     runApp(Application(setting: _setting));
     return;
   }
+
+  // #endregion
 
 }
