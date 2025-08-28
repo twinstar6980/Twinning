@@ -69,14 +69,14 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			LPWSTR *          ppszInfotip
 		) override {
 			*ppszInfotip = nullptr;
-			return S_OK;
+			return E_NOTIMPL;
 		}
 
 		virtual IFACEMETHODIMP GetCanonicalName (
 			GUID * pguidCommandName
 		) override {
 			*pguidCommandName = GUID_NULL;
-			return S_OK;
+			return E_NOTIMPL;
 		}
 
 		virtual IFACEMETHODIMP GetState (
@@ -133,8 +133,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 		virtual IFACEMETHODIMP EnumSubCommands (
 			IEnumExplorerCommand * * ppEnum
 		) override {
-			ppEnum = nullptr;
-			return S_OK;
+			*ppEnum = nullptr;
+			return E_NOTIMPL;
 		}
 
 		#pragma endregion
