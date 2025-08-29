@@ -5,13 +5,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="forwarder_explorer_command.cppm" />
-    <ClCompile Include="library.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="library.def" />
+    <None Include="main.def" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="library.manifest" />
+    <Manifest Include="main.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resource">

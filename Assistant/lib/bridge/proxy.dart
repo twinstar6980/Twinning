@@ -165,7 +165,7 @@ class ExecutorProxy {
     return proxy;
   }
 
-  static void construct(
+  static Void construct(
     ffi.Pointer<Executor> instance,
     ExecutorProxy         proxy,
   ) {
@@ -212,7 +212,7 @@ class ExecutorProxy {
     return;
   }
 
-  static void destruct(
+  static Void destruct(
     ffi.Pointer<Executor> instance,
   ) {
     var guard = ExecutorProxy._guard[instance]!;

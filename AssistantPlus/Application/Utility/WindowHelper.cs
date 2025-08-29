@@ -76,7 +76,7 @@ namespace AssistantPlus.Utility {
 			return;
 		}
 
-		public static void SetAsCenter (
+		public static void SetAtCenter (
 			Window window
 		) {
 			var handle = WindowHelper.GetHandle(window);
@@ -109,6 +109,13 @@ namespace AssistantPlus.Utility {
 			Window window
 		) {
 			window.Activate();
+			return;
+		}
+
+		public static void Close (
+			Window window
+		) {
+			window.Close();
 			return;
 		}
 

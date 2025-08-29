@@ -2,8 +2,10 @@ module;
 
 #include <Shlwapi.h>
 #include <ShlObj_core.h>
-#include <wrl/implements.h>
+#include <winrt/base.h>
 #include "./common.hpp"
+
+#define ForwarderExplorerCommandClassFactory_UUID "BE4A1760-1939-4240-BB82-7199B184B702"
 
 export module twinning.assistant_plus.forwarder.forwarder_explorer_command;
 
@@ -13,8 +15,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 	#pragma region type
 
-	class __declspec(uuid("BE4A1760-1939-4240-BB82-7199B184B702")) ForwarderExplorerCommand :
-		public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand> {
+	class ForwarderExplorerCommand :
+		public winrt::implements<ForwarderExplorerCommand, IExplorerCommand> {
 
 	private:
 
@@ -30,7 +32,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 		explicit ForwarderExplorerCommand (
 		) :
-			Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IExplorerCommand>{},
+			winrt::implements<ForwarderExplorerCommand, IExplorerCommand>{},
 			m_application_name{},
 			m_application_logo{},
 			m_state_file{} {
@@ -341,9 +343,57 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			auto message_w = thiz.wide_from_utf8(message);
 			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
 			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-			TaskDialog(nullptr, nullptr, L"Twinning Assistant Plus", L"Exception", message_w.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
+			TaskDialog(nullptr, nullptr, thiz.m_application_name.data(), L"Exception", message_w.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
 			SetThreadDpiAwarenessContext(original_thread_dpi_awareness_context);
 			return;
+		}
+
+		#pragma endregion
+
+	};
+
+	// ----------------
+
+	class __declspec(uuid(ForwarderExplorerCommandClassFactory_UUID)) ForwarderExplorerCommandClassFactory :
+		public winrt::implements<ForwarderExplorerCommandClassFactory, IClassFactory> {
+
+	public:
+
+		#pragma region structor
+
+		explicit ForwarderExplorerCommandClassFactory (
+		) :
+			winrt::implements<ForwarderExplorerCommandClassFactory, IClassFactory>{} {
+			return;
+		}
+
+		#pragma endregion
+
+		#pragma region implement IClassFactory
+
+		virtual IFACEMETHODIMP CreateInstance (
+			IUnknown * pUnkOuter,
+			REFIID     riid,
+			void * *   ppvObject
+		) override {
+			try {
+				return winrt::make<ForwarderExplorerCommand>()->QueryInterface(riid, ppvObject);
+			}
+			catch (...) {
+				return winrt::to_hresult();
+			}
+		}
+
+		virtual IFACEMETHODIMP LockServer (
+			BOOL fLock
+		) override {
+			if (fLock) {
+				++winrt::get_module_lock();
+			}
+			else {
+				--winrt::get_module_lock();
+			}
+			return S_OK;
 		}
 
 		#pragma endregion

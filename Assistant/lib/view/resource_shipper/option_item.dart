@@ -1,8 +1,8 @@
 import '/common.dart';
+import '/utility/icon_helper.dart';
 import '/view/resource_shipper/configuration.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/get.dart';
 
 // ----------------
 
@@ -39,7 +39,7 @@ class OptionItem extends StatelessWidget {
             contentPadding: EdgeInsets.fromLTRB(40, 0, 16, 0),
             dense: true,
             enabled: enabled,
-            leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
+            leading: Icon(IconHelper.queryOutlined(this.configuration.icon)),
             title: Text(
               this.configuration.name,
               overflow: TextOverflow.ellipsis,
@@ -156,7 +156,7 @@ class OptionGroupItem extends StatelessWidget {
         children: [
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-            leading: Icon(SymbolsGet.get(this.configuration.icon, SymbolStyle.outlined)),
+            leading: Icon(IconHelper.queryOutlined(this.configuration.icon)),
             title: Text(
               this.configuration.name,
               overflow: TextOverflow.ellipsis,

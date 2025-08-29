@@ -14,15 +14,13 @@ typedef Integer = int;
 
 typedef Floater = double;
 
-typedef IconSymbols = Symbols;
-
 // ----------------
 
 final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '102';
+  static const String version = '103';
 
   static const String developer = 'TwinStar';
 
@@ -234,3 +232,5 @@ extension CommonWidgetExtension<TType extends Widget> on TType {
   }
 
 }
+
+typedef IconSymbols = Symbols;

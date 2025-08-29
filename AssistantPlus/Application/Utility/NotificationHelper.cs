@@ -11,14 +11,13 @@ namespace AssistantPlus.Utility {
 		#region utility
 
 		public static void Initialize (
+			Action handler
 		) {
 			if (!AppNotificationManager.IsSupported()) {
 				return;
 			}
 			AppNotificationManager.Default.NotificationInvoked += (_, _) => {
-				if (App.MainWindowIsInitialized) {
-					WindowHelper.SetAsForeground(App.MainWindow);
-				}
+				handler();
 				return;
 			};
 			{

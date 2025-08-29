@@ -2,18 +2,18 @@ import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
 import '/application.dart';
-import '/utility/command_line_reader.dart';
 import '/utility/exception_helper.dart';
-import '/utility/control_helper.dart';
-import '/utility/notification_helper.dart';
 import '/utility/storage_helper.dart';
+import '/utility/command_line_reader.dart';
+import '/utility/control_helper.dart';
+import '/utility/window_helper.dart';
+import '/utility/notification_helper.dart';
+import '/utility/custom_link_helper.dart';
 import '/view/home/common.dart';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:window_manager/window_manager.dart';
-import 'package:app_links/app_links.dart';
 
 // ----------------
 
@@ -194,20 +194,25 @@ class _MainApplication {
       await NotificationHelper.initialize();
       await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-        await windowManager.ensureInitialized();
+        await WindowHelper.ensureInitialized();
         if (_setting.data.windowSizeState) {
-          await windowManager.setSize(Size(_setting.data.windowSizeWidth.toDouble(), _setting.data.windowSizeHeight.toDouble()));
+          await WindowHelper.setSize(_setting.data.windowSizeWidth.toDouble(), _setting.data.windowSizeHeight.toDouble());
         }
         if (_setting.data.windowPositionState) {
-          await windowManager.setPosition(Offset(_setting.data.windowPositionX.toDouble(), _setting.data.windowPositionY.toDouble()));
+          await WindowHelper.setPosition(_setting.data.windowPositionX.toDouble(), _setting.data.windowPositionY.toDouble());
         }
         else {
-          await windowManager.center();
+          await WindowHelper.setAtCenter();
         }
-        await windowManager.waitUntilReadyToShow();
-        await windowManager.show();
+        await WindowHelper.waitUntilReadyToShow();
+        await WindowHelper.show();
       }
-      if (!(await AppLinks().getInitialLinkString() ?? '').startsWith('twinstar.twinning.assistant:')) {
+      CustomLinkHelper.listen((link) async {
+        ControlHelper.postTask(() async {
+          await _handleLink(link);
+        });
+      });
+      if (await CustomLinkHelper.getFirst() == null) {
         ControlHelper.postTask(() async {
           if (argument.length >= 1 && argument[0] == 'application') {
             await _handleCommand(argument.slice(1));
@@ -217,13 +222,6 @@ class _MainApplication {
           }
         });
       }
-      AppLinks().stringLinkStream.listen((link) async {
-        ControlHelper.postTask(() async {
-          if (link.startsWith('twinstar.twinning.assistant:')) {
-            await _handleLink(Uri.parse(link));
-          }
-        });
-      });
     }
     catch (e, s) {
       ControlHelper.postTask(() async {

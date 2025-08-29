@@ -1,12 +1,11 @@
 // twinning.assistant.forwarder.main
 
-#include <activation.h>
-#include <ObjectArray.h>
-#include <wrl/implements.h>
-#include <wrl/module.h>
+#include <unknwn.h>
+#include <winrt/base.h>
 #include "./common.hpp"
 
 import twinning.assistant.forwarder.forwarder_explorer_command;
+using Twinning::Assistant::Forwarder::ForwarderExplorerCommandClassFactory;
 
 #pragma region main
 
@@ -15,17 +14,16 @@ STDAPI_(BOOL) DllMain (
 	DWORD     fdwReason,
 	LPVOID    lpvReserved
 ) {
-	if (fdwReason == DLL_PROCESS_ATTACH) {
-		DisableThreadLibraryCalls(hinstDLL);
-	}
 	return TRUE;
 }
 
-STDAPI DllGetActivationFactory (
-	HSTRING                activatableClassId,
-	IActivationFactory * * factory
+STDAPI DllCanUnloadNow (
 ) {
-	return Microsoft::WRL::Module<Microsoft::WRL::InProc>::GetModule().GetActivationFactory(activatableClassId, factory);
+	if (winrt::get_module_lock()) {
+		return S_FALSE;
+	}
+	winrt::clear_factory_cache();
+	return S_OK;
 }
 
 STDAPI DllGetClassObject (
@@ -33,18 +31,22 @@ STDAPI DllGetClassObject (
 	REFIID       riid,
 	LPVOID FAR * ppv
 ) {
-	return Microsoft::WRL::Module<Microsoft::WRL::InProc>::GetModule().GetClassObject(rclsid, riid, ppv);
+	if (ppv == nullptr) {
+		return E_POINTER;
+	}
+	*ppv = nullptr;
+	if (riid != IID_IClassFactory && riid != IID_IUnknown) {
+		return E_NOINTERFACE;
+	}
+	try {
+		if (rclsid == __uuidof(ForwarderExplorerCommandClassFactory)) {
+			return winrt::make<ForwarderExplorerCommandClassFactory>()->QueryInterface(riid, ppv);
+		}
+		return E_INVALIDARG;
+	}
+	catch (...) {
+		return winrt::to_hresult();
+	}
 }
-
-STDAPI DllCanUnloadNow (
-) {
-	return Microsoft::WRL::Module<Microsoft::WRL::InProc>::GetModule().Terminate() ? S_OK : S_FALSE;
-}
-
-// ----------------
-
-using Twinning::Assistant::Forwarder::ForwarderExplorerCommand;
-CoCreatableClass(ForwarderExplorerCommand);
-CoCreatableClassWrlCreatorMapInclude(ForwarderExplorerCommand);
 
 #pragma endregion

@@ -74,9 +74,13 @@ namespace AssistantPlus {
 				unsafe {
 					Win32.PInvoke.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
 				}
-				NotificationHelper.Initialize();
+				NotificationHelper.Initialize(() => {
+					if (App.MainWindowIsInitialized) {
+						WindowHelper.SetAsForeground(App.MainWindow);
+					}
+					return;
+				});
 				App.MainWindow = new ();
-				window = App.MainWindow;
 				if (App.Setting.Data.WindowSizeState) {
 					WindowHelper.SetSize(App.MainWindow, App.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), App.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
 				}
@@ -84,7 +88,7 @@ namespace AssistantPlus {
 					WindowHelper.SetPosition(App.MainWindow, App.Setting.Data.WindowPositionX.CastPrimitive<Size>(), App.Setting.Data.WindowPositionY.CastPrimitive<Size>());
 				}
 				else {
-					WindowHelper.SetAsCenter(App.MainWindow);
+					WindowHelper.SetAtCenter(App.MainWindow);
 				}
 				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
 					await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
@@ -99,9 +103,10 @@ namespace AssistantPlus {
 					}
 				}).SelfLet(ExceptionHelper.WrapTask);
 				await App.Setting.Apply();
+				window = App.MainWindow;
 			}
 			catch (Exception e) {
-				window = new () {
+				window = new Window() {
 					SystemBackdrop = new MicaBackdrop(),
 					Content = new Control.Box() {
 						RequestedTheme = ElementTheme.Default,
@@ -116,8 +121,15 @@ namespace AssistantPlus {
 							},
 						},
 					},
-				};
-				WindowHelper.SetTitleBar(window, true, null, false);
+				}.SelfAlso((it) => {
+					WindowHelper.SetTitleBar(it, true, null, false);
+					it.Closed += (_, _) => {
+						if (App.MainWindowIsInitialized) {
+							WindowHelper.Close(App.MainWindow);
+						}
+						return;
+					};
+				});
 			}
 			WindowHelper.SetIcon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
 			WindowHelper.SetTitle(window, Package.Current.DisplayName);
@@ -271,7 +283,7 @@ namespace AssistantPlus {
 				WindowHelper.SetPosition(App.MainWindow, optionWindowPosition.Item1.CastPrimitive<Size>(), optionWindowPosition.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition == null && optionWindowSize != null) {
-				WindowHelper.SetAsCenter(App.MainWindow);
+				WindowHelper.SetAtCenter(App.MainWindow);
 			}
 			if (optionLaunch != null) {
 				await this.HandleLaunch(optionLaunch.Item1, optionLaunch.Item2, optionLaunch.Item3);
