@@ -117,7 +117,7 @@ class ExecutorProxy {
 
   // #region convert
 
-  static Map<ffi.Pointer<Executor>, (ffi.NativeCallable, ffi.NativeCallable)> _guard = {};
+  static final Map<ffi.Pointer<Executor>, (ffi.NativeCallable, ffi.NativeCallable)> _guard = {};
 
   // ----------------
 

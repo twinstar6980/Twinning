@@ -132,7 +132,7 @@ namespace AssistantPlus.Bridge {
 			Message*  exception
 		);
 
-		private static Dictionary<IntPtr, Tuple<GCHandle, GCHandle>> sGuard = new ();
+		private static readonly Dictionary<IntPtr, Tuple<GCHandle, GCHandle>> sGuard = [];
 
 		// ----------------
 

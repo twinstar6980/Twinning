@@ -3,14 +3,14 @@ import '/setting.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/utility/permission_helper.dart';
 import '/utility/control_helper.dart';
+import '/utility/permission_helper.dart';
+import '/utility/forwarder_extension_helper.dart';
 import '/view/home/common.dart';
 import '/view/home/about_panel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // ----------------
 
@@ -34,58 +34,6 @@ class _SettingPanelState extends State<SettingPanel> {
   late Boolean  _storagePermissionState;
   late Boolean? _forwarderExtensionState;
 
-  Future<Boolean?> checkForwarderExtension(
-  ) async {
-    var result = null as Boolean?;
-    if (SystemChecker.isWindows) {
-      var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
-      result = await StorageHelper.exist(stateFile);
-    }
-    if (SystemChecker.isLinux) {
-      result = false;
-    }
-    if (SystemChecker.isMacintosh) {
-      result = null;
-    }
-    if (SystemChecker.isAndroid) {
-      result = true;
-    }
-    if (SystemChecker.isIphone) {
-      result = null;
-    }
-    return result;
-  }
-
-  Future<Boolean?> toggleForwarderExtension(
-  ) async {
-    var result = null as Boolean?;
-    if (SystemChecker.isWindows) {
-      var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
-      if (!await StorageHelper.exist(stateFile)) {
-        await StorageHelper.createFile(stateFile);
-      }
-      else {
-        await StorageHelper.remove(stateFile);
-      }
-      result = true;
-    }
-    if (SystemChecker.isLinux) {
-      result = false;
-    }
-    if (SystemChecker.isMacintosh) {
-      // Ventura 13 and later
-      await launchUrl(Uri.parse('x-apple.systempreferences:com.apple.ExtensionsPreferences?extensionPointIdentifier=com.apple.fileprovider-nonui'), mode: LaunchMode.externalApplication);
-      result = null;
-    }
-    if (SystemChecker.isAndroid) {
-      result = false;
-    }
-    if (SystemChecker.isIphone) {
-      result = false;
-    }
-    return result;
-  }
-
   // ----------------
 
   @override
@@ -95,7 +43,7 @@ class _SettingPanelState extends State<SettingPanel> {
     this._forwarderExtensionState = null;
     ControlHelper.postTask(() async {
       this._storagePermissionState = await PermissionHelper.checkStorage();
-      this._forwarderExtensionState = await this.checkForwarderExtension();
+      this._forwarderExtensionState = await ForwarderExtensionHelper.check();
       await refreshState(this.setState);
     });
     return;
@@ -535,8 +483,8 @@ class _SettingPanelState extends State<SettingPanel> {
                 thumbIcon: this._forwarderExtensionState != null ? null : WidgetStatePropertyAll(Icon(IconSymbols.question_mark)),
                 value: this._forwarderExtensionState == null ? false : this._forwarderExtensionState!,
                 onChanged: (value) async {
-                  await this.toggleForwarderExtension();
-                  this._forwarderExtensionState = await this.checkForwarderExtension();
+                  await ForwarderExtensionHelper.toggle();
+                  this._forwarderExtensionState = await ForwarderExtensionHelper.check();
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);
                 },

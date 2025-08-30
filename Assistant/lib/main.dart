@@ -28,26 +28,33 @@ class _MainApplication {
 
   // #region utility
 
-  static Void _handleException(
+  static Future<Void> _handleException(
     Object      exception,
     StackTrace? stack,
-  ) {
-    if (_setting.state.applicationNavigatorKey.currentContext != null) {
-      ControlHelper.showDialogAsModal<Void>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
-        title: 'Unhandled Exception',
-        contentBuilder: (context, setStateForPanel) => [
-          Row(
-            children: [
-              Text(
-                ExceptionHelper.generateMessage(exception, stack),
-                overflow: TextOverflow.clip,
-              ).withSelectionArea(
-              ).withExpanded(),
+  ) async {
+    try {
+      await ControlHelper.postTask(() async {
+        if (_setting.state.applicationNavigatorKey.currentContext != null) {
+          await ControlHelper.showDialogAsModal<Void>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
+            title: 'Unhandled Exception',
+            contentBuilder: (context, setStateForPanel) => [
+              Row(
+                children: [
+                  Text(
+                    ExceptionHelper.generateMessage(exception, stack),
+                    overflow: TextOverflow.clip,
+                  ).withSelectionArea(
+                  ).withExpanded(),
+                ],
+              ),
             ],
-          ),
-        ],
-        actionBuilder: null,
-      ));
+            actionBuilder: null,
+          ));
+        }
+      });
+    }
+    catch (e) {
+      // ignored
     }
     return;
   }
@@ -170,7 +177,7 @@ class _MainApplication {
 
   // #region life
 
-  static SettingProvider _setting = SettingProvider();
+  static final SettingProvider _setting = SettingProvider();
 
   // ----------------
 
@@ -179,7 +186,10 @@ class _MainApplication {
   ) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      ExceptionHelper.initialize(_handleException);
+      ExceptionHelper.initialize((exception, stack) async {
+        _handleException(exception, stack);
+        return;
+      });
       try {
         await _setting.load();
       }
@@ -211,6 +221,7 @@ class _MainApplication {
         ControlHelper.postTask(() async {
           await _handleLink(link);
         });
+        return;
       });
       if (await CustomLinkHelper.getFirst() == null) {
         ControlHelper.postTask(() async {
@@ -224,9 +235,7 @@ class _MainApplication {
       }
     }
     catch (e, s) {
-      ControlHelper.postTask(() async {
-        _handleException(e, s);
-      });
+      _handleException(e, s);
     }
     runApp(Application(setting: _setting));
     return;

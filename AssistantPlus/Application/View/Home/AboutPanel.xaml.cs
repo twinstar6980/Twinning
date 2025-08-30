@@ -363,7 +363,7 @@ namespace AssistantPlus.View.Home {
 
 		public Boolean uSettingForwarderExtension_IsChecked {
 			get {
-				return StorageHelper.Exist(App.ForwarderExtensionStateFile);
+				return ForwarderExtensionHelper.Check();
 			}
 		}
 
@@ -372,12 +372,7 @@ namespace AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			if (!StorageHelper.Exist(App.ForwarderExtensionStateFile)) {
-				StorageHelper.CreateFile(App.ForwarderExtensionStateFile);
-			}
-			else {
-				StorageHelper.Remove(App.ForwarderExtensionStateFile);
-			}
+			ForwarderExtensionHelper.Toggle();
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingForwarderExtension_IsChecked),
 				nameof(this.uSettingForwarderExtension_Content),
@@ -387,7 +382,7 @@ namespace AssistantPlus.View.Home {
 
 		public String uSettingForwarderExtension_Content {
 			get {
-				return !StorageHelper.Exist(App.ForwarderExtensionStateFile) ? "Disabled" : "Enabled";
+				return !ForwarderExtensionHelper.Check() ? "Disabled" : "Enabled";
 			}
 		}
 

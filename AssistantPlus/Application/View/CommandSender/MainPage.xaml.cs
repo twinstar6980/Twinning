@@ -29,11 +29,10 @@ namespace AssistantPlus.View.CommandSender {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = ((Func<Task>)(async () => {
-				await ControlHelper.WaitUntilLoaded(this);
+			ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -114,7 +113,6 @@ namespace AssistantPlus.View.CommandSender {
 		public async Task ApplyOption (
 			List<String> optionView
 		) {
-			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionParallelForward = default(Boolean?);
 			var optionCommand = default(List<Tuple<String, Boolean, Dictionary<String, Object>>>?);
 			var option = new CommandLineReader(optionView);

@@ -38,7 +38,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			m_state_file{} {
 			thiz.m_application_name = L"Twinning Assistant Plus";
 			thiz.m_application_logo = thiz.get_library_file_path();
-			thiz.m_state_file = thiz.get_roaming_directory_path() + L"\\TwinStar.Twinning.AssistantPlus\\Forwarder";
+			thiz.m_state_file = thiz.get_data_directory_path() + L"\\TwinStar.Twinning.AssistantPlus\\Forwarder";
 			return;
 		}
 
@@ -99,23 +99,26 @@ export namespace Twinning::AssistantPlus::Forwarder {
 		) override {
 			try {
 				auto state_h = HRESULT{};
-				assert_test(psiItemArray != nullptr);
+				if (psiItemArray == nullptr) {
+					throw std::runtime_error{"selection item is null"};
+				}
 				auto resource = std::vector<std::wstring>{};
 				auto resource_count = DWORD{};
 				state_h = psiItemArray->GetCount(&resource_count);
 				assert_test(state_h == S_OK);
 				resource.reserve(resource_count);
 				for (auto index = DWORD{0}; index < resource_count; ++index) {
-					auto item = std::add_pointer_t<IShellItem>{};
-					state_h = psiItemArray->GetItemAt(index, &item);
+					auto item = winrt::com_ptr<IShellItem>{};
+					state_h = psiItemArray->GetItemAt(index, item.put());
 					assert_test(state_h == S_OK);
 					auto display_name = LPWSTR{};
 					state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
-					assert_test(state_h == S_OK);
+					if (state_h != S_OK) {
+						throw std::runtime_error{"selection item is not file-system object"};
+					}
 					resource.emplace_back(thiz.get_file_long_path(std::wstring{display_name}));
 					std::replace(resource.back().begin(), resource.back().end(), L'\\', L'/');
 					CoTaskMemFree(display_name);
-					item->Release();
 				}
 				thiz.forward_resource(resource);
 			}
@@ -145,80 +148,6 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 		#pragma region utility
 
-		auto wide_to_utf8 (
-			std::wstring_view const & source
-		) -> std::string {
-			auto destination = std::string{};
-			if (!source.empty()) {
-				auto destination_size = std::size_t{};
-				destination_size = static_cast<std::size_t>(
-					WideCharToMultiByte(
-						CP_UTF8,
-						WC_ERR_INVALID_CHARS,
-						source.data(),
-						static_cast<int>(source.size()),
-						nullptr,
-						0,
-						nullptr,
-						nullptr
-					)
-				);
-				assert_test(destination_size != 0);
-				destination.reserve(destination_size + 1);
-				destination.resize(destination_size);
-				destination_size = static_cast<std::size_t>(
-					WideCharToMultiByte(
-						CP_UTF8,
-						WC_ERR_INVALID_CHARS,
-						source.data(),
-						static_cast<int>(source.size()),
-						destination.data(),
-						static_cast<int>(destination.size()),
-						nullptr,
-						nullptr
-					)
-				);
-				assert_test(destination_size == destination.size());
-			}
-			return destination;
-		}
-
-		auto wide_from_utf8 (
-			std::string_view const & source
-		) -> std::wstring {
-			auto destination = std::wstring{};
-			if (!source.empty()) {
-				auto destination_size = std::size_t{};
-				destination_size = static_cast<std::size_t>(
-					MultiByteToWideChar(
-						CP_UTF8,
-						MB_ERR_INVALID_CHARS,
-						source.data(),
-						static_cast<int>(source.size()),
-						nullptr,
-						0
-					)
-				);
-				assert_test(destination_size != 0);
-				destination.reserve(destination_size + 1);
-				destination.resize(destination_size);
-				destination_size = static_cast<std::size_t>(
-					MultiByteToWideChar(
-						CP_UTF8,
-						MB_ERR_INVALID_CHARS,
-						source.data(),
-						static_cast<int>(source.size()),
-						destination.data(),
-						static_cast<int>(destination.size())
-					)
-				);
-				assert_test(destination_size == destination.size());
-			}
-			return destination;
-		}
-
-		// ----------------
-
 		auto get_library_file_path (
 		) -> std::wstring {
 			auto state_d = DWORD{};
@@ -238,7 +167,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			return result;
 		}
 
-		auto get_roaming_directory_path (
+		auto get_data_directory_path (
 		) -> std::wstring {
 			auto state_h = DWORD{};
 			auto result = std::wstring{};
@@ -269,7 +198,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 		auto encode_percent_string (
 			std::wstring const & source
 		) -> std::wstring {
-			auto data = thiz.wide_to_utf8(source);
+			auto data = winrt::to_string(source);
 			auto destination = std::wstring{};
 			destination.reserve(data.size() * 3);
 			for (auto & character : data) {
@@ -283,8 +212,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 					destination.push_back(character);
 				}
 				else {
-					auto high_digit = character / 0x10u;
-					auto low_digit = character % 0x10u;
+					auto high_digit = static_cast<std::uint8_t>(character) / 0x10u;
+					auto low_digit = static_cast<std::uint8_t>(character) % 0x10u;
 					destination.push_back('%');
 					destination.push_back(static_cast<char>((high_digit < 0xAu) ? ('0' + high_digit) : ('A' + high_digit - 0xAu)));
 					destination.push_back(static_cast<char>((low_digit < 0xAu) ? ('0' + low_digit) : ('A' + low_digit - 0xAu)));
@@ -340,10 +269,10 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			catch (...) {
 				message = "UnknownException";
 			}
-			auto message_w = thiz.wide_from_utf8(message);
+			auto message_h = winrt::to_hstring(message);
 			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
 			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-			TaskDialog(nullptr, nullptr, thiz.m_application_name.data(), L"Exception", message_w.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
+			TaskDialog(nullptr, nullptr, thiz.m_application_name.data(), L"Exception", message_h.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
 			SetThreadDpiAwarenessContext(original_thread_dpi_awareness_context);
 			return;
 		}

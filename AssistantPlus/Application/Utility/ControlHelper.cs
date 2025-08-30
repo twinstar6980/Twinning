@@ -9,13 +9,14 @@ namespace AssistantPlus.Utility {
 
 		#region common
 
-		public static async Task WaitUntilLoaded (
+		public static async Task PostTask (
 			FrameworkElement target,
-			Size             delay = 40
+			Func<Task>       action
 		) {
 			while (!target.IsLoaded) {
-				await Task.Delay(delay);
+				await Task.Delay(40);
 			}
+			await action();
 			return;
 		}
 
@@ -23,7 +24,7 @@ namespace AssistantPlus.Utility {
 
 		#region dialog
 
-		private static List<ContentDialog> Dialog { get; } = [];
+		private static readonly List<ContentDialog> Dialog = [];
 
 		private static async Task<ContentDialogResult> PushDialog (
 			ContentDialog item

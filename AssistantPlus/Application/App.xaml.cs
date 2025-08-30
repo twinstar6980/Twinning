@@ -26,8 +26,6 @@ namespace AssistantPlus {
 
 		public static String CacheDirectory { get; private set; } = default!;
 
-		public static String ForwarderExtensionStateFile { get; private set; } = default!;
-
 		// ----------------
 
 		public static Boolean MainWindowIsInitialized {
@@ -54,15 +52,16 @@ namespace AssistantPlus {
 		protected override async void OnLaunched (
 			LaunchActivatedEventArgs args
 		) {
-			var window = default(Window);
 			try {
-				ExceptionHelper.Initialize(this, this.HandleException);
+				ExceptionHelper.Initialize(this, async (exception) => {
+					_ = this.HandleException(exception, App.MainWindow);
+					return;
+				});
 				var argument = Environment.GetCommandLineArgs();
 				App.PackageDirectory = StorageHelper.Parent(argument[0]).AsNotNull();
 				App.ProgramFile = $"{App.PackageDirectory}/Application.exe";
 				App.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{Package.Current.Id.Name}");
 				App.CacheDirectory = $"{App.SharedDirectory}/Cache";
-				App.ForwarderExtensionStateFile = $"{App.SharedDirectory}/Forwarder";
 				argument = argument[1..];
 				try {
 					await App.Setting.Load();
@@ -74,7 +73,7 @@ namespace AssistantPlus {
 				unsafe {
 					Win32.PInvoke.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
 				}
-				NotificationHelper.Initialize(() => {
+				NotificationHelper.Initialize(async () => {
 					if (App.MainWindowIsInitialized) {
 						WindowHelper.SetAsForeground(App.MainWindow);
 					}
@@ -91,49 +90,24 @@ namespace AssistantPlus {
 					WindowHelper.SetAtCenter(App.MainWindow);
 				}
 				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
-					await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
-					if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
-						await this.HandleLink(new (argument[0]));
-					}
-					else if (argument.Length >= 1 && argument[0] == "Application") {
-						await this.HandleCommand(argument[1..].ToList());
-					}
-					else {
-						await App.MainWindow.ShowLauncherPanel();
-					}
+					await ControlHelper.PostTask(App.MainWindow.Content.As<FrameworkElement>(), async () => {
+						if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
+							await this.HandleLink(new (argument[0]));
+						}
+						else if (argument.Length >= 1 && argument[0] == "Application") {
+							await this.HandleCommand(argument[1..].ToList());
+						}
+						else {
+							await App.MainWindow.ShowLauncherPanel();
+						}
+					});
 				}).SelfLet(ExceptionHelper.WrapTask);
 				await App.Setting.Apply();
-				window = App.MainWindow;
+				WindowHelper.Activate(App.MainWindow);
 			}
 			catch (Exception e) {
-				window = new Window() {
-					SystemBackdrop = new MicaBackdrop(),
-					Content = new Control.Box() {
-						RequestedTheme = ElementTheme.Default,
-						Padding = new (16),
-						Children = {
-							new TextBlock() {
-								HorizontalAlignment = HorizontalAlignment.Center,
-								VerticalAlignment = VerticalAlignment.Center,
-								IsTextSelectionEnabled = true,
-								TextWrapping = TextWrapping.Wrap,
-								Text = ExceptionHelper.GenerateMessage(e),
-							},
-						},
-					},
-				}.SelfAlso((it) => {
-					WindowHelper.SetTitleBar(it, true, null, false);
-					it.Closed += (_, _) => {
-						if (App.MainWindowIsInitialized) {
-							WindowHelper.Close(App.MainWindow);
-						}
-						return;
-					};
-				});
+				_ = this.HandleExceptionFatal(e);
 			}
-			WindowHelper.SetIcon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
-			WindowHelper.SetTitle(window, Package.Current.DisplayName);
-			WindowHelper.Activate(window);
 			return;
 		}
 
@@ -175,24 +149,55 @@ namespace AssistantPlus {
 
 		// ----------------
 
-		private void HandleException (
+		private async Task HandleException (
+			Exception exception,
+			Window?   window
+		) {
+			try {
+				if (window != null) {
+					await window.DispatcherQueue.EnqueueAsync(async () => {
+						await ControlHelper.PostTask(window.Content.As<FrameworkElement>(), async () => {
+							await ControlHelper.ShowDialogAsAutomatic(window.Content, "Unhandled Exception", new TextBlock() {
+								HorizontalAlignment = HorizontalAlignment.Stretch,
+								VerticalAlignment = VerticalAlignment.Stretch,
+								IsTextSelectionEnabled = true,
+								TextWrapping = TextWrapping.Wrap,
+								Text = ExceptionHelper.GenerateMessage(exception),
+							}, null);
+						});
+					});
+				}
+			}
+			catch (Exception) {
+				// ignored
+			}
+			return;
+		}
+
+		private async Task HandleExceptionFatal (
 			Exception exception
 		) {
-			if (App.MainWindowIsInitialized) {
-				App.MainWindow.DispatcherQueue.EnqueueAsync(() => {
-					try {
-						_ = ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Unhandled Exception", new TextBlock() {
-							HorizontalAlignment = HorizontalAlignment.Stretch,
-							VerticalAlignment = VerticalAlignment.Stretch,
-							IsTextSelectionEnabled = true,
-							TextWrapping = TextWrapping.Wrap,
-							Text = ExceptionHelper.GenerateMessage(exception),
-						}, null);
+			try {
+				var window = new Window() {
+					SystemBackdrop = new MicaBackdrop(),
+					Content = new Grid(),
+				};
+				window.Closed += (_, _) => {
+					// if the user close the window externally, the dialog task will not complete, so put the step to close MainWindow in the Closed event
+					if (App.MainWindowIsInitialized) {
+						WindowHelper.Close(App.MainWindow);
 					}
-					catch (Exception) {
-						// ignored
-					}
-				});
+					return;
+				};
+				WindowHelper.SetIcon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
+				WindowHelper.SetTitle(window, Package.Current.DisplayName);
+				WindowHelper.SetTitleBar(window, true, null, false);
+				WindowHelper.Activate(window);
+				await this.HandleException(exception, window);
+				WindowHelper.Close(window);
+			}
+			catch (Exception) {
+				// ignored
 			}
 			return;
 		}
@@ -204,7 +209,6 @@ namespace AssistantPlus {
 			ModuleType   type,
 			List<String> option
 		) {
-			await ControlHelper.WaitUntilLoaded(App.MainWindow.Content.As<FrameworkElement>());
 			await App.MainWindow.InsertTabItem(new () {
 				Title = title,
 				Type = type,

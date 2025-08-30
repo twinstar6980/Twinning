@@ -4,6 +4,7 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.System;
+using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 
@@ -20,6 +21,8 @@ namespace AssistantPlus.View.Home {
 		public MainWindow (
 		) {
 			this.InitializeComponent();
+			WindowHelper.SetIcon(this, $"{App.PackageDirectory}/Asset/Logo.ico");
+			WindowHelper.SetTitle(this, Package.Current.DisplayName);
 			WindowHelper.SetTitleBar(this, true, this.uTab.TabStripFooter.As<UIElement>(), false);
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();

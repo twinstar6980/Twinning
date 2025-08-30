@@ -29,11 +29,10 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = ((Func<Task>)(async () => {
-				await ControlHelper.WaitUntilLoaded(this);
+			ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -110,7 +109,6 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 		public async Task ApplyOption (
 			List<String> optionView
 		) {
-			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionDescriptorFile = default(String?);
 			var option = new CommandLineReader(optionView);
 			if (option.Check("-DescriptorFile")) {

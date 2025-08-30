@@ -12,6 +12,7 @@ class CustomLinkHelper {
   ) async {
     AppLinks().uriLinkStream.listen((link) {
       handler(link);
+      return;
     });
     return;
   }

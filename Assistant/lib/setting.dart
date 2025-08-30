@@ -167,68 +167,72 @@ class SettingProvider with ChangeNotifier {
   // #region utility
 
   static SettingData _createDefaultData(
-  ) => SettingData(
-    version: ApplicationInformation.version,
-    themeMode: ThemeMode.system,
-    themeColorState: false,
-    themeColorLight: Color(0xFF6200EE),
-    themeColorDark: Color(0xFFBB86FC),
-    themeFontState: false,
-    themeFontPath: [],
-    windowPositionState: false,
-    windowPositionX: 0,
-    windowPositionY: 0,
-    windowSizeState: false,
-    windowSizeWidth: 0,
-    windowSizeHeight: 0,
-    storagePickerFallbackDirectory: '',
-    storagePickerHistoryLocation: {},
-    forwarderDefaultTarget: ModuleType.resource_shipper,
-    forwarderImmediateJump: false,
-    moduleLauncher: ModuleLauncherSetting(
-      module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
-      pinned: [],
-      recent: [],
-    ),
-    moddingWorker: modding_worker.Setting(
-      kernel: '',
-      script: '',
-      argument: [],
-      immediateLaunch: true,
-      messageFont: [],
-    ),
-    commandSender: command_sender.Setting(
-      methodConfiguration: '',
-      parallelForward: false,
-    ),
-    resourceShipper: resource_shipper.Setting(
-      optionConfiguration: '',
-      parallelForward: false,
-      enableFilter: true,
-      enableBatch: false,
-    ),
-    animationViewer: animation_viewer.Setting(
-      immediateSelect: true,
-      automaticPlay: true,
-      repeatPlay: true,
-      keepSpeed: true,
-      showBoundary: true,
-    ),
-  );
+  ) {
+    return SettingData(
+      version: ApplicationInformation.version,
+      themeMode: ThemeMode.system,
+      themeColorState: false,
+      themeColorLight: Color(0xFF6200EE),
+      themeColorDark: Color(0xFFBB86FC),
+      themeFontState: false,
+      themeFontPath: [],
+      windowPositionState: false,
+      windowPositionX: 0,
+      windowPositionY: 0,
+      windowSizeState: false,
+      windowSizeWidth: 0,
+      windowSizeHeight: 0,
+      storagePickerFallbackDirectory: '',
+      storagePickerHistoryLocation: {},
+      forwarderDefaultTarget: ModuleType.resource_shipper,
+      forwarderImmediateJump: false,
+      moduleLauncher: ModuleLauncherSetting(
+        module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
+        pinned: [],
+        recent: [],
+      ),
+      moddingWorker: modding_worker.Setting(
+        kernel: '',
+        script: '',
+        argument: [],
+        immediateLaunch: true,
+        messageFont: [],
+      ),
+      commandSender: command_sender.Setting(
+        methodConfiguration: '',
+        parallelForward: false,
+      ),
+      resourceShipper: resource_shipper.Setting(
+        optionConfiguration: '',
+        parallelForward: false,
+        enableFilter: true,
+        enableBatch: false,
+      ),
+      animationViewer: animation_viewer.Setting(
+        immediateSelect: true,
+        automaticPlay: true,
+        repeatPlay: true,
+        keepSpeed: true,
+        showBoundary: true,
+      ),
+    );
+  }
 
   static SettingState _createDefaultState(
-  ) => SettingState(
-    handleLaunch: null,
-    handleForward: null,
-    handleCommand: null,
-    handleLink: null,
-    applicationNavigatorKey: GlobalKey<NavigatorState>(),
-    themeFontFamliy: [],
-    homeShowLauncherPanel: null,
-    homeInsertTabItem: null,
-    moddingWorkerMessageFontFamily: [],
-    moddingWorkerSubmissionHistory: modding_worker.SubmissionType.values.map((value) => <modding_worker.ValueExpression>[]).toList(),
-  );
+  ) {
+    return SettingState(
+      handleLaunch: null,
+      handleForward: null,
+      handleCommand: null,
+      handleLink: null,
+      applicationNavigatorKey: GlobalKey<NavigatorState>(),
+      themeFontFamliy: [],
+      homeShowLauncherPanel: null,
+      homeInsertTabItem: null,
+      moddingWorkerMessageFontFamily: [],
+      moddingWorkerSubmissionHistory: modding_worker.SubmissionType.values.map((value) => <modding_worker.ValueExpression>[]).toList(),
+    );
+  }
 
   // ----------------
 

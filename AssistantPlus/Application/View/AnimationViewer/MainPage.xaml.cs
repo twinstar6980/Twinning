@@ -35,11 +35,10 @@ namespace AssistantPlus.View.AnimationViewer {
 		protected override void OnNavigatedTo (
 			NavigationEventArgs args
 		) {
-			_ = ((Func<Task>)(async () => {
-				await ControlHelper.WaitUntilLoaded(this);
+			ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
-			}))().SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ExceptionHelper.WrapTask);
 			base.OnNavigatedTo(args);
 			return;
 		}
@@ -175,7 +174,6 @@ namespace AssistantPlus.View.AnimationViewer {
 		public async Task ApplyOption (
 			List<String> optionView
 		) {
-			await ControlHelper.WaitUntilLoaded(this.View);
 			var optionImmediateSelect = default(Boolean?);
 			var optionAutomaticPlay = default(Boolean?);
 			var optionRepeatPlay = default(Boolean?);

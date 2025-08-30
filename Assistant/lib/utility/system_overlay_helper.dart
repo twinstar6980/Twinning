@@ -8,7 +8,7 @@ class SystemOverlayHelper {
 
   // #region utility
 
-  static const SystemUiOverlayStyle _styleForLight = SystemUiOverlayStyle(
+  static final SystemUiOverlayStyle _styleForLight = SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,
     systemNavigationBarDividerColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.dark,
@@ -19,7 +19,7 @@ class SystemOverlayHelper {
     systemStatusBarContrastEnforced: false,
   );
 
-  static const SystemUiOverlayStyle _styleForDark = SystemUiOverlayStyle(
+  static final SystemUiOverlayStyle _styleForDark = SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,
     systemNavigationBarDividerColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.light,

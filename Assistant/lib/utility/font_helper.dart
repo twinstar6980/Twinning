@@ -8,27 +8,27 @@ class FontHelper {
 
   // #region load
 
-  static List<String> _cachedFilePath = [];
+  static final List<String> _loadedFilePath = [];
 
   // ----------------
 
   static Future<String?> loadFile(
     String path,
   ) async {
-    var index = _cachedFilePath.indexOf(path);
-    if (index == -1) {
-      index = _cachedFilePath.length;
-      try {
+    try {
+      var index = _loadedFilePath.indexOf(path);
+      if (index == -1) {
+        index = _loadedFilePath.length;
         var loader = FontLoader('_custom_${index + 1}');
         loader.addFont(Future.sync(() async => (await StorageHelper.readFile(path)).buffer.asByteData()));
         await loader.load();
-        _cachedFilePath.add(path);
+        _loadedFilePath.add(path);
       }
-      catch (e) {
-        return null;
-      }
+      return '_custom_${index + 1}';
     }
-    return '_custom_${index + 1}';
+    catch (e) {
+      return null;
+    }
   }
 
   // #endregion

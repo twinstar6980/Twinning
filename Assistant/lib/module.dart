@@ -73,7 +73,7 @@ class ModuleLauncherSetting {
 
 class ModuleHelper {
 
-  static List<ModuleInformation> _information = [
+  static final List<ModuleInformation> _information = [
     ModuleInformation(
       type: ModuleType.modding_worker,
       icon: IconSymbols.rule_settings,
