@@ -51,6 +51,7 @@
 							ToolTipService.ToolTip="Additional Argument"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
+							Click="{x:Bind Controller.uAdditionalArgument_Click}"
 							>
 							<my:Stack
 								HorizontalAlignment="Stretch"
@@ -72,34 +73,6 @@
 									Glyph="{StaticResource FluentIconGlyph.Attach}"
 									/>
 							</my:Stack>
-							<Button.Flyout>
-								<Flyout Placement="Full" FlyoutPresenterStyle="{StaticResource VerticalScrollFlyoutPresenterStyle}">
-									<my:Stack
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Stretch"
-										Orientation="Vertical"
-										Spacing="12"
-										>
-										<TextBlock
-											HorizontalAlignment="Stretch"
-											VerticalAlignment="Stretch"
-											Style="{ThemeResource SubtitleTextBlockStyle}"
-											TextWrapping="NoWrap"
-											Text="Additional Argument"
-											/>
-										<TextBox
-											my:Stack.Weight="1"
-											HorizontalAlignment="Stretch"
-											VerticalAlignment="Stretch"
-											LostFocus="{x:Bind Controller.uAdditionalArgumentContent_LostFocus}"
-											FontFamily="{StaticResource ModdingWorker.MessageFont}"
-											TextWrapping="Wrap"
-											AcceptsReturn="True"
-											Text="{x:Bind Controller.uAdditionalArgumentContent_Text}"
-											/>
-									</my:Stack>
-								</Flyout>
-							</Button.Flyout>
 						</Button>
 						<ToggleButton
 							ToolTipService.ToolTip="Automatic Scroll"

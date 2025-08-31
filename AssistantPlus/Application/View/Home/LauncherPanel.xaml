@@ -138,34 +138,6 @@
 						/>
 				</my:Stack>
 			</Button>
-			<Button
-				my:Stack.Weight="1"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				Click="{x:Bind Controller.uForward_Click}"
-				>
-				<my:Stack
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Orientation="Horizontal"
-					Spacing="12"
-					>
-					<FontIcon
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
-						FontSize="{StaticResource MediumIconSize}"
-						Glyph="{StaticResource FluentIconGlyph.NearbySharing}"
-						/>
-					<TextBlock
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
-						Style="{ThemeResource BodyStrongTextBlockStyle}"
-						TextWrapping="NoWrap"
-						Text="Forward"
-						/>
-				</my:Stack>
-			</Button>
 		</my:Stack>
 		<my:Stack
 			HorizontalAlignment="Stretch"

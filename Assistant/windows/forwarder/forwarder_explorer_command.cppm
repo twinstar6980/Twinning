@@ -103,22 +103,22 @@ export namespace Twinning::Assistant::Forwarder {
 					throw std::runtime_error{"selection item is null"};
 				}
 				auto resource = std::vector<std::wstring>{};
-				auto resource_count = DWORD{};
-				state_h = psiItemArray->GetCount(&resource_count);
+				auto item_count = DWORD{};
+				state_h = psiItemArray->GetCount(&item_count);
 				assert_test(state_h == S_OK);
-				resource.reserve(resource_count);
-				for (auto index = DWORD{0}; index < resource_count; ++index) {
+				resource.reserve(item_count);
+				for (auto item_index = DWORD{0}; item_index < item_count; ++item_index) {
 					auto item = winrt::com_ptr<IShellItem>{};
-					state_h = psiItemArray->GetItemAt(index, item.put());
+					state_h = psiItemArray->GetItemAt(item_index, item.put());
 					assert_test(state_h == S_OK);
-					auto display_name = LPWSTR{};
-					state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &display_name);
+					auto item_name = LPWSTR{};
+					state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &item_name);
 					if (state_h != S_OK) {
 						throw std::runtime_error{"selection item is not file-system object"};
 					}
-					resource.emplace_back(thiz.get_file_long_path(std::wstring{display_name}));
+					resource.emplace_back(thiz.get_file_long_path(std::wstring{item_name}));
 					std::replace(resource.back().begin(), resource.back().end(), L'\\', L'/');
-					CoTaskMemFree(display_name);
+					CoTaskMemFree(item_name);
 				}
 				thiz.forward_resource(resource);
 			}

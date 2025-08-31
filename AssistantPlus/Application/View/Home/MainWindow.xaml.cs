@@ -372,7 +372,7 @@ namespace AssistantPlus.View.Home {
 						AcceptsReturn = false,
 						Text = "",
 					}.SelfAlso((it) => {
-						it.LostFocus += (_, _) => {
+						it.LostFocus += async (_, _) => {
 							title = it.Text;
 							return;
 						};

@@ -182,7 +182,7 @@ namespace AssistantPlus {
 					SystemBackdrop = new MicaBackdrop(),
 					Content = new Grid(),
 				};
-				window.Closed += (_, _) => {
+				window.Closed += async (_, _) => {
 					// if the user close the window externally, the dialog task will not complete, so put the step to close MainWindow in the Closed event
 					if (App.MainWindowIsInitialized) {
 						WindowHelper.Close(App.MainWindow);
@@ -233,7 +233,7 @@ namespace AssistantPlus {
 					IsChecked = item == targetType,
 					Content = ModuleHelper.Query(item).Name,
 				}.SelfAlso((it) => {
-					it.Click += (sender, args) => {
+					it.Click += async (_, _) => {
 						targetType = item;
 						return;
 					};

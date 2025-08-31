@@ -36,7 +36,7 @@ namespace AssistantPlus.Utility {
 			var semaphore = new SemaphoreSlim(0, 1);
 			var result = ContentDialogResult.None;
 			var index = ControlHelper.Dialog.Count;
-			item.Closed += (sender, args) => {
+			item.Closed += async (sender, args) => {
 				if (ControlHelper.Dialog.Count == index) {
 					result = args.Result;
 					semaphore.Release();

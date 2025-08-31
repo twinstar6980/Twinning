@@ -152,7 +152,7 @@ class SettingPanel extends StatelessWidget {
                           allowSaveFile: true,
                           location: '@ModdingWorker.Argument',
                           onPicked: (target) async {
-                            this.data.argument = this.data.argument + [target];
+                            this.data.argument = [...this.data.argument, target];
                             await refreshState(setStateForPanel);
                             await refreshState(setState);
                             this.onUpdate();
@@ -229,7 +229,7 @@ class SettingPanel extends StatelessWidget {
                           allowSaveFile: false,
                           location: '@ModdingWorker.MessageFont',
                           onPicked: (target) async {
-                            this.data.messageFont = this.data.messageFont + [target];
+                            this.data.messageFont = [...this.data.messageFont, target];
                             await refreshState(setStateForPanel);
                             await refreshState(setState);
                             this.onUpdate();

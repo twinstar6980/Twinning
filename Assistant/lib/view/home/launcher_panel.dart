@@ -75,49 +75,6 @@ class LauncherPanel extends StatelessWidget {
                   }
                 },
               ).withExpanded(),
-              SizedBox(width: 12),
-              FilledButton.tonalIcon(
-                icon: Icon(IconSymbols.send_time_extension),
-                label: Text(
-                  'Forward',
-                  overflow: TextOverflow.ellipsis,
-                ),
-                onPressed: () async {
-                  var resource = <String>[];
-                  var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                    title: 'Forward',
-                    contentBuilder: (context, setStateForPanel) => [
-                      CustomTextField(
-                        keyboardType: TextInputType.multiline,
-                        inputFormatters: [],
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                          filled: false,
-                          border: OutlineInputBorder(),
-                        ),
-                        value: ConvertHelper.makeStringListToStringWithLine(resource),
-                        onChanged: (value) async {
-                          resource = ConvertHelper.parseStringListFromStringWithLine(value);
-                          await refreshState(setStateForPanel);
-                        },
-                      ),
-                    ],
-                    actionBuilder: (context) => [
-                      TextButton(
-                        child: Text('Cancel'),
-                        onPressed: () => Navigator.pop(context, false),
-                      ),
-                      TextButton(
-                        child: Text('Continue'),
-                        onPressed: () => Navigator.pop(context, true),
-                      ),
-                    ],
-                  )) ?? false;
-                  if (canContinue) {
-                    await setting.state.handleForward!(resource);
-                  }
-                },
-              ).withExpanded(),
               SizedBox(width: 16),
             ],
           ),

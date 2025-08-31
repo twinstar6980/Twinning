@@ -549,7 +549,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			};
 			Storyboard.SetTarget(sliderStoryboard, this.View.uActiveProgress);
 			this.View.uSprite.Storyboard.Children.Add(sliderStoryboard);
-			this.View.uSprite.Storyboard.Completed += (sender, o) => {
+			this.View.uSprite.Storyboard.Completed += async (_, _) => {
 				if (!this.RepeatPlay) {
 					this.View.uSprite.State = SpriteControl.StateType.Paused;
 					this.ActiveProgressState = false;
@@ -557,6 +557,7 @@ namespace AssistantPlus.View.AnimationViewer {
 						nameof(this.uActiveProgressStateIcon_Glyph),
 					]);
 				}
+				return;
 			};
 			this.View.uSprite.FrameRange = this.ActiveFrameRange;
 			this.View.uSprite.FrameSpeed = this.ActiveFrameSpeed.AsNotNull();

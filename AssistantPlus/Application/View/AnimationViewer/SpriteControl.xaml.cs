@@ -67,7 +67,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		private void Storyboard_Completed (
 			Object? sender,
-			Object  e
+			Object  args
 		) {
 			GF.AssertTest(this.Loaded);
 			this.State = StateType.Idle;

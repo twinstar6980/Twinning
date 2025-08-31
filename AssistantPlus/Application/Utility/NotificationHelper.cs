@@ -16,14 +16,14 @@ namespace AssistantPlus.Utility {
 			if (!AppNotificationManager.IsSupported()) {
 				return;
 			}
-			AppNotificationManager.Default.NotificationInvoked += (_, _) => {
+			AppNotificationManager.Default.NotificationInvoked += async (_, _) => {
 				handler();
 				return;
 			};
 			{
 				AppNotificationManager.Default.Register();
 			}
-			AppDomain.CurrentDomain.ProcessExit += (_, _) => {
+			AppDomain.CurrentDomain.ProcessExit += async (_, _) => {
 				AppNotificationManager.Default.Unregister();
 				return;
 			};

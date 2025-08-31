@@ -4,6 +4,7 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppNotifications.Builder;
 
@@ -57,7 +58,6 @@ namespace AssistantPlus.View.ModdingWorker {
 			this.Controller.AdditionalArgument = additionalArgument;
 			this.Controller.NotifyPropertyChanged([
 				nameof(this.Controller.uAdditionalArgumentCount_Text),
-				nameof(this.Controller.uAdditionalArgumentContent_Text),
 			]);
 			return await this.Controller.LaunchSession();
 		}
@@ -158,7 +158,6 @@ namespace AssistantPlus.View.ModdingWorker {
 				this.AdditionalArgument = optionAdditionalArgument;
 				this.NotifyPropertyChanged([
 					nameof(this.uAdditionalArgumentCount_Text),
-					nameof(this.uAdditionalArgumentContent_Text),
 				]);
 			}
 			if (optionImmediateLaunch != null) {
@@ -344,30 +343,36 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		#region additional argument
 
-		public String uAdditionalArgumentCount_Text {
-			get {
-				return $"{this.AdditionalArgument.Count}";
-			}
+		public async void uAdditionalArgument_Click (
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			await ControlHelper.ShowDialogAsAutomatic(this.View, "Additional Argument", new TextBox() {
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch,
+				FontFamily = this.View.FindResource("ModdingWorker.MessageFont").As<FontFamily>(),
+				TextWrapping = TextWrapping.Wrap,
+				AcceptsReturn = true,
+				Text = ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument),
+			}.SelfAlso((it) => {
+				it.LostFocus += async (_, _) => {
+					this.AdditionalArgument = ConvertHelper.ParseStringListFromStringWithLine(it.Text);
+					this.NotifyPropertyChanged([
+						nameof(this.uAdditionalArgumentCount_Text),
+					]);
+					it.Text = ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument);
+					return;
+				};
+			}), null);
+			return;
 		}
 
 		// ----------------
 
-		public async void uAdditionalArgumentContent_LostFocus (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<TextBox>();
-			this.AdditionalArgument = ConvertHelper.ParseStringListFromStringWithLine(senders.Text);
-			this.NotifyPropertyChanged([
-				nameof(this.uAdditionalArgumentCount_Text),
-				nameof(this.uAdditionalArgumentContent_Text),
-			]);
-			return;
-		}
-
-		public String uAdditionalArgumentContent_Text {
+		public String uAdditionalArgumentCount_Text {
 			get {
-				return ConvertHelper.MakeStringListToStringWithLine(this.AdditionalArgument);
+				return $"{this.AdditionalArgument.Count}";
 			}
 		}
 

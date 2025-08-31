@@ -228,7 +228,7 @@ class _SettingPanelState extends State<SettingPanel> {
                         allowSaveFile: false,
                         location: '@Application.ThemeFont',
                         onPicked: (target) async {
-                          setting.data.themeFontPath = setting.data.themeFontPath + [target];
+                          setting.data.themeFontPath = [...setting.data.themeFontPath, target];
                           await refreshState(setStateForPanel);
                           await refreshState(this.setState);
                           await setting.save();

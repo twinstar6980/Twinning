@@ -94,7 +94,7 @@ namespace AssistantPlus.View.Home {
 				AcceptsReturn = true,
 				Text = "",
 			}.SelfAlso((it) => {
-				it.LostFocus += (_, _) => {
+				it.LostFocus += async (_, _) => {
 					command = ConvertHelper.ParseStringListFromStringWithLine(it.Text);
 					it.Text = ConvertHelper.MakeStringListToStringWithLine(command);
 					return;
@@ -102,35 +102,6 @@ namespace AssistantPlus.View.Home {
 			}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
 			if (canContinue) {
 				await App.Instance.HandleCommand(command);
-			}
-			else {
-				this.PanelEnter();
-			}
-			return;
-		}
-
-		public async void uForward_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<Button>();
-			this.PanelExit();
-			var resource = new List<String>();
-			var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new TextBox() {
-				HorizontalAlignment = HorizontalAlignment.Stretch,
-				VerticalAlignment = VerticalAlignment.Stretch,
-				TextWrapping = TextWrapping.Wrap,
-				AcceptsReturn = true,
-				Text = "",
-			}.SelfAlso((it) => {
-				it.LostFocus += (_, _) => {
-					resource = ConvertHelper.ParseStringListFromStringWithLine(it.Text);
-					it.Text = ConvertHelper.MakeStringListToStringWithLine(resource);
-					return;
-				};
-			}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
-			if (canContinue) {
-				await App.Instance.HandleForward(resource);
 			}
 			else {
 				this.PanelEnter();

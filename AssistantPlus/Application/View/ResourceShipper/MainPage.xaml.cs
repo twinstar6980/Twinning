@@ -418,10 +418,9 @@ namespace AssistantPlus.View.ResourceShipper {
 						AcceptsReturn = true,
 						Text = "",
 					}.SelfAlso((it) => {
-						it.LostFocus += (sender, args) => {
-							var senders = sender.As<TextBox>();
-							item = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select(StorageHelper.Regularize).ToList();
-							senders.Text = ConvertHelper.MakeStringListToStringWithLine(item);
+						it.LostFocus += async (_, _) => {
+							item = ConvertHelper.ParseStringListFromStringWithLine(it.Text).Select(StorageHelper.Regularize).ToList();
+							it.Text = ConvertHelper.MakeStringListToStringWithLine(item);
 							return;
 						};
 					}), new ("Cancel", "Continue", null));

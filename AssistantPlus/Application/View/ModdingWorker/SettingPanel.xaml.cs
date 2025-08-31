@@ -276,7 +276,7 @@ namespace AssistantPlus.View.ModdingWorker {
 					Text = item,
 					FontFamily = new (item),
 				}.SelfAlso((it) => {
-					it.Click += (_, _) => {
+					it.Click += async (_, _) => {
 						this.Data.MessageFont = item;
 						this.NotifyPropertyChanged([
 							nameof(this.uMessageFontText_Text),

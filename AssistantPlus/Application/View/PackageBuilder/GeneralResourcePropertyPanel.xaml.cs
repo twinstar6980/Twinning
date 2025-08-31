@@ -140,7 +140,7 @@ namespace AssistantPlus.View.PackageBuilder {
 				flyout.Items.Add(new MenuFlyoutItem() {
 					Text = type,
 				}.SelfAlso((it) => {
-					it.Click += (_, _) => {
+					it.Click += async (_, _) => {
 						this.Value.Type = type;
 						this.NotifyPropertyChanged([
 							nameof(this.uType_Text),
