@@ -32,7 +32,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			String  text,
 			String? fallback
 		) {
-			var result = default(String?);
+			var result = null as String;
 			if (text.Length != 0) {
 				if (text.Length == 4 && text.All(Character.IsAsciiLetter)) {
 					result = text.ToUpperInvariant();

@@ -7,7 +7,7 @@ namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 		version_number: [0n][number],
 	): [Kernel.ByteArray, Kernel.Size] {
 		let version_c = Kernel.Tool.Marmalade.DZip.Version.value({ number: version_number });
-		let resource_list = KernelX.Storage.list_file(resource_directory);
+		let resource_list = KernelX.Storage.list_directory(resource_directory, null, true, false);
 		let definition_js: Kernel.Tool.Marmalade.DZip.Definition.JS_N.Package = {
 			resource: [],
 		};

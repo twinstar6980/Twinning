@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 90
+ * @version 92
  */
 declare namespace Twinning.Kernel {
 
@@ -1266,7 +1266,7 @@ declare namespace Twinning.Kernel {
 		 * @param data 文件内容
 		 * @returns 无
 		 */
-		function read_stream_file(
+		function read_file_stream(
 			target: Path,
 			data: OutputByteStreamView,
 		): Void;
@@ -1277,7 +1277,7 @@ declare namespace Twinning.Kernel {
 		 * @param data 文件内容
 		 * @returns 无
 		 */
-		function write_stream_file(
+		function write_file_stream(
 			target: Path,
 			data: InputByteStreamView,
 		): Void;
@@ -1293,72 +1293,19 @@ declare namespace Twinning.Kernel {
 			target: Path,
 		): Void;
 
-		// ------------------------------------------------
-
-		/**
-		 * 计数目标目录下的文件与目录
-		 * @param target 目标目录
-		 * @param depth 需要处理的深度，为空时处理所有层级
-		 * @returns 目标目录下的文件与目录数
-		 */
-		function count(
-			target: Path,
-			depth: SizeOptional,
-		): Size;
-
-		/**
-		 * 计数目标目录下的文件
-		 * @param target 目标目录
-		 * @param depth 需要处理的深度，为空时处理所有层级
-		 * @returns 目标目录下的文件数
-		 */
-		function count_file(
-			target: Path,
-			depth: SizeOptional,
-		): Size;
-
-		/**
-		 * 计数目标目录下的目录
-		 * @param target 目标目录
-		 * @param depth 需要处理的深度，为空时处理所有层级
-		 * @returns 目标目录下的目录数
-		 */
-		function count_directory(
-			target: Path,
-			depth: SizeOptional,
-		): Size;
-
 		/**
 		 * 列出目标目录下的文件与目录
 		 * @param target 目标目录
 		 * @param depth 需要处理的深度，为空时处理所有层级
+		 * @param allow_file 记录子文件
+		 * @param allow_directory 记录子目录
 		 * @returns 目标目录下的文件与目录列表
-		 */
-		function list(
-			target: Path,
-			depth: SizeOptional,
-		): PathList;
-
-		/**
-		 * 列出目标目录下的文件
-		 * @param target 目标目录
-		 * @param depth 需要处理的深度，为空时处理所有层级
-		 * @returns 目标目录下的文件列表
-		 */
-		function list_file(
-			target: Path,
-			depth: SizeOptional,
-		): PathList;
-
-		/**
-		 * 列出目标目录下的目录
-		 * @param target 目标目录
-		 * @param depth 需要处理的深度，为空时处理所有层级
-		 * @returns 目标目录下的目录列表
 		 */
 		function list_directory(
 			target: Path,
 			depth: SizeOptional,
+			allow_file: Boolean,
+			allow_directory: Boolean,
 		): PathList;
 
 	}

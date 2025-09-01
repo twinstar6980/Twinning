@@ -143,7 +143,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 						Console.information(los('support.pvz2.remote_project.execute:pull'), []);
 						AndroidHelper.pull(local_temporary.content_delivery, remote.content_delivery);
 						Console.information(los('support.pvz2.remote_project.execute:decode'), []);
-						for (let sub_file of KernelX.Storage.list_file(local_temporary.content_delivery)) {
+						for (let sub_file of KernelX.Storage.list_directory(local_temporary.content_delivery, null, true, false)) {
 							if (sub_file.endsWith('.rton') || sub_file.endsWith('.json')) {
 								KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${sub_file.replace('.rton', '.json')}`, g_rton_version);
 							}
@@ -181,7 +181,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 						KernelX.Storage.create_directory(local_temporary_directory);
 						Console.information(los('support.pvz2.remote_project.execute:encode'), []);
 						let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(g_rton_encode_buffer));
-						for (let sub_file of KernelX.Storage.list_file(local.content_delivery)) {
+						for (let sub_file of KernelX.Storage.list_directory(local.content_delivery, null, true, false)) {
 							KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(`${local_temporary.content_delivery}/${sub_file.replace(/(?<!(cdn_config|forceupdateconfig))\.json$/i, '.rton')}`, `${local.content_delivery}/${sub_file}`, true, true, g_rton_version, buffer.view());
 						}
 						Console.information(los('support.pvz2.remote_project.execute:push'), []);

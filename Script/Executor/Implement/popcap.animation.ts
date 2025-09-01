@@ -276,7 +276,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					let media_directory = `${target_directory}/LIBRARY/media`;
 					KernelX.Storage.remove_if(media_directory);
 					KernelX.Storage.create_directory(media_directory);
-					KernelX.Storage.list_file(`${target_directory}/..`, 1n)
+					KernelX.Storage.list_directory(`${target_directory}/..`, 1n, true, false)
 						.filter((value) => (/(\.png)$/i.test(value)))
 						.forEach((value) => {
 							KernelX.Storage.create_hard_link(`${media_directory}/${value}`, `${target_directory}/../${value}`);

@@ -64,7 +64,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 				resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::k_path_separator_windows)};
 				resource_information_structure.time = cbox<IntegerU64>(resource_definition.time);
 				if constexpr (check_version(version, {}, {false})) {
-					auto resource_size = Storage::read_stream_file(resource_path, data);
+					auto resource_size = Storage::read_file_stream(resource_path, data);
 					resource_information_structure.size = cbox<IntegerU32>(resource_size);
 				}
 				if constexpr (check_version(version, {}, {true})) {

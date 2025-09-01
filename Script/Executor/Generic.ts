@@ -33,11 +33,11 @@ namespace Twinning.Script.Executor {
 	// ------------------------------------------------
 
 	export function parse(
-		raw_command: Array<string>,
+		command_line: Array<string>,
 	): Array<Command> {
 		let result: Array<Command> = [];
-		let index = 0;
-		while (index < raw_command.length) {
+		let command_reader = new CommandLineReader(command_line);
+		while (!command_reader.done()) {
 			let command: Command = {
 				input: null,
 				filterless: false,
@@ -45,28 +45,17 @@ namespace Twinning.Script.Executor {
 				argument: {},
 			};
 			{
-				let input_value = raw_command[index++];
-				if (input_value !== '?') {
-					command.input = input_value;
-				}
+				let input = command_reader.next_string();
+				command.input = input === '?' ? null : input;
 			}
-			if (index < raw_command.length && raw_command[index] === '-filterless') {
-				index++;
+			if (command_reader.check('-filterless')) {
 				command.filterless = true;
 			}
-			if (index < raw_command.length && raw_command[index] === '-method') {
-				index++;
-				if (index === raw_command.length) {
-					throw new Error(`command truncated, expected method`);
-				}
-				command.method = raw_command[index++];
+			if (command_reader.check('-method')) {
+				command.method = command_reader.next_string();
 			}
-			if (index < raw_command.length && raw_command[index] === '-argument') {
-				index++;
-				if (index === raw_command.length) {
-					throw new Error(`command truncated, expected argument`);
-				}
-				let argument = KernelX.JSON.read_s_js(raw_command[index++]);
+			if (command_reader.check('-argument')) {
+				let argument = KernelX.JSON.read_s_js(command_reader.next_string());
 				if (!is_object_of_object(argument)) {
 					throw new Error(`argument must be a object`);
 				}

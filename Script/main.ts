@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// ------------------------------------------------
 
-	export const k_version = '133';
+	export const k_version = '134';
 
 	// ------------------------------------------------
 
@@ -236,6 +236,7 @@ namespace Twinning.Script {
 			`utility/Check`,
 			`utility/TextGenerator`,
 			`utility/VirtualTerminalSequence`,
+			`utility/CommandLineReader`,
 			`utility/XML`,
 			`utility/ByteListView`,
 			`utility/KernelX`,

@@ -43,7 +43,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late Boolean                                         _keepSpeed;
   late Boolean                                         _showBoundary;
   late String?                                         _animationFile;
-  late String?                                         _textureDirectory;
   late model.Animation?                                _animation;
   late Map<String, (ImageProvider, Integer, Integer)>? _texture;
   late List<Boolean>?                                  _imageFilter;
@@ -67,13 +66,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   Future<Void> _load(
     String animationFile,
-    String textureDirectory,
   ) async {
     assertTest(!this._loaded && !this._activated);
     var animation = await VisualHelper.loadAnimation(animationFile);
-    var texture = await VisualHelper.loadTexture(textureDirectory, animation);
+    var texture = await VisualHelper.loadTexture(StorageHelper.parent(animationFile), animation);
     this._animationFile = animationFile;
-    this._textureDirectory = textureDirectory;
     this._animation = animation;
     this._texture = texture;
     this._imageFilter = List.filled(this._animation!.image.length, true);
@@ -86,7 +83,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   ) async {
     assertTest(this._loaded && !this._activated);
     this._animationFile = null;
-    this._textureDirectory = null;
     this._animation = null;
     this._texture = null;
     this._imageFilter = null;
@@ -174,13 +170,19 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return;
   }
 
-  Future<Void> _changeControlFilter(
-    List<Boolean> imageFilter,
-    List<Boolean> spriteFilter,
+  Future<Void> _changeElementFilter(
+    List<Boolean>? imageFilter,
+    List<Boolean>? spriteFilter,
   ) async {
     assertTest(this._loaded);
-    this._imageFilter = imageFilter;
-    this._spriteFilter = spriteFilter;
+    assertTest(imageFilter == null || imageFilter.length == this._animation!.image.length);
+    assertTest(spriteFilter == null || spriteFilter.length == this._animation!.sprite.length);
+    if (imageFilter != null) {
+      this._imageFilter = imageFilter;
+    }
+    if (spriteFilter != null) {
+      this._spriteFilter = spriteFilter;
+    }
     if (this._activated) {
       this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     }
@@ -192,6 +194,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     (Integer, Integer) frameRange,
   ) async {
     assertTest(this._loaded && this._activated);
+    assertTest(0 <= frameRange.$1 && frameRange.$1 < this._activeSprite!.frame.length);
+    assertTest(0 <= frameRange.$2 && frameRange.$2 < this._activeSprite!.frame.length);
+    assertTest(frameRange.$1 <= frameRange.$2);
     this._activeFrameRange = frameRange;
     // TODO
     await refreshState(this.setState);
@@ -202,6 +207,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     Floater frameSpeed,
   ) async {
     assertTest(this._loaded && this._activated);
+    assertTest(frameSpeed > 0.0);
     var currentState = this._queryProgressState();
     if (currentState) {
       this._animationController.stop();
@@ -225,6 +231,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     Integer index,
   ) async {
     assertTest(this._loaded && this._activated);
+    assertTest(index < this._activeSprite!.frame.length);
     var currentState = this._queryProgressState();
     if (currentState) {
       this._animationController.stop();
@@ -261,7 +268,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   Future<Void> _applyLoad(
     String              animationFile,
-    String?             textureDirectory,
     List<Integer>?      imageFilter,
     List<Integer>?      spriteFilter,
     (Boolean, Integer)? activeTarget,
@@ -270,20 +276,19 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     Integer?            activeProgressIndex,
     Boolean?            activeProgressState,
   ) async {
-    textureDirectory ??= StorageHelper.parent(animationFile);
     if (this._loaded) {
       if (this._activated) {
         await this._deactivate();
       }
       await this._unload();
     }
-    await this._load(animationFile, textureDirectory);
-    await this._changeControlFilter(
-      imageFilter == null ? this._imageFilter! : List.generate(this._animation!.image.length, (index) => !imageFilter.contains(index)).toList(),
-      spriteFilter == null ? this._spriteFilter! : List.generate(this._animation!.sprite.length, (index) => !spriteFilter.contains(index)).toList(),
+    await this._load(animationFile);
+    await this._changeElementFilter(
+      imageFilter == null ? null : this._animation!.image.mapIndexed((index, value) => !imageFilter.contains(index)).toList(),
+      spriteFilter == null ? null : this._animation!.sprite.mapIndexed((index, value) => !spriteFilter.contains(index)).toList(),
     );
-    if (activeTarget == null && this._immediateSelect) {
-      activeTarget ??= (true, this._animation!.sprite.length);
+    if (activeTarget == null && this._immediateSelect && this._animation!.mainSprite != null) {
+      activeTarget = (true, this._animation!.sprite.length);
     }
     if (activeTarget != null) {
       await this._activate(activeTarget, activeFrameRange, activeFrameSpeed, activeProgressIndex, activeProgressState);
@@ -321,7 +326,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     var optionKeepSpeed = null as Boolean?;
     var optionShowBoundary = null as Boolean?;
     var optionAnimationFile = null as String?;
-    var optionTextureDirectory = null as String?;
     var optionImageFilter = null as List<Integer>?;
     var optionSpriteFilter = null as List<Integer>?;
     var optionActiveTarget = null as (Boolean, Integer)?;
@@ -347,9 +351,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
     if (option.check('-animation_file')) {
       optionAnimationFile = option.nextString();
-    }
-    if (option.check('-texture_directory')) {
-      optionTextureDirectory = option.nextString();
     }
     if (option.check('-image_filter')) {
       optionImageFilter = option.nextString().split(',').where((value) => value.isNotEmpty).map(Integer.parse).toList();
@@ -399,7 +400,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     if (optionAnimationFile != null) {
       await this._applyLoad(
         optionAnimationFile,
-        optionTextureDirectory,
         optionImageFilter,
         optionSpriteFilter,
         optionActiveTarget,
@@ -433,9 +433,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
     if (option.check('-animation_file', state: this._loaded)) {
       option.nextString(this._animationFile!);
-    }
-    if (option.check('-texture_directory', state: this._loaded)) {
-      option.nextString(this._textureDirectory!);
     }
     if (option.check('-image_filter', state: this._loaded)) {
       option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).nonNulls.join(','));
@@ -475,7 +472,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._keepSpeed = setting.data.animationViewer.keepSpeed;
     this._showBoundary = setting.data.animationViewer.showBoundary;
     this._animationFile = null;
-    this._textureDirectory = null;
     this._animation = null;
     this._texture = null;
     this._imageFilter = null;
@@ -491,6 +487,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._animationController = AnimationController(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
     this._animationController.addListener(() async {
       this._activeProgressIndexStream.sink.add(null);
+      return;
     });
     this._animationController.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
@@ -501,6 +498,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           this._changeProgressState(true);
         }
       }
+      return;
     });
     this._animationVisual = null;
     this._stageHorizontalScrollSontroller = ScrollController();
@@ -534,7 +532,16 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     var theme = Theme.of(context);
     return CustomModulePageRegion(
       onDropFile: (item) async {
-        await this._applyLoad(item.first, null, null, null, null, null, null, null, null);
+        if (item.length != 1) {
+          await ControlHelper.showSnackBar(context, 'Source is multiply.');
+          return;
+        }
+        if (!await StorageHelper.existFile(item.first)) {
+          await ControlHelper.showSnackBar(context, 'Source is not a file.');
+          return;
+        }
+        await this._applyLoad(item.first, null, null, null, null, null, null, null);
+        return;
       },
       content: Column(
         children: [
@@ -963,7 +970,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               ],
                               actionBuilder: null,
                             ));
-                            await this._changeControlFilter(currentValue, this._spriteFilter!);
+                            await this._changeElementFilter(currentValue, null);
                           },
                       ),
                     ).withExpanded(flex: 3),
@@ -997,7 +1004,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               await this._deactivate();
                             }
                             else {
-                              await this._activate((true, this._animation!.sprite.length), null, null, null, null);
+                              if (this._animation!.mainSprite == null) {
+                                await ControlHelper.showSnackBar(context, 'The animation does not contain main sprite.');
+                              }
+                              else {
+                                await this._activate((true, this._animation!.sprite.length), null, null, null, null);
+                              }
                             }
                             await refreshState(this.setState);
                           },
@@ -1066,7 +1078,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               ],
                               actionBuilder: null,
                             ));
-                            await this._changeControlFilter(this._imageFilter!, currentValue);
+                            await this._changeElementFilter(null, currentValue);
                           },
                       ),
                     ).withExpanded(flex: 3),
@@ -1134,7 +1146,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         var animationFile = await StorageHelper.pickLoadFile(context, '@AnimationViewer.AnimationFile');
                         if (animationFile != null) {
                           Navigator.pop(context);
-                          await this._applyLoad(animationFile, null, null, null, null, null, null, null, null);
+                          await this._applyLoad(animationFile, null, null, null, null, null, null, null);
                         }
                       },
                     ).withExpanded(),

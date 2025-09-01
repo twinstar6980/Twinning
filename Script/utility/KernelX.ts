@@ -449,6 +449,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.write_file(Kernel.Path.value(target), data_view!);
 		}
 
+		// extension
 		export function read_file_s(
 			target: string,
 		): string {
@@ -457,6 +458,7 @@ namespace Twinning.Script.KernelX {
 			return data_string;
 		}
 
+		// extension
 		export function write_file_s(
 			target: string,
 			data: string,
@@ -476,48 +478,13 @@ namespace Twinning.Script.KernelX {
 
 		// ------------------------------------------------
 
-		export function count(
-			target: string,
-			depth: null | bigint = null,
-		): bigint {
-			return Kernel.Storage.count(Kernel.Path.value(target), Kernel.SizeOptional.value(depth)).value;
-		}
-
-		export function count_file(
-			target: string,
-			depth: null | bigint = null,
-		): bigint {
-			return Kernel.Storage.count_file(Kernel.Path.value(target), Kernel.SizeOptional.value(depth)).value;
-		}
-
-		export function count_directory(
-			target: string,
-			depth: null | bigint = null,
-		): bigint {
-			return Kernel.Storage.count_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth)).value;
-		}
-
-		// ------------------------------------------------
-
-		export function list(
-			target: string,
-			depth: null | bigint = null,
-		): Array<string> {
-			return Kernel.Storage.list(Kernel.Path.value(target), Kernel.SizeOptional.value(depth)).value;
-		}
-
-		export function list_file(
-			target: string,
-			depth: null | bigint = null,
-		): Array<string> {
-			return Kernel.Storage.list_file(Kernel.Path.value(target), Kernel.SizeOptional.value(depth)).value;
-		}
-
 		export function list_directory(
 			target: string,
-			depth: null | bigint = null,
+			depth: null | bigint,
+			allow_file: boolean,
+			allow_directory: boolean,
 		): Array<string> {
-			return Kernel.Storage.list_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth)).value;
+			return Kernel.Storage.list_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth), Kernel.Boolean.value(allow_file), Kernel.Boolean.value(allow_directory)).value;
 		}
 
 		// ------------------------------------------------

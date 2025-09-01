@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Storage {
 
 	namespace Detail {
 
-		#pragma region utility for std::filesystem::path
+		#pragma region path
 
 		#if defined M_system_windows
 
@@ -88,7 +88,55 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma endregion
 
-		#pragma region RAII wrapper for std::FILE
+		#pragma region type
+
+		M_enumeration(
+			M_wrap(ObjectType),
+			M_wrap(
+				none,
+				file,
+				directory,
+				other,
+			),
+		);
+
+		// ----------------
+
+		inline auto get_type (
+			std::filesystem::file_type const & type
+		) -> ObjectType {
+			auto result = ObjectType{};
+			switch (type) {
+				case std::filesystem::file_type::not_found: {
+					result = ObjectType::Constant::none();
+					break;
+				}
+				case std::filesystem::file_type::regular: {
+					result = ObjectType::Constant::file();
+					break;
+				}
+				case std::filesystem::file_type::directory: {
+					result = ObjectType::Constant::directory();
+					break;
+				}
+				default: {
+					result = ObjectType::Constant::other();
+					break;
+				}
+			}
+			return result;
+		}
+
+		inline auto get_type (
+			Path const & target
+		) -> ObjectType {
+			auto status = std::filesystem::status(make_std_path(target));
+			return get_type(status.type());
+		}
+
+		#pragma endregion
+
+		#pragma region file
 
 		class FileHandler {
 
@@ -211,141 +259,75 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma endregion
 
-		#pragma region type
+		#pragma region directory
 
-		M_enumeration(
-			M_wrap(ObjectType),
-			M_wrap(
-				none,
-				file,
-				directory,
-				other,
-			),
-		);
-
-		// ----------------
-
-		inline auto get_type (
-			std::filesystem::file_type const & type
-		) -> ObjectType {
-			auto result = ObjectType{};
-			switch (type) {
-				case std::filesystem::file_type::not_found: {
-					result = ObjectType::Constant::none();
-					break;
-				}
-				case std::filesystem::file_type::regular: {
-					result = ObjectType::Constant::file();
-					break;
-				}
-				case std::filesystem::file_type::directory: {
-					result = ObjectType::Constant::directory();
-					break;
-				}
-				default: {
-					result = ObjectType::Constant::other();
-					break;
-				}
-			}
-			return result;
-		}
-
-		inline auto get_type (
-			Path const & target
-		) -> ObjectType {
-			auto status = std::filesystem::status(make_std_path(target));
-			return get_type(status.type());
-		}
-
-		#pragma endregion
-
-		#pragma region iterate
-
-		M_enumeration(
-			M_wrap(FilterType),
-			M_wrap(
-				any,
-				file,
-				directory,
-			),
-		);
-
-		// ----------------
-
-		template <auto filter> requires
+		template <auto allow_file, auto allow_directory> requires
 			CategoryConstraint<>
-			&& (IsSameOf<filter, FilterType>)
-		inline auto count (
+			&& (IsSameOf<allow_file, Boolean>)
+			&& (IsSameOf<allow_directory, Boolean>)
+		inline auto count_directory (
 			Path const &           target,
 			Optional<Size> const & depth,
-			Size const &           current_depth = k_begin_index
+			Size const &           current_depth
 		) -> Size {
 			if (current_depth == k_begin_index) {
 				assert_test(exist_directory(target));
 			}
 			auto result = k_none_size;
 			if (!depth.has() || current_depth < depth.get()) {
-				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
-					auto name = make_string(self_cast<std::string>(entry.path().filename().generic_u8string()));
-					auto type = get_type(entry.status().type());
-					if constexpr (filter == FilterType::Constant::any()) {
-						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
+				for (auto & item : std::filesystem::directory_iterator{make_std_path(target)}) {
+					auto item_type = get_type(item.status().type());
+					auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
+					if constexpr (allow_file) {
+						if (item_type == ObjectType::Constant::file()) {
 							++result;
 						}
 					}
-					if constexpr (filter == FilterType::Constant::file()) {
-						if (type == ObjectType::Constant::file()) {
+					if constexpr (allow_directory) {
+						if (item_type == ObjectType::Constant::directory()) {
 							++result;
 						}
 					}
-					if constexpr (filter == FilterType::Constant::directory()) {
-						if (type == ObjectType::Constant::directory()) {
-							++result;
-						}
-					}
-					if (type == ObjectType::Constant::directory()) {
-						result += count<filter>(target / name, depth, current_depth + k_next_index);
+					if (item_type == ObjectType::Constant::directory()) {
+						result += count_directory<allow_file, allow_directory>(target / item_name, depth, current_depth + k_next_index);
 					}
 				}
 			}
 			return result;
 		}
 
-		template <auto filter> requires
+		template <auto allow_file, auto allow_directory> requires
 			CategoryConstraint<>
-			&& (IsSameOf<filter, FilterType>)
-		inline auto list (
+			&& (IsSameOf<allow_file, Boolean>)
+			&& (IsSameOf<allow_directory, Boolean>)
+		inline auto list_directory (
 			Path const &           target,
 			Optional<Size> const & depth,
 			List<Path> &           result,
-			Path const &           current_target = Path{},
-			Size const &           current_depth = k_begin_index
+			Path const &           current_target,
+			Size const &           current_depth
 		) -> Void {
 			if (current_depth == k_begin_index) {
 				assert_test(exist_directory(target));
-				result.allocate(count<filter>(target, depth));
+				result.allocate(count_directory<allow_file, allow_directory>(target, depth, k_begin_index));
 			}
 			if (!depth.has() || current_depth < depth.get()) {
-				for (auto & entry : std::filesystem::directory_iterator{make_std_path(target)}) {
-					auto name = make_string(self_cast<std::string>(entry.path().filename().generic_u8string()));
-					auto type = get_type(entry.status().type());
-					if constexpr (filter == FilterType::Constant::any()) {
-						if (type == ObjectType::Constant::file() || type == ObjectType::Constant::directory()) {
-							result.append(current_target / name);
+				for (auto & item : std::filesystem::directory_iterator{make_std_path(target)}) {
+					auto item_type = get_type(item.status().type());
+					auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
+					auto item_path = current_target / item_name;
+					if constexpr (allow_file) {
+						if (item_type == ObjectType::Constant::file()) {
+							result.append(item_path);
 						}
 					}
-					if constexpr (filter == FilterType::Constant::file()) {
-						if (type == ObjectType::Constant::file()) {
-							result.append(current_target / name);
+					if constexpr (allow_directory) {
+						if (item_type == ObjectType::Constant::directory()) {
+							result.append(item_path);
 						}
 					}
-					if constexpr (filter == FilterType::Constant::directory()) {
-						if (type == ObjectType::Constant::directory()) {
-							result.append(current_target / name);
-						}
-					}
-					if (type == ObjectType::Constant::directory()) {
-						list<filter>(target / name, depth, result, current_target / name, current_depth + k_next_index);
+					if (item_type == ObjectType::Constant::directory()) {
+						list_directory<allow_file, allow_directory>(target / item_name, depth, result, item_path, current_depth + k_next_index);
 					}
 				}
 			}
@@ -511,7 +493,7 @@ export namespace Twinning::Kernel::Storage {
 
 	// ----------------
 
-	inline auto read_stream_file (
+	inline auto read_file_stream (
 		Path const &           target,
 		OutputByteStreamView & data
 	) -> Size {
@@ -524,7 +506,7 @@ export namespace Twinning::Kernel::Storage {
 		return size;
 	}
 
-	inline auto write_stream_file (
+	inline auto write_file_stream (
 		Path const &          target,
 		InputByteStreamView & data
 	) -> Size {
@@ -547,57 +529,27 @@ export namespace Twinning::Kernel::Storage {
 		return;
 	}
 
-	#pragma endregion
-
-	#pragma region iterate
-
-	inline auto count (
-		Path const &           target,
-		Optional<Size> const & depth = k_null_optional
-	) -> Size {
-		return Detail::count<Detail::FilterType::Constant::any()>(target, depth);
-	}
-
-	inline auto count_file (
-		Path const &           target,
-		Optional<Size> const & depth = k_null_optional
-	) -> Size {
-		return Detail::count<Detail::FilterType::Constant::file()>(target, depth);
-	}
-
-	inline auto count_directory (
-		Path const &           target,
-		Optional<Size> const & depth = k_null_optional
-	) -> Size {
-		return Detail::count<Detail::FilterType::Constant::directory()>(target, depth);
-	}
-
 	// ----------------
-
-	inline auto list (
-		Path const &           target,
-		Optional<Size> const & depth = k_null_optional
-	) -> List<Path> {
-		auto result = List<Path>{};
-		Detail::list<Detail::FilterType::Constant::any()>(target, depth, result);
-		return result;
-	}
-
-	inline auto list_file (
-		Path const &           target,
-		Optional<Size> const & depth = k_null_optional
-	) -> List<Path> {
-		auto result = List<Path>{};
-		Detail::list<Detail::FilterType::Constant::file()>(target, depth, result);
-		return result;
-	}
 
 	inline auto list_directory (
 		Path const &           target,
-		Optional<Size> const & depth = k_null_optional
+		Optional<Size> const & depth,
+		Boolean const &        allow_file,
+		Boolean const &        allow_directory
 	) -> List<Path> {
 		auto result = List<Path>{};
-		Detail::list<Detail::FilterType::Constant::directory()>(target, depth, result);
+		if (allow_file == k_false && allow_directory == k_false) {
+			Detail::list_directory<k_false, k_false>(target, depth, result, Path{}, k_begin_index);
+		}
+		if (allow_file == k_false && allow_directory == k_true) {
+			Detail::list_directory<k_false, k_true>(target, depth, result, Path{}, k_begin_index);
+		}
+		if (allow_file == k_true && allow_directory == k_false) {
+			Detail::list_directory<k_true, k_false>(target, depth, result, Path{}, k_begin_index);
+		}
+		if (allow_file == k_true && allow_directory == k_true) {
+			Detail::list_directory<k_true, k_true>(target, depth, result, Path{}, k_begin_index);
+		}
 		return result;
 	}
 

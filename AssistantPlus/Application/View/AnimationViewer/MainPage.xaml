@@ -154,14 +154,33 @@
 						Orientation="Horizontal"
 						Spacing="8"
 						>
-						<Button
-							ToolTipService.ToolTip="Clear"
+						<DropDownButton
+							ToolTipService.ToolTip="Animation File"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							IsEnabled="{x:Bind Controller.uClearSource_IsEnabled}"
-							Click="{x:Bind Controller.uClearSource_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
-							/>
+							HorizontalContentAlignment="Left"
+							MinWidth="98"
+							MaxWidth="928"
+							Content="{x:Bind Controller.uAnimationFile_Content}"
+							>
+							<DropDownButton.Flyout>
+								<MenuFlyout Placement="BottomEdgeAlignedRight">
+									<MenuFlyoutItem
+										Tag="Load"
+										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenFolderHorizontal}}"
+										Text="Load"
+										/>
+									<MenuFlyoutItem
+										Tag="Clear"
+										IsEnabled="{x:Bind Controller.uAnimationFileMenuClear_IsEnabled}"
+										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Clear}}"
+										Text="Clear"
+										/>
+								</MenuFlyout>
+							</DropDownButton.Flyout>
+						</DropDownButton>
 					</my:Stack>
 				</my:HeaderBar.Action>
 			</my:HeaderBar>
@@ -196,60 +215,6 @@
 					VerticalAlignment="Stretch"
 					Padding="16"
 					>
-					<my:Stack
-						HorizontalAlignment="Right"
-						VerticalAlignment="Top"
-						Orientation="Vertical"
-						Spacing="8"
-						>
-						<my:Stack
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Stretch"
-							Orientation="Horizontal"
-							Spacing="8"
-							>
-							<TextBox
-								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								Width="262"
-								IsEnabled="{x:Bind Controller.uAnimationFile_IsEnabled}"
-								PlaceholderText="Animation File"
-								IsReadOnly="True"
-								Text="{x:Bind Controller.uAnimationFile_Text}"
-								/>
-							<Button
-								ToolTipService.ToolTip="Pick"
-								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								Click="{x:Bind Controller.uAnimationFilePick_Click}"
-								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenFile}}"
-								/>
-						</my:Stack>
-						<my:Stack
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Stretch"
-							Orientation="Horizontal"
-							Spacing="8"
-							>
-							<TextBox
-								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								Width="262"
-								IsEnabled="{x:Bind Controller.uTextureDirectory_IsEnabled}"
-								PlaceholderText="Texture Directory"
-								IsReadOnly="True"
-								Text="{x:Bind Controller.uTextureDirectory_Text}"
-								/>
-							<Button
-								ToolTipService.ToolTip="Pick"
-								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								IsEnabled="{x:Bind Controller.uTextureDirectoryPick_IsEnabled}"
-								Click="{x:Bind Controller.uTextureDirectoryPick_Click}"
-								Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}"
-								/>
-						</my:Stack>
-					</my:Stack>
 					<my:Stack
 						HorizontalAlignment="Left"
 						VerticalAlignment="Bottom"

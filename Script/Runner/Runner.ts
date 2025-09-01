@@ -25,7 +25,7 @@ namespace Twinning.Script.Runner {
 		filter: ['any' | 'file' | 'directory', null | RegExp],
 		worker: (item: string) => void,
 	): void {
-		let item_list = KernelX.Storage[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[filter[0]]](parent);
+		let item_list = KernelX.Storage.list_directory(parent, null, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
 		if (filter[1] !== null) {
 			item_list = item_list.filter((e) => (filter[1]!.test(e)));
 		}

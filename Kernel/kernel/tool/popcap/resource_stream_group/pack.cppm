@@ -120,7 +120,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
 					auto   resource_path_full = resource_directory / resource_definition.path;
 					resource_information_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
 					resource_information_structure.value.offset = cbox<IntegerU32>(resource_data_section_stream.position());
-					resource_information_structure.value.size = cbox<IntegerU32>(Storage::read_stream_file(resource_path_full, resource_data_section_stream));
+					resource_information_structure.value.size = cbox<IntegerU32>(Storage::read_file_stream(resource_path_full, resource_data_section_stream));
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();

@@ -195,7 +195,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						// chunk_size_compressed = k_none_size;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::copy_coded)) {
-						chunk_size_uncompressed = Storage::read_stream_file(resource_path, data);
+						chunk_size_uncompressed = Storage::read_file_stream(resource_path, data);
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::lzma)) {

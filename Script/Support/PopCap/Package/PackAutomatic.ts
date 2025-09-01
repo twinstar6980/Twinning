@@ -8,7 +8,7 @@ namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 		version_compress_resource_data: boolean,
 	): [Kernel.ByteArray, Kernel.Size] {
 		let version_c = Kernel.Tool.PopCap.Package.Version.value({ number: version_number, compress_resource_data: version_compress_resource_data });
-		let resource_list = KernelX.Storage.list_file(resource_directory);
+		let resource_list = KernelX.Storage.list_directory(resource_directory, null, true, false);
 		let definition_js: Kernel.Tool.PopCap.Package.Definition.JS_N.Package = {
 			resource: [],
 		};

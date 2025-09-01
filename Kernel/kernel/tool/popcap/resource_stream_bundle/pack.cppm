@@ -473,7 +473,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 					auto packet_header_structure = ResourceStreamGroup::Structure::Header<packet_version>{};
 					if (packet_file.has()) {
 						if (Storage::exist_file(make_formatted_path(packet_file.get()))) {
-							auto legacy_packet_size = Storage::read_stream_file(make_formatted_path(packet_file.get()), packet_data);
+							auto legacy_packet_size = Storage::read_file_stream(make_formatted_path(packet_file.get()), packet_data);
 							auto legacy_packet_stream = InputByteStreamView{packet_data.previous_view(legacy_packet_size)};
 							legacy_packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
 							legacy_packet_stream.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));

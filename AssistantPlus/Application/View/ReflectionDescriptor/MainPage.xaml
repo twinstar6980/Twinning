@@ -53,7 +53,7 @@
 							VerticalAlignment="Center"
 							HorizontalContentAlignment="Left"
 							MinWidth="98"
-							MaxWidth="196"
+							MaxWidth="172"
 							Content="{x:Bind Controller.uDescriptorFile_Content}"
 							>
 							<DropDownButton.Flyout>

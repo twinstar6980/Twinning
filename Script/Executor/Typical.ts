@@ -276,7 +276,7 @@ namespace Twinning.Script.Executor {
 				else {
 					assert_test(source.batch_argument !== null);
 					timer.start();
-					let all_item = KernelX.Storage[({ any: 'list', file: 'list_file', directory: 'list_directory' } as const)[source.filter[0]]](final_argument[source.argument[0].id]);
+					let all_item = KernelX.Storage.list_directory(final_argument[source.argument[0].id], null, source.filter[0] === 'any' || source.filter[0] === 'file', source.filter[0] === 'any' || source.filter[0] === 'directory');
 					let valid_item = all_item.filter((value) => (source.filter[1]!.test(value)));
 					let failed_item = [] as Array<string>;
 					let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);

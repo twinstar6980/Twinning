@@ -84,8 +84,6 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		public String? AnimationFile { get; set; } = null;
 
-		public String? TextureDirectory { get; set; } = null;
-
 		// ----------------
 
 		public GameAnimationModel.Animation? Animation { get; set; } = null;
@@ -182,7 +180,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			var optionImageFilterRule = default(String?);
 			var optionSpriteFilterRule = default(String?);
 			var optionAnimationFile = default(String?);
-			var optionTextureDirectory = default(String?);
+			var optionImageFilter = default(List<Integer>?);
+			var optionSpriteFilter = default(List<Integer>?);
 			var optionActiveTarget = default(Tuple<Boolean, Integer>?);
 			var optionActiveFrameRange = default(Tuple<Integer, Integer>?);
 			var optionActiveFrameSpeed = default(Floater?);
@@ -212,8 +211,11 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (option.Check("-AnimationFile")) {
 				optionAnimationFile = option.NextString();
 			}
-			if (option.Check("-TextureDirectory")) {
-				optionTextureDirectory = option.NextString();
+			if (option.Check("-ImageFilter")) {
+				optionImageFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
+			}
+			if (option.Check("-SpriteFilter")) {
+				optionSpriteFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
 			}
 			if (option.Check("-ActiveTarget")) {
 				optionActiveTarget = new (
@@ -281,7 +283,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (optionAnimationFile != null) {
 				await this.ApplyLoad(
 					optionAnimationFile,
-					optionTextureDirectory,
+					optionImageFilter,
+					optionSpriteFilter,
 					optionActiveTarget == null ? null : new (optionActiveTarget.Item1, optionActiveTarget.Item2.CastPrimitive<Size>()),
 					optionActiveFrameRange == null ? null : new () { Begin = optionActiveFrameRange.Item1.CastPrimitive<Size>(), End = optionActiveFrameRange.Item2.CastPrimitive<Size>() },
 					optionActiveFrameSpeed,
@@ -318,8 +321,11 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (option.Check("-AnimationFile", this.Loaded)) {
 				option.NextString(this.AnimationFile.AsNotNull());
 			}
-			if (option.Check("-TextureDirectory", this.Loaded)) {
-				option.NextString(this.TextureDirectory.AsNotNull());
+			if (option.Check("-ImageFilter", this.Loaded)) {
+				option.NextString(this.ImageFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
+			}
+			if (option.Check("-SpriteFilter", this.Loaded)) {
+				option.NextString(this.SpriteFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
 			}
 			if (option.Check("-ActiveTarget", this.Activated)) {
 				option.NextBoolean(this.ActiveTarget.AsNotNull().Item1);
@@ -343,7 +349,6 @@ namespace AssistantPlus.View.AnimationViewer {
 		#region action
 
 		[MemberNotNullWhen(true, nameof(MainPageController.AnimationFile))]
-		[MemberNotNullWhen(true, nameof(MainPageController.TextureDirectory))]
 		[MemberNotNullWhen(true, nameof(MainPageController.Animation))]
 		[MemberNotNullWhen(true, nameof(MainPageController.Texture))]
 		[MemberNotNullWhen(true, nameof(MainPageController.ImageFilter))]
@@ -358,7 +363,6 @@ namespace AssistantPlus.View.AnimationViewer {
 		}
 
 		[MemberNotNullWhen(true, nameof(MainPageController.AnimationFile))]
-		[MemberNotNullWhen(true, nameof(MainPageController.TextureDirectory))]
 		[MemberNotNullWhen(true, nameof(MainPageController.Animation))]
 		[MemberNotNullWhen(true, nameof(MainPageController.Texture))]
 		[MemberNotNullWhen(true, nameof(MainPageController.ImageFilter))]
@@ -381,14 +385,12 @@ namespace AssistantPlus.View.AnimationViewer {
 		// ----------------
 
 		public async Task Load (
-			String animationFile,
-			String textureDirectory
+			String animationFile
 		) {
 			GF.AssertTest(!this.Loaded && !this.Activated);
 			var animation = await GameAnimationHelper.LoadAnimation(animationFile);
-			var texture = await GameAnimationHelper.LoadTexture(textureDirectory, animation);
+			var texture = await GameAnimationHelper.LoadTexture(StorageHelper.Parent(animationFile).AsNotNull(), animation);
 			this.AnimationFile = animationFile;
-			this.TextureDirectory = textureDirectory;
 			this.Animation = animation;
 			this.Texture = texture;
 			this.ImageFilter = Enumerable.Repeat(false, this.Animation.Image.Count).ToList();
@@ -397,12 +399,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ink" || value == "butter")).ToList();
 			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ground_swatch" || value == "ground_swatch_plane")).ToList();
 			this.NotifyPropertyChanged([
-				nameof(this.uClearSource_IsEnabled),
-				nameof(this.uAnimationFile_IsEnabled),
-				nameof(this.uAnimationFile_Text),
-				nameof(this.uTextureDirectory_IsEnabled),
-				nameof(this.uTextureDirectory_Text),
-				nameof(this.uTextureDirectoryPick_IsEnabled),
+				nameof(this.uAnimationFile_Content),
+				nameof(this.uAnimationFileMenuClear_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_ItemsSource),
 				nameof(this.uMainSpriteList_ItemsSource),
@@ -437,7 +435,6 @@ namespace AssistantPlus.View.AnimationViewer {
 				this.View.uMainSpriteList.DeselectRange(new (0, 1));
 			}
 			this.AnimationFile = null;
-			this.TextureDirectory = null;
 			this.Animation = null;
 			this.Texture = null;
 			this.ImageFilter = null;
@@ -446,12 +443,8 @@ namespace AssistantPlus.View.AnimationViewer {
 			this.ZombieStateLayerName = null;
 			this.ZombieGroundSwatchLayerName = null;
 			this.NotifyPropertyChanged([
-				nameof(this.uClearSource_IsEnabled),
-				nameof(this.uAnimationFile_IsEnabled),
-				nameof(this.uAnimationFile_Text),
-				nameof(this.uTextureDirectory_IsEnabled),
-				nameof(this.uTextureDirectory_Text),
-				nameof(this.uTextureDirectoryPick_IsEnabled),
+				nameof(this.uAnimationFile_Content),
+				nameof(this.uAnimationFileMenuClear_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_ItemsSource),
 				nameof(this.uMainSpriteList_ItemsSource),
@@ -659,62 +652,13 @@ namespace AssistantPlus.View.AnimationViewer {
 			return;
 		}
 
-		public async Task UpdateActiveFrameRange (
-			GameAnimationHelper.FrameRange frameRange
-		) {
-			GF.AssertTest(this.Loaded && this.Activated);
-			this.ActiveFrameRange = frameRange;
-			this.View.uSprite.FrameRange = frameRange;
-			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Begin);
-			this.NotifyPropertyChanged([
-				nameof(this.uActiveFrameRangeBegin_Value),
-				nameof(this.uActiveFrameRangeEnd_Value),
-				nameof(this.uActiveFrameRangeLabel_SelectedItem),
-				nameof(this.uActiveProgress_Minimum),
-				nameof(this.uActiveProgress_Maximum),
-				nameof(this.uActiveProgressStateIcon_Glyph),
-			]);
-			return;
-		}
-
-		// ----------------
-
-		public async Task ApplyLoad (
-			String                          animationFile,
-			String?                         textureDirectory,
-			Tuple<Boolean, Size>?           target,
-			GameAnimationHelper.FrameRange? frameRange,
-			Floater?                        frameSpeed,
-			Boolean?                        progressState
-		) {
-			textureDirectory ??= StorageHelper.Parent(animationFile).AsNotNull();
-			if (this.Loaded) {
-				if (this.Activated) {
-					await this.Deactivate();
-				}
-				await this.Unload();
-			}
-			await this.Load(animationFile, textureDirectory);
-			if (this.Loaded) {
-				await this.ApplyFilterRule();
-				if (this.ImmediateSelect && this.Animation.MainSprite != null) {
-					await this.Activate(target ?? new (true, this.Animation.Sprite.Count), frameRange, frameSpeed, progressState, null);
-				}
-				await App.Instance.AppendRecentLauncherItem(new () {
-					Title = Regex.Replace(StorageHelper.Name(animationFile), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),
-					Type = ModuleType.AnimationViewer,
-					Option = await this.CollectOption(),
-					Command = [],
-				});
-			}
-			return;
-		}
-
-		public async Task ApplyFilter (
+		public async Task ChangeElementFilter (
 			List<Boolean?>? imageFilter,
 			List<Boolean?>? spriteFilter
 		) {
 			GF.AssertTest(this.Loaded);
+			GF.AssertTest(imageFilter == null || imageFilter.Count == this.Animation.Image.Count);
+			GF.AssertTest(spriteFilter == null || spriteFilter.Count == this.Animation.Sprite.Count);
 			if (this.SuppressApplyFilterChanged) {
 				return;
 			}
@@ -771,13 +715,72 @@ namespace AssistantPlus.View.AnimationViewer {
 			return;
 		}
 
-		public async Task ApplyFilterRule (
+		public async Task ChangeElementFilterByRule (
 		) {
 			GF.AssertTest(this.Loaded);
-			await this.ApplyFilter(
+			await this.ChangeElementFilter(
 				this.Animation.Image.Select((value) => (this.ImageFilterRule.Length != 0 && Regex.IsMatch(GameAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null)).ToList(),
 				this.Animation.Sprite.Select((value) => (value.Name != null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null)).ToList()
 			);
+			return;
+		}
+
+		public async Task ChangeFrameRange (
+			GameAnimationHelper.FrameRange frameRange
+		) {
+			GF.AssertTest(this.Loaded && this.Activated);
+			this.ActiveFrameRange = frameRange;
+			this.View.uSprite.FrameRange = frameRange;
+			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Begin);
+			this.NotifyPropertyChanged([
+				nameof(this.uActiveFrameRangeBegin_Value),
+				nameof(this.uActiveFrameRangeEnd_Value),
+				nameof(this.uActiveFrameRangeLabel_SelectedItem),
+				nameof(this.uActiveProgress_Minimum),
+				nameof(this.uActiveProgress_Maximum),
+				nameof(this.uActiveProgressStateIcon_Glyph),
+			]);
+			return;
+		}
+
+		// ----------------
+
+		public async Task ApplyLoad (
+			String                          animationFile,
+			List<Integer>?                  imageFilter,
+			List<Integer>?                  spriteFilter,
+			Tuple<Boolean, Size>?           activeTarget,
+			GameAnimationHelper.FrameRange? activeFrameRange,
+			Floater?                        activeFrameSpeed,
+			Boolean?                        activeProgressState
+		) {
+			if (this.Loaded) {
+				if (this.Activated) {
+					await this.Deactivate();
+				}
+				await this.Unload();
+			}
+			await this.Load(animationFile);
+			GF.AssertTest(this.Loaded);
+			await this.ChangeElementFilter(
+				imageFilter == null ? null : this.Animation.Image.Select((value, index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
+				spriteFilter == null ? null : this.Animation.Sprite.Select((value, index) => (Boolean?)!spriteFilter.Contains(index)).ToList()
+			);
+			if (imageFilter == null && spriteFilter == null) {
+				await this.ChangeElementFilterByRule();
+			}
+			if (activeTarget == null && this.ImmediateSelect && this.Animation.MainSprite != null) {
+				activeTarget = new (true, this.Animation.Sprite.Count);
+			}
+			if (activeTarget != null) {
+				await this.Activate(activeTarget, activeFrameRange, activeFrameSpeed, activeProgressState, null);
+			}
+			await App.Instance.AppendRecentLauncherItem(new () {
+				Title = Regex.Replace(StorageHelper.Name(animationFile), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),
+				Type = ModuleType.AnimationViewer,
+				Option = await this.CollectOption(),
+				Command = [],
+			});
 			return;
 		}
 
@@ -813,7 +816,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
-				await this.ApplyLoad(animationFile, null, null, null, null, null);
+				await this.ApplyLoad(animationFile, null, null, null, null, null, null);
 			}
 			return;
 		}
@@ -945,120 +948,54 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region source
 
-		public Boolean uClearSource_IsEnabled {
+		public String uAnimationFile_Content {
 			get {
 				if (!this.Loaded) {
-					return false;
+					return "None";
 				}
-				return true;
+				return new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).Replace(StorageHelper.Name(this.AnimationFile), "");
 			}
-		}
-
-		public async void uClearSource_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<Button>();
-			if (!this.Loaded) {
-				return;
-			}
-			if (this.Activated) {
-				await this.Deactivate();
-			}
-			await this.Unload();
-			return;
 		}
 
 		// ----------------
 
-		public Boolean uAnimationFile_IsEnabled {
+		public Boolean uAnimationFileMenuClear_IsEnabled {
 			get {
-				if (!this.Loaded) {
-					return false;
-				}
-				return true;
+				return this.Loaded;
 			}
 		}
 
-		public String uAnimationFile_Text {
-			get {
-				if (!this.Loaded) {
-					return "";
-				}
-				return this.AnimationFile;
-			}
-		}
-
-		public async void uAnimationFilePick_Click (
+		public async void uAnimationFileMenu_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
-			var senders = sender.As<Button>();
-			var isPlaying = this.Activated && this.View.uSprite.State == SpriteControl.StateType.Playing;
-			if (isPlaying) {
-				this.View.uSprite.State = SpriteControl.StateType.Paused;
-			}
-			var animationFile = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(AnimationViewer)}.AnimationFile");
-			if (animationFile != null) {
-				await this.ApplyLoad(animationFile, null, null, null, null, null);
-			}
-			else {
-				if (isPlaying) {
-					this.View.uSprite.State = SpriteControl.StateType.Playing;
+			var senders = sender.As<MenuFlyoutItem>();
+			switch (senders.Tag.As<String>()) {
+				case "Load": {
+					var isPlaying = this.Activated && this.View.uSprite.State == SpriteControl.StateType.Playing;
+					if (isPlaying) {
+						this.View.uSprite.State = SpriteControl.StateType.Paused;
+					}
+					var animationFile = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(AnimationViewer)}.AnimationFile");
+					if (animationFile != null) {
+						await this.ApplyLoad(animationFile, null, null, null, null, null, null);
+					}
+					else {
+						if (isPlaying) {
+							this.View.uSprite.State = SpriteControl.StateType.Playing;
+						}
+					}
+					break;
 				}
-			}
-			return;
-		}
-
-		// ----------------
-
-		public Boolean uTextureDirectory_IsEnabled {
-			get {
-				if (!this.Loaded) {
-					return false;
+				case "Clear": {
+					GF.AssertTest(this.Loaded);
+					if (this.Activated) {
+						await this.Deactivate();
+					}
+					await this.Unload();
+					break;
 				}
-				return true;
-			}
-		}
-
-		public String uTextureDirectory_Text {
-			get {
-				if (!this.Loaded) {
-					return "";
-				}
-				return this.TextureDirectory;
-			}
-		}
-
-		public Boolean uTextureDirectoryPick_IsEnabled {
-			get {
-				if (!this.Loaded) {
-					return false;
-				}
-				return true;
-			}
-		}
-
-		public async void uTextureDirectoryPick_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<Button>();
-			if (!this.Loaded) {
-				return;
-			}
-			var isPlaying = this.Activated && this.View.uSprite.State == SpriteControl.StateType.Playing;
-			if (isPlaying) {
-				this.View.uSprite.State = SpriteControl.StateType.Paused;
-			}
-			var textureDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{nameof(AnimationViewer)}.TextureDirectory");
-			if (textureDirectory != null) {
-				await this.ApplyLoad(this.AnimationFile, textureDirectory, null, null, null, null);
-			}
-			else {
-				if (isPlaying) {
-					this.View.uSprite.State = SpriteControl.StateType.Playing;
-				}
+				default: throw new UnreachableException();
 			}
 			return;
 		}
@@ -1256,7 +1193,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					End = Math.Max(newBegin, this.ActiveFrameRange.End),
 				};
 				if (newRange != this.ActiveFrameRange) {
-					await this.UpdateActiveFrameRange(newRange);
+					await this.ChangeFrameRange(newRange);
 				}
 			}
 			this.NotifyPropertyChanged([
@@ -1324,7 +1261,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					End = newEnd,
 				};
 				if (newRange != this.ActiveFrameRange) {
-					await this.UpdateActiveFrameRange(newRange);
+					await this.ChangeFrameRange(newRange);
 				}
 			}
 			this.NotifyPropertyChanged([
@@ -1396,7 +1333,7 @@ namespace AssistantPlus.View.AnimationViewer {
 					newRange = this.ActiveFrameLabel.Find((value) => (value.Item1 == newLabel)).AsNotNull().Item2;
 				}
 				if (newRange != this.ActiveFrameRange) {
-					await this.UpdateActiveFrameRange(newRange);
+					await this.ChangeFrameRange(newRange);
 				}
 			}
 			return;
@@ -1700,7 +1637,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Loaded) {
 				return;
 			}
-			await this.ApplyFilterRule();
+			await this.ChangeElementFilterByRule();
 			return;
 		}
 
@@ -1803,7 +1740,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			if (args.AddedItems.Count == 1) {
 				var targetLayer = $"custom_{args.AddedItems[0].As<String>()}";
-				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+				await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
 				this.NotifyPropertyChanged([
 					nameof(this.uPlantCustomLayer_SelectedItem),
 				]);
@@ -1870,7 +1807,7 @@ namespace AssistantPlus.View.AnimationViewer {
 			}
 			if (args.AddedItems.Count == 1) {
 				var targetLayer = args.AddedItems[0].As<String>();
-				await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+				await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
 				this.NotifyPropertyChanged([
 					nameof(this.uZombieStateLayer_SelectedItem),
 				]);
@@ -1921,7 +1858,7 @@ namespace AssistantPlus.View.AnimationViewer {
 				return;
 			}
 			var newValue = senders.IsChecked.AsNotNull();
-			await this.ApplyFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
+			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
 			this.NotifyPropertyChanged([
 				nameof(this.uZombieGroundSwatchLayer_IsChecked),
 			]);

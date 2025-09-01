@@ -254,7 +254,7 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#endregion
 
-		#region descriptor file
+		#region source
 
 		public String uDescriptorFile_Content {
 			get {
@@ -269,7 +269,10 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		public Boolean uDescriptorFileMenuClear_IsEnabled {
 			get {
-				return this.IsLoaded;
+				if (!this.IsLoaded) {
+					return false;
+				}
+				return true;
 			}
 		}
 

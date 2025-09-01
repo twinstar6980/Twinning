@@ -4799,7 +4799,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						else {
 							data_data.write_space(k_null_byte, compute_padding_size(data_begin_position + data_data.position(), k_data_block_padding_size));
 							data_offset = data_data.position();
-							data_size = Storage::read_stream_file(embedded_media_directory / "{}.wem"_sf(value), data_data);
+							data_size = Storage::read_file_stream(embedded_media_directory / "{}.wem"_sf(value), data_data);
 						}
 						exchange_id(data, value);
 						exchange_size_fixed<IntegerU32>(data, data_offset);

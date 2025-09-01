@@ -212,6 +212,44 @@ class StorageHelper {
     await Directory(target).create(recursive: true);
   }
 
+  // ----------------
+
+  static Future<List<String>> listDirectory(
+    String   target,
+    Integer? depth,
+    Boolean  allowFile,
+    Boolean  allowDirectory,
+  ) async {
+    var result = <String>[];
+    Future<Void> iterate(
+      String   target,
+      Integer? depth,
+      Boolean  allowFile,
+      Boolean  allowDirectory,
+      String   currentTarget,
+      Integer  currentDepth,
+    ) async {
+      if (depth == null || currentDepth < depth) {
+        await for (var item in Directory(target).list(recursive: false, followLinks: false)) {
+          var itemName = name(item.path);
+          var itemPath = '${currentTarget.isEmpty ? '' : '${currentTarget}/'}${itemName}';
+          if (allowFile && item is File) {
+            result.add(itemPath);
+          }
+          if (allowDirectory && item is Directory) {
+            result.add(itemPath);
+          }
+          if (item is Directory) {
+            await iterate('${target}/${itemName}', depth, allowFile, allowDirectory, itemPath, currentDepth + 1);
+          }
+        }
+      }
+      return;
+    }
+    await iterate(target, depth, allowFile, allowDirectory, '', 0);
+    return result;
+  }
+
   // #endregion
 
   // #region shell
@@ -221,13 +259,13 @@ class StorageHelper {
   ) async {
     assertTest(await exist(target));
     var revealed = false;
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isLinux) {
       revealed = await launchUrl(Uri.file(target), mode: LaunchMode.externalApplication);
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       throw UnsupportedException();
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       revealed = await launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: LaunchMode.externalApplication);
     }
     assertTest(revealed);
@@ -254,7 +292,7 @@ class StorageHelper {
       locationPath = null;
     }
     name ??= '';
-    if (Platform.isWindows) {
+    if (SystemChecker.isWindows) {
       locationPath ??= 'C:/';
       if (type == 'load_file') {
         target = (await file_selector.openFile(initialDirectory: toWindowsStyle(locationPath)))?.path;
@@ -273,7 +311,7 @@ class StorageHelper {
         target = null;
       }
     }
-    if (Platform.isLinux || Platform.isMacOS) {
+    if (SystemChecker.isLinux || SystemChecker.isMacintosh) {
       locationPath ??= '/';
       if (type == 'load_file') {
         target = (await file_selector.openFile(initialDirectory: locationPath))?.path;
@@ -285,7 +323,7 @@ class StorageHelper {
         target = (await file_selector.getSaveLocation(initialDirectory: locationPath, suggestedName: name))?.path;
       }
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       locationPath ??= await PlatformMethod.queryExternalStoragePath();
       if (type == 'load_file') {
         target = await PlatformMethod.pickStorageItem('load_file', locationPath, name);
@@ -300,7 +338,7 @@ class StorageHelper {
         target = await parseAndroidContentUri(context, Uri.parse(target), true);
       }
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       locationPath ??= await queryApplicationSharedDirectory();
       if (type == 'load_file') {
         target = await PlatformMethod.pickStorageItem('load_file', locationPath, name);
@@ -353,20 +391,20 @@ class StorageHelper {
   static Future<String> queryApplicationSharedDirectory(
   ) async {
     var result = null as String?;
-    if (Platform.isWindows) {
+    if (SystemChecker.isWindows) {
       result = (await path_provider.getApplicationSupportDirectory()).path;
       result = regularize(result);
     }
-    if (Platform.isLinux) {
+    if (SystemChecker.isLinux) {
       result = (await path_provider.getApplicationSupportDirectory()).path;
     }
-    if (Platform.isMacOS) {
+    if (SystemChecker.isMacintosh) {
       result = (await path_provider.getApplicationSupportDirectory()).path;
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       result = (await path_provider.getExternalStorageDirectory())!.path;
     }
-    if (Platform.isIOS) {
+    if (SystemChecker.isIphone) {
       result = (await path_provider.getApplicationDocumentsDirectory()).path;
     }
     return result!;
@@ -375,10 +413,10 @@ class StorageHelper {
   static Future<String> queryApplicationCacheDirectory(
   ) async {
     var result = null as String?;
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS || Platform.isIOS) {
+    if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isIphone) {
       result = (await queryApplicationSharedDirectory()) + '/cache';
     }
-    if (Platform.isAndroid) {
+    if (SystemChecker.isAndroid) {
       result = (await path_provider.getApplicationCacheDirectory()).path;
     }
     return result!;

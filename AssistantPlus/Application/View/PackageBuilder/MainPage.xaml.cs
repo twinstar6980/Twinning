@@ -307,7 +307,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			String parent
 		) {
 			GF.AssertTest(this.IsLoaded);
-			return StorageHelper.ListDirectory(parent, 0).Where((value) => (!value.StartsWith("."))).ToList();
+			return StorageHelper.ListDirectory(parent, 1, false, true).Where((value) => (!value.StartsWith("."))).ToList();
 		}
 
 		public String FindAvailableScopeChildName (

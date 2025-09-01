@@ -244,6 +244,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     return CustomModulePageRegion(
       onDropFile: (item) async {
         await this._appendResource(item);
+        return;
       },
       content: Column(
         children: [
