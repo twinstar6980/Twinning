@@ -83,13 +83,13 @@
 	"executor.typical:argument_input": "Argument need input: {}",
 	"executor.typical:batch_result": "Batch processing done, total {} items, valid {} items, failed {} items",
 	// Executor/Implement/*
-	"范围溢出": "Out of range",
-	"密钥非法": "Illegal key",
-	"密钥长度非法": "Illegal key length",
-	"长度不匹配": "Length not match",
-	"分辨率应大于零": "Resolution should be bigger than zero",
-	"尺寸应大于零": "Size should be bigger than zero",
-	"比例应大于零": "Rate should be bigger than zero",
+	"executor.implement:*.out_of_range": "Out of range",
+	"executor.implement:*.illegal_key": "Illegal key",
+	"executor.implement:*.illegal_key_length": "Illegal key length",
+	"executor.implement:*.length_not_match": "Length not match",
+	"executor.implement:*.resolution_should_be_bigger_then_zero": "Resolution should be bigger than zero",
+	"executor.implement:*.size_should_be_bigger_then_zero": "Size should be bigger than zero",
+	"executor.implement:*.rate_should_be_bigger_then_zero": "Rate should be bigger than zero",
 	// Executor/Implement/script.js
 	"executor.implement:script.js.execute": "JS Execute",
 	"executor.implement:script.js.execute:script_file": "Script file",
@@ -640,9 +640,9 @@
 	"executor.implement:kairosoft.game.modify_program:target_directory": "Target directory",
 	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Disable record encryption",
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Enable debug mode",
-	// Executable/JSShell
-	"executable.js_shell:input_start": "JS Interation Mode enabled",
-	"executable.js_shell:input_description": "Enter empty string to finish one round of input, enter empty strings for an entire round to finish interation",
+	// Executable/ScriptConsole
+	"executable.script_console:start": "JS interation mode enabled",
+	"executable.script_console:description": "Enter empty string to finish one round of input, enter empty strings for an entire round to finish interation",
 	// Executable/CompareLanguageFile
 	"executable.compare_language_file:please_input_original_file": "Please input the original text file",
 	"executable.compare_language_file:please_input_translation_file": "Please input the translation text file",

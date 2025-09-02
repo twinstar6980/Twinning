@@ -1,6 +1,6 @@
 namespace Twinning.Script.VirtualTerminalSequence {
 
-	// ------------------------------------------------
+	// #region text attribute
 
 	const k_color_value = {
 		black: 0,
@@ -15,7 +15,7 @@ namespace Twinning.Script.VirtualTerminalSequence {
 
 	export type ColorName = keyof typeof k_color_value;
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type TextAttribute = {
 		background: null | 'default' | [ColorName, boolean];
@@ -50,6 +50,6 @@ namespace Twinning.Script.VirtualTerminalSequence {
 		return result.length === 0 ? '' : `\u001b[${result.slice(0, -1)}m`;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

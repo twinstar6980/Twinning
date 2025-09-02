@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.text.json {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -82,7 +82,7 @@ namespace Twinning.Script.Executor.Implement.text.json {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

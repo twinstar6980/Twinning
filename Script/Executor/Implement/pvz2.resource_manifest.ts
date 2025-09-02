@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -134,7 +134,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

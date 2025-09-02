@@ -1,19 +1,10 @@
 namespace Twinning.Script.Console {
 
-	// ------------------------------------------------
+	// #region common
 
-	/**
-	 * 消息分类
-	 * + verbosity   常规
-	 * + information 信息
-	 * + warning     警告
-	 * + error       错误
-	 * + success     成功
-	 * + input       输入
-	 */
 	export type MessageType = 'verbosity' | 'information' | 'warning' | 'error' | 'success' | 'input';
 
-	// ------------------------------------------------
+	// ----------------
 
 	export let g_basic_disable_virtual_terminal_sequence = false;
 
@@ -65,7 +56,100 @@ namespace Twinning.Script.Console {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region output
+
+	function basic_common_output(
+		text: string,
+		leading: boolean,
+		indent: number,
+		line_feed: boolean,
+	): void {
+		Shell.basic_output_text(`${leading ? '●' : ' '} ${'  '.repeat(indent)}${text}${line_feed ? '\n' : ''}`);
+		return;
+	}
+
+	function assistant_common_output(
+		type: MessageType,
+		title: string,
+		description: Array<string>,
+	): void {
+		Shell.assistant_send_message(type, title, description);
+		return;
+	}
+
+	// ----------------
+
+	export function message(
+		type: MessageType,
+		title: string,
+		description: Array<string>,
+	): void {
+		if (Shell.is_basic) {
+			basic_set_message_text_attribute(type);
+			basic_common_output(title, true, 0, true);
+			basic_set_message_text_attribute('verbosity');
+			for (let description_item of description) {
+				basic_common_output(description_item, false, 1, true);
+			}
+		}
+		if (Shell.is_assistant) {
+			assistant_common_output(type, title, description);
+		}
+		return;
+	}
+
+	// ----------------
+
+	export function verbosity(
+		title: string,
+		description: Array<string>,
+	): void {
+		return message('verbosity', title, description);
+	}
+
+	export function information(
+		title: string,
+		description: Array<string>,
+	): void {
+		return message('information', title, description);
+	}
+
+	export function warning(
+		title: string,
+		description: Array<string>,
+	): void {
+		return message('warning', title, description);
+	}
+
+	export function error(
+		title: string,
+		description: Array<string>,
+	): void {
+		return message('error', title, description);
+	}
+
+	export function success(
+		title: string,
+		description: Array<string>,
+	): void {
+		return message('success', title, description);
+	}
+
+	// ----------------
+
+	export function error_of(
+		exception: any,
+	): void {
+		let [title, description] = generate_exception_message(exception);
+		error(title, description);
+		return;
+	}
+
+	// #endregion
+
+	// #region input
 
 	function common_input_with_checker<Value>(
 		inputer: () => string,
@@ -111,18 +195,6 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
-
-	function basic_common_output(
-		text: string,
-		leading: boolean,
-		indent: number,
-		line_feed: boolean,
-	): void {
-		Shell.basic_output_text(`${leading ? '●' : ' '} ${'  '.repeat(indent)}${text}${line_feed ? '\n' : ''}`);
-		return;
-	}
-
 	function basic_common_input<Value>(
 		leading: string,
 		messager: () => void,
@@ -154,17 +226,6 @@ namespace Twinning.Script.Console {
 		);
 	}
 
-	// ------------------------------------------------
-
-	function assistant_common_output(
-		type: MessageType,
-		title: string,
-		description: Array<string>,
-	): void {
-		Shell.assistant_send_message(type, title, description);
-		return;
-	}
-
 	function assistant_common_input<Value>(
 		inputer: () => string,
 		leading: string,
@@ -187,71 +248,7 @@ namespace Twinning.Script.Console {
 		);
 	}
 
-	// ------------------------------------------------
-
-	export function message(
-		type: MessageType,
-		title: string,
-		description: Array<string>,
-	): void {
-		if (Shell.is_basic) {
-			basic_set_message_text_attribute(type);
-			basic_common_output(title, true, 0, true);
-			basic_set_message_text_attribute('verbosity');
-			for (let description_item of description) {
-				basic_common_output(description_item, false, 1, true);
-			}
-		}
-		if (Shell.is_assistant) {
-			assistant_common_output(type, title, description);
-		}
-		return;
-	}
-
-	export function verbosity(
-		title: string,
-		description: Array<string>,
-	): void {
-		return message('verbosity', title, description);
-	}
-
-	export function information(
-		title: string,
-		description: Array<string>,
-	): void {
-		return message('information', title, description);
-	}
-
-	export function warning(
-		title: string,
-		description: Array<string>,
-	): void {
-		return message('warning', title, description);
-	}
-
-	export function error(
-		title: string,
-		description: Array<string>,
-	): void {
-		return message('error', title, description);
-	}
-
-	export function success(
-		title: string,
-		description: Array<string>,
-	): void {
-		return message('success', title, description);
-	}
-
-	export function error_of(
-		exception: any,
-	): void {
-		let [title, description] = generate_exception_message(exception);
-		error(title, description);
-		return;
-	}
-
-	// ------------------------------------------------
+	// ----------------
 
 	export function pause(
 	): void {
@@ -275,7 +272,7 @@ namespace Twinning.Script.Console {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function boolean(
 		nullable: null,
@@ -304,7 +301,7 @@ namespace Twinning.Script.Console {
 			if (regexp_check_result !== null) {
 				return los('console:boolean_format_error');
 			}
-			return [parse_confirmation_boolean_string(value)];
+			return [parse_boolean_from_string_of_confirmation_character(value)];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -336,7 +333,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function integer(
 		nullable: null,
@@ -397,7 +394,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function floater(
 		nullable: null,
@@ -458,7 +455,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function size(
 		nullable: null,
@@ -487,7 +484,7 @@ namespace Twinning.Script.Console {
 			if (regexp_check_result !== null) {
 				return los('console:size_format_error', regexp_check_result);
 			}
-			return [parse_size_string(value)];
+			return [parse_size_from_string(value)];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -519,7 +516,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function string(
 		nullable: null,
@@ -592,7 +589,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
@@ -624,7 +621,7 @@ namespace Twinning.Script.Console {
 			allow_overwrite: false as boolean,
 		};
 		if (initial !== undefined && initial !== null) {
-			initial = Home.of(PathUtility.regularize(initial));
+			initial = HomePath.of(PathUtility.regularize(initial));
 			state_data.last_value = initial;
 		}
 		let converter = (value: string): string | [null | string] => {
@@ -633,12 +630,12 @@ namespace Twinning.Script.Console {
 			}
 			let result: string;
 			if (value[0] !== '=') {
-				result = Home.of(PathUtility.regularize(unquote_string(value)));
+				result = HomePath.of(PathUtility.regularize(unquote_string(value)));
 			}
 			else {
 				switch (value[1]) {
 					case '=': {
-						result = Home.of(PathUtility.regularize(value.slice(2)));
+						result = HomePath.of(PathUtility.regularize(value.slice(2)));
 						break;
 					}
 					case 'p': {
@@ -794,7 +791,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function enumeration<Value>(
 		option: Array<[Value, string, null | string]>,
@@ -819,7 +816,7 @@ namespace Twinning.Script.Console {
 		let result: null | Value = undefined!;
 		let leading = 'Enumeration';
 		let maximum_key_length = Math.max(...option.map((value) => (value[1].length)));
-		let message = option.map((value) => (`${make_prefix_padded_string(value[1], ' ', maximum_key_length)}${value[2] === null ? '' : `. ${value[2]}`}`));
+		let message = option.map((value) => (`${value[1].padStart(maximum_key_length, ' ')}${value[2] === null ? '' : `. ${value[2]}`}`));
 		let converter = (value: string): string | [null | Value] => {
 			if (value === '') {
 				return [null];
@@ -871,7 +868,7 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function option_boolean<Value extends boolean>(
 		value: Array<Value>,
@@ -897,7 +894,9 @@ namespace Twinning.Script.Console {
 		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region gui feature
 
 	export function pick_storage_item(
 		type: null | 'load_file' | 'load_directory' | 'save_file',
@@ -933,6 +932,6 @@ namespace Twinning.Script.Console {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

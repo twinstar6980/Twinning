@@ -1,8 +1,8 @@
 namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient {
 
-	// ------------------------------------------------
+	// #region common
 
-	export function read_pb_varint_unsigned(
+	function read_pb_varint_unsigned(
 		data: ByteStreamView,
 	): bigint {
 		let value = 0n;
@@ -19,14 +19,14 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return value;
 	}
 
-	export function read_pb_varint_signed(
+	function read_pb_varint_signed(
 		data: ByteStreamView,
 	): bigint {
 		let value = read_pb_varint_unsigned(data);
 		return (value >> 1n) ^ -(value & 0b1n);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function read_utf8_character(
 		data: ByteStreamView,
@@ -115,9 +115,11 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return value;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
-	export function process_unit(
+	// #region utility
+
+	function process_unit(
 		data: ByteStreamView,
 		native_string_index: Array<string>,
 		unicode_string_index: Array<string>,
@@ -386,7 +388,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return value;
 	}
 
-	export function process_whole(
+	function process_whole(
 		data: ByteStreamView,
 		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
 	): Kernel.JSON.JS_Value {
@@ -403,7 +405,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return definition;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process(
 		data: ByteStreamView,
@@ -412,7 +414,7 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return process_whole(data, version);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process_fs(
 		data_file: string,
@@ -425,6 +427,6 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

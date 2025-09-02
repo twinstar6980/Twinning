@@ -1,13 +1,8 @@
 namespace Twinning.Script.Support.Wwise.Media.Encode {
 
-	// ------------------------------------------------
-
-	export let g_wwise_program_file: null | string = null;
-
-	// ------------------------------------------------
+	// #region wwise helper
 
 	// base on Wwise 2019.2
-
 	const k_sample_conversion_settings = `<?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{E271866C-F671-47E6-BC51-1593F78D3B68}" SchemaVersion="97">
 	<Conversions>
@@ -275,7 +270,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 	</Conversions>
 </WwiseDocument>`;
 
-	// ------------------------------------------------
+	// ----------------
 
 	function cast_wwise_internal_path(
 		raw: string,
@@ -290,6 +285,14 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		}
 		throw new Error();
 	};
+
+	// #endregion
+
+	// #region utility
+
+	export let g_wwise_program_file: null | string = null;
+
+	// ----------------
 
 	export function encode_fs(
 		raw_file: string,
@@ -308,11 +311,11 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		}
 		let wwise_program_file = g_wwise_program_file !== null ? g_wwise_program_file : ProcessHelper.search_path_ensure(wwise_program_name);
 		let program_result: ProcessHelper.ExecuteResult;
-		let temporary_directory = Home.new_temporary(null, null);
+		let temporary_directory = HomePath.new_temporary(null, null);
 		let wwise_project_directory = `${temporary_directory}/Sample`;
 		let wwise_wproj_file = `${wwise_project_directory}/Sample.wproj`;
 		while (true) {
-			program_result = ProcessHelper.execute(
+			program_result = ProcessHelper.spawn_child(
 				wwise_program_file,
 				[
 					'create-new-project',
@@ -352,7 +355,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			'opus': 'Android',
 			'wemopus': 'Android',
 		})[format];
-		program_result = ProcessHelper.execute(
+		program_result = ProcessHelper.spawn_child(
 			wwise_program_file,
 			[
 				'convert-external-source',
@@ -372,6 +375,6 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

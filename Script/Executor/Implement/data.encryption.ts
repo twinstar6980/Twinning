@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.data.encryption {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -31,13 +31,13 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					typical_argument_string({
 						id: 'key',
 						option: null,
-						checker: (argument: {}, value) => ((/^(( )*[0-9a-fA-F]{2,2}( )*)+$/.test(value)) ? null : los(`密钥非法`)),
+						checker: (argument: {}, value) => ((/^(( )*[0-9a-fA-F]{2,2}( )*)+$/.test(value)) ? null : los(`executor.implement:*.illegal_key`)),
 						automatic: null,
 						condition: null,
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }) => {
-					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, string_to_byte_array(key));
+					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, make_string_to_byte_array(key));
 					return;
 				},
 				batch_argument: [
@@ -95,14 +95,14 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					typical_argument_string({
 						id: 'key',
 						option: null,
-						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)),
+						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`executor.implement:*.illegal_key_length`)),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
 						id: 'iv',
 						option: null,
-						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los(`长度不匹配`)),
+						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los(`executor.implement:*.length_not_match`)),
 						automatic: null,
 						condition: (argument: { mode: string; }) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
 					}),
@@ -166,14 +166,14 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					typical_argument_string({
 						id: 'key',
 						option: null,
-						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`密钥长度非法`)),
+						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los(`executor.implement:*.illegal_key_length`)),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
 						id: 'iv',
 						option: null,
-						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los(`长度不匹配`)),
+						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los(`executor.implement:*.length_not_match`)),
 						automatic: null,
 						condition: (argument: { mode: string; }) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
 					}),
@@ -206,7 +206,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -1,10 +1,12 @@
 namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash {
 
-	// ------------------------------------------------
+	// #region common
 
 	export const k_standard_resolution = 1200n;
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region xfl
 
 	export const k_xfl_content = 'PROXY-CS5';
 
@@ -15,7 +17,18 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash {
 		'xmlns': 'http://ns.adobe.com/xfl/2008/',
 	};
 
-	// ------------------------------------------------
+	// ----------------
+
+	export function create_xfl_content_file(
+		directory: string,
+	): void {
+		KernelX.Storage.write_file_s(`${directory}/main.xfl`, k_xfl_content);
+		return;
+	}
+
+	// #endregion
+
+	// #region flash package
 
 	export type ExtraInformation = {
 		position: [number, number];
@@ -44,6 +57,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash {
 			main_sprite: null | Kernel.XML.JS_Element;
 		};
 	};
+
+	// ----------------
 
 	export function save_flash_package(
 		directory: string,
@@ -80,15 +95,6 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash {
 		};
 	}
 
-	// ------------------------------------------------
-
-	export function create_xfl_content_file(
-		directory: string,
-	): void {
-		KernelX.Storage.write_file_s(`${directory}/main.xfl`, k_xfl_content);
-		return;
-	}
-
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject.Diagnose {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function diagnose(
 		project_directory: string,
@@ -9,6 +9,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Diagnose {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

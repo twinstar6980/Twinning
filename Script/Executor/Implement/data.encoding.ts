@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.data.encoding {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -100,7 +100,7 @@ namespace Twinning.Script.Executor.Implement.data.encoding {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

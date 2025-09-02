@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.Kairosoft.Game.EncryptRecord {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function process_fs(
 		target_directory: string,
@@ -13,6 +13,6 @@ namespace Twinning.Script.Support.Kairosoft.Game.EncryptRecord {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

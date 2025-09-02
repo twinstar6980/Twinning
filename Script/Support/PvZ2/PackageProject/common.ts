@@ -1,10 +1,50 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject {
 
-	// ------------------------------------------------
+	// #region common
+
+	export function make_subgroup_name(
+		group_name: string,
+		subgroup_category: RegularResourceManifest.SubgroupCategory,
+	): string {
+		let subgroup_name = group_name;
+		if (subgroup_category.resolution !== null) {
+			subgroup_name += `_${subgroup_category.resolution}`;
+		}
+		if (subgroup_category.locale !== null) {
+			subgroup_name += `_${subgroup_category.locale}`;
+		}
+		if (subgroup_category.resolution === null && subgroup_category.locale === null) {
+			subgroup_name += `_Common`;
+		}
+		return subgroup_name;
+	}
+
+	// #endregion
+
+	// #region version
 
 	export const k_version = 2n;
 
-	// ------------------------------------------------
+	// ----------------
+
+	export function check_version_file(
+		project_directory: string,
+	): void {
+		try {
+			let version_file = make_scope_child_path(project_directory, 'version.txt');
+			let version_data = KernelX.Storage.read_file(version_file);
+			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
+			assert_test(version_text === k_version.toString());
+		}
+		catch (e) {
+			throw new Error(`failed to check version.txt, excepted '${k_version}'`);
+		}
+		return;
+	}
+
+	// #endregion
+
+	// #region scope
 
 	export type Scope0 = [];
 
@@ -16,6 +56,8 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 
 	export type Scope = [] | [string] | [string, string] | [string, string, string];
 
+	// ----------------
+
 	export function parse_scope_expression(
 		source: string,
 	): Scope {
@@ -26,7 +68,52 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		return destination as Scope;
 	}
 
-	// ------------------------------------------------
+	// ----------------
+
+	export function list_scope_child_name(
+		parent_directory: string,
+		child_scope: Scope,
+	): Array<string> {
+		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.Storage.list_directory(parent_directory, 1n, false, true)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
+	}
+
+	// ----------------
+
+	export function make_scope_root_path(
+		project_directory: string,
+		part_name?: string,
+		group_name?: string,
+		resource_name?: string,
+	): string {
+		let result = project_directory;
+		if (part_name !== undefined) {
+			result += `/${part_name}`;
+		}
+		if (group_name !== undefined) {
+			result += `/${group_name}`;
+		}
+		if (resource_name !== undefined) {
+			result += `/${resource_name}`;
+		}
+		return result;
+	}
+
+	export function make_scope_child_path(
+		parent_directory: string,
+		child_name: string,
+	): string {
+		return `${parent_directory}/${child_name}`;
+	}
+
+	export function make_scope_setting_path(
+		root_directory: string,
+	): string {
+		return `${root_directory}/setting.json`;
+	}
+
+	// #endregion
+
+	// #region state
 
 	export type ResourceState = Array<{
 		category: RegularResourceManifest.SubgroupCategory;
@@ -47,7 +134,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		part: Record<string, PartState>;
 	};
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function query_state_of_resource(
 		group_state: GroupState,
@@ -90,7 +177,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		return part_state;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region veriable
 
 	export function merge_variable_list(
 		parent_list: Array<Variable>,
@@ -144,26 +233,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
-	export function make_subgroup_name(
-		group_name: string,
-		subgroup_category: RegularResourceManifest.SubgroupCategory,
-	): string {
-		let subgroup_name = group_name;
-		if (subgroup_category.resolution !== null) {
-			subgroup_name += `_${subgroup_category.resolution}`;
-		}
-		if (subgroup_category.locale !== null) {
-			subgroup_name += `_${subgroup_category.locale}`;
-		}
-		if (subgroup_category.resolution === null && subgroup_category.locale === null) {
-			subgroup_name += `_Common`;
-		}
-		return subgroup_name;
-	}
-
-	// ------------------------------------------------
+	// #region conversion
 
 	export function find_conversion_setting<Type extends keyof ConversionSetting>(
 		list: ConversionSetting,
@@ -186,46 +258,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
-	export function list_scope_child_name(
-		parent_directory: string,
-		child_scope: Scope,
-	): Array<string> {
-		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.Storage.list_directory(parent_directory, 1n, false, true)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
-	}
-
-	export function make_scope_root_path(
-		project_directory: string,
-		part_name?: string,
-		group_name?: string,
-		resource_name?: string,
-	): string {
-		let result = project_directory;
-		if (part_name !== undefined) {
-			result += `/${part_name}`;
-		}
-		if (group_name !== undefined) {
-			result += `/${group_name}`;
-		}
-		if (resource_name !== undefined) {
-			result += `/${resource_name}`;
-		}
-		return result;
-	}
-
-	export function make_scope_child_path(
-		parent_directory: string,
-		child_name: string,
-	): string {
-		return `${parent_directory}/${child_name}`;
-	}
-
-	export function make_scope_setting_path(
-		root_directory: string,
-	): string {
-		return `${root_directory}/setting.json`;
-	}
+	// #region build
 
 	export function make_build_package_state_path(
 		project_directory: string,
@@ -265,23 +300,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		return `${project_directory}/.build/${package_name}.rsb`;
 	}
 
-	// ------------------------------------------------
-
-	export function check_version_file(
-		project_directory: string,
-	): void {
-		try {
-			let version_file = make_scope_child_path(project_directory, 'version.txt');
-			let version_data = KernelX.Storage.read_file(version_file);
-			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
-			assert_test(version_text === k_version.toString());
-		}
-		catch (e) {
-			throw new Error(`failed to check version.txt, excepted '${k_version}'`);
-		}
-		return;
-	}
-
-	// ------------------------------------------------
+	// #endregion
 
 }

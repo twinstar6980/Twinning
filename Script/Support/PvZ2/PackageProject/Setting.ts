@@ -1,6 +1,34 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject {
 
-	// ------------------------------------------------
+	// #region type
+
+	export type Variable = {
+		name: string;
+		value: string;
+	};
+
+	export type ConversionSetting = {
+		rton: Array<{
+			name: string;
+			version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value;
+			key: null | string;
+		}>;
+		ptx: Array<{
+			name: string;
+			format: Support.PopCap.Texture.Encoding.Format;
+			index: bigint;
+		}>;
+		pam: Array<{
+			name: string;
+			version: typeof Kernel.Tool.PopCap.Animation.Version.Value;
+		}>;
+		wem: Array<{
+			name: string;
+			format: Support.Wwise.Media.Format;
+		}>;
+	};
+
+	// ----------------
 
 	export type ResourceCategory = {
 		resolution: null | bigint;
@@ -87,35 +115,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 
 	export type ResourceProperty = DummyResourceProperty | GeneralResourceProperty | TextureResourceProperty | SpecialRTONResourceProperty | SpecialPTXResourceProperty | SpecialPAMResourceProperty | SpecialPOPFXPesourceProperty | SpecialWEMResourceProperty | SpecialBNKResourceProperty;
 
-	// ------------------------------------------------
-
-	export type Variable = {
-		name: string;
-		value: string;
-	};
-
-	export type ConversionSetting = {
-		rton: Array<{
-			name: string;
-			version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value;
-			key: null | string;
-		}>;
-		ptx: Array<{
-			name: string;
-			format: Support.PopCap.Texture.Encoding.Format;
-			index: bigint;
-		}>;
-		pam: Array<{
-			name: string;
-			version: typeof Kernel.Tool.PopCap.Animation.Version.Value;
-		}>;
-		wem: Array<{
-			name: string;
-			format: Support.Wwise.Media.Format;
-		}>;
-	};
-
-	// ------------------------------------------------
+	// ----------------
 
 	const ManifestTypeX = [
 		'internal',
@@ -128,7 +128,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 
 	export const ManifestTypeE = ManifestTypeX as unknown as ManifestType[];
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type ResourceSetting = {
 		category: ResourceCategory;
@@ -173,6 +173,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		package: Array<PackageSetting>;
 	};
 
-	// ------------------------------------------------
+	// #endregion
 
 }

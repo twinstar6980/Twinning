@@ -153,7 +153,7 @@ export namespace Twinning::Shell {
 
 	struct MainConsole {
 
-		#pragma region function
+		#pragma region utility
 
 		inline static auto launch_session (
 			Bridge::Service * const &        kernel_symbol,
@@ -188,7 +188,9 @@ export namespace Twinning::Shell {
 			return exception.has_value() ? std::nullopt : result;
 		}
 
-		// ----------------
+		#pragma endregion
+
+		#pragma region life
 
 		inline static auto run (
 			int const &                  argc,

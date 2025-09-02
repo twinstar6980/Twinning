@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Decode {
 
-	// ------------------------------------------------
+	// #region utility
 
 	function read_enumeration(
 		data: ByteStreamView,
@@ -42,7 +42,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 		return PopCap.ReflectionObjectNotation.DecodeLenient.read_utf8_string_by_size(data, length);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process(
 		data: ByteStreamView,
@@ -170,7 +170,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 		return definition;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process_fs(
 		data_file: string,
@@ -182,6 +182,6 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

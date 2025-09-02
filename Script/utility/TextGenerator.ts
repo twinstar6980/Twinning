@@ -1,44 +1,22 @@
 namespace Twinning.Script.TextGenerator {
 
-	// ------------------------------------------------
-
-	export type ProgressStyle = 'percent' | 'fraction';
-
-	export function progress(
-		style: ProgressStyle,
-		no_bar: boolean,
-		length: number,
-		limit: number,
-		current: number,
-	): Array<string> {
-		let result = '';
-		let current_length = Math.floor(current * length / limit);
-		let number_text: string;
-		switch (style) {
-			case 'percent': {
-				number_text = `${make_prefix_padded_string(Math.floor(current / limit), ' ', 3)}%`;
-				break;
-			}
-			case 'fraction': {
-				let padded_length = `${limit}`.length;
-				number_text = `${make_prefix_padded_string(current, ' ', padded_length)}/${limit}`;
-				break;
-			}
-		}
-		result += `${no_bar ? '' : `[${'#'.repeat(current_length)}${'-'.repeat(length - current_length)}] `}${number_text}`;
-		return [result];
-	}
-
-	// ------------------------------------------------
+	// #region common
 
 	export type Generator = {
-		make(): Array<string>;
 		toString(): string;
 	};
 
+	// #endregion
+
+	// #region progress
+
+	export type ProgressStyle = 'percent' | 'fraction';
+
+	// ----------------
+
 	export class Progress implements Generator {
 
-		// ------------------------------------------------
+		// #region structor
 
 		private m_style: ProgressStyle;
 
@@ -52,9 +30,9 @@ namespace Twinning.Script.TextGenerator {
 
 		private m_step: number;
 
-		// ------------------------------------------------
+		// ----------------
 
-		constructor(
+		public constructor(
 			style: ProgressStyle,
 			no_bar: boolean,
 			length: number,
@@ -71,53 +49,70 @@ namespace Twinning.Script.TextGenerator {
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
-		limit(
+		// #region access
+
+		public limit(
 		): number {
 			return this.m_limit;
 		}
 
-		current(
+		// ----------------
+
+		public current(
 		): number {
 			return this.m_current;
 		}
 
-		set_current(
+		public set_current(
 			value: number,
 		): Progress {
 			this.m_current = value;
 			return this;
 		}
 
-		increase(
+		// ----------------
+
+		public increase(
 			value: number = 1,
 		): Progress {
 			return this.set_current(this.m_current + this.m_step * value);
 		}
 
-		decrease(
+		public decrease(
 			value: number = 1,
 		): Progress {
 			return this.set_current(this.m_current - this.m_step * value);
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
-		make() {
-			return progress(this.m_style, this.m_no_bar, this.m_length, this.m_limit, this.m_current);
+		// #region generate
+
+		public toString(
+		): string {
+			let result = '';
+			let current_length = Math.floor(this.m_current * this.m_length / this.m_limit);
+			let number_text: string;
+			switch (this.m_style) {
+				case 'percent': {
+					number_text = `${Math.floor(this.m_current / this.m_limit).toString().padStart(3, ' ')}%`;
+					break;
+				}
+				case 'fraction': {
+					number_text = `${this.m_current.toString().padStart(`${this.m_limit}`.length, ' ')}/${this.m_limit}`;
+					break;
+				}
+			}
+			result += `${this.m_no_bar ? '' : `[${'#'.repeat(current_length)}${'-'.repeat(this.m_length - current_length)}] `}${number_text}`;
+			return result;
 		}
 
-		// ------------------------------------------------
-
-		toString() {
-			return this.make().join('\n');
-		}
-
-		// ------------------------------------------------
+		// #endregion
 
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

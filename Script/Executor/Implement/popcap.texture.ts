@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.texture {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -71,14 +71,14 @@ namespace Twinning.Script.Executor.Implement.popcap.texture {
 					typical_argument_integer({
 						id: 'image_width',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
+						checker: (argument: {}, value) => ((0n < value) ? null : los(`executor.implement:*.size_should_be_bigger_then_zero`)),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						id: 'image_height',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
+						checker: (argument: {}, value) => ((0n < value) ? null : los(`executor.implement:*.size_should_be_bigger_then_zero`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -94,7 +94,7 @@ namespace Twinning.Script.Executor.Implement.popcap.texture {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

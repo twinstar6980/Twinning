@@ -1,6 +1,6 @@
 namespace Twinning.Script.Shell {
 
-	// ------------------------------------------------
+	// #region callback
 
 	export function callback(
 		argument: Array<string>,
@@ -8,7 +8,9 @@ namespace Twinning.Script.Shell {
 		return KernelX.Miscellaneous.callback(argument);
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region common
 
 	export const name = String(callback(['name'])[0]);
 
@@ -16,11 +18,13 @@ namespace Twinning.Script.Shell {
 
 	export const is_assistant = name === 'assistant' || name === 'assistant.plus';
 
-	// ------------------------------------------------
+	// ----------------
 
 	export const version = String(callback(['version'])[0]);
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region basic
 
 	export function basic_output_text(
 		text: string,
@@ -35,7 +39,9 @@ namespace Twinning.Script.Shell {
 		return { text: result[0] };
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region assistant
 
 	export function assistant_send_message(
 		type: 'verbosity' | 'information' | 'warning' | 'error' | 'success' | 'input',
@@ -54,6 +60,8 @@ namespace Twinning.Script.Shell {
 		return { value: result[0] };
 	}
 
+	// ----------------
+
 	export function assistant_pick_storage_item(
 		type: 'load_file' | 'load_directory' | 'save_file',
 	): { target: string; } {
@@ -69,6 +77,6 @@ namespace Twinning.Script.Shell {
 		return {};
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

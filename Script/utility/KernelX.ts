@@ -1,6 +1,6 @@
 namespace Twinning.Script.KernelX {
 
-	// ------------------------------------------------
+	// #region common
 
 	export const system = Kernel.Miscellaneous.g_system.value;
 
@@ -14,19 +14,19 @@ namespace Twinning.Script.KernelX {
 
 	export const is_iphone = system === 'iphone';
 
-	// ------------------------------------------------
+	// ----------------
 
-	export const g_common_buffer = Kernel.ByteArray.default();
+	export let g_common_buffer = Kernel.ByteArray.default();
 
-	export const g_common_buffer_x = Kernel.ByteArray.allocate(Kernel.Size.value(0x2000n));
+	export let g_common_buffer_x = Kernel.ByteArray.allocate(Kernel.Size.value(0x2000n));
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region wrapper
 
 	export namespace JSON {
 
-		// ------------------------------------------------
-
-		export const g_format: {
+		export let g_format: {
 			disable_array_trailing_comma: boolean;
 			disable_array_line_breaking: boolean;
 			disable_object_trailing_comma: boolean;
@@ -38,7 +38,7 @@ namespace Twinning.Script.KernelX {
 			disable_object_line_breaking: false,
 		};
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read<Constraint extends Kernel.JSON.JS_Value>(
 			data: ArrayBuffer,
@@ -66,7 +66,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read_s<Constraint extends Kernel.JSON.JS_Value>(
 			data: string,
@@ -87,7 +87,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read_fs<Constraint extends Kernel.JSON.JS_Value>(
 			data_file: string,
@@ -110,7 +110,7 @@ namespace Twinning.Script.KernelX {
 			return;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read_js<Constraint extends Kernel.JSON.JS_Value>(
 			data: ArrayBuffer,
@@ -130,7 +130,7 @@ namespace Twinning.Script.KernelX {
 			return write(Kernel.JSON.Value.value<Constraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read_s_js<Constraint extends Kernel.JSON.JS_Value>(
 			data: string,
@@ -149,7 +149,7 @@ namespace Twinning.Script.KernelX {
 			return write_s(Kernel.JSON.Value.value<Constraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read_fs_js<Constraint extends Kernel.JSON.JS_Value>(
 			data_file: string,
@@ -169,13 +169,9 @@ namespace Twinning.Script.KernelX {
 			return write_fs(data_file, Kernel.JSON.Value.value<Constraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
-		// ------------------------------------------------
-
 	}
 
 	export namespace XML {
-
-		// ------------------------------------------------
 
 		export function read_fs(
 			data_file: string,
@@ -198,7 +194,7 @@ namespace Twinning.Script.KernelX {
 			return;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function read_fs_js(
 			data_file: string,
@@ -213,19 +209,17 @@ namespace Twinning.Script.KernelX {
 			return write_fs(data_file, Kernel.XML.Node.value(value));
 		}
 
-		// ------------------------------------------------
-
 	}
 
-	export namespace Image {
+	// ----------------
 
-		// ------------------------------------------------
+	export namespace Image {
 
 		export type ImageSize = typeof Kernel.Image.ImageSize.Value;
 
 		export type ImagePosition = typeof Kernel.Image.ImagePosition.Value;
 
-		// ------------------------------------------------
+		// ----------------
 
 		export type Color = typeof Kernel.Image.Color.Value;
 
@@ -233,15 +227,11 @@ namespace Twinning.Script.KernelX {
 
 		export type Pixel = typeof Kernel.Image.Pixel.Value;
 
-		// ------------------------------------------------
+		// ----------------
 
 		export namespace File {
 
-			// ------------------------------------------------
-
 			export namespace PNG {
-
-				// ------------------------------------------------
 
 				export function size(
 					data: Kernel.ByteListView,
@@ -265,9 +255,8 @@ namespace Twinning.Script.KernelX {
 					return Kernel.Tool.Texture.File.PNG.Write.process(data, image);
 				}
 
-				// ------------------------------------------------
+				// ----------------
 
-				// avoid use this function
 				export function size_fs(
 					file: string,
 				): ImageSize {
@@ -299,6 +288,8 @@ namespace Twinning.Script.KernelX {
 					return;
 				}
 
+				// ----------------
+
 				export function read_fs_of(
 					file: string,
 				): Kernel.Image.Image {
@@ -310,21 +301,15 @@ namespace Twinning.Script.KernelX {
 					return image;
 				}
 
-				// ------------------------------------------------
-
 			}
-
-			// ------------------------------------------------
 
 		}
 
-		// ------------------------------------------------
-
 	}
 
-	export namespace Storage {
+	// ----------------
 
-		// ------------------------------------------------
+	export namespace Storage {
 
 		export function exist(
 			target: string,
@@ -344,7 +329,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.exist_directory(Kernel.Path.value(target)).value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function copy(
 			source: string,
@@ -376,7 +361,7 @@ namespace Twinning.Script.KernelX {
 			return;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function create_link(
 			target: string,
@@ -392,7 +377,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.parse_link(Kernel.Path.value(target)).value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function create_hard_link(
 			target: string,
@@ -401,15 +386,13 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.create_hard_link(Kernel.Path.value(target), Kernel.Path.value(object));
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function create_file(
 			target: string,
 		): void {
 			return Kernel.Storage.create_file(Kernel.Path.value(target));
 		}
-
-		// ------------------------------------------------
 
 		export function size_file(
 			target: string,
@@ -423,8 +406,6 @@ namespace Twinning.Script.KernelX {
 		): void {
 			return Kernel.Storage.resize_file(Kernel.Path.value(target), Kernel.Size.value(size));
 		}
-
-		// ------------------------------------------------
 
 		export function read_file(
 			target: string,
@@ -468,15 +449,13 @@ namespace Twinning.Script.KernelX {
 			return;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function create_directory(
 			path: string,
 		): void {
 			return Kernel.Storage.create_directory(Kernel.Path.value(path));
 		}
-
-		// ------------------------------------------------
 
 		export function list_directory(
 			target: string,
@@ -487,13 +466,9 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.list_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth), Kernel.Boolean.value(allow_file), Kernel.Boolean.value(allow_directory)).value;
 		}
 
-		// ------------------------------------------------
-
 	}
 
 	export namespace Process {
-
-		// ------------------------------------------------
 
 		export function get_working_directory(
 		): string {
@@ -506,7 +481,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Process.set_working_directory(Kernel.Path.value(target));
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function get_environment_variable(
 			name: string,
@@ -526,7 +501,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Process.list_environment_variable().value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function spawn_child(
 			program: string,
@@ -539,7 +514,7 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Process.spawn_child(Kernel.Path.value(program), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input), Kernel.PathOptional.value(output), Kernel.PathOptional.value(error)).value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function execute_system_command(
 			command: string,
@@ -547,9 +522,9 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Process.execute_system_command(Kernel.String.value(command)).value;
 		}
 
-		// ------------------------------------------------
-
 	}
+
+	// ----------------
 
 	export namespace Tool {
 
@@ -565,7 +540,7 @@ namespace Twinning.Script.KernelX {
 						let data = Storage.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.MD5.Hash.process(data.view(), value);
-						return integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+						return parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
 					}
 
 				}
@@ -580,7 +555,7 @@ namespace Twinning.Script.KernelX {
 						let data = Storage.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.FNV.Mode.value(mode), Kernel.Tool.Data.Hash.FNV.BitCount.value(bit_count));
-						return integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+						return parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 					export function hash_s(
@@ -591,7 +566,7 @@ namespace Twinning.Script.KernelX {
 						let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data_string));
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.FNV.Mode.value(mode), Kernel.Tool.Data.Hash.FNV.BitCount.value(bit_count));
-						return integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+						return parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 				}
@@ -662,15 +637,17 @@ namespace Twinning.Script.KernelX {
 
 					const ModeX = ['ecb', 'cbc', 'cfb'] as const;
 
-					const BlockSizeX = [16n, 24n, 32n] as const;
-
 					export type Mode = typeof ModeX[number];
 
 					export const ModeE = ModeX as unknown as Mode[];
 
+					const BlockSizeX = [16n, 24n, 32n] as const;
+
 					export type BlockSize = typeof BlockSizeX[number];
 
 					export const BlockSizeE = BlockSizeX as unknown as BlockSize[];
+
+					// ----------------
 
 					export function encrypt_fs(
 						plain_file: string,
@@ -718,33 +695,35 @@ namespace Twinning.Script.KernelX {
 
 					const LevelX = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
-					const WindowBitsX = [8n, 9n, 10n, 11n, 12n, 13n, 14n, 15n] as const;
-
-					const MemoryLevelX = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
-
-					const StrategyX = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
-
-					const WrapperTypeX = ['none', 'zlib', 'gzip'] as const;
-
 					export type Level = typeof LevelX[number];
 
 					export const LevelE = LevelX as unknown as Level[];
+
+					const WindowBitsX = [8n, 9n, 10n, 11n, 12n, 13n, 14n, 15n] as const;
 
 					export type WindowBits = typeof WindowBitsX[number];
 
 					export const WindowBitsE = WindowBitsX as unknown as WindowBits[];
 
+					const MemoryLevelX = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+
 					export type MemoryLevel = typeof MemoryLevelX[number];
 
 					export const MemoryLevelE = MemoryLevelX as unknown as MemoryLevel[];
+
+					const StrategyX = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
 
 					export type Strategy = typeof StrategyX[number];
 
 					export const StrategyE = StrategyX as unknown as Strategy[];
 
+					const WrapperTypeX = ['none', 'zlib', 'gzip'] as const;
+
 					export type WrapperType = typeof WrapperTypeX[number];
 
 					export const WrapperTypeE = WrapperTypeX as unknown as WrapperType[];
+
+					// ----------------
 
 					export function compress_fs(
 						raw_file: string,
@@ -792,6 +771,8 @@ namespace Twinning.Script.KernelX {
 
 					export const BlockSizeE = BlockSizeX as unknown as BlockSize[];
 
+					// ----------------
+
 					export function compress_fs(
 						raw_file: string,
 						ripe_file: string,
@@ -830,6 +811,8 @@ namespace Twinning.Script.KernelX {
 					export type Level = typeof LevelX[number];
 
 					export const LevelE = LevelX as unknown as Level[];
+
+					// ----------------
 
 					export function compress_fs(
 						raw_file: string,
@@ -929,7 +912,7 @@ namespace Twinning.Script.KernelX {
 					return Kernel.Tool.Texture.Transformation.Scale.process(source, destination);
 				}
 
-				// ------------------------------------------------
+				// ----------------
 
 				export function flip_fs(
 					source_file: string,
@@ -976,8 +959,6 @@ namespace Twinning.Script.KernelX {
 
 			export namespace Encoding {
 
-				// ------------------------------------------------
-
 				const FormatX = [
 					'a_8',
 					'rgb_332',
@@ -997,6 +978,10 @@ namespace Twinning.Script.KernelX {
 					'rgba_8888_o',
 				] as const;
 
+				export type Format = typeof FormatX[number];
+
+				export const FormatE = FormatX as unknown as Format[];
+
 				const CompressionX = [
 					'rgb_etc1',
 					'rgb_etc2',
@@ -1005,24 +990,20 @@ namespace Twinning.Script.KernelX {
 					'rgba_pvrtc4',
 				] as const;
 
+				export type Compression = typeof CompressionX[number];
+
+				export const CompressionE = CompressionX as unknown as Compression[];
+
 				const CompositeFormatX = [
 					...FormatX,
 					...CompressionX,
 				] as const;
 
-				export type Format = typeof FormatX[number];
-
-				export const FormatE = FormatX as unknown as Format[];
-
-				export type Compression = typeof CompressionX[number];
-
-				export const CompressionE = CompressionX as unknown as Compression[];
-
 				export type CompositeFormat = typeof CompositeFormatX[number];
 
 				export const CompositeFormatE = CompositeFormatX as unknown as CompositeFormat[];
 
-				// ------------------------------------------------
+				// ----------------
 
 				export function get_bpp(
 					format: CompositeFormat,
@@ -1165,7 +1146,7 @@ namespace Twinning.Script.KernelX {
 					].includes(format);
 				}
 
-				// ------------------------------------------------
+				// ----------------
 
 				export function encode(
 					data: Kernel.OutputByteStreamView,
@@ -1265,7 +1246,7 @@ namespace Twinning.Script.KernelX {
 					return;
 				}
 
-				// ------------------------------------------------
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1306,8 +1287,6 @@ namespace Twinning.Script.KernelX {
 					return;
 				}
 
-				// ------------------------------------------------
-
 			}
 
 		}
@@ -1319,6 +1298,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionNumber = typeof Kernel.Tool.Wwise.SoundBank.Version.Value.number;
 
 				export const VersionNumberE = [72n, 88n, 112n, 113n, 118n, 120n, 125n, 128n, 132n, 134n, 135n, 140n, 145n, 150n] as VersionNumber[];
+
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1365,6 +1346,8 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionNumberE = [0n] as VersionNumber[];
 
+				// ----------------
+
 				export function pack_fs(
 					data_file: string,
 					definition_file: string,
@@ -1409,6 +1392,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionVariant64 = typeof Kernel.Tool.PopCap.ZLib.Version.Value.variant_64;
 
 				export const VersionVariant64E = [false, true] as VersionVariant64[];
+
+				// ----------------
 
 				export function compress_fs(
 					raw_file: string,
@@ -1503,6 +1488,8 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionNativeStringEncodingUseUTF8E = [false, true] as VersionNativeStringEncodingUseUTF8[];
 
+				// ----------------
+
 				export function encode_fs(
 					data_file: string,
 					definition_file: string,
@@ -1593,19 +1580,18 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionCompressTextureDataE = [false, true] as VersionCompressTextureData[];
 
-				export type Format = [
+				const FormatX = [
 					'rgba_8888_o',
 					'rgba_4444',
 					'rgba_5551',
 					'rgb_565',
-				][number];
+				] as const;
 
-				export const FormatE = [
-					'rgba_8888_o',
-					'rgba_4444',
-					'rgba_5551',
-					'rgb_565',
-				] as Format[];
+				export type Format = typeof FormatX[number];
+
+				export const FormatE = FormatX as unknown as Format[];
+
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1650,7 +1636,7 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionNumberE = [0n] as VersionNumber[];
 
-				export type Format = [
+				const FormatX = [
 					'argb_8888',
 					'argb_4444',
 					'argb_1555',
@@ -1660,19 +1646,13 @@ namespace Twinning.Script.KernelX {
 					'rgba_5551',
 					// 'xrgb_8888',
 					'la_88',
-				][number];
+				] as const;
 
-				export const FormatE = [
-					'argb_8888',
-					'argb_4444',
-					'argb_1555',
-					'rgb_565',
-					'rgba_8888_o',
-					'rgba_4444',
-					'rgba_5551',
-					// 'xrgb_8888',
-					'la_88',
-				] as Format[];
+				export type Format = typeof FormatX[number];
+
+				export const FormatE = FormatX as unknown as Format[];
+
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1718,6 +1698,8 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionNumberE = [1n, 2n, 3n, 4n, 5n, 6n] as VersionNumber[];
 
+				// ----------------
+
 				export function encode_fs(
 					data_file: string,
 					definition_file: string,
@@ -1758,6 +1740,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionVariant64 = typeof Kernel.Tool.PopCap.ReAnimation.Version.Value.variant_64;
 
 				export const VersionVariant64E = [false, true] as VersionVariant64[];
+
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1800,6 +1784,8 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionVariant64E = [false, true] as VersionVariant64[];
 
+				// ----------------
+
 				export function encode_fs(
 					data_file: string,
 					definition_file: string,
@@ -1840,6 +1826,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionVariant64 = typeof Kernel.Tool.PopCap.Trail.Version.Value.variant_64;
 
 				export const VersionVariant64E = [false, true] as VersionVariant64[];
+
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1882,6 +1870,8 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionVariantE = [1n, 2n, 3n] as VersionVariant[];
 
+				// ----------------
+
 				export function encode_fs(
 					data_file: string,
 					definition_file: string,
@@ -1918,6 +1908,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionNumber = typeof Kernel.Tool.PopCap.ParticleEffect.Version.Value.number;
 
 				export const VersionNumberE = [1n] as VersionNumber[];
+
+				// ----------------
 
 				export function encode_fs(
 					data_file: string,
@@ -1995,6 +1987,8 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionCompressResourceDataE = [false, true] as VersionCompressResourceData[];
 
+				// ----------------
+
 				export function pack_fs(
 					data_file: string,
 					definition_file: string,
@@ -2035,6 +2029,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionNumber = typeof Kernel.Tool.PopCap.ResourceStreamGroup.Version.Value.number;
 
 				export const VersionNumberE = [1n, 3n, 4n] as VersionNumber[];
+
+				// ----------------
 
 				export function pack_fs(
 					data_file: string,
@@ -2080,6 +2076,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionaExtendedTextureInformationForPVZ2CN = typeof Kernel.Tool.PopCap.ResourceStreamBundle.Version.Value.extended_texture_information_for_pvz2_cn;
 
 				export const VersionaExtendedTextureInformationForPVZ2CNE = [0n, 1n, 2n, 3n] as VersionaExtendedTextureInformationForPVZ2CN[];
+
+				// ----------------
 
 				export function pack_fs(
 					data_file: string,
@@ -2131,6 +2129,8 @@ namespace Twinning.Script.KernelX {
 				export type VersionNumber = typeof Kernel.Tool.PopCap.ResourceStreamBundlePatch.Version.Value.number;
 
 				export const VersionNumberE = [1n] as VersionNumber[];
+
+				// ----------------
 
 				export function encode_fs(
 					before_file: string,
@@ -2222,7 +2222,7 @@ namespace Twinning.Script.KernelX {
 					return bit_count;
 				}
 
-				// ------------------------------------------------
+				// ----------------
 
 				export function compute_data_size_with_palette(
 					size: Image.ImageSize,
@@ -2259,7 +2259,7 @@ namespace Twinning.Script.KernelX {
 					return palette;
 				}
 
-				// ------------------------------------------------
+				// ----------------
 
 				export function encode_with_palette(
 					data: Kernel.OutputByteStreamView,
@@ -2345,9 +2345,9 @@ namespace Twinning.Script.KernelX {
 
 	}
 
-	export namespace Miscellaneous {
+	// ----------------
 
-		// ------------------------------------------------
+	export namespace Miscellaneous {
 
 		export function evaluate(
 			script: string,
@@ -2366,16 +2366,16 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(script_file), Kernel.Boolean.value(is_module));
 		}
 
+		// ----------------
+
 		export function callback(
 			argument: Array<string>,
 		): Array<string> {
 			return Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(argument)).value;
 		}
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

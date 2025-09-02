@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -112,7 +112,7 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

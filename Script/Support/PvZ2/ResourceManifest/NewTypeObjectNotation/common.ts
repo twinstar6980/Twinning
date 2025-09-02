@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation {
 
-	// ------------------------------------------------
+	// #region type
 
 	export const GroupTypeEnumeration = [
 		{ index: 1n, value: 'composite' },
@@ -17,6 +17,6 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation {
 		{ index: 7n, value: 'DecodedSoundBank' },
 	] as const;
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,8 +1,8 @@
 namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
-	// ------------------------------------------------
+	// #region utility
 
-	export function decode_compiled_map<Value>(
+	function decode_compiled_map<Value>(
 		data: ByteListView,
 		value_parser: (stream: ByteStreamView) => Value,
 	): Record<string, Value> {
@@ -37,7 +37,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		return map;
 	}
 
-	export function unpack_resource(
+	function unpack_resource(
 		ripe: ByteListView,
 		size: null | number,
 		type: number,
@@ -65,7 +65,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		return;
 	}
 
-	export function process_package(
+	function process_package(
 		package_data: ByteListView,
 		package_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_directory: string,
@@ -287,7 +287,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process(
 		data: ByteListView,
@@ -297,7 +297,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		return process_package(data, definition, resource_directory);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process_fs(
 		data_file: string,
@@ -313,6 +313,6 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

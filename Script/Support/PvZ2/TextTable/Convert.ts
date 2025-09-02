@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 
-	// ------------------------------------------------
+	// #region utility
 
 	const VersionX = [
 		'text',
@@ -12,7 +12,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 
 	export const VersionE = VersionX as unknown as Version[];
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function convert(
 		source_data: ArrayBuffer,
@@ -44,7 +44,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		}
 		switch (source_version) {
 			case 'text': {
-				if (string_data_maybe_utf16(source_data)) {
+				if (check_string_data_maybe_utf16(source_data)) {
 					throw new Error(`unsupport charset UTF-16`);
 				}
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
@@ -156,7 +156,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		return destination_data;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function convert_fs(
 		source_file: string,
@@ -170,6 +170,6 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 
-	// ------------------------------------------------
+	// #region common
 
 	const FormatX = [
 		'rgba_8888_o',
@@ -21,7 +21,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 
 	export const FormatE = FormatX as unknown as Format[];
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type EncodeOption = {
 		rgb_etc1_a_palette: null | {
@@ -29,7 +29,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		};
 	};
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function is_opacity_format(
 		format: Format,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		].includes(format);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function compute_padded_image_size(
 		origin_size: KernelX.Image.ImageSize,
@@ -151,7 +151,9 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region utility
 
 	export function encode(
 		image: Kernel.Image.ConstantImageView,
@@ -244,7 +246,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function encode_fs(
 		image_file: string,
@@ -290,6 +292,6 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

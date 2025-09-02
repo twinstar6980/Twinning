@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function pack(
 		resource_directory: string,
@@ -36,6 +36,6 @@ namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 		return [data, stream.position()];
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.Atlas.Pack {
 
-	// ------------------------------------------------
+	// #region common
 
 	export type SpriteDefinition = {
 		name: string;
@@ -13,7 +13,9 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite: Array<SpriteDefinition>;
 	};
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region utility for fsh
 
 	export function pack_fsh(
 		definition: AtlasDefinition,
@@ -36,6 +38,8 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		}
 		return;
 	}
+
+	// ----------------
 
 	export function pack_automatic_fsh(
 		sprite_directory: string,
@@ -67,7 +71,9 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		return [definition, atlas];
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region utility for fs
 
 	export function pack_fs(
 		definition_file: string,
@@ -94,6 +100,8 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		return;
 	}
 
+	// ----------------
+
 	export function pack_automatic_fs(
 		definition_file: string,
 		atlas_file: string,
@@ -106,6 +114,6 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

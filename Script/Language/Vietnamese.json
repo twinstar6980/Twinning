@@ -83,13 +83,13 @@
 	"executor.typical:argument_input": "Đối số yêu cầu đầu vào: {}",
 	"executor.typical:batch_result": "Hoàn thành xử lý, tổng cộng {} tệp, hợp lệ {} tệp, thất bại {} tệp",
 	// Executor/Implement/*
-	"范围溢出": "Vượt quá phạm vi",
-	"密钥非法": "Khoá không hợp lệ",
-	"密钥长度非法": "Độ dài khóa không hợp lệ",
-	"长度不匹配": "Độ dài không khớp",
-	"分辨率应大于零": "Độ phân giải nên lớn hơn không",
-	"尺寸应大于零": "Kích thước nên lớn hơn không",
-	"比例应大于零": "Tỷ lệ nên lớn hơn không",
+	"executor.implement:*.out_of_range": "Vượt quá phạm vi",
+	"executor.implement:*.illegal_key": "Khoá không hợp lệ",
+	"executor.implement:*.illegal_key_length": "Độ dài khóa không hợp lệ",
+	"executor.implement:*.length_not_match": "Độ dài không khớp",
+	"executor.implement:*.resolution_should_be_bigger_then_zero": "Độ phân giải nên lớn hơn không",
+	"executor.implement:*.size_should_be_bigger_then_zero": "Kích thước nên lớn hơn không",
+	"executor.implement:*.rate_should_be_bigger_then_zero": "Tỷ lệ nên lớn hơn không",
 	// Executor/Implement/script.js
 	"executor.implement:script.js.execute": "Thực hiện JS",
 	"executor.implement:script.js.execute:script_file": "Tệp kịch bản",
@@ -640,9 +640,9 @@
 	"executor.implement:kairosoft.game.modify_program:target_directory": "Thư mục đích",
 	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Tắt mã hóa bản ghi",
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Bật chế độ gỡ lỗi",
-	// Executable/JSShell
-	"executable.js_shell:input_start": "Chế độ Tương tác JS được bật",
-	"executable.js_shell:input_description": "Nhập chuỗi trống để kết thúc một vòng nhập dữ liệu, nhập chuỗi trống cho toàn bộ vòng nhập để kết thúc tương tác",
+	// Executable/ScriptConsole
+	"executable.script_console:start": "Chế độ Tương tác JS được bật",
+	"executable.script_console:description": "Nhập chuỗi trống để kết thúc một vòng nhập dữ liệu, nhập chuỗi trống cho toàn bộ vòng nhập để kết thúc tương tác",
 	// Executable/CompareLanguageFile
 	"executable.compare_language_file:please_input_original_file": "Hãy nhập đường dẫn tệp tin ngôn ngữ gốc",
 	"executable.compare_language_file:please_input_translation_file": "Hãy nhập đường dẫn tệp tin ngôn ngữ dịch",

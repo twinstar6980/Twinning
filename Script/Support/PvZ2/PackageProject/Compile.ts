@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 
-	// ------------------------------------------------
+	// #region utility
 
 	function compile_resource(
 		project_directory: string,
@@ -422,7 +422,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function compile(
 		project_directory: string,
@@ -460,6 +460,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

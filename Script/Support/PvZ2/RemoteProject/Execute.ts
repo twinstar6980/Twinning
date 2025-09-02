@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.RemoteProject {
 
-	// ------------------------------------------------
+	// #region utility
 
 	const ActionX = [
 		'launch',
@@ -14,7 +14,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 
 	export const ActionE = ActionX as unknown as Action[];
 
-	// ------------------------------------------------
+	// ----------------
 
 	const TargetX = [
 		'main_package',
@@ -27,7 +27,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 
 	export const TargetE = TargetX as unknown as Target[];
 
-	// ------------------------------------------------
+	// ----------------
 
 	function collect_application_information(
 	): null | AndroidHelper.ApplicationInformation {
@@ -48,11 +48,11 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 		return AndroidHelper.application_query(id);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
-	const g_rton_version = { number: 1n, native_string_encoding_use_utf8: true } as typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value;
+	const k_rton_version = { number: 1n, native_string_encoding_use_utf8: true } as typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value;
 
-	const g_rton_encode_buffer = 4n << 20n;
+	const k_rton_encode_buffer = 4n << 20n;
 
 	export function execute(
 		project_directory: string,
@@ -84,7 +84,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 			local_profile: `${project_directory}/local.json`,
 			player_profile: `${project_directory}/player.json`,
 		};
-		let local_temporary_directory = Home.new_temporary(null, null);
+		let local_temporary_directory = HomePath.new_temporary(null, null);
 		let local_temporary = {
 			content_delivery: `${local_temporary_directory}/content_delivery`,
 			local_profile: `${local_temporary_directory}/local.rton`,
@@ -145,7 +145,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 						Console.information(los('support.pvz2.remote_project.execute:decode'), []);
 						for (let sub_file of KernelX.Storage.list_directory(local_temporary.content_delivery, null, true, false)) {
 							if (sub_file.endsWith('.rton') || sub_file.endsWith('.json')) {
-								KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${sub_file.replace('.rton', '.json')}`, g_rton_version);
+								KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(`${local_temporary.content_delivery}/${sub_file}`, `${local.content_delivery}/${sub_file.replace('.rton', '.json')}`, k_rton_version);
 							}
 						}
 						break;
@@ -155,7 +155,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 						Console.information(los('support.pvz2.remote_project.execute:pull'), []);
 						AndroidHelper.pull(local_temporary.local_profile, remote.local_profile);
 						Console.information(los('support.pvz2.remote_project.execute:decode'), []);
-						KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.local_profile, local.local_profile, g_rton_version);
+						KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.local_profile, local.local_profile, k_rton_version);
 						break;
 					}
 					case 'player_profile': {
@@ -163,7 +163,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 						Console.information(los('support.pvz2.remote_project.execute:pull'), []);
 						AndroidHelper.pull(local_temporary.player_profile, remote.player_profile);
 						Console.information(los('support.pvz2.remote_project.execute:decode'), []);
-						KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.player_profile, local.player_profile, g_rton_version);
+						KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(local_temporary.player_profile, local.player_profile, k_rton_version);
 						break;
 					}
 				}
@@ -180,9 +180,9 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 					case 'content_delivery': {
 						KernelX.Storage.create_directory(local_temporary_directory);
 						Console.information(los('support.pvz2.remote_project.execute:encode'), []);
-						let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(g_rton_encode_buffer));
+						let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(k_rton_encode_buffer));
 						for (let sub_file of KernelX.Storage.list_directory(local.content_delivery, null, true, false)) {
-							KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(`${local_temporary.content_delivery}/${sub_file.replace(/(?<!(cdn_config|forceupdateconfig))\.json$/i, '.rton')}`, `${local.content_delivery}/${sub_file}`, true, true, g_rton_version, buffer.view());
+							KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(`${local_temporary.content_delivery}/${sub_file.replace(/(?<!(cdn_config|forceupdateconfig))\.json$/i, '.rton')}`, `${local.content_delivery}/${sub_file}`, true, true, k_rton_version, buffer.view());
 						}
 						Console.information(los('support.pvz2.remote_project.execute:push'), []);
 						AndroidHelper.push(local_temporary.content_delivery, remote.content_delivery, application.user);
@@ -191,7 +191,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 					case 'local_profile': {
 						KernelX.Storage.create_directory(local_temporary_directory);
 						Console.information(los('support.pvz2.remote_project.execute:encode'), []);
-						KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.local_profile, local.local_profile, true, true, g_rton_version, g_rton_encode_buffer);
+						KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.local_profile, local.local_profile, true, true, k_rton_version, k_rton_encode_buffer);
 						Console.information(los('support.pvz2.remote_project.execute:push'), []);
 						AndroidHelper.push(local_temporary.local_profile, remote.local_profile, application.user);
 						break;
@@ -199,7 +199,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 					case 'player_profile': {
 						KernelX.Storage.create_directory(local_temporary_directory);
 						Console.information(los('support.pvz2.remote_project.execute:encode'), []);
-						KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.player_profile, local.player_profile, true, true, g_rton_version, g_rton_encode_buffer);
+						KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(local_temporary.player_profile, local.player_profile, true, true, k_rton_version, k_rton_encode_buffer);
 						Console.information(los('support.pvz2.remote_project.execute:push'), []);
 						AndroidHelper.push(local_temporary.player_profile, remote.player_profile, application.user);
 						AndroidHelper.fs_remove(remote.player_profile_snapshot_1);
@@ -215,6 +215,6 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

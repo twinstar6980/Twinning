@@ -1,10 +1,12 @@
 namespace Twinning.Script {
 
-	// ------------------------------------------------
+	// #region version
 
-	export const k_version = '134';
+	export const k_version = '135';
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region exception
 
 	export function assert_test(
 		condition: boolean,
@@ -45,25 +47,48 @@ namespace Twinning.Script {
 		return [title, description];
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region implement
 
 	namespace Detail {
 
-		// ------------------------------------------------
+		// #region utility
 
 		export function exist_file(
-			path: string,
+			target: string,
 		): boolean {
-			return Kernel.Storage.exist_file(Kernel.Path.value(path)).value;
+			return Kernel.Storage.exist_file(Kernel.Path.value(target)).value;
 		}
 
 		export function exist_directory(
-			path: string,
+			target: string,
 		): boolean {
-			return Kernel.Storage.exist_directory(Kernel.Path.value(path)).value;
+			return Kernel.Storage.exist_directory(Kernel.Path.value(target)).value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
+
+		export function create_directory(
+			target: string,
+		): void {
+			return Kernel.Storage.create_directory(Kernel.Path.value(target));
+		}
+
+		// ----------------
+
+		export function get_working_directory(
+		): string {
+			return Kernel.Process.get_working_directory().value;
+		}
+
+		export function set_working_directory(
+			target: string,
+		): void {
+			return Kernel.Process.set_working_directory(Kernel.Path.value(target));
+		}
+
+		// ----------------
 
 		export function read_json<Constraint extends Kernel.JSON.JS_Value>(
 			file: string,
@@ -77,16 +102,9 @@ namespace Twinning.Script {
 			return value.value;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
-		export function get_working_directory(
-		): string {
-			return Kernel.Process.get_working_directory().value;
-		}
-
-		// ------------------------------------------------
-
-		export function evaluate(
+		export function evaluate_script(
 			script_file: string,
 			name: string,
 		): any {
@@ -94,9 +112,9 @@ namespace Twinning.Script {
 			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
-		export function output(
+		export function output_text(
 			title: string,
 			description: Array<string>,
 		): void {
@@ -113,25 +131,25 @@ namespace Twinning.Script {
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
-	export namespace Home {
+	export namespace HomePath {
 
-		// ------------------------------------------------
+		// #region utility
 
-		export let path: string = undefined!;
+		let g_location: string = undefined!;
 
 		export function of(
 			format: string,
 		): string {
-			return format.replaceAll(/^~(?=([/]|$))/g, path);
+			return format.replaceAll(/^~(?=([/]|$))/g, g_location);
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function script(
 		): string {
@@ -148,13 +166,13 @@ namespace Twinning.Script {
 			return of(`~/temporary`);
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function new_temporary(
 			name: null | string,
 			create: null | 'file' | 'directory',
 		): string {
-			let temporary_name = name !== null ? name : make_date_simple_string(new Date());
+			let temporary_name = name !== null ? name : make_date_to_string_simple(new Date());
 			let temporary_path = PathUtility.generate_suffix_path(`${temporary()}/${temporary_name}`);
 			if (create === 'file') {
 				KernelX.Storage.create_file(temporary_path);
@@ -165,29 +183,31 @@ namespace Twinning.Script {
 			return temporary_path;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function initialize(
+			location: string,
 		): void {
-			KernelX.Storage.create_directory(workspace());
-			KernelX.Storage.create_directory(temporary());
-			KernelX.Process.set_working_directory(workspace());
+			g_location = location;
+			Detail.create_directory(workspace());
+			Detail.create_directory(temporary());
+			Detail.set_working_directory(workspace());
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
 	}
 
 	export namespace PartitionLoader {
 
-		// ------------------------------------------------
+		// #region utility
 
 		export type Configuration = Record<string, Kernel.JSON.JS_Value>;
 
 		export type Injector = (configuration: null | Configuration) => void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		export function load(
 			partition_list: Array<string>,
@@ -211,7 +231,7 @@ namespace Twinning.Script {
 					}
 					configuration = raw_configuration as Configuration;
 				}
-				let injector = Detail.evaluate(script_file, script_name) as undefined | Injector;
+				let injector = Detail.evaluate_script(script_file, script_name) as undefined | Injector;
 				if (injector !== undefined) {
 					injector(configuration);
 				}
@@ -219,17 +239,15 @@ namespace Twinning.Script {
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
 	}
 
-	// ------------------------------------------------
+	export namespace MainScript {
 
-	export namespace Main {
+		// #region life
 
-		// ------------------------------------------------
-
-		let g_partition_list: Array<string> = [
+		const k_partition_list: Array<string> = [
 			`utility/Timer`,
 			`utility/TypeUtility`,
 			`utility/PathUtility`,
@@ -239,6 +257,7 @@ namespace Twinning.Script {
 			`utility/CommandLineReader`,
 			`utility/XML`,
 			`utility/ByteListView`,
+			`utility/ByteStreamView`,
 			`utility/KernelX`,
 			`utility/Shell`,
 			`utility/ThreadManager`,
@@ -321,34 +340,33 @@ namespace Twinning.Script {
 			`Runner/Runner`,
 		];
 
-		// ------------------------------------------------
+		// ----------------
 
-		async function internal(
+		async function run(
 			argument: Array<string>,
 		): Promise<Array<string>> {
-			Detail.output(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`, argument);
+			Detail.output_text(`Twinning ~ Kernel:${Kernel.Miscellaneous.g_version.value} & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]} & Script:${k_version} ~ ${Kernel.Miscellaneous.g_system.value}:${Kernel.Miscellaneous.g_architecture.value}`, argument);
 			if (argument.length < 1) {
 				throw new Error(`argument too few`);
 			}
-			// set home directory
+			// parse home path
 			let home_path = argument[0].replaceAll(`\\`, '/');
 			if (/^\.{1,2}[\/]/.test(home_path)) {
 				home_path = `${Detail.get_working_directory()}/${home_path}`;
 			}
-			Home.path = home_path;
+			HomePath.initialize(home_path);
 			// set module home directory
-			Kernel.Miscellaneous.g_context.query_module_home().value = Home.script();
+			Kernel.Miscellaneous.g_context.query_module_home().value = HomePath.script();
 			// load script partition
-			let timer_begin = Date.now();
-			PartitionLoader.load(g_partition_list, Home.script());
-			let timer_end = Date.now();
-			let result = '';
+			let load_timer_begin = Date.now();
+			PartitionLoader.load(k_partition_list, HomePath.script());
+			let load_timer_end = Date.now();
 			// execute runner
+			let result = '';
 			try {
 				Console.success(los('main:partition_load_finish'), [
-					los('main:partition_load_duration', ((timer_end - timer_begin) / 1000).toFixed(3)),
+					los('main:partition_load_duration', ((load_timer_end - load_timer_begin) / 1000).toFixed(3)),
 				]);
-				Home.initialize();
 				result = Runner.run(argument.slice(1));
 			}
 			catch (e) {
@@ -356,11 +374,11 @@ namespace Twinning.Script {
 				throw '';
 			}
 			// release resource
-			g_thread_manager.resize(0);
+			ThreadManager.g_global_manager.resize(0);
 			return [result];
 		}
 
-		export function external(
+		export function runWrapper(
 			data: {
 				argument: Array<string>;
 				result: undefined | Array<string>;
@@ -368,7 +386,7 @@ namespace Twinning.Script {
 			},
 		): void {
 			data.result = [];
-			internal(data.argument)
+			run(data.argument)
 				.then(
 					(value) => {
 						data.result = value;
@@ -380,12 +398,12 @@ namespace Twinning.Script {
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 
-Twinning.Script.Main.external;
+Twinning.Script.MainScript.runWrapper;

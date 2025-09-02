@@ -1,10 +1,6 @@
 namespace Twinning.Script.Executor {
 
-	// ------------------------------------------------
-
-	export let g_typical_method_disable_name_filter: boolean = false;
-
-	// ------------------------------------------------
+	// #region common
 
 	export type TypicalArgumentExpression<Value> = Value | '?automatic' | '?input';
 
@@ -35,7 +31,9 @@ namespace Twinning.Script.Executor {
 		batch_worker: null | ((argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void);
 	};
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region basic
 
 	export function typical_argument_boolean<ID extends string>(
 		object: {
@@ -47,7 +45,7 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<ID, boolean, boolean> {
 		return {
 			id: object.id,
-			initial_echoer: (value) => (make_confirmation_boolean_string(value)),
+			initial_echoer: (value) => (make_boolean_to_string_of_confirmation_character(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.boolean(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -67,7 +65,7 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<ID, bigint, bigint> {
 		return {
 			id: object.id,
-			initial_echoer: (value) => (make_integer_string(value)),
+			initial_echoer: (value) => (make_integer_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.integer(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -87,7 +85,7 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<ID, number, number> {
 		return {
 			id: object.id,
-			initial_echoer: (value) => (make_number_string(value)),
+			initial_echoer: (value) => (make_number_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.floater(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -106,8 +104,8 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<ID, bigint, string> {
 		return {
 			id: object.id,
-			initial_echoer: (value) => (make_size_string(value)),
-			given_converter: (argument, given) => (parse_size_string(given)),
+			initial_echoer: (value) => (make_size_to_string(value)),
+			given_converter: (argument, given) => (parse_size_from_string(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.size(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
@@ -177,7 +175,7 @@ namespace Twinning.Script.Executor {
 		} as TypicalBatchArgument<ID>;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function typical_method<ID extends string, Argument extends Array<TypicalArgument<string, any, any>>, BatchArgument extends Array<TypicalBatchArgument<string>>>(
 		object: {
@@ -199,7 +197,40 @@ namespace Twinning.Script.Executor {
 		} as TypicalMethod<ID, Argument, BatchArgument>;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region advance
+
+	export let g_typical_method_disable_name_filter: boolean = false;
+
+	// ----------------
+
+	export function execute_typical_batch_task(
+		parent: string,
+		filter: ['any' | 'file' | 'directory', RegExp],
+		worker: (item: string, temporary: any) => void,
+	): void {
+		let all_item = KernelX.Storage.list_directory(parent, null, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
+		let valid_item = all_item.filter((value) => (filter[1].test(value)));
+		let failed_item = [] as Array<string>;
+		let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);
+		let temporary = {};
+		for (let item of valid_item) {
+			progress.increase();
+			Console.information(`${progress}`, [`${item}`]);
+			try {
+				worker(item, temporary);
+			}
+			catch (e) {
+				failed_item.push(item);
+				Console.error_of(e);
+			}
+		}
+		Console.warning(los('executor.typical:batch_result', all_item.length, valid_item.length, failed_item.length), failed_item);
+		return;
+	}
+
+	// ----------------
 
 	export function request_typical_argument<Given, Result>(
 		name: string,
@@ -262,8 +293,8 @@ namespace Twinning.Script.Executor {
 						argument.condition(final_argument),
 					);
 				}
+				timer.start();
 				if (!batch) {
-					timer.start();
 					try {
 						source.worker(final_argument as any);
 						state = true;
@@ -271,22 +302,15 @@ namespace Twinning.Script.Executor {
 					catch (e) {
 						Console.error_of(e);
 					}
-					timer.stop();
 				}
 				else {
 					assert_test(source.batch_argument !== null);
-					timer.start();
-					let all_item = KernelX.Storage.list_directory(final_argument[source.argument[0].id], null, source.filter[0] === 'any' || source.filter[0] === 'file', source.filter[0] === 'any' || source.filter[0] === 'directory');
-					let valid_item = all_item.filter((value) => (source.filter[1]!.test(value)));
-					let failed_item = [] as Array<string>;
-					let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);
-					let temporary = {};
-					for (let item of valid_item) {
-						progress.increase();
-						Console.information(`${progress}`, [`${item}`]);
-						try {
+					execute_typical_batch_task(
+						final_argument[source.argument[0].id],
+						source.filter,
+						(item, temporary) => {
 							let item_argument = { ...final_argument };
-							for (let batch_argument of source.batch_argument) {
+							for (let batch_argument of source.batch_argument!) {
 								item_argument[batch_argument.id] += '/' + batch_argument.item_mapper(final_argument, item);
 							}
 							if (source.batch_worker === null) {
@@ -295,16 +319,11 @@ namespace Twinning.Script.Executor {
 							else {
 								source.batch_worker(item_argument as any, temporary);
 							}
-						}
-						catch (e) {
-							failed_item.push(item);
-							Console.error_of(e);
-						}
-					}
-					timer.stop();
-					Console.warning(los('executor.typical:batch_result', all_item.length, valid_item.length, failed_item.length), failed_item);
+						},
+					);
 					state = true;
 				}
+				timer.stop();
 				return [state, timer.duration()];
 			},
 			default_argument: record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
@@ -328,7 +347,7 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type TypicalMethodConfiguration = {
 		filter: string;
@@ -365,6 +384,6 @@ namespace Twinning.Script.Executor {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,10 +1,12 @@
 namespace Twinning.Script.Runner {
 
-	// ------------------------------------------------
+	// #region run
 
 	let g_configuration: Configuration = undefined!;
 
 	let g_configuration_action: { [Key in keyof Configuration]: (value: Configuration[Key]) => void; } = undefined!;
+
+	// ----------------
 
 	function update_configuration(
 		configuration: Partial<Configuration>,
@@ -18,38 +20,65 @@ namespace Twinning.Script.Runner {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
-	export function simple_batch_execute(
-		parent: string,
-		filter: ['any' | 'file' | 'directory', null | RegExp],
-		worker: (item: string) => void,
-	): void {
-		let item_list = KernelX.Storage.list_directory(parent, null, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
-		if (filter[1] !== null) {
-			item_list = item_list.filter((e) => (filter[1]!.test(e)));
-		}
-		if (item_list.length === 0) {
-			Console.warning(los('runner:batch_no_item'), [
+	export function run(
+		argument: Array<string>,
+	): string {
+		let raw_command = [...argument];
+		if (raw_command.length === 0) {
+			Console.information(los('runner:input_command'), [
+				los('runner:input_finish_if_empty'),
 			]);
-		}
-		else {
-			let progress = new TextGenerator.Progress('fraction', false, 40, item_list.length);
-			for (let item of item_list) {
-				progress.increase();
-				Console.information(`${progress}`, [`${item}`]);
-				try {
-					worker(item);
+			while (true) {
+				let input = Console.path('any', 'input', true, null);
+				if (input === null) {
+					break;
 				}
-				catch (e) {
-					Console.error_of(e);
+				raw_command.push(input);
+			}
+		}
+		let command = Executor.parse(raw_command);
+		Console.information(los('runner:all_command_parse'), [
+			los('runner:all_command_count', command.length),
+		]);
+		let duration = 0;
+		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
+		let command_log = '';
+		for (let item of command) {
+			progress.increase();
+			Console.information(los('runner:current_command_execute', progress), [
+				item.input === null ? '?' : item.input,
+				make_boolean_to_string_of_confirmation_character(item.filterless),
+				item.method === null ? '?' : item.method,
+				...record_to_array(item.argument, (key, value) => (`"${key}": ${KernelX.JSON.write_s_js(value, true, true, true, true)}`)),
+			]);
+			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
+			if (state === null) {
+				command_log += '~';
+			}
+			else {
+				if (state[0] === false) {
+					command_log += 'f';
+				}
+				if (state[0] === true) {
+					command_log += 's';
+				}
+				duration += state[1];
+				if (g_configuration.command_notification_time_limit !== null && g_configuration.command_notification_time_limit <= state[1]) {
+					Console.push_system_notification(los('runner:current_command_finish'), los('runner:duration', (state[1] / 1000).toFixed(3)));
 				}
 			}
 		}
-		return;
+		Console.success(los('runner:all_command_finish'), [
+			los('runner:duration', (duration / 1000).toFixed(3)),
+		]);
+		return command_log;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region partition function
 
 	export type Configuration = {
 		language: string;
@@ -93,7 +122,7 @@ namespace Twinning.Script.Runner {
 		};
 		g_configuration_action = {
 			language: (value) => {
-				Language.imbue(KernelX.JSON.read_fs_js(Home.of(`~/script/Language/${value}.json`)) as unknown as Language.StringMap);
+				Language.imbue(KernelX.JSON.read_fs_js(HomePath.of(`~/script/Language/${value}.json`)) as unknown as Language.StringMap);
 			},
 			console_basic_disable_virtual_terminal_sequence: (value) => {
 				Console.g_basic_disable_virtual_terminal_sequence = value;
@@ -105,7 +134,7 @@ namespace Twinning.Script.Runner {
 				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
 			},
 			common_buffer_size: (value) => {
-				KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_string(value)));
+				KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_from_string(value)));
 			},
 			json_format_disable_array_trailing_comma: (value) => {
 				KernelX.JSON.g_format.disable_array_trailing_comma = value;
@@ -135,7 +164,7 @@ namespace Twinning.Script.Runner {
 				Support.Kairosoft.Game.ModifyProgram.g_il2cpp_dumper_program_file = value;
 			},
 			thread_limit: (value) => {
-				g_thread_manager.resize(Number(value));
+				ThreadManager.g_global_manager.resize(Number(value));
 			},
 			command_notification_time_limit: (value) => {
 			},
@@ -144,61 +173,7 @@ namespace Twinning.Script.Runner {
 		return;
 	}
 
-	export function run(
-		argument: Array<string>,
-	): string {
-		let raw_command = [...argument];
-		if (raw_command.length === 0) {
-			Console.information(los('runner:input_command'), [
-				los('runner:input_finish_if_empty'),
-			]);
-			while (true) {
-				let input = Console.path('any', 'input', true, null);
-				if (input === null) {
-					break;
-				}
-				raw_command.push(input);
-			}
-		}
-		let command = Executor.parse(raw_command);
-		Console.information(los('runner:all_command_parse'), [
-			los('runner:all_command_count', command.length),
-		]);
-		let duration = 0;
-		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
-		let command_log = '';
-		for (let item of command) {
-			progress.increase();
-			Console.information(los('runner:current_command_execute', progress), [
-				item.input === null ? '?' : item.input,
-				make_confirmation_boolean_string(item.filterless),
-				item.method === null ? '?' : item.method,
-				...record_to_array(item.argument, (key, value) => (`"${key}": ${KernelX.JSON.write_s_js(value, true, true, true, true)}`)),
-			]);
-			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
-			if (state === null) {
-				command_log += '~';
-			}
-			else {
-				if (state[0] === false) {
-					command_log += 'f';
-				}
-				if (state[0] === true) {
-					command_log += 's';
-				}
-				duration += state[1];
-				if (g_configuration.command_notification_time_limit !== null && g_configuration.command_notification_time_limit <= state[1]) {
-					Console.push_system_notification(los('runner:current_command_finish'), los('runner:duration', (state[1] / 1000).toFixed(3)));
-				}
-			}
-		}
-		Console.success(los('runner:all_command_finish'), [
-			los('runner:duration', (duration / 1000).toFixed(3)),
-		]);
-		return command_log;
-	}
-
-	// ------------------------------------------------
+	// #endregion
 
 }
 

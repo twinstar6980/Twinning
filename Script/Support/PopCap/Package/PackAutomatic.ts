@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function pack(
 		resource_directory: string,
@@ -36,6 +36,6 @@ namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 		return [data, stream.position()];
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

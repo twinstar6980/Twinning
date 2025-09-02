@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.texture.transformation {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -86,14 +86,14 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 					typical_argument_integer({
 						id: 'size_width',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
+						checker: (argument: {}, value) => ((0n < value) ? null : los(`executor.implement:*.size_should_be_bigger_then_zero`)),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						id: 'size_height',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los(`尺寸应大于零`)),
+						checker: (argument: {}, value) => ((0n < value) ? null : los(`executor.implement:*.size_should_be_bigger_then_zero`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -143,7 +143,7 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 					typical_argument_floater({
 						id: 'size_rate',
 						option: null,
-						checker: (argument: {}, value) => ((0.0 < value) ? null : los(`比例应大于零`)),
+						checker: (argument: {}, value) => ((0.0 < value) ? null : los(`executor.implement:*.rate_should_be_bigger_then_zero`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -176,7 +176,7 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 
-	// ------------------------------------------------
+	// #region utility
 
 	function parse_transform(
 		x_Matrix: Kernel.XML.JS_Element,
@@ -287,6 +287,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 		return undefined!;
 	}
 
+	// ----------------
+
 	export function to(
 		flash: FlashPackage,
 		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
@@ -327,7 +329,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 		return animation;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function to_fsh(
 		raw_file: string,
@@ -349,6 +351,6 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

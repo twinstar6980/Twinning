@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function link(
 		project_directory: string,
@@ -171,6 +171,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -138,7 +138,7 @@ namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

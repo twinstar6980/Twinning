@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.data.differentiation {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -92,7 +92,7 @@ namespace Twinning.Script.Executor.Implement.data.differentiation {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

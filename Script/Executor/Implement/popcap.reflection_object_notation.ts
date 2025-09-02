@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -432,7 +432,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -47,7 +47,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

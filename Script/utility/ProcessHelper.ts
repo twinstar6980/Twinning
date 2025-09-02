@@ -1,6 +1,6 @@
 namespace Twinning.Script.ProcessHelper {
 
-	// ------------------------------------------------
+	// #region environment variable
 
 	export function parse_environment_variable(
 		list: Array<string>,
@@ -27,6 +27,8 @@ namespace Twinning.Script.ProcessHelper {
 		}
 		return result;
 	}
+
+	// ----------------
 
 	export function search_path(
 		name: string,
@@ -67,7 +69,9 @@ namespace Twinning.Script.ProcessHelper {
 		return path;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region child
 
 	export type ExecuteResult = {
 		code: bigint;
@@ -75,13 +79,15 @@ namespace Twinning.Script.ProcessHelper {
 		error: string;
 	};
 
-	export function execute(
+	// ----------------
+
+	export function spawn_child(
 		program: string,
 		argument: Array<string>,
 		environment: Array<string>,
 		input_data: string = '',
 	): ExecuteResult {
-		let temporary_directory = Home.new_temporary(null, 'directory');
+		let temporary_directory = HomePath.new_temporary(null, 'directory');
 		let temporary_directory_fallback: null | string = null;
 		let input = `${temporary_directory}/input`;
 		let output = `${temporary_directory}/output`;
@@ -102,7 +108,7 @@ namespace Twinning.Script.ProcessHelper {
 			let data = KernelX.Storage.read_file_s(path);
 			return normalize_string_line_feed(data);
 		};
-		let result = {
+		let result: ExecuteResult = {
 			code: code,
 			output: read_file(output),
 			error: read_file(error),
@@ -115,6 +121,6 @@ namespace Twinning.Script.ProcessHelper {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.data.compression {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -504,7 +504,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

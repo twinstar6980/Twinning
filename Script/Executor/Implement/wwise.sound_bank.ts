@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.wwise.sound_bank {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -132,7 +132,7 @@ namespace Twinning.Script.Executor.Implement.wwise.sound_bank {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

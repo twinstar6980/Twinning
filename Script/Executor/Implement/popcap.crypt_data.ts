@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -31,7 +31,7 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 					typical_argument_integer({
 						id: 'limit',
 						option: null,
-						checker: (argument: {}, value) => (0x00n <= value ? null : los(`范围溢出`)),
+						checker: (argument: {}, value) => (0x00n <= value ? null : los(`executor.implement:*.out_of_range`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -88,7 +88,7 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 					typical_argument_integer({
 						id: 'limit',
 						option: null,
-						checker: (argument: {}, value) => (0x00n <= value ? null : los(`范围溢出`)),
+						checker: (argument: {}, value) => (0x00n <= value ? null : los(`executor.implement:*.out_of_range`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -128,7 +128,7 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.u_texture {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -119,7 +119,7 @@ namespace Twinning.Script.Executor.Implement.popcap.u_texture {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

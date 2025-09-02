@@ -119,7 +119,8 @@ namespace AssistantPlus.View.Home {
 					},
 				],
 			};
-			frame.NavigateToType(model.MainPage, configuration.Option, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
+			frame.NavigateToType(model.MainPage, null, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
+			frame.Content.As<Page>().Tag = configuration.Option;
 			this.uTab_TabItemsSource.Add(new () { Host = this, Title = configuration.Title, Type = configuration.Type, Frame = frame });
 			this.NotifyPropertyChanged([
 				nameof(this.uBlank_Visibility),

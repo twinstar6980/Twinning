@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.kairosoft.game {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -24,7 +24,7 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 					typical_argument_string({
 						id: 'key',
 						option: null,
-						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los(`密钥非法`)),
+						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los(`executor.implement:*.illegal_key`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -32,13 +32,13 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 				worker: ({ target_directory, key }) => {
 					let key_value = [] as Array<bigint>;
 					if (key.startsWith('d32:')) {
-						key_value = integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4);
+						key_value = make_integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4);
 					}
 					else if (key.startsWith('d64:')) {
-						key_value = integer_to_byte_array(BigInt(key.substring('d64:'.length)), 8);
+						key_value = make_integer_to_byte_array(BigInt(key.substring('d64:'.length)), 8);
 					}
 					else {
-						key_value = string_to_byte_array(key);
+						key_value = make_string_to_byte_array(key);
 					}
 					Support.Kairosoft.Game.EncryptRecord.process_fs(target_directory, key_value);
 					return;
@@ -81,7 +81,7 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

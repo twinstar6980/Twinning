@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.ResourceManifest {
 
-	// ------------------------------------------------
+	// #region type
 
 	export type ResourceType = RegularResourceManifest.ResourceType;
 
@@ -54,7 +54,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest {
 
 	export type Resource = ResourceBase & ResourceAdditional;
 
-	// ------------------------------------------------
+	// ----------------
 
 	export const GroupTypeE = [
 		'composite',
@@ -87,7 +87,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest {
 
 	export type Group = GroupBase & GroupAdditional;
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type Package = {
 		version?: bigint;
@@ -99,6 +99,6 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest {
 		groups: Array<Group>;
 	};
 
-	// ------------------------------------------------
+	// #endregion
 
 }

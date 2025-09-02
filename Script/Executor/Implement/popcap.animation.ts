@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.animation {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -239,7 +239,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					typical_argument_integer({
 						id: 'resolution',
 						option: null,
-						checker: (argument, value) => (value > 0n ? null : los(`分辨率应大于零`)),
+						checker: (argument, value) => (value > 0n ? null : los(`executor.implement:*.resolution_should_be_bigger_then_zero`)),
 						automatic: null,
 						condition: null,
 					}),
@@ -299,7 +299,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

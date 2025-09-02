@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.data.hash {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -24,7 +24,7 @@ namespace Twinning.Script.Executor.Implement.data.hash {
 				],
 				worker: ({ target_file }) => {
 					let result = KernelX.Tool.Data.Hash.MD5.hash_fs(target_file);
-					Console.success(`${string_from_byte_array(integer_to_byte_array(result, 16, 'little'), false)}`, []);
+					Console.success(`${parse_string_from_byte_array(make_integer_to_byte_array(result, 16, 'little'), false)}`, []);
 					return;
 				},
 				batch_argument: [
@@ -43,7 +43,7 @@ namespace Twinning.Script.Executor.Implement.data.hash {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -22,19 +22,10 @@ namespace AssistantPlus.View.ResourceShipper {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();
-			return;
-		}
-
-		// ----------------
-
-		protected override void OnNavigatedTo (
-			NavigationEventArgs args
-		) {
 			ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
-				await this.Controller.ApplyOption(args.Parameter.As<List<String>>());
+				await this.Controller.ApplyOption(this.Tag.As<List<String>>());
 			}).SelfLet(ExceptionHelper.WrapTask);
-			base.OnNavigatedTo(args);
 			return;
 		}
 

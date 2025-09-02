@@ -4,17 +4,13 @@
  */
 declare namespace Twinning.Kernel {
 
-	// ------------------------------------------------
-
 	/** 内部类型定义模板 */
 	class T {
-
-		// ------------------------------------------------
 
 		/** 不存在的属性，用于避免TS类型兼容规则对内部类型的影响 */
 		private _T: any;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/* 通用操作 */
 
@@ -24,7 +20,7 @@ declare namespace Twinning.Kernel {
 		/** 复制 构造 */
 		static copy(it: T): T;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/** JS值 操作 */
 
@@ -40,35 +36,31 @@ declare namespace Twinning.Kernel {
 		/** JS值 setter */
 		set value(it: typeof T.Value);
 
-		// ------------------------------------------------
+		// ----------------
 
 		/** 其他 */
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 无值 */
 	type Void = void;
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 布尔值 */
 	class Boolean {
 
-		// ------------------------------------------------
-
 		private _Boolean;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): Boolean;
 
 		static copy(it: Boolean): Boolean;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: boolean;
 
@@ -78,26 +70,22 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof Boolean.Value);
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 32位无符号整数 */
 	class IntegerU32 {
 
-		// ------------------------------------------------
-
 		private _IntegerU32;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): IntegerU32;
 
 		static copy(it: IntegerU32): IntegerU32;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: bigint;
 
@@ -107,26 +95,22 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof IntegerU32.Value);
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 表征尺寸的整数，表现为64位无符号整数 */
 	class Size {
 
-		// ------------------------------------------------
-
 		private _Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): Size;
 
 		static copy(it: Size): Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: bigint;
 
@@ -136,24 +120,20 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof Size.Value);
 
-		// ------------------------------------------------
-
 	}
 
 	/** Optional包装的Path */
 	class SizeOptional {
 
-		// ------------------------------------------------
-
 		private _SizeOptional;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): SizeOptional;
 
 		static copy(it: SizeOptional): SizeOptional;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: null | bigint;
 
@@ -163,26 +143,22 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof SizeOptional.Value);
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字符串 */
 	class String {
 
-		// ------------------------------------------------
-
 		private _String;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): String;
 
 		static copy(it: String): String;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: string;
 
@@ -192,24 +168,20 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof String.Value);
 
-		// ------------------------------------------------
-
 	}
 
 	/** Optional包装的String */
 	class StringOptional {
 
-		// ------------------------------------------------
-
 		private _StringOptional;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): StringOptional;
 
 		static copy(it: StringOptional): StringOptional;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: null | string;
 
@@ -219,24 +191,20 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof StringOptional.Value);
 
-		// ------------------------------------------------
-
 	}
 
 	/** 字符串列表 */
 	class StringList {
 
-		// ------------------------------------------------
-
 		private _StringList;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): StringList;
 
 		static copy(it: StringList): StringList;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: Array<string>;
 
@@ -246,26 +214,22 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof StringList.Value);
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 文件路径 */
 	class Path {
 
-		// ------------------------------------------------
-
 		private _Path;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): Path;
 
 		static copy(it: Path): Path;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: string;
 
@@ -275,24 +239,20 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof Path.Value);
 
-		// ------------------------------------------------
-
 	}
 
 	/** Optional包装的Path */
 	class PathOptional {
 
-		// ------------------------------------------------
-
 		private _PathOptional;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): PathOptional;
 
 		static copy(it: PathOptional): PathOptional;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: null | string;
 
@@ -302,24 +262,20 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof PathOptional.Value);
 
-		// ------------------------------------------------
-
 	}
 
 	/** 文件路径列表 */
 	class PathList {
 
-		// ------------------------------------------------
-
 		private _PathList;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): PathList;
 
 		static copy(it: PathList): PathList;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: Array<string>;
 
@@ -329,26 +285,22 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof PathList.Value);
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字节，8位无符号整数 */
 	class Byte {
 
-		// ------------------------------------------------
-
 		private _Byte;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): Byte;
 
 		static copy(it: Byte): Byte;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: bigint;
 
@@ -358,26 +310,22 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof Byte.Value);
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字节序列容器 */
 	class ByteArray {
 
-		// ------------------------------------------------
-
 		private _ByteArray;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): ByteArray;
 
 		static copy(it: ByteArray): ByteArray;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: ArrayBuffer;
 
@@ -387,7 +335,7 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof ByteArray.Value);
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 根据所给尺寸构造数组
@@ -398,7 +346,7 @@ declare namespace Twinning.Kernel {
 			size: Size,
 		): ByteArray;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 分配新数组
@@ -416,7 +364,7 @@ declare namespace Twinning.Kernel {
 		reset(
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取序列尺寸
@@ -425,7 +373,7 @@ declare namespace Twinning.Kernel {
 		size(
 		): Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取观测本序列的视图
@@ -434,7 +382,7 @@ declare namespace Twinning.Kernel {
 		view(
 		): ByteListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 移交内存的所有权给所返回的ArrayBuffer对象，调用之后对象表现为重置之后的状态
@@ -443,26 +391,22 @@ declare namespace Twinning.Kernel {
 		release(
 		): typeof ByteArray.Value;
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字节序列视图 */
 	class ByteListView {
 
-		// ------------------------------------------------
-
 		private _ByteListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): ByteListView;
 
 		static copy(it: ByteListView): ByteListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static Value: ArrayBuffer;
 
@@ -472,7 +416,7 @@ declare namespace Twinning.Kernel {
 
 		set value(it: typeof ByteListView.Value);
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取视图尺寸
@@ -481,7 +425,7 @@ declare namespace Twinning.Kernel {
 		size(
 		): Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取子视图
@@ -494,8 +438,6 @@ declare namespace Twinning.Kernel {
 			size: Size,
 		): ByteListView;
 
-		// ------------------------------------------------
-
 	}
 
 	/** 变量字节序列视图 */
@@ -504,22 +446,20 @@ declare namespace Twinning.Kernel {
 	/** 常量字节序列视图 */
 	type ConstantByteListView = ByteListView;
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字节流视图 */
 	class ByteStreamView {
 
-		// ------------------------------------------------
-
 		private _ByteStreamView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): ByteStreamView;
 
 		static copy(it: ByteStreamView): ByteStreamView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 使用字节序列视图作为观测对象，初始流位置为0
@@ -530,7 +470,7 @@ declare namespace Twinning.Kernel {
 			list: ByteListView,
 		): ByteStreamView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取视图尺寸
@@ -539,7 +479,7 @@ declare namespace Twinning.Kernel {
 		size(
 		): Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取流所处的位置，即已流经的字节数
@@ -557,7 +497,7 @@ declare namespace Twinning.Kernel {
 			position: Size,
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取观测完整序列的视图，即 [ 0, size() )
@@ -573,8 +513,6 @@ declare namespace Twinning.Kernel {
 		stream_view(
 		): ByteListView;
 
-		// ------------------------------------------------
-
 	}
 
 	/** 字节输入流视图 */
@@ -583,22 +521,20 @@ declare namespace Twinning.Kernel {
 	/** 字节输出流视图 */
 	type OutputByteStreamView = ByteStreamView;
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字符序列视图 */
 	class CharacterListView {
 
-		// ------------------------------------------------
-
 		private _CharacterListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): CharacterListView;
 
 		static copy(it: CharacterListView): CharacterListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取视图尺寸
@@ -607,7 +543,7 @@ declare namespace Twinning.Kernel {
 		size(
 		): Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取子视图
@@ -620,8 +556,6 @@ declare namespace Twinning.Kernel {
 			size: Size,
 		): CharacterListView;
 
-		// ------------------------------------------------
-
 	}
 
 	/** 变量字符序列视图 */
@@ -630,22 +564,20 @@ declare namespace Twinning.Kernel {
 	/** 常量字符序列视图 */
 	type ConstantCharacterListView = CharacterListView;
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 字符流视图 */
 	class CharacterStreamView {
 
-		// ------------------------------------------------
-
 		private _CharacterStreamView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		static default(): CharacterStreamView;
 
 		static copy(it: CharacterStreamView): CharacterStreamView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 使用字符序列视图作为观测对象，初始流位置为0
@@ -656,7 +588,7 @@ declare namespace Twinning.Kernel {
 			list: CharacterListView,
 		): CharacterStreamView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取视图尺寸
@@ -665,7 +597,7 @@ declare namespace Twinning.Kernel {
 		size(
 		): Size;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取流所处的位置，即已流经的字符数
@@ -683,7 +615,7 @@ declare namespace Twinning.Kernel {
 			position: Size,
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取观测完整序列的视图，即 [ 0, size() )
@@ -699,8 +631,6 @@ declare namespace Twinning.Kernel {
 		stream_view(
 		): CharacterListView;
 
-		// ------------------------------------------------
-
 	}
 
 	/** 字符输入流视图 */
@@ -709,7 +639,7 @@ declare namespace Twinning.Kernel {
 	/** 字符输出流视图 */
 	type OutputCharacterStreamView = CharacterStreamView;
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** JSON */
 	namespace JSON {
@@ -724,25 +654,21 @@ declare namespace Twinning.Kernel {
 		 */
 		class Value<Constraint extends JS_Value = JS_Value> {
 
-			// ------------------------------------------------
-
 			private _JSON_Value: Constraint;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default<Constraint extends JS_Value>(): Value<Constraint>;
 
 			static copy<Constraint extends JS_Value>(it: Value<Constraint>): Value<Constraint>;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static value<Constraint extends JS_Value>(it: Constraint): Value<Constraint>;
 
 			get value(): Constraint;
 
 			set value(it: Constraint);
-
-			// ------------------------------------------------
 
 		}
 
@@ -802,17 +728,15 @@ declare namespace Twinning.Kernel {
 		/** 结点 */
 		class Node {
 
-			// ------------------------------------------------
-
 			private _XML_Node;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): Node;
 
 			static copy(it: Node): Node;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static value(it: JS_Node): Node;
 
@@ -820,31 +744,27 @@ declare namespace Twinning.Kernel {
 
 			set value(it: JS_Node);
 
-			// ------------------------------------------------
-
 		}
 
 	}
 
+	// ----------------
+
 	/** 图像 */
 	namespace Image {
-
-		// ------------------------------------------------
 
 		/** 表征图像尺寸的整数组 */
 		class ImageSize {
 
-			// ------------------------------------------------
-
 			private _Image_ImageSize;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): ImageSize;
 
 			static copy(it: ImageSize): ImageSize;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static Value: [bigint, bigint];
 
@@ -854,24 +774,20 @@ declare namespace Twinning.Kernel {
 
 			set value(it: typeof ImageSize.Value);
 
-			// ------------------------------------------------
-
 		}
 
 		/** 表征图像位置的整数组 */
 		class ImagePosition {
 
-			// ------------------------------------------------
-
 			private _Image_ImagePosition;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): ImagePosition;
 
 			static copy(it: ImagePosition): ImagePosition;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static Value: [bigint, bigint];
 
@@ -881,26 +797,22 @@ declare namespace Twinning.Kernel {
 
 			set value(it: typeof ImagePosition.Value);
 
-			// ------------------------------------------------
-
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		/** 颜色 */
 		class Color {
 
-			// ------------------------------------------------
-
 			private _Image_Color;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): Color;
 
 			static copy(it: Color): Color;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static Value: bigint;
 
@@ -910,26 +822,20 @@ declare namespace Twinning.Kernel {
 
 			set value(it: typeof Color.Value);
 
-			// ------------------------------------------------
-
 		}
-
-		// ------------------------------------------------
 
 		/** 颜色列表 */
 		class ColorList {
 
-			// ------------------------------------------------
-
 			private _Image_ColorList;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): ColorList;
 
 			static copy(it: ColorList): ColorList;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static Value: Array<bigint>;
 
@@ -939,26 +845,22 @@ declare namespace Twinning.Kernel {
 
 			set value(it: typeof ColorList.Value);
 
-			// ------------------------------------------------
-
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		/** 像素 */
 		class Pixel {
 
-			// ------------------------------------------------
-
 			private _Image_Pixel;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): Pixel;
 
 			static copy(it: Pixel): Pixel;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static Value: [bigint, bigint, bigint, bigint];
 
@@ -968,90 +870,22 @@ declare namespace Twinning.Kernel {
 
 			set value(it: typeof Pixel.Value);
 
-			// ------------------------------------------------
-
 		}
 
-		// ------------------------------------------------
-
-		/** 图像 */
-		class Image {
-
-			// ------------------------------------------------
-
-			private _Image_Image;
-
-			// ------------------------------------------------
-
-			static default(): Image;
-
-			static copy(it: Image): Image;
-
-			// ------------------------------------------------
-
-			/**
-			 * 根据所给尺寸构造图像
-			 * @param size 图像尺寸
-			 * @returns 对象
-			 */
-			static allocate(
-				size: ImageSize,
-			): Image;
-
-			// ------------------------------------------------
-
-			/**
-			 * 分配新图像
-			 * @param size 新图像的尺寸
-			 * @returns 无
-			 */
-			allocate(
-				size: ImageSize,
-			): Void;
-
-			/**
-			 * 重置图像
-			 * @returns 无
-			 */
-			reset(
-			): Void;
-
-			// ------------------------------------------------
-
-			/**
-			 * 获取图像尺寸
-			 * @returns 图像尺寸
-			 */
-			size(
-			): ImageSize;
-
-			// ------------------------------------------------
-
-			/**
-			 * 获取观测本图像的视图
-			 * @returns 观测本图像的视图
-			 */
-			view(
-			): ImageView;
-
-			// ------------------------------------------------
-
-		}
+		// ----------------
 
 		/** 图像视图 */
 		class ImageView {
 
-			// ------------------------------------------------
-
 			private _Image_ImageView;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): ImageView;
 
 			static copy(it: ImageView): ImageView;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 获取视图尺寸
@@ -1060,7 +894,7 @@ declare namespace Twinning.Kernel {
 			size(
 			): ImageSize;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 获取子视图
@@ -1073,7 +907,7 @@ declare namespace Twinning.Kernel {
 				size: ImageSize,
 			): ImageView;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 以像素填充视图
@@ -1093,8 +927,6 @@ declare namespace Twinning.Kernel {
 				image: ImageView,
 			): Void;
 
-			// ------------------------------------------------
-
 		}
 
 		/** 变量图像视图 */
@@ -1103,14 +935,74 @@ declare namespace Twinning.Kernel {
 		/** 常量图像视图 */
 		type ConstantImageView = ImageView;
 
-		// ------------------------------------------------
+		// ----------------
+
+		/** 图像 */
+		class Image {
+
+			private _Image_Image;
+
+			// ----------------
+
+			static default(): Image;
+
+			static copy(it: Image): Image;
+
+			// ----------------
+
+			/**
+			 * 根据所给尺寸构造图像
+			 * @param size 图像尺寸
+			 * @returns 对象
+			 */
+			static allocate(
+				size: ImageSize,
+			): Image;
+
+			// ----------------
+
+			/**
+			 * 分配新图像
+			 * @param size 新图像的尺寸
+			 * @returns 无
+			 */
+			allocate(
+				size: ImageSize,
+			): Void;
+
+			/**
+			 * 重置图像
+			 * @returns 无
+			 */
+			reset(
+			): Void;
+
+			// ----------------
+
+			/**
+			 * 获取图像尺寸
+			 * @returns 图像尺寸
+			 */
+			size(
+			): ImageSize;
+
+			// ----------------
+
+			/**
+			 * 获取观测本图像的视图
+			 * @returns 观测本图像的视图
+			 */
+			view(
+			): ImageView;
+
+		}
 
 	}
 
+	// ----------------
+
 	/** 存储 */
 	namespace Storage {
-
-		// ------------------------------------------------
 
 		/**
 		 * 判断目标是否存在
@@ -1139,7 +1031,7 @@ declare namespace Twinning.Kernel {
 			target: Path,
 		): Boolean;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 复制文件或目录
@@ -1172,7 +1064,7 @@ declare namespace Twinning.Kernel {
 			source: Path,
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 创建符号链接
@@ -1196,7 +1088,7 @@ declare namespace Twinning.Kernel {
 			target: Path,
 		): Path;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 创建硬链接
@@ -1209,7 +1101,7 @@ declare namespace Twinning.Kernel {
 			object: Path,
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 创建文件
@@ -1282,7 +1174,7 @@ declare namespace Twinning.Kernel {
 			data: InputByteStreamView,
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 创建目录
@@ -1313,8 +1205,6 @@ declare namespace Twinning.Kernel {
 	/** 进程 */
 	namespace Process {
 
-		// ------------------------------------------------
-
 		/**
 		 * 获取工作目录
 		 * @returns 工作目录
@@ -1331,7 +1221,7 @@ declare namespace Twinning.Kernel {
 			target: Path,
 		): Void;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取环境变量
@@ -1360,7 +1250,7 @@ declare namespace Twinning.Kernel {
 		function list_environment_variable(
 		): StringList;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 生成子进程
@@ -1381,7 +1271,7 @@ declare namespace Twinning.Kernel {
 			error: PathOptional,
 		): IntegerU32;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 调用宿主环境的命令处理器
@@ -1392,9 +1282,9 @@ declare namespace Twinning.Kernel {
 			command: String,
 		): IntegerU32;
 
-		// ------------------------------------------------
-
 	}
+
+	// ----------------
 
 	/** 工具 */
 	namespace Tool {
@@ -1411,17 +1301,15 @@ declare namespace Twinning.Kernel {
 					/** 模式 */
 					class Mode {
 
-						// ------------------------------------------------
-
 						private _Tool_Data_Hash_FNV_Mode;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Mode;
 
 						static copy(it: Mode): Mode;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'm_0' | 'm_1' | 'm_1a';
 
@@ -1431,24 +1319,20 @@ declare namespace Twinning.Kernel {
 
 						set value(it: typeof Mode.Value);
 
-						// ------------------------------------------------
-
 					}
 
 					/** 位数 */
 					class BitCount {
 
-						// ------------------------------------------------
-
 						private _Tool_Data_Hash_FNV_BitCount;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): BitCount;
 
 						static copy(it: BitCount): BitCount;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'b_32' | 'b_64';
 
@@ -1457,8 +1341,6 @@ declare namespace Twinning.Kernel {
 						get value(): typeof BitCount.Value;
 
 						set value(it: typeof BitCount.Value);
-
-						// ------------------------------------------------
 
 					}
 
@@ -1596,17 +1478,15 @@ declare namespace Twinning.Kernel {
 					/** 模式 */
 					class Mode {
 
-						// ------------------------------------------------
-
 						private _Tool_Data_Encrypt_Rijndeal_Mode;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Mode;
 
 						static copy(it: Mode): Mode;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'ecb' | 'cbc' | 'cfb';
 
@@ -1615,8 +1495,6 @@ declare namespace Twinning.Kernel {
 						get value(): typeof Mode.Value;
 
 						set value(it: typeof Mode.Value);
-
-						// ------------------------------------------------
 
 					}
 
@@ -1683,17 +1561,15 @@ declare namespace Twinning.Kernel {
 					/** 策略 */
 					class Strategy {
 
-						// ------------------------------------------------
-
 						private _Tool_Data_Compress_Deflate_Strategy;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Strategy;
 
 						static copy(it: Strategy): Strategy;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'default_mode' | 'filtered' | 'huffman_only' | 'rle' | 'fixed';
 
@@ -1703,24 +1579,20 @@ declare namespace Twinning.Kernel {
 
 						set value(it: typeof Strategy.Value);
 
-						// ------------------------------------------------
-
 					}
 
 					/** 封装 */
 					class Wrapper {
 
-						// ------------------------------------------------
-
 						private _Tool_Data_Compress_Deflate_Wrapper;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Wrapper;
 
 						static copy(it: Wrapper): Wrapper;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'none' | 'zlib' | 'gzip';
 
@@ -1729,8 +1601,6 @@ declare namespace Twinning.Kernel {
 						get value(): typeof Wrapper.Value;
 
 						set value(it: typeof Wrapper.Value);
-
-						// ------------------------------------------------
 
 					}
 
@@ -2057,17 +1927,15 @@ declare namespace Twinning.Kernel {
 				/** 格式 */
 				class Format {
 
-					// ------------------------------------------------
-
 					private _Tool_Texture_Encoding_Format;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Format;
 
 					static copy(it: Format): Format;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: 'a_8' | 'rgb_332' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_1555' | 'argb_4444' | 'argb_8888' | 'l_8' | 'la_44' | 'la_88' | 'al_44' | 'al_88' | 'rgb_888_o' | 'rgba_8888_o';
 
@@ -2076,8 +1944,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Format.Value;
 
 					set value(it: typeof Format.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2126,17 +1992,15 @@ declare namespace Twinning.Kernel {
 					/** 格式 */
 					class Format {
 
-						// ------------------------------------------------
-
 						private _Tool_Texture_Compression_ETC_Format;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Format;
 
 						static copy(it: Format): Format;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'v1_rgb' | 'v2_rgb' | 'v2_rgba';
 
@@ -2145,8 +2009,6 @@ declare namespace Twinning.Kernel {
 						get value(): typeof Format.Value;
 
 						set value(it: typeof Format.Value);
-
-						// ------------------------------------------------
 
 					}
 
@@ -2192,17 +2054,15 @@ declare namespace Twinning.Kernel {
 					/** 格式 */
 					class Format {
 
-						// ------------------------------------------------
-
 						private _Tool_Texture_Compression_PVRTC_Format;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Format;
 
 						static copy(it: Format): Format;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static Value: 'v1_4bpp_rgb' | 'v1_4bpp_rgba';
 
@@ -2211,8 +2071,6 @@ declare namespace Twinning.Kernel {
 						get value(): typeof Format.Value;
 
 						set value(it: typeof Format.Value);
-
-						// ------------------------------------------------
 
 					}
 
@@ -2315,17 +2173,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_Wwise_SoundBank_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 72n | 88n | 112n | 113n | 118n | 120n | 125n | 128n | 132n | 134n | 135n | 140n | 145n | 150n;
@@ -2336,8 +2192,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2359,25 +2213,21 @@ declare namespace Twinning.Kernel {
 					/** 声音库 */
 					class SoundBank {
 
-						// ------------------------------------------------
-
 						private _Tool_Wwise_SoundBank_Definition_SoundBank;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): SoundBank;
 
 						static copy(it: SoundBank): SoundBank;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<JS_N.SoundBank>, version: Version): SoundBank;
 
 						get_json(version: Version): JSON.Value<JS_N.SoundBank>;
 
 						set_json(it: JSON.Value<JS_N.SoundBank>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -2434,17 +2284,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_Marmalade_DZip_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 0n;
@@ -2455,8 +2303,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2490,25 +2336,21 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						// ------------------------------------------------
-
 						private _Tool_Marmalade_DZip_Definition_Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Package;
 
 						static copy(it: Package): Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
 
 						get_json(version: Version): JSON.Value<JS_N.Package>;
 
 						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -2565,17 +2407,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ZLib_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						variant_64: false | true;
@@ -2586,8 +2426,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2671,17 +2509,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_CryptData_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 					};
@@ -2691,8 +2527,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2777,17 +2611,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ReflectionObjectNotation_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n;
@@ -2799,8 +2631,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2850,17 +2680,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_UTexture_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						compress_texture_data: false | true;
@@ -2871,8 +2699,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -2946,17 +2772,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_SexyTexture_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 0n;
@@ -2967,8 +2791,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3046,17 +2868,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_Animation_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n | 2n | 3n | 4n | 5n | 6n;
@@ -3067,8 +2887,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3237,25 +3055,21 @@ declare namespace Twinning.Kernel {
 					/** 动画 */
 					class Animation {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_Animation_Definition_Animation;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Animation;
 
 						static copy(it: Animation): Animation;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<JS_N.Animation>, version: Version): Animation;
 
 						get_json(version: Version): JSON.Value<JS_N.Animation>;
 
 						set_json(it: JSON.Value<JS_N.Animation>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3303,17 +3117,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ReAnimation_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						platform: 'desktop' | 'mobile' | 'television';
@@ -3325,8 +3137,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3360,25 +3170,21 @@ declare namespace Twinning.Kernel {
 					/** 动画 */
 					class Animation {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_ReAnimation_Definition_Animation;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Animation;
 
 						static copy(it: Animation): Animation;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<undefined>, version: Version): Animation;
 
 						get_json(version: Version): JSON.Value<undefined>;
 
 						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3426,17 +3232,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_Particle_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						platform: 'desktop' | 'mobile' | 'television';
@@ -3448,8 +3252,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3463,25 +3265,21 @@ declare namespace Twinning.Kernel {
 					/** 粒子 */
 					class Particle {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_Particle_Definition_Particle;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Particle;
 
 						static copy(it: Particle): Particle;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<undefined>, version: Version): Particle;
 
 						get_json(version: Version): JSON.Value<undefined>;
 
 						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3529,17 +3327,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_Trail_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						platform: 'desktop' | 'mobile' | 'television';
@@ -3551,8 +3347,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3566,25 +3360,21 @@ declare namespace Twinning.Kernel {
 					/** 拖尾 */
 					class Trail {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_Trail_Definition_Trail;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Trail;
 
 						static copy(it: Trail): Trail;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<undefined>, version: Version): Trail;
 
 						get_json(version: Version): JSON.Value<undefined>;
 
 						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3632,17 +3422,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_RenderEffect_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n;
@@ -3654,8 +3442,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3669,25 +3455,21 @@ declare namespace Twinning.Kernel {
 					/** 效果 */
 					class Effect {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_RenderEffect_Definition_Effect;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Effect;
 
 						static copy(it: Effect): Effect;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<undefined>, version: Version): Effect;
 
 						get_json(version: Version): JSON.Value<undefined>;
 
 						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3735,17 +3517,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ParticleEffect_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n;
@@ -3756,8 +3536,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3771,25 +3549,21 @@ declare namespace Twinning.Kernel {
 					/** 效果 */
 					class Effect {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_ParticleEffect_Definition_Effect;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Effect;
 
 						static copy(it: Effect): Effect;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<undefined>, version: Version): Effect;
 
 						get_json(version: Version): JSON.Value<undefined>;
 
 						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3837,17 +3611,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_CharacterFontWidget2_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 					};
@@ -3857,8 +3629,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3872,25 +3642,21 @@ declare namespace Twinning.Kernel {
 					/** 字体部件 */
 					class FontWidget {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_CharacterFontWidget2_Definition_FontWidget;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): FontWidget;
 
 						static copy(it: FontWidget): FontWidget;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<undefined>, version: Version): FontWidget;
 
 						get_json(version: Version): JSON.Value<undefined>;
 
 						set_json(it: JSON.Value<undefined>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -3938,17 +3704,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_Package_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 0n;
@@ -3960,8 +3724,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -3989,25 +3751,21 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_Definition_Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Package;
 
 						static copy(it: Package): Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
 
 						get_json(version: Version): JSON.Value<JS_N.Package>;
 
 						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -4059,17 +3817,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ResourceStreamGroup_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n | 3n | 4n;
@@ -4080,8 +3836,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -4147,25 +3901,21 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_ResourceStreamGroup_Definition_Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Package;
 
 						static copy(it: Package): Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
 
 						get_json(version: Version): JSON.Value<JS_N.Package>;
 
 						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -4217,17 +3967,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ResourceStreamBundle_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n | 3n | 4n;
@@ -4239,8 +3987,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -4340,25 +4086,21 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_ResourceStreamBundle_Definition_Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): Package;
 
 						static copy(it: Package): Package;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
 
 						get_json(version: Version): JSON.Value<JS_N.Package>;
 
 						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -4373,25 +4115,21 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class PackageOptional {
 
-						// ------------------------------------------------
-
 						private _Tool_PopCap_ResourceStreamBundle_Manifest_PackageOptional;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static default(): PackageOptional;
 
 						static copy(it: PackageOptional): PackageOptional;
 
-						// ------------------------------------------------
+						// ----------------
 
 						static json(it: JSON.Value<null>, version: Version): PackageOptional;
 
 						get_json(version: Version): JSON.Value<null>;
 
 						set_json(it: JSON.Value<null>, version: Version): Void;
-
-						// ------------------------------------------------
 
 					}
 
@@ -4453,17 +4191,15 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					// ------------------------------------------------
-
 					private _Tool_PopCap_ResourceStreamBundlePatch_Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static default(): Version;
 
 					static copy(it: Version): Version;
 
-					// ------------------------------------------------
+					// ----------------
 
 					static Value: {
 						number: 1n;
@@ -4474,8 +4210,6 @@ declare namespace Twinning.Kernel {
 					get value(): typeof Version.Value;
 
 					set value(it: typeof Version.Value);
-
-					// ------------------------------------------------
 
 				}
 
@@ -4669,25 +4403,21 @@ declare namespace Twinning.Kernel {
 
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 杂项 */
 	namespace Miscellaneous {
 
-		// ------------------------------------------------
-
 		/** 线程 */
 		class Thread {
 
-			// ------------------------------------------------
-
 			private _Miscellaneous_Thread;
 
-			// ------------------------------------------------
+			// ----------------
 
 			static default(): Thread;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 判断线程是否可合并
@@ -4696,7 +4426,7 @@ declare namespace Twinning.Kernel {
 			joinable(
 			): Boolean;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 合并线程
@@ -4712,7 +4442,7 @@ declare namespace Twinning.Kernel {
 			detach(
 			): Void;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 当前线程放弃目前的执行权，以允许其他线程执行
@@ -4730,18 +4460,14 @@ declare namespace Twinning.Kernel {
 				duration: Size,
 			): Void;
 
-			// ------------------------------------------------
-
 		}
 
 		/** 上下文 */
 		class Context {
 
-			// ------------------------------------------------
-
 			private _Miscellaneous_Context;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 执行脚本
@@ -4765,7 +4491,7 @@ declare namespace Twinning.Kernel {
 				argument: StringList,
 			): StringList;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 产生新的上下文，与当前上下文是兄弟关系
@@ -4774,7 +4500,7 @@ declare namespace Twinning.Kernel {
 			spawn(
 			): Context;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 判断当前上下文是否繁忙，即是否通过execute函数在另一线程中执行着任务
@@ -4794,7 +4520,7 @@ declare namespace Twinning.Kernel {
 				executor: () => any,
 			): Void;
 
-			// ------------------------------------------------
+			// ----------------
 
 			/**
 			 * 模块加载时的主目录，默认为null
@@ -4810,11 +4536,9 @@ declare namespace Twinning.Kernel {
 			query_byte_stream_use_big_endian(
 			): Boolean;
 
-			// ------------------------------------------------
-
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 将 ByteListView 解释为 CharacterListView
@@ -4834,7 +4558,7 @@ declare namespace Twinning.Kernel {
 			t: CharacterListView,
 		): ByteListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 移动 ByteArray 所持有的内存到新的 String
@@ -4854,7 +4578,7 @@ declare namespace Twinning.Kernel {
 			t: String,
 		): ByteArray;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 获取 String 的内存视图为 CharacterListView
@@ -4865,7 +4589,7 @@ declare namespace Twinning.Kernel {
 			t: String,
 		): CharacterListView;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/**
 		 * 通过 CharacterListView 指向的内存构造新的字符串
@@ -4876,7 +4600,7 @@ declare namespace Twinning.Kernel {
 			t: CharacterListView,
 		): string;
 
-		// ------------------------------------------------
+		// ----------------
 
 		/** 主上下文 */
 		const g_context: Context;
@@ -4890,11 +4614,9 @@ declare namespace Twinning.Kernel {
 		/** 处理器架构 */
 		const g_architecture: String;
 
-		// ------------------------------------------------
-
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	/** 主函数 */
 	type JS_MainFunction = (
@@ -4904,8 +4626,6 @@ declare namespace Twinning.Kernel {
 			exception: undefined | any;
 		},
 	) => void;
-
-	// ------------------------------------------------
 
 }
 

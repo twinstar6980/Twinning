@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 
-	// ------------------------------------------------
+	// #region utility
 
 	function make_scale_matrix(
 		resolution: bigint,
@@ -15,7 +15,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		};
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	function create_one(
 		index: number,
@@ -62,7 +62,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		return animation.image.map((value, index) => (create_one(index, value, resolution)));
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	function resize_one(
 		document: Kernel.XML.JS_Node,
@@ -101,7 +101,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function create_fsh(
 		directory: string,
@@ -127,6 +127,6 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

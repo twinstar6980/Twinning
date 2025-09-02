@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export type PTXFormatMap = Array<{
 		index: bigint;
@@ -41,6 +41,8 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			directory: string;
 		},
 	};
+
+	// ----------------
 
 	export function convert(
 		resource_directory: string,
@@ -176,7 +178,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 					if (format === undefined) {
 						throw new Error(`unknown texture format '${texture_additional_source.format}'`);
 					}
-					Console.verbosity(`    size = [ ${make_prefix_padded_string(size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(size[1].toString(), ' ', 4)} ] of [ ${make_prefix_padded_string(actual_size[0].toString(), ' ', 4)}, ${make_prefix_padded_string(actual_size[1].toString(), ' ', 4)} ], format = ${format}`, []);
+					Console.verbosity(`    size = [ ${size[0].toString().padStart(4, ' ')}, ${size[1].toString().padStart(4, ' ')} ] of [ ${actual_size[0].toString().padStart(4, ' ')}, ${actual_size[1].toString().padStart(4, ' ')} ], format = ${format}`, []);
 					let data = KernelX.Storage.read_file(`${resource_directory}/${path}.ptx`);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
@@ -327,6 +329,6 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

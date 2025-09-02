@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PopCap.Animation.Convert {
 
-	// ------------------------------------------------
+	// #region image
 
 	export function parse_image_file_name(
 		value: string,
@@ -30,11 +30,15 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region transform
 
 	export type Transform = [number, number, number, number, number, number];
 
 	export const k_initial_transform: Transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
+
+	// ----------------
 
 	export function mix_transform(
 		source: Transform,
@@ -49,6 +53,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 			change[1] * source[4] + change[3] * source[5] + change[5],
 		];
 	}
+
+	// ----------------
 
 	export function convert_transform_from_standard_to_rotate(
 		data: Transform,
@@ -75,6 +81,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 			data[2],
 		];
 	}
+
+	// ----------------
 
 	export function convert_transform_from_standard_to_variant(
 		data: Transform,
@@ -125,12 +133,14 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region color
 
 	export type Color = [number, number, number, number];
 
 	export const k_initial_color: Color = [1.0, 1.0, 1.0, 1.0];
 
-	// ------------------------------------------------
+	// #endregion
 
 }

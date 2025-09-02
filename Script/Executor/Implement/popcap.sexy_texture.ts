@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -127,7 +127,7 @@ namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

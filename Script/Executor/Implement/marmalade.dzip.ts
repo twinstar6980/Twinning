@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -166,7 +166,7 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

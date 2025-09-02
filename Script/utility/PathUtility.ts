@@ -1,6 +1,6 @@
 namespace Twinning.Script.PathUtility {
 
-	// ------------------------------------------------
+	// #region basic
 
 	export function regularize(
 		target: string,
@@ -20,7 +20,7 @@ namespace Twinning.Script.PathUtility {
 		return target.replaceAll('/', '\\');
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function split(
 		target: string,
@@ -34,7 +34,7 @@ namespace Twinning.Script.PathUtility {
 		return regularize(target.join('/'));
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function parent(
 		target: string,
@@ -52,7 +52,7 @@ namespace Twinning.Script.PathUtility {
 		return index === -1 ? target : target.slice(index + 1);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type Tree = { [key: string]: null | Tree; };
 
@@ -78,9 +78,40 @@ namespace Twinning.Script.PathUtility {
 		return tree;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
-	const dangerous_path_rule = [
+	// #region advance
+
+	export function generate_suffix_path(
+		path: string,
+		infix: string = '.',
+	): string {
+		let result = path;
+		let suffix = 0;
+		while (KernelX.Storage.exist(result)) {
+			suffix += 1;
+			result = `${path}${infix}${suffix}`;
+		}
+		return result;
+	}
+
+	export function rename_secure(
+		source: string,
+		destination: string,
+	): void {
+		if (KernelX.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.toLowerCase() === destination.toLowerCase()) {
+			KernelX.Storage.rename(source, source + '!');
+			KernelX.Storage.rename(source + '!', destination);
+		}
+		else {
+			KernelX.Storage.rename(source, destination);
+		}
+		return;
+	}
+
+	// ----------------
+
+	const k_dangerous_path_rule = [
 		/^\/((storage\/emulated\/[0-9]+)|(sdcard))\//,
 		/^\/$/,
 		/^\/(home)$/,
@@ -108,36 +139,9 @@ namespace Twinning.Script.PathUtility {
 	export function is_dangerous(
 		target: string,
 	): boolean {
-		return dangerous_path_rule.every((value) => (!value.test(target)));
+		return k_dangerous_path_rule.every((value) => (!value.test(target)));
 	}
 
-	export function rename_secure(
-		source: string,
-		destination: string,
-	): void {
-		if (KernelX.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.toLowerCase() === destination.toLowerCase()) {
-			KernelX.Storage.rename(source, source + '!');
-			KernelX.Storage.rename(source + '!', destination);
-		}
-		else {
-			KernelX.Storage.rename(source, destination);
-		}
-		return;
-	}
-
-	export function generate_suffix_path(
-		path: string,
-		infix: string = '.',
-	): string {
-		let result = path;
-		let suffix = 0;
-		while (KernelX.Storage.exist(result)) {
-			suffix += 1;
-			result = `${path}${infix}${suffix}`;
-		}
-		return result;
-	}
-
-	// ------------------------------------------------
+	// #endregion
 
 }

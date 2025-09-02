@@ -1,10 +1,6 @@
 namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
-	// ------------------------------------------------
-
-	export let g_il2cpp_dumper_program_file: null | string = null;
-
-	// ------------------------------------------------
+	// #region il2cpp dumper helper
 
 	type DumpedFieldSignature = {
 		address: number,
@@ -42,6 +38,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		}
 		return result;
 	}
+
+	// ----------------
 
 	type DumpedMethodSignature = {
 		address: number,
@@ -83,7 +81,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region utility
+
+	export let g_il2cpp_dumper_program_file: null | string = null;
+
+	// ----------------
 
 	type Platform = 'windows_x32' | 'android_a32' | 'android_a64';
 
@@ -107,7 +111,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return type;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	const k_instruction_code_nop_x32 = 0x90n;
 
@@ -198,7 +202,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return state;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process_fs(
 		target_directory: string,
@@ -241,7 +245,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		Console.information(`Phase: dump program information via Il2CppDumper`, []);
 		if (disable_record_encryption || enable_debug_mode) {
 			let il2cpp_dumper_program_file = g_il2cpp_dumper_program_file !== null ? g_il2cpp_dumper_program_file : ProcessHelper.search_path_ensure('Il2CppDumper-x86');
-			let dump_result = ProcessHelper.execute(
+			let dump_result = ProcessHelper.spawn_child(
 				il2cpp_dumper_program_file,
 				[
 					program_backup_file,
@@ -442,6 +446,6 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

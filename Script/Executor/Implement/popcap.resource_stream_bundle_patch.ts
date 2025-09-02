@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -118,7 +118,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -1,10 +1,10 @@
 namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export type ValueType = boolean | number | bigint | string | ValueType[] | { [key: string]: ValueType; };
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function boolean<T = never>(
 		source: ValueType | undefined,
@@ -85,6 +85,6 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		throw new Error(`type error`);
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 
-	// ------------------------------------------------
+	// #region type
 
 	export const ResourceTypeE = [
 		'File',
@@ -56,7 +56,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 		additional: ResourceAdditional;
 	};
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type SubgroupCategory = {
 		resolution: null | bigint;
@@ -69,7 +69,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 		resource: Array<Resource>;
 	};
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type Group = {
 		id: string;
@@ -77,12 +77,12 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 		subgroup: Array<Subgroup>;
 	};
 
-	// ------------------------------------------------
+	// ----------------
 
 	export type Package = {
 		group: Array<Group>;
 	};
 
-	// ------------------------------------------------
+	// #endregion
 
 }

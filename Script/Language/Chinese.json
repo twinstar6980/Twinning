@@ -83,13 +83,13 @@
 	"executor.typical:argument_input": "参数需输入：{}",
 	"executor.typical:batch_result": "批处理完成，总计 {} 项，有效 {} 项，失败 {} 项",
 	// Executor/Implement/*
-	"范围溢出": "范围溢出",
-	"密钥非法": "密钥非法",
-	"密钥长度非法": "密钥长度非法",
-	"长度不匹配": "长度不匹配",
-	"分辨率应大于零": "分辨率应大于零",
-	"尺寸应大于零": "尺寸应大于零",
-	"比例应大于零": "比例应大于零",
+	"executor.implement:*.out_of_range": "executor.implement:*.out_of_range",
+	"executor.implement:*.illegal_key": "executor.implement:*.illegal_key",
+	"executor.implement:*.illegal_key_length": "executor.implement:*.illegal_key_length",
+	"executor.implement:*.length_not_match": "executor.implement:*.length_not_match",
+	"executor.implement:*.resolution_should_be_bigger_then_zero": "executor.implement:*.resolution_should_be_bigger_then_zero",
+	"executor.implement:*.size_should_be_bigger_then_zero": "executor.implement:*.size_should_be_bigger_then_zero",
+	"executor.implement:*.rate_should_be_bigger_then_zero": "executor.implement:*.rate_should_be_bigger_then_zero",
 	// Executor/Implement/script.js
 	"executor.implement:script.js.execute": "JS 执行",
 	"executor.implement:script.js.execute:script_file": "脚本文件",
@@ -640,9 +640,9 @@
 	"executor.implement:kairosoft.game.modify_program:target_directory": "目标目录",
 	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "禁用存档加密",
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "启用调试模式",
-	// Executable/JSShell
-	"executable.js_shell:input_start": "JS交互模式已开启",
-	"executable.js_shell:input_description": "输入为空则完成一轮输入，若一轮输入为空则结束交互",
+	// Executable/ScriptConsole
+	"executable.script_console:start": "JS交互模式已开启",
+	"executable.script_console:description": "输入为空则完成一轮输入，若一轮输入为空则结束交互",
 	// Executable/CompareLanguageFile
 	"executable.compare_language_file:please_input_original_file": "请输入原文文件",
 	"executable.compare_language_file:please_input_translation_file": "请输入译文文件",

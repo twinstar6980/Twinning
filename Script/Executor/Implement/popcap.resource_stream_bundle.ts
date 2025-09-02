@@ -1,55 +1,6 @@
 namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 
-	// ------------------------------------------------
-
-	const ResourceStreamBundleLayoutModeX = [
-		'group',
-		'subgroup',
-		'resource',
-	] as const;
-
-	type ResourceStreamBundleLayoutMode = typeof ResourceStreamBundleLayoutModeX[number];
-
-	const ResourceStreamBundleLayoutModeE = ResourceStreamBundleLayoutModeX as unknown as ResourceStreamBundleLayoutMode[];
-
-	function make_resource_stream_bundle_package_relative_path(
-		layout_mode: ResourceStreamBundleLayoutMode,
-	) {
-		let result: {
-			resource_directory: TypicalArgumentExpression<string>;
-			packet_file: TypicalArgumentExpression<string>;
-			packet_definition_file: TypicalArgumentExpression<string>;
-		};
-		switch (layout_mode) {
-			case 'group': {
-				result = {
-					resource_directory: 'group/{0}/{1}/resource',
-					packet_file: 'group/{0}/{1}/packet.rsg',
-					packet_definition_file: 'group/{0}/{1}/definition.json',
-				};
-				break;
-			}
-			case 'subgroup': {
-				result = {
-					resource_directory: 'subgroup/{1}/resource',
-					packet_file: 'subgroup/{1}/packet.rsg',
-					packet_definition_file: 'subgroup/{1}/definition.json',
-				};
-				break;
-			}
-			case 'resource': {
-				result = {
-					resource_directory: 'resource',
-					packet_file: 'packet/{1}.rsg',
-					packet_definition_file: 'packet/{1}.json',
-				};
-				break;
-			}
-		}
-		return result;
-	}
-
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -94,7 +45,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					}),
 					typical_argument_string({
 						id: 'layout_mode',
-						option: ResourceStreamBundleLayoutModeE,
+						option: Support.PopCap.ResourceStreamBundle.LayoutModeE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -119,7 +70,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					}),
 				],
 				worker: ({ bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, input_packet, output_new_packet, buffer_size }) => {
-					let relative_path = make_resource_stream_bundle_package_relative_path(layout_mode as any);
+					let relative_path = Support.PopCap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/${relative_path.resource_directory}`;
@@ -150,7 +101,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					let relative_path = make_resource_stream_bundle_package_relative_path(layout_mode as any);
+					let relative_path = Support.PopCap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/${relative_path.resource_directory}`;
@@ -194,7 +145,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					}),
 					typical_argument_string({
 						id: 'layout_mode',
-						option: ResourceStreamBundleLayoutModeE,
+						option: Support.PopCap.ResourceStreamBundle.LayoutModeE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -213,7 +164,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					}),
 				],
 				worker: ({ data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, output_resource, output_packet }) => {
-					let relative_path = make_resource_stream_bundle_package_relative_path(layout_mode as any);
+					let relative_path = Support.PopCap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
@@ -499,7 +450,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

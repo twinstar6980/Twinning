@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.Wwise.Media {
 
-	// ------------------------------------------------
+	// #region type
 
 	const FormatX = [
 		'pcm',
@@ -15,6 +15,6 @@ namespace Twinning.Script.Support.Wwise.Media {
 
 	export const FormatE = FormatX as unknown as Format[];
 
-	// ------------------------------------------------
+	// #endregion
 
 }

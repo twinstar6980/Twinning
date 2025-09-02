@@ -1,5 +1,7 @@
 namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 
+	// #region execute
+
 	export function execute(
 	): void {
 		Console.information(los('executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory'), [
@@ -12,7 +14,7 @@ namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 			los('executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory', input_directory),
 			los('executable.extract_rsb_from_pvz2_cn_apk_directory:output_directory', output_directory),
 		]);
-		Runner.simple_batch_execute(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
+		Executor.execute_typical_batch_task(input_directory, ['file', /.+\.rsb\.smf$/i], (item, temporary) => {
 			let input_file = `${input_directory}/${item}`;
 			let output_file = `${output_directory}/${item.slice(0, -4)}`;
 			KernelX.Tool.PopCap.ZLib.uncompress_fs(input_file, output_file, 15n, { variant_64: false });
@@ -21,6 +23,8 @@ namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 		]);
 		return;
 	}
+
+	// #endregion
 
 }
 

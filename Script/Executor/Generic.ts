@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor {
 
-	// ------------------------------------------------
+	// #region type
 
 	export type Argument = Record<string, null | boolean | bigint | number | string>;
 
@@ -30,7 +30,9 @@ namespace Twinning.Script.Executor {
 		argument: Argument;
 	};
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region basic
 
 	export function parse(
 		command_line: Array<string>,
@@ -134,12 +136,14 @@ namespace Twinning.Script.Executor {
 		return is_string(state) ? null : state;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
-	export const g_method: Array<Executor.Method> = [];
+	// #region global
 
-	export const g_method_batch: Array<Executor.Method> = [];
+	export let g_method: Array<Executor.Method> = [];
 
-	// ------------------------------------------------
+	export let g_method_batch: Array<Executor.Method> = [];
+
+	// #endregion
 
 }

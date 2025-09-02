@@ -1,14 +1,14 @@
 namespace Twinning.Script.Language {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export type StringMap = Record<string, string>;
 
-	// ------------------------------------------------
+	// ----------------
 
 	let g_map: StringMap = {};
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function imbue(
 		source: StringMap,
@@ -17,7 +17,7 @@ namespace Twinning.Script.Language {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function query(
 		id: string,
@@ -47,9 +47,10 @@ namespace Twinning.Script.Language {
 		return result;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
+
 namespace Twinning.Script {
 	/** LOcalized String, @see {@link Language.query} */
 	export const los = Language.query;

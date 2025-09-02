@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export type Option = {
 		generalize_rton: boolean;
@@ -12,6 +12,8 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 		specialize_pam: boolean;
 		specialize_wem: boolean;
 	};
+
+	// ----------------
 
 	function transpile_resource(
 		project_directory: string,
@@ -291,7 +293,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function transpile(
 		project_directory: string,
@@ -315,6 +317,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

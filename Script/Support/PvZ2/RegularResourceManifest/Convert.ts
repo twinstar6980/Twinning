@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function from_official(
 		source: ResourceManifest.Package,
@@ -230,6 +230,6 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 		return destination;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

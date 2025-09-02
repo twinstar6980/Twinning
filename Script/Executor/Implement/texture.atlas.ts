@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executor.Implement.texture.atlas {
 
-	// ------------------------------------------------
+	// #region partition function
 
 	export type Configuration = {
 		method: TypicalMethodConfigurationGroup;
@@ -113,7 +113,7 @@ namespace Twinning.Script.Executor.Implement.texture.atlas {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }
 

@@ -1,6 +1,6 @@
 namespace Twinning.Script.XML {
 
-	// ------------------------------------------------
+	// #region wrap
 
 	export function wrap_element(
 		value: Kernel.XML.JS_Element,
@@ -29,7 +29,9 @@ namespace Twinning.Script.XML {
 		};
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region create
 
 	export function create_element(
 		name: string,
@@ -52,7 +54,7 @@ namespace Twinning.Script.XML {
 		return { value };
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function create_element_node(
 		name: string,
@@ -75,7 +77,9 @@ namespace Twinning.Script.XML {
 		return wrap_comment(create_comment(value));
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region find
 
 	export function find_child_element(
 		parent: Kernel.XML.JS_Element,
@@ -106,6 +110,6 @@ namespace Twinning.Script.XML {
 		return list.length === 0 ? null : list[0];
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

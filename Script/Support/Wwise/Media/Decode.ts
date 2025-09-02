@@ -1,10 +1,10 @@
 namespace Twinning.Script.Support.Wwise.Media.Decode {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export let g_vgmstream_program_file: null | string = null;
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function decode_fs(
 		ripe_file: string,
@@ -18,7 +18,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		let ripe_file_fallback_temporary: null | string = null;
 		let ripe_file_fallback = ripe_file;
 		if (!ripe_file.endsWith('.wem')) {
-			ripe_file_fallback_temporary = Home.new_temporary(null, 'directory');
+			ripe_file_fallback_temporary = HomePath.new_temporary(null, 'directory');
 			ripe_file_fallback = `${ripe_file_fallback_temporary}/sample.wem`;
 			KernelX.Storage.copy(ripe_file, ripe_file_fallback);
 		}
@@ -26,7 +26,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (raw_file_directory !== null) {
 			KernelX.Storage.create_directory(raw_file_directory);
 		}
-		program_result = ProcessHelper.execute(
+		program_result = ProcessHelper.spawn_child(
 			vgmstream_program_file,
 			[
 				'-o',
@@ -69,6 +69,6 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		return format;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

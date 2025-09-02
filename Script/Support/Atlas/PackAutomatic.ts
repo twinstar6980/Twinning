@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.Atlas.PackAutomatic {
 
-	// ------------------------------------------------
+	// #region common
 
 	export type Box = {
 		w: number;
@@ -12,7 +12,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		y: number;
 	} & Box;
 
-	// ------------------------------------------------
+	// ----------------
 
 	function box_is_fit(
 		item: Box,
@@ -44,7 +44,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		}
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	function box_area(
 		t: Box,
@@ -88,7 +88,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		return box_bigger_side(t) / box_smaller_side(t) * box_area(t);
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function expander_exponent_of_2_generator(
 		square: boolean,
@@ -129,12 +129,14 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		}
 	}
 
-	// ------------------------------------------------
+	// #endregion
+
+	// #region utility
 
 	export function pack(
-		container: Box,
 		item_map: Record<string, Box>,
-		item_weighter: (a: Box) => number,
+		container: Box,
+		item_weighter: (it: Box) => number,
 	): null | Record<string, Rect> {
 		let space_list: Array<Rect> = [{ x: 0, y: 0, ...container }];
 		let item_list = record_to_array(item_map, (key, value) => ({ name: key, box: item_map[key] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
@@ -175,16 +177,18 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		return result;
 	}
 
+	// ----------------
+
 	export function pack_automatic(
 		item_map: Record<string, Box>,
 		container_expander: (it: Box, step: number) => void,
-		item_weighter: (a: Box) => number,
+		item_weighter: (it: Box) => number,
 	): [Box, Record<string, Rect>] {
 		let container: Box = { w: 0, h: 0 };
 		let result: null | Record<string, Rect>;
 		let expand_step = 0;
 		while (true) {
-			result = pack(container, item_map, item_weighter);
+			result = pack(item_map, container, item_weighter);
 			if (result !== null) {
 				break;
 			}
@@ -197,7 +201,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 	export function pack_automatic_best(
 		item_map: Record<string, Box>,
 		container_expander: (it: Box, step: number) => void,
-		item_weighter: Array<(a: Box) => number> = [
+		item_weighter: Array<(it: Box) => number> = [
 			box_area,
 			box_perimeter,
 			box_bigger_side,
@@ -217,6 +221,6 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		return best;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

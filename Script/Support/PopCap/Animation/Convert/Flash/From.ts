@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 
-	// ------------------------------------------------
+	// #region utility
 
 	function create_image_document(
 		image: Kernel.Tool.PopCap.Animation.Definition.JS_N.Image,
@@ -372,6 +372,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 		]);
 	}
 
+	// ----------------
+
 	export function from(
 		animation: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
@@ -417,7 +419,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 		return flash;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function from_fsh(
 		raw: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
@@ -440,6 +442,6 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

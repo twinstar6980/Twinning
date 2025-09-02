@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export function parse(
 		project_directory: string,
@@ -179,6 +179,6 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

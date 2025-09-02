@@ -1,10 +1,10 @@
 namespace Twinning.Script.Check {
 
-	// ------------------------------------------------
+	// #region utility
 
 	export type CheckerX<T> = (value: T) => null | string;
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function enumeration_checker_x<T>(
 		rule: Array<T>,
@@ -18,6 +18,6 @@ namespace Twinning.Script.Check {
 		return (value) => (rule.test(value) ? null : los('check:regexp_message', `${rule.source}`));
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

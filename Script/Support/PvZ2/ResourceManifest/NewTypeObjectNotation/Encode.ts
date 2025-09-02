@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Encode {
 
-	// ------------------------------------------------
+	// #region utility
 
 	function write_enumeration(
 		data: ByteStreamView,
@@ -39,7 +39,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process(
 		data: ByteStreamView,
@@ -105,7 +105,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		return;
 	}
 
-	// ------------------------------------------------
+	// ----------------
 
 	export function process_fs(
 		data_file: string,
@@ -121,6 +121,6 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		return;
 	}
 
-	// ------------------------------------------------
+	// #endregion
 
 }

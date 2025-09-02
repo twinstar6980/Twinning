@@ -1,8 +1,8 @@
 namespace Twinning.Script {
 
-	// ------------------------------------------------
-
 	export class ThreadManager {
+
+		// #region structor
 
 		private m_pool: Array<{
 			thread: Kernel.Miscellaneous.Thread;
@@ -10,44 +10,27 @@ namespace Twinning.Script {
 			result: [boolean, any];
 		}>;
 
-		private make_executor(
-			index: number,
-			executor: () => any,
-		): () => void {
-			return () => {
-				let item = this.m_pool[index];
-				item.context.query_byte_stream_use_big_endian().value = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
-				item.result = [false, undefined];
-				try {
-					let result = executor();
-					item.result = [false, result];
-				}
-				catch (e) {
-					item.result = [true, e];
-				}
-				return;
-			};
-		}
+		// ----------------
 
-		// ------------------------------------------------
-
-		constructor(
+		public constructor(
 		) {
 			this.m_pool = [];
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
-		idle(
-			index: number
+		// #region action
+
+		public idle(
+			index: number,
 		): boolean {
 			assert_test(0 <= index && index < this.m_pool.length);
 			let item = this.m_pool[index];
 			return !item.context.busy().value;
 		}
 
-		execute(
+		public execute(
 			index: number,
 			executor: () => any,
 		): void {
@@ -59,7 +42,7 @@ namespace Twinning.Script {
 			return;
 		}
 
-		result(
+		public result(
 			index: number,
 		): [boolean, any] {
 			assert_test(0 <= index && index < this.m_pool.length);
@@ -68,7 +51,7 @@ namespace Twinning.Script {
 			return item.result;
 		}
 
-		wait(
+		public wait(
 		): void {
 			while (!this.m_pool.every((value, index) => (this.idle(index)))) {
 				Kernel.Miscellaneous.Thread.yield();
@@ -76,7 +59,9 @@ namespace Twinning.Script {
 			return;
 		}
 
-		resize(
+		// ----------------
+
+		public resize(
 			size: number,
 			initializer: null | (() => any) = null,
 		): void {
@@ -99,7 +84,7 @@ namespace Twinning.Script {
 			return;
 		}
 
-		push_execute(
+		public push(
 			executor: () => any,
 		): void {
 			assert_test(this.m_pool.length !== 0);
@@ -115,12 +100,37 @@ namespace Twinning.Script {
 			return;
 		}
 
+		// #endregion
+
+		// #region executor
+
+		private make_executor(
+			index: number,
+			executor: () => any,
+		): () => void {
+			return () => {
+				let item = this.m_pool[index];
+				item.context.query_byte_stream_use_big_endian().value = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value;
+				item.result = [false, undefined];
+				try {
+					let result = executor();
+					item.result = [false, result];
+				}
+				catch (e) {
+					item.result = [true, e];
+				}
+				return;
+			};
+		}
+
+		// #endregion
+
+		// #region global
+
+		public static g_global_manager: ThreadManager = new ThreadManager();
+
+		// #endregion
+
 	}
-
-	// ------------------------------------------------
-
-	export const g_thread_manager = new ThreadManager();
-
-	// ------------------------------------------------
 
 }

@@ -1,18 +1,16 @@
 namespace Twinning.Script {
 
-	// ------------------------------------------------
-
 	export class CommandLineReader {
 
-		// ------------------------------------------------
+		// #region structor
 
 		private m_view: Array<string>;
 
 		private m_position: number;
 
-		// ------------------------------------------------
+		// ----------------
 
-		constructor(
+		public constructor(
 			view: Array<string>,
 		) {
 			this.m_view = view;
@@ -20,14 +18,16 @@ namespace Twinning.Script {
 			return;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
-		done(
+		// #region query
+
+		public done(
 		): boolean {
 			return !(0 <= this.m_position && this.m_position < this.m_view.length);
 		}
 
-		check(
+		public check(
 			name: string,
 		): boolean {
 			let state = !this.done() && this.m_view[this.m_position] === name;
@@ -37,9 +37,9 @@ namespace Twinning.Script {
 			return state;
 		}
 
-		// ------------------------------------------------
+		// ----------------
 
-		next_string(
+		public next_string(
 		): string {
 			assert_test(!this.done());
 			let value = this.m_view[this.m_position];
@@ -47,10 +47,8 @@ namespace Twinning.Script {
 			return value;
 		}
 
-		// ------------------------------------------------
+		// #endregion
 
 	}
-
-	// ------------------------------------------------
 
 }
