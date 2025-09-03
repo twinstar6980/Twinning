@@ -118,11 +118,11 @@ export namespace Twinning::Kernel {
 	};
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableBasicCharacterListView = BasicCharacterListView<Element, k_false>;
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantBasicCharacterListView = BasicCharacterListView<Element, k_true>;
 
 	// ----------------
@@ -545,7 +545,7 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <auto constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	using CharacterListView = BasicCharacterListView<Character, constant>;
 
 	using VariableCharacterListView = VariableBasicCharacterListView<Character>;
@@ -557,7 +557,7 @@ export namespace Twinning::Kernel {
 	using CharacterArray = BasicCharacterArray<Character>;
 
 	template <auto size> requires
-		AutoConstraint
+		AutomaticConstraint
 	using StaticCharacterArray = BasicStaticCharacterArray<Character, size>;
 
 	#pragma endregion

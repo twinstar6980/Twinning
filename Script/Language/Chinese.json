@@ -25,7 +25,6 @@
 	"console:path_is_exist_not_file": "指定路径已存在，但不是文件",
 	"console:path_is_exist_not_directory": "指定路径已存在，但不是目录",
 	"console:path_command_need_output": "该指令只可用于输出路径",
-	"console:path_command_pick_cancel": "已取消选择",
 	"console:option_invalid": "输入项不在可选项中",
 	"console:pick_path_type": "请选择路径类型",
 	// Support/Marmalade/DZip/PackAutomatic
@@ -66,7 +65,6 @@
 	"support.pvz2.resource_convert:recase_resource_path": "恢复资源路径大小写 ...",
 	"support.pvz2.resource_convert:convert_resource": "转换资源 ...",
 	// Executor/Generic
-	"executor.generic:input_required": "输入值对于未指定功能的命令是必须的",
 	"executor.generic:method_select": "请选择需要应用的功能",
 	"executor.generic:method_select_null_to_skip": "输入为空则跳过此条命令",
 	"executor.generic:method_unavailable": "没有可用的功能",

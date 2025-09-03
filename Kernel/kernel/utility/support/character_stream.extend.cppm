@@ -216,7 +216,7 @@ export namespace Twinning::Kernel {
 	#pragma region byte list
 
 	template <auto t_constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct CharacterStreamAdapter<ByteListView<t_constant>> {
 
 		using ThisInput = InputCharacterStreamView;

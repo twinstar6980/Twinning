@@ -63,7 +63,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 		let cos = data[0];
 		let sin = data[1];
 		let radian = Math.atan(sin / cos) + Math.PI * (cos >= 0 ? 0 : sin >= 0 ? +1 : -1);
-		assert_test(number_is_equal(Math.sin(radian), sin, 1e-2) && number_is_equal(Math.cos(radian), cos, 1e-2));
+		assert_test(floater_is_equal(Math.sin(radian), sin, 1e-2) && floater_is_equal(Math.cos(radian), cos, 1e-2));
 		return [radian, data[4], data[5]];
 	}
 
@@ -94,7 +94,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 			let cos = data[0];
 			let sin = data[1];
 			let radian = Math.atan(sin / cos) + Math.PI * (cos >= 0 ? 0 : sin >= 0 ? +1 : -1);
-			if (number_is_equal(Math.sin(radian), sin, 1e-2) && number_is_equal(Math.cos(radian), cos, 1e-2)) {
+			if (floater_is_equal(Math.sin(radian), sin, 1e-2) && floater_is_equal(Math.cos(radian), cos, 1e-2)) {
 				return [radian, data[4], data[5]];
 			}
 		}

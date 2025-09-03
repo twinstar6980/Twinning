@@ -10,11 +10,18 @@ namespace Twinning.Script.Executable.ScriptConsole {
 		while (true) {
 			let script = '';
 			while (true) {
-				let sub_script = Console.string(true, null);
-				if (sub_script === null) {
+				let text = Console.string(true, null);
+				if (text === null) {
 					break;
 				}
-				script += sub_script + '\n';
+				else if (text.endsWith('\\')) {
+					script += text.substring(0, text.length - 1) + '\n';
+					continue;
+				}
+				else {
+					script += text;
+					break;
+				}
 			}
 			if (script === '') {
 				break;

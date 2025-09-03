@@ -93,28 +93,28 @@ export namespace Twinning::Kernel::Trait {
 	// ----------------
 
 	template <typename TResult, typename ... TArgument> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct CallableTrait<AsGlobalFunction<TResult, TArgument ...>> :
 		GlobalFunctionTrait<TResult, TArgument ...> {
 
 	};
 
 	template <typename TClass, typename TResult, typename ... TArgument> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct CallableTrait<AsVariableMemberFunction<TClass, TResult, TArgument ...>> :
 		MemberFunctionTrait<TClass, false, TResult, TArgument ...> {
 
 	};
 
 	template <typename TClass, typename TResult, typename ... TArgument> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct CallableTrait<AsConstantMemberFunction<TClass, TResult, TArgument ...>> :
 		MemberFunctionTrait<TClass, true, TResult, TArgument ...> {
 
 	};
 
 	template <typename TClass> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct CallableTrait<AsCallableClass<TClass>> :
 		CallableClassTrait<TClass> {
 

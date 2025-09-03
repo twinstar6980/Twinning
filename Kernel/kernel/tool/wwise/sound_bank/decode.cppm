@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		using typename Common::CommonPropertyValue;
 
 		template <typename Type> requires
-			AutoConstraint
+			AutomaticConstraint
 		using CommonPropertyMap = typename Common::template CommonPropertyMap<Type>;
 
 		using typename Common::EventActionCommonPropertyType;
@@ -43,7 +43,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		using typename Common::AudioCommonPropertyType;
 
 		template <typename Type> requires
-			AutoConstraint
+			AutomaticConstraint
 		using EnumerationAttribute = typename Common::template EnumerationAttribute<Type>;
 
 		// ----------------

@@ -6,7 +6,7 @@ namespace Twinning.Script.Console {
 
 	// ----------------
 
-	export let g_basic_disable_virtual_terminal_sequence = false;
+	export let g_basic_disable_virtual_terminal_sequence: boolean = false;
 
 	const k_basic_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
 		verbosity: {
@@ -542,18 +542,19 @@ namespace Twinning.Script.Console {
 				return [null];
 			}
 			let result: string;
-			if (value[0] !== '=') {
+			if (value[0] !== '?') {
 				result = value;
 			}
 			else {
-				switch (value[1]) {
-					case '=': {
-						result = value.slice(2);
-						break;
-					}
-					default: {
-						return los('console:input_command_invalid');
-						break;
+				if (value[1] === '?') {
+					result = value.slice(2);
+				}
+				else {
+					switch (value.substring(1)) {
+						default: {
+							return los('console:input_command_invalid');
+							break;
+						}
 					}
 				}
 			}
@@ -629,109 +630,80 @@ namespace Twinning.Script.Console {
 				return [null];
 			}
 			let result: string;
-			if (value[0] !== '=') {
+			if (value[0] !== '?') {
 				result = HomePath.of(PathUtility.regularize(unquote_string(value)));
 			}
 			else {
-				switch (value[1]) {
-					case '=': {
-						result = HomePath.of(PathUtility.regularize(value.slice(2)));
-						break;
-					}
-					case 'p': {
-						if (value.length > 2) {
+				if (value[1] === '?') {
+					result = HomePath.of(PathUtility.regularize(value.slice(2)));
+				}
+				else {
+					switch (value.substring(1)) {
+						case 'g':
+						case 'generate': {
+							if (mode !== 'output') {
+								return los('console:path_command_need_output');
+							}
+							if (state_data.last_value === null) {
+								return los('console:input_command_need_previous_input');
+							}
+							result = state_data.last_value;
+							if (KernelX.Storage.exist(result)) {
+								result = PathUtility.generate_suffix_path(result);
+								warning(los('console:path_is_exist_but_generate'), [result]);
+							}
+							break;
+						}
+						case 'm':
+						case 'move': {
+							if (mode !== 'output') {
+								return los('console:path_command_need_output');
+							}
+							if (state_data.last_value === null) {
+								return los('console:input_command_need_previous_input');
+							}
+							result = state_data.last_value;
+							if (KernelX.Storage.exist(result)) {
+								let move_path = PathUtility.generate_suffix_path(result);
+								KernelX.Storage.rename(result, move_path);
+								warning(los('console:path_is_exist_but_move'), [move_path]);
+							}
+							break;
+						}
+						case 'd':
+						case 'delete': {
+							if (mode !== 'output') {
+								return los('console:path_command_need_output');
+							}
+							if (state_data.last_value === null) {
+								return los('console:input_command_need_previous_input');
+							}
+							result = state_data.last_value;
+							if (KernelX.Storage.exist(result)) {
+								KernelX.Storage.remove(result);
+								warning(los('console:path_is_exist_but_delete'), []);
+							}
+							break;
+						}
+						case 'o':
+						case 'overwrite': {
+							if (mode !== 'output') {
+								return los('console:path_command_need_output');
+							}
+							if (state_data.last_value === null) {
+								return los('console:input_command_need_previous_input');
+							}
+							result = state_data.last_value;
+							if (KernelX.Storage.exist(result)) {
+								state_data.allow_overwrite = true;
+								warning(los('console:path_is_exist_but_overwrite'), []);
+							}
+							break;
+						}
+						default: {
 							return los('console:input_command_invalid');
+							break;
 						}
-						let pick_type = null as null | 'load_file' | 'load_directory' | 'save_file';
-						if (mode === 'input' && type === 'file') {
-							pick_type = 'load_file';
-						}
-						if (mode === 'input' && type === 'directory') {
-							pick_type = 'load_directory';
-						}
-						if (mode === 'output' && type === 'file') {
-							pick_type = 'save_file';
-						}
-						let pick_result = pick_storage_item(pick_type);
-						if (pick_result === null) {
-							return los('console:path_command_pick_cancel');
-						}
-						result = pick_result;
-						message('input', leading, [result]);
-						break;
-					}
-					case 'g': {
-						if (mode !== 'output') {
-							return los('console:path_command_need_output');
-						}
-						if (value.length > 2) {
-							return los('console:input_command_invalid');
-						}
-						if (state_data.last_value === null) {
-							return los('console:input_command_need_previous_input');
-						}
-						result = state_data.last_value;
-						if (KernelX.Storage.exist(result)) {
-							result = PathUtility.generate_suffix_path(result);
-							warning(los('console:path_is_exist_but_generate'), [result]);
-						}
-						break;
-					}
-					case 'm': {
-						if (mode !== 'output') {
-							return los('console:path_command_need_output');
-						}
-						if (value.length > 2) {
-							return los('console:input_command_invalid');
-						}
-						if (state_data.last_value === null) {
-							return los('console:input_command_need_previous_input');
-						}
-						result = state_data.last_value;
-						if (KernelX.Storage.exist(result)) {
-							let move_path = PathUtility.generate_suffix_path(result);
-							KernelX.Storage.rename(result, move_path);
-							warning(los('console:path_is_exist_but_move'), [move_path]);
-						}
-						break;
-					}
-					case 'd': {
-						if (mode !== 'output') {
-							return los('console:path_command_need_output');
-						}
-						if (value.length > 2) {
-							return los('console:input_command_invalid');
-						}
-						if (state_data.last_value === null) {
-							return los('console:input_command_need_previous_input');
-						}
-						result = state_data.last_value;
-						if (KernelX.Storage.exist(result)) {
-							KernelX.Storage.remove(result);
-							warning(los('console:path_is_exist_but_delete'), []);
-						}
-						break;
-					}
-					case 'o': {
-						if (mode !== 'output') {
-							return los('console:path_command_need_output');
-						}
-						if (value.length > 2) {
-							return los('console:input_command_invalid');
-						}
-						if (state_data.last_value === null) {
-							return los('console:input_command_need_previous_input');
-						}
-						result = state_data.last_value;
-						if (KernelX.Storage.exist(result)) {
-							state_data.allow_overwrite = true;
-							warning(los('console:path_is_exist_but_overwrite'), []);
-						}
-						break;
-					}
-					default: {
-						return los('console:input_command_invalid');
-						break;
 					}
 				}
 			}
@@ -795,14 +767,14 @@ namespace Twinning.Script.Console {
 
 	export function enumeration<Value>(
 		option: Array<[Value, string, null | string]>,
-		nullable: null | boolean,
+		nullable: null,
 		checker: null | Check.CheckerX<Value>,
 		initial?: Value,
 	): Value;
 
 	export function enumeration<Value>(
 		option: Array<[Value, string, null | string]>,
-		nullable: null | boolean,
+		nullable: boolean,
 		checker: null | Check.CheckerX<Value>,
 		initial?: null | Value,
 	): null | Value;

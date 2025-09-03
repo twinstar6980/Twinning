@@ -99,7 +99,7 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using Enumeration = EnumerationBox<Value>;
 
 	#pragma endregion

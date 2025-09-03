@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename TType> requires
-		AutoConstraint
+		AutomaticConstraint
 		&& (IsSame<TType, Null, Boolean, Number, String, Array, Object>)
 	struct ValueAdapter<TType> {
 
@@ -250,7 +250,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename TType> requires
-		AutoConstraint
+		AutomaticConstraint
 		&& (IsEnumerationBox<TType>)
 		&& (IsDerivedFrom<TType, Enumeration<typename TType::Value>>)
 		&& (!IsSame<TType, Enumeration<typename TType::Value>>)
@@ -285,7 +285,7 @@ export namespace Twinning::Kernel::JSON {
 	#pragma region container
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Wrapper<TValue>> {
 
 		using This = Value;
@@ -315,7 +315,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Optional<TValue>> {
 
 		using This = Value;
@@ -355,7 +355,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename ... TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Variant<TValue ...>> {
 
 		using This = Value;
@@ -421,7 +421,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename TEnumeration, typename ... TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<EnumerableVariant<TEnumeration, TValue ...>> {
 
 		using This = Value;
@@ -491,7 +491,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename ... TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Tuple<TValue ...>> {
 
 		using This = Value;
@@ -533,7 +533,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<List<TElement>> {
 
 		using This = Value;
@@ -577,7 +577,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename TKey, typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Map<TKey, TValue>> {
 
 		using This = Value;
@@ -625,7 +625,7 @@ export namespace Twinning::Kernel::JSON {
 	#pragma region record
 
 	template <typename TType> requires
-		AutoConstraint
+		AutomaticConstraint
 		&& (IsDerivedFrom<TType, ListRecord>)
 	struct ValueAdapter<TType> {
 
@@ -668,7 +668,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename TType> requires
-		AutoConstraint
+		AutomaticConstraint
 		&& (IsDerivedFrom<TType, MapRecord>)
 	struct ValueAdapter<TType> {
 
@@ -715,7 +715,7 @@ export namespace Twinning::Kernel::JSON {
 	// ----------------
 
 	template <typename ... TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<ListRecordVariant<TValue ...>> {
 
 		using This = Value;
@@ -748,7 +748,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename ... TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<MapRecordVariant<TValue ...>> {
 
 		using This = Value;
@@ -845,7 +845,7 @@ export namespace Twinning::Kernel::JSON {
 	#pragma region miscellaneous
 
 	template <typename XValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Position1<XValue>> {
 
 		using This = Value;
@@ -877,7 +877,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename XValue, typename YValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Position2<XValue, YValue>> {
 
 		using This = Value;
@@ -911,7 +911,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename XValue, typename YValue, typename ZValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Position3<XValue, YValue, ZValue>> {
 
 		using This = Value;
@@ -947,7 +947,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename XValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Size1<XValue>> {
 
 		using This = Value;
@@ -979,7 +979,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename XValue, typename YValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Size2<XValue, YValue>> {
 
 		using This = Value;
@@ -1013,7 +1013,7 @@ export namespace Twinning::Kernel::JSON {
 	};
 
 	template <typename XValue, typename YValue, typename ZValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ValueAdapter<Size3<XValue, YValue, ZValue>> {
 
 		using This = Value;

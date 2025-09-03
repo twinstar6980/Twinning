@@ -25,7 +25,6 @@
 	"console:path_is_exist_not_file": "Đường dẫn đã được chỉ định đã tồn tại, nhưng không phải là tệp",
 	"console:path_is_exist_not_directory": "Đường dẫn đã được chỉ định đã tồn tại, nhưng không phải là thư mục",
 	"console:path_command_need_output": "Lệnh này chỉ có sẵn cho đường dẫn đầu ra",
-	"console:path_command_pick_cancel": "Lựa chọn đã bị hủy",
 	"console:option_invalid": "Dữ liệu đầu vào không thuộc một trong các tùy chọn",
 	"console:pick_path_type": "Chọn loại đường dẫn",
 	// Support/Marmalade/DZip/PackAutomatic
@@ -66,7 +65,6 @@
 	"support.pvz2.resource_convert:recase_resource_path": "Đang điều chỉnh lại đường dẫn tài nguyên...",
 	"support.pvz2.resource_convert:convert_resource": "Đang chuyển đổi tài nguyên...",
 	// Executor/Generic
-	"executor.generic:input_required": "Giá trị đầu vào là bắt buộc đối với các lệnh không chỉ định chức năng",
 	"executor.generic:method_select": "Chọn các phương thức để áp dụng",
 	"executor.generic:method_select_null_to_skip": "Nhập chuỗi trống để bỏ qua lệnh này",
 	"executor.generic:method_unavailable": "Không tìm thấy phương thức có sẵn, lệnh đã bị bỏ qua",

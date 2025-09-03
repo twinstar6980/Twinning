@@ -5,28 +5,17 @@ namespace Twinning.Script.Executor {
 	export type Argument = Record<string, null | boolean | bigint | number | string>;
 
 	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends keyof Argument = keyof Argument> = {
-		/** ID；用于指定功能，应唯一 */
 		id: string;
-		/** 名称函数；返回对函数的名称文本 */
 		name(): string;
-		/** 工作函数；根据参数执行的事务，返回结束状态与有效用时 */
 		worker(argument: Argument): [boolean, number];
-		/** 默认参数；当命令所提供参数未包含所需参数时，提供默认值，若其中属性值为undefined，则表示命令所提供参数必须包含此值 */
 		default_argument: Argument;
-		/** 输入过滤函数；根据输入值判断此功能是否可进入待选表 */
 		input_filter(input: string): boolean;
-		/** 输入转发键名；输入值需要转发到工作函数参数的键名 */
 		input_forwarder: InputForwarderKey;
 	};
 
 	export type Command = {
-		/** 附加输入值 */
-		input: null | string;
-		/** 关闭功能的筛选；若指定，则所有功能都可供用户选择 */
-		filterless: boolean;
-		/** 需要应用的功能，若未指定，则需由用户选择 */
-		method: null | string;
-		/** 传递给所应用功能工作函数的参数 */
+		input: '?none' | string;
+		method: '?filtered' | '?unfiltered' | string;
 		argument: Argument;
 	};
 
@@ -41,17 +30,12 @@ namespace Twinning.Script.Executor {
 		let command_reader = new CommandLineReader(command_line);
 		while (!command_reader.done()) {
 			let command: Command = {
-				input: null,
-				filterless: false,
-				method: null,
+				input: '?none',
+				method: '?filtered',
 				argument: {},
 			};
 			{
-				let input = command_reader.next_string();
-				command.input = input === '?' ? null : input;
-			}
-			if (command_reader.check('-filterless')) {
-				command.filterless = true;
+				command.input = command_reader.next_string();
 			}
 			if (command_reader.check('-method')) {
 				command.method = command_reader.next_string();
@@ -75,15 +59,15 @@ namespace Twinning.Script.Executor {
 	): null | [boolean, number] {
 		let state: [boolean, number] | string = undefined!;
 		do {
-			if (command.method === null) {
-				if (command.input === null) {
-					state = los('executor.generic:input_required');
-					break;
-				}
+			let selected_method: null | string = null;
+			if (command.method !== '?filtered' && command.method !== '?unfiltered') {
+				selected_method = command.method;
+			}
+			else {
 				for (let method_source of [method, fallback_method]) {
 					let valid_method: Array<[bigint, Method]> = [];
 					for (let index in method_source) {
-						if (command.filterless || method_source[index].input_filter(command.input)) {
+						if (command.method === '?unfiltered' || command.input === '?none' || method_source[index].input_filter(command.input)) {
 							valid_method.push([BigInt(index) + 1n, method_source[index]]);
 						}
 					}
@@ -91,27 +75,27 @@ namespace Twinning.Script.Executor {
 						Console.information(los('executor.generic:method_select'), [
 							los('executor.generic:method_select_null_to_skip'),
 						]);
-						command.method = Console.enumeration(valid_method.map((value) => ([value[1].id, `${value[0]}`, value[1].name()])), true, null);
-						if (command.method !== null) {
+						selected_method = Console.enumeration(valid_method.map((value) => ([value[1].id, `${value[0]}`, value[1].name()])), true, null);
+						if (selected_method !== null) {
 							break;
 						}
 					}
 				}
 			}
-			if (command.method === null) {
+			if (selected_method === null) {
 				state = los('executor.generic:method_unavailable');
 				break;
 			}
-			let target_method = method.find((value) => (value.id === command.method));
+			let target_method = method.find((value) => (value.id === selected_method));
 			if (target_method === undefined) {
-				target_method = fallback_method.find((value) => (value.id === command.method));
+				target_method = fallback_method.find((value) => (value.id === selected_method));
 			}
 			if (target_method === undefined) {
 				state = los('executor.generic:method_invalid');
 				break;
 			}
 			let argument = { ...command.argument };
-			if (command.input !== null) {
+			if (command.input !== '?none') {
 				argument[target_method.input_forwarder] = command.input;
 			}
 			for (let key in target_method.default_argument) {

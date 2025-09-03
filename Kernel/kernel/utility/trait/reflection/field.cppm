@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 		}
 
 		template <typename Class> requires
-			AutoConstraint // TODO: check type
+			AutomaticConstraint // TODO: check type
 		inline static constexpr auto value_of (
 			Class && thix
 		) -> auto && requires
@@ -64,19 +64,19 @@ export namespace Twinning::Kernel::Trait::Reflection {
 	// ----------------
 
 	template <auto t_name, auto t_value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using MemberVariableField = ClassField<t_name, t_value, false, false>;
 
 	template <auto t_name, auto t_value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using MemberFunctionField = ClassField<t_name, t_value, false, true>;
 
 	template <auto t_name, auto t_value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using StaticVariableField = ClassField<t_name, t_value, true, false>;
 
 	template <auto t_name, auto t_value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using StaticFunctionField = ClassField<t_name, t_value, true, true>;
 
 	#pragma endregion
@@ -94,7 +94,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 	// ----------------
 
 	template <auto t_name, auto t_value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using EnumerationValueField = EnumerationField<t_name, t_value>;
 
 	#pragma endregion

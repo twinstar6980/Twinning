@@ -167,7 +167,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup::Structure 
 export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamGroup::Structure::ResourceInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;

@@ -203,11 +203,11 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableBasicStringView = BasicStringView<Element, k_false>;
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantBasicStringView = BasicStringView<Element, k_true>;
 
 	#pragma endregion

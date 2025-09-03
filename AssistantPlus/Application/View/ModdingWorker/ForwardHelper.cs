@@ -42,7 +42,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			String  method,
 			Boolean enableBatch
 		) {
-			return $"{method}{(!enableBatch ? "" : ".batch")}";
+			return $"{method}{(!enableBatch ? "" : "!batch")}";
 		}
 
 		public static List<String> MakeArgumentForCommand (
@@ -51,7 +51,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			Dictionary<String, Object>? argument
 		) {
 			var command = new List<String>();
-			command.Add(input ?? "?");
+			command.Add(input ?? "?none");
 			if (method != null) {
 				command.Add("-method");
 				command.Add(method);

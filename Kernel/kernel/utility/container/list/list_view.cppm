@@ -256,11 +256,11 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableListView = ListView<Element, k_false>;
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantListView = ListView<Element, k_true>;
 
 	#pragma endregion

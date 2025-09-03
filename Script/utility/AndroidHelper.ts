@@ -2,12 +2,6 @@ namespace Twinning.Script.AndroidHelper {
 
 	// #region common
 
-	export let g_sh_program_file: null | string = null;
-
-	export let g_adb_program_file: null | string = null;
-
-	// ----------------
-
 	export const k_remote_temporary_directory = `/data/local/tmp/twinning`;
 
 	// ----------------
@@ -21,30 +15,30 @@ namespace Twinning.Script.AndroidHelper {
 	function run_sh(
 		argument: Array<string>,
 	): string {
-		let program_path = g_sh_program_file !== null ? g_sh_program_file : ProcessHelper.search_path_ensure(`sh`);
-		let execute_result = ProcessHelper.spawn_child(program_path, argument, KernelX.Process.list_environment_variable());
-		if (execute_result.code !== 0n) {
-			throw new Error(`sh execute failed: ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
+		let program_path = ProcessHelper.search_program_ensure('sh');
+		let program_result = ProcessHelper.spawn_child(program_path, argument, KernelX.Process.list_environment_variable());
+		if (program_result.code !== 0n) {
+			throw new Error(`sh execute failed: ${program_result.code}\n${program_result.output}\n${program_result.error}`);
 		}
-		return execute_result.output;
+		return program_result.output;
 	}
 
 	function run_adb(
 		argument: Array<string>,
 	): string {
-		let program_path = g_adb_program_file !== null ? g_adb_program_file : ProcessHelper.search_path_ensure(`adb`);
-		let execute_result = ProcessHelper.spawn_child(program_path, argument, KernelX.Process.list_environment_variable());
-		if (execute_result.code !== 0n) {
-			throw new Error(`adb execute failed: ${execute_result.code}\n${execute_result.output}\n${execute_result.error}`);
+		let program_path = ProcessHelper.search_program_ensure('adb');
+		let program_result = ProcessHelper.spawn_child(program_path, argument, KernelX.Process.list_environment_variable());
+		if (program_result.code !== 0n) {
+			throw new Error(`adb execute failed: ${program_result.code}\n${program_result.output}\n${program_result.error}`);
 		}
-		return execute_result.output;
+		return program_result.output;
 	}
 
 	// #endregion
 
 	// #region basic
 
-	let g_mode: 'native' | 'bridge' = KernelX.is_android ? 'native' : 'bridge';
+	const k_mode = KernelX.is_android ? 'native' : 'bridge';
 
 	// ----------------
 
@@ -52,10 +46,10 @@ namespace Twinning.Script.AndroidHelper {
 		command: string,
 	): string {
 		let result: string;
-		if (g_mode === 'native') {
+		if (k_mode === 'native') {
 			result = run_sh([`-c`, `su -c "${command}"`]);
 		}
-		if (g_mode === 'bridge') {
+		if (k_mode === 'bridge') {
 			result = run_adb([`shell`, `su -c "${command}"`]);
 		}
 		return result!;
@@ -70,10 +64,10 @@ namespace Twinning.Script.AndroidHelper {
 		if (local_parent !== null) {
 			KernelX.Storage.create_directory(local_parent);
 		}
-		if (g_mode === 'native') {
+		if (k_mode === 'native') {
 			fs_copy(remote, local);
 		}
-		if (g_mode === 'bridge') {
+		if (k_mode === 'bridge') {
 			run_adb([`pull`, remote, local]);
 		}
 		return;
@@ -89,10 +83,10 @@ namespace Twinning.Script.AndroidHelper {
 		if (remote_parent !== null) {
 			fs_create_directory(remote_parent);
 		}
-		if (g_mode === 'native') {
+		if (k_mode === 'native') {
 			fs_copy(local, remote);
 		}
-		if (g_mode === 'bridge') {
+		if (k_mode === 'bridge') {
 			if (fs_is_fuse_media_path(remote)) {
 				run_adb([`push`, local, remote]);
 			}

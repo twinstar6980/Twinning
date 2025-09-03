@@ -619,10 +619,10 @@ class _PathSubmissionBar extends StatelessWidget {
                     position: PopupMenuPosition.under,
                     icon: Icon(IconSymbols.adjust),
                     itemBuilder: (context) => [
-                      ('=g', 'Generate'),
-                      ('=m', 'Move'),
-                      ('=d', 'Delete'),
-                      ('=o', 'Overwrite'),
+                      ('?generate', 'Generate'),
+                      ('?move', 'Move'),
+                      ('?delete', 'Delete'),
+                      ('?overwrite', 'Overwrite'),
                     ].map((value) => PopupMenuItem(
                       value: value.$1,
                       child: Text(

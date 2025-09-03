@@ -85,7 +85,7 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<ID, number, number> {
 		return {
 			id: object.id,
-			initial_echoer: (value) => (make_number_to_string(value)),
+			initial_echoer: (value) => (make_floater_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.floater(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -271,7 +271,7 @@ namespace Twinning.Script.Executor {
 		batch: boolean,
 	): Method<typeof source.GivenArgument> {
 		return {
-			id: `${source.id}${!batch ? '' : '.batch'}`,
+			id: `${source.id}${!batch ? '' : '!batch'}`,
 			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${source.id}`)}`),
 			worker: (given_argument: Record<string, any>) => {
 				let state = false;

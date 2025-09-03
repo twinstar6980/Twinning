@@ -262,11 +262,11 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Key, typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableMapView = MapView<Key, Value, k_false>;
 
 	template <typename Key, typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantMapView = MapView<Key, Value, k_true>;
 
 	#pragma endregion

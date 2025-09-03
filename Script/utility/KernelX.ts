@@ -16,9 +16,9 @@ namespace Twinning.Script.KernelX {
 
 	// ----------------
 
-	export let g_common_buffer = Kernel.ByteArray.default();
+	export let g_common_buffer: Kernel.ByteArray = Kernel.ByteArray.default();
 
-	export let g_common_buffer_x = Kernel.ByteArray.allocate(Kernel.Size.value(0x2000n));
+	export let g_common_buffer_for_string: Kernel.ByteArray = Kernel.ByteArray.allocate(Kernel.Size.value(0x2000n));
 
 	// #endregion
 
@@ -45,7 +45,7 @@ namespace Twinning.Script.KernelX {
 		): Kernel.JSON.Value<Constraint> {
 			let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
 			let value = Kernel.JSON.Value.default<Constraint>();
-			let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_x.view()));
+			let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_for_string.view()));
 			Kernel.Tool.Data.Serialization.JSON.Read.process(data_stream, value, buffer_stream);
 			return value;
 		}

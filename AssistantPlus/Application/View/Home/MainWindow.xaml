@@ -17,6 +17,7 @@
 	<my:Box
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
+		IsTabStop="True"
 		>
 		<my:Box
 			x:Name="uBackground"

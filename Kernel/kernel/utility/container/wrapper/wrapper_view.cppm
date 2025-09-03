@@ -112,11 +112,11 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableWrapperView = WrapperView<Value, k_false>;
 
 	template <typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantWrapperView = WrapperView<Value, k_true>;
 
 	#pragma endregion

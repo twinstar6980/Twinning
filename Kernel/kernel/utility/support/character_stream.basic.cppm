@@ -51,7 +51,7 @@ export namespace Twinning::Kernel {
 	#pragma region string
 
 	template <auto t_constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct CharacterStreamAdapter<StringView<t_constant>> {
 
 		using ThisInput = InputCharacterStreamView;

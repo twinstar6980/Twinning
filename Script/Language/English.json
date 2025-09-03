@@ -25,7 +25,6 @@
 	"console:path_is_exist_not_file": "Path specified already exists, but not a file",
 	"console:path_is_exist_not_directory": "Path specified already exists, but not a directory",
 	"console:path_command_need_output": "This command only available for output path",
-	"console:path_command_pick_cancel": "Pick has been cancel",
 	"console:option_invalid": "Input is not one of the options",
 	"console:pick_path_type": "Select the path type",
 	// Support/Marmalade/DZip/PackAutomatic
@@ -66,7 +65,6 @@
 	"support.pvz2.resource_convert:recase_resource_path": "Recase resource path...",
 	"support.pvz2.resource_convert:convert_resource": "Converting resource...",
 	// Executor/Generic
-	"executor.generic:input_required": "Input value is required for commands that do not specify a method",
 	"executor.generic:method_select": "Select methods to apply",
 	"executor.generic:method_select_null_to_skip": "Enter empty string to skip this command",
 	"executor.generic:method_unavailable": "No available methods found, command skipped",

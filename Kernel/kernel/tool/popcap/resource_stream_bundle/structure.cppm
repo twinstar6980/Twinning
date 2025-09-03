@@ -504,7 +504,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
@@ -564,7 +564,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <auto t_version> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
@@ -607,7 +607,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <auto t_version> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
@@ -653,7 +653,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <auto t_version> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;

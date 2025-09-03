@@ -16,7 +16,7 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <auto constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	using StringView = BasicStringView<Character, constant>;
 
 	using VariableStringView = VariableBasicStringView<Character>;

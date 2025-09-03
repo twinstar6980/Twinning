@@ -46,7 +46,7 @@ class ForwardHelper {
     String  method,
     Boolean enableBatch,
   ) {
-    return '${method}${!enableBatch ? '' : '.batch'}';
+    return '${method}${!enableBatch ? '' : '!batch'}';
   }
 
   static List<String> makeArgumentForCommand(
@@ -55,7 +55,7 @@ class ForwardHelper {
     Object? argument,
   ) {
     var command = <String>[];
-    command.add(input ?? '?');
+    command.add(input ?? '?none');
     if (method != null) {
       command.add('-method');
       command.add(method);

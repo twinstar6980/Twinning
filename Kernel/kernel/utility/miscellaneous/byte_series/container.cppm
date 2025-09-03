@@ -118,11 +118,11 @@ export namespace Twinning::Kernel {
 	};
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableBasicByteListView = BasicByteListView<Element, k_false>;
 
 	template <typename Element> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantBasicByteListView = BasicByteListView<Element, k_true>;
 
 	// ----------------
@@ -545,7 +545,7 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <auto constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ByteListView = BasicByteListView<Byte, constant>;
 
 	using VariableByteListView = VariableBasicByteListView<Byte>;
@@ -557,7 +557,7 @@ export namespace Twinning::Kernel {
 	using ByteArray = BasicByteArray<Byte>;
 
 	template <auto size> requires
-		AutoConstraint
+		AutomaticConstraint
 	using StaticByteArray = BasicStaticByteArray<Byte, size>;
 
 	#pragma endregion

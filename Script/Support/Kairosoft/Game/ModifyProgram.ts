@@ -85,10 +85,6 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	// #region utility
 
-	export let g_il2cpp_dumper_program_file: null | string = null;
-
-	// ----------------
-
 	type Platform = 'windows_x32' | 'android_a32' | 'android_a64';
 
 	function detect_platform(
@@ -244,20 +240,20 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		let dump_data: Array<string> = [];
 		Console.information(`Phase: dump program information via Il2CppDumper`, []);
 		if (disable_record_encryption || enable_debug_mode) {
-			let il2cpp_dumper_program_file = g_il2cpp_dumper_program_file !== null ? g_il2cpp_dumper_program_file : ProcessHelper.search_path_ensure('Il2CppDumper-x86');
-			let dump_result = ProcessHelper.spawn_child(
-				il2cpp_dumper_program_file,
+			let il2cpp_dumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper-x86');
+			let il2cpp_dumper_program_result = ProcessHelper.spawn_child(
+				il2cpp_dumper_program_path,
 				[
 					program_backup_file,
 					metadata_file,
 				],
 				KernelX.Process.list_environment_variable(),
 			);
-			Console.warning(`The output of Il2CppDumper:`, [dump_result.output]);
-			if (!normalize_string_line_feed(dump_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
+			Console.warning(`The output of Il2CppDumper:`, [il2cpp_dumper_program_result.output]);
+			if (!normalize_string_line_feed(il2cpp_dumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
 				throw new Error(`execute failed by Il2CppDumper`);
 			}
-			dump_data = KernelX.Storage.read_file_s(`${PathUtility.parent(il2cpp_dumper_program_file)}/dump.cs`).split('\n');
+			dump_data = KernelX.Storage.read_file_s(`${PathUtility.parent(il2cpp_dumper_program_path)}/dump.cs`).split('\n');
 		}
 		let symbol_address = {
 			CRC64: {
@@ -331,7 +327,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			program_stream.p(symbol_address.RecordStore.ReadRecord);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
-			assert_test (find_call_instruction(program_stream, 0x1000, symbol_address.CRC64.GetValue, false, platform));
+			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.CRC64.GetValue, false, platform));
 			if (platform === 'windows_x32') {
 				// add esp, .. = 83 C4 XX
 				assert_test(program_stream.u8() === 0x83n);

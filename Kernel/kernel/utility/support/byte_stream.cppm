@@ -36,7 +36,7 @@ export namespace Twinning::Kernel {
 	inline thread_local auto g_byte_stream_use_big_endian = Boolean{k_false};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BaseBox<TValue>> {
 
 		using ThisInput = InputByteStreamView;
@@ -90,7 +90,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BooleanBox<TValue>> {
 
 		using ThisInput = InputByteStreamView;
@@ -136,49 +136,49 @@ export namespace Twinning::Kernel {
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<NumberBox<TValue>> :
 		ByteStreamAdapter<BaseBox<TValue>> {
 
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<IntegerBox<TValue>> :
 		ByteStreamAdapter<NumberBox<TValue>> {
 
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<FloaterBox<TValue>> :
 		ByteStreamAdapter<NumberBox<TValue>> {
 
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<CharacterBox<TValue>> :
 		ByteStreamAdapter<IntegerBox<TValue>> {
 
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<ByteBox<TValue>> :
 		ByteStreamAdapter<IntegerBox<TValue>> {
 
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<EnumeratedBox<TValue>> :
 		ByteStreamAdapter<IntegerBox<TValue>> {
 
 	};
 
 	template <typename TValue> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<EnumerationBox<TValue>> {
 
 		using ThisInput = InputByteStreamView;
@@ -249,7 +249,7 @@ export namespace Twinning::Kernel {
 	#pragma region container
 
 	template <typename TElement, auto t_constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<ListView<TElement, t_constant>> {
 
 		using ThisInput = InputByteStreamView;
@@ -300,7 +300,7 @@ export namespace Twinning::Kernel {
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<List<TElement>> {
 
 		using ThisInput = InputByteStreamView;
@@ -352,7 +352,7 @@ export namespace Twinning::Kernel {
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<Array<TElement>> {
 
 		using ThisInput = InputByteStreamView;
@@ -404,7 +404,7 @@ export namespace Twinning::Kernel {
 	};
 
 	template <typename TElement, auto t_size> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<StaticArray<TElement, t_size>> {
 
 		using ThisInput = InputByteStreamView;
@@ -449,28 +449,28 @@ export namespace Twinning::Kernel {
 	#pragma region byte container
 
 	template <typename TElement, auto t_constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicByteListView<TElement, t_constant>> :
 		ByteStreamAdapter<ListView<TElement, t_constant>> {
 
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicByteList<TElement>> :
 		ByteStreamAdapter<List<TElement>> {
 
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicByteArray<TElement>> :
 		ByteStreamAdapter<Array<TElement>> {
 
 	};
 
 	template <typename TElement, auto t_size> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicStaticByteArray<TElement, t_size>> :
 		ByteStreamAdapter<StaticArray<TElement, t_size>> {
 
@@ -481,28 +481,28 @@ export namespace Twinning::Kernel {
 	#pragma region character container
 
 	template <typename TElement, auto t_constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicCharacterListView<TElement, t_constant>> :
 		ByteStreamAdapter<ListView<TElement, t_constant>> {
 
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicCharacterList<TElement>> :
 		ByteStreamAdapter<List<TElement>> {
 
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicCharacterArray<TElement>> :
 		ByteStreamAdapter<Array<TElement>> {
 
 	};
 
 	template <typename TElement, auto t_size> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicStaticCharacterArray<TElement, t_size>> :
 		ByteStreamAdapter<StaticArray<TElement, t_size>> {
 
@@ -513,14 +513,14 @@ export namespace Twinning::Kernel {
 	#pragma region string
 
 	template <typename TElement, auto t_constant> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicStringView<TElement, t_constant>> :
 		ByteStreamAdapter<ListView<TElement, t_constant>> {
 
 	};
 
 	template <typename TElement> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<BasicString<TElement>> :
 		ByteStreamAdapter<List<TElement>> {
 
@@ -531,7 +531,7 @@ export namespace Twinning::Kernel {
 	#pragma region record
 
 	template <typename TType> requires
-		AutoConstraint
+		AutomaticConstraint
 		&& (IsDerivedFrom<TType, Record>)
 	struct ByteStreamAdapter<TType> {
 
@@ -657,7 +657,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <auto t_value> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<ConstantBlock<t_value>> {
 
 		using ThisInput = InputByteStreamView;
@@ -700,7 +700,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <typename TLength> requires
-		AutoConstraint
+		AutomaticConstraint
 	struct ByteStreamAdapter<StringBlock<TLength>> {
 
 		using ThisInput = InputByteStreamView;

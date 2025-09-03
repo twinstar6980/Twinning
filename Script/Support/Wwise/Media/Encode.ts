@@ -290,10 +290,6 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 
 	// #region utility
 
-	export let g_wwise_program_file: null | string = null;
-
-	// ----------------
-
 	export function encode_fs(
 		raw_file: string,
 		ripe_file: string,
@@ -309,14 +305,13 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		if (KernelX.is_macintosh) {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
-		let wwise_program_file = g_wwise_program_file !== null ? g_wwise_program_file : ProcessHelper.search_path_ensure(wwise_program_name);
-		let program_result: ProcessHelper.ExecuteResult;
+		let wwise_program_path = ProcessHelper.search_program_ensure(wwise_program_name);
 		let temporary_directory = HomePath.new_temporary(null, null);
 		let wwise_project_directory = `${temporary_directory}/Sample`;
 		let wwise_wproj_file = `${wwise_project_directory}/Sample.wproj`;
 		while (true) {
-			program_result = ProcessHelper.spawn_child(
-				wwise_program_file,
+			let wwise_program_result = ProcessHelper.spawn_child(
+				wwise_program_path,
 				[
 					'create-new-project',
 					wwise_wproj_file,
@@ -326,7 +321,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				],
 				KernelX.Process.list_environment_variable(),
 			);
-			if (program_result.code !== 0n) {
+			if (wwise_program_result.code !== 0n) {
 				throw new Error(`execute failed by Wwise`);
 			}
 			if (KernelX.Storage.exist_file(wwise_wproj_file)) {
@@ -355,8 +350,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			'opus': 'Android',
 			'wemopus': 'Android',
 		})[format];
-		program_result = ProcessHelper.spawn_child(
-			wwise_program_file,
+		let wwise_program_result = ProcessHelper.spawn_child(
+			wwise_program_path,
 			[
 				'convert-external-source',
 				wwise_wproj_file,
@@ -367,7 +362,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			],
 			KernelX.Process.list_environment_variable(),
 		);
-		if (program_result.code !== 0n) {
+		if (wwise_program_result.code !== 0n) {
 			throw new Error(`execute failed by Wwise`);
 		}
 		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);

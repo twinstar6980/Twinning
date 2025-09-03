@@ -48,9 +48,8 @@ namespace Twinning.Script.Runner {
 		for (let item of command) {
 			progress.increase();
 			Console.information(los('runner:current_command_execute', progress), [
-				item.input === null ? '?' : item.input,
-				make_boolean_to_string_of_confirmation_character(item.filterless),
-				item.method === null ? '?' : item.method,
+				item.input,
+				item.method,
 				...record_to_array(item.argument, (key, value) => (`"${key}": ${KernelX.JSON.write_s_js(value, true, true, true, true)}`)),
 			]);
 			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
@@ -90,11 +89,7 @@ namespace Twinning.Script.Runner {
 		json_format_disable_array_line_breaking: boolean;
 		json_format_disable_object_trailing_comma: boolean;
 		json_format_disable_object_line_breaking: boolean;
-		external_program_path_sh: null | string;
-		external_program_path_adb: null | string;
-		external_program_path_vgmstream: null | string;
-		external_program_path_wwise: null | string;
-		external_program_path_il2cpp_dumper: null | string;
+		external_program_path: Record<string, null | string>;
 		thread_limit: bigint;
 		command_notification_time_limit: null | bigint;
 	};
@@ -112,11 +107,7 @@ namespace Twinning.Script.Runner {
 			json_format_disable_array_line_breaking: undefined!,
 			json_format_disable_object_trailing_comma: undefined!,
 			json_format_disable_object_line_breaking: undefined!,
-			external_program_path_sh: undefined!,
-			external_program_path_adb: undefined!,
-			external_program_path_vgmstream: undefined!,
-			external_program_path_wwise: undefined!,
-			external_program_path_il2cpp_dumper: undefined!,
+			external_program_path: undefined!,
 			thread_limit: undefined!,
 			command_notification_time_limit: undefined!,
 		};
@@ -148,20 +139,14 @@ namespace Twinning.Script.Runner {
 			json_format_disable_object_line_breaking: (value) => {
 				KernelX.JSON.g_format.disable_object_line_breaking = value;
 			},
-			external_program_path_sh: (value) => {
-				AndroidHelper.g_sh_program_file = value;
-			},
-			external_program_path_adb: (value) => {
-				AndroidHelper.g_adb_program_file = value;
-			},
-			external_program_path_vgmstream: (value) => {
-				Support.Wwise.Media.Decode.g_vgmstream_program_file = value;
-			},
-			external_program_path_wwise: (value) => {
-				Support.Wwise.Media.Encode.g_wwise_program_file = value;
-			},
-			external_program_path_il2cpp_dumper: (value) => {
-				Support.Kairosoft.Game.ModifyProgram.g_il2cpp_dumper_program_file = value;
+			external_program_path: (value) => {
+				ProcessHelper.g_program_path_map = {};
+				for (let item_key in value) {
+					let item_value = value[item_key];
+					if (item_value !== null) {
+						ProcessHelper.g_program_path_map[item_key] = item_value;
+					}
+				}
 			},
 			thread_limit: (value) => {
 				ThreadManager.g_global_manager.resize(Number(value));

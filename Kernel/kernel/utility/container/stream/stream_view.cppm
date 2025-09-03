@@ -392,15 +392,15 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
-		AutoConstraint
+		AutomaticConstraint
 	using AccessStreamView = StreamView<Element, StreamMode::Constant::access(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
-		AutoConstraint
+		AutomaticConstraint
 	using InputStreamView = StreamView<Element, StreamMode::Constant::input(), ListView>;
 
 	template <typename Element, template <typename, auto> typename ListView = ListView> requires
-		AutoConstraint
+		AutomaticConstraint
 	using OutputStreamView = StreamView<Element, StreamMode::Constant::output(), ListView>;
 
 	#pragma endregion

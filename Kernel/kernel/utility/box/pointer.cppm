@@ -347,7 +347,7 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Target> requires
-		AutoConstraint
+		AutomaticConstraint
 	using Pointer = PointerBox<Target>;
 
 	#pragma endregion

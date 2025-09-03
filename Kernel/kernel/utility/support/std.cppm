@@ -103,7 +103,7 @@ export {
 
 	// TODO: specialization format for floater box?
 	template <typename TType> requires
-		Twinning::Kernel::AutoConstraint
+		Twinning::Kernel::AutomaticConstraint
 		&& (Twinning::Kernel::IsBaseBox<TType>)
 	struct std::formatter<TType> :
 		std::formatter<typename TType::Value> {

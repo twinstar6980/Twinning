@@ -228,9 +228,9 @@ namespace Twinning.Script {
 
 	// #endregion
 
-	// #region number
+	// #region floater
 
-	export function number_is_equal(
+	export function floater_is_equal(
 		x: number,
 		y: number,
 		tolerance = Number.EPSILON,
@@ -240,7 +240,7 @@ namespace Twinning.Script {
 
 	// ----------------
 
-	export function make_number_to_string(
+	export function make_floater_to_string(
 		value: number,
 	): string {
 		return `${value > 0.0 ? '+' : ''}${value}${Number.isInteger(value) ? '.0' : ''}`;

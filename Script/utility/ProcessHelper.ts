@@ -28,11 +28,72 @@ namespace Twinning.Script.ProcessHelper {
 		return result;
 	}
 
+	// #endregion
+
+	// #region child
+
+	export type ProgramResult = {
+		code: bigint;
+		output: string;
+		error: string;
+	};
+
 	// ----------------
 
-	export function search_path(
+	export function spawn_child(
+		program: string,
+		argument: Array<string>,
+		environment: Array<string>,
+		input_data: string = '',
+	): ProgramResult {
+		let temporary_directory = HomePath.new_temporary(null, 'directory');
+		let temporary_directory_fallback: null | string = null;
+		let input = `${temporary_directory}/input`;
+		let output = `${temporary_directory}/output`;
+		let error = `${temporary_directory}/error`;
+		KernelX.Storage.write_file_s(input, input_data);
+		if (KernelX.is_android && !Shell.is_basic) {
+			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
+			output = `${temporary_directory_fallback}/output`;
+			error = `${temporary_directory_fallback}/error`;
+			assert_test(KernelX.Process.execute_system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
+		}
+		else {
+			KernelX.Storage.create_file(output);
+			KernelX.Storage.create_file(error);
+		}
+		let code = KernelX.Process.spawn_child(program, argument, environment, input, output, error);
+		let read_file = (path: string) => {
+			let data = KernelX.Storage.read_file_s(path);
+			return normalize_string_line_feed(data);
+		};
+		let result: ProgramResult = {
+			code: code,
+			output: read_file(output),
+			error: read_file(error),
+		};
+		KernelX.Storage.remove(temporary_directory);
+		if (KernelX.is_android && !Shell.is_basic) {
+			assert_test(temporary_directory_fallback !== null);
+			assert_test(KernelX.Process.execute_system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
+		}
+		return result;
+	}
+
+	// #endregion
+
+	// #region program path
+
+	export let g_program_path_map: Record<string, string> = {};
+
+	// ----------------
+
+	export function search_program(
 		name: string,
 	): null | string {
+		if (g_program_path_map[name] !== undefined) {
+			return g_program_path_map[name];
+		}
 		let result: null | string = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
 		let path_environment = KernelX.Process.get_environment_variable('PATH');
@@ -59,66 +120,14 @@ namespace Twinning.Script.ProcessHelper {
 		return result;
 	}
 
-	export function search_path_ensure(
+	export function search_program_ensure(
 		name: string,
 	): string {
-		let path = search_path(name);
+		let path = search_program(name);
 		if (path === null) {
 			throw new Error(`could not find '${path}' program from 'PATH' environment`);
 		}
 		return path;
-	}
-
-	// #endregion
-
-	// #region child
-
-	export type ExecuteResult = {
-		code: bigint;
-		output: string;
-		error: string;
-	};
-
-	// ----------------
-
-	export function spawn_child(
-		program: string,
-		argument: Array<string>,
-		environment: Array<string>,
-		input_data: string = '',
-	): ExecuteResult {
-		let temporary_directory = HomePath.new_temporary(null, 'directory');
-		let temporary_directory_fallback: null | string = null;
-		let input = `${temporary_directory}/input`;
-		let output = `${temporary_directory}/output`;
-		let error = `${temporary_directory}/error`;
-		KernelX.Storage.write_file_s(input, input_data);
-		if (KernelX.is_android && !Shell.is_basic) {
-			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
-			output = `${temporary_directory_fallback}/output`;
-			error = `${temporary_directory_fallback}/error`;
-			assert_test(KernelX.Process.execute_system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
-		}
-		else {
-			KernelX.Storage.create_file(output);
-			KernelX.Storage.create_file(error);
-		}
-		let code = KernelX.Process.spawn_child(program, argument, environment, input, output, error);
-		let read_file = (path: string) => {
-			let data = KernelX.Storage.read_file_s(path);
-			return normalize_string_line_feed(data);
-		};
-		let result: ExecuteResult = {
-			code: code,
-			output: read_file(output),
-			error: read_file(error),
-		};
-		KernelX.Storage.remove(temporary_directory);
-		if (KernelX.is_android && !Shell.is_basic) {
-			assert_test(temporary_directory_fallback !== null);
-			assert_test(KernelX.Process.execute_system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
-		}
-		return result;
 	}
 
 	// #endregion

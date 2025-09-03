@@ -143,11 +143,11 @@ export namespace Twinning::Kernel {
 	#pragma region alias
 
 	template <typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using VariableOptionalView = OptionalView<Value, k_false>;
 
 	template <typename Value> requires
-		AutoConstraint
+		AutomaticConstraint
 	using ConstantOptionalView = OptionalView<Value, k_true>;
 
 	#pragma endregion

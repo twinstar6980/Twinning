@@ -13,9 +13,9 @@ export namespace Twinning::Kernel::Trait {
 
 	inline constexpr auto NoneConstraint = true;
 
-	inline constexpr auto AutoConstraint = true;
-
 	inline constexpr auto CustomConstraint = true;
+
+	inline constexpr auto AutomaticConstraint = true;
 
 	// ----------------
 

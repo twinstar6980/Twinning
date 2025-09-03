@@ -305,7 +305,7 @@ export namespace Twinning::Kernel {
 	#pragma region enumeration
 
 	template <typename TType> requires
-		AutoConstraint
+		AutomaticConstraint
 		&& (IsEnumerationBox<TType>)
 		&& (IsDerivedFrom<TType, Enumeration<typename TType::Value>>)
 		&& (!IsSame<TType, Enumeration<typename TType::Value>>)
