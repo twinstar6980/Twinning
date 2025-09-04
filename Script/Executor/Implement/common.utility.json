@@ -1,0 +1,18 @@
+{
+	"method": {
+		"set_global_configuration": {
+			"filter": null,
+			"argument": {
+				"data": "?input",
+			},
+			"batch_argument": null,
+		},
+		"run_executable_script": {
+			"filter": null,
+			"argument": {
+				"target": "?input",
+			},
+			"batch_argument": null,
+		},
+	},
+}

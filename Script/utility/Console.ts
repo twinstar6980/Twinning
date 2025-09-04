@@ -799,18 +799,25 @@ namespace Twinning.Script.Console {
 			}
 			return [option[index][0]];
 		};
+		let checker_proxy = (value: Value): null | string => {
+			let index = option.findIndex((e) => (e[0] === value));
+			if (index === -1) {
+				return los('console:option_invalid');
+			}
+			return checker === null ? null : checker(value);
+		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
 				leading,
 				() => {
-					for (let messageItem of message) {
-						basic_common_output(messageItem, false, 1, true);
+					for (let message_item of message) {
+						basic_common_output(message_item, false, 1, true);
 					}
 					return;
 				},
 				converter,
 				nullable,
-				checker,
+				checker_proxy,
 				initial,
 			);
 		}
@@ -833,7 +840,7 @@ namespace Twinning.Script.Console {
 				},
 				converter,
 				nullable,
-				checker,
+				checker_proxy,
 				initial,
 			);
 		}
@@ -848,13 +855,13 @@ namespace Twinning.Script.Console {
 		return value.map((value, index) => ([value, `${value === false ? 'n' : 'y'}`, null]));
 	}
 
-	export function option_floater<Value extends number>(
+	export function option_integer<Value extends bigint>(
 		value: Array<Value>,
 	): Array<[Value, string, null | string]> {
 		return value.map((value, index) => ([value, `${value}`, null]));
 	}
 
-	export function option_integer<Value extends bigint>(
+	export function option_floater<Value extends number>(
 		value: Array<Value>,
 	): Array<[Value, string, null | string]> {
 		return value.map((value, index) => ([value, `${value}`, null]));

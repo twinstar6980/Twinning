@@ -11,7 +11,7 @@ namespace Twinning.Script.Executor {
 		initial_echoer: (value: Value) => string;
 		given_converter: (argument: any, given: GivenValue) => Value;
 		automatic_generator: (argument: any) => null | Value;
-		input_generator: (argument: any, initial: Value) => Value;
+		input_generator: (argument: any, initial?: Value) => null | Value;
 		condition: (argument: any) => null | Value;
 		default: TypicalArgumentExpression<GivenValue>;
 	};
@@ -24,7 +24,7 @@ namespace Twinning.Script.Executor {
 		Argument: { [Element in Argument[number]as Element['id']]: Element['Value'] };
 		GivenArgument: { [Element in Argument[number]as Element['id']]: Element['GivenValue'] };
 		id: ID;
-		filter: ['any' | 'file' | 'directory', RegExp];
+		filter: null | ['any' | 'file' | 'directory', RegExp];
 		argument: Argument;
 		worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }) => void;
 		batch_argument: null | BatchArgument;
@@ -44,14 +44,16 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalArgument<ID, boolean, boolean> {
 		return {
+			Value: undefined! as any,
+			GivenValue: undefined! as any,
 			id: object.id,
 			initial_echoer: (value) => (make_boolean_to_string_of_confirmation_character(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.boolean(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.boolean(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
-		} as TypicalArgument<ID, boolean, boolean>;
+		};
 	}
 
 	export function typical_argument_integer<ID extends string>(
@@ -64,14 +66,16 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalArgument<ID, bigint, bigint> {
 		return {
+			Value: undefined! as any,
+			GivenValue: undefined! as any,
 			id: object.id,
 			initial_echoer: (value) => (make_integer_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.integer(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (object.option === null ? Console.integer(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
-		} as TypicalArgument<ID, bigint, bigint>;
+		};
 	}
 
 	export function typical_argument_floater<ID extends string>(
@@ -84,14 +88,16 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalArgument<ID, number, number> {
 		return {
+			Value: undefined! as any,
+			GivenValue: undefined! as any,
 			id: object.id,
 			initial_echoer: (value) => (make_floater_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.floater(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (object.option === null ? Console.floater(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
-		} as TypicalArgument<ID, number, number>;
+		};
 	}
 
 	export function typical_argument_size<ID extends string>(
@@ -103,14 +109,16 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalArgument<ID, bigint, string> {
 		return {
+			Value: undefined! as any,
+			GivenValue: undefined! as any,
 			id: object.id,
 			initial_echoer: (value) => (make_size_to_string(value)),
 			given_converter: (argument, given) => (parse_size_from_string(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.size(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.size(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
-		} as TypicalArgument<ID, bigint, string>;
+		};
 	}
 
 	export function typical_argument_string<ID extends string>(
@@ -123,14 +131,16 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalArgument<ID, string, string> {
 		return {
+			Value: undefined! as any,
+			GivenValue: undefined! as any,
 			id: object.id,
 			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.string(null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_string(object.option), null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (object.option === null ? Console.string(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_string(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
-		} as TypicalArgument<ID, string, string>;
+		};
 	}
 
 	export function typical_argument_path<ID extends string>(
@@ -143,14 +153,16 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalArgument<ID, string, string> {
 		return {
+			Value: undefined! as string,
+			GivenValue: undefined! as string,
 			id: object.id,
 			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (PathUtility.regularize(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.path(object.rule[0], object.rule[1], null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.path(object.rule[0], object.rule[1], true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
-		} as TypicalArgument<ID, string, string>;
+		};
 	}
 
 	export function typical_argument_batch<ID extends string>(
@@ -164,15 +176,17 @@ namespace Twinning.Script.Executor {
 		},
 	): TypicalBatchArgument<ID> {
 		return {
+			Value: undefined! as any,
+			GivenValue: undefined! as any,
 			id: object.id,
 			initial_echoer: (value) => (value),
 			given_converter: (argument, given) => (PathUtility.regularize(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.path('directory', object.rule, null, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (Console.path('directory', object.rule, true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
 			item_mapper: object.item_mapper,
-		} as TypicalBatchArgument<ID>;
+		};
 	}
 
 	// ----------------
@@ -180,21 +194,26 @@ namespace Twinning.Script.Executor {
 	export function typical_method<ID extends string, Argument extends Array<TypicalArgument<string, any, any>>, BatchArgument extends Array<TypicalBatchArgument<string>>>(
 		object: {
 			id: ID;
-			filter: 'any' | 'file' | 'directory';
+			filter: null | 'any' | 'file' | 'directory';
 			argument: Argument;
 			worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }) => void;
 			batch_argument: null | BatchArgument;
 			batch_worker: null | ((argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void);
 		},
 	): TypicalMethod<ID, Argument, BatchArgument> {
+		if (object.filter === null) {
+			assert_test(object.batch_argument === null && object.batch_worker === null);
+		}
 		return {
+			Argument: undefined! as any,
+			GivenArgument: undefined! as any,
 			id: object.id,
-			filter: [object.filter, /()/],
+			filter: object.filter === null ? null : [object.filter, /()/],
 			argument: object.argument,
 			worker: object.worker,
 			batch_argument: object.batch_argument,
 			batch_worker: object.batch_worker,
-		} as TypicalMethod<ID, Argument, BatchArgument>;
+		};
 	}
 
 	// #endregion
@@ -238,9 +257,9 @@ namespace Twinning.Script.Executor {
 		initial_echoer: (value: Result) => string,
 		given_converter: (given: Given) => Result,
 		automatic_generator: () => null | Result,
-		input_generator: (initial?: Result) => Result,
+		input_generator: (initial?: Result) => null | Result,
 		skip_value: null | Result = null,
-	): Result {
+	): null | Result {
 		if (skip_value !== null) {
 			Console.information(los('executor.typical:argument_skipped', name), []);
 			return skip_value;
@@ -274,8 +293,7 @@ namespace Twinning.Script.Executor {
 			id: `${source.id}${!batch ? '' : '!batch'}`,
 			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${source.id}`)}`),
 			worker: (given_argument: Record<string, any>) => {
-				let state = false;
-				let timer = new Timer();
+				let interrupted = false;
 				let final_argument = {} as Record<string, any>;
 				for (let argument_index in source.argument) {
 					let argument = source.argument[argument_index];
@@ -283,7 +301,7 @@ namespace Twinning.Script.Executor {
 					if (batch_argument !== undefined) {
 						argument = batch_argument;
 					}
-					final_argument[argument.id] = request_typical_argument(
+					let argument_value = request_typical_argument(
 						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implement:${source.id}:${argument.id}`)}`,
 						given_argument[argument.id],
 						argument.initial_echoer,
@@ -292,7 +310,17 @@ namespace Twinning.Script.Executor {
 						(initial) => (argument.input_generator(final_argument, initial)),
 						argument.condition(final_argument),
 					);
+					if (argument_value === null) {
+						interrupted = true;
+						break;
+					}
+					final_argument[argument.id] = argument_value;
 				}
+				if (interrupted) {
+					return los('executor.typical:method_interrupted');
+				}
+				let state = false;
+				let timer = new Timer();
 				timer.start();
 				if (!batch) {
 					try {
@@ -304,13 +332,14 @@ namespace Twinning.Script.Executor {
 					}
 				}
 				else {
-					assert_test(source.batch_argument !== null);
+					assert_test(source.filter !== null);
 					execute_typical_batch_task(
 						final_argument[source.argument[0].id],
 						source.filter,
 						(item, temporary) => {
+							assert_test(source.batch_argument !== null);
 							let item_argument = { ...final_argument };
-							for (let batch_argument of source.batch_argument!) {
+							for (let batch_argument of source.batch_argument) {
 								item_argument[batch_argument.id] += '/' + batch_argument.item_mapper(final_argument, item);
 							}
 							if (source.batch_worker === null) {
@@ -329,30 +358,35 @@ namespace Twinning.Script.Executor {
 			default_argument: record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
 			input_filter: (input) => {
 				let state = true;
-				if (input == '') {
-					state = false;
-				}
-				else if (!batch) {
-					state &&= KernelX.Storage[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
-					if (!g_typical_method_disable_name_filter) {
-						state &&= source.filter[1].test(input);
-					}
+				if (input === null) {
+					state &&= source.filter === null;
 				}
 				else {
-					state &&= KernelX.Storage.exist_directory(input);
+					if (input === '' || source.filter === null) {
+						state &&= false;
+					}
+					else if (!batch) {
+						state &&= KernelX.Storage[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
+						if (!g_typical_method_disable_name_filter) {
+							state &&= source.filter[1].test(input);
+						}
+					}
+					else {
+						state &&= KernelX.Storage.exist_directory(input);
+					}
 				}
 				return state;
 			},
-			input_forwarder: source.argument[0].id,
+			input_forwarder: source.filter === null ? null : source.argument[0].id,
 		};
 	}
 
 	// ----------------
 
 	export type TypicalMethodConfiguration = {
-		filter: string;
+		filter: null | string;
 		argument: Record<string, TypicalArgumentExpression<any>>;
-		batch_argument: Record<string, TypicalArgumentExpression<any>>;
+		batch_argument: null | Record<string, TypicalArgumentExpression<any>>;
 	};
 
 	export type TypicalMethodConfigurationGroup = Record<string, TypicalMethodConfiguration>;
@@ -364,22 +398,26 @@ namespace Twinning.Script.Executor {
 	): void {
 		for (let item of list) {
 			let item_configuration = configuration[item.id];
-			item.filter[1] = new RegExp(item_configuration.filter, 'i');
+			if (item.filter !== null) {
+				assert_test(item_configuration.filter !== null);
+				item.filter[1] = new RegExp(item_configuration.filter, 'i');
+			}
 			{
 				for (let argument of item.argument) {
+					assert_test(item_configuration.argument[argument.id] !== undefined);
 					argument.default = item_configuration.argument[argument.id];
 				}
 			}
 			if (item.batch_argument !== null) {
+				assert_test(item_configuration.batch_argument !== null);
 				for (let argument of item.batch_argument) {
+					assert_test(item_configuration.batch_argument[argument.id] !== undefined);
 					argument.default = item_configuration.batch_argument[argument.id];
 				}
 			}
 			item.id = `${group_id}.${item.id}`;
 			g_method.push(convert_typical_method(item, false));
-			if (item.batch_argument !== null) {
-				g_method_batch.push(convert_typical_method(item, true));
-			}
+			g_method_batch.push(item.batch_argument === null ? null : convert_typical_method(item, true));
 		}
 		return;
 	}

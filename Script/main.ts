@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region version
 
-	export const k_version = '136';
+	export const k_version = '137';
 
 	// #endregion
 
@@ -301,6 +301,7 @@ namespace Twinning.Script {
 			`Support/Kairosoft/Game/ModifyProgram`,
 			`Executor/Generic`,
 			`Executor/Typical`,
+			`Executor/Implement/common.utility`,
 			`Executor/Implement/script.js`,
 			`Executor/Implement/data.hash`,
 			`Executor/Implement/data.encoding`,

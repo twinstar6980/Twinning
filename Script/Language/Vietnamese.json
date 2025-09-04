@@ -79,6 +79,7 @@
 	"executor.typical:argument_automatic": "Đã tạo ra đối số: {}",
 	"executor.typical:argument_automatic_failed": "Không thể tạo ra đối số: {}",
 	"executor.typical:argument_input": "Đối số yêu cầu đầu vào: {}",
+	"executor.typical:method_interrupted": "Nhận giá trị null làm đầu vào rõ ràng, làm gián đoạn quá trình thực thi",
 	"executor.typical:batch_result": "Hoàn thành xử lý, tổng cộng {} tệp, hợp lệ {} tệp, thất bại {} tệp",
 	// Executor/Implement/*
 	"executor.implement:*.out_of_range": "Vượt quá phạm vi",
@@ -88,6 +89,11 @@
 	"executor.implement:*.resolution_should_be_bigger_then_zero": "Độ phân giải nên lớn hơn không",
 	"executor.implement:*.size_should_be_bigger_then_zero": "Kích thước nên lớn hơn không",
 	"executor.implement:*.rate_should_be_bigger_then_zero": "Tỷ lệ nên lớn hơn không",
+	// Executor/Implement/common.utility
+	"executor.implement:common.utility.set_global_configuration": "Thiết lập cấu hình toàn cầu",
+	"executor.implement:common.utility.set_global_configuration:data": "Dữ liệu",
+	"executor.implement:common.utility.run_executable_script": "Chạy tập lệnh thực thi",
+	"executor.implement:common.utility.run_executable_script:target": "Mục tiêu",
 	// Executor/Implement/script.js
 	"executor.implement:script.js.execute": "Thực hiện JS",
 	"executor.implement:script.js.execute:script_file": "Tệp kịch bản",
@@ -640,7 +646,7 @@
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Bật chế độ gỡ lỗi",
 	// Executable/ScriptConsole
 	"executable.script_console:start": "Chế độ Tương tác JS được bật",
-	"executable.script_console:description": "Nhập chuỗi trống để kết thúc một vòng nhập dữ liệu, nhập chuỗi trống cho toàn bộ vòng nhập để kết thúc tương tác",
+	"executable.script_console:description": "Nhập trống sẽ kết thúc tương tác và nếu tập lệnh kéo dài nhiều dòng, hãy thêm ký tự '\\' ở cuối dòng",
 	// Executable/CompareLanguageFile
 	"executable.compare_language_file:please_input_original_file": "Hãy nhập đường dẫn tệp tin ngôn ngữ gốc",
 	"executable.compare_language_file:please_input_translation_file": "Hãy nhập đường dẫn tệp tin ngôn ngữ dịch",

@@ -79,6 +79,7 @@
 	"executor.typical:argument_automatic": "参数已生成：{}",
 	"executor.typical:argument_automatic_failed": "参数未生成：{}",
 	"executor.typical:argument_input": "参数需输入：{}",
+	"executor.typical:method_interrupted": "接收到显式输入的空值，中止执行",
 	"executor.typical:batch_result": "批处理完成，总计 {} 项，有效 {} 项，失败 {} 项",
 	// Executor/Implement/*
 	"executor.implement:*.out_of_range": "executor.implement:*.out_of_range",
@@ -88,6 +89,11 @@
 	"executor.implement:*.resolution_should_be_bigger_then_zero": "executor.implement:*.resolution_should_be_bigger_then_zero",
 	"executor.implement:*.size_should_be_bigger_then_zero": "executor.implement:*.size_should_be_bigger_then_zero",
 	"executor.implement:*.rate_should_be_bigger_then_zero": "executor.implement:*.rate_should_be_bigger_then_zero",
+	// Executor/Implement/common.utility
+	"executor.implement:common.utility.set_global_configuration": "设置全局配置",
+	"executor.implement:common.utility.set_global_configuration:data": "数据",
+	"executor.implement:common.utility.run_executable_script": "运行可执行脚本",
+	"executor.implement:common.utility.run_executable_script:target": "目标",
 	// Executor/Implement/script.js
 	"executor.implement:script.js.execute": "JS 执行",
 	"executor.implement:script.js.execute:script_file": "脚本文件",
@@ -640,7 +646,7 @@
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "启用调试模式",
 	// Executable/ScriptConsole
 	"executable.script_console:start": "JS交互模式已开启",
-	"executable.script_console:description": "输入为空则完成一轮输入，若一轮输入为空则结束交互",
+	"executable.script_console:description": "输入为空将结束交互，若脚本跨越多行，请在行末尾添加 '\\' 字符",
 	// Executable/CompareLanguageFile
 	"executable.compare_language_file:please_input_original_file": "请输入原文文件",
 	"executable.compare_language_file:please_input_translation_file": "请输入译文文件",

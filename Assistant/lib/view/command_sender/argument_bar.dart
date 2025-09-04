@@ -156,10 +156,7 @@ class _IntegerArgumentBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Integer',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-              ],
-            ),
+            suffixIcon: null,
           ),
           value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
           onChanged: (text) async {
@@ -210,10 +207,7 @@ class _FloaterArgumentBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'Floater',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-              ],
-            ),
+            suffixIcon: null,
           ),
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
           onChanged: (text) async {
@@ -344,10 +338,7 @@ class _StringArgumentBar extends StatelessWidget {
             filled: false,
             border: UnderlineInputBorder(),
             hintText: 'String',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-              ],
-            ),
+            suffixIcon: null,
           ),
           value: this.value.value == null ? '' : this.value.value!.value,
           onChanged: (text) async {

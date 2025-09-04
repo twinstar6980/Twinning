@@ -79,6 +79,7 @@
 	"executor.typical:argument_automatic": "Argument generated: {}",
 	"executor.typical:argument_automatic_failed": "Argument can not generated: {}",
 	"executor.typical:argument_input": "Argument need input: {}",
+	"executor.typical:method_interrupted": "Receives a null value as explicit input, interrupting execution",
 	"executor.typical:batch_result": "Batch processing done, total {} items, valid {} items, failed {} items",
 	// Executor/Implement/*
 	"executor.implement:*.out_of_range": "Out of range",
@@ -88,6 +89,11 @@
 	"executor.implement:*.resolution_should_be_bigger_then_zero": "Resolution should be bigger than zero",
 	"executor.implement:*.size_should_be_bigger_then_zero": "Size should be bigger than zero",
 	"executor.implement:*.rate_should_be_bigger_then_zero": "Rate should be bigger than zero",
+	// Executor/Implement/common.utility
+	"executor.implement:common.utility.set_global_configuration": "Set global configuration",
+	"executor.implement:common.utility.set_global_configuration:data": "Data",
+	"executor.implement:common.utility.run_executable_script": "Run executable script",
+	"executor.implement:common.utility.run_executable_script:target": "Target",
 	// Executor/Implement/script.js
 	"executor.implement:script.js.execute": "JS Execute",
 	"executor.implement:script.js.execute:script_file": "Script file",
@@ -640,7 +646,7 @@
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Enable debug mode",
 	// Executable/ScriptConsole
 	"executable.script_console:start": "JS interation mode enabled",
-	"executable.script_console:description": "Enter empty string to finish one round of input, enter empty strings for an entire round to finish interation",
+	"executable.script_console:description": "Entering empty will end the interaction, and if the script spans multiple lines, add the '\\' character at the end of the line",
 	// Executable/CompareLanguageFile
 	"executable.compare_language_file:please_input_original_file": "Please input the original text file",
 	"executable.compare_language_file:please_input_translation_file": "Please input the translation text file",

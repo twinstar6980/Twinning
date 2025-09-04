@@ -24,7 +24,7 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 					typical_argument_string({
 						id: 'key',
 						option: null,
-						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los(`executor.implement:*.illegal_key`)),
+						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los('executor.implement:*.illegal_key')),
 						automatic: null,
 						condition: null,
 					}),

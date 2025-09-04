@@ -4,18 +4,59 @@ namespace Twinning.Script.Runner {
 
 	let g_configuration: Configuration = undefined!;
 
-	let g_configuration_action: { [Key in keyof Configuration]: (value: Configuration[Key]) => void; } = undefined!;
-
 	// ----------------
 
-	function update_configuration(
+	export function set_configuration(
 		configuration: Partial<Configuration>,
 	): void {
+		let action: { [Key in keyof Configuration]: (value: Configuration[Key]) => void; } = {
+			language: (value) => {
+				Language.imbue(KernelX.JSON.read_fs_js(HomePath.of(`~/script/Language/${value}.json`)) as unknown as Language.StringMap);
+			},
+			console_basic_disable_virtual_terminal_sequence: (value) => {
+				Console.g_basic_disable_virtual_terminal_sequence = value;
+			},
+			executor_typical_method_disable_name_filter: (value) => {
+				Executor.g_typical_method_disable_name_filter = value;
+			},
+			byte_stream_use_big_endian: (value) => {
+				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
+			},
+			common_buffer_size: (value) => {
+				KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_from_string(value)));
+			},
+			json_format_disable_array_trailing_comma: (value) => {
+				KernelX.JSON.g_format.disable_array_trailing_comma = value;
+			},
+			json_format_disable_array_line_breaking: (value) => {
+				KernelX.JSON.g_format.disable_array_line_breaking = value;
+			},
+			json_format_disable_object_trailing_comma: (value) => {
+				KernelX.JSON.g_format.disable_object_trailing_comma = value;
+			},
+			json_format_disable_object_line_breaking: (value) => {
+				KernelX.JSON.g_format.disable_object_line_breaking = value;
+			},
+			external_program_path: (value) => {
+				ProcessHelper.g_program_path_map = {};
+				for (let item_key in value) {
+					let item_value = value[item_key];
+					if (item_value !== null) {
+						ProcessHelper.g_program_path_map[item_key] = item_value;
+					}
+				}
+			},
+			thread_limit: (value) => {
+				ThreadManager.g_global_manager.resize(Number(value));
+			},
+			command_notification_time_limit: (value) => {
+			},
+		};
 		for (let key in configuration) {
 			assert_test(g_configuration.hasOwnProperty(key));
 			let value = (configuration as any)[key];
 			(g_configuration as any)[key] = value;
-			(g_configuration_action as any)[key](value);
+			(action as any)[key](value);
 		}
 		return;
 	}
@@ -25,8 +66,8 @@ namespace Twinning.Script.Runner {
 	export function run(
 		argument: Array<string>,
 	): string {
-		let raw_command = [...argument];
-		if (raw_command.length === 0) {
+		let command_line = [...argument];
+		if (command_line.length === 0) {
 			Console.information(los('runner:input_command'), [
 				los('runner:input_finish_if_empty'),
 			]);
@@ -35,10 +76,10 @@ namespace Twinning.Script.Runner {
 				if (input === null) {
 					break;
 				}
-				raw_command.push(input);
+				command_line.push(input);
 			}
 		}
-		let command = Executor.parse(raw_command);
+		let command = Executor.parse(command_line);
 		Console.information(los('runner:all_command_parse'), [
 			los('runner:all_command_count', command.length),
 		]);
@@ -50,7 +91,7 @@ namespace Twinning.Script.Runner {
 			Console.information(los('runner:current_command_execute', progress), [
 				item.input,
 				item.method,
-				...record_to_array(item.argument, (key, value) => (`"${key}": ${KernelX.JSON.write_s_js(value, true, true, true, true)}`)),
+				...record_to_array(item.argument, (key, value) => (`${key}: ${KernelX.JSON.write_s_js(value, true, true, true, true)}`)),
 			]);
 			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
 			if (state === null) {
@@ -111,50 +152,7 @@ namespace Twinning.Script.Runner {
 			thread_limit: undefined!,
 			command_notification_time_limit: undefined!,
 		};
-		g_configuration_action = {
-			language: (value) => {
-				Language.imbue(KernelX.JSON.read_fs_js(HomePath.of(`~/script/Language/${value}.json`)) as unknown as Language.StringMap);
-			},
-			console_basic_disable_virtual_terminal_sequence: (value) => {
-				Console.g_basic_disable_virtual_terminal_sequence = value;
-			},
-			executor_typical_method_disable_name_filter: (value) => {
-				Executor.g_typical_method_disable_name_filter = value;
-			},
-			byte_stream_use_big_endian: (value) => {
-				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
-			},
-			common_buffer_size: (value) => {
-				KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_from_string(value)));
-			},
-			json_format_disable_array_trailing_comma: (value) => {
-				KernelX.JSON.g_format.disable_array_trailing_comma = value;
-			},
-			json_format_disable_array_line_breaking: (value) => {
-				KernelX.JSON.g_format.disable_array_line_breaking = value;
-			},
-			json_format_disable_object_trailing_comma: (value) => {
-				KernelX.JSON.g_format.disable_object_trailing_comma = value;
-			},
-			json_format_disable_object_line_breaking: (value) => {
-				KernelX.JSON.g_format.disable_object_line_breaking = value;
-			},
-			external_program_path: (value) => {
-				ProcessHelper.g_program_path_map = {};
-				for (let item_key in value) {
-					let item_value = value[item_key];
-					if (item_value !== null) {
-						ProcessHelper.g_program_path_map[item_key] = item_value;
-					}
-				}
-			},
-			thread_limit: (value) => {
-				ThreadManager.g_global_manager.resize(Number(value));
-			},
-			command_notification_time_limit: (value) => {
-			},
-		};
-		update_configuration(configuration);
+		set_configuration(configuration);
 		return;
 	}
 

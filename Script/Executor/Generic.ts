@@ -7,10 +7,10 @@ namespace Twinning.Script.Executor {
 	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends keyof Argument = keyof Argument> = {
 		id: string;
 		name(): string;
-		worker(argument: Argument): [boolean, number];
+		worker(argument: Argument): string | [boolean, number];
 		default_argument: Argument;
-		input_filter(input: string): boolean;
-		input_forwarder: InputForwarderKey;
+		input_filter(input: null | string): boolean;
+		input_forwarder: null | InputForwarderKey;
 	};
 
 	export type Command = {
@@ -54,56 +54,66 @@ namespace Twinning.Script.Executor {
 
 	export function execute(
 		command: Command,
-		method: Array<Method>,
-		fallback_method: Array<Method>,
+		candidate_method: Array<null | Method>,
+		candidate_method_fallback: Array<null | Method>,
 	): null | [boolean, number] {
 		let state: [boolean, number] | string = undefined!;
 		do {
-			let selected_method: null | string = null;
+			let actual_input: null | string = null;
+			if (command.input !== '?none') {
+				actual_input = command.input;
+			}
+			let actual_method: null | string = null;
 			if (command.method !== '?filtered' && command.method !== '?unfiltered') {
-				selected_method = command.method;
+				actual_method = command.method;
 			}
 			else {
-				for (let method_source of [method, fallback_method]) {
-					let valid_method: Array<[bigint, Method]> = [];
-					for (let index in method_source) {
-						if (command.method === '?unfiltered' || command.input === '?none' || method_source[index].input_filter(command.input)) {
-							valid_method.push([BigInt(index) + 1n, method_source[index]]);
+				for (let candidate_method_current of [candidate_method, candidate_method_fallback]) {
+					let available_method: Array<[bigint, Method]> = [];
+					for (let index in candidate_method_current) {
+						let candidate_method_item = candidate_method_current[index];
+						if (candidate_method_item === null) {
+							continue;
 						}
+						if (command.method === '?filtered' && !candidate_method_item.input_filter(actual_input)) {
+							continue;
+						}
+						available_method.push([BigInt(index) + 1n, candidate_method_item]);
 					}
-					if (valid_method.length !== 0) {
+					if (available_method.length !== 0) {
 						Console.information(los('executor.generic:method_select'), [
 							los('executor.generic:method_select_null_to_skip'),
 						]);
-						selected_method = Console.enumeration(valid_method.map((value) => ([value[1].id, `${value[0]}`, value[1].name()])), true, null);
-						if (selected_method !== null) {
+						actual_method = Console.enumeration(available_method.map((value) => ([value[1].id, `${value[0]}`, value[1].name()])), true, null);
+						if (actual_method !== null) {
 							break;
 						}
 					}
 				}
 			}
-			if (selected_method === null) {
+			if (actual_method === null) {
 				state = los('executor.generic:method_unavailable');
 				break;
 			}
-			let target_method = method.find((value) => (value.id === selected_method));
+			let target_method = candidate_method.find((value) => (value !== null && value.id === actual_method));
 			if (target_method === undefined) {
-				target_method = fallback_method.find((value) => (value.id === selected_method));
+				target_method = candidate_method_fallback.find((value) => (value !== null && value.id === actual_method));
 			}
 			if (target_method === undefined) {
 				state = los('executor.generic:method_invalid');
 				break;
 			}
-			let argument = { ...command.argument };
-			if (command.input !== '?none') {
-				argument[target_method.input_forwarder] = command.input;
+			assert_test(target_method !== null);
+			let actual_argument = { ...command.argument };
+			if (actual_input !== null && target_method.input_forwarder !== null) {
+				actual_argument[target_method.input_forwarder] = actual_input;
 			}
 			for (let key in target_method.default_argument) {
-				if (argument[key] === undefined) {
-					argument[key] = target_method.default_argument[key];
+				if (actual_argument[key] === undefined) {
+					actual_argument[key] = target_method.default_argument[key];
 				}
 			}
-			state = target_method.worker(argument);
+			state = target_method.worker(actual_argument);
 		}
 		while (false);
 		if (is_string(state)) {
@@ -124,9 +134,9 @@ namespace Twinning.Script.Executor {
 
 	// #region global
 
-	export let g_method: Array<Executor.Method> = [];
+	export let g_method: Array<null | Method> = [];
 
-	export let g_method_batch: Array<Executor.Method> = [];
+	export let g_method_batch: Array<null | Method> = [];
 
 	// #endregion
 
