@@ -8,6 +8,7 @@
 				"version_compress_texture_data": "?input",
 				"format": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"image_file": "?input",
 				"data_file": "?automatic",
@@ -20,6 +21,7 @@
 				"image_file": "?automatic",
 				"version_compress_texture_data": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"image_file": "?automatic",

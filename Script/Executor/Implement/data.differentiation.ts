@@ -46,6 +46,7 @@ namespace Twinning.Script.Executor.Implement.data.differentiation {
 					KernelX.Tool.Data.Differentiation.VCDiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -85,6 +86,7 @@ namespace Twinning.Script.Executor.Implement.data.differentiation {
 					KernelX.Tool.Data.Differentiation.VCDiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

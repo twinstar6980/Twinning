@@ -4,7 +4,7 @@ namespace Twinning.Script.Executor {
 
 	export type Argument = Record<string, null | boolean | bigint | number | string>;
 
-	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends keyof Argument = keyof Argument> = {
+	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends Exclude<keyof Argument, number> = Exclude<keyof Argument, number>> = {
 		id: string;
 		name(): string;
 		worker(argument: Argument): string | [boolean, number];

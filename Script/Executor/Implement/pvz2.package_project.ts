@@ -119,6 +119,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					Support.PvZ2.PackageProject.Transpile.transpile(project_directory, target_scope_list as any, target_package, option, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -160,6 +161,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					Support.PvZ2.PackageProject.Compile.compile(project_directory, target_scope_list as any, target_package_list, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -199,6 +201,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					Support.PvZ2.PackageProject.Link.link(project_directory, target_package_list, remake_manifest, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -246,6 +249,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					Support.PvZ2.PackageProject.Parse.parse(project_directory, package_directory, package_name, { number: package_version_number as any, extended_texture_information_for_pvz2_cn: package_version_extended_texture_information_for_pvz2_cn as any }, configuration.default_conversion_setting);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

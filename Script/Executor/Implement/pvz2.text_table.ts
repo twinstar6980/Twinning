@@ -40,6 +40,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.text_table {
 					Support.PvZ2.TextTable.Convert.convert_fs(source_file, destination_file, 'automatic', destination_version as any);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

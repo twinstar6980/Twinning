@@ -7,6 +7,7 @@
 				"data_file": "?automatic",
 				"buffer_size": "64.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"new_type_object_notation.decode": {
@@ -15,6 +16,7 @@
 				"data_file": "?input",
 				"definition_file": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"regular.from": {
@@ -23,6 +25,7 @@
 				"raw_file": "?input",
 				"ripe_file": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"regular.to": {
@@ -32,6 +35,7 @@
 				"raw_file": "?automatic",
 				"use_array_style_path": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

@@ -9,6 +9,7 @@
 				"version_variant_64": "?input",
 				"buffer_size": "8.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"definition_file": "?input",
 				"data_file": "?automatic",
@@ -22,6 +23,7 @@
 				"version_platform": "?input",
 				"version_variant_64": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"definition_file": "?automatic",

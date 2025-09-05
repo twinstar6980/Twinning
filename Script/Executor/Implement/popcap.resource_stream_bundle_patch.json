@@ -10,6 +10,7 @@
 				"use_raw_packet": "?input",
 				"buffer_size": "1024.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"decode": {
@@ -22,6 +23,7 @@
 				"use_raw_packet": "?input",
 				"buffer_size": "1024.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

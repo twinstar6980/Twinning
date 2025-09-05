@@ -27,6 +27,7 @@ namespace Twinning.Script.Executor.Implement.data.hash {
 					Console.success(`${parse_string_from_byte_array(make_integer_to_byte_array(result, 16, 'little'), false)}`, []);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'target_file',

@@ -8,6 +8,7 @@
 				"limit": 256,
 				"key": "AS23DSREPLKL335KO4439032N8345NF",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"plain_file": "?input",
 				"cipher_file": "?automatic",
@@ -21,6 +22,7 @@
 				"limit": 256,
 				"key": "AS23DSREPLKL335KO4439032N8345NF",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"cipher_file": "?input",
 				"plain_file": "?automatic",

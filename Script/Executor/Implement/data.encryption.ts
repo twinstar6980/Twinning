@@ -40,6 +40,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, make_string_to_byte_array(key));
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'plain_file',
@@ -111,6 +112,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'plain_file',
@@ -182,6 +184,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'cipher_file',

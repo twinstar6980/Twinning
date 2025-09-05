@@ -79,6 +79,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					KernelX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'bundle_directory',
@@ -172,6 +173,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					KernelX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -218,6 +220,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -434,6 +437,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle {
 					);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'bundle_directory',

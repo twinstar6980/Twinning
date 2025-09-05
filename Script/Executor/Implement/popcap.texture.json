@@ -7,6 +7,7 @@
 				"data_file": "?automatic",
 				"format": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"decode": {
@@ -18,6 +19,7 @@
 				"image_width": "?input",
 				"image_height": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

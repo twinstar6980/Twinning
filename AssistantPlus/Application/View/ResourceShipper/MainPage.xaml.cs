@@ -85,14 +85,16 @@ namespace AssistantPlus.View.ResourceShipper {
 				Children = group.Item.Select((item) => (new MainPageOptionItemItemController() {
 					Host = this,
 					Configuration = item,
-					SingleMatched = false,
-					BatchMatched = false,
-					NameMatched = false,
+					SingleEnabled = false,
+					SingleFiltered = false,
+					BatchEnabled = false,
+					BatchFiltered = false,
 				})).ToList(),
 			})).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uOptionList_ItemsSource),
 			]);
+			await this.RefreshMatch();
 			return;
 		}
 
@@ -191,24 +193,29 @@ namespace AssistantPlus.View.ResourceShipper {
 		) {
 			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
-					item.SingleMatched = false;
-					item.BatchMatched = false;
-					item.NameMatched = false;
-					if (this.Resource.Count != 0) {
-						item.SingleMatched = true;
-						item.BatchMatched = true;
-						item.NameMatched = true;
-						var nameRule = new Regex(item.Configuration.Filter.Name, RegexOptions.IgnoreCase);
+					item.SingleEnabled = true;
+					item.BatchEnabled = item.Configuration.Batchable;
+					if (item.Configuration.Filter != null) {
 						foreach (var resource in this.Resource) {
-							item.SingleMatched &= item.Configuration.Filter.Type switch {
+							item.SingleEnabled &= item.Configuration.Filter.Type switch {
 								FilterType.Any       => resource.Item2 != null,
 								FilterType.File      => resource.Item2 == false,
 								FilterType.Directory => resource.Item2 == true,
 								_                    => throw new UnreachableException(),
 							};
-							item.BatchMatched &= item.Configuration.Batchable && resource.Item2 == true;
-							item.NameMatched &= nameRule.IsMatch(resource.Item1);
+							item.BatchEnabled &= resource.Item2 == true;
 						}
+					}
+					item.SingleFiltered = false;
+					item.BatchFiltered = false;
+					if (item.Configuration.Filter == null && this.Resource.Count == 0) {
+						item.SingleFiltered |= true;
+						item.BatchFiltered |= true;
+					}
+					if (item.Configuration.Filter != null && this.Resource.Count != 0) {
+						var nameRule = new Regex(item.Configuration.Filter.Name, RegexOptions.IgnoreCase);
+						item.SingleFiltered |= this.Resource.All((resource) => nameRule.IsMatch(resource.Item1));
+						item.BatchFiltered |= true;
 					}
 				}
 			}
@@ -226,6 +233,7 @@ namespace AssistantPlus.View.ResourceShipper {
 				}
 				group.NotifyPropertyChanged([
 					nameof(group.uRoot_Visibility),
+					nameof(group.uCount_Value),
 				]);
 			}
 			return;
@@ -277,8 +285,9 @@ namespace AssistantPlus.View.ResourceShipper {
 			String?                     method,
 			Dictionary<String, Object>? argument
 		) {
+			var actualInput = this.Resource.Count != 0 ? this.Resource.Select((value) => value.Item1).Cast<String?>() : [null];
 			var actualMethod = method == null ? null : ModdingWorker.ForwardHelper.MakeMethodForBatchable(method, this.EnableBatch);
-			var actualCommand = this.Resource.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value.Item1, actualMethod, argument))).ToList();
+			var actualCommand = actualInput.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value, actualMethod, argument))).ToList();
 			await ModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
 			return;
 		}
@@ -560,7 +569,7 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return !this.Host.EnableFilter || this.Children.Any((value) => (value.Host.EnableBatch ? value.BatchMatched : value.SingleMatched && value.NameMatched));
+				return this.Children.Any((item) => !item.Host.EnableFilter || (!item.Host.EnableBatch ? item.SingleEnabled && item.SingleFiltered : item.BatchEnabled && item.BatchFiltered));
 			}
 		}
 
@@ -582,6 +591,12 @@ namespace AssistantPlus.View.ResourceShipper {
 			}
 		}
 
+		public Size uCount_Value {
+			get {
+				return this.Children.Count((item) => !item.Host.EnableFilter || (!item.Host.EnableBatch ? item.SingleEnabled && item.SingleFiltered : item.BatchEnabled && item.BatchFiltered));
+			}
+		}
+
 		#endregion
 
 	}
@@ -598,11 +613,13 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		// ----------------
 
-		public Boolean SingleMatched { get; set; } = default!;
+		public Boolean SingleEnabled { get; set; } = default!;
 
-		public Boolean BatchMatched { get; set; } = default!;
+		public Boolean SingleFiltered { get; set; } = default!;
 
-		public Boolean NameMatched { get; set; } = default!;
+		public Boolean BatchEnabled { get; set; } = default!;
+
+		public Boolean BatchFiltered { get; set; } = default!;
 
 		#endregion
 
@@ -610,13 +627,13 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		public Boolean uRoot_Visibility {
 			get {
-				return !this.Host.EnableFilter || (this.Host.EnableBatch ? this.BatchMatched : this.SingleMatched && this.NameMatched);
+				return !this.Host.EnableFilter || (!this.Host.EnableBatch ? this.SingleEnabled && this.SingleFiltered : this.BatchEnabled && this.BatchFiltered);
 			}
 		}
 
 		public Boolean uRoot_IsEnabled {
 			get {
-				return (this.Host.EnableBatch ? this.BatchMatched : this.SingleMatched && (!this.Host.EnableFilter || this.NameMatched));
+				return !this.Host.EnableBatch ? this.SingleEnabled : this.BatchEnabled;
 			}
 		}
 

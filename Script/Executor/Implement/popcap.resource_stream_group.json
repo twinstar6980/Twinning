@@ -9,6 +9,7 @@
 				"version_number": "?input",
 				"buffer_size": "256.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"bundle_directory": "?input",
 				"data_file": "?automatic",
@@ -21,6 +22,7 @@
 				"bundle_directory": "?automatic",
 				"version_number": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"bundle_directory": "?automatic",

@@ -5,6 +5,7 @@
 			"argument": {
 				"target_file": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"target_file": "?input",
 			},

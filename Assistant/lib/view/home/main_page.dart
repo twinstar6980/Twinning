@@ -240,7 +240,7 @@ class _MainPageState extends State<MainPage> {
               PopupMenuButton(
                 tooltip: 'Action',
                 position: PopupMenuPosition.under,
-                icon: Icon(IconSymbols.more_vert),
+                icon: Icon(IconSymbols.steppers),
                 itemBuilder: (context) => [
                   ('remove', 'Remove', IconSymbols.cancel),
                   ('rename', 'Rename', IconSymbols.draw),

@@ -12,6 +12,7 @@
 				"output_new_packet": "?input",
 				"buffer_size": "1.25g",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"bundle_directory": "?input",
 				"data_file": "?automatic",
@@ -28,6 +29,7 @@
 				"output_resource": "?input",
 				"output_packet": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"bundle_directory": "?automatic",
@@ -39,6 +41,7 @@
 				"data_file": "?input",
 				"bundle_directory": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"bundle_directory": "?automatic",
@@ -67,6 +70,7 @@
 				"option_bnk_version_number": "?input",
 				"option_wem": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"bundle_directory": "?input",
 			},

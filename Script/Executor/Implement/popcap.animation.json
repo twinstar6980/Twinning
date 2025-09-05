@@ -8,6 +8,7 @@
 				"version_number": "?input",
 				"buffer_size": "8.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"definition_file": "?input",
 				"data_file": "?automatic",
@@ -20,6 +21,7 @@
 				"definition_file": "?automatic",
 				"version_number": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"definition_file": "?automatic",
@@ -32,6 +34,7 @@
 				"ripe_directory": "?automatic",
 				"version_number": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"raw_file": "?input",
 				"ripe_directory": "?automatic",
@@ -44,6 +47,7 @@
 				"raw_file": "?automatic",
 				"version_number": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"ripe_directory": "?input",
 				"raw_file": "?automatic",
@@ -55,6 +59,7 @@
 				"target_directory": "?input",
 				"resolution": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"target_directory": "?input",
 			},
@@ -64,6 +69,7 @@
 			"argument": {
 				"target_directory": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"target_directory": "?input",
 			},

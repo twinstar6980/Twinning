@@ -7,6 +7,7 @@
 				"ripe_file": "?automatic",
 				"version_variant_64": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"raw_file": "?input",
 				"ripe_file": "?automatic",
@@ -19,6 +20,7 @@
 				"raw_file": "?automatic",
 				"version_variant_64": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"ripe_file": "?input",
 				"raw_file": "?automatic",

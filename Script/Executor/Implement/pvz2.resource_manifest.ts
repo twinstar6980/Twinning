@@ -39,6 +39,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 					Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Encode.process_fs(data_file, definition_file, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -65,6 +66,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 					Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Decode.process_fs(data_file, definition_file);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -93,6 +95,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 					KernelX.JSON.write_fs_js(ripe_file, ripe);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -127,6 +130,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 					KernelX.JSON.write_fs_js(raw_file, raw);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

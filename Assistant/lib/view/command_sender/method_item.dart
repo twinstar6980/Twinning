@@ -85,10 +85,8 @@ class MethodGroupItem extends StatelessWidget {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '${this.configuration.item.length}',
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.bodyMedium!,
+              Badge.count(
+                count: this.configuration.item.length,
               ),
               SizedBox(width: 6),
               Icon(!this.expanded ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),

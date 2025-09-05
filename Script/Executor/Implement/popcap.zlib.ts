@@ -39,6 +39,7 @@ namespace Twinning.Script.Executor.Implement.popcap.zlib {
 					KernelX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -88,6 +89,7 @@ namespace Twinning.Script.Executor.Implement.popcap.zlib {
 					KernelX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',

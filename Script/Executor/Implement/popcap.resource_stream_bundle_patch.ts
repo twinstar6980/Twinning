@@ -59,6 +59,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 					KernelX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -111,6 +112,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 					KernelX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

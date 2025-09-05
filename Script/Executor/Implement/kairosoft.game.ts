@@ -43,6 +43,7 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 					Support.Kairosoft.Game.EncryptRecord.process_fs(target_directory, key_value);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -74,6 +75,7 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 					Support.Kairosoft.Game.ModifyProgram.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

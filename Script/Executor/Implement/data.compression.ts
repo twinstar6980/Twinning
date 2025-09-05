@@ -33,6 +33,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -82,6 +83,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',
@@ -131,6 +133,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -180,6 +183,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',
@@ -229,6 +233,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -278,6 +283,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',
@@ -327,6 +333,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -376,6 +383,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.BZip2.uncompress_fs(ripe_file, raw_file, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',
@@ -425,6 +433,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -474,6 +483,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',

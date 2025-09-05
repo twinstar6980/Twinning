@@ -48,6 +48,7 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 					KernelX.Tool.Marmalade.DZip.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'bundle_directory',
@@ -108,6 +109,7 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 					KernelX.Tool.Marmalade.DZip.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -159,6 +161,7 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 					KernelX.Storage.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

@@ -29,7 +29,7 @@ class FilterConfiguration {
 class OptionConfiguration {
   String                     name;
   String                     icon;
-  FilterConfiguration        filter;
+  FilterConfiguration?       filter;
   Boolean                    batchable;
   String?                    method;
   List<PresetConfiguration?> preset;
@@ -69,7 +69,7 @@ class ConfigurationHelper {
       item: (jsonGroup['item'] as List<dynamic>).map((jsonItem) => OptionConfiguration(
         name: (jsonItem['name'] as String),
         icon: (jsonItem['icon'] as String),
-        filter: (jsonItem['filter'] as Map<dynamic, dynamic>).selfLet((jsonFilter) => FilterConfiguration(
+        filter: (jsonItem['filter'] as Map<dynamic, dynamic>?)?.selfLet((jsonFilter) => FilterConfiguration(
           name: (jsonFilter['name'] as String),
           type: (jsonFilter['type'] as String).selfLet((it) => FilterType.values.byName(it)),
         )),

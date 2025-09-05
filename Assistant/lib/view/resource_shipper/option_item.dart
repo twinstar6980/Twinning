@@ -20,7 +20,7 @@ class OptionItem extends StatelessWidget {
   // ----------------
 
   final OptionConfiguration                          configuration;
-  final (Boolean, Boolean, Boolean)                  match;
+  final (Boolean, Boolean, Boolean, Boolean)         match;
   final Boolean                                      enableFilter;
   final Boolean                                      enableBatch;
   final Void Function(String?, Map<String, Object>?) onSelect;
@@ -28,11 +28,10 @@ class OptionItem extends StatelessWidget {
   // ----------------
 
   @override
-  build(context) { 
-    var visible = !this.enableFilter || (this.enableBatch ? this.match.$2 : this.match.$1 && this.match.$3);
-    var enabled = (this.enableBatch ? this.match.$2 : this.match.$1 && (!this.enableFilter || this.match.$3));
+  build(context) {
+    var enabled = !this.enableBatch ? this.match.$1 : this.match.$3;
     return Visibility(
-      visible: visible,
+      visible: !this.enableFilter || (!this.enableBatch ? this.match.$1 && this.match.$2 : this.match.$3 && this.match.$4),
       child: Column(
         children: [
           ListTile(
@@ -66,7 +65,7 @@ class OptionItem extends StatelessWidget {
                                 '${this.configuration.preset.nonNulls.length}',
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(width: 4),
+                              SizedBox(width: 6),
                               Icon(IconSymbols.flash_on),
                             ],
                           ),
@@ -137,7 +136,7 @@ class OptionGroupItem extends StatelessWidget {
   // ----------------
 
   final OptionGroupConfiguration                     configuration;
-  final List<(Boolean, Boolean, Boolean)>            match;
+  final List<(Boolean, Boolean, Boolean, Boolean)>   match;
   final Boolean                                      enableFilter;
   final Boolean                                      enableBatch;
   final Void Function(String?, Map<String, Object>?) onSelect;
@@ -149,9 +148,8 @@ class OptionGroupItem extends StatelessWidget {
   @override
   build(context) {
     var theme = Theme.of(context);
-    var visible = !this.enableFilter || this.match.any((value) => this.enableBatch ? value.$2 : value.$1 && value.$3);
     return Visibility(
-      visible: visible,
+      visible: this.match.any((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)),
       child: Column(
         children: [
           ListTile(
@@ -164,10 +162,8 @@ class OptionGroupItem extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  '${this.configuration.item.length}',
-                  overflow: TextOverflow.clip,
-                  style: theme.textTheme.bodyMedium!,
+                Badge.count(
+                  count: this.match.where((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)).length,
                 ),
                 SizedBox(width: 6),
                 Icon(!this.expanded ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),

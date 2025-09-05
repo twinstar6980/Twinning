@@ -45,6 +45,7 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 					KernelX.Tool.Texture.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'source_file',
@@ -102,6 +103,7 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 					KernelX.Tool.Texture.Transformation.scale_fs(source_file, destination_file, [size_width, size_height]);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'source_file',
@@ -152,6 +154,7 @@ namespace Twinning.Script.Executor.Implement.texture.transformation {
 					KernelX.Tool.Texture.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'source_file',

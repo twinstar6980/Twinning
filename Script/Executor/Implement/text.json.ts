@@ -58,6 +58,7 @@ namespace Twinning.Script.Executor.Implement.text.json {
 					KernelX.JSON.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'source_file',

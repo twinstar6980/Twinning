@@ -33,6 +33,7 @@ namespace Twinning.Script.Executor.Implement.data.encoding {
 					KernelX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -76,6 +77,7 @@ namespace Twinning.Script.Executor.Implement.data.encoding {
 					KernelX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',

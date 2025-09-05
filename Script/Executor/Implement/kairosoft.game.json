@@ -6,6 +6,7 @@
 				"target_directory": "?input",
 				"key": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"modify_program": {
@@ -15,6 +16,7 @@
 				"disable_record_encryption": "?input",
 				"enable_debug_mode": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

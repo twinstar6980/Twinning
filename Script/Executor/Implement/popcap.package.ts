@@ -54,6 +54,7 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 					KernelX.Tool.PopCap.Package.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'bundle_directory',
@@ -120,6 +121,7 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 					KernelX.Tool.PopCap.Package.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -177,6 +179,7 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 					KernelX.Storage.write_file(data_file, data[0].view().sub(Kernel.Size.value(0n), data[1]));
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -203,6 +206,7 @@ namespace Twinning.Script.Executor.Implement.popcap.package_ {
 					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, [0xF7n]);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'plain_file',

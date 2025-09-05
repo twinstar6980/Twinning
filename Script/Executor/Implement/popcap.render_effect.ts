@@ -53,6 +53,7 @@ namespace Twinning.Script.Executor.Implement.popcap.render_effect {
 					KernelX.Tool.PopCap.RenderEffect.encode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'definition_file',
@@ -116,6 +117,7 @@ namespace Twinning.Script.Executor.Implement.popcap.render_effect {
 					KernelX.Tool.PopCap.RenderEffect.decode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

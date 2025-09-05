@@ -34,6 +34,7 @@ namespace Twinning.Script.Executor.Implement.text.xml {
 					KernelX.XML.write_fs(destination_file, data);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'source_file',

@@ -47,6 +47,7 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 					KernelX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'plain_file',
@@ -104,6 +105,7 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 					KernelX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'cipher_file',

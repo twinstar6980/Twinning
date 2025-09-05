@@ -275,14 +275,19 @@ namespace AssistantPlus.View.Home {
 			var senders = sender.As<Button>();
 			GF.AssertTest(this.Category == ModuleLauncherCategory.Pinned || this.Category == ModuleLauncherCategory.Recent);
 			if (this.Category == ModuleLauncherCategory.Pinned) {
-				App.Setting.Data.ModuleLauncher.Pinned.Remove(this.Configuration);
-				this.Host.uPinnedLauncherList_ItemsSource.Remove(this);
+				this.Host.PanelExit();
+				if (await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
+					App.Setting.Data.ModuleLauncher.Pinned.Remove(this.Configuration);
+					this.Host.uPinnedLauncherList_ItemsSource.Remove(this);
+					await App.Setting.Save();
+				}
+				this.Host.PanelEnter();
 			}
-			else {
+			if (this.Category == ModuleLauncherCategory.Recent) {
 				App.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
 				this.Host.uRecentLauncherList_ItemsSource.Remove(this);
+				await App.Setting.Save();
 			}
-			await App.Setting.Save();
 			return;
 		}
 

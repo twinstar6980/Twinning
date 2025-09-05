@@ -7,6 +7,7 @@
 				"destination_version": "?input",
 				"destination_file": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

@@ -52,6 +52,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'definition_file',
@@ -114,6 +115,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -164,6 +166,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					KernelX.Tool.Miscellaneous.PvZ2CNCryptData.encrypt_fs(plain_file, cipher_file, key);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'plain_file',
@@ -214,6 +217,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					KernelX.Tool.Miscellaneous.PvZ2CNCryptData.decrypt_fs(cipher_file, plain_file, key);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'cipher_file',
@@ -283,6 +287,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'definition_file',
@@ -352,6 +357,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -408,6 +414,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 					Support.PopCap.ReflectionObjectNotation.DecodeLenient.process_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

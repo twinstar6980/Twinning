@@ -147,8 +147,10 @@ class LauncherPanel extends StatelessWidget {
                 tooltip: 'Remove',
                 icon: Icon(IconSymbols.remove),
                 onPressed: () async {
-                  setting.data.moduleLauncher.pinned.remove(item);
-                  await setting.save();
+                  if (await ControlHelper.showDialogForConfirm(context)) {
+                    setting.data.moduleLauncher.pinned.remove(item);
+                    await setting.save();
+                  }
                 },
               ),
               SizedBox(width: 4),

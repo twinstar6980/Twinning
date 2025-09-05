@@ -7,6 +7,7 @@
 				"sprite_directory": "?automatic",
 				"atlas_file": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"unpack": {
@@ -16,6 +17,7 @@
 				"atlas_file": "?automatic",
 				"sprite_directory": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"pack_automatic": {
@@ -25,6 +27,7 @@
 				"atlas_file": "?automatic",
 				"definition_file": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

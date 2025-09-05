@@ -339,6 +339,12 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
+		public Size uCount_Value {
+			get {
+				return this.Configuration.Item.Count;
+			}
+		}
+
 		#endregion
 
 	}
@@ -418,7 +424,9 @@ namespace AssistantPlus.View.CommandSender {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await this.Host.RemoveCommand(this.Host.uCommandList_ItemsSource.IndexOf(this));
+			if (this.ArgumentValue.All((value) => value.Value == null) || await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
+				await this.Host.RemoveCommand(this.Host.uCommandList_ItemsSource.IndexOf(this));
+			}
 			return;
 		}
 

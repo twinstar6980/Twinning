@@ -53,6 +53,7 @@ namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 					KernelX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'image_file',
@@ -103,6 +104,7 @@ namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 					KernelX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

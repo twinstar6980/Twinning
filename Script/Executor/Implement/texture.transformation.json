@@ -8,6 +8,7 @@
 				"horizontal": "?input",
 				"vertical": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"source_file": "?input",
 				"destination_file": "?automatic",
@@ -21,6 +22,7 @@
 				"size_width": "?input",
 				"size_height": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"source_file": "?input",
 				"destination_file": "?automatic",
@@ -33,6 +35,7 @@
 				"destination_file": "?automatic",
 				"size_rate": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"source_file": "?input",
 				"destination_file": "?automatic",

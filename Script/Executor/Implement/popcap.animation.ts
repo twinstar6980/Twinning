@@ -46,6 +46,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					KernelX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'definition_file',
@@ -102,6 +103,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					KernelX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',
@@ -155,6 +157,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -205,6 +208,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory, { number: version_number as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_directory',
@@ -248,6 +252,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 					Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'target_directory',
@@ -283,6 +288,7 @@ namespace Twinning.Script.Executor.Implement.popcap.animation {
 						});
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'target_directory',

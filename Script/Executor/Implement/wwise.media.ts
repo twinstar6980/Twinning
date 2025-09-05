@@ -40,6 +40,7 @@ namespace Twinning.Script.Executor.Implement.wwise.media {
 					Support.Wwise.Media.Encode.encode_fs(raw_file, ripe_file, format as any);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'raw_file',
@@ -83,6 +84,7 @@ namespace Twinning.Script.Executor.Implement.wwise.media {
 					Support.Wwise.Media.Decode.decode_fs(ripe_file, raw_file);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'ripe_file',

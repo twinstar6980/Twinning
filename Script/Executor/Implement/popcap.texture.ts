@@ -40,6 +40,7 @@ namespace Twinning.Script.Executor.Implement.popcap.texture {
 					Support.PopCap.Texture.Encoding.encode_fs(image_file, data_file, format as any);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -87,6 +88,7 @@ namespace Twinning.Script.Executor.Implement.popcap.texture {
 					Support.PopCap.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], format as any);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

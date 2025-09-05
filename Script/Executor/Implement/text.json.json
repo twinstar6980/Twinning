@@ -10,6 +10,7 @@
 				"disable_object_trailing_comma": "?automatic",
 				"disable_object_line_breaking": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"source_file": "?input",
 				"destination_file": "?automatic",

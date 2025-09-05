@@ -26,6 +26,7 @@ namespace Twinning.Script.Executor.Implement.common.utility {
 					Runner.set_configuration(KernelX.JSON.read_s_js(data) as any);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -47,6 +48,7 @@ namespace Twinning.Script.Executor.Implement.common.utility {
 					KernelX.Miscellaneous.evaluate_fs(HomePath.of(`~/script/Executable/${target}.js`), false);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

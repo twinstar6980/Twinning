@@ -68,7 +68,7 @@ class CommandPanel extends StatelessWidget {
                     isSelected: false,
                     icon: Icon(IconSymbols.remove),
                     onPressed: () async {
-                      if (this.argumentValue.where((value) => value.value != null).isEmpty || await ControlHelper.showDialogForConfirm(context)) {
+                      if (this.argumentValue.every((value) => value.value == null) || await ControlHelper.showDialogForConfirm(context)) {
                         this.onRemove();
                       }
                     },

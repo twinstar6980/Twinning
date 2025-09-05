@@ -32,6 +32,7 @@ namespace Twinning.Script.Executor.Implement.script.js {
 					let result = KernelX.Miscellaneous.evaluate_fs(script_file, is_module);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'script_file',

@@ -5,6 +5,7 @@
 			"argument": {
 				"data": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"run_executable_script": {
@@ -12,6 +13,7 @@
 			"argument": {
 				"target": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 	},

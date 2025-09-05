@@ -48,6 +48,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_group {
 					KernelX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'bundle_directory',
@@ -108,6 +109,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_group {
 					KernelX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

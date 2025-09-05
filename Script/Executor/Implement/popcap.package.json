@@ -9,6 +9,7 @@
 				"version_compress_resource_data": "?input",
 				"buffer_size": "256.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"bundle_directory": "?input",
 				"data_file": "?automatic",
@@ -22,6 +23,7 @@
 				"version_number": 0,
 				"version_compress_resource_data": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"bundle_directory": "?automatic",
@@ -35,6 +37,7 @@
 				"version_number": 0,
 				"version_compress_resource_data": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": null,
 		},
 		"encrypt": {
@@ -43,6 +46,7 @@
 				"plain_file": "?input",
 				"cipher_file": "?automatic",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"plain_file": "?input",
 				"cipher_file": "?automatic",

@@ -35,40 +35,45 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
-  late List<OptionGroupConfiguration>          _optionConfiguration;
-  late Boolean                                 _parallelForward;
-  late Boolean                                 _enableFilter;
-  late Boolean                                 _enableBatch;
-  late List<(String, Boolean?)>                _resource;
-  late List<List<(Boolean, Boolean, Boolean)>> _optionMatch;
-  late List<Boolean>                           _optionExpanded;
-  late ScrollController                        _optionListScrollController;
+  late List<OptionGroupConfiguration>                   _optionConfiguration;
+  late Boolean                                          _parallelForward;
+  late Boolean                                          _enableFilter;
+  late Boolean                                          _enableBatch;
+  late List<(String, Boolean?)>                         _resource;
+  late List<List<(Boolean, Boolean, Boolean, Boolean)>> _optionMatch;
+  late List<Boolean>                                    _optionExpanded;
+  late ScrollController                                 _optionListScrollController;
 
   Future<Void> _refreshMatch(
   ) async {
     this._optionMatch.clear();
     for (var group in this._optionConfiguration) {
-      var groupMatch = <(Boolean, Boolean, Boolean)>[];
+      var groupMatch = <(Boolean, Boolean, Boolean, Boolean)>[];
       for (var item in group.item) {
-        var singleMatched = false;
-        var batchMatched = false;
-        var nameMatched = false;
-        if (this._resource.length != 0) {
-          singleMatched = true;
-          batchMatched = true;
-          nameMatched = true;
-          var nameRule = RegExp(item.filter.name);
+        var singleEnabled = true;
+        var batchEnabled = item.batchable;
+        if (item.filter != null) {
           for (var resource in this._resource) {
-            singleMatched &= switch (item.filter.type) {
+            singleEnabled &= switch (item.filter!.type) {
               FilterType.any       => resource.$2 != null,
               FilterType.file      => resource.$2 == false,
               FilterType.directory => resource.$2 == true,
             };
-            batchMatched &= item.batchable && resource.$2 == true;
-            nameMatched &= nameRule.hasMatch(resource.$1);
+            batchEnabled &= resource.$2 == true;
           }
         }
-        groupMatch.add((singleMatched, batchMatched, nameMatched));
+        var singleFiltered = false;
+        var batchFiltered = false;
+        if (item.filter == null && this._resource.length == 0) {
+          singleFiltered |= true;
+          batchFiltered |= true;
+        }
+        if (item.filter != null && this._resource.length != 0) {
+          var nameRule = RegExp(item.filter!.name);
+          singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.$1));
+          batchFiltered |= true;
+        }
+        groupMatch.add((singleEnabled, singleFiltered, batchEnabled, batchFiltered));
       }
       this._optionMatch.add(groupMatch);
     }
@@ -110,8 +115,9 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     String?              method,
     Map<String, Object>? argument,
   ) async {
+    var actualInput = this._resource.isNotEmpty ? this._resource.map((value) => value.$1).toList() : <String?>[null];
     var actualMethod = method == null ? null : modding_worker.ForwardHelper.makeMethodForBatchable(method, this._enableBatch);
-    var actualCommand = this._resource.map((value) => modding_worker.ForwardHelper.makeArgumentForCommand(value.$1, actualMethod, argument)).toList();
+    var actualCommand = actualInput.map((value) => modding_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
     await modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
     return;
   }

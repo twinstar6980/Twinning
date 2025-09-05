@@ -27,6 +27,7 @@ namespace Twinning.Script.Executor {
 		filter: null | ['any' | 'file' | 'directory', RegExp];
 		argument: Argument;
 		worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }) => void;
+		batch_filter: null | ['any' | 'file' | 'directory', RegExp];
 		batch_argument: null | BatchArgument;
 		batch_worker: null | ((argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void);
 	};
@@ -197,13 +198,11 @@ namespace Twinning.Script.Executor {
 			filter: null | 'any' | 'file' | 'directory';
 			argument: Argument;
 			worker: (argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }) => void;
+			batch_filter: null | 'any' | 'file' | 'directory';
 			batch_argument: null | BatchArgument;
 			batch_worker: null | ((argument: { [Element in Argument[number]as Element['id']]: Element['Value'] }, temporary: any) => void);
 		},
 	): TypicalMethod<ID, Argument, BatchArgument> {
-		if (object.filter === null) {
-			assert_test(object.batch_argument === null && object.batch_worker === null);
-		}
 		return {
 			Argument: undefined! as any,
 			GivenArgument: undefined! as any,
@@ -211,6 +210,7 @@ namespace Twinning.Script.Executor {
 			filter: object.filter === null ? null : [object.filter, /()/],
 			argument: object.argument,
 			worker: object.worker,
+			batch_filter: object.batch_filter === null ? null : [object.batch_filter, /()/],
 			batch_argument: object.batch_argument,
 			batch_worker: object.batch_worker,
 		};
@@ -332,22 +332,17 @@ namespace Twinning.Script.Executor {
 					}
 				}
 				else {
-					assert_test(source.filter !== null);
+					assert_test(source.batch_argument !== null && source.batch_argument.length > 0);
+					assert_test(source.batch_filter !== null || source.batch_worker !== null);
 					execute_typical_batch_task(
 						final_argument[source.argument[0].id],
-						source.filter,
+						source.batch_filter!,
 						(item, temporary) => {
-							assert_test(source.batch_argument !== null);
 							let item_argument = { ...final_argument };
-							for (let batch_argument of source.batch_argument) {
+							for (let batch_argument of source.batch_argument!) {
 								item_argument[batch_argument.id] += '/' + batch_argument.item_mapper(final_argument, item);
 							}
-							if (source.batch_worker === null) {
-								source.worker(item_argument as any);
-							}
-							else {
-								source.batch_worker(item_argument as any, temporary);
-							}
+							source.batch_worker!(item_argument as any, temporary);
 						},
 					);
 					state = true;
@@ -358,11 +353,13 @@ namespace Twinning.Script.Executor {
 			default_argument: record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
 			input_filter: (input) => {
 				let state = true;
-				if (input === null) {
-					state &&= source.filter === null;
+				if (source.filter === null) {
+					if (input !== null) {
+						state &&= false;
+					}
 				}
 				else {
-					if (input === '' || source.filter === null) {
+					if (input === null || input === '') {
 						state &&= false;
 					}
 					else if (!batch) {
@@ -377,7 +374,7 @@ namespace Twinning.Script.Executor {
 				}
 				return state;
 			},
-			input_forwarder: source.filter === null ? null : source.argument[0].id,
+			input_forwarder: source.filter === null ? null : source.argument[0].id as Exclude<keyof typeof source.GivenArgument, number>,
 		};
 	}
 
@@ -386,7 +383,8 @@ namespace Twinning.Script.Executor {
 	export type TypicalMethodConfiguration = {
 		filter: null | string;
 		argument: Record<string, TypicalArgumentExpression<any>>;
-		batch_argument: null | Record<string, TypicalArgumentExpression<any>>;
+		batch_filter: null | string;
+		batch_argument: null | Record<string, TypicalArgumentExpression<string>>;
 	};
 
 	export type TypicalMethodConfigurationGroup = Record<string, TypicalMethodConfiguration>;
@@ -398,24 +396,39 @@ namespace Twinning.Script.Executor {
 	): void {
 		for (let item of list) {
 			let item_configuration = configuration[item.id];
-			if (item.filter !== null) {
-				assert_test(item_configuration.filter !== null);
-				item.filter[1] = new RegExp(item_configuration.filter, 'i');
-			}
+			item.id = `${group_id}.${item.id}`;
 			{
-				for (let argument of item.argument) {
-					assert_test(item_configuration.argument[argument.id] !== undefined);
-					argument.default = item_configuration.argument[argument.id];
+				if (item.filter !== null) {
+					assert_test(item_configuration.filter !== null);
+					item.filter[1] = new RegExp(item_configuration.filter, 'i');
+				}
+				{
+					for (let argument of item.argument as Array<TypicalArgument<string, any, any>>) {
+						assert_test(item_configuration.argument[argument.id] !== undefined);
+						argument.default = item_configuration.argument[argument.id];
+					}
 				}
 			}
 			if (item.batch_argument !== null) {
-				assert_test(item_configuration.batch_argument !== null);
-				for (let argument of item.batch_argument) {
-					assert_test(item_configuration.batch_argument[argument.id] !== undefined);
-					argument.default = item_configuration.batch_argument[argument.id];
+				if (item.batch_filter !== null) {
+					assert_test(item_configuration.batch_filter !== null);
+					item.batch_filter[1] = new RegExp(item_configuration.batch_filter, 'i');
+				}
+				{
+					assert_test(item_configuration.batch_argument !== null);
+					for (let argument of item.batch_argument as Array<TypicalBatchArgument<string>>) {
+						assert_test(item_configuration.batch_argument[argument.id] !== undefined);
+						argument.default = item_configuration.batch_argument[argument.id];
+					}
+				}
+				if (item.batch_filter === null) {
+					assert_test(item.filter !== null);
+					item.batch_filter = [item.filter[0], item.filter[1]];
+				}
+				if (item.batch_worker === null) {
+					item.batch_worker = item.worker;
 				}
 			}
-			item.id = `${group_id}.${item.id}`;
 			g_method.push(convert_typical_method(item, false));
 			g_method_batch.push(item.batch_argument === null ? null : convert_typical_method(item, true));
 		}

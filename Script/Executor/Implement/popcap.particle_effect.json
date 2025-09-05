@@ -8,6 +8,7 @@
 				"version_number": 1,
 				"buffer_size": "8.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"definition_file": "?input",
 				"data_file": "?automatic",
@@ -20,6 +21,7 @@
 				"definition_file": "?automatic",
 				"version_number": 1,
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"definition_file": "?automatic",

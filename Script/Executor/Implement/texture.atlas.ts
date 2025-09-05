@@ -40,6 +40,7 @@ namespace Twinning.Script.Executor.Implement.texture.atlas {
 					Support.Atlas.Pack.pack_fs(definition_file, atlas_file, sprite_directory);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -73,6 +74,7 @@ namespace Twinning.Script.Executor.Implement.texture.atlas {
 					Support.Atlas.Pack.unpack_fs(definition_file, atlas_file, sprite_directory);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),
@@ -106,6 +108,7 @@ namespace Twinning.Script.Executor.Implement.texture.atlas {
 					Support.Atlas.Pack.pack_automatic_fs(definition_file, atlas_file, sprite_directory);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

@@ -52,6 +52,7 @@ namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 					KernelX.Tool.PopCap.ReAnimation.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'definition_file',
@@ -114,6 +115,7 @@ namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 					KernelX.Tool.PopCap.ReAnimation.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

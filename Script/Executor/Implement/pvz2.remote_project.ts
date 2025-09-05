@@ -40,6 +40,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 					Support.PvZ2.RemoteProject.execute(project_directory, action as any, target === '' ? null : target as any);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: null,
 				batch_worker: null,
 			}),

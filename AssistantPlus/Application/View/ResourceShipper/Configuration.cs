@@ -25,7 +25,7 @@ namespace AssistantPlus.View.ResourceShipper {
 	public record OptionConfiguration {
 		public String                     Name      = default!;
 		public String                     Icon      = default!;
-		public FilterConfiguration        Filter    = default!;
+		public FilterConfiguration?       Filter    = default!;
 		public Boolean                    Batchable = default!;
 		public String?                    Method    = default!;
 		public List<PresetConfiguration?> Preset    = default!;

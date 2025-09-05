@@ -9,6 +9,7 @@
 				"version_native_string_encoding_use_utf8": true,
 				"buffer_size": "64.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"definition_file": "?input",
 				"data_file": "?automatic",
@@ -22,6 +23,7 @@
 				"version_number": 1,
 				"version_native_string_encoding_use_utf8": true,
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"definition_file": "?automatic",
@@ -34,6 +36,7 @@
 				"cipher_file": "?automatic",
 				"key": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"plain_file": "?input",
 				"cipher_file": "?automatic",
@@ -46,6 +49,7 @@
 				"plain_file": "?automatic",
 				"key": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"cipher_file": "?input",
 				"plain_file": "?automatic",
@@ -61,6 +65,7 @@
 				"key": "?input",
 				"buffer_size": "64.0m",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"definition_file": "?input",
 				"data_file": "?automatic",
@@ -75,6 +80,7 @@
 				"version_native_string_encoding_use_utf8": true,
 				"key": "?input",
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"definition_file": "?automatic",
@@ -88,6 +94,7 @@
 				"version_number": 1,
 				"version_native_string_encoding_use_utf8": true,
 			},
+			"batch_filter": null,
 			"batch_argument": {
 				"data_file": "?input",
 				"definition_file": "?automatic",

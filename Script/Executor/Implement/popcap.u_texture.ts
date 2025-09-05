@@ -46,6 +46,7 @@ namespace Twinning.Script.Executor.Implement.popcap.u_texture {
 					KernelX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'image_file',
@@ -95,6 +96,7 @@ namespace Twinning.Script.Executor.Implement.popcap.u_texture {
 					KernelX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

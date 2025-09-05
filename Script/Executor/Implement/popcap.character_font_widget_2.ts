@@ -39,6 +39,7 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 					KernelX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, buffer_size);
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'definition_file',
@@ -88,6 +89,7 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 					KernelX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
 					return;
 				},
+				batch_filter: null,
 				batch_argument: [
 					typical_argument_batch({
 						id: 'data_file',

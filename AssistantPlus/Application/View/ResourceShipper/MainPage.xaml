@@ -327,6 +327,14 @@
 											TextWrapping="NoWrap"
 											Text="{x:Bind uName_Text}"
 											/>
+										<InfoBadge
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Margin="0,0,12,0"
+											Width="20"
+											Style="{StaticResource AttentionValueInfoBadgeStyle}"
+											Value="{x:Bind uCount_Value}"
+											/>
 									</my:Stack>
 								</TreeViewItem>
 							</DataTemplate>

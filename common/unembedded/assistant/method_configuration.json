@@ -1,0 +1,6267 @@
+[
+	{
+		"id": "common.utility",
+		"name": "Utility",
+		"icon": "code",
+		"item": [
+			{
+				"id": "common.utility.set_global_configuration",
+				"name": "Set global configuration",
+				"icon": "code",
+				"argument": [
+					{
+						"id": "data",
+						"name": "Data",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "Language - English",
+						"argument": {
+							"data": "{\"language\":\"English\"}"
+						}
+					},
+					{
+						"name": "Language - Chinese",
+						"argument": {
+							"data": "{\"language\":\"Chinese\"}"
+						}
+					},
+					{
+						"name": "Language - Vietnamese",
+						"argument": {
+							"data": "{\"language\":\"Vietnamese\"}"
+						}
+					},
+					null,
+					{
+						"name": "Byte endian - Little",
+						"argument": {
+							"data": "{\"byte_stream_use_big_endian\":false}"
+						}
+					},
+					{
+						"name": "Byte endian - Big",
+						"argument": {
+							"data": "{\"byte_stream_use_big_endian\":true}"
+						}
+					},
+					null,
+					{
+						"name": "JSON format - Trailing",
+						"argument": {
+							"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}"
+						}
+					},
+					{
+						"name": "JSON format - Compat",
+						"argument": {
+							"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}"
+						}
+					}
+				]
+			},
+			{
+				"id": "common.utility.run_executable_script",
+				"name": "Run executable script",
+				"icon": "code",
+				"argument": [
+					{
+						"id": "target",
+						"name": "Target",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "ScriptConsole",
+						"argument": {
+							"target": "ScriptConsole"
+						}
+					},
+					{
+						"name": "CompareLanguageFile",
+						"argument": {
+							"target": "CompareLanguageFile"
+						}
+					},
+					{
+						"name": "ComputeWwiseShortID",
+						"argument": {
+							"target": "ComputeWwiseShortID"
+						}
+					},
+					{
+						"name": "ExtractRSBFromPvZ2CNAPKDirectory",
+						"argument": {
+							"target": "ExtractRSBFromPvZ2CNAPKDirectory"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "script",
+		"name": "Script",
+		"icon": "code",
+		"item": [
+			{
+				"id": "script.js.execute",
+				"name": "JS Execute",
+				"icon": "play_arrow",
+				"argument": [
+					{
+						"id": "script_file",
+						"name": "Script file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "is_module",
+						"name": "Run as module",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"script_file"
+				],
+				"preset": [
+					{
+						"name": "Normal",
+						"argument": {
+							"is_module": false
+						}
+					},
+					{
+						"name": "Module",
+						"argument": {
+							"is_module": true
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "data",
+		"name": "Data",
+		"icon": "draft",
+		"item": [
+			{
+				"id": "data.hash.md5",
+				"name": "MD5 Hash",
+				"icon": "check_box",
+				"argument": [
+					{
+						"id": "target_file",
+						"name": "Target file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"target_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.encoding.base64.encode",
+				"name": "Base64 Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.encoding.base64.decode",
+				"name": "Base64 Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.encryption.exor.encrypt",
+				"name": "EXOR Encrypt",
+				"icon": "lock",
+				"argument": [
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"plain_file",
+					"cipher_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.encryption.rijndael.encrypt",
+				"name": "Rijndael Encrypt",
+				"icon": "lock",
+				"argument": [
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "mode",
+						"name": "Algorithm mode",
+						"type": "string",
+						"option": [
+							"ecb",
+							"cbc",
+							"cfb"
+						]
+					},
+					{
+						"id": "block_size",
+						"name": "Block size",
+						"type": "integer",
+						"option": [
+							16,
+							24,
+							32
+						]
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "iv",
+						"name": "Initialization vector",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"plain_file",
+					"cipher_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.encryption.rijndael.decrypt",
+				"name": "Rijndael Decrypt",
+				"icon": "key",
+				"argument": [
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "mode",
+						"name": "Algorithm mode",
+						"type": "string",
+						"option": [
+							"ecb",
+							"cbc",
+							"cfb"
+						]
+					},
+					{
+						"id": "block_size",
+						"name": "Block size",
+						"type": "integer",
+						"option": [
+							16,
+							24,
+							32
+						]
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "iv",
+						"name": "Initialization vector",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"cipher_file",
+					"plain_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.deflate.compress",
+				"name": "Deflate Compress",
+				"icon": "close_fullscreen",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.deflate.uncompress",
+				"name": "Deflate Uncompress",
+				"icon": "open_in_full",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.zlib.compress",
+				"name": "ZLib Compress",
+				"icon": "close_fullscreen",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.zlib.uncompress",
+				"name": "ZLib Uncompress",
+				"icon": "open_in_full",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.gzip.compress",
+				"name": "GZip Compress",
+				"icon": "close_fullscreen",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.gzip.uncompress",
+				"name": "GZip Uncompress",
+				"icon": "open_in_full",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.bzip2.compress",
+				"name": "BZip2 Compress",
+				"icon": "close_fullscreen",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.bzip2.uncompress",
+				"name": "BZip2 Uncompress",
+				"icon": "open_in_full",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.lzma.compress",
+				"name": "Lzma Compress",
+				"icon": "close_fullscreen",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.compression.lzma.uncompress",
+				"name": "Lzma Uncompress",
+				"icon": "open_in_full",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "data.differentiation.vcdiff.encode",
+				"name": "VCDiff Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "after_file",
+						"name": "After file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "patch_file",
+						"name": "Patch file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "before_file",
+						"name": "Before file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "data.differentiation.vcdiff.decode",
+				"name": "VCDiff Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "patch_file",
+						"name": "Patch file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "after_file",
+						"name": "After file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "before_file",
+						"name": "Before file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "text",
+		"name": "Text",
+		"icon": "description",
+		"item": [
+			{
+				"id": "text.json.format",
+				"name": "JSON Format",
+				"icon": "format_list_bulleted",
+				"argument": [
+					{
+						"id": "source_file",
+						"name": "Source file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "destination_file",
+						"name": "Destination file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "disable_array_trailing_comma",
+						"name": "Disable array trailing comma",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "disable_array_line_breaking",
+						"name": "Disable array line breaking",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "disable_object_trailing_comma",
+						"name": "Disable object trailing comma",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "disable_object_line_breaking",
+						"name": "Disable object line breaking",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"source_file",
+					"destination_file"
+				],
+				"preset": [
+					{
+						"name": "Enable trailing comma | Enable line breaking",
+						"argument": {
+							"disable_array_trailing_comma": false,
+							"disable_array_line_breaking": false,
+							"disable_object_trailing_comma": false,
+							"disable_object_line_breaking": false
+						}
+					},
+					{
+						"name": "Enable trailing comma | Disable line breaking",
+						"argument": {
+							"disable_array_trailing_comma": false,
+							"disable_array_line_breaking": true,
+							"disable_object_trailing_comma": false,
+							"disable_object_line_breaking": true
+						}
+					},
+					null,
+					{
+						"name": "Disable trailing comma | Enable line breaking",
+						"argument": {
+							"disable_array_trailing_comma": true,
+							"disable_array_line_breaking": false,
+							"disable_object_trailing_comma": true,
+							"disable_object_line_breaking": false
+						}
+					},
+					{
+						"name": "Disable trailing comma | Disable line breaking",
+						"argument": {
+							"disable_array_trailing_comma": true,
+							"disable_array_line_breaking": true,
+							"disable_object_trailing_comma": true,
+							"disable_object_line_breaking": true
+						}
+					}
+				]
+			},
+			{
+				"id": "text.xml.format",
+				"name": "XML Format",
+				"icon": "format_list_bulleted",
+				"argument": [
+					{
+						"id": "source_file",
+						"name": "Source file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "destination_file",
+						"name": "Destination file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"source_file",
+					"destination_file"
+				],
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "texture",
+		"name": "Texture",
+		"icon": "imagesmode",
+		"item": [
+			{
+				"id": "texture.transformation.flip",
+				"name": "Flip",
+				"icon": "settings_backup_restore",
+				"argument": [
+					{
+						"id": "source_file",
+						"name": "Source file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "destination_file",
+						"name": "Destination file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "horizontal",
+						"name": "Flip horizontal",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "vertical",
+						"name": "Flip vertical",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"source_file",
+					"destination_file"
+				],
+				"preset": [
+					{
+						"name": "Horizontal",
+						"argument": {
+							"horizontal": true,
+							"vertical": false
+						}
+					},
+					{
+						"name": "Vertical",
+						"argument": {
+							"horizontal": false,
+							"vertical": true
+						}
+					},
+					{
+						"name": "Both",
+						"argument": {
+							"horizontal": true,
+							"vertical": true
+						}
+					}
+				]
+			},
+			{
+				"id": "texture.transformation.scale",
+				"name": "Scale",
+				"icon": "branding_watermark",
+				"argument": [
+					{
+						"id": "source_file",
+						"name": "Source file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "destination_file",
+						"name": "Destination file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "size_width",
+						"name": "Width",
+						"type": "integer",
+						"option": null
+					},
+					{
+						"id": "size_height",
+						"name": "Height",
+						"type": "integer",
+						"option": null
+					}
+				],
+				"batchable": [
+					"source_file",
+					"destination_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "texture.transformation.scale_rate",
+				"name": "Scale by rate",
+				"icon": "branding_watermark",
+				"argument": [
+					{
+						"id": "source_file",
+						"name": "Source file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "destination_file",
+						"name": "Destination file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "size_rate",
+						"name": "Size rate",
+						"type": "floater",
+						"option": null
+					}
+				],
+				"batchable": [
+					"source_file",
+					"destination_file"
+				],
+				"preset": [
+					{
+						"name": "÷ 2",
+						"argument": {
+							"size_rate": 0.5
+						}
+					},
+					{
+						"name": "× 2",
+						"argument": {
+							"size_rate": 2.0
+						}
+					}
+				]
+			},
+			{
+				"id": "texture.encoding.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "format",
+						"name": "Texture format",
+						"type": "string",
+						"option": [
+							"a_8",
+							"rgb_332",
+							"rgb_565",
+							"rgba_5551",
+							"rgba_4444",
+							"rgba_8888",
+							"argb_1555",
+							"argb_4444",
+							"argb_8888",
+							"l_8",
+							"la_44",
+							"la_88",
+							"al_44",
+							"al_88",
+							"rgb_888_o",
+							"rgba_8888_o",
+							"rgb_etc1",
+							"rgb_etc2",
+							"rgba_etc2",
+							"rgb_pvrtc4",
+							"rgba_pvrtc4"
+						]
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "A-8",
+						"argument": {
+							"format": "a_8"
+						}
+					},
+					null,
+					{
+						"name": "RGB-332",
+						"argument": {
+							"format": "rgb_332"
+						}
+					},
+					{
+						"name": "RGB-565",
+						"argument": {
+							"format": "rgb_565"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-5551",
+						"argument": {
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "RGBA-4444",
+						"argument": {
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "RGBA-8888",
+						"argument": {
+							"format": "rgba_8888"
+						}
+					},
+					null,
+					{
+						"name": "ARGB-1555",
+						"argument": {
+							"format": "argb_1555"
+						}
+					},
+					{
+						"name": "ARGB-4444",
+						"argument": {
+							"format": "argb_4444"
+						}
+					},
+					{
+						"name": "ARGB-8888",
+						"argument": {
+							"format": "argb_8888"
+						}
+					},
+					null,
+					{
+						"name": "L-8",
+						"argument": {
+							"format": "l_8"
+						}
+					},
+					null,
+					{
+						"name": "LA-44",
+						"argument": {
+							"format": "la_44"
+						}
+					},
+					{
+						"name": "LA-88",
+						"argument": {
+							"format": "la_88"
+						}
+					},
+					null,
+					{
+						"name": "AL-44",
+						"argument": {
+							"format": "al_44"
+						}
+					},
+					{
+						"name": "AL-88",
+						"argument": {
+							"format": "al_88"
+						}
+					},
+					null,
+					{
+						"name": "RGB-888-O",
+						"argument": {
+							"format": "rgb_888_o"
+						}
+					},
+					{
+						"name": "RGBA-8888-O",
+						"argument": {
+							"format": "rgba_8888_o"
+						}
+					},
+					null,
+					{
+						"name": "RGB-ETC1",
+						"argument": {
+							"format": "rgb_etc1"
+						}
+					},
+					{
+						"name": "RGB-ETC2",
+						"argument": {
+							"format": "rgb_etc2"
+						}
+					},
+					{
+						"name": "RGBA-ETC2",
+						"argument": {
+							"format": "rgba_etc2"
+						}
+					},
+					null,
+					{
+						"name": "RGB-PVRTC4",
+						"argument": {
+							"format": "rgb_pvrtc4"
+						}
+					},
+					{
+						"name": "RGBA-PVRTC4",
+						"argument": {
+							"format": "rgba_pvrtc4"
+						}
+					}
+				]
+			},
+			{
+				"id": "texture.encoding.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "format",
+						"name": "Texture format",
+						"type": "string",
+						"option": [
+							"a_8",
+							"rgb_332",
+							"rgb_565",
+							"rgba_5551",
+							"rgba_4444",
+							"rgba_8888",
+							"argb_1555",
+							"argb_4444",
+							"argb_8888",
+							"l_8",
+							"la_44",
+							"la_88",
+							"al_44",
+							"al_88",
+							"rgb_888_o",
+							"rgba_8888_o",
+							"rgb_etc1",
+							"rgb_etc2",
+							"rgba_etc2",
+							"rgb_pvrtc4",
+							"rgba_pvrtc4"
+						]
+					},
+					{
+						"id": "image_width",
+						"name": "Image width",
+						"type": "integer",
+						"option": null
+					},
+					{
+						"id": "image_height",
+						"name": "Image height",
+						"type": "integer",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "A-8",
+						"argument": {
+							"format": "a_8"
+						}
+					},
+					null,
+					{
+						"name": "RGB-332",
+						"argument": {
+							"format": "rgb_332"
+						}
+					},
+					{
+						"name": "RGB-565",
+						"argument": {
+							"format": "rgb_565"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-5551",
+						"argument": {
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "RGBA-4444",
+						"argument": {
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "RGBA-8888",
+						"argument": {
+							"format": "rgba_8888"
+						}
+					},
+					null,
+					{
+						"name": "ARGB-1555",
+						"argument": {
+							"format": "argb_1555"
+						}
+					},
+					{
+						"name": "ARGB-4444",
+						"argument": {
+							"format": "argb_4444"
+						}
+					},
+					{
+						"name": "ARGB-8888",
+						"argument": {
+							"format": "argb_8888"
+						}
+					},
+					null,
+					{
+						"name": "L-8",
+						"argument": {
+							"format": "l_8"
+						}
+					},
+					null,
+					{
+						"name": "LA-44",
+						"argument": {
+							"format": "la_44"
+						}
+					},
+					{
+						"name": "LA-88",
+						"argument": {
+							"format": "la_88"
+						}
+					},
+					null,
+					{
+						"name": "AL-44",
+						"argument": {
+							"format": "al_44"
+						}
+					},
+					{
+						"name": "AL-88",
+						"argument": {
+							"format": "al_88"
+						}
+					},
+					null,
+					{
+						"name": "RGB-888-O",
+						"argument": {
+							"format": "rgb_888_o"
+						}
+					},
+					{
+						"name": "RGBA-8888-O",
+						"argument": {
+							"format": "rgba_8888_o"
+						}
+					},
+					null,
+					{
+						"name": "RGB-ETC1",
+						"argument": {
+							"format": "rgb_etc1"
+						}
+					},
+					{
+						"name": "RGB-ETC2",
+						"argument": {
+							"format": "rgb_etc2"
+						}
+					},
+					{
+						"name": "RGBA-ETC2",
+						"argument": {
+							"format": "rgba_etc2"
+						}
+					},
+					null,
+					{
+						"name": "RGB-PVRTC4",
+						"argument": {
+							"format": "rgb_pvrtc4"
+						}
+					},
+					{
+						"name": "RGBA-PVRTC4",
+						"argument": {
+							"format": "rgba_pvrtc4"
+						}
+					}
+				]
+			},
+			{
+				"id": "texture.atlas.pack",
+				"name": "Atlas Pack",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "sprite_directory",
+						"name": "Sprite directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "atlas_file",
+						"name": "Atlas file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "texture.atlas.unpack",
+				"name": "Atlas Unpack",
+				"icon": "orders",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "atlas_file",
+						"name": "Atlas file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "sprite_directory",
+						"name": "Sprite directory",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "texture.atlas.pack_automatic",
+				"name": "Atlas Pack by automatic",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "sprite_directory",
+						"name": "Sprite directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "atlas_file",
+						"name": "Atlas file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "wwise.media",
+		"name": "Wwise Media",
+		"icon": "genres",
+		"item": [
+			{
+				"id": "wwise.media.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original File",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "format",
+						"name": "Audio format",
+						"type": "string",
+						"option": [
+							"pcm",
+							"adpcm",
+							"vorbis",
+							"aac",
+							"opus",
+							"wemopus"
+						]
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+					{
+						"name": "PCM",
+						"argument": {
+							"format": "pcm"
+						}
+					},
+					{
+						"name": "ADPCM",
+						"argument": {
+							"format": "adpcm"
+						}
+					},
+					{
+						"name": "Vorbis",
+						"argument": {
+							"format": "vorbis"
+						}
+					},
+					{
+						"name": "AAC",
+						"argument": {
+							"format": "aac"
+						}
+					},
+					{
+						"name": "Opus",
+						"argument": {
+							"format": "opus"
+						}
+					},
+					{
+						"name": "WEMOpus",
+						"argument": {
+							"format": "wemopus"
+						}
+					}
+				]
+			},
+			{
+				"id": "wwise.media.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Original File",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "wwise.sound_bank",
+		"name": "Wwise Sound-Bank",
+		"icon": "genres",
+		"item": [
+			{
+				"id": "wwise.sound_bank.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							72,
+							88,
+							112,
+							113,
+							118,
+							120,
+							125,
+							128,
+							132,
+							134,
+							135,
+							140,
+							145,
+							150
+						]
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"bundle_directory",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "72",
+						"argument": {
+							"version_number": 72
+						}
+					},
+					{
+						"name": "88",
+						"argument": {
+							"version_number": 88
+						}
+					},
+					{
+						"name": "112",
+						"argument": {
+							"version_number": 112
+						}
+					},
+					{
+						"name": "113",
+						"argument": {
+							"version_number": 113
+						}
+					},
+					{
+						"name": "118",
+						"argument": {
+							"version_number": 118
+						}
+					},
+					{
+						"name": "120",
+						"argument": {
+							"version_number": 120
+						}
+					},
+					{
+						"name": "125",
+						"argument": {
+							"version_number": 125
+						}
+					},
+					{
+						"name": "128",
+						"argument": {
+							"version_number": 128
+						}
+					},
+					{
+						"name": "132",
+						"argument": {
+							"version_number": 132
+						}
+					},
+					{
+						"name": "134",
+						"argument": {
+							"version_number": 134
+						}
+					},
+					{
+						"name": "135",
+						"argument": {
+							"version_number": 135
+						}
+					},
+					{
+						"name": "140",
+						"argument": {
+							"version_number": 140
+						}
+					},
+					{
+						"name": "145",
+						"argument": {
+							"version_number": 145
+						}
+					},
+					{
+						"name": "150",
+						"argument": {
+							"version_number": 150
+						}
+					}
+				]
+			},
+			{
+				"id": "wwise.sound_bank.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							72,
+							88,
+							112,
+							113,
+							118,
+							120,
+							125,
+							128,
+							132,
+							134,
+							135,
+							140,
+							145,
+							150
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"bundle_directory"
+				],
+				"preset": [
+					{
+						"name": "72",
+						"argument": {
+							"version_number": 72
+						}
+					},
+					{
+						"name": "88",
+						"argument": {
+							"version_number": 88
+						}
+					},
+					{
+						"name": "112",
+						"argument": {
+							"version_number": 112
+						}
+					},
+					{
+						"name": "113",
+						"argument": {
+							"version_number": 113
+						}
+					},
+					{
+						"name": "118",
+						"argument": {
+							"version_number": 118
+						}
+					},
+					{
+						"name": "120",
+						"argument": {
+							"version_number": 120
+						}
+					},
+					{
+						"name": "125",
+						"argument": {
+							"version_number": 125
+						}
+					},
+					{
+						"name": "128",
+						"argument": {
+							"version_number": 128
+						}
+					},
+					{
+						"name": "132",
+						"argument": {
+							"version_number": 132
+						}
+					},
+					{
+						"name": "134",
+						"argument": {
+							"version_number": 134
+						}
+					},
+					{
+						"name": "135",
+						"argument": {
+							"version_number": 135
+						}
+					},
+					{
+						"name": "140",
+						"argument": {
+							"version_number": 140
+						}
+					},
+					{
+						"name": "145",
+						"argument": {
+							"version_number": 145
+						}
+					},
+					{
+						"name": "150",
+						"argument": {
+							"version_number": 150
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "marmalade.dzip",
+		"name": "Marmalade DZip",
+		"icon": "deployed_code",
+		"item": [
+			{
+				"id": "marmalade.dzip.pack",
+				"name": "Pack",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"bundle_directory",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "0",
+						"argument": {
+							"version_number": 0
+						}
+					}
+				]
+			},
+			{
+				"id": "marmalade.dzip.unpack",
+				"name": "Unpack",
+				"icon": "orders",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"bundle_directory"
+				],
+				"preset": [
+					{
+						"name": "0",
+						"argument": {
+							"version_number": 0
+						}
+					}
+				]
+			},
+			{
+				"id": "marmalade.dzip.pack_automatic",
+				"name": "Pack by automatic",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "resource_directory",
+						"name": "Resource directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "0",
+						"argument": {
+							"version_number": 0
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.zlib",
+		"name": "PopCap ZLib",
+		"icon": "folder_zip",
+		"item": [
+			{
+				"id": "popcap.zlib.compress",
+				"name": "Compress",
+				"icon": "close_fullscreen",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_file"
+				],
+				"preset": [
+					{
+						"name": "32",
+						"argument": {
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "64",
+						"argument": {
+							"version_variant_64": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.zlib.uncompress",
+				"name": "Uncompress",
+				"icon": "open_in_full",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"ripe_file",
+					"raw_file"
+				],
+				"preset": [
+					{
+						"name": "32",
+						"argument": {
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "64",
+						"argument": {
+							"version_variant_64": true
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.crypt_data",
+		"name": "PopCap Crypt-Data",
+		"icon": "folder_zip",
+		"item": [
+			{
+				"id": "popcap.crypt_data.encrypt",
+				"name": "Encrypt",
+				"icon": "lock",
+				"argument": [
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "limit",
+						"name": "Limit",
+						"type": "integer",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"plain_file",
+					"cipher_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "popcap.crypt_data.decrypt",
+				"name": "Decrypt",
+				"icon": "key",
+				"argument": [
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "limit",
+						"name": "Limit",
+						"type": "integer",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"cipher_file",
+					"plain_file"
+				],
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.reflection_object_notation",
+		"name": "PopCap Reflection-Object-Notation",
+		"icon": "description",
+		"item": [
+			{
+				"id": "popcap.reflection_object_notation.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_native_string_encoding_use_utf8",
+						"name": "Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1 | E-ASCII",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": false
+						}
+					},
+					{
+						"name": "1 | UTF-8",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.reflection_object_notation.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_native_string_encoding_use_utf8",
+						"name": "Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "1 | E-ASCII",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": false
+						}
+					},
+					{
+						"name": "1 | UTF-8",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.reflection_object_notation.encrypt",
+				"name": "Encrypt",
+				"icon": "lock",
+				"argument": [
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"plain_file",
+					"cipher_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "popcap.reflection_object_notation.decrypt",
+				"name": "Decrypt",
+				"icon": "key",
+				"argument": [
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"cipher_file",
+					"plain_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "popcap.reflection_object_notation.encode_cipher",
+				"name": "Encode for cipher",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_native_string_encoding_use_utf8",
+						"name": "Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1 | E-ASCII",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": false
+						}
+					},
+					{
+						"name": "1 | UTF-8",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.reflection_object_notation.decode_cipher",
+				"name": "Decode for cipher",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_native_string_encoding_use_utf8",
+						"name": "Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "1 | E-ASCII",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": false
+						}
+					},
+					{
+						"name": "1 | UTF-8",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.reflection_object_notation.decode_lenient",
+				"name": "Decode by lenient",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_native_string_encoding_use_utf8",
+						"name": "Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "1 | E-ASCII",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": false
+						}
+					},
+					{
+						"name": "1 | UTF-8",
+						"argument": {
+							"version_number": 1,
+							"version_native_string_encoding_use_utf8": true
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.texture",
+		"name": "PopCap Texture",
+		"icon": "imagesmode",
+		"item": [
+			{
+				"id": "popcap.texture.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "format",
+						"name": "Texture format",
+						"type": "string",
+						"option": [
+							"rgba_8888_o",
+							"argb_8888",
+							"rgba_4444",
+							"rgb_565",
+							"rgba_5551",
+							"rgba_4444_tiled",
+							"rgb_565_tiled",
+							"rgba_5551_tiled",
+							"rgba_pvrtc4",
+							"rgb_pvrtc4_a_8",
+							"rgb_etc1_a_8",
+							"rgb_etc1_a_palette"
+						]
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "RGBA-8888",
+						"argument": {
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "ARGB-8888",
+						"argument": {
+							"format": "argb_8888"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-4444",
+						"argument": {
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "RGBA-565",
+						"argument": {
+							"format": "rgb_565"
+						}
+					},
+					{
+						"name": "RGBA-5551",
+						"argument": {
+							"format": "rgba_5551"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-4444-T",
+						"argument": {
+							"format": "rgba_4444_tiled"
+						}
+					},
+					{
+						"name": "RGBA-565-T",
+						"argument": {
+							"format": "rgb_565_tiled"
+						}
+					},
+					{
+						"name": "RGBA-5551-T",
+						"argument": {
+							"format": "rgba_5551_tiled"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-PVRTC-4",
+						"argument": {
+							"format": "rgba_pvrtc4"
+						}
+					},
+					{
+						"name": "RGB-PVRTC-4 + A-8",
+						"argument": {
+							"format": "rgb_pvrtc4_a_8"
+						}
+					},
+					null,
+					{
+						"name": "ETC-1 + A-8",
+						"argument": {
+							"format": "rgb_etc1_a_8"
+						}
+					},
+					{
+						"name": "ETC-1 + A-P",
+						"argument": {
+							"format": "rgb_etc1_a_palette"
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.texture.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "format",
+						"name": "Texture format",
+						"type": "string",
+						"option": [
+							"rgba_8888_o",
+							"argb_8888",
+							"rgba_4444",
+							"rgb_565",
+							"rgba_5551",
+							"rgba_4444_tiled",
+							"rgb_565_tiled",
+							"rgba_5551_tiled",
+							"rgba_pvrtc4",
+							"rgb_pvrtc4_a_8",
+							"rgb_etc1_a_8",
+							"rgb_etc1_a_palette"
+						]
+					},
+					{
+						"id": "image_width",
+						"name": "Image width",
+						"type": "integer",
+						"option": null
+					},
+					{
+						"id": "image_height",
+						"name": "Image height",
+						"type": "integer",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "RGBA-8888",
+						"argument": {
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "ARGB-8888",
+						"argument": {
+							"format": "argb_8888"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-4444",
+						"argument": {
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "RGBA-565",
+						"argument": {
+							"format": "rgb_565"
+						}
+					},
+					{
+						"name": "RGBA-5551",
+						"argument": {
+							"format": "rgba_5551"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-4444-T",
+						"argument": {
+							"format": "rgba_4444_tiled"
+						}
+					},
+					{
+						"name": "RGBA-565-T",
+						"argument": {
+							"format": "rgb_565_tiled"
+						}
+					},
+					{
+						"name": "RGBA-5551-T",
+						"argument": {
+							"format": "rgba_5551_tiled"
+						}
+					},
+					null,
+					{
+						"name": "RGBA-PVRTC-4",
+						"argument": {
+							"format": "rgba_pvrtc4"
+						}
+					},
+					{
+						"name": "RGB-PVRTC-4 + A-8",
+						"argument": {
+							"format": "rgb_pvrtc4_a_8"
+						}
+					},
+					null,
+					{
+						"name": "ETC-1 + A-8",
+						"argument": {
+							"format": "rgb_etc1_a_8"
+						}
+					},
+					{
+						"name": "ETC-1 + A-P",
+						"argument": {
+							"format": "rgb_etc1_a_palette"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.u_texture",
+		"name": "PopCap U-Texture",
+		"icon": "imagesmode",
+		"item": [
+			{
+				"id": "popcap.u_texture.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_compress_texture_data",
+						"name": "Compress texture data",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "format",
+						"name": "Texture format",
+						"type": "string",
+						"option": [
+							"rgba_8888_o",
+							"rgba_4444",
+							"rgba_5551",
+							"rgb_565"
+						]
+					}
+				],
+				"batchable": [
+					"image_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "Original | RGBA-8888",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "Original | RGBA-4444",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "Original | RGBA-5551",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "Original | RGB-565",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgb_565"
+						}
+					},
+					null,
+					{
+						"name": "Compressed | RGBA-8888",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "Compressed | RGBA-4444",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "Compressed | RGBA-5551",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "Compressed | RGB-565",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgb_565"
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.u_texture.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_compress_texture_data",
+						"name": "Compress texture data",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"image_file"
+				],
+				"preset": [
+					{
+						"name": "Original | RGBA-8888",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "Original | RGBA-4444",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "Original | RGBA-5551",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "Original | RGB-565",
+						"argument": {
+							"version_compress_texture_data": false,
+							"format": "rgb_565"
+						}
+					},
+					null,
+					{
+						"name": "Compressed | RGBA-8888",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "Compressed | RGBA-4444",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "Compressed | RGBA-5551",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "Compressed | RGB-565",
+						"argument": {
+							"version_compress_texture_data": true,
+							"format": "rgb_565"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.sexy_texture",
+		"name": "PopCap Sexy-Texture",
+		"icon": "imagesmode",
+		"item": [
+			{
+				"id": "popcap.sexy_texture.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					},
+					{
+						"id": "format",
+						"name": "Texture format",
+						"type": "string",
+						"option": [
+							"argb_8888",
+							"argb_4444",
+							"argb_1555",
+							"rgb_565",
+							"rgba_8888_o",
+							"rgba_4444",
+							"rgba_5551",
+							"la_88"
+						]
+					},
+					{
+						"id": "compress_texture_data",
+						"name": "Compress texture data",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"image_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "0 | Original | ARGB-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "argb_8888"
+						}
+					},
+					{
+						"name": "0 | Original | ARGB-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "argb_4444"
+						}
+					},
+					{
+						"name": "0 | Original | ARGB-1555",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "argb_1555"
+						}
+					},
+					{
+						"name": "0 | Original | RGB-565",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgb_565"
+						}
+					},
+					{
+						"name": "0 | Original | RGBA-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "0 | Original | RGBA-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "0 | Original | RGBA-5551",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "0 | Original | LA-88",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "la_88"
+						}
+					},
+					null,
+					{
+						"name": "0 | Compressed | ARGB-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "argb_8888"
+						}
+					},
+					{
+						"name": "0 | Compressed | ARGB-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "argb_4444"
+						}
+					},
+					{
+						"name": "0 | Compressed | ARGB-1555",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "argb_1555"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGB-565",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgb_565"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGBA-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGBA-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGBA-5551",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "0 | Compressed | LA-88",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "la_88"
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.sexy_texture.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "image_file",
+						"name": "Image file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"image_file"
+				],
+				"preset": [
+					{
+						"name": "0 | Original | ARGB-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "argb_8888"
+						}
+					},
+					{
+						"name": "0 | Original | ARGB-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "argb_4444"
+						}
+					},
+					{
+						"name": "0 | Original | ARGB-1555",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "argb_1555"
+						}
+					},
+					{
+						"name": "0 | Original | RGB-565",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgb_565"
+						}
+					},
+					{
+						"name": "0 | Original | RGBA-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "0 | Original | RGBA-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "0 | Original | RGBA-5551",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "0 | Original | LA-88",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": false,
+							"format": "la_88"
+						}
+					},
+					null,
+					{
+						"name": "0 | Compressed | ARGB-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "argb_8888"
+						}
+					},
+					{
+						"name": "0 | Compressed | ARGB-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "argb_4444"
+						}
+					},
+					{
+						"name": "0 | Compressed | ARGB-1555",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "argb_1555"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGB-565",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgb_565"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGBA-8888",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgba_8888_o"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGBA-4444",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgba_4444"
+						}
+					},
+					{
+						"name": "0 | Compressed | RGBA-5551",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "rgba_5551"
+						}
+					},
+					{
+						"name": "0 | Compressed | LA-88",
+						"argument": {
+							"version_number": 0,
+							"compress_texture_data": true,
+							"format": "la_88"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.animation",
+		"name": "PopCap Animation",
+		"icon": "thread_unread",
+		"item": [
+			{
+				"id": "popcap.animation.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6
+						]
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					},
+					{
+						"name": "2",
+						"argument": {
+							"version_number": 2
+						}
+					},
+					{
+						"name": "3",
+						"argument": {
+							"version_number": 3
+						}
+					},
+					{
+						"name": "4",
+						"argument": {
+							"version_number": 4
+						}
+					},
+					{
+						"name": "5",
+						"argument": {
+							"version_number": 5
+						}
+					},
+					{
+						"name": "6",
+						"argument": {
+							"version_number": 6
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.animation.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					},
+					{
+						"name": "2",
+						"argument": {
+							"version_number": 2
+						}
+					},
+					{
+						"name": "3",
+						"argument": {
+							"version_number": 3
+						}
+					},
+					{
+						"name": "4",
+						"argument": {
+							"version_number": 4
+						}
+					},
+					{
+						"name": "5",
+						"argument": {
+							"version_number": 5
+						}
+					},
+					{
+						"name": "6",
+						"argument": {
+							"version_number": 6
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.animation.convert.flash.from",
+				"name": "Flash Convert from JSON",
+				"icon": "swipe_right_alt",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_directory",
+						"name": "Finished directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6
+						]
+					}
+				],
+				"batchable": [
+					"raw_file",
+					"ripe_directory"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					},
+					{
+						"name": "2",
+						"argument": {
+							"version_number": 2
+						}
+					},
+					{
+						"name": "3",
+						"argument": {
+							"version_number": 3
+						}
+					},
+					{
+						"name": "4",
+						"argument": {
+							"version_number": 4
+						}
+					},
+					{
+						"name": "5",
+						"argument": {
+							"version_number": 5
+						}
+					},
+					{
+						"name": "6",
+						"argument": {
+							"version_number": 6
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.animation.convert.flash.to",
+				"name": "Flash Convert to JSON",
+				"icon": "swipe_left_alt",
+				"argument": [
+					{
+						"id": "ripe_directory",
+						"name": "Finished directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6
+						]
+					}
+				],
+				"batchable": [
+					"ripe_directory",
+					"raw_file"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					},
+					{
+						"name": "2",
+						"argument": {
+							"version_number": 2
+						}
+					},
+					{
+						"name": "3",
+						"argument": {
+							"version_number": 3
+						}
+					},
+					{
+						"name": "4",
+						"argument": {
+							"version_number": 4
+						}
+					},
+					{
+						"name": "5",
+						"argument": {
+							"version_number": 5
+						}
+					},
+					{
+						"name": "6",
+						"argument": {
+							"version_number": 6
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.animation.convert.flash.resize",
+				"name": "Flash Resize image",
+				"icon": "branding_watermark",
+				"argument": [
+					{
+						"id": "target_directory",
+						"name": "Target directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "resolution",
+						"name": "Image resolution",
+						"type": "integer",
+						"option": [
+							384,
+							768,
+							1536,
+							640,
+							1280
+						]
+					}
+				],
+				"batchable": [
+					"target_directory"
+				],
+				"preset": [
+					{
+						"name": "384",
+						"argument": {
+							"resolution": 384
+						}
+					},
+					{
+						"name": "768",
+						"argument": {
+							"resolution": 768
+						}
+					},
+					{
+						"name": "1536",
+						"argument": {
+							"resolution": 1536
+						}
+					},
+					null,
+					{
+						"name": "640",
+						"argument": {
+							"resolution": 640
+						}
+					},
+					{
+						"name": "1280",
+						"argument": {
+							"resolution": 1280
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.animation.convert.flash.link_media",
+				"name": "Flash Create links for image files",
+				"icon": "link",
+				"argument": [
+					{
+						"id": "target_directory",
+						"name": "Target directory",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"target_directory"
+				],
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.re_animation",
+		"name": "PopCap Re-Animation",
+		"icon": "thread_unread",
+		"item": [
+			{
+				"id": "popcap.re_animation.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_platform",
+						"name": "Version platform",
+						"type": "string",
+						"option": [
+							"desktop",
+							"mobile",
+							"television"
+						]
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "Desktop | 32",
+						"argument": {
+							"version_platform": "desktop",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 32",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 64",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": true
+						}
+					},
+					{
+						"name": "Television | 32",
+						"argument": {
+							"version_platform": "television",
+							"version_variant_64": false
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.re_animation.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_platform",
+						"name": "Version platform",
+						"type": "string",
+						"option": [
+							"desktop",
+							"mobile",
+							"television"
+						]
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "Desktop | 32",
+						"argument": {
+							"version_platform": "desktop",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 32",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 64",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": true
+						}
+					},
+					{
+						"name": "Television | 32",
+						"argument": {
+							"version_platform": "television",
+							"version_variant_64": false
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.particle",
+		"name": "PopCap Particle",
+		"icon": "motion_blur",
+		"item": [
+			{
+				"id": "popcap.particle.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_platform",
+						"name": "Version platform",
+						"type": "string",
+						"option": [
+							"desktop",
+							"mobile",
+							"television"
+						]
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "Desktop | 32",
+						"argument": {
+							"version_platform": "desktop",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 32",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 64",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": true
+						}
+					},
+					{
+						"name": "Television | 32",
+						"argument": {
+							"version_platform": "television",
+							"version_variant_64": false
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.particle.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_platform",
+						"name": "Version platform",
+						"type": "string",
+						"option": [
+							"desktop",
+							"mobile",
+							"television"
+						]
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "Desktop | 32",
+						"argument": {
+							"version_platform": "desktop",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 32",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 64",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": true
+						}
+					},
+					{
+						"name": "Television | 32",
+						"argument": {
+							"version_platform": "television",
+							"version_variant_64": false
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.trail",
+		"name": "PopCap Trail",
+		"icon": "motion_blur",
+		"item": [
+			{
+				"id": "popcap.trail.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_platform",
+						"name": "Version platform",
+						"type": "string",
+						"option": [
+							"desktop",
+							"mobile",
+							"television"
+						]
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "Desktop | 32",
+						"argument": {
+							"version_platform": "desktop",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 32",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 64",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": true
+						}
+					},
+					{
+						"name": "Television | 32",
+						"argument": {
+							"version_platform": "television",
+							"version_variant_64": false
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.trail.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_platform",
+						"name": "Version platform",
+						"type": "string",
+						"option": [
+							"desktop",
+							"mobile",
+							"television"
+						]
+					},
+					{
+						"id": "version_variant_64",
+						"name": "Use the 64-bit variant",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "Desktop | 32",
+						"argument": {
+							"version_platform": "desktop",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 32",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": false
+						}
+					},
+					{
+						"name": "Mobile | 64",
+						"argument": {
+							"version_platform": "mobile",
+							"version_variant_64": true
+						}
+					},
+					{
+						"name": "Television | 32",
+						"argument": {
+							"version_platform": "television",
+							"version_variant_64": false
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.particle_effect",
+		"name": "PopCap Particle-Effect",
+		"icon": "motion_blur",
+		"item": [
+			{
+				"id": "popcap.particle_effect.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.particle_effect.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.render_effect",
+		"name": "PopCap Render-Effect",
+		"icon": "motion_blur",
+		"item": [
+			{
+				"id": "popcap.render_effect.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_variant",
+						"name": "Version variant",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3
+						]
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1 | 1",
+						"argument": {
+							"version_number": 1,
+							"version_variant": 1
+						}
+					},
+					{
+						"name": "1 | 2",
+						"argument": {
+							"version_number": 1,
+							"version_variant": 2
+						}
+					},
+					{
+						"name": "1 | 3",
+						"argument": {
+							"version_number": 1,
+							"version_variant": 3
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.render_effect.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "version_variant",
+						"name": "Version variant",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+					{
+						"name": "1 | 1",
+						"argument": {
+							"version_number": 1,
+							"version_variant": 1
+						}
+					},
+					{
+						"name": "1 | 2",
+						"argument": {
+							"version_number": 1,
+							"version_variant": 2
+						}
+					},
+					{
+						"name": "1 | 3",
+						"argument": {
+							"version_number": 1,
+							"version_variant": 3
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.character_font_widget_2",
+		"name": "PopCap Character-Font-Widget-2",
+		"icon": "custom_typography",
+		"item": [
+			{
+				"id": "popcap.character_font_widget_2.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"definition_file",
+					"data_file"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "popcap.character_font_widget_2.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"definition_file"
+				],
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.package",
+		"name": "PopCap Package",
+		"icon": "deployed_code",
+		"item": [
+			{
+				"id": "popcap.package.pack",
+				"name": "Pack",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					},
+					{
+						"id": "version_compress_resource_data",
+						"name": "Compress resource data",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"bundle_directory",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "0 | Original",
+						"argument": {
+							"version_number": 0,
+							"version_compress_resource_data": false
+						}
+					},
+					{
+						"name": "0 | Compressed",
+						"argument": {
+							"version_number": 0,
+							"version_compress_resource_data": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.package.unpack",
+				"name": "Unpack",
+				"icon": "orders",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					},
+					{
+						"id": "version_compress_resource_data",
+						"name": "Compress resource data",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"bundle_directory"
+				],
+				"preset": [
+					{
+						"name": "0 | Original",
+						"argument": {
+							"version_number": 0,
+							"version_compress_resource_data": false
+						}
+					},
+					{
+						"name": "0 | Compressed",
+						"argument": {
+							"version_number": 0,
+							"version_compress_resource_data": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.package.pack_automatic",
+				"name": "Pack by automatic",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "resource_directory",
+						"name": "Resource directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							0
+						]
+					},
+					{
+						"id": "version_compress_resource_data",
+						"name": "Compress resource data",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "0 | Original",
+						"argument": {
+							"version_number": 0,
+							"version_compress_resource_data": false
+						}
+					},
+					{
+						"name": "0 | Compressed",
+						"argument": {
+							"version_number": 0,
+							"version_compress_resource_data": true
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.package.encrypt",
+				"name": "Encrypt",
+				"icon": "lock",
+				"argument": [
+					{
+						"id": "plain_file",
+						"name": "Plaintext file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "cipher_file",
+						"name": "Ciphertext file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"plain_file",
+					"cipher_file"
+				],
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.resource_stream_group",
+		"name": "PopCap Resource-Stream-Group",
+		"icon": "deployed_code",
+		"item": [
+			{
+				"id": "popcap.resource_stream_group.pack",
+				"name": "Pack",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							3,
+							4
+						]
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"bundle_directory",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					},
+					{
+						"name": "3",
+						"argument": {
+							"version_number": 3
+						}
+					},
+					{
+						"name": "4",
+						"argument": {
+							"version_number": 4
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.resource_stream_group.unpack",
+				"name": "Unpack",
+				"icon": "orders",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							3,
+							4
+						]
+					}
+				],
+				"batchable": [
+					"data_file",
+					"bundle_directory"
+				],
+				"preset": [
+					{
+						"name": "1",
+						"argument": {
+							"version_number": 1
+						}
+					},
+					{
+						"name": "3",
+						"argument": {
+							"version_number": 3
+						}
+					},
+					{
+						"name": "4",
+						"argument": {
+							"version_number": 4
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.resource_stream_bundle",
+		"name": "PopCap Resource-Stream-Bundle",
+		"icon": "deployed_code",
+		"item": [
+			{
+				"id": "popcap.resource_stream_bundle.pack",
+				"name": "Pack",
+				"icon": "inventory_2",
+				"argument": [
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							3,
+							4
+						]
+					},
+					{
+						"id": "version_extended_texture_information_for_pvz2_cn",
+						"name": "Extended version of texture information for PvZ-2 CN version",
+						"type": "integer",
+						"option": [
+							0,
+							1,
+							2,
+							3
+						]
+					},
+					{
+						"id": "layout_mode",
+						"name": "Layout mode",
+						"type": "string",
+						"option": [
+							"group",
+							"subgroup",
+							"resource"
+						]
+					},
+					{
+						"id": "input_packet",
+						"name": "Use packets that already exists",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "output_new_packet",
+						"name": "Export newly packed packets",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": [
+					"bundle_directory",
+					"data_file"
+				],
+				"preset": [
+					{
+						"name": "1 | 0",
+						"argument": {
+							"version_number": 1,
+							"version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					{
+						"name": "3 | 0",
+						"argument": {
+							"version_number": 3,
+							"version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					{
+						"name": "4 | 0",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					null,
+					{
+						"name": "4 | 1",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 1
+						}
+					},
+					{
+						"name": "4 | 2",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 2
+						}
+					},
+					{
+						"name": "4 | 3",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 3
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.resource_stream_bundle.unpack",
+				"name": "Unpack",
+				"icon": "orders",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1,
+							3,
+							4
+						]
+					},
+					{
+						"id": "version_extended_texture_information_for_pvz2_cn",
+						"name": "Extended version of texture information for PvZ-2 CN version",
+						"type": "integer",
+						"option": [
+							0,
+							1,
+							2,
+							3
+						]
+					},
+					{
+						"id": "layout_mode",
+						"name": "Layout mode",
+						"type": "string",
+						"option": [
+							"group",
+							"subgroup",
+							"resource"
+						]
+					},
+					{
+						"id": "output_resource",
+						"name": "Export resources",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "output_packet",
+						"name": "Export packet",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"bundle_directory"
+				],
+				"preset": [
+					{
+						"name": "1 | 0",
+						"argument": {
+							"version_number": 1,
+							"version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					{
+						"name": "3 | 0",
+						"argument": {
+							"version_number": 3,
+							"version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					{
+						"name": "4 | 0",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					null,
+					{
+						"name": "4 | 1",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 1
+						}
+					},
+					{
+						"name": "4 | 2",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 2
+						}
+					},
+					{
+						"name": "4 | 3",
+						"argument": {
+							"version_number": 4,
+							"version_extended_texture_information_for_pvz2_cn": 3
+						}
+					}
+				]
+			},
+			{
+				"id": "popcap.resource_stream_bundle.unpack_lenient",
+				"name": "Unpack by lenient",
+				"icon": "orders",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": [
+					"data_file",
+					"bundle_directory"
+				],
+				"preset": [
+				]
+			},
+			{
+				"id": "popcap.resource_stream_bundle.resource_convert",
+				"name": "Resource convert",
+				"icon": "lightning_stand",
+				"argument": [
+					{
+						"id": "bundle_directory",
+						"name": "Bundle directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "option_recase_path",
+						"name": "Recase resource path",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_rton",
+						"name": "Extract RTON",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_rton_version_number",
+						"name": "Extract RTON - Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "option_rton_version_native_string_encoding_use_utf8",
+						"name": "Extract RTON - Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_rton_crypt",
+						"name": "Extract RTON - Enable encryption",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_rton_crypt_key",
+						"name": "Extract RTON - Key for encryption",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "option_ptx",
+						"name": "Extract PTX",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_ptx_format",
+						"name": "Extract PTX - Format category",
+						"type": "string",
+						"option": [
+							"iphone",
+							"android",
+							"android_pvz2_cn"
+						]
+					},
+					{
+						"id": "option_ptx_atlas",
+						"name": "Extract PTX - Extract as atlas",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_ptx_atlas_resize",
+						"name": "Extract PTX - Adjust atlas size",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_ptx_sprite",
+						"name": "Extract PTX - Extract as sprite",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_pam",
+						"name": "Extract PAM",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_pam_version_number",
+						"name": "Extract PAM - Version number",
+						"type": "integer",
+						"option": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6
+						]
+					},
+					{
+						"id": "option_pam_json",
+						"name": "Extract PAM - Extract as JSON",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_pam_flash",
+						"name": "Extract PAM - Extract as Flash",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_bnk",
+						"name": "Extract BNK",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_bnk_version_number",
+						"name": "Extract BNK - Version number",
+						"type": "integer",
+						"option": [
+							72,
+							88,
+							112,
+							113,
+							118,
+							120,
+							125,
+							128,
+							132,
+							134,
+							135,
+							140,
+							145,
+							150
+						]
+					},
+					{
+						"id": "option_wem",
+						"name": "Extract WEM",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": [
+					"bundle_directory"
+				],
+				"preset": [
+					{
+						"name": "Recase path",
+						"argument": {
+							"option_recase_path": true,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					null,
+					{
+						"name": "RTON | 1 | E-ASCII | Plain",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": true,
+							"option_rton_version_number": 1,
+							"option_rton_version_native_string_encoding_use_utf8": false,
+							"option_rton_crypt": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "RTON | 1 | E-ASCII | Cipher",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": true,
+							"option_rton_version_number": 1,
+							"option_rton_version_native_string_encoding_use_utf8": false,
+							"option_rton_crypt": true,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "RTON | 1 | UTF-8 | Plain",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": true,
+							"option_rton_version_number": 1,
+							"option_rton_version_native_string_encoding_use_utf8": true,
+							"option_rton_crypt": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "RTON | 1 | UTF-8 | Cipher",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": true,
+							"option_rton_version_number": 1,
+							"option_rton_version_native_string_encoding_use_utf8": true,
+							"option_rton_crypt": true,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					null,
+					{
+						"name": "PTX | Atlas",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": true,
+							"option_ptx_atlas": true,
+							"option_ptx_atlas_resize": true,
+							"option_ptx_sprite": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "PTX | Sprite",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": true,
+							"option_ptx_atlas": false,
+							"option_ptx_atlas_resize": true,
+							"option_ptx_sprite": true,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "PTX | Atlas + Sprite",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": true,
+							"option_ptx_atlas": true,
+							"option_ptx_atlas_resize": true,
+							"option_ptx_sprite": true,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					null,
+					{
+						"name": "PAM | 6 | JSON",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": true,
+							"option_pam_version_number": 6,
+							"option_pam_json": true,
+							"option_pam_flash": false,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "PAM | 6 | Flash",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": true,
+							"option_pam_version_number": 6,
+							"option_pam_json": false,
+							"option_pam_flash": true,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "PAM | 6 | JSON + Flash",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": true,
+							"option_pam_version_number": 6,
+							"option_pam_json": true,
+							"option_pam_flash": true,
+							"option_bnk": false,
+							"option_wem": false
+						}
+					},
+					null,
+					{
+						"name": "BNK | 72",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": true,
+							"option_bnk_version_number": 72,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "BNK | 88",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": true,
+							"option_bnk_version_number": 88,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "BNK | 112",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": true,
+							"option_bnk_version_number": 112,
+							"option_wem": false
+						}
+					},
+					{
+						"name": "BNK | 140",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": true,
+							"option_bnk_version_number": 140,
+							"option_wem": false
+						}
+					},
+					null,
+					{
+						"name": "WEM",
+						"argument": {
+							"option_recase_path": false,
+							"option_rton": false,
+							"option_ptx": false,
+							"option_pam": false,
+							"option_bnk": false,
+							"option_wem": true
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "popcap.resource_stream_bundle_patch",
+		"name": "PopCap Resource-Stream-Bundle-Patch",
+		"icon": "extension",
+		"item": [
+			{
+				"id": "popcap.resource_stream_bundle_patch.encode",
+				"name": "Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "after_file",
+						"name": "After file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "patch_file",
+						"name": "Patch file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "before_file",
+						"name": "Before file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "use_raw_packet",
+						"name": "Use raw packet",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "popcap.resource_stream_bundle_patch.decode",
+				"name": "Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "patch_file",
+						"name": "Patch file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "after_file",
+						"name": "After file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "before_file",
+						"name": "Before file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "version_number",
+						"name": "Version number",
+						"type": "integer",
+						"option": [
+							1
+						]
+					},
+					{
+						"id": "use_raw_packet",
+						"name": "Use raw packet",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			}
+		]
+	},
+	{
+		"id": "pvz2.text_table",
+		"name": "PvZ-2 Text-Table",
+		"icon": "description",
+		"item": [
+			{
+				"id": "pvz2.text_table.convert",
+				"name": "Convert",
+				"icon": "repeat",
+				"argument": [
+					{
+						"id": "source_file",
+						"name": "Source file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "destination_version",
+						"name": "Destination version",
+						"type": "string",
+						"option": [
+							"text",
+							"json_map",
+							"json_list"
+						]
+					},
+					{
+						"id": "destination_file",
+						"name": "Destination file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "Text",
+						"argument": {
+							"destination_version": "text"
+						}
+					},
+					{
+						"name": "JSON Map",
+						"argument": {
+							"destination_version": "json_map"
+						}
+					},
+					{
+						"name": "JSON List",
+						"argument": {
+							"destination_version": "json_list"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "pvz2.resource_manifest",
+		"name": "PvZ-2 Resource-Manifest",
+		"icon": "description",
+		"item": [
+			{
+				"id": "pvz2.resource_manifest.new_type_object_notation.encode",
+				"name": "New-Type-Object-Notation Encode",
+				"icon": "skip_next",
+				"argument": [
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "pvz2.resource_manifest.new_type_object_notation.decode",
+				"name": "New-Type-Object-Notation Decode",
+				"icon": "skip_previous",
+				"argument": [
+					{
+						"id": "data_file",
+						"name": "Data file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "definition_file",
+						"name": "Definition file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "pvz2.resource_manifest.regular.from",
+				"name": "Regular Convert from official data",
+				"icon": "swipe_right_alt",
+				"argument": [
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "pvz2.resource_manifest.regular.to",
+				"name": "Regular Convert to official data",
+				"icon": "swipe_left_alt",
+				"argument": [
+					{
+						"id": "ripe_file",
+						"name": "Finished file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "raw_file",
+						"name": "Original file",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "use_array_style_path",
+						"name": "Use array style path",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "String path",
+						"argument": {
+							"use_array_style_path": false
+						}
+					},
+					{
+						"name": "Array path",
+						"argument": {
+							"use_array_style_path": true
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "pvz2.package_project",
+		"name": "PvZ-2 Package-Project",
+		"icon": "deployed_code",
+		"item": [
+			{
+				"id": "pvz2.package_project.transpile",
+				"name": "Transpile",
+				"icon": "repeat",
+				"argument": [
+					{
+						"id": "project_directory",
+						"name": "Project directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "target_scope",
+						"name": "Target scope",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "target_package",
+						"name": "Target package",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "option_generalize_rton",
+						"name": "Generalize RTON",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_generalize_ptx",
+						"name": "Generalize PTX",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_generalize_pam",
+						"name": "Generalize PAM",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_generalize_wem",
+						"name": "Generalize WEM",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_specialize_rton",
+						"name": "Specialize RTON",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_specialize_ptx",
+						"name": "Specialize PTX",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_specialize_pam",
+						"name": "Specialize PAM",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "option_specialize_wem",
+						"name": "Specialize WEM",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "Generalize",
+						"argument": {
+							"option_generalize_rton": true,
+							"option_generalize_ptx": true,
+							"option_generalize_pam": true,
+							"option_generalize_wem": true,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Generalize | RTON",
+						"argument": {
+							"option_generalize_rton": true,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Generalize | PTX",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": true,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Generalize | PAM",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": true,
+							"option_generalize_wem": false,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Generalize | WEM",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": true,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					null,
+					{
+						"name": "Specialize",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": true,
+							"option_specialize_ptx": true,
+							"option_specialize_pam": true,
+							"option_specialize_wem": true
+						}
+					},
+					{
+						"name": "Specialize | RTON",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": true,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Specialize | PTX",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": true,
+							"option_specialize_pam": false,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Specialize | PAM",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": true,
+							"option_specialize_wem": false
+						}
+					},
+					{
+						"name": "Specialize | WEM",
+						"argument": {
+							"option_generalize_rton": false,
+							"option_generalize_ptx": false,
+							"option_generalize_pam": false,
+							"option_generalize_wem": false,
+							"option_specialize_rton": false,
+							"option_specialize_ptx": false,
+							"option_specialize_pam": false,
+							"option_specialize_wem": true
+						}
+					}
+				]
+			},
+			{
+				"id": "pvz2.package_project.compile",
+				"name": "Compile",
+				"icon": "sound_sampler",
+				"argument": [
+					{
+						"id": "project_directory",
+						"name": "Project directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "target_scope",
+						"name": "Target scope",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "target_package",
+						"name": "Target package",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "pvz2.package_project.link",
+				"name": "link",
+				"icon": "linked_services",
+				"argument": [
+					{
+						"id": "project_directory",
+						"name": "Project directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "target_package",
+						"name": "Target package",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "remake_manifest",
+						"name": "Remake manifest",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "buffer_size",
+						"name": "Buffer memory size",
+						"type": "size",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "Legacy",
+						"argument": {
+							"remake_manifest": false
+						}
+					},
+					{
+						"name": "Remake",
+						"argument": {
+							"remake_manifest": true
+						}
+					}
+				]
+			},
+			{
+				"id": "pvz2.package_project.parse",
+				"name": "Parse",
+				"icon": "barcode_reader",
+				"argument": [
+					{
+						"id": "project_directory",
+						"name": "Project directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "package_directory",
+						"name": "Package directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "package_name",
+						"name": "Package name",
+						"type": "string",
+						"option": null
+					},
+					{
+						"id": "package_version_number",
+						"name": "Package version number",
+						"type": "integer",
+						"option": [
+							1,
+							3,
+							4
+						]
+					},
+					{
+						"id": "package_version_extended_texture_information_for_pvz2_cn",
+						"name": "Package extended version of texture information for PvZ-2 CN version",
+						"type": "integer",
+						"option": [
+							0,
+							1,
+							2,
+							3
+						]
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "1 | 0",
+						"argument": {
+							"package_version_number": 1,
+							"package_version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					{
+						"name": "3 | 0",
+						"argument": {
+							"package_version_number": 3,
+							"package_version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					{
+						"name": "4 | 0",
+						"argument": {
+							"package_version_number": 4,
+							"package_version_extended_texture_information_for_pvz2_cn": 0
+						}
+					},
+					null,
+					{
+						"name": "4 | 1",
+						"argument": {
+							"package_version_number": 4,
+							"package_version_extended_texture_information_for_pvz2_cn": 1
+						}
+					},
+					{
+						"name": "4 | 2",
+						"argument": {
+							"package_version_number": 4,
+							"package_version_extended_texture_information_for_pvz2_cn": 2
+						}
+					},
+					{
+						"name": "4 | 3",
+						"argument": {
+							"package_version_number": 4,
+							"package_version_extended_texture_information_for_pvz2_cn": 3
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "pvz2.remote_project",
+		"name": "PvZ-2 Remote-Project",
+		"icon": "cloud",
+		"item": [
+			{
+				"id": "pvz2.remote_project.execute",
+				"name": "Execute",
+				"icon": "sound_sampler",
+				"argument": [
+					{
+						"id": "project_directory",
+						"name": "Project directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "action",
+						"name": "Action",
+						"type": "string",
+						"option": [
+							"launch",
+							"check",
+							"clear",
+							"pull",
+							"push"
+						]
+					},
+					{
+						"id": "target",
+						"name": "Target",
+						"type": "string",
+						"option": [
+							"main_package",
+							"content_delivery",
+							"local_profile",
+							"player_profile"
+						]
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "Launch",
+						"argument": {
+							"action": "launch"
+						}
+					},
+					null,
+					{
+						"name": "Check",
+						"argument": {
+							"action": "check"
+						}
+					},
+					null,
+					{
+						"name": "Clear main package",
+						"argument": {
+							"action": "clear",
+							"target": "main_package"
+						}
+					},
+					{
+						"name": "Clear content delivery",
+						"argument": {
+							"action": "clear",
+							"target": "content_delivery"
+						}
+					},
+					{
+						"name": "Clear local profile",
+						"argument": {
+							"action": "clear",
+							"target": "local_profile"
+						}
+					},
+					{
+						"name": "Clear player profile",
+						"argument": {
+							"action": "clear",
+							"target": "player_profile"
+						}
+					},
+					null,
+					{
+						"name": "Pull main package",
+						"argument": {
+							"action": "pull",
+							"target": "main_package"
+						}
+					},
+					{
+						"name": "Pull content delivery",
+						"argument": {
+							"action": "pull",
+							"target": "content_delivery"
+						}
+					},
+					{
+						"name": "Pull local profile",
+						"argument": {
+							"action": "pull",
+							"target": "local_profile"
+						}
+					},
+					{
+						"name": "Pull player profile",
+						"argument": {
+							"action": "pull",
+							"target": "player_profile"
+						}
+					},
+					null,
+					{
+						"name": "Push main package",
+						"argument": {
+							"action": "push",
+							"target": "main_package"
+						}
+					},
+					{
+						"name": "Push content delivery",
+						"argument": {
+							"action": "push",
+							"target": "content_delivery"
+						}
+					},
+					{
+						"name": "Push local profile",
+						"argument": {
+							"action": "push",
+							"target": "local_profile"
+						}
+					},
+					{
+						"name": "Push player profile",
+						"argument": {
+							"action": "push",
+							"target": "player_profile"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "kairosoft.game",
+		"name": "Kairosoft Game",
+		"icon": "sports_esports",
+		"item": [
+			{
+				"id": "kairosoft.game.encrypt_record",
+				"name": "Encrypt record",
+				"icon": "lock_open",
+				"argument": [
+					{
+						"id": "target_directory",
+						"name": "Target directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+				]
+			},
+			{
+				"id": "kairosoft.game.modify_program",
+				"name": "Modify program",
+				"icon": "build",
+				"argument": [
+					{
+						"id": "target_directory",
+						"name": "Target directory",
+						"type": "path",
+						"option": null
+					},
+					{
+						"id": "disable_record_encryption",
+						"name": "Disable record encryption",
+						"type": "boolean",
+						"option": null
+					},
+					{
+						"id": "enable_debug_mode",
+						"name": "Enable debug mode",
+						"type": "boolean",
+						"option": null
+					}
+				],
+				"batchable": null,
+				"preset": [
+					{
+						"name": "Disable record encryption",
+						"argument": {
+							"disable_record_encryption": true,
+							"enable_debug_mode": false
+						}
+					},
+					{
+						"name": "Enable debug mode",
+						"argument": {
+							"disable_record_encryption": false,
+							"enable_debug_mode": true
+						}
+					},
+					null,
+					{
+						"name": "None",
+						"argument": {
+							"disable_record_encryption": false,
+							"enable_debug_mode": false
+						}
+					},
+					{
+						"name": "Both",
+						"argument": {
+							"disable_record_encryption": true,
+							"enable_debug_mode": true
+						}
+					}
+				]
+			}
+		]
+	}
+]
