@@ -1,8 +1,8 @@
 namespace Twinning.Script.Executable.ComputeWwiseShortID {
 
-	// #region execute
+	// #region run
 
-	export function execute(
+	export function run(
 	): void {
 		Console.information(los('executable.compute_wwise_short_id:please_input_string'), []);
 		while (true) {
@@ -20,4 +20,4 @@ namespace Twinning.Script.Executable.ComputeWwiseShortID {
 
 }
 
-Twinning.Script.Executable.ComputeWwiseShortID.execute();
+Twinning.Script.Executable.ComputeWwiseShortID.run();

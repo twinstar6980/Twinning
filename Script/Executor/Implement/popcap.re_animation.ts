@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.re_animation', [
@@ -144,4 +144,4 @@ namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.re_animation.injector;
+Twinning.Script.Executor.Implement.popcap.re_animation.inject;

@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.wwise.media {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'wwise.media', [
@@ -113,4 +113,4 @@ namespace Twinning.Script.Executor.Implement.wwise.media {
 
 }
 
-Twinning.Script.Executor.Implement.wwise.media.injector;
+Twinning.Script.Executor.Implement.wwise.media.inject;

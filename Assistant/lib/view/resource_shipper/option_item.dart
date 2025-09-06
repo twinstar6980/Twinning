@@ -147,7 +147,6 @@ class OptionGroupItem extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return Visibility(
       visible: this.match.any((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)),
       child: Column(

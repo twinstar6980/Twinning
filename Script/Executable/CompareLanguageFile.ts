@@ -1,6 +1,6 @@
 namespace Twinning.Script.Executable.CompareLanguageFile {
 
-	// #region execute
+	// #region run
 
 	function compare(
 		original_map: Language.StringMap,
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executable.CompareLanguageFile {
 
 	// ----------------
 
-	export function execute(
+	export function run(
 	): void {
 		Console.information(los('executable.compare_language_file:please_input_original_file'), []);
 		let original_file = Console.path('file', 'input', null, null);
@@ -41,4 +41,4 @@ namespace Twinning.Script.Executable.CompareLanguageFile {
 
 }
 
-Twinning.Script.Executable.CompareLanguageFile.execute();
+Twinning.Script.Executable.CompareLanguageFile.run();

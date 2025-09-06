@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.crypt_data', [
@@ -134,4 +134,4 @@ namespace Twinning.Script.Executor.Implement.popcap.crypt_data {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.crypt_data.injector;
+Twinning.Script.Executor.Implement.popcap.crypt_data.inject;

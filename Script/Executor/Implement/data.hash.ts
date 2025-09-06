@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.data.hash {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'data.hash', [
@@ -48,4 +48,4 @@ namespace Twinning.Script.Executor.Implement.data.hash {
 
 }
 
-Twinning.Script.Executor.Implement.data.hash.injector;
+Twinning.Script.Executor.Implement.data.hash.inject;

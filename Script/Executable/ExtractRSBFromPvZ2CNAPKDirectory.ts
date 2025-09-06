@@ -1,8 +1,8 @@
 namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 
-	// #region execute
+	// #region run
 
-	export function execute(
+	export function run(
 	): void {
 		Console.information(los('executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory'), [
 		]);
@@ -28,4 +28,4 @@ namespace Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory {
 
 }
 
-Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory.execute();
+Twinning.Script.Executable.ExtractRSBFromPvZ2CNAPKDirectory.run();

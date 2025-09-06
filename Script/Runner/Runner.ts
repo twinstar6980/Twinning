@@ -19,6 +19,8 @@ namespace Twinning.Script.Runner {
 			executor_typical_method_disable_name_filter: (value) => {
 				Executor.g_typical_method_disable_name_filter = value;
 			},
+			command_notification_time_limit: (value) => {
+			},
 			byte_stream_use_big_endian: (value) => {
 				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
 			},
@@ -37,6 +39,9 @@ namespace Twinning.Script.Runner {
 			json_format_disable_object_line_breaking: (value) => {
 				KernelX.JSON.g_format.disable_object_line_breaking = value;
 			},
+			thread_limit: (value) => {
+				ThreadManager.g_global_manager.resize(Number(value));
+			},
 			external_program_path: (value) => {
 				ProcessHelper.g_program_path_map = {};
 				for (let item_key in value) {
@@ -45,11 +50,6 @@ namespace Twinning.Script.Runner {
 						ProcessHelper.g_program_path_map[item_key] = item_value;
 					}
 				}
-			},
-			thread_limit: (value) => {
-				ThreadManager.g_global_manager.resize(Number(value));
-			},
-			command_notification_time_limit: (value) => {
 			},
 		};
 		for (let key in configuration) {
@@ -124,33 +124,33 @@ namespace Twinning.Script.Runner {
 		language: string;
 		console_basic_disable_virtual_terminal_sequence: boolean;
 		executor_typical_method_disable_name_filter: boolean;
+		command_notification_time_limit: null | bigint;
 		byte_stream_use_big_endian: boolean;
 		common_buffer_size: string;
 		json_format_disable_array_trailing_comma: boolean;
 		json_format_disable_array_line_breaking: boolean;
 		json_format_disable_object_trailing_comma: boolean;
 		json_format_disable_object_line_breaking: boolean;
-		external_program_path: Record<string, null | string>;
 		thread_limit: bigint;
-		command_notification_time_limit: null | bigint;
+		external_program_path: Record<string, null | string>;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		g_configuration = {
 			language: undefined!,
 			console_basic_disable_virtual_terminal_sequence: undefined!,
 			executor_typical_method_disable_name_filter: undefined!,
+			command_notification_time_limit: undefined!,
 			byte_stream_use_big_endian: undefined!,
 			common_buffer_size: undefined!,
 			json_format_disable_array_trailing_comma: undefined!,
 			json_format_disable_array_line_breaking: undefined!,
 			json_format_disable_object_trailing_comma: undefined!,
 			json_format_disable_object_line_breaking: undefined!,
-			external_program_path: undefined!,
 			thread_limit: undefined!,
-			command_notification_time_limit: undefined!,
+			external_program_path: undefined!,
 		};
 		set_configuration(configuration);
 		return;
@@ -160,4 +160,4 @@ namespace Twinning.Script.Runner {
 
 }
 
-Twinning.Script.Runner.injector;
+Twinning.Script.Runner.inject;

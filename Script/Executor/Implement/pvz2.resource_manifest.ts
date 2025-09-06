@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'pvz2.resource_manifest', [
@@ -142,4 +142,4 @@ namespace Twinning.Script.Executor.Implement.pvz2.resource_manifest {
 
 }
 
-Twinning.Script.Executor.Implement.pvz2.resource_manifest.injector;
+Twinning.Script.Executor.Implement.pvz2.resource_manifest.inject;

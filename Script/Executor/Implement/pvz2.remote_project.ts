@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'pvz2.remote_project', [
@@ -52,4 +52,4 @@ namespace Twinning.Script.Executor.Implement.pvz2.remote_project {
 
 }
 
-Twinning.Script.Executor.Implement.pvz2.remote_project.injector;
+Twinning.Script.Executor.Implement.pvz2.remote_project.inject;

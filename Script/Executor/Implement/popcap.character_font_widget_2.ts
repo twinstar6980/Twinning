@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.character_font_widget_2', [
@@ -118,4 +118,4 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.character_font_widget_2.injector;
+Twinning.Script.Executor.Implement.popcap.character_font_widget_2.inject;

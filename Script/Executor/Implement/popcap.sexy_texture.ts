@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.sexy_texture', [
@@ -133,4 +133,4 @@ namespace Twinning.Script.Executor.Implement.popcap.sexy_texture {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.sexy_texture.injector;
+Twinning.Script.Executor.Implement.popcap.sexy_texture.inject;

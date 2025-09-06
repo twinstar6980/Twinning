@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.resource_stream_bundle_patch', [
@@ -124,4 +124,4 @@ namespace Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch
 
 }
 
-Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch.injector;
+Twinning.Script.Executor.Implement.popcap.resource_stream_bundle_patch.inject;

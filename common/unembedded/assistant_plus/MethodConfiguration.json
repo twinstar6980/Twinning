@@ -2,12 +2,12 @@
 	{
 		"id": "common.utility",
 		"name": "Utility",
-		"icon": "Code",
+		"icon": "DeveloperTools",
 		"item": [
 			{
 				"id": "common.utility.set_global_configuration",
 				"name": "Set configuration",
-				"icon": "Play",
+				"icon": "Settings",
 				"argument": [
 					{
 						"id": "data",
@@ -67,7 +67,7 @@
 			{
 				"id": "common.utility.run_executable_script",
 				"name": "Run executable",
-				"icon": "Play",
+				"icon": "Component",
 				"argument": [
 					{
 						"id": "target",

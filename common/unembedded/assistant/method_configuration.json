@@ -2,12 +2,12 @@
 	{
 		"id": "common.utility",
 		"name": "Utility",
-		"icon": "code",
+		"icon": "handyman",
 		"item": [
 			{
 				"id": "common.utility.set_global_configuration",
 				"name": "Set global configuration",
-				"icon": "code",
+				"icon": "settings",
 				"argument": [
 					{
 						"id": "data",
@@ -67,7 +67,7 @@
 			{
 				"id": "common.utility.run_executable_script",
 				"name": "Run executable script",
-				"icon": "code",
+				"icon": "extension",
 				"argument": [
 					{
 						"id": "target",

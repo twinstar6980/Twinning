@@ -72,7 +72,6 @@ class MethodGroupItem extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return Column(
       children: [
         ListTile(

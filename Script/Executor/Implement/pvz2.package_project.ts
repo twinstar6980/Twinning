@@ -7,7 +7,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 		default_conversion_setting: Support.PvZ2.PackageProject.ConversionSetting;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'pvz2.package_project', [
@@ -261,4 +261,4 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 
 }
 
-Twinning.Script.Executor.Implement.pvz2.package_project.injector;
+Twinning.Script.Executor.Implement.pvz2.package_project.inject;

@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.particle_effect {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.particle_effect', [
@@ -132,4 +132,4 @@ namespace Twinning.Script.Executor.Implement.popcap.particle_effect {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.particle_effect.injector;
+Twinning.Script.Executor.Implement.popcap.particle_effect.inject;

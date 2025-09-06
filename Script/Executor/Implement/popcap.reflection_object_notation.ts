@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.reflection_object_notation', [
@@ -443,4 +443,4 @@ namespace Twinning.Script.Executor.Implement.popcap.reflection_object_notation {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.reflection_object_notation.injector;
+Twinning.Script.Executor.Implement.popcap.reflection_object_notation.inject;

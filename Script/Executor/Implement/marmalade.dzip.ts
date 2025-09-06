@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'marmalade.dzip', [
@@ -173,4 +173,4 @@ namespace Twinning.Script.Executor.Implement.marmalade.dzip {
 
 }
 
-Twinning.Script.Executor.Implement.marmalade.dzip.injector;
+Twinning.Script.Executor.Implement.marmalade.dzip.inject;

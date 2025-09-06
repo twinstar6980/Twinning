@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.common.utility {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'common.utility', [
@@ -60,4 +60,4 @@ namespace Twinning.Script.Executor.Implement.common.utility {
 
 }
 
-Twinning.Script.Executor.Implement.common.utility.injector;
+Twinning.Script.Executor.Implement.common.utility.inject;

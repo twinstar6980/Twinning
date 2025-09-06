@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.trail {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.trail', [
@@ -144,4 +144,4 @@ namespace Twinning.Script.Executor.Implement.popcap.trail {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.trail.injector;
+Twinning.Script.Executor.Implement.popcap.trail.inject;

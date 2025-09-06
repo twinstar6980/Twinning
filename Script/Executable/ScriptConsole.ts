@@ -1,8 +1,8 @@
 namespace Twinning.Script.Executable.ScriptConsole {
 
-	// #region execute
+	// #region run
 
-	export function execute(
+	export function run(
 	): void {
 		Console.information(los('executable.script_console:start'), [
 			los('executable.script_console:description'),
@@ -41,4 +41,4 @@ namespace Twinning.Script.Executable.ScriptConsole {
 
 }
 
-Twinning.Script.Executable.ScriptConsole.execute();
+Twinning.Script.Executable.ScriptConsole.run();

@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.data.encoding {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'data.encoding', [
@@ -106,4 +106,4 @@ namespace Twinning.Script.Executor.Implement.data.encoding {
 
 }
 
-Twinning.Script.Executor.Implement.data.encoding.injector;
+Twinning.Script.Executor.Implement.data.encoding.inject;

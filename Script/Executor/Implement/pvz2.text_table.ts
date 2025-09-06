@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.text_table {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'pvz2.text_table', [
@@ -52,4 +52,4 @@ namespace Twinning.Script.Executor.Implement.pvz2.text_table {
 
 }
 
-Twinning.Script.Executor.Implement.pvz2.text_table.injector;
+Twinning.Script.Executor.Implement.pvz2.text_table.inject;

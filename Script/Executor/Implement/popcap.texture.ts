@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.texture {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.texture', [
@@ -100,4 +100,4 @@ namespace Twinning.Script.Executor.Implement.popcap.texture {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.texture.injector;
+Twinning.Script.Executor.Implement.popcap.texture.inject;

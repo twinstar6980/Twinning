@@ -28,11 +28,11 @@
 	},
 	{
 		"name": "Utility",
-		"icon": "Code",
+		"icon": "DeveloperTools",
 		"item": [
 			{
 				"name": "Set global configuration",
-				"icon": "Code",
+				"icon": "Settings",
 				"filter": null,
 				"batchable": false,
 				"method": "common.utility.set_global_configuration",
@@ -85,7 +85,7 @@
 			},
 			{
 				"name": "Run executable script",
-				"icon": "Code",
+				"icon": "Component",
 				"filter": null,
 				"batchable": false,
 				"method": "common.utility.run_executable_script",

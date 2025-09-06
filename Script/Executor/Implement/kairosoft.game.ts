@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'kairosoft.game', [
@@ -87,4 +87,4 @@ namespace Twinning.Script.Executor.Implement.kairosoft.game {
 
 }
 
-Twinning.Script.Executor.Implement.kairosoft.game.injector;
+Twinning.Script.Executor.Implement.kairosoft.game.inject;

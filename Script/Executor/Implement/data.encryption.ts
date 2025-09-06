@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'data.encryption', [
@@ -213,4 +213,4 @@ namespace Twinning.Script.Executor.Implement.data.encryption {
 
 }
 
-Twinning.Script.Executor.Implement.data.encryption.injector;
+Twinning.Script.Executor.Implement.data.encryption.inject;

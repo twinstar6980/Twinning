@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.data.differentiation {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'data.differentiation', [
@@ -98,4 +98,4 @@ namespace Twinning.Script.Executor.Implement.data.differentiation {
 
 }
 
-Twinning.Script.Executor.Implement.data.differentiation.injector;
+Twinning.Script.Executor.Implement.data.differentiation.inject;

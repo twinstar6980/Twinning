@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.texture.atlas {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'texture.atlas', [
@@ -120,4 +120,4 @@ namespace Twinning.Script.Executor.Implement.texture.atlas {
 
 }
 
-Twinning.Script.Executor.Implement.texture.atlas.injector;
+Twinning.Script.Executor.Implement.texture.atlas.inject;

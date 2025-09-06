@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.text.xml {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'text.xml', [
@@ -63,4 +63,4 @@ namespace Twinning.Script.Executor.Implement.text.xml {
 
 }
 
-Twinning.Script.Executor.Implement.text.xml.injector;
+Twinning.Script.Executor.Implement.text.xml.inject;

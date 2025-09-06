@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.texture.encoding {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'texture.encoding', [
@@ -100,4 +100,4 @@ namespace Twinning.Script.Executor.Implement.texture.encoding {
 
 }
 
-Twinning.Script.Executor.Implement.texture.encoding.injector;
+Twinning.Script.Executor.Implement.texture.encoding.inject;

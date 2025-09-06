@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.popcap.render_effect {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'popcap.render_effect', [
@@ -146,4 +146,4 @@ namespace Twinning.Script.Executor.Implement.popcap.render_effect {
 
 }
 
-Twinning.Script.Executor.Implement.popcap.render_effect.injector;
+Twinning.Script.Executor.Implement.popcap.render_effect.inject;

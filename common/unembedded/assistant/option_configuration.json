@@ -28,11 +28,11 @@
 	},
 	{
 		"name": "Utility",
-		"icon": "code",
+		"icon": "handyman",
 		"item": [
 			{
 				"name": "Set global configuration",
-				"icon": "code",
+				"icon": "settings",
 				"filter": null,
 				"batchable": false,
 				"method": "common.utility.set_global_configuration",
@@ -85,7 +85,7 @@
 			},
 			{
 				"name": "Run executable script",
-				"icon": "code",
+				"icon": "extension",
 				"filter": null,
 				"batchable": false,
 				"method": "common.utility.run_executable_script",

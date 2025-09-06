@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.script.js {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'script.js', [
@@ -53,4 +53,4 @@ namespace Twinning.Script.Executor.Implement.script.js {
 
 }
 
-Twinning.Script.Executor.Implement.script.js.injector;
+Twinning.Script.Executor.Implement.script.js.inject;

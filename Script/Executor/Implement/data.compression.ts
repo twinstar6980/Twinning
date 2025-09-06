@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'data.compression', [
@@ -518,4 +518,4 @@ namespace Twinning.Script.Executor.Implement.data.compression {
 
 }
 
-Twinning.Script.Executor.Implement.data.compression.injector;
+Twinning.Script.Executor.Implement.data.compression.inject;

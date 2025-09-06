@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.wwise.sound_bank {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'wwise.sound_bank', [
@@ -138,4 +138,4 @@ namespace Twinning.Script.Executor.Implement.wwise.sound_bank {
 
 }
 
-Twinning.Script.Executor.Implement.wwise.sound_bank.injector;
+Twinning.Script.Executor.Implement.wwise.sound_bank.inject;

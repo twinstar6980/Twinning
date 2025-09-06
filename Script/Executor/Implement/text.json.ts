@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implement.text.json {
 		method: TypicalMethodConfigurationGroup;
 	};
 
-	export function injector(
+	export function inject(
 		configuration: Configuration,
 	): void {
 		push_typical_method(configuration.method, 'text.json', [
@@ -87,4 +87,4 @@ namespace Twinning.Script.Executor.Implement.text.json {
 
 }
 
-Twinning.Script.Executor.Implement.text.json.injector;
+Twinning.Script.Executor.Implement.text.json.inject;

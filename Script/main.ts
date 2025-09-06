@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region version
 
-	export const k_version = '138';
+	export const k_version = '139';
 
 	// #endregion
 
@@ -205,7 +205,7 @@ namespace Twinning.Script {
 
 		export type Configuration = Record<string, Kernel.JSON.JS_Value>;
 
-		export type Injector = (configuration: null | Configuration) => void;
+		export type Inject = (configuration: null | Configuration) => void;
 
 		// ----------------
 
@@ -231,9 +231,9 @@ namespace Twinning.Script {
 					}
 					configuration = raw_configuration as Configuration;
 				}
-				let injector = Detail.evaluate_script(script_file, script_name) as undefined | Injector;
-				if (injector !== undefined) {
-					injector(configuration);
+				let inject = Detail.evaluate_script(script_file, script_name) as undefined | Inject;
+				if (inject !== undefined) {
+					inject(configuration);
 				}
 			}
 			return;
