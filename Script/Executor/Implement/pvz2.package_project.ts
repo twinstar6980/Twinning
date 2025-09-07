@@ -86,6 +86,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
+						option: null,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -150,6 +151,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
+						option: null,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -191,6 +193,7 @@ namespace Twinning.Script.Executor.Implement.pvz2.package_project {
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
+						option: null,
 						checker: null,
 						automatic: null,
 						condition: null,

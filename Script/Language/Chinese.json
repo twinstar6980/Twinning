@@ -92,12 +92,11 @@
 	// Executor/Implement/common.utility
 	"executor.implement:common.utility.set_global_configuration": "设置全局配置",
 	"executor.implement:common.utility.set_global_configuration:data": "数据",
-	"executor.implement:common.utility.run_executable_script": "运行可执行脚本",
-	"executor.implement:common.utility.run_executable_script:target": "目标",
-	// Executor/Implement/script.js
-	"executor.implement:script.js.execute": "JS 执行",
-	"executor.implement:script.js.execute:script_file": "脚本文件",
-	"executor.implement:script.js.execute:is_module": "作为模块运行",
+	"executor.implement:common.utility.run_embedded_script": "运行内置脚本",
+	"executor.implement:common.utility.run_embedded_script:target_name": "目标名称",
+	"executor.implement:common.utility.run_custom_script": "运行自定义脚本",
+	"executor.implement:common.utility.run_custom_script:target_file": "目标文件",
+	"executor.implement:common.utility.run_custom_script:is_module": "作为模块运行",
 	// Executor/Implement/data.hash
 	"executor.implement:data.hash.md5": "MD5 散列",
 	"executor.implement:data.hash.md5:target_file": "目标文件",

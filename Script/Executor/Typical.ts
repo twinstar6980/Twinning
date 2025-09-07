@@ -104,6 +104,7 @@ namespace Twinning.Script.Executor {
 	export function typical_argument_size<ID extends string>(
 		object: {
 			id: ID;
+			option: null | Array<bigint>;
 			checker: null | ((argument: any, value: bigint) => null | string);
 			automatic: null | ((argument: any) => null | bigint);
 			condition: null | ((argument: any) => null | bigint);
@@ -116,7 +117,7 @@ namespace Twinning.Script.Executor {
 			initial_echoer: (value) => (make_size_to_string(value)),
 			given_converter: (argument, given) => (parse_size_from_string(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.size(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
+			input_generator: (argument, initial) => (object.option === null ? Console.size(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_size(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
 			default: '?input',
 		};

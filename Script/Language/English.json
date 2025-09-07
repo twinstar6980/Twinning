@@ -92,12 +92,11 @@
 	// Executor/Implement/common.utility
 	"executor.implement:common.utility.set_global_configuration": "Set global configuration",
 	"executor.implement:common.utility.set_global_configuration:data": "Data",
-	"executor.implement:common.utility.run_executable_script": "Run executable script",
-	"executor.implement:common.utility.run_executable_script:target": "Target",
-	// Executor/Implement/script.js
-	"executor.implement:script.js.execute": "JS Execute",
-	"executor.implement:script.js.execute:script_file": "Script file",
-	"executor.implement:script.js.execute:is_module": "Run as module",
+	"executor.implement:common.utility.run_embedded_script": "Run embedded script",
+	"executor.implement:common.utility.run_embedded_script:target_name": "Target name",
+	"executor.implement:common.utility.run_custom_script": "Run custom script",
+	"executor.implement:common.utility.run_custom_script:target_file": "Target file",
+	"executor.implement:common.utility.run_custom_script:is_module": "Run as module",
 	// Executor/Implement/data.hash
 	"executor.implement:data.hash.md5": "MD5 Hash",
 	"executor.implement:data.hash.md5:target_file": "Target file",

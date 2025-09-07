@@ -220,6 +220,8 @@ namespace AssistantPlus.View.Home {
 			var senders = sender.As<MenuFlyoutItem>();
 			this.Host.PanelExit();
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Launcher Configuration", new LauncherConfigurationPanel() {
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch,
 				Data = this.Configuration,
 				Stamp = UniqueStamp.Create(),
 			}, null);

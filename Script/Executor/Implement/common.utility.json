@@ -8,13 +8,24 @@
 			"batch_filter": null,
 			"batch_argument": null,
 		},
-		"run_executable_script": {
+		"run_embedded_script": {
 			"filter": null,
 			"argument": {
-				"target": "?input",
+				"target_name": "?input",
 			},
 			"batch_filter": null,
 			"batch_argument": null,
+		},
+		"run_custom_script": {
+			"filter": "(\\.js)$",
+			"argument": {
+				"target_file": "?input",
+				"is_module": "?input",
+			},
+			"batch_filter": null,
+			"batch_argument": {
+				"target_file": "?input",
+			},
 		},
 	},
 }

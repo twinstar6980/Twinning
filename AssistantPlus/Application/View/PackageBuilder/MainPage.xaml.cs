@@ -1740,6 +1740,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				case "Part": {
 					var partList = this.Host.uPartList_ItemsSource.Select((value) => (value.Name)).ToList();
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Part", new PackagePartPanel() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
 						Source = partList,
 						Value = this.Setting.Part,
 						Stamp = UniqueStamp.Create(),
@@ -1753,6 +1755,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Setting": {
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Setting", new PackageSettingPanel() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
 						Value = this.Setting,
 						Stamp = UniqueStamp.Create(),
 					}, null);
@@ -1761,6 +1765,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Variable": {
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Variable", new VariableListPanel() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
 					}, null);
@@ -1969,6 +1975,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Variable": {
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Part Variable", new VariableListPanel() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
 					}, null);
@@ -2221,6 +2229,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Variable": {
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Group Variable", new VariableListPanel() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
 					}, null);
@@ -2485,33 +2495,47 @@ namespace AssistantPlus.View.PackageBuilder {
 			};
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
 				ResourceType.Dummy => new DummyResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					Value = property.As<DummyResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.General => new GeneralResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					Value = property.As<GeneralResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.Texture => new TextureResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					Value = property.As<TextureResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialRton => new SpecialRtonResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Rton.Select((x) => (x.Name)))).Distinct().ToList(),
 					Value = property.As<SpecialRtonResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialPtx => new SpecialPtxResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Ptx.Select((x) => (x.Name)))).Distinct().ToList(),
 					Value = property.As<SpecialPtxResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialPam => new SpecialPamResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Pam.Select((x) => (x.Name)))).Distinct().ToList(),
 					Value = property.As<SpecialPamResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialWem => new SpecialWemResourcePropertyPanel() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
 					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Wem.Select((x) => (x.Name)))).Distinct().ToList(),
 					Value = property.As<SpecialWemResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
@@ -2674,6 +2698,8 @@ namespace AssistantPlus.View.PackageBuilder {
 				}
 				case "Variable": {
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Variable", new VariableListPanel() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
 						Value = this.Setting.Variable,
 						Stamp = UniqueStamp.Create(),
 					}, null);

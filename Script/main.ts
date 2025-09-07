@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region version
 
-	export const k_version = '139';
+	export const k_version = '140';
 
 	// #endregion
 
@@ -302,7 +302,6 @@ namespace Twinning.Script {
 			`Executor/Generic`,
 			`Executor/Typical`,
 			`Executor/Implement/common.utility`,
-			`Executor/Implement/script.js`,
 			`Executor/Implement/data.hash`,
 			`Executor/Implement/data.encoding`,
 			`Executor/Implement/data.encryption`,

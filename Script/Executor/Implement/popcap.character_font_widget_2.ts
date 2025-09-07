@@ -30,6 +30,7 @@ namespace Twinning.Script.Executor.Implement.popcap.character_font_widget_2 {
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
+						option: null,
 						checker: null,
 						automatic: null,
 						condition: null,

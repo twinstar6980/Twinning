@@ -84,53 +84,47 @@
 				],
 			},
 			{
-				"name": "Run executable script",
+				"name": "Run embedded script",
 				"icon": "Component",
 				"filter": null,
 				"batchable": false,
-				"method": "common.utility.run_executable_script",
+				"method": "common.utility.run_embedded_script",
 				"preset": [
 					{
 						"name": "ScriptConsole",
 						"argument": {
-							"target": "ScriptConsole",
+							"target_name": "ScriptConsole",
 						},
 					},
 					{
 						"name": "CompareLanguageFile",
 						"argument": {
-							"target": "CompareLanguageFile",
+							"target_name": "CompareLanguageFile",
 						},
 					},
 					{
 						"name": "ComputeWwiseShortID",
 						"argument": {
-							"target": "ComputeWwiseShortID",
+							"target_name": "ComputeWwiseShortID",
 						},
 					},
 					{
 						"name": "ExtractRSBFromPvZ2CNAPKDirectory",
 						"argument": {
-							"target": "ExtractRSBFromPvZ2CNAPKDirectory",
+							"target_name": "ExtractRSBFromPvZ2CNAPKDirectory",
 						},
 					},
 				],
 			},
-		],
-	},
-	{
-		"name": "Script",
-		"icon": "Code",
-		"item": [
 			{
-				"name": "JS Execute",
-				"icon": "Play",
+				"name": "Run custom script",
+				"icon": "Code",
 				"filter": {
 					"type": "file",
 					"name": "(\\.js)$",
 				},
 				"batchable": true,
-				"method": "script.js.execute",
+				"method": "common.utility.run_custom_script",
 				"preset": [
 					{
 						"name": "Normal",

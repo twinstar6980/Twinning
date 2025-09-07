@@ -92,15 +92,14 @@
 	// Executor/Implement/common.utility
 	"executor.implement:common.utility.set_global_configuration": "Thiết lập cấu hình toàn cầu",
 	"executor.implement:common.utility.set_global_configuration:data": "Dữ liệu",
-	"executor.implement:common.utility.run_executable_script": "Chạy tập lệnh thực thi",
-	"executor.implement:common.utility.run_executable_script:target": "Mục tiêu",
-	// Executor/Implement/script.js
-	"executor.implement:script.js.execute": "Thực hiện JS",
-	"executor.implement:script.js.execute:script_file": "Tệp kịch bản",
-	"executor.implement:script.js.execute:is_module": "Chạy dưới dạng module",
+	"executor.implement:common.utility.run_embedded_script": "Chạy tập lệnh nhúng",
+	"executor.implement:common.utility.run_embedded_script:target_name": "Tên mục tiêu",
+	"executor.implement:common.utility.run_custom_script": "Chạy tập lệnh tùy chỉnh",
+	"executor.implement:common.utility.run_custom_script:target_file": "Tệp mục tiêu",
+	"executor.implement:common.utility.run_custom_script:is_module": "Chạy dưới dạng module",
 	// Executor/Implement/data.hash
 	"executor.implement:data.hash.md5": "Mã hoá MD5",
-	"executor.implement:data.hash.md5:target_file": "Tệp đích",
+	"executor.implement:data.hash.md5:target_file": "Tệp mục tiêu",
 	// Executor/Implement/data.encoding
 	"executor.implement:data.encoding.base64.encode": "Mã hóa Base64",
 	"executor.implement:data.encoding.base64.encode:raw_file": "Tệp gốc",

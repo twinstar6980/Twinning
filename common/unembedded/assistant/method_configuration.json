@@ -65,13 +65,13 @@
 				]
 			},
 			{
-				"id": "common.utility.run_executable_script",
-				"name": "Run executable script",
+				"id": "common.utility.run_embedded_script",
+				"name": "Run embedded script",
 				"icon": "extension",
 				"argument": [
 					{
-						"id": "target",
-						"name": "Target",
+						"id": "target_name",
+						"name": "Target name",
 						"type": "string",
 						"option": null
 					}
@@ -81,44 +81,37 @@
 					{
 						"name": "ScriptConsole",
 						"argument": {
-							"target": "ScriptConsole"
+							"target_name": "ScriptConsole"
 						}
 					},
 					{
 						"name": "CompareLanguageFile",
 						"argument": {
-							"target": "CompareLanguageFile"
+							"target_name": "CompareLanguageFile"
 						}
 					},
 					{
 						"name": "ComputeWwiseShortID",
 						"argument": {
-							"target": "ComputeWwiseShortID"
+							"target_name": "ComputeWwiseShortID"
 						}
 					},
 					{
 						"name": "ExtractRSBFromPvZ2CNAPKDirectory",
 						"argument": {
-							"target": "ExtractRSBFromPvZ2CNAPKDirectory"
+							"target_name": "ExtractRSBFromPvZ2CNAPKDirectory"
 						}
 					}
 				]
-			}
-		]
-	},
-	{
-		"id": "script",
-		"name": "Script",
-		"icon": "code",
-		"item": [
+			},
 			{
-				"id": "script.js.execute",
-				"name": "JS Execute",
-				"icon": "play_arrow",
+				"id": "common.utility.run_custom_script",
+				"name": "Run custom script",
+				"icon": "code",
 				"argument": [
 					{
-						"id": "script_file",
-						"name": "Script file",
+						"id": "target_file",
+						"name": "Target file",
 						"type": "path",
 						"option": null
 					},
@@ -130,7 +123,7 @@
 					}
 				],
 				"batchable": [
-					"script_file"
+					"target_file"
 				],
 				"preset": [
 					{

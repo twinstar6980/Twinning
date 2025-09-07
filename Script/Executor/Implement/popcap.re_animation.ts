@@ -43,6 +43,7 @@ namespace Twinning.Script.Executor.Implement.popcap.re_animation {
 					}),
 					typical_argument_size({
 						id: 'buffer_size',
+						option: null,
 						checker: null,
 						automatic: null,
 						condition: null,

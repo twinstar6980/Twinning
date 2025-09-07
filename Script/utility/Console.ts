@@ -867,7 +867,19 @@ namespace Twinning.Script.Console {
 		return value.map((value, index) => ([value, `${value}`, null]));
 	}
 
+	export function option_size<Value extends bigint>(
+		value: Array<Value>,
+	): Array<[Value, string, null | string]> {
+		return value.map((value, index) => ([value, `${index + 1}`, `${make_size_to_string(value)}`]));
+	}
+
 	export function option_string<Value extends string>(
+		value: Array<Value>,
+	): Array<[Value, string, null | string]> {
+		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
+	}
+
+	export function option_path<Value extends string>(
 		value: Array<Value>,
 	): Array<[Value, string, null | string]> {
 		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
