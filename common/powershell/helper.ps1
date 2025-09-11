@@ -39,7 +39,7 @@ function My-PackMsix(
 	Copy-Item -Force -Recurse -Path "${Source}\*" -Destination "${ProjectTemporaryDirectory}/PackMsix/${Name}"
 	makepri "createconfig" "/cf" "${ProjectTemporaryDirectory}/PackMsix/${Name}/priconfig.xml" "/dq" "en-US" "/o"
 	makepri "new" "/cf" "${ProjectTemporaryDirectory}/PackMsix/${Name}/priconfig.xml" "/pr" "${ProjectTemporaryDirectory}/PackMsix/${Name}" "/of" "${ProjectTemporaryDirectory}/PackMsix/${Name}/resources.pri" "/o"
-	makeappx "pack" "/o" "/d" "${ProjectTemporaryDirectory}/PackMsix/${Name}" "/p" "${ProjectTemporaryDirectory}/PackMsix/${Name}.msix"
+	makeappx "pack" "/o" "/h" "SHA256" "/d" "${ProjectTemporaryDirectory}/PackMsix/${Name}" "/p" "${ProjectTemporaryDirectory}/PackMsix/${Name}.msix"
 	Copy-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackMsix/${Name}.msix" -Destination "${Destination}"
 	Remove-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackMsix"
 	return

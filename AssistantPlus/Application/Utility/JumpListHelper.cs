@@ -13,6 +13,9 @@ namespace AssistantPlus.Utility {
 		public static async Task Apply (
 			List<JumpListItem> itemList
 		) {
+			#if DEBUG
+			return;
+			#endif
 			if (!JumpList.IsSupported()) {
 				return;
 			}
