@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::XML {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Node (
 		) = default;

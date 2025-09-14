@@ -8,7 +8,7 @@ namespace AssistantPlus.Bridge {
 
 	public unsafe class Library {
 
-		#region structor
+		#region constructor
 
 		private Win32.Foundation.HMODULE? mHandle;
 

@@ -28,7 +28,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		explicit ForwarderExplorerCommand (
 		) :
@@ -288,7 +288,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		explicit ForwarderExplorerCommandClassFactory (
 		) :

@@ -7,7 +7,7 @@ namespace AssistantPlus.Utility {
 
 	public partial class Finalizer : IDisposable {
 
-		#region structor
+		#region constructor
 
 		private Action mAction;
 

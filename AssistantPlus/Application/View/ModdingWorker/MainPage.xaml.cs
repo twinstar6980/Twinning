@@ -5,7 +5,6 @@ using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppNotifications.Builder;
 
 namespace AssistantPlus.View.ModdingWorker {
@@ -258,7 +257,7 @@ namespace AssistantPlus.View.ModdingWorker {
 				try {
 					StorageHelper.Copy(App.Setting.Data.ModdingWorker.Kernel, kernel);
 					library.Open(kernel);
-					result = await new Task<List<String>>(() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument]))).SelfAlso((it) => { it.Start(); });
+					result = await Task.Run(() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument])));
 				}
 				catch (Exception e) {
 					exception = e;
@@ -493,7 +492,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 	public class MainPageBridgeClient : Bridge.Client {
 
-		#region structor
+		#region constructor
 
 		private MainPageController mController;
 

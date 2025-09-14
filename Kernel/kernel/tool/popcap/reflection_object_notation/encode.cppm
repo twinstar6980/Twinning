@@ -7,7 +7,6 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.reflection_object_notation.version;
 import twinning.kernel.tool.popcap.reflection_object_notation.common;
 import twinning.kernel.tool.common.protocol_buffer_variable_length_integer;
-import twinning.kernel.third.mscharconv;
 
 export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
@@ -136,9 +135,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							auto uid_first = IntegerU32{};
 							auto uid_middle = IntegerU32{};
 							auto uid_last = IntegerU32{};
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[1_ix].begin()).value, cast_pointer<char>(uid_part[1_ix].end()).value, uid_first.value, 10).ec == std::errc{});
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[2_ix].begin()).value, cast_pointer<char>(uid_part[2_ix].end()).value, uid_middle.value, 10).ec == std::errc{});
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[3_ix].begin()).value, cast_pointer<char>(uid_part[3_ix].end()).value, uid_last.value, 16).ec == std::errc{});
+							assert_test(std::from_chars(cast_pointer<char>(uid_part[1_ix].begin()).value, cast_pointer<char>(uid_part[1_ix].end()).value, uid_first.value, 10).ec == std::errc{});
+							assert_test(std::from_chars(cast_pointer<char>(uid_part[2_ix].begin()).value, cast_pointer<char>(uid_part[2_ix].end()).value, uid_middle.value, 10).ec == std::errc{});
+							assert_test(std::from_chars(cast_pointer<char>(uid_part[3_ix].begin()).value, cast_pointer<char>(uid_part[3_ix].end()).value, uid_last.value, 16).ec == std::errc{});
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(sheet.size()));
 							data.write(sheet);

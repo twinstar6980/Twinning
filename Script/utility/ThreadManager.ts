@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	export class ThreadManager {
 
-		// #region structor
+		// #region constructor
 
 		private m_pool: Array<{
 			thread: Kernel.Miscellaneous.Thread;

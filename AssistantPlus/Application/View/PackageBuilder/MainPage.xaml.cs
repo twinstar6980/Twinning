@@ -4,7 +4,6 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using System.Text.Json.Nodes;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 using WinRT;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;

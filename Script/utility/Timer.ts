@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	export class Timer {
 
-		// #region structor
+		// #region constructor
 
 		private m_duration: number;
 

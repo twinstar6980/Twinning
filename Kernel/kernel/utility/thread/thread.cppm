@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Thread {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Thread (
 		) = default;

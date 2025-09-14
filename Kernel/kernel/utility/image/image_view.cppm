@@ -43,7 +43,7 @@ export namespace Twinning::Kernel::Image {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~BasicImageView (
 		) = default;

@@ -1,11 +1,8 @@
 package com.twinstar.twinning.assistant
 
-import android.Manifest
 import android.content.ContentResolver
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
@@ -13,6 +10,7 @@ import android.provider.Settings
 import androidx.core.database.getFloatOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
+import androidx.core.net.toUri
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -74,21 +72,6 @@ class CustomMethodChannel {
 					this@CustomMethodChannel.continuation.send(data?.data)
 				}
 			}
-			REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION -> {
-				runBlocking {
-					this@CustomMethodChannel.continuation.send(null)
-				}
-			}
-		}
-		return
-	}
-
-	public fun register_onRequestPermissionsResult(
-		requestCode: Int,
-		permissions: Array<out String>,
-		grantResults: IntArray,
-	) {
-		when (requestCode) {
 			REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION -> {
 				runBlocking {
 					this@CustomMethodChannel.continuation.send(null)
@@ -177,7 +160,7 @@ class CustomMethodChannel {
 		if (location.startsWith(primaryDirectory)) {
 			locationSafe = location.substring(primaryDirectory.length)
 		}
-		intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.parse("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(locationSafe)}"))
+		intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(locationSafe)}".toUri())
 		if (type == "save_file") {
 			intent.putExtra(Intent.EXTRA_TITLE, name)
 		}
@@ -198,7 +181,7 @@ class CustomMethodChannel {
 		placement: String,
 	): String {
 		check(File(placement).isDirectory)
-		val sourceUri = Uri.parse(source)
+		val sourceUri = source.toUri()
 		check(sourceUri.scheme == "content")
 		val destinationName = queryDatabaseOfContentUri<String>(sourceUri, OpenableColumns.DISPLAY_NAME, this.host.contentResolver)
 		check(destinationName != null)
@@ -219,23 +202,10 @@ class CustomMethodChannel {
 	): Boolean {
 		check(mode == "check" || mode == "request")
 		if (mode == "request") {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-				this.host.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION)
-			}
-			else {
-				this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${this.host.packageName}")), REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION)
-			}
+			this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION)
 			this.continuation.receive()
 		}
-		val state: Boolean
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-			state = this.host.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-					this.host.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-		}
-		else {
-			state = Environment.isExternalStorageManager()
-		}
-		return state
+		return Environment.isExternalStorageManager()
 	}
 
 	private suspend fun handleQueryExternalStoragePath(

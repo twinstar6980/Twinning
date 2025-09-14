@@ -8,7 +8,7 @@ namespace AssistantPlus.Bridge {
 
 	public abstract class Client {
 
-		#region structor
+		#region constructor
 
 		public Client (
 		) {

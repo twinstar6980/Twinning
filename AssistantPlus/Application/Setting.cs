@@ -44,7 +44,7 @@ namespace AssistantPlus {
 
 	public class SettingProvider {
 
-		#region structor
+		#region constructor
 
 		public SettingData Data;
 

@@ -26,7 +26,7 @@ export namespace Twinning::Kernel::Executor {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Context (
 		) = default;

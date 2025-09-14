@@ -344,7 +344,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
 class _MainPageBridgeClient extends bridge.Client {
 
-  // #region structor
+  // #region constructor
 
   _MainPageState _controller;
 

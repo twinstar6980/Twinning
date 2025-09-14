@@ -5,7 +5,7 @@ import '/utility/convert_helper.dart';
 
 class CommandLineWriter {
 
-  // #region structor
+  // #region constructor
 
   List<String> _view;
 

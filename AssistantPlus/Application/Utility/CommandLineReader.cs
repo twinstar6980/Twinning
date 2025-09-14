@@ -7,7 +7,7 @@ namespace AssistantPlus.Utility {
 
 	public class CommandLineReader {
 
-		#region structor
+		#region constructor
 
 		private List<String> mView;
 

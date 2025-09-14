@@ -89,7 +89,7 @@ class SettingState {
 
 class SettingProvider with ChangeNotifier {
 
-  // #region structor
+  // #region constructor
 
   SettingData data;
 

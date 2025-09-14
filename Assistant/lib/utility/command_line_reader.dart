@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 
 class CommandLineReader {
 
-  // #region structor
+  // #region constructor
 
   List<String> _view;
 

@@ -146,7 +146,7 @@ export namespace Twinning::Kernel::Storage {
 
 		protected:
 
-			#pragma region structor
+			#pragma region constructor
 
 			explicit FileHandler (
 				Pointer<std::FILE> const & value
@@ -159,7 +159,7 @@ export namespace Twinning::Kernel::Storage {
 
 		public:
 
-			#pragma region structor
+			#pragma region constructor
 
 			~FileHandler (
 			) {

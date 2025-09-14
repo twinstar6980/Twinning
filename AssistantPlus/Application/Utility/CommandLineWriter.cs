@@ -7,7 +7,7 @@ namespace AssistantPlus.Utility {
 
 	public class CommandLineWriter {
 
-		#region structor
+		#region constructor
 
 		private List<String> mView;
 

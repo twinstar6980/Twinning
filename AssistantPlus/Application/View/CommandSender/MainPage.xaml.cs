@@ -3,7 +3,6 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
-using Microsoft.UI.Xaml.Navigation;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
 namespace AssistantPlus.View.CommandSender {

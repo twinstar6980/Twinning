@@ -41,7 +41,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		constexpr ~BasicCharacterListView (
 		) = default;
@@ -159,7 +159,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~BasicCharacterList (
 		) = default;
@@ -318,7 +318,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~BasicCharacterArray (
 		) = default;
@@ -478,7 +478,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		constexpr ~BasicStaticCharacterArray (
 		) = default;

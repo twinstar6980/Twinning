@@ -6,7 +6,7 @@ import 'dart:ffi' as ffi;
 
 class Library {
 
-  // #region structor
+  // #region constructor
 
   ffi.DynamicLibrary? _handle;
 

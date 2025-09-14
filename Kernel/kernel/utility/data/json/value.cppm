@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::JSON {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Value (
 		) = default;

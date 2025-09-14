@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.twinstar.twinning.assistant"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "28.2.13676358"
+    ndkVersion = "29.0.14033849"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "com.twinstar.twinning.assistant"
-        minSdk = 28
+        minSdk = 30
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

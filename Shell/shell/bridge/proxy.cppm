@@ -18,7 +18,7 @@ export namespace Twinning::Shell::Bridge {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~MessageProxy (
 		) = default;
@@ -151,7 +151,7 @@ export namespace Twinning::Shell::Bridge {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~ExecutorProxy (
 		) = default;

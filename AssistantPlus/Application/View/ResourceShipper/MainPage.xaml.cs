@@ -4,7 +4,6 @@
 using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.UI.Xaml.Navigation;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
 namespace AssistantPlus.View.ResourceShipper {

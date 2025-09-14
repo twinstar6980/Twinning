@@ -20,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '111';
+  static const String version = '112';
 
   static const String developer = 'TwinStar';
 
@@ -46,7 +46,7 @@ final class SystemChecker {
 
 class UnreachableException implements Exception {
 
-  // #region structor
+  // #region constructor
 
   // ----------------
 
@@ -69,7 +69,7 @@ class UnreachableException implements Exception {
 
 class UnimplementedException implements Exception {
 
-  // #region structor
+  // #region constructor
 
   // ----------------
 
@@ -92,7 +92,7 @@ class UnimplementedException implements Exception {
 
 class UnsupportedException implements Exception {
 
-  // #region structor
+  // #region constructor
 
   // ----------------
 
@@ -115,7 +115,7 @@ class UnsupportedException implements Exception {
 
 class AssertionException implements Exception {
 
-  // #region structor
+  // #region constructor
 
   final String? expression;
 

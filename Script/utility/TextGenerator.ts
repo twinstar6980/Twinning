@@ -16,7 +16,7 @@ namespace Twinning.Script.TextGenerator {
 
 	export class Progress implements Generator {
 
-		// #region structor
+		// #region constructor
 
 		private m_style: ProgressStyle;
 

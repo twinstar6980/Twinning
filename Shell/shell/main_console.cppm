@@ -26,7 +26,7 @@ export namespace Twinning::Shell {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		virtual ~MainConsoleBridgeClient (
 		) override {

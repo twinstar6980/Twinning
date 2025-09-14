@@ -50,7 +50,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		constexpr ~StaticArray (
 		) = default;

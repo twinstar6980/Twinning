@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	export class ByteStreamView {
 
-		// #region structor
+		// #region constructor
 
 		private m_view: ByteListView;
 

@@ -30,7 +30,7 @@ export namespace Twinning::Kernel::Storage {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Path (
 		) = default;

@@ -8,7 +8,7 @@ namespace AssistantPlus {
 
 	public partial class CustomController : INotifyPropertyChanged {
 
-		#region structor
+		#region constructor
 
 		public CustomController (
 		) {

@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	protected:
 
-		#pragma region structor
+		#pragma region constructor
 
 		explicit Runtime (
 			ZPointer<Third::quickjs_ng::$JSRuntime> const & raw_value,
@@ -101,7 +101,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Runtime (
 		) {
@@ -211,7 +211,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	protected:
 
-		#pragma region structor
+		#pragma region constructor
 
 		explicit Context (
 			ZPointer<Third::quickjs_ng::$JSContext> const & raw_value,
@@ -244,7 +244,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Context (
 		) {
@@ -376,7 +376,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	protected:
 
-		#pragma region structor
+		#pragma region constructor
 
 		explicit Value (
 			Third::quickjs_ng::$JSValue const & value
@@ -447,7 +447,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~Value (
 		) {

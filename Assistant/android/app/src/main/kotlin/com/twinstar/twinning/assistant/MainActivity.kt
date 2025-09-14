@@ -28,14 +28,4 @@ class MainActivity : FlutterActivity() {
 		return
 	}
 
-	public override fun onRequestPermissionsResult(
-		requestCode: Int,
-		permissions: Array<out String>,
-		grantResults: IntArray,
-	): Unit {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-		this.customMethodChannel.register_onRequestPermissionsResult(requestCode, permissions, grantResults)
-		return
-	}
-
 }

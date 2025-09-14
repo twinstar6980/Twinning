@@ -29,7 +29,7 @@ export namespace Twinning::Kernel::Range {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		constexpr ~NumberIterator (
 		) = default;

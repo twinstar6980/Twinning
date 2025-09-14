@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	export class CommandLineReader {
 
-		// #region structor
+		// #region constructor
 
 		private m_view: Array<string>;
 

@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	protected:
 
-		#pragma region structor
+		#pragma region constructor
 
 		explicit NativeValueHandler (
 			Pointer<Value> const & value,
@@ -65,7 +65,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~NativeValueHandler (
 		) = default;
@@ -366,7 +366,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~NativeClassBuilder (
 		) = default;
@@ -583,7 +583,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~NativeSpaceBuilder (
 		) = default;

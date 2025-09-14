@@ -4,7 +4,7 @@ import '/common.dart'; // ignore: unused_import
 
 class Wrapper<TValue> {
 
-  // #region structor
+  // #region constructor
 
   _WrapperData _data;
 

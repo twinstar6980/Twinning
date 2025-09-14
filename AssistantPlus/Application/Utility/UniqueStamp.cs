@@ -7,7 +7,7 @@ namespace AssistantPlus.Utility {
 
 	public class UniqueStamp {
 
-		#region structor
+		#region constructor
 
 		public UniqueStamp (
 		) {

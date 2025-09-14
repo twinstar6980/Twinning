@@ -41,7 +41,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		constexpr ~BasicByteListView (
 		) = default;
@@ -159,7 +159,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~BasicByteList (
 		) = default;
@@ -318,7 +318,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~BasicByteArray (
 		) = default;
@@ -478,7 +478,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		constexpr ~BasicStaticByteArray (
 		) = default;

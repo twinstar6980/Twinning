@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	export class ByteListView {
 
-		// #region structor
+		// #region constructor
 
 		private m_view: DataView<ArrayBuffer>;
 

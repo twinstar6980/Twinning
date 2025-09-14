@@ -9,7 +9,7 @@ import 'package:ffi/ffi.dart' as ffi;
 
 class MessageProxy {
 
-  // #region structor
+  // #region constructor
 
   List<String> value;
 
@@ -102,7 +102,7 @@ class MessageProxy {
 
 class ExecutorProxy {
 
-  // #region structor
+  // #region constructor
 
   Void Function(ExecutorProxy, MessageProxy, MessageProxy) value;
 

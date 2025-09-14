@@ -8,7 +8,7 @@ namespace AssistantPlus.Bridge {
 
 	public class MessageProxy {
 
-		#region structor
+		#region constructor
 
 		public List<String> Value;
 
@@ -106,7 +106,7 @@ namespace AssistantPlus.Bridge {
 
 	public class ExecutorProxy {
 
-		#region structor
+		#region constructor
 
 		public Action<ExecutorProxy, MessageProxy, MessageProxy> Value;
 

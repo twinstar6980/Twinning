@@ -191,13 +191,19 @@ function apply_compiler_option_warning_regular(target)
 		'-Wno-covered-switch-default',
 		'-Wno-reserved-identifier',
 		'-Wno-reserved-user-defined-literal',
-		-- '-Wno-nrvo',
 		'-Wno-float-equal',
 		'-Wno-unsafe-buffer-usage',
 		'-Wno-global-constructors',
 		'-Wno-exit-time-destructors',
-		-- '-Wno-unique-object-duplication',
-		-- '-Wno-thread-safety-analysis',
 		{ private = true }
 	)
+	if m.system:is('windows', 'linux') then
+		target:add(
+			'cxflags',
+			'-Wno-nrvo',
+			'-Wno-unique-object-duplication',
+			'-Wno-thread-safety-analysis',
+			{ private = true }
+		)
+	end
 end

@@ -9,7 +9,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
 
 namespace AssistantPlus.View.AnimationViewer {
@@ -472,13 +471,13 @@ namespace AssistantPlus.View.AnimationViewer {
 					FrameRate = null,
 					WorkArea = new (0, 0),
 					Frame = [
-						new GameAnimationModel.Frame() {
+						new () {
 							Label = null,
 							Stop = false,
 							Command = [],
 							Remove = [],
 							Append = [
-								new GameAnimationModel.LayerAppend() {
+								new () {
 									Index = 0,
 									Name = null,
 									Resource = target.Item2,
@@ -489,7 +488,7 @@ namespace AssistantPlus.View.AnimationViewer {
 								},
 							],
 							Change = [
-								new GameAnimationModel.LayerChange() {
+								new () {
 									Index = 0,
 									Transform = [0.0, 0.0],
 									Color = null,

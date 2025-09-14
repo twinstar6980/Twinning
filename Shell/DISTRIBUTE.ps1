@@ -22,7 +22,7 @@ if ($TargetPlatform -eq "linux.x86_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--builddir=.build" "--mode=release" "--plat=linux" "--arch=x86_64" "--toolchain=clang-20" "--runtimes=c++_shared"
+	xmake "config" "--builddir=.build" "--mode=release" "--plat=linux" "--arch=x86_64" "--toolchain=clang-21" "--runtimes=c++_shared"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/linux/x86_64/release/shell" -Destination "${ModuleDistributionFile}"
 }
@@ -38,7 +38,7 @@ if ($TargetPlatform -eq "android.arm_64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--builddir=.build" "--mode=release" "--plat=android" "--arch=arm64-v8a" "--toolchain=ndk" "--runtimes=c++_shared" "--ndk_sdkver=28"
+	xmake "config" "--builddir=.build" "--mode=release" "--plat=android" "--arch=arm64-v8a" "--toolchain=ndk" "--runtimes=c++_shared" "--ndk_sdkver=30"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/android/arm64-v8a/release/shell" -Destination "${ModuleDistributionFile}"
 }

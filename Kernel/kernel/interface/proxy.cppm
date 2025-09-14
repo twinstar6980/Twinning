@@ -18,7 +18,7 @@ export namespace Twinning::Kernel::Interface {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~MessageProxy (
 		) = default;
@@ -151,7 +151,7 @@ export namespace Twinning::Kernel::Interface {
 
 	public:
 
-		#pragma region structor
+		#pragma region constructor
 
 		~ExecutorProxy (
 		) = default;

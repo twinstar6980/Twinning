@@ -8,7 +8,7 @@ namespace AssistantPlus.Utility {
 	public class Wrapper<TValue>
 		where TValue : notnull {
 
-		#region structor
+		#region constructor
 
 		private WrapperData mData;
 

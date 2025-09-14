@@ -26,7 +26,7 @@
 
 ## 平台支持
 
-* 操作系统：`Windows 10+` 、`Linux ~` 、`Macintosh 11+` 、`Android 9+` 、`Iphone 15+` 。
+* 操作系统：`Windows 10+` 、`Linux ~` 、`Macintosh 11+` 、`Android 11+` 、`Iphone 15+` 。
 
 * 处理器架构：`x86_64` 、`arm_64` 。
 

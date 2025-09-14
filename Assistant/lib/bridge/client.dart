@@ -4,7 +4,7 @@ import '/common.dart';
 
 abstract class Client {
 
-  // #region structor
+  // #region constructor
 
   Client(
   );
