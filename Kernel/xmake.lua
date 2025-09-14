@@ -6,6 +6,7 @@ add_moduledirs('./../common/xmake')
 includes('./../common/xmake/helper.lua')
 apply_common_setting()
 
+includes('./third/mscharconv')
 includes('./third/tinyxml2')
 includes('./third/cpp_md5_lib')
 includes('./third/Rijndael')

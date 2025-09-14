@@ -18,6 +18,7 @@ target('kernel', function()
 		{}
 	)
 	add_deps(
+		'third.mscharconv',
 		'third.tinyxml2',
 		'third.cpp_md5_lib',
 		'third.Rijndael',

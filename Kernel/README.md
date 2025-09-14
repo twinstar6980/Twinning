@@ -10,13 +10,13 @@
 	
 	* [xmake 3.0](https://xmake.io/#/)
 	
-	* [LLVM 21.1 (MinGW-ucrt)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
+	* [LLVM 20.1 (MinGW-ucrt)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 	
-	* [LLVM 21.1](https://llvm.org/) for `Linux`
+	* [LLVM 20.1](https://llvm.org/) for `Linux`
 	
 	* [LLVM 20.1 (SDK 15.5)](https://llvm.org/) for `Macintosh`
 	
-	* [LLVM 21.0 (NDK 29.0 beta4)](https://developer.android.com/ndk/downloads) for `Android`
+	* [LLVM 19.0 (NDK 28.2)](https://developer.android.com/ndk/downloads) for `Android`
 	
 	* [LLVM 20.1 (SDK 18.5)](https://llvm.org/) for `Iphone`
 
@@ -24,6 +24,7 @@
 
 | 库                                                                       | 用途                |
 |:------------------------------------------------------------------------:|:-------------------:|
+| [mscharconv 1.2.3](https://github.com/iboB/mscharconv)                   | charconv 支持       |
 | [tinyxml2 11.0.0](https://github.com/leethomason/tinyxml2)               | XML 读写            |
 | [cpp_md5_lib ?](https://github.com/tiankonguse/cpp-md5-lib)              | MD5 哈希计算        |
 | [Rijndael ?](#)                                                          | Rijndael 加密与解密 |

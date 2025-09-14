@@ -156,7 +156,7 @@ export namespace Twinning::Shell {
 		#pragma region utility
 
 		inline static auto launch_session (
-			Bridge::Service * const &        kernel_symbol,
+			Bridge::Service * const &        kernel_library_symbol,
 			std::string const &              kernel,
 			std::string const &              script,
 			std::vector<std::string> const & argument
@@ -165,7 +165,7 @@ export namespace Twinning::Shell {
 			auto exception = std::optional<std::string>{};
 			try {
 				auto client = MainConsoleBridgeClient{};
-				auto library = kernel_symbol != nullptr ? Bridge::Library{kernel_symbol} : Bridge::Library{kernel};
+				auto library = kernel_library_symbol != nullptr ? Bridge::Library{kernel_library_symbol} : Bridge::Library{kernel};
 				result.emplace(Bridge::Launcher::launch(client, library, script, argument));
 			}
 			catch (...) {

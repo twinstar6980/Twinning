@@ -54,7 +54,7 @@ function My-PackDmg(
 	[String] $Destination
 ) {
 	New-Item -Force -ItemType "Directory" -Path "${ProjectTemporaryDirectory}/PackDmg"
-	Copy-Item -Force -Recurse -Path "${Source}" -Destination "${ProjectTemporaryDirectory}/PackDmg/${Name}.app"
+	cp -R "${Source}" "${ProjectTemporaryDirectory}/PackDmg/${Name}.app"
 	create-dmg "${ProjectTemporaryDirectory}/PackDmg/${Name}.dmg" "${ProjectTemporaryDirectory}/PackDmg/${Name}.app"
 	Copy-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackDmg/${Name}.dmg" -Destination "${Destination}"
 	Remove-Item -Force -Recurse -Path "${ProjectTemporaryDirectory}/PackDmg"

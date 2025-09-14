@@ -30,7 +30,6 @@ module;
 #include <mutex>
 #include <thread>
 #include <format>
-#include <charconv>
 #include <locale>
 #include <cstdio>
 #include <iostream>
@@ -214,11 +213,6 @@ export {
 		using ::std::format;
 		using ::std::formatter;
 		using ::std::runtime_format;
-		using ::std::chars_format;
-		using ::std::from_chars;
-		using ::std::from_chars_result;
-		using ::std::to_chars;
-		using ::std::to_chars_result;
 	}
 	// io
 	namespace std {
