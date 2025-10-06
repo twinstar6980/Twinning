@@ -59,17 +59,11 @@ function make_m()
 		m.system.name = 'iphone'
 	end
 	m.architecture.name = 'unknown'
-	if is_arch('x86', 'i386') then
-		m.architecture.name = 'x86_32'
-	end
 	if is_arch('x86_64', 'x64') then
-		m.architecture.name = 'x86_64'
-	end
-	if is_arch('arm', 'armv7', 'armeabi', 'armeabi-v7a') then
-		m.architecture.name = 'arm_32'
+		m.architecture.name = 'amd64'
 	end
 	if is_arch('arm64', 'arm64-v8a') then
-		m.architecture.name = 'arm_64'
+		m.architecture.name = 'arm64'
 	end
 	m.build.name = 'unknown'
 	if is_mode('debug') then
@@ -197,13 +191,13 @@ function apply_compiler_option_warning_regular(target)
 		'-Wno-exit-time-destructors',
 		{ private = true }
 	)
-	if m.system:is('windows', 'linux') then
-		target:add(
-			'cxflags',
-			'-Wno-nrvo',
-			'-Wno-unique-object-duplication',
-			'-Wno-thread-safety-analysis',
-			{ private = true }
-		)
-	end
+	-- if m.system:is('windows', 'linux') then
+	-- 	target:add(
+	-- 		'cxflags',
+	-- 		'-Wno-nrvo',
+	-- 		'-Wno-unique-object-duplication',
+	-- 		'-Wno-thread-safety-analysis',
+	-- 		{ private = true }
+	-- 	)
+	-- end
 end

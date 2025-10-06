@@ -14,11 +14,11 @@
 	
 	* [LLVM 20.1](https://llvm.org/) for `Linux`
 	
-	* [LLVM 20.1 (SDK 15.5)](https://llvm.org/) for `Macintosh`
+	* [LLVM 20.1 (SDK 26.0)](https://llvm.org/) for `Macintosh`
 	
 	* [LLVM 19.0 (NDK 28.2)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [LLVM 20.1 (SDK 18.5)](https://llvm.org/) for `Iphone`
+	* [LLVM 20.1 (SDK 26.0)](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
