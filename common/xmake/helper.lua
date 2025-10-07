@@ -191,13 +191,14 @@ function apply_compiler_option_warning_regular(target)
 		'-Wno-exit-time-destructors',
 		{ private = true }
 	)
-	-- if m.system:is('windows', 'linux') then
-	-- 	target:add(
-	-- 		'cxflags',
-	-- 		'-Wno-nrvo',
-	-- 		'-Wno-unique-object-duplication',
-	-- 		'-Wno-thread-safety-analysis',
-	-- 		{ private = true }
-	-- 	)
-	-- end
+	if m.system:is('windows', 'linux') then
+		target:add(
+			'cxflags',
+			'-Wno-nrvo',
+			'-Wno-unique-object-duplication',
+			'-Wno-thread-safety-analysis',
+			'-Wno-thread-safety-negative',
+			{ private = true }
+		)
+	end
 end

@@ -22,7 +22,7 @@ if ($TargetPlatform -eq "linux.amd64") {
 	if (Test-Path -Path $ModuleDistributionFile) {
 		Remove-Item -Force -Recurse -Path $ModuleDistributionFile
 	}
-	xmake "config" "--builddir=.build" "--mode=release" "--plat=linux" "--arch=x86_64" "--toolchain=clang-20" "--runtimes=c++_shared"
+	xmake "config" "--builddir=.build" "--mode=release" "--plat=linux" "--arch=x86_64" "--toolchain=clang" "--runtimes=c++_shared"
 	xmake "build"
 	Copy-Item -Force -Recurse -Path "${ModuleDirectory}/.build/linux/x86_64/release/shell" -Destination "${ModuleDistributionFile}"
 }
