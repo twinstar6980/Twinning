@@ -36,6 +36,7 @@
 						Spacing="8"
 						>
 						<TextBlock
+							ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Bottom"
@@ -61,7 +62,6 @@
 									Spacing="8"
 									>
 									<Button
-										ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Top"
 										HorizontalContentAlignment="Stretch"
@@ -69,6 +69,7 @@
 										Click="{x:Bind uName_Click}"
 										>
 										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uNameText_ToolTip}"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Stretch"
 											Style="{ThemeResource BodyStrongTextBlockStyle}"

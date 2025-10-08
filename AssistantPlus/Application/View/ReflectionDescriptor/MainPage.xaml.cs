@@ -420,6 +420,13 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		// ----------------
 
+		public String uContent_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return this.Descriptor.Name;
+			}
+		}
+
 		public String uContent_Name {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);

@@ -86,6 +86,7 @@
 											Glyph="{x:Bind uIcon_Glyph}"
 											/>
 										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"
@@ -122,6 +123,7 @@
 											Glyph="{x:Bind uIcon_Glyph}"
 											/>
 										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"
@@ -230,6 +232,7 @@
 									Spacing="8"
 									>
 									<TextBlock
+										ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"

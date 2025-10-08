@@ -513,6 +513,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			sourcePackage.Name = destinationPackage;
 			var itemNode = this.uPackageList_ItemsSource.First((value) => (Object.ReferenceEquals(value.Setting, sourcePackage)));
 			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
 			]);
 			await this.ProjectSaveSetting();
@@ -679,17 +680,20 @@ namespace AssistantPlus.View.PackageBuilder {
 			var itemNode = this.FindScopeNode(sourcePart);
 			itemNode.Name = destinationPart;
 			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
 			]);
 			foreach (var groupNode in this.uGroupList_ItemsSource.Where((value) => (value.PartName == sourcePart))) {
 				groupNode.PartName = destinationPart;
 				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uName_ToolTip),
 					nameof(groupNode.uName_Text),
 				]);
 			}
 			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => (value.PartName == sourcePart))) {
 				groupNode.PartName = destinationPart;
 				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uName_ToolTip),
 					nameof(groupNode.uName_Text),
 				]);
 			}
@@ -839,11 +843,13 @@ namespace AssistantPlus.View.PackageBuilder {
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Name = destinationGroup;
 			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
 			]);
 			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => (value.PartName == sourcePart && value.GroupName == sourceGroup))) {
 				groupNode.GroupName = destinationGroup;
 				groupNode.NotifyPropertyChanged([
+					nameof(groupNode.uName_ToolTip),
 					nameof(groupNode.uName_Text),
 				]);
 			}
@@ -1018,6 +1024,7 @@ namespace AssistantPlus.View.PackageBuilder {
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Name = destinationResource;
 			itemNode.NotifyPropertyChanged([
+				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
 			]);
 			return;
@@ -1643,6 +1650,13 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region view
 
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return this.Setting.Name;
+			}
+		}
+
 		public Boolean uName_Visibility {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
@@ -1721,8 +1735,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				case "Rename": {
 					this.IsNameEditing = true;
 					this.NotifyPropertyChanged([
-						nameof(this.uName_Text),
+						nameof(this.uName_ToolTip),
 						nameof(this.uName_Visibility),
+						nameof(this.uName_Text),
 						nameof(this.uNameEdit_Visibility),
 						nameof(this.uNameEdit_IsEnabled),
 					]);
@@ -1848,6 +1863,13 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		// ----------------
 
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return this.Name;
+			}
+		}
+
 		public Boolean uName_Visibility {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
@@ -1938,8 +1960,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				case "Rename": {
 					this.IsNameEditing = true;
 					this.NotifyPropertyChanged([
-						nameof(this.uName_Text),
+						nameof(this.uName_ToolTip),
 						nameof(this.uName_Visibility),
+						nameof(this.uName_Text),
 						nameof(this.uNameEdit_Visibility),
 						nameof(this.uNameEdit_IsEnabled),
 					]);
@@ -2009,6 +2032,13 @@ namespace AssistantPlus.View.PackageBuilder {
 		#endregion
 
 		#region view
+
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return $"{this.PartName}";
+			}
+		}
 
 		public String uName_Text {
 			get {
@@ -2102,6 +2132,13 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		// ----------------
 
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return this.Name;
+			}
+		}
+
 		public Boolean uName_Visibility {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
@@ -2192,8 +2229,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				case "Rename": {
 					this.IsNameEditing = true;
 					this.NotifyPropertyChanged([
-						nameof(this.uName_Text),
+						nameof(this.uName_ToolTip),
 						nameof(this.uName_Visibility),
+						nameof(this.uName_Text),
 						nameof(this.uNameEdit_Visibility),
 						nameof(this.uNameEdit_IsEnabled),
 					]);
@@ -2266,6 +2304,13 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region view
 
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return $"{this.PartName} - {this.GroupName}";
+			}
+		}
+
 		public String uName_Text {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
@@ -2321,6 +2366,13 @@ namespace AssistantPlus.View.PackageBuilder {
 		#endregion
 
 		#region view
+
+		public String uName_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				return this.Name;
+			}
+		}
 
 		public Boolean uName_Visibility {
 			get {
@@ -2661,8 +2713,9 @@ namespace AssistantPlus.View.PackageBuilder {
 				case "Rename": {
 					this.IsNameEditing = true;
 					this.NotifyPropertyChanged([
-						nameof(this.uName_Text),
+						nameof(this.uName_ToolTip),
 						nameof(this.uName_Visibility),
+						nameof(this.uName_Text),
 						nameof(this.uNameEdit_Visibility),
 						nameof(this.uNameEdit_IsEnabled),
 					]);

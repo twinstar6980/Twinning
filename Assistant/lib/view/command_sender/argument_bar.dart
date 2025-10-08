@@ -37,10 +37,12 @@ class _BasicArgumentBar extends StatelessWidget {
             SizedBox(width: 8),
             Text(
               this.name,
-              overflow: TextOverflow.clip,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelLarge!.copyWith(
                 color: theme.colorScheme.primary,
               ),
+            ).withTooltip(
+              message: this.name,
             ).withExpanded(),
           ],
         ),

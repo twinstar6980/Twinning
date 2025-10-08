@@ -288,6 +288,7 @@
 								VerticalAlignment="Center"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
@@ -509,6 +510,7 @@
 								VerticalAlignment="Center"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
@@ -773,6 +775,7 @@
 									Spacing="12"
 									>
 									<TextBlock
+										ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Center"
@@ -811,6 +814,7 @@
 								VerticalAlignment="Center"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
@@ -1074,6 +1078,7 @@
 									Spacing="12"
 									>
 									<TextBlock
+										ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Center"
@@ -1110,6 +1115,7 @@
 								VerticalAlignment="Center"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"

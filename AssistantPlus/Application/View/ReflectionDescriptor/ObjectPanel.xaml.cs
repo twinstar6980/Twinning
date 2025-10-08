@@ -134,6 +134,14 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region view
 
+		public String uTitle_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				var model = this.Host.DescriptorList[this.Index];
+				return model.Name;
+			}
+		}
+
 		public String uTitle_Text {
 			get {
 				GF.AssertTest(this.Host.IsLoaded);
@@ -170,14 +178,6 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 
 		#region view
 
-		public String uName_ToolTip {
-			get {
-				GF.AssertTest(this.Host.IsLoaded);
-				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
-				return model.Name;
-			}
-		}
-
 		public async void uName_Click (
 			Object          sender,
 			RoutedEventArgs args
@@ -188,6 +188,14 @@ namespace AssistantPlus.View.ReflectionDescriptor {
 			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(model.Name); }));
 			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
+		}
+
+		public String uNameText_ToolTip {
+			get {
+				GF.AssertTest(this.Host.IsLoaded);
+				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
+				return model.Name;
+			}
 		}
 
 		public String uNameText_Text {

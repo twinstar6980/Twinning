@@ -594,35 +594,34 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           maxWidth: constraints.maxWidth + 16,
                           child: StreamBuilder(
                             stream: this._activeProgressIndexStream.stream,
-                            builder: (context, snapshot) => Tooltip(
+                            builder: (context, snapshot) => Slider(
+                              min: 1.0,
+                              max: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
+                              value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
+                              onChanged: !this._activated
+                                ? null
+                                : (value) async {
+                                  await this._changeProgressIndex(value.round() - 1);
+                                  this._activeProgressIndexStream.sink.add(null);
+                                },
+                              onChangeStart: !this._activated
+                                ? null
+                                : (value) async {
+                                  this._activeProgressChangingContinue = this._queryProgressState();
+                                  if (this._activeProgressChangingContinue) {
+                                    await this._changeProgressState(false);
+                                  }
+                                },
+                              onChangeEnd: !this._activated
+                                ? null
+                                : (value) async {
+                                  if (this._activeProgressChangingContinue) {
+                                    await this._changeProgressState(true);
+                                  }
+                                  this._activeProgressChangingContinue = false;
+                                },
+                            ).withTooltip(
                               message: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
-                              child: Slider(
-                                min: 1.0,
-                                max: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
-                                value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
-                                onChanged: !this._activated
-                                  ? null
-                                  : (value) async {
-                                    await this._changeProgressIndex(value.round() - 1);
-                                    this._activeProgressIndexStream.sink.add(null);
-                                  },
-                                onChangeStart: !this._activated
-                                  ? null
-                                  : (value) async {
-                                    this._activeProgressChangingContinue = this._queryProgressState();
-                                    if (this._activeProgressChangingContinue) {
-                                      await this._changeProgressState(false);
-                                    }
-                                  },
-                                onChangeEnd: !this._activated
-                                  ? null
-                                  : (value) async {
-                                    if (this._activeProgressChangingContinue) {
-                                      await this._changeProgressState(true);
-                                    }
-                                    this._activeProgressChangingContinue = false;
-                                  },
-                              ),
                             ),
                           ),
                         ),
@@ -635,150 +634,149 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 Row(
                   children: [
                     SizedBox(width: 16),
-                    Tooltip(
-                      message: !this._activated ? '' : 'Frame Range',
-                      child: TextButton.icon(
-                        iconAlignment: IconAlignment.start,
-                        icon: Icon(IconSymbols.linear_scale),
-                        label: Row(
-                          children: [
-                            Text(
-                              !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                            ).withExpanded(),
-                          ],
-                        ),
-                        onPressed: !this._activated
-                          ? null
-                          : () async {
-                            var currentValue = this._activeFrameRange!;
-                            await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                              title: 'Frame Range',
-                              contentBuilder: (context, setStateForPanel) => [
-                                CustomTextField(
-                                  keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-                                  inputFormatters: [],
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                    filled: false,
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(IconSymbols.line_start_circle),
-                                    suffixIcon: CustomTextFieldSuffixRegion(
-                                      children: [
-                                        PopupMenuButton(
-                                          tooltip: 'Preset',
-                                          position: PopupMenuPosition.under,
-                                          icon: Icon(IconSymbols.more_vert),
-                                          itemBuilder: (context) => [
-                                            (1, 'whole'),
-                                            null,
-                                            ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
-                                          ].map((value) => value == null
-                                            ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
-                                            : PopupMenuItem(
-                                              value: value.$1,
-                                              child: ListTile(
-                                                contentPadding: EdgeInsets.zero,
-                                                dense: true,
-                                                title: Text(
-                                                  value.$2,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                trailing: Text(
-                                                  ConvertHelper.makeIntegerToString(value.$1, false),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: theme.textTheme.labelSmall!.copyWith(
-                                                    color: theme.colorScheme.onSurfaceVariant,
-                                                  ),
-                                                ),
-                                              ),
-                                            )).toList(),
-                                          onSelected: (value) async {
-                                            value as Integer;
-                                            value -= 1;
-                                            currentValue = (value, max(value, currentValue.$2));
-                                            await refreshState(setStateForPanel);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  value: ConvertHelper.makeIntegerToString(currentValue.$1 + 1, false),
-                                  onChanged: (text) async {
-                                    var value = Integer.tryParse(text);
-                                    if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                      value -= 1;
-                                      currentValue = (value, max(value, currentValue.$2));
-                                    }
-                                    await refreshState(setStateForPanel);
-                                  },
-                                ),
-                                SizedBox(height: 12),
-                                CustomTextField(
-                                  keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-                                  inputFormatters: [],
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                    filled: false,
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(IconSymbols.line_end_circle),
-                                    suffixIcon: CustomTextFieldSuffixRegion(
-                                      children: [
-                                        PopupMenuButton(
-                                          tooltip: 'Preset',
-                                          position: PopupMenuPosition.under,
-                                          icon: Icon(IconSymbols.more_vert),
-                                          itemBuilder: (context) => [
-                                            (this._activeSprite!.frame.length, 'whole'),
-                                            null,
-                                            ...this._activeFrameLabel!.map((value) => (value.$3 + 1, value.$1)),
-                                          ].map((value) => value == null
-                                            ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
-                                            : PopupMenuItem(
-                                              value: value.$1,
-                                              child: ListTile(
-                                                contentPadding: EdgeInsets.zero,
-                                                dense: true,
-                                                title: Text(
-                                                  value.$2,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                trailing: Text(
-                                                  ConvertHelper.makeIntegerToString(value.$1, false),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: theme.textTheme.labelSmall!.copyWith(
-                                                    color: theme.colorScheme.onSurfaceVariant,
-                                                  ),
-                                                ),
-                                              ),
-                                            )).toList(),
-                                          onSelected: (value) async {
-                                            value as Integer;
-                                            value -= 1;
-                                            currentValue = (min(value, currentValue.$1), value);
-                                            await refreshState(setStateForPanel);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  value: ConvertHelper.makeIntegerToString(currentValue.$2 + 1, false),
-                                  onChanged: (text) async {
-                                    var value = Integer.tryParse(text);
-                                    if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                      value -= 1;
-                                      currentValue = (min(value, currentValue.$1), value);
-                                    }
-                                    await refreshState(setStateForPanel);
-                                  },
-                                ),
-                              ],
-                              actionBuilder: null,
-                            ));
-                            await this._changeFrameRange(currentValue);
-                          },
+                    TextButton.icon(
+                      iconAlignment: IconAlignment.start,
+                      icon: Icon(IconSymbols.linear_scale),
+                      label: Row(
+                        children: [
+                          Text(
+                            !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ).withExpanded(),
+                        ],
                       ),
+                      onPressed: !this._activated
+                        ? null
+                        : () async {
+                          var currentValue = this._activeFrameRange!;
+                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+                            title: 'Frame Range',
+                            contentBuilder: (context, setStateForPanel) => [
+                              CustomTextField(
+                                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+                                inputFormatters: [],
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                  filled: false,
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(IconSymbols.line_start_circle),
+                                  suffixIcon: CustomTextFieldSuffixRegion(
+                                    children: [
+                                      PopupMenuButton(
+                                        tooltip: 'Preset',
+                                        position: PopupMenuPosition.under,
+                                        icon: Icon(IconSymbols.more_vert),
+                                        itemBuilder: (context) => [
+                                          (1, 'whole'),
+                                          null,
+                                          ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
+                                        ].map((value) => value == null
+                                          ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
+                                          : PopupMenuItem(
+                                            value: value.$1,
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              dense: true,
+                                              title: Text(
+                                                value.$2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              trailing: Text(
+                                                ConvertHelper.makeIntegerToString(value.$1, false),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: theme.textTheme.labelSmall!.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                ),
+                                              ),
+                                            ),
+                                          )).toList(),
+                                        onSelected: (value) async {
+                                          value as Integer;
+                                          value -= 1;
+                                          currentValue = (value, max(value, currentValue.$2));
+                                          await refreshState(setStateForPanel);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                value: ConvertHelper.makeIntegerToString(currentValue.$1 + 1, false),
+                                onChanged: (text) async {
+                                  var value = Integer.tryParse(text);
+                                  if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
+                                    value -= 1;
+                                    currentValue = (value, max(value, currentValue.$2));
+                                  }
+                                  await refreshState(setStateForPanel);
+                                },
+                              ),
+                              SizedBox(height: 12),
+                              CustomTextField(
+                                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
+                                inputFormatters: [],
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                  filled: false,
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(IconSymbols.line_end_circle),
+                                  suffixIcon: CustomTextFieldSuffixRegion(
+                                    children: [
+                                      PopupMenuButton(
+                                        tooltip: 'Preset',
+                                        position: PopupMenuPosition.under,
+                                        icon: Icon(IconSymbols.more_vert),
+                                        itemBuilder: (context) => [
+                                          (this._activeSprite!.frame.length, 'whole'),
+                                          null,
+                                          ...this._activeFrameLabel!.map((value) => (value.$3 + 1, value.$1)),
+                                        ].map((value) => value == null
+                                          ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
+                                          : PopupMenuItem(
+                                            value: value.$1,
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              dense: true,
+                                              title: Text(
+                                                value.$2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              trailing: Text(
+                                                ConvertHelper.makeIntegerToString(value.$1, false),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: theme.textTheme.labelSmall!.copyWith(
+                                                  color: theme.colorScheme.onSurfaceVariant,
+                                                ),
+                                              ),
+                                            ),
+                                          )).toList(),
+                                        onSelected: (value) async {
+                                          value as Integer;
+                                          value -= 1;
+                                          currentValue = (min(value, currentValue.$1), value);
+                                          await refreshState(setStateForPanel);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                value: ConvertHelper.makeIntegerToString(currentValue.$2 + 1, false),
+                                onChanged: (text) async {
+                                  var value = Integer.tryParse(text);
+                                  if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
+                                    value -= 1;
+                                    currentValue = (min(value, currentValue.$1), value);
+                                  }
+                                  await refreshState(setStateForPanel);
+                                },
+                              ),
+                            ],
+                            actionBuilder: null,
+                          ));
+                          await this._changeFrameRange(currentValue);
+                        },
+                    ).withTooltip(
+                      message: !this._activated ? '' : 'Frame Range',
                     ).withExpanded(),
                     SizedBox(width: 12),
                     IconButton(
@@ -795,7 +793,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     StreamBuilder(
                       stream: this._activeProgressStateStream.stream,
                       builder: (context, snapshot) => IconButton.filled(
-                        tooltip: !this._activated ? '' : 'Pause & Resume',
+                        tooltip: !this._activated ? '' : !this._queryProgressState() ? 'Resume' : 'Pause',
                         isSelected: true,
                         icon: Icon(!this._activated ? IconSymbols.play_arrow : !this._queryProgressState() ? IconSymbols.play_arrow : IconSymbols.pause, fill: 1),
                         onPressed: !this._activated
@@ -817,87 +815,86 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         },
                     ),
                     SizedBox(width: 12),
-                    Tooltip(
-                      message: !this._activated ? '' : 'Frame Speed',
-                      child: TextButton.icon(
-                        iconAlignment: IconAlignment.end,
-                        icon: Icon(IconSymbols.speed),
-                        label: Row(
-                          children: [
-                            Text(
-                              !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                            ).withExpanded(),
-                          ],
-                        ),
-                        onPressed: !this._activated
-                          ? null
-                          : () async {
-                            var currentValue = this._activeFrameSpeed!;
-                            var normalSpeed = this._activeSprite?.frameRate ?? this._animation!.frameRate.toDouble();
-                            await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                              title: 'Frame Speed',
-                              contentBuilder: (context, setStateForPanel) => [
-                                CustomTextField(
-                                  keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                                  inputFormatters: [],
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                    filled: false,
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(IconSymbols.speed),
-                                    suffixIcon: CustomTextFieldSuffixRegion(
-                                      children: [
-                                        PopupMenuButton(
-                                          tooltip: 'Preset',
-                                          position: PopupMenuPosition.under,
-                                          icon: Icon(IconSymbols.more_vert),
-                                          itemBuilder: (context) => [
-                                            (normalSpeed / 2.0, 'Slow'),
-                                            (normalSpeed, 'Normal'),
-                                            (normalSpeed * 2.0, 'Fast'),
-                                          ].map((value) => PopupMenuItem(
-                                            value: value.$1,
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              dense: true,
-                                              title: Text(
-                                                value.$2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              trailing: Text(
-                                                ConvertHelper.makeFloaterToString(value.$1, false),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall!.copyWith(
-                                                  color: theme.colorScheme.onSurfaceVariant,
-                                                ),
+                    TextButton.icon(
+                      iconAlignment: IconAlignment.end,
+                      icon: Icon(IconSymbols.speed),
+                      label: Row(
+                        children: [
+                          Text(
+                            !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.end,
+                          ).withExpanded(),
+                        ],
+                      ),
+                      onPressed: !this._activated
+                        ? null
+                        : () async {
+                          var currentValue = this._activeFrameSpeed!;
+                          var normalSpeed = this._activeSprite?.frameRate ?? this._animation!.frameRate.toDouble();
+                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+                            title: 'Frame Speed',
+                            contentBuilder: (context, setStateForPanel) => [
+                              CustomTextField(
+                                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                                inputFormatters: [],
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                  filled: false,
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(IconSymbols.speed),
+                                  suffixIcon: CustomTextFieldSuffixRegion(
+                                    children: [
+                                      PopupMenuButton(
+                                        tooltip: 'Preset',
+                                        position: PopupMenuPosition.under,
+                                        icon: Icon(IconSymbols.more_vert),
+                                        itemBuilder: (context) => [
+                                          (normalSpeed / 2.0, 'Slow'),
+                                          (normalSpeed, 'Normal'),
+                                          (normalSpeed * 2.0, 'Fast'),
+                                        ].map((value) => PopupMenuItem(
+                                          value: value.$1,
+                                          child: ListTile(
+                                            contentPadding: EdgeInsets.zero,
+                                            dense: true,
+                                            title: Text(
+                                              value.$2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            trailing: Text(
+                                              ConvertHelper.makeFloaterToString(value.$1, false),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: theme.textTheme.labelSmall!.copyWith(
+                                                color: theme.colorScheme.onSurfaceVariant,
                                               ),
                                             ),
-                                          )).toList(),
-                                          onSelected: (value) async {
-                                            currentValue = value;
-                                            await refreshState(setStateForPanel);
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                        )).toList(),
+                                        onSelected: (value) async {
+                                          currentValue = value;
+                                          await refreshState(setStateForPanel);
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                  value: ConvertHelper.makeFloaterToString(currentValue, false),
-                                  onChanged: (text) async {
-                                    var value = Floater.tryParse(text);
-                                    if (value != null && value.isFinite && value > 0.0) {
-                                      currentValue = value;
-                                    }
-                                    await refreshState(setStateForPanel);
-                                  },
                                 ),
-                              ],
-                              actionBuilder: null,
-                            ));
-                            await this._changeFrameSpeed(currentValue);
-                          },
-                      ),
+                                value: ConvertHelper.makeFloaterToString(currentValue, false),
+                                onChanged: (text) async {
+                                  var value = Floater.tryParse(text);
+                                  if (value != null && value.isFinite && value > 0.0) {
+                                    currentValue = value;
+                                  }
+                                  await refreshState(setStateForPanel);
+                                },
+                              ),
+                            ],
+                            actionBuilder: null,
+                          ));
+                          await this._changeFrameSpeed(currentValue);
+                        },
+                    ).withTooltip(
+                      message: !this._activated ? '' : 'Frame Speed',
                     ).withExpanded(),
                     SizedBox(width: 16),
                   ],
@@ -908,179 +905,172 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 Row(
                   children: [
                     SizedBox(width: 16),
-                    Tooltip(
-                      message: !this._loaded ? '' : 'Image',
-                      child: TextButton.icon(
-                        iconAlignment: IconAlignment.start,
-                        icon: Icon(IconSymbols.imagesmode),
-                        label: Row(
-                          children: [
-                            Text(
-                              !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                            ).withExpanded(),
-                          ],
-                        ),
-                        onPressed: !this._loaded
-                          ? null
-                          : () async {
-                            var currentValue = [...this._imageFilter!];
-                            await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                              title: 'Image',
-                              contentBuilder: (context, setStateForPanel) => [
-                                ...this._animation!.image.mapIndexed((index, item) => Tooltip(
+                    TextButton.icon(
+                      iconAlignment: IconAlignment.start,
+                      icon: Icon(IconSymbols.imagesmode),
+                      label: Row(
+                        children: [
+                          Text(
+                            !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ).withExpanded(),
+                        ],
+                      ),
+                      onPressed: !this._loaded
+                        ? null
+                        : () async {
+                          var currentValue = [...this._imageFilter!];
+                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+                            title: 'Image',
+                            contentBuilder: (context, setStateForPanel) => [
+                              ...this._animation!.image.mapIndexed((index, item) => ListTile(
+                                dense: true,
+                                leading: Checkbox(
+                                  value: currentValue[index],
+                                  onChanged: (value) async {
+                                  },
+                                ).withIgnorePointer(
+                                ),
+                                title: Text(
+                                  VisualHelper.parseImageFileName(item.name),
+                                  overflow: TextOverflow.ellipsis,
+                                ).withTooltip(
                                   message: VisualHelper.parseImageFileName(item.name),
-                                  child: ListTile(
-                                    dense: true,
-                                    leading: IgnorePointer(
-                                      child: Checkbox(
-                                        value: currentValue[index],
-                                        onChanged: (value) async {
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      VisualHelper.parseImageFileName(item.name),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${item.size?.$1 ?? 0} x ${item.size?.$2 ?? 0}',
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '${item.size?.$1 ?? 0} x ${item.size?.$2 ?? 0}',
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      currentValue[index] = !currentValue[index];
-                                      await refreshState(setStateForPanel);
-                                    },
-                                    onLongPress: () async {
-                                      var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
-                                      if (this._activated) {
-                                        await this._deactivate();
-                                      }
-                                      await this._activate((false, index), null, newFrameSpeed, null, null);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                )),
-                              ],
-                              actionBuilder: null,
-                            ));
-                            await this._changeElementFilter(currentValue, null);
-                          },
-                      ),
+                                  ],
+                                ),
+                                onTap: () async {
+                                  currentValue[index] = !currentValue[index];
+                                  await refreshState(setStateForPanel);
+                                },
+                                onLongPress: () async {
+                                  var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
+                                  if (this._activated) {
+                                    await this._deactivate();
+                                  }
+                                  await this._activate((false, index), null, newFrameSpeed, null, null);
+                                  Navigator.pop(context);
+                                },
+                              )),
+                            ],
+                            actionBuilder: null,
+                          ));
+                          await this._changeElementFilter(currentValue, null);
+                        },
+                    ).withTooltip(
+                      message: !this._loaded ? '' : 'Image',
                     ).withExpanded(flex: 3),
                     SizedBox(width: 12),
-                    Tooltip(
-                      message: !this._loaded ? '' : 'Activate & Deactivate',
-                      child: FilledButton(
-                        style: ButtonStyle(
-                          padding: WidgetStatePropertyAll(EdgeInsets.fromLTRB(8, 8, 8, 8)),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(IconSymbols.arrow_back_ios_new),
-                            SizedBox(width: 8),
-                            if (!this._activated)
-                              Icon(IconSymbols.power_settings_new).withExpanded()
-                            else
-                              Text(
-                                this._activeSprite!.name ?? '',
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                              ).withExpanded(),
-                            SizedBox(width: 8),
-                            Icon(IconSymbols.arrow_forward_ios),
-                          ],
-                        ),
-                        onPressed: !this._loaded
-                          ? null
-                          : () async {
-                            if (this._activated) {
-                              await this._deactivate();
+                    FilledButton(
+                      style: ButtonStyle(
+                        padding: WidgetStatePropertyAll(EdgeInsets.fromLTRB(8, 8, 8, 8)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(IconSymbols.arrow_back_ios_new),
+                          SizedBox(width: 8),
+                          if (!this._activated)
+                            Icon(IconSymbols.power_settings_new).withExpanded()
+                          else
+                            Text(
+                              this._activeSprite!.name ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ).withExpanded(),
+                          SizedBox(width: 8),
+                          Icon(IconSymbols.arrow_forward_ios),
+                        ],
+                      ),
+                      onPressed: !this._loaded
+                        ? null
+                        : () async {
+                          if (this._activated) {
+                            await this._deactivate();
+                          }
+                          else {
+                            if (this._animation!.mainSprite == null) {
+                              await ControlHelper.showSnackBar(context, 'The animation does not contain main sprite.');
                             }
                             else {
-                              if (this._animation!.mainSprite == null) {
-                                await ControlHelper.showSnackBar(context, 'The animation does not contain main sprite.');
-                              }
-                              else {
-                                await this._activate((true, this._animation!.sprite.length), null, null, null, null);
-                              }
+                              await this._activate((true, this._animation!.sprite.length), null, null, null, null);
                             }
-                            await refreshState(this.setState);
-                          },
-                      ),
+                          }
+                          await refreshState(this.setState);
+                        },
+                    ).withTooltip(
+                      message: !this._loaded ? '' : !this._activated ? 'Activate' : 'Deactivate',
                     ).withExpanded(flex: 5),
                     SizedBox(width: 12),
-                    Tooltip(
-                      message: !this._loaded ? '' : 'Sprite',
-                      child: TextButton.icon(
-                        iconAlignment: IconAlignment.end,
-                        icon: Icon(IconSymbols.thread_unread),
-                        label: Row(
-                          children: [
-                            Text(
-                              !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                            ).withExpanded(),
-                          ],
-                        ),
-                        onPressed: !this._loaded
-                          ? null
-                          : () async {
-                            var currentValue = [...this._spriteFilter!];
-                            await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                              title: 'Sprite',
-                              contentBuilder: (context, setStateForPanel) => [
-                                ...this._animation!.sprite.mapIndexed((index, item) => Tooltip(
+                    TextButton.icon(
+                      iconAlignment: IconAlignment.end,
+                      icon: Icon(IconSymbols.thread_unread),
+                      label: Row(
+                        children: [
+                          Text(
+                            !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.end,
+                          ).withExpanded(),
+                        ],
+                      ),
+                      onPressed: !this._loaded
+                        ? null
+                        : () async {
+                          var currentValue = [...this._spriteFilter!];
+                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+                            title: 'Sprite',
+                            contentBuilder: (context, setStateForPanel) => [
+                              ...this._animation!.sprite.mapIndexed((index, item) => ListTile(
+                                dense: true,
+                                leading: Checkbox(
+                                  value: currentValue[index],
+                                  onChanged: (value) async {
+                                  },
+                                ).withIgnorePointer(
+                                ),
+                                title: Text(
+                                  item.name ?? '',
+                                  overflow: TextOverflow.ellipsis,
+                                ).withTooltip(
                                   message: item.name ?? '',
-                                  child: ListTile(
-                                    dense: true,
-                                    leading: IgnorePointer(
-                                      child: Checkbox(
-                                        value: currentValue[index],
-                                        onChanged: (value) async {
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      item.name ?? '',
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}',
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}',
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      currentValue[index] = !currentValue[index];
-                                      await refreshState(setStateForPanel);
-                                    },
-                                    onLongPress: () async {
-                                      var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
-                                      if (this._activated) {
-                                        await this._deactivate();
-                                      }
-                                      await this._activate((true, index), null, newFrameSpeed, null, null);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                )),
-                              ],
-                              actionBuilder: null,
-                            ));
-                            await this._changeElementFilter(null, currentValue);
-                          },
-                      ),
+                                  ],
+                                ),
+                                onTap: () async {
+                                  currentValue[index] = !currentValue[index];
+                                  await refreshState(setStateForPanel);
+                                },
+                                onLongPress: () async {
+                                  var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
+                                  if (this._activated) {
+                                    await this._deactivate();
+                                  }
+                                  await this._activate((true, index), null, newFrameSpeed, null, null);
+                                  Navigator.pop(context);
+                                },
+                              )),
+                            ],
+                            actionBuilder: null,
+                          ));
+                          await this._changeElementFilter(null, currentValue);
+                        },
+                    ).withTooltip(
+                      message: !this._loaded ? '' : 'Sprite',
                     ).withExpanded(flex: 3),
                     SizedBox(width: 16),
                   ],

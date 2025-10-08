@@ -227,6 +227,7 @@ namespace AssistantPlus.View.ModdingWorker {
 					Text = ValueExpressionHelper.MakeString(item),
 					FontFamily = font,
 				}.SelfAlso((it) => {
+					ToolTipService.SetToolTip(it, it.Text);
 					it.Click += async (_, _) => {
 						this.Value.Value = item;
 						await this.UpdateView();

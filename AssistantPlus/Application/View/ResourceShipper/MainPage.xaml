@@ -226,7 +226,6 @@
 											<ListView.ItemTemplate>
 												<DataTemplate x:DataType="localViewResourceShipper:MainPageResourceItemController">
 													<my:Stack
-														ToolTipService.ToolTip="{x:Bind uRoot_ToolTip}"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Stretch"
 														Padding="0,0,4,0"
@@ -240,6 +239,7 @@
 															Glyph="{x:Bind uIcon_Glyph}"
 															/>
 														<TextBlock
+															ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 															my:Stack.Weight="1"
 															HorizontalAlignment="Stretch"
 															VerticalAlignment="Center"
@@ -320,6 +320,7 @@
 											Glyph="{x:Bind uIcon_Glyph}"
 											/>
 										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"
@@ -362,6 +363,7 @@
 											Glyph="{x:Bind uIcon_Glyph}"
 											/>
 										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"

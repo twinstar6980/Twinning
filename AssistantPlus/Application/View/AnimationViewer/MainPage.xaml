@@ -88,6 +88,7 @@
 								Spacing="0"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Style="{ThemeResource BodyTextBlockStyle}"
@@ -749,6 +750,7 @@
 								Spacing="0"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Style="{ThemeResource BodyTextBlockStyle}"
@@ -791,6 +793,8 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Padding="0,2,0,-2"
+				Opacity="{x:Bind Controller.uMainSpriteList_Opacity}"
+				IsEnabled="{x:Bind Controller.uMainSpriteList_IsEnabled}"
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uMainSpriteList_ItemsSource}"
@@ -802,7 +806,6 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Padding="0,8,4,8"
-							Opacity="{x:Bind uRoot_Opacity}"
 							Orientation="Horizontal"
 							Spacing="12"
 							>
@@ -823,6 +826,7 @@
 								Spacing="0"
 								>
 								<TextBlock
+									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Style="{ThemeResource BodyTextBlockStyle}"

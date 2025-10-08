@@ -42,70 +42,71 @@ class OptionItem extends StatelessWidget {
             title: Text(
               this.configuration.name,
               overflow: TextOverflow.ellipsis,
+            ).withTooltip(
+              message: !enabled ? '' : this.configuration.name,
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Tooltip(
-                  message: !enabled ? '' : 'Preset',
-                  child: TextButton(
-                    style: ButtonStyle(
-                      padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                    ),
-                    child: Stack(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                          height: 40,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 8),
-                              Text(
-                                '${this.configuration.preset.nonNulls.length}',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(width: 6),
-                              Icon(IconSymbols.flash_on),
-                            ],
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: PopupMenuButton<PresetConfiguration>(
-                            tooltip: '',
-                            enabled: enabled,
-                            position: PopupMenuPosition.under,
-                            offset: Offset(0, 12),
-                            icon: SizedBox(),
-                            itemBuilder: (context) => [
-                              if (this.configuration.preset.isEmpty)
-                                PopupMenuItem(
-                                  height: 16,
-                                  enabled: false,
-                                  child: null,
-                                ),
-                              ...this.configuration.preset.map((preset) => preset == null
-                                ? PopupMenuDivider()
-                                : PopupMenuItem(
-                                  value: preset,
-                                  child: Text(
-                                    preset.name,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )),
-                            ],
-                            onSelected: (value) async {
-                              this.onSelect(this.configuration.method, value.argument);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    onPressed: !enabled
-                      ? null
-                      : () async {
-                      },
+                TextButton(
+                  style: ButtonStyle(
+                    padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                    overlayColor: WidgetStatePropertyAll(Colors.transparent),
                   ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                        height: 40,
+                        child: Row(
+                          children: [
+                            SizedBox(width: 8),
+                            Text(
+                              '${this.configuration.preset.nonNulls.length}',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(width: 6),
+                            Icon(IconSymbols.flash_on),
+                          ],
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: PopupMenuButton<PresetConfiguration>(
+                          tooltip: '',
+                          enabled: enabled,
+                          position: PopupMenuPosition.under,
+                          offset: Offset(0, 12),
+                          icon: SizedBox(),
+                          itemBuilder: (context) => [
+                            if (this.configuration.preset.isEmpty)
+                              PopupMenuItem(
+                                height: 16,
+                                enabled: false,
+                                child: null,
+                              ),
+                            ...this.configuration.preset.map((preset) => preset == null
+                              ? PopupMenuDivider()
+                              : PopupMenuItem(
+                                value: preset,
+                                child: Text(
+                                  preset.name,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                          ],
+                          onSelected: (value) async {
+                            this.onSelect(this.configuration.method, value.argument);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: !enabled
+                    ? null
+                    : () async {
+                    },
+                ).withTooltip(
+                  message: !enabled ? '' : 'Preset',
                 ),
               ],
             ),
@@ -157,6 +158,8 @@ class OptionGroupItem extends StatelessWidget {
             title: Text(
               this.configuration.name,
               overflow: TextOverflow.ellipsis,
+            ).withTooltip(
+              message: this.configuration.name,
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,

@@ -393,25 +393,24 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                   SizedBox(height: 12),
                   Divider(height: 1, indent: 16, endIndent: 16),
                   SizedBox(height: 8),
-                  ...this._resource.map((value) => Tooltip(
-                    message: value.$1,
-                    child: ListTile(
-                      key: ObjectKey(value),
-                      contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-                      leading: Icon(switch (value.$2) {
-                        null  => IconSymbols.hide_source,
-                        false => IconSymbols.draft,
-                        true  => IconSymbols.folder,
-                      }),
-                      title: Text(
-                        StorageHelper.name(value.$1),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () async {
-                        await this._removeResource([value.$1]);
-                        await refreshState(setStateForPanel);
-                      },
+                  ...this._resource.map((value) => ListTile(
+                    key: ObjectKey(value),
+                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    leading: Icon(switch (value.$2) {
+                      null  => IconSymbols.hide_source,
+                      false => IconSymbols.draft,
+                      true  => IconSymbols.folder,
+                    }),
+                    title: Text(
+                      StorageHelper.name(value.$1),
+                      overflow: TextOverflow.ellipsis,
+                    ).withTooltip(
+                      message: value.$1,
                     ),
+                    onTap: () async {
+                      await this._removeResource([value.$1]);
+                      await refreshState(setStateForPanel);
+                    },
                   )),
                   SizedBox(height: 8),
                 ],

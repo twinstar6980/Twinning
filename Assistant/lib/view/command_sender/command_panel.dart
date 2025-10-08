@@ -51,6 +51,8 @@ class CommandPanel extends StatelessWidget {
                     '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium!,
+                  ).withTooltip(
+                    message: '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
                   ).withExpanded(),
                   SizedBox(width: 8),
                   IconButton(
@@ -189,7 +191,7 @@ class CommandPanel extends StatelessWidget {
                   ),
                   SizedBox(width: 8),
                   IconButton.filledTonal(
-                    tooltip: 'Enable Batch',
+                    tooltip: this.itemConfiguration.batchable == null ? '' : 'Enable Batch',
                     isSelected: this.enableBatch.value,
                     icon: Icon(IconSymbols.layers),
                     selectedIcon: Icon(IconSymbols.layers, fill: 1),

@@ -20,7 +20,7 @@ final class ApplicationInformation {
 
   static const String name = 'Twinning Assistant';
 
-  static const String version = '115';
+  static const String version = '116';
 
   static const String developer = 'TwinStar';
 
@@ -227,6 +227,36 @@ extension CommonWidgetExtension<TType extends Widget> on TType {
     return SingleChildScrollView(
       scrollDirection: scrollDirection,
       controller: controller,
+      child: this,
+    );
+  }
+
+  IgnorePointer withIgnorePointer({
+    Boolean? ignoring = null,
+  }) {
+    ignoring ??= true;
+    return IgnorePointer(
+      ignoring: ignoring,
+      child: this,
+    );
+  }
+
+  Tooltip withTooltip({
+    String? message = null,
+  }) {
+    message ??= '';
+    return Tooltip(
+      message: message,
+      child: this,
+    );
+  }
+
+  Material withMaterial({
+    MaterialType? type = null,
+  }) {
+    type ??= MaterialType.transparency;
+    return Material(
+      type: type,
       child: this,
     );
   }

@@ -96,6 +96,7 @@ class _CustomFullDialogState extends State<CustomFullDialog> {
               controller: this._scrollController,
             ).withScrollbar(
               controller: this._scrollController,
+            ).withMaterial(
             ).withExpanded(),
           ],
         ),
@@ -174,6 +175,7 @@ class _CustomModalDialogState extends State<CustomModalDialog> {
         controller: this._scrollController,
       ).withScrollbar(
         controller: this._scrollController,
+      ).withMaterial(
       ),
       actions: this.widget.actionBuilder == null
         ? [
@@ -271,6 +273,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
           controller: this._scrollController,
         ).withScrollbar(
           controller: this._scrollController,
+        ).withMaterial(
         ).withExpanded(),
       ],
     );
@@ -976,6 +979,7 @@ class CustomModulePageRegion extends StatelessWidget {
               viewPadding: EdgeInsets.zero,
             ),
             child: this.content,
+          ).withMaterial(
           ).withExpanded(),
           BottomAppBar(
             child: this.bottom,

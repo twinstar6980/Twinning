@@ -393,6 +393,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uAnimationFileMenuClear_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_ItemsSource),
+				nameof(this.uMainSpriteList_IsEnabled),
+				nameof(this.uMainSpriteList_Opacity),
 				nameof(this.uMainSpriteList_ItemsSource),
 			]);
 			this.View.uImageList.SelectAll();
@@ -437,6 +439,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				nameof(this.uAnimationFileMenuClear_IsEnabled),
 				nameof(this.uImageList_ItemsSource),
 				nameof(this.uSpriteList_ItemsSource),
+				nameof(this.uMainSpriteList_IsEnabled),
+				nameof(this.uMainSpriteList_Opacity),
 				nameof(this.uMainSpriteList_ItemsSource),
 				nameof(this.uPlantCustomLayerIcon_Opacity),
 				nameof(this.uPlantCustomLayer_IsEnabled),
@@ -1088,6 +1092,24 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
+		public Floater uMainSpriteList_Opacity {
+			get {
+				if (!this.Loaded) {
+					return 0.0;
+				}
+				return 1.0;
+			}
+		}
+
+		public Boolean uMainSpriteList_IsEnabled {
+			get {
+				if (!this.Loaded) {
+					return false;
+				}
+				return this.Animation.MainSprite == null ? false : true;
+			}
+		}
+
 		public List<MainPageMainSpriteItemController> uMainSpriteList_ItemsSource {
 			get {
 				if (!this.Loaded) {
@@ -1275,7 +1297,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
-		public String uActiveFrameRangeLabel__ItemNameOfAll { get; } = "\0";
+		public String uActiveFrameRangeLabel__ItemNameOfAll { get; } = "whole\0";
 
 		public Boolean uActiveFrameRangeLabel_IsEnabled {
 			get {
@@ -1686,7 +1708,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
-		public String uPlantCustomLayer__ItemNameOfNone { get; } = "\0";
+		public String uPlantCustomLayer__ItemNameOfNone { get; } = "none\0";
 
 		public Boolean uPlantCustomLayer_IsEnabled {
 			get {
@@ -1753,7 +1775,7 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
-		public String uZombieStateLayer__ItemNameOfNone { get; } = "\0";
+		public String uZombieStateLayer__ItemNameOfNone { get; } = "none\0";
 
 		public Boolean uZombieStateLayer_IsEnabled {
 			get {
@@ -1873,6 +1895,14 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region view
 
+		public String uTitle_ToolTip {
+			get {
+				GF.AssertTest(this.Host.Loaded);
+				var model = this.Host.Animation.Image[this.Index];
+				return GameAnimationHelper.ParseImageFileName(model.Name);
+			}
+		}
+
 		public String uTitle_Text {
 			get {
 				GF.AssertTest(this.Host.Loaded);
@@ -1955,6 +1985,14 @@ namespace AssistantPlus.View.AnimationViewer {
 		#endregion
 
 		#region view
+
+		public String uTitle_ToolTip {
+			get {
+				GF.AssertTest(this.Host.Loaded);
+				var model = this.Host.Animation.Sprite[this.Index];
+				return model.Name ?? "";
+			}
+		}
 
 		public String uTitle_Text {
 			get {
@@ -2041,30 +2079,25 @@ namespace AssistantPlus.View.AnimationViewer {
 
 		#region view
 
-		public Floater uRoot_Opacity {
+		public String uTitle_ToolTip {
 			get {
 				if (this.Index == null) {
-					return 0.0;
+					return "";
 				}
-				else {
-					GF.AssertTest(this.Host.Loaded);
-					return 1.0;
-				}
+				GF.AssertTest(this.Host.Loaded);
+				var model = this.Host.Animation.MainSprite!;
+				return model.Name ?? "";
 			}
 		}
-
-		// ----------------
 
 		public String uTitle_Text {
 			get {
 				if (this.Index == null) {
 					return "";
 				}
-				else {
-					GF.AssertTest(this.Host.Loaded);
-					var model = this.Host.Animation.MainSprite!;
-					return model.Name ?? "";
-				}
+				GF.AssertTest(this.Host.Loaded);
+				var model = this.Host.Animation.MainSprite!;
+				return model.Name ?? "";
 			}
 		}
 
@@ -2073,11 +2106,9 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (this.Index == null) {
 					return "";
 				}
-				else {
-					GF.AssertTest(this.Host.Loaded);
-					var model = this.Host.Animation.MainSprite!;
-					return $"{model.FrameRate ?? 0.0:F0} - {model.Frame.Count}";
-				}
+				GF.AssertTest(this.Host.Loaded);
+				var model = this.Host.Animation.MainSprite!;
+				return $"{model.FrameRate ?? 0.0:F0} - {model.Frame.Count}";
 			}
 		}
 
@@ -2099,10 +2130,8 @@ namespace AssistantPlus.View.AnimationViewer {
 				if (this.Index == null) {
 					return false;
 				}
-				else {
-					GF.AssertTest(this.Host.Loaded);
-					return this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == true && this.Host.ActiveTarget.Item2 == this.Index;
-				}
+				GF.AssertTest(this.Host.Loaded);
+				return this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == true && this.Host.ActiveTarget.Item2 == this.Index;
 			}
 		}
 

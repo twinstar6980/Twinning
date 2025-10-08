@@ -332,6 +332,12 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
+		public String uName_ToolTip {
+			get {
+				return this.Configuration.Name;
+			}
+		}
+
 		public String uName_Text {
 			get {
 				return this.Configuration.Name;
@@ -365,6 +371,12 @@ namespace AssistantPlus.View.CommandSender {
 		public String uIcon_Glyph {
 			get {
 				return FluentIconGlyph.FindGlyph(this.Configuration.Icon);
+			}
+		}
+
+		public String uName_ToolTip {
+			get {
+				return this.Configuration.Name;
 			}
 		}
 
@@ -409,6 +421,12 @@ namespace AssistantPlus.View.CommandSender {
 		#endregion
 
 		#region view
+
+		public String uTitle_ToolTip {
+			get {
+				return $"{this.GroupConfiguration.Name} - {this.ItemConfiguration.Name}";
+			}
+		}
 
 		public String uTitle_Text {
 			get {

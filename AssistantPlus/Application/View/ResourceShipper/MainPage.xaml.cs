@@ -502,12 +502,6 @@ namespace AssistantPlus.View.ResourceShipper {
 
 		#region view
 
-		public String uRoot_ToolTip {
-			get {
-				return this.Path;
-			}
-		}
-
 		public String uIcon_Glyph {
 			get {
 				return this.Type switch {
@@ -515,6 +509,12 @@ namespace AssistantPlus.View.ResourceShipper {
 					false => FluentIconGlyph.Document,
 					true  => FluentIconGlyph.Folder,
 				};
+			}
+		}
+
+		public String uName_ToolTip {
+			get {
+				return this.Path;
 			}
 		}
 
@@ -584,6 +584,12 @@ namespace AssistantPlus.View.ResourceShipper {
 			}
 		}
 
+		public String uName_ToolTip {
+			get {
+				return this.Configuration.Name;
+			}
+		}
+
 		public String uName_Text {
 			get {
 				return this.Configuration.Name;
@@ -639,6 +645,12 @@ namespace AssistantPlus.View.ResourceShipper {
 		public String uIcon_Glyph {
 			get {
 				return FluentIconGlyph.FindGlyph(this.Configuration.Icon);
+			}
+		}
+
+		public String uName_ToolTip {
+			get {
+				return this.Configuration.Name;
 			}
 		}
 

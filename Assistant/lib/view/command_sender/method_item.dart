@@ -33,13 +33,12 @@ class MethodItem extends StatelessWidget {
           title: Text(
             this.configuration.name,
             overflow: TextOverflow.ellipsis,
+          ).withTooltip(
+            message: this.configuration.name,
           ),
           trailing: Visibility(
             visible: this.configuration.batchable != null,
-            child: Tooltip(
-              message: 'Batchable',
-              child: Icon(IconSymbols.layers, color: theme.colorScheme.primary),
-            ),
+            child: Icon(IconSymbols.layers, color: theme.colorScheme.primary).withTooltip(message: 'Batchable'),
           ),
           onTap: () async {
             this.onSelect(this.configuration.id);
@@ -80,6 +79,8 @@ class MethodGroupItem extends StatelessWidget {
           title: Text(
             this.configuration.name,
             overflow: TextOverflow.ellipsis,
+          ).withTooltip(
+            message: this.configuration.name,
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
