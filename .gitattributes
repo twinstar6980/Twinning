@@ -6,10 +6,9 @@
 /**/*.md                                     text eol=lf
 
 # General - Script
-/**/*.bat                                    text eol=crlf
-/**/*.cmd                                    text eol=crlf
-/**/*.ps1                                    text eol=lf
 /**/*.sh                                     text eol=lf
+/**/*.cmd                                    text eol=crlf
+/**/*.bat                                    text eol=crlf
 
 # General - Configuration
 /**/*.json                                   text eol=lf
@@ -61,6 +60,9 @@
 # Language - Kotlin
 /**/*.kt                                     text eol=lf
 /**/*.kts                                    text eol=lf
+
+# Language - Python
+/**/*.py                                     text eol=lf
 
 # Language - Swift
 /**/*.swift                                  text eol=lf

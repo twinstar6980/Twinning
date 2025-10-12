@@ -21,10 +21,10 @@ target('shell', function()
 		{}
 	)
 	on_load(function(target)
-		import('helper')
-		helper.apply_condition_definition_basic(target)
-		helper.apply_compiler_option_basic(target)
-		helper.apply_compiler_option_warning_regular(target)
+		import('common.xmake.utility')
+		utility.apply_condition_definition_basic(target)
+		utility.apply_compiler_option_basic(target)
+		utility.apply_compiler_option_warning_regular(target)
 	end)
 	set_runargs(
 		m.root .. '/../.local/test/kernel',
