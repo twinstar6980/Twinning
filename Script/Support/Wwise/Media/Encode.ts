@@ -305,13 +305,12 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		if (KernelX.is_macintosh) {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
-		let wwise_program_path = ProcessHelper.search_program_ensure(wwise_program_name);
 		let temporary_directory = HomePath.new_temporary(null, null);
 		let wwise_project_directory = `${temporary_directory}/Sample`;
 		let wwise_wproj_file = `${wwise_project_directory}/Sample.wproj`;
 		while (true) {
-			let wwise_program_result = ProcessHelper.spawn_child(
-				wwise_program_path,
+			let wwise_program_result = ProcessHelper.run_process(
+				[wwise_program_name],
 				[
 					'create-new-project',
 					wwise_wproj_file,
@@ -319,7 +318,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 					'Android',
 					'iOS',
 				],
-				KernelX.Process.list_environment_variable(),
+				null,
 			);
 			if (wwise_program_result.code !== 0n) {
 				throw new Error(`execute failed by Wwise`);
@@ -350,8 +349,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			'opus': 'Android',
 			'wemopus': 'Android',
 		})[format];
-		let wwise_program_result = ProcessHelper.spawn_child(
-			wwise_program_path,
+		let wwise_program_result = ProcessHelper.run_process(
+			[wwise_program_name],
 			[
 				'convert-external-source',
 				wwise_wproj_file,
@@ -360,7 +359,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				'--source-file',
 				wwise_wsources_file,
 			],
-			KernelX.Process.list_environment_variable(),
+			null,
 		);
 		if (wwise_program_result.code !== 0n) {
 			throw new Error(`execute failed by Wwise`);

@@ -127,7 +127,7 @@ namespace AssistantPlus {
 			{
 				var list = new List<JumpListItem>();
 				var generateItem = (ModuleLauncherCategory category, ModuleLauncherConfiguration configuration) => {
-					return JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandLineString(null, ModuleHelper.GenerateArgument(configuration)), "").SelfAlso((it) => {
+					return JumpListItem.CreateWithArguments(ProcessHelper.EncodeCommandString(null, ModuleHelper.GenerateArgument(configuration)), "").SelfAlso((it) => {
 						it.Logo = new ("ms-appx:///Asset/Logo.png");
 						it.GroupName = category switch {
 							ModuleLauncherCategory.Module => "",

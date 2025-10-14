@@ -31,7 +31,7 @@
 # Language - Lua
 /**/*.lua                                    text eol=lf
 
-# Language - C/C++/ObjectiveC
+# Language - C/C++
 /**/*.h                                      text eol=lf
 /**/*.hpp                                    text eol=lf
 /**/*.inl                                    text eol=lf
@@ -39,11 +39,6 @@
 /**/*.cc                                     text eol=lf
 /**/*.cpp                                    text eol=lf
 /**/*.cppm                                   text eol=lf
-/**/*.m                                      text eol=lf
-
-# Language - C#/XAML
-/**/*.cs                                     text eol=lf
-/**/*.xaml                                   text eol=lf
 
 # Language - JavaScript/TypeScript
 /**/*.js                                     text eol=lf
@@ -61,11 +56,18 @@
 /**/*.kt                                     text eol=lf
 /**/*.kts                                    text eol=lf
 
-# Language - Python
-/**/*.py                                     text eol=lf
+# Language - ObjectiveC
+/**/*.m                                      text eol=lf
 
 # Language - Swift
 /**/*.swift                                  text eol=lf
+
+# Language - C#/XAML
+/**/*.cs                                     text eol=lf
+/**/*.xaml                                   text eol=lf
+
+# Language - Python
+/**/*.py                                     text eol=lf
 
 # Environment - Git
 /**/.git*                                    text eol=lf

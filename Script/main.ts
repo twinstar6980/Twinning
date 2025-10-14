@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region version
 
-	export const k_version = '141';
+	export const k_version = '142';
 
 	// #endregion
 
@@ -77,15 +77,15 @@ namespace Twinning.Script {
 
 		// ----------------
 
-		export function get_working_directory(
+		export function get_workspace(
 		): string {
-			return Kernel.Process.get_working_directory().value;
+			return Kernel.Process.get_workspace().value;
 		}
 
-		export function set_working_directory(
+		export function set_workspace(
 			target: string,
 		): void {
-			return Kernel.Process.set_working_directory(Kernel.Path.value(target));
+			return Kernel.Process.set_workspace(Kernel.Path.value(target));
 		}
 
 		// ----------------
@@ -191,7 +191,7 @@ namespace Twinning.Script {
 			g_location = location;
 			Detail.create_directory(workspace());
 			Detail.create_directory(temporary());
-			Detail.set_working_directory(workspace());
+			Detail.set_workspace(workspace());
 			return;
 		}
 
@@ -352,7 +352,7 @@ namespace Twinning.Script {
 			// parse home path
 			let home_path = argument[0].replaceAll(`\\`, '/');
 			if (/^\.{1,2}[\/]/.test(home_path)) {
-				home_path = `${Detail.get_working_directory()}/${home_path}`;
+				home_path = `${Detail.get_workspace()}/${home_path}`;
 			}
 			HomePath.initialize(home_path);
 			// set module home directory

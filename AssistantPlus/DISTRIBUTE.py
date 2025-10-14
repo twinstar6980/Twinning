@@ -16,7 +16,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'MSBuild',
             '-restore',
             '-verbosity:minimal',

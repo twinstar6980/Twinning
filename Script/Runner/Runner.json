@@ -16,6 +16,7 @@
 		"WwiseConsole.exe": null,
 		"WwiseConsole.sh": null,
 		"vgmstream-cli": null,
-		"Il2CppDumper-x86": null,
+		"dotnet": null,
+		"Il2CppDumper.dll": null,
 	},
 }

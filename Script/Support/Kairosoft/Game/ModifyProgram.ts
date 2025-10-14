@@ -1,20 +1,79 @@
 namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
-	// #region il2cpp dumper helper
+	// #region platform
 
-	type DumpedFieldSignature = {
-		address: number,
-		access: string,
-		static: boolean,
-		type: string;
-	};
+	type Platform = 'windows_x32' | 'android_a32' | 'android_a64';
+
+	// ----------------
+
+	function get_program_file_path(
+		platform: Platform,
+	): string {
+		var path = '';
+		if (platform === 'windows_x32') {
+			path = 'GameAssembly.dll';
+		}
+		if (platform === 'android_a32') {
+			path = 'lib/armeabi-v7a/libil2cpp.so';
+		}
+		if (platform === 'android_a64') {
+			path = 'lib/arm64-v8a/libil2cpp.so';
+		}
+		return path;
+	}
+
+	function get_metadata_file_path(
+		platform: Platform,
+	): string {
+		var path = '';
+		if (platform === 'windows_x32') {
+			path = 'KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat';
+		}
+		if (platform === 'android_a32') {
+			path = 'assets/bin/Data/Managed/Metadata/global-metadata.dat';
+		}
+		if (platform === 'android_a64') {
+			path = 'assets/bin/Data/Managed/Metadata/global-metadata.dat';
+		}
+		return path;
+	}
+
+	function detect_platform(
+		game_directory: string,
+	): Array<Platform> {
+		let result: Array<Platform> = [];
+		for (let platform of ['windows_x32', 'android_a32', 'android_a64'] as Array<Platform>) {
+			if (!KernelX.Storage.exist_file(`${game_directory}/${get_program_file_path(platform)}`)) {
+				continue;
+			}
+			if (!KernelX.Storage.exist_file(`${game_directory}/${get_metadata_file_path(platform)}`)) {
+				continue;
+			}
+			result.push(platform);
+		}
+		return result;
+	}
+
+	// #endregion
+
+	// #region modify
 
 	function search_field_from_dump_data(
 		source: Array<string>,
 		class_name: string,
 		field_name: string,
-	): null | DumpedFieldSignature {
-		let result: null | DumpedFieldSignature = null;
+	): null | {
+		address: number;
+		access: string;
+		static: boolean;
+		type: string;
+	} {
+		let result: null | {
+			address: number;
+			access: string;
+			static: boolean;
+			type: string;
+		} = null;
 		for (let index = 0; index < source.length; index++) {
 			let class_match = /^(private|protected|public)? class ([^ ]+)?/.exec(source[index]);
 			if (class_match !== null && class_match[2] === class_name) {
@@ -39,22 +98,24 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return result;
 	}
 
-	// ----------------
-
-	type DumpedMethodSignature = {
-		address: number,
-		access: string,
-		static: boolean,
-		result: string,
-		parameter: string,
-	};
-
 	function search_method_from_dump_data(
 		source: Array<string>,
 		class_name: string,
 		method_name: string,
-	): Array<DumpedMethodSignature> {
-		let result: Array<DumpedMethodSignature> = [];
+	): Array<{
+		address: number;
+		access: string;
+		static: boolean;
+		result: string;
+		parameter: string;
+	}> {
+		let result: Array<{
+			address: number;
+			access: string;
+			static: boolean;
+			result: string;
+			parameter: string;
+		}> = [];
 		for (let index = 0; index < source.length; index++) {
 			let class_match = /^(private|protected|public)? class ([^ ]+)?/.exec(source[index]);
 			if (class_match !== null && class_match[2] === class_name) {
@@ -79,32 +140,6 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			}
 		}
 		return result;
-	}
-
-	// #endregion
-
-	// #region utility
-
-	type Platform = 'windows_x32' | 'android_a32' | 'android_a64';
-
-	function detect_platform(
-		game_directory: string,
-	): null | Platform {
-		let type: null | Platform = null;
-		if (KernelX.Storage.exist_file(`${game_directory}/KairoGames.exe`)) {
-			if (KernelX.Storage.exist_file(`${game_directory}/GameAssembly.dll`)) {
-				type = 'windows_x32';
-			}
-		}
-		if (KernelX.Storage.exist_file(`${game_directory}/AndroidManifest.xml`)) {
-			if (KernelX.Storage.exist_file(`${game_directory}/lib/armeabi-v7a/libil2cpp.so`)) {
-				type = 'android_a32';
-			}
-			if (KernelX.Storage.exist_file(`${game_directory}/lib/arm64-v8a/libil2cpp.so`)) {
-				type = 'android_a64';
-			}
-		}
-		return type;
 	}
 
 	// ----------------
@@ -200,54 +235,25 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	// ----------------
 
-	export function process_fs(
-		target_directory: string,
+	function modify_program(
+		program_file: string,
+		metadata_file: string,
+		platform: Platform,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		if (!KernelX.is_windows) {
-			throw new Error(`unsupported system, this function only avaliable for windows`);
-		}
-		Console.information(`Phase: detect game platform`, []);
-		let platform = detect_platform(target_directory);
-		assert_test(platform !== null);
-		Console.information(`The game platform is '${platform}'`, []);
-		let program_file: string;
-		let metadata_file: string;
-		if (platform === 'windows_x32') {
-			program_file = `${target_directory}/GameAssembly.dll`;
-			metadata_file = `${target_directory}/KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat`;
-		}
-		else if (platform === 'android_a32') {
-			program_file = `${target_directory}/lib/armeabi-v7a/libil2cpp.so`;
-			metadata_file = `${target_directory}/assets/bin/Data/Managed/Metadata/global-metadata.dat`;
-		}
-		else if (platform === 'android_a64') {
-			program_file = `${target_directory}/lib/arm64-v8a/libil2cpp.so`;
-			metadata_file = `${target_directory}/assets/bin/Data/Managed/Metadata/global-metadata.dat`;
-		}
-		else {
-			throw new Error();
-		}
-		let program_backup_file = `${target_directory}/.backup/program`;
-		Console.information(`Phase: check game file`, []);
-		assert_test(KernelX.Storage.exist_file(program_file) || KernelX.Storage.exist_file(program_backup_file));
-		assert_test(KernelX.Storage.exist_file(metadata_file));
-		if (!KernelX.Storage.exist_file(program_backup_file)) {
-			Console.information(`Phase: backup original program`, []);
-			KernelX.Storage.copy(program_file, program_backup_file);
-		}
 		let dump_data: Array<string> = [];
-		Console.information(`Phase: dump program information via Il2CppDumper`, []);
 		if (disable_record_encryption || enable_debug_mode) {
-			let il2cpp_dumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper-x86');
-			let il2cpp_dumper_program_result = ProcessHelper.spawn_child(
-				il2cpp_dumper_program_path,
+			Console.information(`Phase: dump program data`, []);
+			let il2cpp_dumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
+			let il2cpp_dumper_program_result = ProcessHelper.run_process(
+				['dotnet'],
 				[
-					program_backup_file,
+					il2cpp_dumper_program_path,
+					program_file,
 					metadata_file,
 				],
-				KernelX.Process.list_environment_variable(),
+				null,
 			);
 			Console.warning(`The output of Il2CppDumper:`, [il2cpp_dumper_program_result.output]);
 			if (!normalize_string_line_feed(il2cpp_dumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
@@ -273,7 +279,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			},
 		};
 		if (disable_record_encryption || enable_debug_mode) {
-			Console.information(`Phase: parse symbol address from program information`, []);
+			Console.information(`Phase: parse symbol address`, []);
 			{
 				let search_result = search_method_from_dump_data(dump_data, 'CRC64', 'GetValue');
 				assert_test(search_result.length === 1);
@@ -320,7 +326,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			]);
 		}
 		Console.information(`Phase: load original program`, []);
-		let program_data = KernelX.Storage.read_file(program_backup_file);
+		let program_data = KernelX.Storage.read_file(program_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
 			Console.information(`Phase: modify method 'RecordStore.ReadRecord'`, []);
@@ -439,6 +445,36 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		}
 		Console.information(`Phase: save modified program`, []);
 		KernelX.Storage.write_file(program_file, program_data);
+		return;
+	}
+
+	function modify_program_from_package(
+		target_directory: string,
+		disable_record_encryption: boolean,
+		enable_debug_mode: boolean,
+	): void {
+		Console.information(`Phase: detect game platform`, []);
+		let platform_list = detect_platform(target_directory);
+		Console.information(`The game platform: '${platform_list.join(', ')}'`, []);
+		assert_test(platform_list !== null);
+		for (let platform of platform_list) {
+			Console.information(`Phase: modify platform '${platform_list.join(', ')}'`, []);
+			modify_program(`${target_directory}/${get_program_file_path(platform)}`, `${target_directory}/${get_metadata_file_path(platform)}`, platform, disable_record_encryption, enable_debug_mode);
+		}
+		return;
+	}
+
+	// ----------------
+
+	export function process_fs(
+		target_directory: string,
+		disable_record_encryption: boolean,
+		enable_debug_mode: boolean,
+	): void {
+		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
+			throw new Error(`unsupported system, this function only avaliable for windows or linux or macintosh`);
+		}
+		modify_program_from_package(target_directory, disable_record_encryption, enable_debug_mode);
 		return;
 	}
 

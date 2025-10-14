@@ -15,8 +15,7 @@ namespace Twinning.Script.AndroidHelper {
 	function run_sh(
 		argument: Array<string>,
 	): string {
-		let program_path = ProcessHelper.search_program_ensure('sh');
-		let program_result = ProcessHelper.spawn_child(program_path, argument, KernelX.Process.list_environment_variable());
+		let program_result = ProcessHelper.run_process(['sh'], argument, null);
 		if (program_result.code !== 0n) {
 			throw new Error(`sh execute failed: ${program_result.code}\n${program_result.output}\n${program_result.error}`);
 		}
@@ -26,8 +25,7 @@ namespace Twinning.Script.AndroidHelper {
 	function run_adb(
 		argument: Array<string>,
 	): string {
-		let program_path = ProcessHelper.search_program_ensure('adb');
-		let program_result = ProcessHelper.spawn_child(program_path, argument, KernelX.Process.list_environment_variable());
+		let program_result = ProcessHelper.run_process(['adb'], argument, null);
 		if (program_result.code !== 0n) {
 			throw new Error(`adb execute failed: ${program_result.code}\n${program_result.output}\n${program_result.error}`);
 		}

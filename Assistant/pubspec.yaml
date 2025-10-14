@@ -1,5 +1,5 @@
 name: assistant
-version: 116.0.0+116
+version: 117.0.0+117
 publish_to: 'none'
 environment:
   sdk: ^3.9.2
@@ -12,6 +12,7 @@ dependencies:
   collection: 1.19.1
   stack_trace: 1.12.1
   decimal: 3.2.4
+  json5: 0.8.2
   provider: 6.1.5+1
   path_provider: 2.1.5
   material_symbols_icons: 4.2874.0

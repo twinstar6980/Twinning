@@ -1,8 +1,8 @@
 namespace Twinning.Script.ProcessHelper {
 
-	// #region environment variable
+	// #region environment
 
-	export function parse_environment_variable(
+	export function parse_environment(
 		list: Array<string>,
 	): Record<string, string> {
 		return record_from_array(
@@ -14,7 +14,7 @@ namespace Twinning.Script.ProcessHelper {
 		);
 	}
 
-	export function query_environment_variable(
+	export function query_environment(
 		map: Record<string, string>,
 		key: string,
 	): null | string {
@@ -40,12 +40,18 @@ namespace Twinning.Script.ProcessHelper {
 
 	// ----------------
 
-	export function spawn_child(
-		program: string,
+	export function run_process(
+		program: string | [string],
 		argument: Array<string>,
-		environment: Array<string>,
+		environment: null | Array<string>,
 		input_data: string = '',
 	): ProgramResult {
+		if (is_object_of_array(program)) {
+			program = search_program_ensure(program[0]);
+		}
+		if (environment === null) {
+			environment = KernelX.Process.list_environment();
+		}
 		let temporary_directory = HomePath.new_temporary(null, 'directory');
 		let temporary_directory_fallback: null | string = null;
 		let input = `${temporary_directory}/input`;
@@ -56,13 +62,13 @@ namespace Twinning.Script.ProcessHelper {
 			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${PathUtility.name(temporary_directory)}`;
 			output = `${temporary_directory_fallback}/output`;
 			error = `${temporary_directory_fallback}/error`;
-			assert_test(KernelX.Process.execute_system_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
+			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
 		}
 		else {
 			KernelX.Storage.create_file(output);
 			KernelX.Storage.create_file(error);
 		}
-		let code = KernelX.Process.spawn_child(program, argument, environment, input, output, error);
+		let code = KernelX.Process.run_process(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
 			let data = KernelX.Storage.read_file_s(path);
 			return normalize_string_line_feed(data);
@@ -75,7 +81,7 @@ namespace Twinning.Script.ProcessHelper {
 		KernelX.Storage.remove(temporary_directory);
 		if (KernelX.is_android && !Shell.is_basic) {
 			assert_test(temporary_directory_fallback !== null);
-			assert_test(KernelX.Process.execute_system_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
+			assert_test(KernelX.Process.execute_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
 		}
 		return result;
 	}
@@ -90,20 +96,21 @@ namespace Twinning.Script.ProcessHelper {
 
 	export function search_program(
 		name: string,
+		allow_extension: boolean,
 	): null | string {
 		if (g_program_path_map[name] !== undefined) {
 			return g_program_path_map[name];
 		}
 		let result: null | string = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
-		let path_environment = KernelX.Process.get_environment_variable('PATH');
+		let path_environment = KernelX.Process.get_environment('PATH');
 		if (path_environment === null) {
 			throw new Error(`could not find 'PATH' environment`);
 		}
 		let path_list = path_environment.split(item_delimiter);
 		let path_extension_list = [''];
-		if (KernelX.is_windows) {
-			let path_extension_environment = KernelX.Process.get_environment_variable('PATHEXT');
+		if (allow_extension && KernelX.is_windows) {
+			let path_extension_environment = KernelX.Process.get_environment('PATHEXT');
 			if (path_extension_environment === null) {
 				throw new Error(`could not find 'PATHEXT' environment`);
 			}
@@ -122,10 +129,11 @@ namespace Twinning.Script.ProcessHelper {
 
 	export function search_program_ensure(
 		name: string,
+		allow_extension: boolean = true,
 	): string {
-		let path = search_program(name);
+		let path = search_program(name, allow_extension);
 		if (path === null) {
-			throw new Error(`could not find '${path}' program from 'PATH' environment`);
+			throw new Error(`could not find '${name}' program from 'PATH' environment`);
 		}
 		return path;
 	}

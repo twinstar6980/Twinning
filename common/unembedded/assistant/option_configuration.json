@@ -10,21 +10,21 @@
 				"batchable": true,
 				"method": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Send",
 				"icon": "send",
 				"filter": {
 					"type": "any",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": null,
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "Utility",
@@ -40,48 +40,48 @@
 					{
 						"name": "Language - English",
 						"argument": {
-							"data": "{\"language\":\"English\"}"
-						}
+							"data": "{\"language\":\"English\"}",
+						},
 					},
 					{
 						"name": "Language - Chinese",
 						"argument": {
-							"data": "{\"language\":\"Chinese\"}"
-						}
+							"data": "{\"language\":\"Chinese\"}",
+						},
 					},
 					{
 						"name": "Language - Vietnamese",
 						"argument": {
-							"data": "{\"language\":\"Vietnamese\"}"
-						}
+							"data": "{\"language\":\"Vietnamese\"}",
+						},
 					},
 					null,
 					{
 						"name": "Byte endian - Little",
 						"argument": {
-							"data": "{\"byte_stream_use_big_endian\":false}"
-						}
+							"data": "{\"byte_stream_use_big_endian\":false}",
+						},
 					},
 					{
 						"name": "Byte endian - Big",
 						"argument": {
-							"data": "{\"byte_stream_use_big_endian\":true}"
-						}
+							"data": "{\"byte_stream_use_big_endian\":true}",
+						},
 					},
 					null,
 					{
 						"name": "JSON format - Trailing",
 						"argument": {
-							"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}"
-						}
+							"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}",
+						},
 					},
 					{
 						"name": "JSON format - Compat",
 						"argument": {
-							"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}"
-						}
-					}
-				]
+							"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}",
+						},
+					},
+				],
 			},
 			{
 				"name": "Run embedded script",
@@ -93,35 +93,35 @@
 					{
 						"name": "ScriptConsole",
 						"argument": {
-							"target_name": "ScriptConsole"
-						}
+							"target_name": "ScriptConsole",
+						},
 					},
 					{
 						"name": "CompareLanguageFile",
 						"argument": {
-							"target_name": "CompareLanguageFile"
-						}
+							"target_name": "CompareLanguageFile",
+						},
 					},
 					{
 						"name": "ComputeWwiseShortID",
 						"argument": {
-							"target_name": "ComputeWwiseShortID"
-						}
+							"target_name": "ComputeWwiseShortID",
+						},
 					},
 					{
 						"name": "ExtractRSBFromPvZ2CNAPKDirectory",
 						"argument": {
-							"target_name": "ExtractRSBFromPvZ2CNAPKDirectory"
-						}
-					}
-				]
+							"target_name": "ExtractRSBFromPvZ2CNAPKDirectory",
+						},
+					},
+				],
 			},
 			{
 				"name": "Run custom script",
 				"icon": "code",
 				"filter": {
 					"type": "file",
-					"name": "(\\.js)$"
+					"name": "(\\.js)$",
 				},
 				"batchable": true,
 				"method": "common.utility.run_custom_script",
@@ -129,18 +129,18 @@
 					{
 						"name": "Normal",
 						"argument": {
-							"is_module": false
-						}
+							"is_module": false,
+						},
 					},
 					{
 						"name": "Module",
 						"argument": {
-							"is_module": true
-						}
-					}
-				]
-			}
-		]
+							"is_module": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "Data",
@@ -151,218 +151,218 @@
 				"icon": "check_box",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.hash.md5",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Base64 Encode",
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.encoding.base64.encode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Base64 Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.encoding.base64.decode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "EXOR Encrypt",
 				"icon": "lock",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.encryption.exor.encrypt",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Rijndael Encrypt",
 				"icon": "lock",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.encryption.rijndael.encrypt",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Rijndael Decrypt",
 				"icon": "key",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.encryption.rijndael.decrypt",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Deflate Compress",
 				"icon": "close_fullscreen",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.deflate.compress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Deflate Uncompress",
 				"icon": "open_in_full",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.deflate.uncompress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "ZLib Compress",
 				"icon": "close_fullscreen",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.zlib.compress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "ZLib Uncompress",
 				"icon": "open_in_full",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.zlib.uncompress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "GZip Compress",
 				"icon": "close_fullscreen",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.gzip.compress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "GZip Uncompress",
 				"icon": "open_in_full",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.gzip.uncompress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "BZip2 Compress",
 				"icon": "close_fullscreen",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.bzip2.compress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "BZip2 Uncompress",
 				"icon": "open_in_full",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.bzip2.uncompress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Lzma Compress",
 				"icon": "close_fullscreen",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.lzma.compress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Lzma Uncompress",
 				"icon": "open_in_full",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "data.compression.lzma.uncompress",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "VCDiff Encode",
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": false,
 				"method": "data.differentiation.vcdiff.encode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "VCDiff Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": false,
 				"method": "data.differentiation.vcdiff.decode",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "Text",
@@ -373,7 +373,7 @@
 				"icon": "format_list_bulleted",
 				"filter": {
 					"type": "file",
-					"name": "(\\.json)$"
+					"name": "(\\.json)$",
 				},
 				"batchable": true,
 				"method": "text.json.format",
@@ -384,8 +384,8 @@
 							"disable_array_trailing_comma": false,
 							"disable_array_line_breaking": false,
 							"disable_object_trailing_comma": false,
-							"disable_object_line_breaking": false
-						}
+							"disable_object_line_breaking": false,
+						},
 					},
 					{
 						"name": "Enable trailing comma | Disable line breaking",
@@ -393,8 +393,8 @@
 							"disable_array_trailing_comma": false,
 							"disable_array_line_breaking": true,
 							"disable_object_trailing_comma": false,
-							"disable_object_line_breaking": true
-						}
+							"disable_object_line_breaking": true,
+						},
 					},
 					null,
 					{
@@ -403,8 +403,8 @@
 							"disable_array_trailing_comma": true,
 							"disable_array_line_breaking": false,
 							"disable_object_trailing_comma": true,
-							"disable_object_line_breaking": false
-						}
+							"disable_object_line_breaking": false,
+						},
 					},
 					{
 						"name": "Disable trailing comma | Disable line breaking",
@@ -412,24 +412,24 @@
 							"disable_array_trailing_comma": true,
 							"disable_array_line_breaking": true,
 							"disable_object_trailing_comma": true,
-							"disable_object_line_breaking": true
-						}
-					}
-				]
+							"disable_object_line_breaking": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "XML Format",
 				"icon": "format_list_bulleted",
 				"filter": {
 					"type": "file",
-					"name": "(\\.xml)$"
+					"name": "(\\.xml)$",
 				},
 				"batchable": true,
 				"method": "text.xml.format",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "Texture",
@@ -440,7 +440,7 @@
 				"icon": "settings_backup_restore",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": true,
 				"method": "texture.transformation.flip",
@@ -449,43 +449,43 @@
 						"name": "Horizontal",
 						"argument": {
 							"horizontal": true,
-							"vertical": false
-						}
+							"vertical": false,
+						},
 					},
 					{
 						"name": "Vertical",
 						"argument": {
 							"horizontal": false,
-							"vertical": true
-						}
+							"vertical": true,
+						},
 					},
 					{
 						"name": "Both",
 						"argument": {
 							"horizontal": true,
-							"vertical": true
-						}
-					}
-				]
+							"vertical": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Scale",
 				"icon": "branding_watermark",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": true,
 				"method": "texture.transformation.scale",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Scale by rate",
 				"icon": "branding_watermark",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": true,
 				"method": "texture.transformation.scale_rate",
@@ -493,23 +493,23 @@
 					{
 						"name": "÷ 2",
 						"argument": {
-							"size_rate": 0.5
-						}
+							"size_rate": 0.5,
+						},
 					},
 					{
 						"name": "× 2",
 						"argument": {
-							"size_rate": 2.0
-						}
-					}
-				]
+							"size_rate": 2.0,
+						},
+					},
+				],
 			},
 			{
 				"name": "Encode",
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": false,
 				"method": "texture.encoding.encode",
@@ -517,146 +517,146 @@
 					{
 						"name": "A-8",
 						"argument": {
-							"format": "a_8"
-						}
+							"format": "a_8",
+						},
 					},
 					null,
 					{
 						"name": "RGB-332",
 						"argument": {
-							"format": "rgb_332"
-						}
+							"format": "rgb_332",
+						},
 					},
 					{
 						"name": "RGB-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888"
-						}
+							"format": "rgba_8888",
+						},
 					},
 					null,
 					{
 						"name": "ARGB-1555",
 						"argument": {
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "ARGB-4444",
 						"argument": {
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "L-8",
 						"argument": {
-							"format": "l_8"
-						}
+							"format": "l_8",
+						},
 					},
 					null,
 					{
 						"name": "LA-44",
 						"argument": {
-							"format": "la_44"
-						}
+							"format": "la_44",
+						},
 					},
 					{
 						"name": "LA-88",
 						"argument": {
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
 						"name": "AL-44",
 						"argument": {
-							"format": "al_44"
-						}
+							"format": "al_44",
+						},
 					},
 					{
 						"name": "AL-88",
 						"argument": {
-							"format": "al_88"
-						}
+							"format": "al_88",
+						},
 					},
 					null,
 					{
 						"name": "RGB-888-O",
 						"argument": {
-							"format": "rgb_888_o"
-						}
+							"format": "rgb_888_o",
+						},
 					},
 					{
 						"name": "RGBA-8888-O",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					null,
 					{
 						"name": "RGB-ETC1",
 						"argument": {
-							"format": "rgb_etc1"
-						}
+							"format": "rgb_etc1",
+						},
 					},
 					{
 						"name": "RGB-ETC2",
 						"argument": {
-							"format": "rgb_etc2"
-						}
+							"format": "rgb_etc2",
+						},
 					},
 					{
 						"name": "RGBA-ETC2",
 						"argument": {
-							"format": "rgba_etc2"
-						}
+							"format": "rgba_etc2",
+						},
 					},
 					null,
 					{
 						"name": "RGB-PVRTC4",
 						"argument": {
-							"format": "rgb_pvrtc4"
-						}
+							"format": "rgb_pvrtc4",
+						},
 					},
 					{
 						"name": "RGBA-PVRTC4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
-					}
-				]
+							"format": "rgba_pvrtc4",
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.bin)$"
+					"name": "(\\.bin)$",
 				},
 				"batchable": false,
 				"method": "texture.encoding.decode",
@@ -664,177 +664,177 @@
 					{
 						"name": "A-8",
 						"argument": {
-							"format": "a_8"
-						}
+							"format": "a_8",
+						},
 					},
 					null,
 					{
 						"name": "RGB-332",
 						"argument": {
-							"format": "rgb_332"
-						}
+							"format": "rgb_332",
+						},
 					},
 					{
 						"name": "RGB-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888"
-						}
+							"format": "rgba_8888",
+						},
 					},
 					null,
 					{
 						"name": "ARGB-1555",
 						"argument": {
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "ARGB-4444",
 						"argument": {
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "L-8",
 						"argument": {
-							"format": "l_8"
-						}
+							"format": "l_8",
+						},
 					},
 					null,
 					{
 						"name": "LA-44",
 						"argument": {
-							"format": "la_44"
-						}
+							"format": "la_44",
+						},
 					},
 					{
 						"name": "LA-88",
 						"argument": {
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
 						"name": "AL-44",
 						"argument": {
-							"format": "al_44"
-						}
+							"format": "al_44",
+						},
 					},
 					{
 						"name": "AL-88",
 						"argument": {
-							"format": "al_88"
-						}
+							"format": "al_88",
+						},
 					},
 					null,
 					{
 						"name": "RGB-888-O",
 						"argument": {
-							"format": "rgb_888_o"
-						}
+							"format": "rgb_888_o",
+						},
 					},
 					{
 						"name": "RGBA-8888-O",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					null,
 					{
 						"name": "RGB-ETC1",
 						"argument": {
-							"format": "rgb_etc1"
-						}
+							"format": "rgb_etc1",
+						},
 					},
 					{
 						"name": "RGB-ETC2",
 						"argument": {
-							"format": "rgb_etc2"
-						}
+							"format": "rgb_etc2",
+						},
 					},
 					{
 						"name": "RGBA-ETC2",
 						"argument": {
-							"format": "rgba_etc2"
-						}
+							"format": "rgba_etc2",
+						},
 					},
 					null,
 					{
 						"name": "RGB-PVRTC4",
 						"argument": {
-							"format": "rgb_pvrtc4"
-						}
+							"format": "rgb_pvrtc4",
+						},
 					},
 					{
 						"name": "RGBA-PVRTC4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
-					}
-				]
+							"format": "rgba_pvrtc4",
+						},
+					},
+				],
 			},
 			{
 				"name": "Atlas Pack",
 				"icon": "inventory_2",
 				"filter": {
 					"type": "file",
-					"name": "(\\.atlas\\.json)$"
+					"name": "(\\.atlas\\.json)$",
 				},
 				"batchable": false,
 				"method": "texture.atlas.pack",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Atlas Unpack",
 				"icon": "orders",
 				"filter": {
 					"type": "file",
-					"name": "(\\.atlas\\.json)$"
+					"name": "(\\.atlas\\.json)$",
 				},
 				"batchable": false,
 				"method": "texture.atlas.unpack",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Atlas Pack by automatic",
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.sprite)$"
+					"name": "(\\.sprite)$",
 				},
 				"batchable": false,
 				"method": "texture.atlas.pack_automatic",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "Wwise Media",
@@ -845,7 +845,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.wav)$"
+					"name": "(\\.wav)$",
 				},
 				"batchable": true,
 				"method": "wwise.media.encode",
@@ -853,54 +853,54 @@
 					{
 						"name": "PCM",
 						"argument": {
-							"format": "pcm"
-						}
+							"format": "pcm",
+						},
 					},
 					{
 						"name": "ADPCM",
 						"argument": {
-							"format": "adpcm"
-						}
+							"format": "adpcm",
+						},
 					},
 					{
 						"name": "Vorbis",
 						"argument": {
-							"format": "vorbis"
-						}
+							"format": "vorbis",
+						},
 					},
 					{
 						"name": "AAC",
 						"argument": {
-							"format": "aac"
-						}
+							"format": "aac",
+						},
 					},
 					{
 						"name": "Opus",
 						"argument": {
-							"format": "opus"
-						}
+							"format": "opus",
+						},
 					},
 					{
 						"name": "WEMOpus",
 						"argument": {
-							"format": "wemopus"
-						}
-					}
-				]
+							"format": "wemopus",
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.wem)$"
+					"name": "(\\.wem)$",
 				},
 				"batchable": true,
 				"method": "wwise.media.decode",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "Wwise Sound-Bank",
@@ -911,7 +911,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.bnk\\.bundle)$"
+					"name": "(\\.bnk\\.bundle)$",
 				},
 				"batchable": true,
 				"method": "wwise.sound_bank.encode",
@@ -919,95 +919,95 @@
 					{
 						"name": "72",
 						"argument": {
-							"version_number": 72
-						}
+							"version_number": 72,
+						},
 					},
 					{
 						"name": "88",
 						"argument": {
-							"version_number": 88
-						}
+							"version_number": 88,
+						},
 					},
 					{
 						"name": "112",
 						"argument": {
-							"version_number": 112
-						}
+							"version_number": 112,
+						},
 					},
 					{
 						"name": "113",
 						"argument": {
-							"version_number": 113
-						}
+							"version_number": 113,
+						},
 					},
 					{
 						"name": "118",
 						"argument": {
-							"version_number": 118
-						}
+							"version_number": 118,
+						},
 					},
 					{
 						"name": "120",
 						"argument": {
-							"version_number": 120
-						}
+							"version_number": 120,
+						},
 					},
 					{
 						"name": "125",
 						"argument": {
-							"version_number": 125
-						}
+							"version_number": 125,
+						},
 					},
 					{
 						"name": "128",
 						"argument": {
-							"version_number": 128
-						}
+							"version_number": 128,
+						},
 					},
 					{
 						"name": "132",
 						"argument": {
-							"version_number": 132
-						}
+							"version_number": 132,
+						},
 					},
 					{
 						"name": "134",
 						"argument": {
-							"version_number": 134
-						}
+							"version_number": 134,
+						},
 					},
 					{
 						"name": "135",
 						"argument": {
-							"version_number": 135
-						}
+							"version_number": 135,
+						},
 					},
 					{
 						"name": "140",
 						"argument": {
-							"version_number": 140
-						}
+							"version_number": 140,
+						},
 					},
 					{
 						"name": "145",
 						"argument": {
-							"version_number": 145
-						}
+							"version_number": 145,
+						},
 					},
 					{
 						"name": "150",
 						"argument": {
-							"version_number": 150
-						}
-					}
-				]
+							"version_number": 150,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.bnk)$"
+					"name": "(\\.bnk)$",
 				},
 				"batchable": true,
 				"method": "wwise.sound_bank.decode",
@@ -1015,90 +1015,90 @@
 					{
 						"name": "72",
 						"argument": {
-							"version_number": 72
-						}
+							"version_number": 72,
+						},
 					},
 					{
 						"name": "88",
 						"argument": {
-							"version_number": 88
-						}
+							"version_number": 88,
+						},
 					},
 					{
 						"name": "112",
 						"argument": {
-							"version_number": 112
-						}
+							"version_number": 112,
+						},
 					},
 					{
 						"name": "113",
 						"argument": {
-							"version_number": 113
-						}
+							"version_number": 113,
+						},
 					},
 					{
 						"name": "118",
 						"argument": {
-							"version_number": 118
-						}
+							"version_number": 118,
+						},
 					},
 					{
 						"name": "120",
 						"argument": {
-							"version_number": 120
-						}
+							"version_number": 120,
+						},
 					},
 					{
 						"name": "125",
 						"argument": {
-							"version_number": 125
-						}
+							"version_number": 125,
+						},
 					},
 					{
 						"name": "128",
 						"argument": {
-							"version_number": 128
-						}
+							"version_number": 128,
+						},
 					},
 					{
 						"name": "132",
 						"argument": {
-							"version_number": 132
-						}
+							"version_number": 132,
+						},
 					},
 					{
 						"name": "134",
 						"argument": {
-							"version_number": 134
-						}
+							"version_number": 134,
+						},
 					},
 					{
 						"name": "135",
 						"argument": {
-							"version_number": 135
-						}
+							"version_number": 135,
+						},
 					},
 					{
 						"name": "140",
 						"argument": {
-							"version_number": 140
-						}
+							"version_number": 140,
+						},
 					},
 					{
 						"name": "145",
 						"argument": {
-							"version_number": 145
-						}
+							"version_number": 145,
+						},
 					},
 					{
 						"name": "150",
 						"argument": {
-							"version_number": 150
-						}
-					}
-				]
-			}
-		]
+							"version_number": 150,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "Marmalade DZip",
@@ -1109,7 +1109,7 @@
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.dz\\.bundle)$"
+					"name": "(\\.dz\\.bundle)$",
 				},
 				"batchable": true,
 				"method": "marmalade.dzip.pack",
@@ -1117,17 +1117,17 @@
 					{
 						"name": "0",
 						"argument": {
-							"version_number": 0
-						}
-					}
-				]
+							"version_number": 0,
+						},
+					},
+				],
 			},
 			{
 				"name": "Unpack",
 				"icon": "orders",
 				"filter": {
 					"type": "file",
-					"name": "(\\.dz)$"
+					"name": "(\\.dz)$",
 				},
 				"batchable": true,
 				"method": "marmalade.dzip.unpack",
@@ -1135,17 +1135,17 @@
 					{
 						"name": "0",
 						"argument": {
-							"version_number": 0
-						}
-					}
-				]
+							"version_number": 0,
+						},
+					},
+				],
 			},
 			{
 				"name": "Pack by automatic",
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": false,
 				"method": "marmalade.dzip.pack_automatic",
@@ -1153,12 +1153,12 @@
 					{
 						"name": "0",
 						"argument": {
-							"version_number": 0
-						}
-					}
-				]
-			}
-		]
+							"version_number": 0,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap ZLib",
@@ -1169,7 +1169,7 @@
 				"icon": "close_fullscreen",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "popcap.zlib.compress",
@@ -1177,23 +1177,23 @@
 					{
 						"name": "32",
 						"argument": {
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "64",
 						"argument": {
-							"version_variant_64": true
-						}
-					}
-				]
+							"version_variant_64": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Uncompress",
 				"icon": "open_in_full",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "popcap.zlib.uncompress",
@@ -1201,18 +1201,18 @@
 					{
 						"name": "32",
 						"argument": {
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "64",
 						"argument": {
-							"version_variant_64": true
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Crypt-Data",
@@ -1223,26 +1223,26 @@
 				"icon": "lock",
 				"filter": {
 					"type": "file",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": true,
 				"method": "popcap.crypt_data.encrypt",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Decrypt",
 				"icon": "key",
 				"filter": {
 					"type": "file",
-					"name": "(\\.cdat)$"
+					"name": "(\\.cdat)$",
 				},
 				"batchable": true,
 				"method": "popcap.crypt_data.decrypt",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Reflection-Object-Notation",
@@ -1253,7 +1253,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.json)$"
+					"name": "(\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.encode",
@@ -1262,24 +1262,24 @@
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rton)$"
+					"name": "(\\.rton)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.decode",
@@ -1288,48 +1288,48 @@
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Encrypt",
 				"icon": "lock",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rton)$"
+					"name": "(\\.rton)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.encrypt",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Decrypt",
 				"icon": "key",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rton)$"
+					"name": "(\\.rton)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.decrypt",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Encode for cipher",
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.json)$"
+					"name": "(\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.encode_cipher",
@@ -1338,24 +1338,24 @@
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode for cipher",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rton)$"
+					"name": "(\\.rton)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.decode_cipher",
@@ -1364,24 +1364,24 @@
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode by lenient",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rton)$"
+					"name": "(\\.rton)$",
 				},
 				"batchable": true,
 				"method": "popcap.reflection_object_notation.decode_lenient",
@@ -1390,19 +1390,19 @@
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
-			}
-		]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Texture",
@@ -1413,7 +1413,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": false,
 				"method": "popcap.texture.encode",
@@ -1421,87 +1421,87 @@
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444-T",
 						"argument": {
-							"format": "rgba_4444_tiled"
-						}
+							"format": "rgba_4444_tiled",
+						},
 					},
 					{
 						"name": "RGBA-565-T",
 						"argument": {
-							"format": "rgb_565_tiled"
-						}
+							"format": "rgb_565_tiled",
+						},
 					},
 					{
 						"name": "RGBA-5551-T",
 						"argument": {
-							"format": "rgba_5551_tiled"
-						}
+							"format": "rgba_5551_tiled",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-PVRTC-4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
+							"format": "rgba_pvrtc4",
+						},
 					},
 					{
 						"name": "RGB-PVRTC-4 + A-8",
 						"argument": {
-							"format": "rgb_pvrtc4_a_8"
-						}
+							"format": "rgb_pvrtc4_a_8",
+						},
 					},
 					null,
 					{
 						"name": "ETC-1 + A-8",
 						"argument": {
-							"format": "rgb_etc1_a_8"
-						}
+							"format": "rgb_etc1_a_8",
+						},
 					},
 					{
 						"name": "ETC-1 + A-P",
 						"argument": {
-							"format": "rgb_etc1_a_palette"
-						}
-					}
-				]
+							"format": "rgb_etc1_a_palette",
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.ptx)$"
+					"name": "(\\.ptx)$",
 				},
 				"batchable": false,
 				"method": "popcap.texture.decode",
@@ -1509,82 +1509,82 @@
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444-T",
 						"argument": {
-							"format": "rgba_4444_tiled"
-						}
+							"format": "rgba_4444_tiled",
+						},
 					},
 					{
 						"name": "RGBA-565-T",
 						"argument": {
-							"format": "rgb_565_tiled"
-						}
+							"format": "rgb_565_tiled",
+						},
 					},
 					{
 						"name": "RGBA-5551-T",
 						"argument": {
-							"format": "rgba_5551_tiled"
-						}
+							"format": "rgba_5551_tiled",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-PVRTC-4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
+							"format": "rgba_pvrtc4",
+						},
 					},
 					{
 						"name": "RGB-PVRTC-4 + A-8",
 						"argument": {
-							"format": "rgb_pvrtc4_a_8"
-						}
+							"format": "rgb_pvrtc4_a_8",
+						},
 					},
 					null,
 					{
 						"name": "ETC-1 + A-8",
 						"argument": {
-							"format": "rgb_etc1_a_8"
-						}
+							"format": "rgb_etc1_a_8",
+						},
 					},
 					{
 						"name": "ETC-1 + A-P",
 						"argument": {
-							"format": "rgb_etc1_a_palette"
-						}
-					}
-				]
-			}
-		]
+							"format": "rgb_etc1_a_palette",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap U-Texture",
@@ -1595,7 +1595,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": true,
 				"method": "popcap.u_texture.encode",
@@ -1604,67 +1604,67 @@
 						"name": "Original | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Original | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Original | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Original | RGB-565",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "Compressed | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Compressed | RGB-565",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgb_565"
-						}
-					}
-				]
+							"format": "rgb_565",
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.tex)$"
+					"name": "(\\.tex)$",
 				},
 				"batchable": true,
 				"method": "popcap.u_texture.decode",
@@ -1673,62 +1673,62 @@
 						"name": "Original | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Original | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Original | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Original | RGB-565",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "Compressed | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Compressed | RGB-565",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgb_565"
-						}
-					}
-				]
-			}
-		]
+							"format": "rgb_565",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Sexy-Texture",
@@ -1739,7 +1739,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.png)$"
+					"name": "(\\.png)$",
 				},
 				"batchable": true,
 				"method": "popcap.sexy_texture.encode",
@@ -1749,64 +1749,64 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Original | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Original | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
@@ -1814,73 +1814,73 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Compressed | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "la_88"
-						}
-					}
-				]
+							"format": "la_88",
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.tex)$"
+					"name": "(\\.tex)$",
 				},
 				"batchable": true,
 				"method": "popcap.sexy_texture.decode",
@@ -1890,64 +1890,64 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Original | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Original | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
@@ -1955,68 +1955,68 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Compressed | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "la_88"
-						}
-					}
-				]
-			}
-		]
+							"format": "la_88",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Animation",
@@ -2027,7 +2027,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.pam\\.json)$"
+					"name": "(\\.pam\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.animation.encode",
@@ -2035,47 +2035,47 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.pam)$"
+					"name": "(\\.pam)$",
 				},
 				"batchable": true,
 				"method": "popcap.animation.decode",
@@ -2083,47 +2083,47 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"name": "Flash Convert from JSON",
 				"icon": "swipe_right_alt",
 				"filter": {
 					"type": "file",
-					"name": "(\\.pam\\.json)$"
+					"name": "(\\.pam\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.animation.convert.flash.from",
@@ -2131,47 +2131,47 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"name": "Flash Convert to JSON",
 				"icon": "swipe_left_alt",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pam\\.xfl)$"
+					"name": "(\\.pam\\.xfl)$",
 				},
 				"batchable": true,
 				"method": "popcap.animation.convert.flash.to",
@@ -2179,47 +2179,47 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"name": "Flash Resize image",
 				"icon": "branding_watermark",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pam\\.xfl)$"
+					"name": "(\\.pam\\.xfl)$",
 				},
 				"batchable": true,
 				"method": "popcap.animation.convert.flash.resize",
@@ -2227,49 +2227,49 @@
 					{
 						"name": "384",
 						"argument": {
-							"resolution": 384
-						}
+							"resolution": 384,
+						},
 					},
 					{
 						"name": "768",
 						"argument": {
-							"resolution": 768
-						}
+							"resolution": 768,
+						},
 					},
 					{
 						"name": "1536",
 						"argument": {
-							"resolution": 1536
-						}
+							"resolution": 1536,
+						},
 					},
 					null,
 					{
 						"name": "640",
 						"argument": {
-							"resolution": 640
-						}
+							"resolution": 640,
+						},
 					},
 					{
 						"name": "1280",
 						"argument": {
-							"resolution": 1280
-						}
-					}
-				]
+							"resolution": 1280,
+						},
+					},
+				],
 			},
 			{
 				"name": "Flash Create links for image files",
 				"icon": "link",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pam\\.xfl)$"
+					"name": "(\\.pam\\.xfl)$",
 				},
 				"batchable": true,
 				"method": "popcap.animation.convert.flash.link_media",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Re-Animation",
@@ -2280,7 +2280,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.reanim\\.json)$"
+					"name": "(\\.reanim\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.re_animation.encode",
@@ -2289,38 +2289,38 @@
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
+							"version_variant_64": false,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.reanim\\.compiled)$"
+					"name": "(\\.reanim\\.compiled)$",
 				},
 				"batchable": true,
 				"method": "popcap.re_animation.decode",
@@ -2329,33 +2329,33 @@
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": false,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Particle",
@@ -2366,7 +2366,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.particle\\.json)$"
+					"name": "(\\.particle\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.particle.encode",
@@ -2375,38 +2375,38 @@
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
+							"version_variant_64": false,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.xml\\.compiled)$"
+					"name": "(\\.xml\\.compiled)$",
 				},
 				"batchable": true,
 				"method": "popcap.particle.decode",
@@ -2415,33 +2415,33 @@
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": false,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Trail",
@@ -2452,7 +2452,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.trail\\.json)$"
+					"name": "(\\.trail\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.trail.encode",
@@ -2461,38 +2461,38 @@
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
+							"version_variant_64": false,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.trail\\.compiled)$"
+					"name": "(\\.trail\\.compiled)$",
 				},
 				"batchable": true,
 				"method": "popcap.trail.decode",
@@ -2501,33 +2501,33 @@
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": false,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Particle-Effect",
@@ -2538,7 +2538,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.ppf\\.json)$"
+					"name": "(\\.ppf\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.particle_effect.encode",
@@ -2546,17 +2546,17 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
-					}
-				]
+							"version_number": 1,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.ppf)$"
+					"name": "(\\.ppf)$",
 				},
 				"batchable": true,
 				"method": "popcap.particle_effect.decode",
@@ -2564,12 +2564,12 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
-					}
-				]
-			}
-		]
+							"version_number": 1,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Render-Effect",
@@ -2580,7 +2580,7 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.popfx\\.json)$"
+					"name": "(\\.popfx\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.render_effect.encode",
@@ -2589,31 +2589,31 @@
 						"name": "1 | 1",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 1
-						}
+							"version_variant": 1,
+						},
 					},
 					{
 						"name": "1 | 2",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 2
-						}
+							"version_variant": 2,
+						},
 					},
 					{
 						"name": "1 | 3",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 3
-						}
-					}
-				]
+							"version_variant": 3,
+						},
+					},
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.popfx)$"
+					"name": "(\\.popfx)$",
 				},
 				"batchable": true,
 				"method": "popcap.render_effect.decode",
@@ -2622,26 +2622,26 @@
 						"name": "1 | 1",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 1
-						}
+							"version_variant": 1,
+						},
 					},
 					{
 						"name": "1 | 2",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 2
-						}
+							"version_variant": 2,
+						},
 					},
 					{
 						"name": "1 | 3",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 3
-						}
-					}
-				]
-			}
-		]
+							"version_variant": 3,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Character-Font-Widget-2",
@@ -2652,26 +2652,26 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.cfw2\\.json)$"
+					"name": "(\\.cfw2\\.json)$",
 				},
 				"batchable": true,
 				"method": "popcap.character_font_widget_2.encode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.cfw2)$"
+					"name": "(\\.cfw2)$",
 				},
 				"batchable": true,
 				"method": "popcap.character_font_widget_2.decode",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Package",
@@ -2682,7 +2682,7 @@
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pak\\.bundle)$"
+					"name": "(\\.pak\\.bundle)$",
 				},
 				"batchable": true,
 				"method": "popcap.package.pack",
@@ -2691,24 +2691,24 @@
 						"name": "0 | Original",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": false
-						}
+							"version_compress_resource_data": false,
+						},
 					},
 					{
 						"name": "0 | Compressed",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": true
-						}
-					}
-				]
+							"version_compress_resource_data": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Unpack",
 				"icon": "orders",
 				"filter": {
 					"type": "file",
-					"name": "(\\.pak)$"
+					"name": "(\\.pak)$",
 				},
 				"batchable": true,
 				"method": "popcap.package.unpack",
@@ -2717,24 +2717,24 @@
 						"name": "0 | Original",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": false
-						}
+							"version_compress_resource_data": false,
+						},
 					},
 					{
 						"name": "0 | Compressed",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": true
-						}
-					}
-				]
+							"version_compress_resource_data": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Pack by automatic",
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": false,
 				"method": "popcap.package.pack_automatic",
@@ -2743,31 +2743,31 @@
 						"name": "0 | Original",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": false
-						}
+							"version_compress_resource_data": false,
+						},
 					},
 					{
 						"name": "0 | Compressed",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": true
-						}
-					}
-				]
+							"version_compress_resource_data": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Encrypt",
 				"icon": "lock",
 				"filter": {
 					"type": "file",
-					"name": "(\\.pak)$"
+					"name": "(\\.pak)$",
 				},
 				"batchable": true,
 				"method": "popcap.package.encrypt",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Resource-Stream-Group",
@@ -2778,7 +2778,7 @@
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.rsg\\.bundle)$"
+					"name": "(\\.rsg\\.bundle)$",
 				},
 				"batchable": true,
 				"method": "popcap.resource_stream_group.pack",
@@ -2786,29 +2786,29 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
-					}
-				]
+							"version_number": 4,
+						},
+					},
+				],
 			},
 			{
 				"name": "Unpack",
 				"icon": "orders",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rsg)$"
+					"name": "(\\.rsg)$",
 				},
 				"batchable": true,
 				"method": "popcap.resource_stream_group.unpack",
@@ -2816,24 +2816,24 @@
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
-					}
-				]
-			}
-		]
+							"version_number": 4,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Resource-Stream-Bundle",
@@ -2844,7 +2844,7 @@
 				"icon": "inventory_2",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.rsb\\.bundle)$"
+					"name": "(\\.rsb\\.bundle)$",
 				},
 				"batchable": true,
 				"method": "popcap.resource_stream_bundle.pack",
@@ -2853,53 +2853,53 @@
 						"name": "1 | 0",
 						"argument": {
 							"version_number": 1,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "3 | 0",
 						"argument": {
 							"version_number": 3,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "4 | 0",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					null,
 					{
 						"name": "4 | 1",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 1
-						}
+							"version_extended_texture_information_for_pvz2_cn": 1,
+						},
 					},
 					{
 						"name": "4 | 2",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 2
-						}
+							"version_extended_texture_information_for_pvz2_cn": 2,
+						},
 					},
 					{
 						"name": "4 | 3",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 3
-						}
-					}
-				]
+							"version_extended_texture_information_for_pvz2_cn": 3,
+						},
+					},
+				],
 			},
 			{
 				"name": "Unpack",
 				"icon": "orders",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rsb)$"
+					"name": "(\\.rsb)$",
 				},
 				"batchable": true,
 				"method": "popcap.resource_stream_bundle.unpack",
@@ -2908,65 +2908,65 @@
 						"name": "1 | 0",
 						"argument": {
 							"version_number": 1,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "3 | 0",
 						"argument": {
 							"version_number": 3,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "4 | 0",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					null,
 					{
 						"name": "4 | 1",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 1
-						}
+							"version_extended_texture_information_for_pvz2_cn": 1,
+						},
 					},
 					{
 						"name": "4 | 2",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 2
-						}
+							"version_extended_texture_information_for_pvz2_cn": 2,
+						},
 					},
 					{
 						"name": "4 | 3",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 3
-						}
-					}
-				]
+							"version_extended_texture_information_for_pvz2_cn": 3,
+						},
+					},
+				],
 			},
 			{
 				"name": "Unpack by lenient",
 				"icon": "orders",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rsb)$"
+					"name": "(\\.rsb)$",
 				},
 				"batchable": true,
 				"method": "popcap.resource_stream_bundle.unpack_lenient",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Resource convert",
 				"icon": "lightning_stand",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.rsb\\.bundle)$"
+					"name": "(\\.rsb\\.bundle)$",
 				},
 				"batchable": true,
 				"method": "popcap.resource_stream_bundle.resource_convert",
@@ -2979,8 +2979,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -2994,8 +2994,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "RTON | 1 | E-ASCII | Cipher",
@@ -3008,8 +3008,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "RTON | 1 | UTF-8 | Plain",
@@ -3022,8 +3022,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "RTON | 1 | UTF-8 | Cipher",
@@ -3036,8 +3036,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -3051,8 +3051,8 @@
 							"option_ptx_sprite": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PTX | Sprite",
@@ -3065,8 +3065,8 @@
 							"option_ptx_sprite": true,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PTX | Atlas + Sprite",
@@ -3079,8 +3079,8 @@
 							"option_ptx_sprite": true,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -3094,8 +3094,8 @@
 							"option_pam_json": true,
 							"option_pam_flash": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PAM | 6 | Flash",
@@ -3108,8 +3108,8 @@
 							"option_pam_json": false,
 							"option_pam_flash": true,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PAM | 6 | JSON + Flash",
@@ -3122,8 +3122,8 @@
 							"option_pam_json": true,
 							"option_pam_flash": true,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -3135,8 +3135,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 72,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "BNK | 88",
@@ -3147,8 +3147,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 88,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "BNK | 112",
@@ -3159,8 +3159,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 112,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "BNK | 140",
@@ -3171,8 +3171,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 140,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -3183,12 +3183,12 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": true
-						}
-					}
-				]
-			}
-		]
+							"option_wem": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PopCap Resource-Stream-Bundle-Patch",
@@ -3199,26 +3199,26 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rsb)$"
+					"name": "(\\.rsb)$",
 				},
 				"batchable": false,
 				"method": "popcap.resource_stream_bundle_patch.encode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.rsbpatch)$"
+					"name": "(\\.rsbpatch)$",
 				},
 				"batchable": false,
 				"method": "popcap.resource_stream_bundle_patch.decode",
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"name": "PvZ-2 Text-Table",
@@ -3229,7 +3229,7 @@
 				"icon": "repeat",
 				"filter": {
 					"type": "file",
-					"name": "(\\.(txt|json))$"
+					"name": "(\\.(txt|json))$",
 				},
 				"batchable": false,
 				"method": "pvz2.text_table.convert",
@@ -3237,24 +3237,24 @@
 					{
 						"name": "Text",
 						"argument": {
-							"destination_version": "text"
-						}
+							"destination_version": "text",
+						},
 					},
 					{
 						"name": "JSON Map",
 						"argument": {
-							"destination_version": "json_map"
-						}
+							"destination_version": "json_map",
+						},
 					},
 					{
 						"name": "JSON List",
 						"argument": {
-							"destination_version": "json_list"
-						}
-					}
-				]
-			}
-		]
+							"destination_version": "json_list",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PvZ-2 Resource-Manifest",
@@ -3265,43 +3265,43 @@
 				"icon": "skip_next",
 				"filter": {
 					"type": "file",
-					"name": "(\\.json)$"
+					"name": "(\\.json)$",
 				},
 				"batchable": false,
 				"method": "pvz2.resource_manifest.new_type_object_notation.encode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "New-Type-Object-Notation Decode",
 				"icon": "skip_previous",
 				"filter": {
 					"type": "file",
-					"name": "(\\.newton)$"
+					"name": "(\\.newton)$",
 				},
 				"batchable": false,
 				"method": "pvz2.resource_manifest.new_type_object_notation.decode",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Regular Convert from official data",
 				"icon": "swipe_right_alt",
 				"filter": {
 					"type": "file",
-					"name": "(\\.json)$"
+					"name": "(\\.json)$",
 				},
 				"batchable": false,
 				"method": "pvz2.resource_manifest.regular.from",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Regular Convert to official data",
 				"icon": "swipe_left_alt",
 				"filter": {
 					"type": "file",
-					"name": "(\\.json)$"
+					"name": "(\\.json)$",
 				},
 				"batchable": false,
 				"method": "pvz2.resource_manifest.regular.to",
@@ -3309,18 +3309,18 @@
 					{
 						"name": "String path",
 						"argument": {
-							"use_array_style_path": false
-						}
+							"use_array_style_path": false,
+						},
 					},
 					{
 						"name": "Array path",
 						"argument": {
-							"use_array_style_path": true
-						}
-					}
-				]
-			}
-		]
+							"use_array_style_path": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PvZ-2 Package-Project",
@@ -3331,7 +3331,7 @@
 				"icon": "repeat",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pvz2_package_project)$"
+					"name": "(\\.pvz2_package_project)$",
 				},
 				"batchable": false,
 				"method": "pvz2.package_project.transpile",
@@ -3346,8 +3346,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | RTON",
@@ -3359,8 +3359,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | PTX",
@@ -3372,8 +3372,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | PAM",
@@ -3385,8 +3385,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | WEM",
@@ -3398,8 +3398,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					null,
 					{
@@ -3412,8 +3412,8 @@
 							"option_specialize_rton": true,
 							"option_specialize_ptx": true,
 							"option_specialize_pam": true,
-							"option_specialize_wem": true
-						}
+							"option_specialize_wem": true,
+						},
 					},
 					{
 						"name": "Specialize | RTON",
@@ -3425,8 +3425,8 @@
 							"option_specialize_rton": true,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Specialize | PTX",
@@ -3438,8 +3438,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": true,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Specialize | PAM",
@@ -3451,8 +3451,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": true,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Specialize | WEM",
@@ -3464,29 +3464,29 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": true
-						}
-					}
-				]
+							"option_specialize_wem": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Compile",
 				"icon": "sound_sampler",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pvz2_package_project)$"
+					"name": "(\\.pvz2_package_project)$",
 				},
 				"batchable": false,
 				"method": "pvz2.package_project.compile",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Link",
 				"icon": "linked_services",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pvz2_package_project)$"
+					"name": "(\\.pvz2_package_project)$",
 				},
 				"batchable": false,
 				"method": "pvz2.package_project.link",
@@ -3494,23 +3494,23 @@
 					{
 						"name": "Legacy",
 						"argument": {
-							"remake_manifest": false
-						}
+							"remake_manifest": false,
+						},
 					},
 					{
 						"name": "Remake",
 						"argument": {
-							"remake_manifest": true
-						}
-					}
-				]
+							"remake_manifest": true,
+						},
+					},
+				],
 			},
 			{
 				"name": "Parse",
 				"icon": "barcode_reader",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pvz2_package_project)$"
+					"name": "(\\.pvz2_package_project)$",
 				},
 				"batchable": false,
 				"method": "pvz2.package_project.parse",
@@ -3519,48 +3519,48 @@
 						"name": "1 | 0",
 						"argument": {
 							"package_version_number": 1,
-							"package_version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "3 | 0",
 						"argument": {
 							"package_version_number": 3,
-							"package_version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "4 | 0",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					null,
 					{
 						"name": "4 | 1",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 1
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 1,
+						},
 					},
 					{
 						"name": "4 | 2",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 2
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 2,
+						},
 					},
 					{
 						"name": "4 | 3",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 3
-						}
-					}
-				]
-			}
-		]
+							"package_version_extended_texture_information_for_pvz2_cn": 3,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "PvZ-2 Remote-Project",
@@ -3571,7 +3571,7 @@
 				"icon": "sound_sampler",
 				"filter": {
 					"type": "directory",
-					"name": "(\\.pvz2_remote_project)$"
+					"name": "(\\.pvz2_remote_project)$",
 				},
 				"batchable": false,
 				"method": "pvz2.remote_project.execute",
@@ -3579,106 +3579,106 @@
 					{
 						"name": "Launch",
 						"argument": {
-							"action": "launch"
-						}
+							"action": "launch",
+						},
 					},
 					null,
 					{
 						"name": "Check",
 						"argument": {
-							"action": "check"
-						}
+							"action": "check",
+						},
 					},
 					null,
 					{
 						"name": "Clear main package",
 						"argument": {
 							"action": "clear",
-							"target": "main_package"
-						}
+							"target": "main_package",
+						},
 					},
 					{
 						"name": "Clear content delivery",
 						"argument": {
 							"action": "clear",
-							"target": "content_delivery"
-						}
+							"target": "content_delivery",
+						},
 					},
 					{
 						"name": "Clear local profile",
 						"argument": {
 							"action": "clear",
-							"target": "local_profile"
-						}
+							"target": "local_profile",
+						},
 					},
 					{
 						"name": "Clear player profile",
 						"argument": {
 							"action": "clear",
-							"target": "player_profile"
-						}
+							"target": "player_profile",
+						},
 					},
 					null,
 					{
 						"name": "Pull main package",
 						"argument": {
 							"action": "pull",
-							"target": "main_package"
-						}
+							"target": "main_package",
+						},
 					},
 					{
 						"name": "Pull content delivery",
 						"argument": {
 							"action": "pull",
-							"target": "content_delivery"
-						}
+							"target": "content_delivery",
+						},
 					},
 					{
 						"name": "Pull local profile",
 						"argument": {
 							"action": "pull",
-							"target": "local_profile"
-						}
+							"target": "local_profile",
+						},
 					},
 					{
 						"name": "Pull player profile",
 						"argument": {
 							"action": "pull",
-							"target": "player_profile"
-						}
+							"target": "player_profile",
+						},
 					},
 					null,
 					{
 						"name": "Push main package",
 						"argument": {
 							"action": "push",
-							"target": "main_package"
-						}
+							"target": "main_package",
+						},
 					},
 					{
 						"name": "Push content delivery",
 						"argument": {
 							"action": "push",
-							"target": "content_delivery"
-						}
+							"target": "content_delivery",
+						},
 					},
 					{
 						"name": "Push local profile",
 						"argument": {
 							"action": "push",
-							"target": "local_profile"
-						}
+							"target": "local_profile",
+						},
 					},
 					{
 						"name": "Push player profile",
 						"argument": {
 							"action": "push",
-							"target": "player_profile"
-						}
-					}
-				]
-			}
-		]
+							"target": "player_profile",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"name": "Kairosoft Game",
@@ -3689,19 +3689,19 @@
 				"icon": "lock_open",
 				"filter": {
 					"type": "directory",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": false,
 				"method": "kairosoft.game.encrypt_record",
 				"preset": [
-				]
+				],
 			},
 			{
 				"name": "Modify program",
 				"icon": "build",
 				"filter": {
 					"type": "directory",
-					"name": "()$"
+					"name": "()$",
 				},
 				"batchable": false,
 				"method": "kairosoft.game.modify_program",
@@ -3710,33 +3710,33 @@
 						"name": "Disable record encryption",
 						"argument": {
 							"disable_record_encryption": true,
-							"enable_debug_mode": false
-						}
+							"enable_debug_mode": false,
+						},
 					},
 					{
 						"name": "Enable debug mode",
 						"argument": {
 							"disable_record_encryption": false,
-							"enable_debug_mode": true
-						}
+							"enable_debug_mode": true,
+						},
 					},
 					null,
 					{
 						"name": "None",
 						"argument": {
 							"disable_record_encryption": false,
-							"enable_debug_mode": false
-						}
+							"enable_debug_mode": false,
+						},
 					},
 					{
 						"name": "Both",
 						"argument": {
 							"disable_record_encryption": true,
-							"enable_debug_mode": true
-						}
-					}
-				]
-			}
-		]
-	}
+							"enable_debug_mode": true,
+						},
+					},
+				],
+			},
+		],
+	},
 ]

@@ -470,40 +470,40 @@ namespace Twinning.Script.KernelX {
 
 	export namespace Process {
 
-		export function get_working_directory(
+		export function get_workspace(
 		): string {
-			return Kernel.Process.get_working_directory().value;
+			return Kernel.Process.get_workspace().value;
 		}
 
-		export function set_working_directory(
+		export function set_workspace(
 			target: string,
 		): void {
-			return Kernel.Process.set_working_directory(Kernel.Path.value(target));
+			return Kernel.Process.set_workspace(Kernel.Path.value(target));
 		}
 
 		// ----------------
 
-		export function get_environment_variable(
+		export function get_environment(
 			name: string,
 		): null | string {
-			return Kernel.Process.get_environment_variable(Kernel.String.value(name)).value;
+			return Kernel.Process.get_environment(Kernel.String.value(name)).value;
 		}
 
-		export function set_environment_variable(
+		export function set_environment(
 			name: string,
 			value: null | string,
 		): void {
-			return Kernel.Process.set_environment_variable(Kernel.String.value(name), Kernel.StringOptional.value(value));
+			return Kernel.Process.set_environment(Kernel.String.value(name), Kernel.StringOptional.value(value));
 		}
 
-		export function list_environment_variable(
+		export function list_environment(
 		): Array<string> {
-			return Kernel.Process.list_environment_variable().value;
+			return Kernel.Process.list_environment().value;
 		}
 
 		// ----------------
 
-		export function spawn_child(
+		export function run_process(
 			program: string,
 			argument: Array<string>,
 			environment: Array<string>,
@@ -511,15 +511,15 @@ namespace Twinning.Script.KernelX {
 			output: null | string,
 			error: null | string,
 		): bigint {
-			return Kernel.Process.spawn_child(Kernel.Path.value(program), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input), Kernel.PathOptional.value(output), Kernel.PathOptional.value(error)).value;
+			return Kernel.Process.run_process(Kernel.Path.value(program), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input), Kernel.PathOptional.value(output), Kernel.PathOptional.value(error)).value;
 		}
 
 		// ----------------
 
-		export function execute_system_command(
+		export function execute_command(
 			command: string,
 		): bigint {
-			return Kernel.Process.execute_system_command(Kernel.String.value(command)).value;
+			return Kernel.Process.execute_command(Kernel.String.value(command)).value;
 		}
 
 	}

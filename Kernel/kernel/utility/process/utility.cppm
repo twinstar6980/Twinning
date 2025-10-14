@@ -35,11 +35,11 @@ export namespace Twinning::Kernel::Process {
 
 	namespace Detail {
 
-		#pragma region windows command line
+		#pragma region windows command
 
 		// NOTE: EXPLAIN: see https://learn.microsoft.com/cpp/c-language/parsing-c-command-line-arguments?view=msvc-170
 
-		inline auto encode_windows_command_line_program_string (
+		inline auto encode_windows_command_program_string (
 			Path const & source,
 			String &     destination
 		) -> Void {
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Process {
 			return;
 		}
 
-		inline auto encode_windows_command_line_argument_string (
+		inline auto encode_windows_command_argument_string (
 			String const & source,
 			String &       destination
 		) -> Void {
@@ -79,7 +79,7 @@ export namespace Twinning::Kernel::Process {
 
 		// ----------------
 
-		inline auto encode_windows_command_line_string (
+		inline auto encode_windows_command_string (
 			Path const &         program,
 			List<String> const & argument
 		) -> String {
@@ -89,21 +89,21 @@ export namespace Twinning::Kernel::Process {
 				destination_size += element.size() * 2_sz + 2_sz;
 			}
 			auto destination = String{destination_size};
-			encode_windows_command_line_program_string(program, destination);
+			encode_windows_command_program_string(program, destination);
 			for (auto & element : argument) {
 				destination.append(' '_c);
-				encode_windows_command_line_argument_string(element, destination);
+				encode_windows_command_argument_string(element, destination);
 			}
 			return destination;
 		}
 
 		#pragma endregion
 
-		#pragma region windows environment variable
+		#pragma region windows environment
 
 		// NOTE: EXPLAIN: see https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
 
-		inline auto encode_windows_environment_variable_string (
+		inline auto encode_windows_environment_string (
 			List<String> const & environment
 		) -> String {
 			auto destination_size = k_none_size;
@@ -126,15 +126,15 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma endregion
 
-	#pragma region working directory
+	#pragma region workspace
 
-	inline auto get_working_directory (
+	inline auto get_workspace (
 	) -> Path {
 		auto target = std::filesystem::current_path();
 		return Path{make_string(self_cast<std::string>(target.generic_u8string()))};
 	}
 
-	inline auto set_working_directory (
+	inline auto set_workspace (
 		Path const & target
 	) -> Void {
 		std::filesystem::current_path(Storage::Detail::make_std_path(target));
@@ -143,9 +143,9 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma endregion
 
-	#pragma region environment variable
+	#pragma region environment
 
-	inline auto get_environment_variable (
+	inline auto get_environment (
 		String const & name
 	) -> Optional<String> {
 		auto value = Optional<String>{};
@@ -176,7 +176,7 @@ export namespace Twinning::Kernel::Process {
 		return value;
 	}
 
-	inline auto set_environment_variable (
+	inline auto set_environment (
 		String const &           name,
 		Optional<String> const & value
 	) -> Void {
@@ -207,7 +207,7 @@ export namespace Twinning::Kernel::Process {
 
 	// ----------------
 
-	inline auto list_environment_variable (
+	inline auto list_environment (
 	) -> List<String> {
 		auto result = List<String>{};
 		#if defined M_system_windows
@@ -232,7 +232,7 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma endregion
 
-	#pragma region child
+	#pragma region process
 
 	// NOTE: EXPLAIN
 	// the return value is process's exit code, see the following webpage to understand
@@ -244,7 +244,7 @@ export namespace Twinning::Kernel::Process {
 	// Windows   : all 32 bit
 	// Linux     : low 08 bit
 	// Macintosh : low 24 bit
-	inline auto spawn_child (
+	inline auto run_process (
 		Path const &           program,
 		List<String> const &   argument,
 		List<String> const &   environment,
@@ -268,8 +268,8 @@ export namespace Twinning::Kernel::Process {
 		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
 		auto exit_code_d = Third::system::windows::$DWORD{};
 		program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(program.to_string(CharacterType::k_path_separator_windows))));
-		argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_command_line_string(program, argument))));
-		environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_environment_variable_string(environment))));
+		argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_command_string(program, argument))));
+		environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_environment_string(environment))));
 		input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).to_string())));
 		output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).to_string())));
 		error_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).to_string())));
@@ -395,9 +395,9 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma endregion
 
-	#pragma region system command
+	#pragma region command
 
-	inline auto execute_system_command (
+	inline auto execute_command (
 		String const & command
 	) -> IntegerU32 {
 		auto result = IntegerU32{};

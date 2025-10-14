@@ -16,7 +16,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'flutter',
             'build',
             'windows',
@@ -36,7 +36,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'flutter',
             'build',
             'linux',
@@ -56,7 +56,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'flutter',
             'build',
             'macos',
@@ -73,7 +73,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'flutter',
             'build',
             'apk',
@@ -94,7 +94,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'flutter',
             'build',
             'ios',

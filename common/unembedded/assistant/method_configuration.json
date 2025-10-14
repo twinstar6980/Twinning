@@ -13,56 +13,56 @@
 						"id": "data",
 						"name": "Data",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "Language - English",
 						"argument": {
-							"data": "{\"language\":\"English\"}"
-						}
+							"data": "{\"language\":\"English\"}",
+						},
 					},
 					{
 						"name": "Language - Chinese",
 						"argument": {
-							"data": "{\"language\":\"Chinese\"}"
-						}
+							"data": "{\"language\":\"Chinese\"}",
+						},
 					},
 					{
 						"name": "Language - Vietnamese",
 						"argument": {
-							"data": "{\"language\":\"Vietnamese\"}"
-						}
+							"data": "{\"language\":\"Vietnamese\"}",
+						},
 					},
 					null,
 					{
 						"name": "Byte endian - Little",
 						"argument": {
-							"data": "{\"byte_stream_use_big_endian\":false}"
-						}
+							"data": "{\"byte_stream_use_big_endian\":false}",
+						},
 					},
 					{
 						"name": "Byte endian - Big",
 						"argument": {
-							"data": "{\"byte_stream_use_big_endian\":true}"
-						}
+							"data": "{\"byte_stream_use_big_endian\":true}",
+						},
 					},
 					null,
 					{
 						"name": "JSON format - Trailing",
 						"argument": {
-							"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}"
-						}
+							"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}",
+						},
 					},
 					{
 						"name": "JSON format - Compat",
 						"argument": {
-							"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}"
-						}
-					}
-				]
+							"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}",
+						},
+					},
+				],
 			},
 			{
 				"id": "common.utility.run_embedded_script",
@@ -73,36 +73,36 @@
 						"id": "target_name",
 						"name": "Target name",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "ScriptConsole",
 						"argument": {
-							"target_name": "ScriptConsole"
-						}
+							"target_name": "ScriptConsole",
+						},
 					},
 					{
 						"name": "CompareLanguageFile",
 						"argument": {
-							"target_name": "CompareLanguageFile"
-						}
+							"target_name": "CompareLanguageFile",
+						},
 					},
 					{
 						"name": "ComputeWwiseShortID",
 						"argument": {
-							"target_name": "ComputeWwiseShortID"
-						}
+							"target_name": "ComputeWwiseShortID",
+						},
 					},
 					{
 						"name": "ExtractRSBFromPvZ2CNAPKDirectory",
 						"argument": {
-							"target_name": "ExtractRSBFromPvZ2CNAPKDirectory"
-						}
-					}
-				]
+							"target_name": "ExtractRSBFromPvZ2CNAPKDirectory",
+						},
+					},
+				],
 			},
 			{
 				"id": "common.utility.run_custom_script",
@@ -113,34 +113,34 @@
 						"id": "target_file",
 						"name": "Target file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "is_module",
 						"name": "Run as module",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
-					"target_file"
+					"target_file",
 				],
 				"preset": [
 					{
 						"name": "Normal",
 						"argument": {
-							"is_module": false
-						}
+							"is_module": false,
+						},
 					},
 					{
 						"name": "Module",
 						"argument": {
-							"is_module": true
-						}
-					}
-				]
-			}
-		]
+							"is_module": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "data",
@@ -156,14 +156,14 @@
 						"id": "target_file",
 						"name": "Target file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
-					"target_file"
+					"target_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.encoding.base64.encode",
@@ -174,21 +174,21 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.encoding.base64.decode",
@@ -199,21 +199,21 @@
 						"id": "ripe_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.encryption.exor.encrypt",
@@ -224,27 +224,27 @@
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"plain_file",
-					"cipher_file"
+					"cipher_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.encryption.rijndael.encrypt",
@@ -255,13 +255,13 @@
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "mode",
@@ -270,8 +270,8 @@
 						"option": [
 							"ecb",
 							"cbc",
-							"cfb"
-						]
+							"cfb",
+						],
 					},
 					{
 						"id": "block_size",
@@ -280,28 +280,28 @@
 						"option": [
 							16,
 							24,
-							32
-						]
+							32,
+						],
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "iv",
 						"name": "Initialization vector",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"plain_file",
-					"cipher_file"
+					"cipher_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.encryption.rijndael.decrypt",
@@ -312,13 +312,13 @@
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "mode",
@@ -327,8 +327,8 @@
 						"option": [
 							"ecb",
 							"cbc",
-							"cfb"
-						]
+							"cfb",
+						],
 					},
 					{
 						"id": "block_size",
@@ -337,28 +337,28 @@
 						"option": [
 							16,
 							24,
-							32
-						]
+							32,
+						],
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "iv",
 						"name": "Initialization vector",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"cipher_file",
-					"plain_file"
+					"plain_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.deflate.compress",
@@ -369,21 +369,21 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.deflate.uncompress",
@@ -394,27 +394,27 @@
 						"id": "ripe_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.zlib.compress",
@@ -425,21 +425,21 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.zlib.uncompress",
@@ -450,27 +450,27 @@
 						"id": "ripe_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.gzip.compress",
@@ -481,21 +481,21 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.gzip.uncompress",
@@ -506,27 +506,27 @@
 						"id": "ripe_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.bzip2.compress",
@@ -537,21 +537,21 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.bzip2.uncompress",
@@ -562,27 +562,27 @@
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.lzma.compress",
@@ -593,21 +593,21 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.compression.lzma.uncompress",
@@ -618,27 +618,27 @@
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.differentiation.vcdiff.encode",
@@ -649,30 +649,30 @@
 						"id": "after_file",
 						"name": "After file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "patch_file",
 						"name": "Patch file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "before_file",
 						"name": "Before file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "data.differentiation.vcdiff.decode",
@@ -683,32 +683,32 @@
 						"id": "patch_file",
 						"name": "Patch file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "after_file",
 						"name": "After file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "before_file",
 						"name": "Before file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "text",
@@ -724,42 +724,42 @@
 						"id": "source_file",
 						"name": "Source file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "destination_file",
 						"name": "Destination file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "disable_array_trailing_comma",
 						"name": "Disable array trailing comma",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "disable_array_line_breaking",
 						"name": "Disable array line breaking",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "disable_object_trailing_comma",
 						"name": "Disable object trailing comma",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "disable_object_line_breaking",
 						"name": "Disable object line breaking",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"source_file",
-					"destination_file"
+					"destination_file",
 				],
 				"preset": [
 					{
@@ -768,8 +768,8 @@
 							"disable_array_trailing_comma": false,
 							"disable_array_line_breaking": false,
 							"disable_object_trailing_comma": false,
-							"disable_object_line_breaking": false
-						}
+							"disable_object_line_breaking": false,
+						},
 					},
 					{
 						"name": "Enable trailing comma | Disable line breaking",
@@ -777,8 +777,8 @@
 							"disable_array_trailing_comma": false,
 							"disable_array_line_breaking": true,
 							"disable_object_trailing_comma": false,
-							"disable_object_line_breaking": true
-						}
+							"disable_object_line_breaking": true,
+						},
 					},
 					null,
 					{
@@ -787,8 +787,8 @@
 							"disable_array_trailing_comma": true,
 							"disable_array_line_breaking": false,
 							"disable_object_trailing_comma": true,
-							"disable_object_line_breaking": false
-						}
+							"disable_object_line_breaking": false,
+						},
 					},
 					{
 						"name": "Disable trailing comma | Disable line breaking",
@@ -796,10 +796,10 @@
 							"disable_array_trailing_comma": true,
 							"disable_array_line_breaking": true,
 							"disable_object_trailing_comma": true,
-							"disable_object_line_breaking": true
-						}
-					}
-				]
+							"disable_object_line_breaking": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "text.xml.format",
@@ -810,23 +810,23 @@
 						"id": "source_file",
 						"name": "Source file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "destination_file",
 						"name": "Destination file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"source_file",
-					"destination_file"
+					"destination_file",
 				],
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "texture",
@@ -842,54 +842,54 @@
 						"id": "source_file",
 						"name": "Source file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "destination_file",
 						"name": "Destination file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "horizontal",
 						"name": "Flip horizontal",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "vertical",
 						"name": "Flip vertical",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"source_file",
-					"destination_file"
+					"destination_file",
 				],
 				"preset": [
 					{
 						"name": "Horizontal",
 						"argument": {
 							"horizontal": true,
-							"vertical": false
-						}
+							"vertical": false,
+						},
 					},
 					{
 						"name": "Vertical",
 						"argument": {
 							"horizontal": false,
-							"vertical": true
-						}
+							"vertical": true,
+						},
 					},
 					{
 						"name": "Both",
 						"argument": {
 							"horizontal": true,
-							"vertical": true
-						}
-					}
-				]
+							"vertical": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "texture.transformation.scale",
@@ -900,33 +900,33 @@
 						"id": "source_file",
 						"name": "Source file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "destination_file",
 						"name": "Destination file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "size_width",
 						"name": "Width",
 						"type": "integer",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "size_height",
 						"name": "Height",
 						"type": "integer",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"source_file",
-					"destination_file"
+					"destination_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "texture.transformation.scale_rate",
@@ -937,39 +937,39 @@
 						"id": "source_file",
 						"name": "Source file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "destination_file",
 						"name": "Destination file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "size_rate",
 						"name": "Size rate",
 						"type": "floater",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"source_file",
-					"destination_file"
+					"destination_file",
 				],
 				"preset": [
 					{
 						"name": "÷ 2",
 						"argument": {
-							"size_rate": 0.5
-						}
+							"size_rate": 0.5,
+						},
 					},
 					{
 						"name": "× 2",
 						"argument": {
-							"size_rate": 2.0
-						}
-					}
-				]
+							"size_rate": 2.0,
+						},
+					},
+				],
 			},
 			{
 				"id": "texture.encoding.encode",
@@ -980,13 +980,13 @@
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "format",
@@ -1013,148 +1013,148 @@
 							"rgb_etc2",
 							"rgba_etc2",
 							"rgb_pvrtc4",
-							"rgba_pvrtc4"
-						]
-					}
+							"rgba_pvrtc4",
+						],
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "A-8",
 						"argument": {
-							"format": "a_8"
-						}
+							"format": "a_8",
+						},
 					},
 					null,
 					{
 						"name": "RGB-332",
 						"argument": {
-							"format": "rgb_332"
-						}
+							"format": "rgb_332",
+						},
 					},
 					{
 						"name": "RGB-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888"
-						}
+							"format": "rgba_8888",
+						},
 					},
 					null,
 					{
 						"name": "ARGB-1555",
 						"argument": {
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "ARGB-4444",
 						"argument": {
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "L-8",
 						"argument": {
-							"format": "l_8"
-						}
+							"format": "l_8",
+						},
 					},
 					null,
 					{
 						"name": "LA-44",
 						"argument": {
-							"format": "la_44"
-						}
+							"format": "la_44",
+						},
 					},
 					{
 						"name": "LA-88",
 						"argument": {
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
 						"name": "AL-44",
 						"argument": {
-							"format": "al_44"
-						}
+							"format": "al_44",
+						},
 					},
 					{
 						"name": "AL-88",
 						"argument": {
-							"format": "al_88"
-						}
+							"format": "al_88",
+						},
 					},
 					null,
 					{
 						"name": "RGB-888-O",
 						"argument": {
-							"format": "rgb_888_o"
-						}
+							"format": "rgb_888_o",
+						},
 					},
 					{
 						"name": "RGBA-8888-O",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					null,
 					{
 						"name": "RGB-ETC1",
 						"argument": {
-							"format": "rgb_etc1"
-						}
+							"format": "rgb_etc1",
+						},
 					},
 					{
 						"name": "RGB-ETC2",
 						"argument": {
-							"format": "rgb_etc2"
-						}
+							"format": "rgb_etc2",
+						},
 					},
 					{
 						"name": "RGBA-ETC2",
 						"argument": {
-							"format": "rgba_etc2"
-						}
+							"format": "rgba_etc2",
+						},
 					},
 					null,
 					{
 						"name": "RGB-PVRTC4",
 						"argument": {
-							"format": "rgb_pvrtc4"
-						}
+							"format": "rgb_pvrtc4",
+						},
 					},
 					{
 						"name": "RGBA-PVRTC4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
-					}
-				]
+							"format": "rgba_pvrtc4",
+						},
+					},
+				],
 			},
 			{
 				"id": "texture.encoding.decode",
@@ -1165,13 +1165,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "format",
@@ -1198,160 +1198,160 @@
 							"rgb_etc2",
 							"rgba_etc2",
 							"rgb_pvrtc4",
-							"rgba_pvrtc4"
-						]
+							"rgba_pvrtc4",
+						],
 					},
 					{
 						"id": "image_width",
 						"name": "Image width",
 						"type": "integer",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "image_height",
 						"name": "Image height",
 						"type": "integer",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "A-8",
 						"argument": {
-							"format": "a_8"
-						}
+							"format": "a_8",
+						},
 					},
 					null,
 					{
 						"name": "RGB-332",
 						"argument": {
-							"format": "rgb_332"
-						}
+							"format": "rgb_332",
+						},
 					},
 					{
 						"name": "RGB-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888"
-						}
+							"format": "rgba_8888",
+						},
 					},
 					null,
 					{
 						"name": "ARGB-1555",
 						"argument": {
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "ARGB-4444",
 						"argument": {
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "L-8",
 						"argument": {
-							"format": "l_8"
-						}
+							"format": "l_8",
+						},
 					},
 					null,
 					{
 						"name": "LA-44",
 						"argument": {
-							"format": "la_44"
-						}
+							"format": "la_44",
+						},
 					},
 					{
 						"name": "LA-88",
 						"argument": {
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
 						"name": "AL-44",
 						"argument": {
-							"format": "al_44"
-						}
+							"format": "al_44",
+						},
 					},
 					{
 						"name": "AL-88",
 						"argument": {
-							"format": "al_88"
-						}
+							"format": "al_88",
+						},
 					},
 					null,
 					{
 						"name": "RGB-888-O",
 						"argument": {
-							"format": "rgb_888_o"
-						}
+							"format": "rgb_888_o",
+						},
 					},
 					{
 						"name": "RGBA-8888-O",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					null,
 					{
 						"name": "RGB-ETC1",
 						"argument": {
-							"format": "rgb_etc1"
-						}
+							"format": "rgb_etc1",
+						},
 					},
 					{
 						"name": "RGB-ETC2",
 						"argument": {
-							"format": "rgb_etc2"
-						}
+							"format": "rgb_etc2",
+						},
 					},
 					{
 						"name": "RGBA-ETC2",
 						"argument": {
-							"format": "rgba_etc2"
-						}
+							"format": "rgba_etc2",
+						},
 					},
 					null,
 					{
 						"name": "RGB-PVRTC4",
 						"argument": {
-							"format": "rgb_pvrtc4"
-						}
+							"format": "rgb_pvrtc4",
+						},
 					},
 					{
 						"name": "RGBA-PVRTC4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
-					}
-				]
+							"format": "rgba_pvrtc4",
+						},
+					},
+				],
 			},
 			{
 				"id": "texture.atlas.pack",
@@ -1362,24 +1362,24 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "sprite_directory",
 						"name": "Sprite directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "atlas_file",
 						"name": "Atlas file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "texture.atlas.unpack",
@@ -1390,24 +1390,24 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "atlas_file",
 						"name": "Atlas file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "sprite_directory",
 						"name": "Sprite directory",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "texture.atlas.pack_automatic",
@@ -1418,26 +1418,26 @@
 						"id": "sprite_directory",
 						"name": "Sprite directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "atlas_file",
 						"name": "Atlas file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "wwise.media",
@@ -1453,13 +1453,13 @@
 						"id": "raw_file",
 						"name": "Original File",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "format",
@@ -1471,52 +1471,52 @@
 							"vorbis",
 							"aac",
 							"opus",
-							"wemopus"
-						]
-					}
+							"wemopus",
+						],
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
 					{
 						"name": "PCM",
 						"argument": {
-							"format": "pcm"
-						}
+							"format": "pcm",
+						},
 					},
 					{
 						"name": "ADPCM",
 						"argument": {
-							"format": "adpcm"
-						}
+							"format": "adpcm",
+						},
 					},
 					{
 						"name": "Vorbis",
 						"argument": {
-							"format": "vorbis"
-						}
+							"format": "vorbis",
+						},
 					},
 					{
 						"name": "AAC",
 						"argument": {
-							"format": "aac"
-						}
+							"format": "aac",
+						},
 					},
 					{
 						"name": "Opus",
 						"argument": {
-							"format": "opus"
-						}
+							"format": "opus",
+						},
 					},
 					{
 						"name": "WEMOpus",
 						"argument": {
-							"format": "wemopus"
-						}
-					}
-				]
+							"format": "wemopus",
+						},
+					},
+				],
 			},
 			{
 				"id": "wwise.media.decode",
@@ -1527,23 +1527,23 @@
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Original File",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "wwise.sound_bank",
@@ -1559,13 +1559,13 @@
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -1585,106 +1585,106 @@
 							135,
 							140,
 							145,
-							150
-						]
+							150,
+						],
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"bundle_directory",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "72",
 						"argument": {
-							"version_number": 72
-						}
+							"version_number": 72,
+						},
 					},
 					{
 						"name": "88",
 						"argument": {
-							"version_number": 88
-						}
+							"version_number": 88,
+						},
 					},
 					{
 						"name": "112",
 						"argument": {
-							"version_number": 112
-						}
+							"version_number": 112,
+						},
 					},
 					{
 						"name": "113",
 						"argument": {
-							"version_number": 113
-						}
+							"version_number": 113,
+						},
 					},
 					{
 						"name": "118",
 						"argument": {
-							"version_number": 118
-						}
+							"version_number": 118,
+						},
 					},
 					{
 						"name": "120",
 						"argument": {
-							"version_number": 120
-						}
+							"version_number": 120,
+						},
 					},
 					{
 						"name": "125",
 						"argument": {
-							"version_number": 125
-						}
+							"version_number": 125,
+						},
 					},
 					{
 						"name": "128",
 						"argument": {
-							"version_number": 128
-						}
+							"version_number": 128,
+						},
 					},
 					{
 						"name": "132",
 						"argument": {
-							"version_number": 132
-						}
+							"version_number": 132,
+						},
 					},
 					{
 						"name": "134",
 						"argument": {
-							"version_number": 134
-						}
+							"version_number": 134,
+						},
 					},
 					{
 						"name": "135",
 						"argument": {
-							"version_number": 135
-						}
+							"version_number": 135,
+						},
 					},
 					{
 						"name": "140",
 						"argument": {
-							"version_number": 140
-						}
+							"version_number": 140,
+						},
 					},
 					{
 						"name": "145",
 						"argument": {
-							"version_number": 145
-						}
+							"version_number": 145,
+						},
 					},
 					{
 						"name": "150",
 						"argument": {
-							"version_number": 150
-						}
-					}
-				]
+							"version_number": 150,
+						},
+					},
+				],
 			},
 			{
 				"id": "wwise.sound_bank.decode",
@@ -1695,13 +1695,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -1721,102 +1721,102 @@
 							135,
 							140,
 							145,
-							150
-						]
-					}
+							150,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
 					{
 						"name": "72",
 						"argument": {
-							"version_number": 72
-						}
+							"version_number": 72,
+						},
 					},
 					{
 						"name": "88",
 						"argument": {
-							"version_number": 88
-						}
+							"version_number": 88,
+						},
 					},
 					{
 						"name": "112",
 						"argument": {
-							"version_number": 112
-						}
+							"version_number": 112,
+						},
 					},
 					{
 						"name": "113",
 						"argument": {
-							"version_number": 113
-						}
+							"version_number": 113,
+						},
 					},
 					{
 						"name": "118",
 						"argument": {
-							"version_number": 118
-						}
+							"version_number": 118,
+						},
 					},
 					{
 						"name": "120",
 						"argument": {
-							"version_number": 120
-						}
+							"version_number": 120,
+						},
 					},
 					{
 						"name": "125",
 						"argument": {
-							"version_number": 125
-						}
+							"version_number": 125,
+						},
 					},
 					{
 						"name": "128",
 						"argument": {
-							"version_number": 128
-						}
+							"version_number": 128,
+						},
 					},
 					{
 						"name": "132",
 						"argument": {
-							"version_number": 132
-						}
+							"version_number": 132,
+						},
 					},
 					{
 						"name": "134",
 						"argument": {
-							"version_number": 134
-						}
+							"version_number": 134,
+						},
 					},
 					{
 						"name": "135",
 						"argument": {
-							"version_number": 135
-						}
+							"version_number": 135,
+						},
 					},
 					{
 						"name": "140",
 						"argument": {
-							"version_number": 140
-						}
+							"version_number": 140,
+						},
 					},
 					{
 						"name": "145",
 						"argument": {
-							"version_number": 145
-						}
+							"version_number": 145,
+						},
 					},
 					{
 						"name": "150",
 						"argument": {
-							"version_number": 150
-						}
-					}
-				]
-			}
-		]
+							"version_number": 150,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "marmalade.dzip",
@@ -1832,41 +1832,41 @@
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
+							0,
+						],
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"bundle_directory",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "0",
 						"argument": {
-							"version_number": 0
-						}
-					}
-				]
+							"version_number": 0,
+						},
+					},
+				],
 			},
 			{
 				"id": "marmalade.dzip.unpack",
@@ -1877,35 +1877,35 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
-					}
+							0,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
 					{
 						"name": "0",
 						"argument": {
-							"version_number": 0
-						}
-					}
-				]
+							"version_number": 0,
+						},
+					},
+				],
 			},
 			{
 				"id": "marmalade.dzip.pack_automatic",
@@ -1916,34 +1916,34 @@
 						"id": "resource_directory",
 						"name": "Resource directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
-					}
+							0,
+						],
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "0",
 						"argument": {
-							"version_number": 0
-						}
-					}
-				]
-			}
-		]
+							"version_number": 0,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.zlib",
@@ -1959,39 +1959,39 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_file"
+					"ripe_file",
 				],
 				"preset": [
 					{
 						"name": "32",
 						"argument": {
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "64",
 						"argument": {
-							"version_variant_64": true
-						}
-					}
-				]
+							"version_variant_64": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.zlib.uncompress",
@@ -2002,41 +2002,41 @@
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"ripe_file",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
 					{
 						"name": "32",
 						"argument": {
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "64",
 						"argument": {
-							"version_variant_64": true
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.crypt_data",
@@ -2052,33 +2052,33 @@
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "limit",
 						"name": "Limit",
 						"type": "integer",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"plain_file",
-					"cipher_file"
+					"cipher_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "popcap.crypt_data.decrypt",
@@ -2089,35 +2089,35 @@
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "limit",
 						"name": "Limit",
 						"type": "integer",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"cipher_file",
-					"plain_file"
+					"plain_file",
 				],
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.reflection_object_notation",
@@ -2133,55 +2133,55 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.reflection_object_notation.decode",
@@ -2192,49 +2192,49 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.reflection_object_notation.encrypt",
@@ -2245,27 +2245,27 @@
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"plain_file",
-					"cipher_file"
+					"cipher_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "popcap.reflection_object_notation.decrypt",
@@ -2276,27 +2276,27 @@
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"cipher_file",
-					"plain_file"
+					"plain_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "popcap.reflection_object_notation.encode_cipher",
@@ -2307,61 +2307,61 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.reflection_object_notation.decode_cipher",
@@ -2372,55 +2372,55 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.reflection_object_notation.decode_lenient",
@@ -2431,51 +2431,51 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "1 | E-ASCII",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": false
-						}
+							"version_native_string_encoding_use_utf8": false,
+						},
 					},
 					{
 						"name": "1 | UTF-8",
 						"argument": {
 							"version_number": 1,
-							"version_native_string_encoding_use_utf8": true
-						}
-					}
-				]
-			}
-		]
+							"version_native_string_encoding_use_utf8": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.texture",
@@ -2491,13 +2491,13 @@
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "format",
@@ -2515,89 +2515,89 @@
 							"rgba_pvrtc4",
 							"rgb_pvrtc4_a_8",
 							"rgb_etc1_a_8",
-							"rgb_etc1_a_palette"
-						]
-					}
+							"rgb_etc1_a_palette",
+						],
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444-T",
 						"argument": {
-							"format": "rgba_4444_tiled"
-						}
+							"format": "rgba_4444_tiled",
+						},
 					},
 					{
 						"name": "RGBA-565-T",
 						"argument": {
-							"format": "rgb_565_tiled"
-						}
+							"format": "rgb_565_tiled",
+						},
 					},
 					{
 						"name": "RGBA-5551-T",
 						"argument": {
-							"format": "rgba_5551_tiled"
-						}
+							"format": "rgba_5551_tiled",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-PVRTC-4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
+							"format": "rgba_pvrtc4",
+						},
 					},
 					{
 						"name": "RGB-PVRTC-4 + A-8",
 						"argument": {
-							"format": "rgb_pvrtc4_a_8"
-						}
+							"format": "rgb_pvrtc4_a_8",
+						},
 					},
 					null,
 					{
 						"name": "ETC-1 + A-8",
 						"argument": {
-							"format": "rgb_etc1_a_8"
-						}
+							"format": "rgb_etc1_a_8",
+						},
 					},
 					{
 						"name": "ETC-1 + A-P",
 						"argument": {
-							"format": "rgb_etc1_a_palette"
-						}
-					}
-				]
+							"format": "rgb_etc1_a_palette",
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.texture.decode",
@@ -2608,13 +2608,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "format",
@@ -2632,103 +2632,103 @@
 							"rgba_pvrtc4",
 							"rgb_pvrtc4_a_8",
 							"rgb_etc1_a_8",
-							"rgb_etc1_a_palette"
-						]
+							"rgb_etc1_a_palette",
+						],
 					},
 					{
 						"id": "image_width",
 						"name": "Image width",
 						"type": "integer",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "image_height",
 						"name": "Image height",
 						"type": "integer",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "RGBA-8888",
 						"argument": {
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "ARGB-8888",
 						"argument": {
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444",
 						"argument": {
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "RGBA-565",
 						"argument": {
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "RGBA-5551",
 						"argument": {
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-4444-T",
 						"argument": {
-							"format": "rgba_4444_tiled"
-						}
+							"format": "rgba_4444_tiled",
+						},
 					},
 					{
 						"name": "RGBA-565-T",
 						"argument": {
-							"format": "rgb_565_tiled"
-						}
+							"format": "rgb_565_tiled",
+						},
 					},
 					{
 						"name": "RGBA-5551-T",
 						"argument": {
-							"format": "rgba_5551_tiled"
-						}
+							"format": "rgba_5551_tiled",
+						},
 					},
 					null,
 					{
 						"name": "RGBA-PVRTC-4",
 						"argument": {
-							"format": "rgba_pvrtc4"
-						}
+							"format": "rgba_pvrtc4",
+						},
 					},
 					{
 						"name": "RGB-PVRTC-4 + A-8",
 						"argument": {
-							"format": "rgb_pvrtc4_a_8"
-						}
+							"format": "rgb_pvrtc4_a_8",
+						},
 					},
 					null,
 					{
 						"name": "ETC-1 + A-8",
 						"argument": {
-							"format": "rgb_etc1_a_8"
-						}
+							"format": "rgb_etc1_a_8",
+						},
 					},
 					{
 						"name": "ETC-1 + A-P",
 						"argument": {
-							"format": "rgb_etc1_a_palette"
-						}
-					}
-				]
-			}
-		]
+							"format": "rgb_etc1_a_palette",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.u_texture",
@@ -2744,19 +2744,19 @@
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_compress_texture_data",
 						"name": "Compress texture data",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "format",
@@ -2766,73 +2766,73 @@
 							"rgba_8888_o",
 							"rgba_4444",
 							"rgba_5551",
-							"rgb_565"
-						]
-					}
+							"rgb_565",
+						],
+					},
 				],
 				"batchable": [
 					"image_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "Original | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Original | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Original | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Original | RGB-565",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "Compressed | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Compressed | RGB-565",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgb_565"
-						}
-					}
-				]
+							"format": "rgb_565",
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.u_texture.decode",
@@ -2843,86 +2843,86 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_compress_texture_data",
 						"name": "Compress texture data",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"image_file"
+					"image_file",
 				],
 				"preset": [
 					{
 						"name": "Original | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Original | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Original | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Original | RGB-565",
 						"argument": {
 							"version_compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					null,
 					{
 						"name": "Compressed | RGBA-8888",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-4444",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "Compressed | RGBA-5551",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "Compressed | RGB-565",
 						"argument": {
 							"version_compress_texture_data": true,
-							"format": "rgb_565"
-						}
-					}
-				]
-			}
-		]
+							"format": "rgb_565",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.sexy_texture",
@@ -2938,21 +2938,21 @@
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
+							0,
+						],
 					},
 					{
 						"id": "format",
@@ -2966,19 +2966,19 @@
 							"rgba_8888_o",
 							"rgba_4444",
 							"rgba_5551",
-							"la_88"
-						]
+							"la_88",
+						],
 					},
 					{
 						"id": "compress_texture_data",
 						"name": "Compress texture data",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"image_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
@@ -2986,64 +2986,64 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Original | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Original | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
@@ -3051,66 +3051,66 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Compressed | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "la_88"
-						}
-					}
-				]
+							"format": "la_88",
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.sexy_texture.decode",
@@ -3121,26 +3121,26 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "image_file",
 						"name": "Image file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
-					}
+							0,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"image_file"
+					"image_file",
 				],
 				"preset": [
 					{
@@ -3148,64 +3148,64 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Original | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Original | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Original | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Original | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": false,
-							"format": "la_88"
-						}
+							"format": "la_88",
+						},
 					},
 					null,
 					{
@@ -3213,68 +3213,68 @@
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_8888"
-						}
+							"format": "argb_8888",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_4444"
-						}
+							"format": "argb_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | ARGB-1555",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "argb_1555"
-						}
+							"format": "argb_1555",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGB-565",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgb_565"
-						}
+							"format": "rgb_565",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-8888",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_8888_o"
-						}
+							"format": "rgba_8888_o",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-4444",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_4444"
-						}
+							"format": "rgba_4444",
+						},
 					},
 					{
 						"name": "0 | Compressed | RGBA-5551",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "rgba_5551"
-						}
+							"format": "rgba_5551",
+						},
 					},
 					{
 						"name": "0 | Compressed | LA-88",
 						"argument": {
 							"version_number": 0,
 							"compress_texture_data": true,
-							"format": "la_88"
-						}
-					}
-				]
-			}
-		]
+							"format": "la_88",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.animation",
@@ -3290,13 +3290,13 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -3308,58 +3308,58 @@
 							3,
 							4,
 							5,
-							6
-						]
+							6,
+						],
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.animation.decode",
@@ -3370,13 +3370,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -3388,52 +3388,52 @@
 							3,
 							4,
 							5,
-							6
-						]
-					}
+							6,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.animation.convert.flash.from",
@@ -3444,13 +3444,13 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_directory",
 						"name": "Finished directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -3462,52 +3462,52 @@
 							3,
 							4,
 							5,
-							6
-						]
-					}
+							6,
+						],
+					},
 				],
 				"batchable": [
 					"raw_file",
-					"ripe_directory"
+					"ripe_directory",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.animation.convert.flash.to",
@@ -3518,13 +3518,13 @@
 						"id": "ripe_directory",
 						"name": "Finished directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -3536,52 +3536,52 @@
 							3,
 							4,
 							5,
-							6
-						]
-					}
+							6,
+						],
+					},
 				],
 				"batchable": [
 					"ripe_directory",
-					"raw_file"
+					"raw_file",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "2",
 						"argument": {
-							"version_number": 2
-						}
+							"version_number": 2,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
+							"version_number": 4,
+						},
 					},
 					{
 						"name": "5",
 						"argument": {
-							"version_number": 5
-						}
+							"version_number": 5,
+						},
 					},
 					{
 						"name": "6",
 						"argument": {
-							"version_number": 6
-						}
-					}
-				]
+							"version_number": 6,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.animation.convert.flash.resize",
@@ -3592,7 +3592,7 @@
 						"id": "target_directory",
 						"name": "Target directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "resolution",
@@ -3603,46 +3603,46 @@
 							768,
 							1536,
 							640,
-							1280
-						]
-					}
+							1280,
+						],
+					},
 				],
 				"batchable": [
-					"target_directory"
+					"target_directory",
 				],
 				"preset": [
 					{
 						"name": "384",
 						"argument": {
-							"resolution": 384
-						}
+							"resolution": 384,
+						},
 					},
 					{
 						"name": "768",
 						"argument": {
-							"resolution": 768
-						}
+							"resolution": 768,
+						},
 					},
 					{
 						"name": "1536",
 						"argument": {
-							"resolution": 1536
-						}
+							"resolution": 1536,
+						},
 					},
 					null,
 					{
 						"name": "640",
 						"argument": {
-							"resolution": 640
-						}
+							"resolution": 640,
+						},
 					},
 					{
 						"name": "1280",
 						"argument": {
-							"resolution": 1280
-						}
-					}
-				]
+							"resolution": 1280,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.animation.convert.flash.link_media",
@@ -3653,16 +3653,16 @@
 						"id": "target_directory",
 						"name": "Target directory",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
-					"target_directory"
+					"target_directory",
 				],
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.re_animation",
@@ -3678,13 +3678,13 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_platform",
@@ -3693,56 +3693,56 @@
 						"option": [
 							"desktop",
 							"mobile",
-							"television"
-						]
+							"television",
+						],
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
+							"version_variant_64": false,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.re_animation.decode",
@@ -3753,13 +3753,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_platform",
@@ -3768,52 +3768,52 @@
 						"option": [
 							"desktop",
 							"mobile",
-							"television"
-						]
+							"television",
+						],
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": false,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.particle",
@@ -3829,13 +3829,13 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_platform",
@@ -3844,56 +3844,56 @@
 						"option": [
 							"desktop",
 							"mobile",
-							"television"
-						]
+							"television",
+						],
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
+							"version_variant_64": false,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.particle.decode",
@@ -3904,13 +3904,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_platform",
@@ -3919,52 +3919,52 @@
 						"option": [
 							"desktop",
 							"mobile",
-							"television"
-						]
+							"television",
+						],
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": false,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.trail",
@@ -3980,13 +3980,13 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_platform",
@@ -3995,56 +3995,56 @@
 						"option": [
 							"desktop",
 							"mobile",
-							"television"
-						]
+							"television",
+						],
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
+							"version_variant_64": false,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.trail.decode",
@@ -4055,13 +4055,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_platform",
@@ -4070,52 +4070,52 @@
 						"option": [
 							"desktop",
 							"mobile",
-							"television"
-						]
+							"television",
+						],
 					},
 					{
 						"id": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "Desktop | 32",
 						"argument": {
 							"version_platform": "desktop",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 32",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": false
-						}
+							"version_variant_64": false,
+						},
 					},
 					{
 						"name": "Mobile | 64",
 						"argument": {
 							"version_platform": "mobile",
-							"version_variant_64": true
-						}
+							"version_variant_64": true,
+						},
 					},
 					{
 						"name": "Television | 32",
 						"argument": {
 							"version_platform": "television",
-							"version_variant_64": false
-						}
-					}
-				]
-			}
-		]
+							"version_variant_64": false,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.particle_effect",
@@ -4131,41 +4131,41 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
-					}
-				]
+							"version_number": 1,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.particle_effect.decode",
@@ -4176,37 +4176,37 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
-					}
+							1,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
-					}
-				]
-			}
-		]
+							"version_number": 1,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.render_effect",
@@ -4222,21 +4222,21 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_variant",
@@ -4245,43 +4245,43 @@
 						"option": [
 							1,
 							2,
-							3
-						]
+							3,
+						],
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1 | 1",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 1
-						}
+							"version_variant": 1,
+						},
 					},
 					{
 						"name": "1 | 2",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 2
-						}
+							"version_variant": 2,
+						},
 					},
 					{
 						"name": "1 | 3",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 3
-						}
-					}
-				]
+							"version_variant": 3,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.render_effect.decode",
@@ -4292,21 +4292,21 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "version_variant",
@@ -4315,39 +4315,39 @@
 						"option": [
 							1,
 							2,
-							3
-						]
-					}
+							3,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
 					{
 						"name": "1 | 1",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 1
-						}
+							"version_variant": 1,
+						},
 					},
 					{
 						"name": "1 | 2",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 2
-						}
+							"version_variant": 2,
+						},
 					},
 					{
 						"name": "1 | 3",
 						"argument": {
 							"version_number": 1,
-							"version_variant": 3
-						}
-					}
-				]
-			}
-		]
+							"version_variant": 3,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.character_font_widget_2",
@@ -4363,27 +4363,27 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"definition_file",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "popcap.character_font_widget_2.decode",
@@ -4394,23 +4394,23 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"definition_file"
+					"definition_file",
 				],
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.package",
@@ -4426,55 +4426,55 @@
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
+							0,
+						],
 					},
 					{
 						"id": "version_compress_resource_data",
 						"name": "Compress resource data",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"bundle_directory",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "0 | Original",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": false
-						}
+							"version_compress_resource_data": false,
+						},
 					},
 					{
 						"name": "0 | Compressed",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": true
-						}
-					}
-				]
+							"version_compress_resource_data": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.package.unpack",
@@ -4485,49 +4485,49 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
+							0,
+						],
 					},
 					{
 						"id": "version_compress_resource_data",
 						"name": "Compress resource data",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
 					{
 						"name": "0 | Original",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": false
-						}
+							"version_compress_resource_data": false,
+						},
 					},
 					{
 						"name": "0 | Compressed",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": true
-						}
-					}
-				]
+							"version_compress_resource_data": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.package.pack_automatic",
@@ -4538,28 +4538,28 @@
 						"id": "resource_directory",
 						"name": "Resource directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							0
-						]
+							0,
+						],
 					},
 					{
 						"id": "version_compress_resource_data",
 						"name": "Compress resource data",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
@@ -4567,17 +4567,17 @@
 						"name": "0 | Original",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": false
-						}
+							"version_compress_resource_data": false,
+						},
 					},
 					{
 						"name": "0 | Compressed",
 						"argument": {
 							"version_number": 0,
-							"version_compress_resource_data": true
-						}
-					}
-				]
+							"version_compress_resource_data": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.package.encrypt",
@@ -4588,23 +4588,23 @@
 						"id": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"plain_file",
-					"cipher_file"
+					"cipher_file",
 				],
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.resource_stream_group",
@@ -4620,13 +4620,13 @@
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -4635,40 +4635,40 @@
 						"option": [
 							1,
 							3,
-							4
-						]
+							4,
+						],
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"bundle_directory",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
-					}
-				]
+							"version_number": 4,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.resource_stream_group.unpack",
@@ -4679,13 +4679,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -4694,36 +4694,36 @@
 						"option": [
 							1,
 							3,
-							4
-						]
-					}
+							4,
+						],
+					},
 				],
 				"batchable": [
 					"data_file",
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
 					{
 						"name": "1",
 						"argument": {
-							"version_number": 1
-						}
+							"version_number": 1,
+						},
 					},
 					{
 						"name": "3",
 						"argument": {
-							"version_number": 3
-						}
+							"version_number": 3,
+						},
 					},
 					{
 						"name": "4",
 						"argument": {
-							"version_number": 4
-						}
-					}
-				]
-			}
-		]
+							"version_number": 4,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.resource_stream_bundle",
@@ -4739,13 +4739,13 @@
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -4754,8 +4754,8 @@
 						"option": [
 							1,
 							3,
-							4
-						]
+							4,
+						],
 					},
 					{
 						"id": "version_extended_texture_information_for_pvz2_cn",
@@ -4765,8 +4765,8 @@
 							0,
 							1,
 							2,
-							3
-						]
+							3,
+						],
 					},
 					{
 						"id": "layout_mode",
@@ -4775,77 +4775,77 @@
 						"option": [
 							"group",
 							"subgroup",
-							"resource"
-						]
+							"resource",
+						],
 					},
 					{
 						"id": "input_packet",
 						"name": "Use packets that already exists",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "output_new_packet",
 						"name": "Export newly packed packets",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"bundle_directory",
-					"data_file"
+					"data_file",
 				],
 				"preset": [
 					{
 						"name": "1 | 0",
 						"argument": {
 							"version_number": 1,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "3 | 0",
 						"argument": {
 							"version_number": 3,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "4 | 0",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					null,
 					{
 						"name": "4 | 1",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 1
-						}
+							"version_extended_texture_information_for_pvz2_cn": 1,
+						},
 					},
 					{
 						"name": "4 | 2",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 2
-						}
+							"version_extended_texture_information_for_pvz2_cn": 2,
+						},
 					},
 					{
 						"name": "4 | 3",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 3
-						}
-					}
-				]
+							"version_extended_texture_information_for_pvz2_cn": 3,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.resource_stream_bundle.unpack",
@@ -4856,13 +4856,13 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
@@ -4871,8 +4871,8 @@
 						"option": [
 							1,
 							3,
-							4
-						]
+							4,
+						],
 					},
 					{
 						"id": "version_extended_texture_information_for_pvz2_cn",
@@ -4882,8 +4882,8 @@
 							0,
 							1,
 							2,
-							3
-						]
+							3,
+						],
 					},
 					{
 						"id": "layout_mode",
@@ -4892,71 +4892,71 @@
 						"option": [
 							"group",
 							"subgroup",
-							"resource"
-						]
+							"resource",
+						],
 					},
 					{
 						"id": "output_resource",
 						"name": "Export resources",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "output_packet",
 						"name": "Export packet",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
 					{
 						"name": "1 | 0",
 						"argument": {
 							"version_number": 1,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "3 | 0",
 						"argument": {
 							"version_number": 3,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "4 | 0",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					null,
 					{
 						"name": "4 | 1",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 1
-						}
+							"version_extended_texture_information_for_pvz2_cn": 1,
+						},
 					},
 					{
 						"name": "4 | 2",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 2
-						}
+							"version_extended_texture_information_for_pvz2_cn": 2,
+						},
 					},
 					{
 						"name": "4 | 3",
 						"argument": {
 							"version_number": 4,
-							"version_extended_texture_information_for_pvz2_cn": 3
-						}
-					}
-				]
+							"version_extended_texture_information_for_pvz2_cn": 3,
+						},
+					},
+				],
 			},
 			{
 				"id": "popcap.resource_stream_bundle.unpack_lenient",
@@ -4967,21 +4967,21 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
 					"data_file",
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "popcap.resource_stream_bundle.resource_convert",
@@ -4992,51 +4992,51 @@
 						"id": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_recase_path",
 						"name": "Recase resource path",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_rton",
 						"name": "Extract RTON",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_rton_version_number",
 						"name": "Extract RTON - Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "option_rton_version_native_string_encoding_use_utf8",
 						"name": "Extract RTON - Native string encoding use UTF-8",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_rton_crypt",
 						"name": "Extract RTON - Enable encryption",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_rton_crypt_key",
 						"name": "Extract RTON - Key for encryption",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_ptx",
 						"name": "Extract PTX",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_ptx_format",
@@ -5045,32 +5045,32 @@
 						"option": [
 							"iphone",
 							"android",
-							"android_pvz2_cn"
-						]
+							"android_pvz2_cn",
+						],
 					},
 					{
 						"id": "option_ptx_atlas",
 						"name": "Extract PTX - Extract as atlas",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_ptx_atlas_resize",
 						"name": "Extract PTX - Adjust atlas size",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_ptx_sprite",
 						"name": "Extract PTX - Extract as sprite",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_pam",
 						"name": "Extract PAM",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_pam_version_number",
@@ -5082,26 +5082,26 @@
 							3,
 							4,
 							5,
-							6
-						]
+							6,
+						],
 					},
 					{
 						"id": "option_pam_json",
 						"name": "Extract PAM - Extract as JSON",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_pam_flash",
 						"name": "Extract PAM - Extract as Flash",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_bnk",
 						"name": "Extract BNK",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_bnk_version_number",
@@ -5121,18 +5121,18 @@
 							135,
 							140,
 							145,
-							150
-						]
+							150,
+						],
 					},
 					{
 						"id": "option_wem",
 						"name": "Extract WEM",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": [
-					"bundle_directory"
+					"bundle_directory",
 				],
 				"preset": [
 					{
@@ -5143,8 +5143,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -5158,8 +5158,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "RTON | 1 | E-ASCII | Cipher",
@@ -5172,8 +5172,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "RTON | 1 | UTF-8 | Plain",
@@ -5186,8 +5186,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "RTON | 1 | UTF-8 | Cipher",
@@ -5200,8 +5200,8 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -5215,8 +5215,8 @@
 							"option_ptx_sprite": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PTX | Sprite",
@@ -5229,8 +5229,8 @@
 							"option_ptx_sprite": true,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PTX | Atlas + Sprite",
@@ -5243,8 +5243,8 @@
 							"option_ptx_sprite": true,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -5258,8 +5258,8 @@
 							"option_pam_json": true,
 							"option_pam_flash": false,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PAM | 6 | Flash",
@@ -5272,8 +5272,8 @@
 							"option_pam_json": false,
 							"option_pam_flash": true,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "PAM | 6 | JSON + Flash",
@@ -5286,8 +5286,8 @@
 							"option_pam_json": true,
 							"option_pam_flash": true,
 							"option_bnk": false,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -5299,8 +5299,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 72,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "BNK | 88",
@@ -5311,8 +5311,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 88,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "BNK | 112",
@@ -5323,8 +5323,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 112,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					{
 						"name": "BNK | 140",
@@ -5335,8 +5335,8 @@
 							"option_pam": false,
 							"option_bnk": true,
 							"option_bnk_version_number": 140,
-							"option_wem": false
-						}
+							"option_wem": false,
+						},
 					},
 					null,
 					{
@@ -5347,12 +5347,12 @@
 							"option_ptx": false,
 							"option_pam": false,
 							"option_bnk": false,
-							"option_wem": true
-						}
-					}
-				]
-			}
-		]
+							"option_wem": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "popcap.resource_stream_bundle_patch",
@@ -5368,44 +5368,44 @@
 						"id": "after_file",
 						"name": "After file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "patch_file",
 						"name": "Patch file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "before_file",
 						"name": "Before file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "use_raw_packet",
 						"name": "Use raw packet",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "popcap.resource_stream_bundle_patch.decode",
@@ -5416,46 +5416,46 @@
 						"id": "patch_file",
 						"name": "Patch file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "after_file",
 						"name": "After file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "before_file",
 						"name": "Before file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
-							1
-						]
+							1,
+						],
 					},
 					{
 						"id": "use_raw_packet",
 						"name": "Use raw packet",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
-			}
-		]
+				],
+			},
+		],
 	},
 	{
 		"id": "pvz2.text_table",
@@ -5471,7 +5471,7 @@
 						"id": "source_file",
 						"name": "Source file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "destination_version",
@@ -5480,39 +5480,39 @@
 						"option": [
 							"text",
 							"json_map",
-							"json_list"
-						]
+							"json_list",
+						],
 					},
 					{
 						"id": "destination_file",
 						"name": "Destination file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "Text",
 						"argument": {
-							"destination_version": "text"
-						}
+							"destination_version": "text",
+						},
 					},
 					{
 						"name": "JSON Map",
 						"argument": {
-							"destination_version": "json_map"
-						}
+							"destination_version": "json_map",
+						},
 					},
 					{
 						"name": "JSON List",
 						"argument": {
-							"destination_version": "json_list"
-						}
-					}
-				]
-			}
-		]
+							"destination_version": "json_list",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "pvz2.resource_manifest",
@@ -5528,24 +5528,24 @@
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "pvz2.resource_manifest.new_type_object_notation.decode",
@@ -5556,18 +5556,18 @@
 						"id": "data_file",
 						"name": "Data file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "definition_file",
 						"name": "Definition file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "pvz2.resource_manifest.regular.from",
@@ -5578,18 +5578,18 @@
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "pvz2.resource_manifest.regular.to",
@@ -5600,38 +5600,38 @@
 						"id": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "raw_file",
 						"name": "Original file",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "use_array_style_path",
 						"name": "Use array style path",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "String path",
 						"argument": {
-							"use_array_style_path": false
-						}
+							"use_array_style_path": false,
+						},
 					},
 					{
 						"name": "Array path",
 						"argument": {
-							"use_array_style_path": true
-						}
-					}
-				]
-			}
-		]
+							"use_array_style_path": true,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "pvz2.package_project",
@@ -5647,74 +5647,74 @@
 						"id": "project_directory",
 						"name": "Project directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "target_scope",
 						"name": "Target scope",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "target_package",
 						"name": "Target package",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_generalize_rton",
 						"name": "Generalize RTON",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_generalize_ptx",
 						"name": "Generalize PTX",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_generalize_pam",
 						"name": "Generalize PAM",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_generalize_wem",
 						"name": "Generalize WEM",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_specialize_rton",
 						"name": "Specialize RTON",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_specialize_ptx",
 						"name": "Specialize PTX",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_specialize_pam",
 						"name": "Specialize PAM",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "option_specialize_wem",
 						"name": "Specialize WEM",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
@@ -5728,8 +5728,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | RTON",
@@ -5741,8 +5741,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | PTX",
@@ -5754,8 +5754,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | PAM",
@@ -5767,8 +5767,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Generalize | WEM",
@@ -5780,8 +5780,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					null,
 					{
@@ -5794,8 +5794,8 @@
 							"option_specialize_rton": true,
 							"option_specialize_ptx": true,
 							"option_specialize_pam": true,
-							"option_specialize_wem": true
-						}
+							"option_specialize_wem": true,
+						},
 					},
 					{
 						"name": "Specialize | RTON",
@@ -5807,8 +5807,8 @@
 							"option_specialize_rton": true,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Specialize | PTX",
@@ -5820,8 +5820,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": true,
 							"option_specialize_pam": false,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Specialize | PAM",
@@ -5833,8 +5833,8 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": true,
-							"option_specialize_wem": false
-						}
+							"option_specialize_wem": false,
+						},
 					},
 					{
 						"name": "Specialize | WEM",
@@ -5846,10 +5846,10 @@
 							"option_specialize_rton": false,
 							"option_specialize_ptx": false,
 							"option_specialize_pam": false,
-							"option_specialize_wem": true
-						}
-					}
-				]
+							"option_specialize_wem": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "pvz2.package_project.compile",
@@ -5860,30 +5860,30 @@
 						"id": "project_directory",
 						"name": "Project directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "target_scope",
 						"name": "Target scope",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "target_package",
 						"name": "Target package",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "pvz2.package_project.link",
@@ -5894,42 +5894,42 @@
 						"id": "project_directory",
 						"name": "Project directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "target_package",
 						"name": "Target package",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "remake_manifest",
 						"name": "Remake manifest",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "Legacy",
 						"argument": {
-							"remake_manifest": false
-						}
+							"remake_manifest": false,
+						},
 					},
 					{
 						"name": "Remake",
 						"argument": {
-							"remake_manifest": true
-						}
-					}
-				]
+							"remake_manifest": true,
+						},
+					},
+				],
 			},
 			{
 				"id": "pvz2.package_project.parse",
@@ -5940,19 +5940,19 @@
 						"id": "project_directory",
 						"name": "Project directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "package_directory",
 						"name": "Package directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "package_name",
 						"name": "Package name",
 						"type": "string",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "package_version_number",
@@ -5961,8 +5961,8 @@
 						"option": [
 							1,
 							3,
-							4
-						]
+							4,
+						],
 					},
 					{
 						"id": "package_version_extended_texture_information_for_pvz2_cn",
@@ -5972,9 +5972,9 @@
 							0,
 							1,
 							2,
-							3
-						]
-					}
+							3,
+						],
+					},
 				],
 				"batchable": null,
 				"preset": [
@@ -5982,48 +5982,48 @@
 						"name": "1 | 0",
 						"argument": {
 							"package_version_number": 1,
-							"package_version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "3 | 0",
 						"argument": {
 							"package_version_number": 3,
-							"package_version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					{
 						"name": "4 | 0",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 0
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 0,
+						},
 					},
 					null,
 					{
 						"name": "4 | 1",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 1
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 1,
+						},
 					},
 					{
 						"name": "4 | 2",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 2
-						}
+							"package_version_extended_texture_information_for_pvz2_cn": 2,
+						},
 					},
 					{
 						"name": "4 | 3",
 						"argument": {
 							"package_version_number": 4,
-							"package_version_extended_texture_information_for_pvz2_cn": 3
-						}
-					}
-				]
-			}
-		]
+							"package_version_extended_texture_information_for_pvz2_cn": 3,
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "pvz2.remote_project",
@@ -6039,7 +6039,7 @@
 						"id": "project_directory",
 						"name": "Project directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "action",
@@ -6050,8 +6050,8 @@
 							"check",
 							"clear",
 							"pull",
-							"push"
-						]
+							"push",
+						],
 					},
 					{
 						"id": "target",
@@ -6061,115 +6061,115 @@
 							"main_package",
 							"content_delivery",
 							"local_profile",
-							"player_profile"
-						]
-					}
+							"player_profile",
+						],
+					},
 				],
 				"batchable": null,
 				"preset": [
 					{
 						"name": "Launch",
 						"argument": {
-							"action": "launch"
-						}
+							"action": "launch",
+						},
 					},
 					null,
 					{
 						"name": "Check",
 						"argument": {
-							"action": "check"
-						}
+							"action": "check",
+						},
 					},
 					null,
 					{
 						"name": "Clear main package",
 						"argument": {
 							"action": "clear",
-							"target": "main_package"
-						}
+							"target": "main_package",
+						},
 					},
 					{
 						"name": "Clear content delivery",
 						"argument": {
 							"action": "clear",
-							"target": "content_delivery"
-						}
+							"target": "content_delivery",
+						},
 					},
 					{
 						"name": "Clear local profile",
 						"argument": {
 							"action": "clear",
-							"target": "local_profile"
-						}
+							"target": "local_profile",
+						},
 					},
 					{
 						"name": "Clear player profile",
 						"argument": {
 							"action": "clear",
-							"target": "player_profile"
-						}
+							"target": "player_profile",
+						},
 					},
 					null,
 					{
 						"name": "Pull main package",
 						"argument": {
 							"action": "pull",
-							"target": "main_package"
-						}
+							"target": "main_package",
+						},
 					},
 					{
 						"name": "Pull content delivery",
 						"argument": {
 							"action": "pull",
-							"target": "content_delivery"
-						}
+							"target": "content_delivery",
+						},
 					},
 					{
 						"name": "Pull local profile",
 						"argument": {
 							"action": "pull",
-							"target": "local_profile"
-						}
+							"target": "local_profile",
+						},
 					},
 					{
 						"name": "Pull player profile",
 						"argument": {
 							"action": "pull",
-							"target": "player_profile"
-						}
+							"target": "player_profile",
+						},
 					},
 					null,
 					{
 						"name": "Push main package",
 						"argument": {
 							"action": "push",
-							"target": "main_package"
-						}
+							"target": "main_package",
+						},
 					},
 					{
 						"name": "Push content delivery",
 						"argument": {
 							"action": "push",
-							"target": "content_delivery"
-						}
+							"target": "content_delivery",
+						},
 					},
 					{
 						"name": "Push local profile",
 						"argument": {
 							"action": "push",
-							"target": "local_profile"
-						}
+							"target": "local_profile",
+						},
 					},
 					{
 						"name": "Push player profile",
 						"argument": {
 							"action": "push",
-							"target": "player_profile"
-						}
-					}
-				]
-			}
-		]
+							"target": "player_profile",
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		"id": "kairosoft.game",
@@ -6185,18 +6185,18 @@
 						"id": "target_directory",
 						"name": "Target directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "key",
 						"name": "Key",
 						"type": "string",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
-				]
+				],
 			},
 			{
 				"id": "kairosoft.game.modify_program",
@@ -6207,20 +6207,20 @@
 						"id": "target_directory",
 						"name": "Target directory",
 						"type": "path",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "disable_record_encryption",
 						"name": "Disable record encryption",
 						"type": "boolean",
-						"option": null
+						"option": null,
 					},
 					{
 						"id": "enable_debug_mode",
 						"name": "Enable debug mode",
 						"type": "boolean",
-						"option": null
-					}
+						"option": null,
+					},
 				],
 				"batchable": null,
 				"preset": [
@@ -6228,33 +6228,33 @@
 						"name": "Disable record encryption",
 						"argument": {
 							"disable_record_encryption": true,
-							"enable_debug_mode": false
-						}
+							"enable_debug_mode": false,
+						},
 					},
 					{
 						"name": "Enable debug mode",
 						"argument": {
 							"disable_record_encryption": false,
-							"enable_debug_mode": true
-						}
+							"enable_debug_mode": true,
+						},
 					},
 					null,
 					{
 						"name": "None",
 						"argument": {
 							"disable_record_encryption": false,
-							"enable_debug_mode": false
-						}
+							"enable_debug_mode": false,
+						},
 					},
 					{
 						"name": "Both",
 						"argument": {
 							"disable_record_encryption": true,
-							"enable_debug_mode": true
-						}
-					}
-				]
-			}
-		]
-	}
+							"enable_debug_mode": true,
+						},
+					},
+				],
+			},
+		],
+	},
 ]

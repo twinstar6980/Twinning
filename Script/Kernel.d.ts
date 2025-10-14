@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 93
+ * @version 98
  */
 declare namespace Twinning.Kernel {
 
@@ -1209,7 +1209,7 @@ declare namespace Twinning.Kernel {
 		 * 获取工作目录
 		 * @returns 工作目录
 		 */
-		function get_working_directory(
+		function get_workspace(
 		): Path;
 
 		/**
@@ -1217,7 +1217,7 @@ declare namespace Twinning.Kernel {
 		 * @param target 工作目录
 		 * @returns 无
 		 */
-		function set_working_directory(
+		function set_workspace(
 			target: Path,
 		): Void;
 
@@ -1228,7 +1228,7 @@ declare namespace Twinning.Kernel {
 		 * @param name 变量名
 		 * @returns 变量值
 		 */
-		function get_environment_variable(
+		function get_environment(
 			name: String,
 		): StringOptional;
 
@@ -1238,7 +1238,7 @@ declare namespace Twinning.Kernel {
 		 * @param value 变量值
 		 * @returns 无
 		 */
-		function set_environment_variable(
+		function set_environment(
 			name: String,
 			value: StringOptional,
 		): Void;
@@ -1247,13 +1247,13 @@ declare namespace Twinning.Kernel {
 		 * 列出环境变量
 		 * @returns 环境变量列表
 		 */
-		function list_environment_variable(
+		function list_environment(
 		): StringList;
 
 		// ----------------
 
 		/**
-		 * 生成子进程
+		 * 运行子进程
 		 * @param program 程序
 		 * @param argument 参数
 		 * @param environment 环境
@@ -1262,7 +1262,7 @@ declare namespace Twinning.Kernel {
 		 * @param error 错误
 		 * @returns 程序正常退出时，返回其退出码
 		 */
-		function spawn_child(
+		function run_process(
 			program: Path,
 			argument: StringList,
 			environment: StringList,
@@ -1274,11 +1274,11 @@ declare namespace Twinning.Kernel {
 		// ----------------
 
 		/**
-		 * 调用宿主环境的命令处理器
+		 * 执行命令，通过宿主环境的解释器
 		 * @param command 命令
 		 * @returns std::system的返回值，由实现定义
 		 */
-		function execute_system_command(
+		function execute_command(
 			command: String,
 		): IntegerU32;
 

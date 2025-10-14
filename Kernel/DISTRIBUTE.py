@@ -15,7 +15,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'config',
             '--builddir=.build',
@@ -25,7 +25,7 @@ def main(platform: str) -> None:
             '--toolchain=mingw',
             '--runtimes=c++_shared',
         ])
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'build',
         ])
@@ -40,7 +40,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'config',
             '--builddir=.build',
@@ -50,7 +50,7 @@ def main(platform: str) -> None:
             '--toolchain=clang',
             '--runtimes=c++_shared',
         ])
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'build',
         ])
@@ -62,7 +62,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'config',
             '--builddir=.build',
@@ -74,7 +74,7 @@ def main(platform: str) -> None:
             '--cc=clang-20',
             '--cxx=clang-20',
         ])
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'build',
         ])
@@ -86,7 +86,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'config',
             '--builddir=.build',
@@ -97,7 +97,7 @@ def main(platform: str) -> None:
             '--ndk_sdkver=30',
             '--runtimes=c++_shared',
         ])
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'build',
         ])
@@ -109,7 +109,7 @@ def main(platform: str) -> None:
         fs_remove(
             f'{module_distribution_file}',
         )
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'config',
             '--builddir=.build',
@@ -121,7 +121,7 @@ def main(platform: str) -> None:
             '--cc=clang-20',
             '--cxx=clang-20',
         ])
-        run_command(module_directory, [
+        execute_command(module_directory, [
             'xmake',
             'build',
         ])

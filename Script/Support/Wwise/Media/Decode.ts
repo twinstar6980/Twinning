@@ -9,7 +9,6 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
 			throw new Error(`unsupported system, this function only avaliable for windows or linux or macintosh`);
 		}
-		let vgmstream_program_path = ProcessHelper.search_program_ensure('vgmstream-cli');
 		let ripe_file_fallback_temporary: null | string = null;
 		let ripe_file_fallback = ripe_file;
 		if (!ripe_file.endsWith('.wem')) {
@@ -21,14 +20,14 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (raw_file_directory !== null) {
 			KernelX.Storage.create_directory(raw_file_directory);
 		}
-		let vgmstream_program_result = ProcessHelper.spawn_child(
-			vgmstream_program_path,
+		let vgmstream_program_result = ProcessHelper.run_process(
+			['vgmstream-cli'],
 			[
 				'-o',
 				raw_file,
 				ripe_file_fallback,
 			],
-			KernelX.Process.list_environment_variable(),
+			null,
 		);
 		if (ripe_file_fallback_temporary !== null) {
 			KernelX.Storage.remove(ripe_file_fallback_temporary);

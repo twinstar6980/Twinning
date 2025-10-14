@@ -142,7 +142,7 @@ namespace AssistantPlus {
 				await App.MainWindow.InsertTabItem(launcher);
 			}
 			else {
-				await ProcessHelper.SpawnChild(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), false);
+				await ProcessHelper.RunProcess(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), false);
 			}
 			return;
 		}

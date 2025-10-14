@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "97"
+#define M_version "98"
 
 #pragma endregion
 

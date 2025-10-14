@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/utility/storage_helper.dart';
 import 'dart:convert';
+import 'package:json5/json5.dart';
 
 // ----------------
 
@@ -11,8 +12,6 @@ class JsonHelper {
   static final JsonEncoder _encoder = JsonEncoder.withIndent('\t');
 
   static final JsonEncoder _encoderCompact = JsonEncoder();
-
-  static final JsonDecoder _decoder = JsonDecoder();
 
   // ----------------
 
@@ -26,7 +25,7 @@ class JsonHelper {
   static Object? deserializeText(
     String text,
   ) {
-    return _decoder.convert(text);
+    return json5Decode(text);
   }
 
   // ----------------

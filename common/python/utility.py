@@ -41,7 +41,7 @@ def fs_create_link(target: str, object: str, is_directory: bool) -> None:
 
 # ----------------
 
-def run_command(location: str, command: list[str], environment: dict[str, str] = {}) -> None:
+def execute_command(location: str, command: list[str], environment: dict[str, str] = {}) -> None:
     actual_environment = os.environ.copy()
     for environment_name, environment_value in environment.items():
         actual_environment[environment_name] = environment_value
@@ -102,7 +102,7 @@ def unpack_zip(source: str, destination: str) -> None:
 
 def strip_windows_binary(target: str) -> None:
     with tempfile.TemporaryDirectory() as temporary:
-        run_command(temporary, [
+        execute_command(temporary, [
             'llvm-strip',
             '--strip-all',
             f'{target}',
@@ -111,7 +111,7 @@ def strip_windows_binary(target: str) -> None:
 
 def apply_windows_manifest(target: str, manifest: str) -> None:
     with tempfile.TemporaryDirectory() as temporary:
-        run_command(temporary, [
+        execute_command(temporary, [
             'mt',
             '-manifest', f'{manifest}',
             f'-outputresource:{target};#1',
@@ -124,14 +124,14 @@ def pack_windows_msix(name: str, source: str, destination: str) -> None:
             f'{source}',
             f'{temporary}/{name}',
         )
-        run_command(temporary, [
+        execute_command(temporary, [
             'makepri',
             'createconfig',
             '/cf', f'{temporary}/{name}/priconfig.xml',
             '/dq', f'en-US',
             '/o',
         ])
-        run_command(temporary, [
+        execute_command(temporary, [
             'makepri',
             'new',
             '/cf', f'{temporary}/{name}/priconfig.xml',
@@ -139,7 +139,7 @@ def pack_windows_msix(name: str, source: str, destination: str) -> None:
             '/of', f'{temporary}/{name}/resources.pri',
             '/o',
         ])
-        run_command(temporary, [
+        execute_command(temporary, [
             'makeappx',
             'pack',
             '/o',
@@ -156,7 +156,7 @@ def pack_windows_msix(name: str, source: str, destination: str) -> None:
 def sign_windows_msix(target: str) -> None:
     with tempfile.TemporaryDirectory() as temporary:
         certificate_file, certificate_password = get_project_certificate('pfx')
-        run_command(temporary, [
+        execute_command(temporary, [
             'signtool',
             'sign',
             '/q',
@@ -175,7 +175,7 @@ def pack_macintosh_dmg(name: str, source: str, destination: str) -> None:
             f'{source}',
             f'{temporary}/{name}.app',
         )
-        run_command(temporary, [
+        execute_command(temporary, [
             'create-dmg',
             f'{temporary}/{name}.dmg',
             f'{temporary}/{name}.app',
@@ -195,14 +195,14 @@ def sign_android_apk(target: str) -> None:
             f'{target}',
             f'{temporary}/original.apk',
         )
-        run_command(temporary, [
+        execute_command(temporary, [
             'zipalign',
             '-f',
             '-p', '4',
             f'{temporary}/original.apk',
             f'{temporary}/aligned.apk',
         ])
-        run_command(temporary, [
+        execute_command(temporary, [
             'apksigner',
             'sign',
             '--ks', f'{certificate_file}',
@@ -219,7 +219,7 @@ def sign_android_apk(target: str) -> None:
 
 def sign_iphone_binary(target: str) -> None:
     with tempfile.TemporaryDirectory() as temporary:
-        run_command(temporary, [
+        execute_command(temporary, [
             'ldid',
             '-S',
             f'{target}',

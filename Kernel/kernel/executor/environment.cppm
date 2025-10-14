@@ -504,17 +504,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 		{
 			auto s_Process = s_Kernel.add_space("Process"_s);
 			s_Process
-				// working directory
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_working_directory>>("get_working_directory"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_working_directory>>("set_working_directory"_s)
-				// environment variable
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_environment_variable>>("get_environment_variable"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_environment_variable>>("set_environment_variable"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::list_environment_variable>>("list_environment_variable"_s)
-				// child
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::spawn_child>>("spawn_child"_s)
-				// system command
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::execute_system_command>>("execute_system_command"_s);
+				// workspace
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_workspace>>("get_workspace"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_workspace>>("set_workspace"_s)
+				// environment
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_environment>>("get_environment"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_environment>>("set_environment"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::list_environment>>("list_environment"_s)
+				// process
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::run_process>>("run_process"_s)
+				// command
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::execute_command>>("execute_command"_s);
 		}
 		// Tool
 		{
