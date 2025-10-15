@@ -47,7 +47,7 @@ namespace Twinning.Script.ProcessHelper {
 		input_data: string = '',
 	): ProgramResult {
 		if (is_object_of_array(program)) {
-			program = search_program_ensure(program[0]);
+			program = search_program_ensure(program[0], true);
 		}
 		if (environment === null) {
 			environment = KernelX.Process.list_environment();
@@ -129,7 +129,7 @@ namespace Twinning.Script.ProcessHelper {
 
 	export function search_program_ensure(
 		name: string,
-		allow_extension: boolean = true,
+		allow_extension: boolean,
 	): string {
 		let path = search_program(name, allow_extension);
 		if (path === null) {

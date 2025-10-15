@@ -235,16 +235,16 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	// ----------------
 
-	function modify_program(
+	function modify_program_flat(
+		platform: Platform,
 		program_file: string,
 		metadata_file: string,
-		platform: Platform,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
 		let dump_data: Array<string> = [];
 		if (disable_record_encryption || enable_debug_mode) {
-			Console.information(`Phase: dump program data`, []);
+			Console.information(`Phase: dump program information`, []);
 			let il2cpp_dumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
 			let il2cpp_dumper_program_result = ProcessHelper.run_process(
 				['dotnet'],
@@ -448,18 +448,24 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return;
 	}
 
-	function modify_program_from_package(
+	function modify_program(
 		target_directory: string,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		Console.information(`Phase: detect game platform`, []);
+		Console.information(`Phase: detect platform`, []);
 		let platform_list = detect_platform(target_directory);
-		Console.information(`The game platform: '${platform_list.join(', ')}'`, []);
-		assert_test(platform_list !== null);
+		Console.information(`The platform is '${platform_list.join('|')}'`, []);
+		assert_test(platform_list.length !== 0);
 		for (let platform of platform_list) {
-			Console.information(`Phase: modify platform '${platform_list.join(', ')}'`, []);
-			modify_program(`${target_directory}/${get_program_file_path(platform)}`, `${target_directory}/${get_metadata_file_path(platform)}`, platform, disable_record_encryption, enable_debug_mode);
+			Console.information(`Phase: modify program of '${platform}'`, []);
+			modify_program_flat(
+				platform,
+				`${target_directory}/${get_program_file_path(platform)}`,
+				`${target_directory}/${get_metadata_file_path(platform)}`,
+				disable_record_encryption,
+				enable_debug_mode,
+			);
 		}
 		return;
 	}
@@ -474,7 +480,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
 			throw new Error(`unsupported system, this function only avaliable for windows or linux or macintosh`);
 		}
-		modify_program_from_package(target_directory, disable_record_encryption, enable_debug_mode);
+		modify_program(target_directory, disable_record_encryption, enable_debug_mode);
 		return;
 	}
 

@@ -61,8 +61,10 @@ def get_project_module(path: str) -> tuple[str, str]:
 def get_project_local() -> str:
     return f'{get_project()}/.local'
 
-def get_project_certificate(type: str) -> tuple[str, str]:
+def get_project_certificate(type: str) -> tuple[str | None, str]:
     file = f'{get_project_local()}/certificate/file.{type}'
+    if not pathlib.Path.is_file(file):
+        return (None, '')
     password = fs_read_file(f'{get_project_local()}/certificate/password.{type}.txt')
     return (file, password)
 
@@ -156,6 +158,8 @@ def pack_windows_msix(name: str, source: str, destination: str) -> None:
 def sign_windows_msix(target: str) -> None:
     with tempfile.TemporaryDirectory() as temporary:
         certificate_file, certificate_password = get_project_certificate('pfx')
+        if certificate_file == None:
+            return
         execute_command(temporary, [
             'signtool',
             'sign',
@@ -191,6 +195,8 @@ def pack_macintosh_dmg(name: str, source: str, destination: str) -> None:
 def sign_android_apk(target: str) -> None:
     with tempfile.TemporaryDirectory() as temporary:
         certificate_file, certificate_password = get_project_certificate('jks')
+        if certificate_file == None:
+            return
         fs_copy(
             f'{target}',
             f'{temporary}/original.apk',

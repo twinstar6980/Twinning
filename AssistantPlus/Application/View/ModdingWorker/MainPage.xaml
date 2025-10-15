@@ -126,6 +126,7 @@
 				ProgressValue="0"
 				ProgressIndeterminate="{x:Bind Controller.uProgress_ProgressIndeterminate}"
 				ProgressPaused="{x:Bind Controller.uProgress_ProgressPaused}"
+				ProgressError="False"
 				/>
 			<my:Box
 				HorizontalAlignment="Stretch"
