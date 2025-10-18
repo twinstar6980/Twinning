@@ -132,10 +132,10 @@
 											Text="{x:Bind uName_Text}"
 											/>
 										<FontIcon
-											ToolTipService.ToolTip="{x:Bind uBatchable_ToolTip}"
+											ToolTipService.ToolTip="{x:Bind uBatch_ToolTip}"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"
-											Opacity="{x:Bind uBatchable_Opacity}"
+											Opacity="{x:Bind uBatch_Opacity}"
 											FontSize="{StaticResource MediumIconSize}"
 											Glyph="{StaticResource FluentIconGlyph.MapLayers}"
 											/>
@@ -242,10 +242,10 @@
 										Text="{x:Bind uTitle_Text}"
 										/>
 									<Button
-										ToolTipService.ToolTip="Apply Preset"
+										ToolTipService.ToolTip="Preset"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"
-										Flyout="{x:Bind uApplyPreset_Flyout}"
+										Flyout="{x:Bind uPreset_Flyout}"
 										>
 										<my:Stack
 											Orientation="Horizontal"
@@ -258,7 +258,7 @@
 												Style="{StaticResource BodyTextBlockStyle}"
 												TextWrapping="NoWrap"
 												TextAlignment="Right"
-												Text="{x:Bind uApplyPresetCount_Text}"
+												Text="{x:Bind uPresetCount_Text}"
 												/>
 											<FontIcon
 												HorizontalAlignment="Stretch"
@@ -269,12 +269,12 @@
 										</my:Stack>
 									</Button>
 									<ToggleButton
-										ToolTipService.ToolTip="Enable Batch"
+										ToolTipService.ToolTip="Batch"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"
-										IsEnabled="{x:Bind uEnableBatch_IsEnabled}"
-										IsChecked="{x:Bind uEnableBatch_IsChecked}"
-										Click="{x:Bind uEnableBatch_Click}"
+										IsEnabled="{x:Bind uBatch_IsEnabled}"
+										IsChecked="{x:Bind uBatch_IsChecked}"
+										Click="{x:Bind uBatch_Click}"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
 										/>
 									<Button

@@ -157,19 +157,19 @@ namespace AssistantPlus.View.CommandSender {
 		#region action
 
 		public async Task AppendCommand (
-			String                     methodId,
-			Boolean                    enableBatch,
-			Dictionary<String, Object> argumentValue
+			String                     method,
+			Boolean                    batch,
+			Dictionary<String, Object> argument
 		) {
-			var groupConfiguration = this.MethodConfiguration.First((value) => (methodId.StartsWith($"{value.Id}.")));
-			var itemConfiguration = groupConfiguration.Item.First((value) => (value.Id == methodId));
-			this.Command.Add(new (groupConfiguration, itemConfiguration, new (enableBatch), ConfigurationHelper.ParseArgumentValueListJson(itemConfiguration.Argument, argumentValue)));
+			var groupConfiguration = this.MethodConfiguration.First((value) => (method.StartsWith($"{value.Id}.")));
+			var itemConfiguration = groupConfiguration.Item.First((value) => (value.Id == method));
+			this.Command.Add(new (groupConfiguration, itemConfiguration, new (batch), ConfigurationHelper.ParseArgumentValueListJson(itemConfiguration.Argument, argument)));
 			this.uCommandList_ItemsSource.Add(new () {
 				Host = this,
 				GroupConfiguration = this.Command.Last().Item1,
 				ItemConfiguration = this.Command.Last().Item2,
-				EnableBatch = this.Command.Last().Item3,
-				ArgumentValue = this.Command.Last().Item4,
+				Batch = this.Command.Last().Item3,
+				Argument = this.Command.Last().Item4,
 			});
 			await Task.Delay(40);
 			this.View.uCommandScrollViewer.ChangeView(null, this.View.uCommandScrollViewer.ExtentHeight, null, false);
@@ -190,7 +190,7 @@ namespace AssistantPlus.View.CommandSender {
 			var actualCommand = new List<List<String>>();
 			foreach (var itemIndex in index) {
 				var item = this.Command[itemIndex];
-				var method = ModdingWorker.ForwardHelper.MakeMethodForBatchable(item.Item2.Id, item.Item3.Value);
+				var method = ModdingWorker.ForwardHelper.MakeMethodMaybeBatch(item.Item2.Id, item.Item3.Value);
 				var argument = ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, item.Item4);
 				actualCommand.Add(ModdingWorker.ForwardHelper.MakeArgumentForCommand(null, method, argument));
 			}
@@ -386,15 +386,15 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
-		public String? uBatchable_ToolTip {
+		public String? uBatch_ToolTip {
 			get {
-				return this.Configuration.Batchable == null ? null : "Batchable";
+				return this.Configuration.Batch == null ? null : "Batch";
 			}
 		}
 
-		public Floater uBatchable_Opacity {
+		public Floater uBatch_Opacity {
 			get {
-				return ConvertHelper.MakeBooleanToFloaterOfOpacityVisibility(this.Configuration.Batchable != null);
+				return ConvertHelper.MakeBooleanToFloaterOfOpacityVisibility(this.Configuration.Batch != null);
 			}
 		}
 
@@ -414,9 +414,9 @@ namespace AssistantPlus.View.CommandSender {
 
 		public MethodConfiguration ItemConfiguration { get; set; } = default!;
 
-		public Wrapper<Boolean> EnableBatch { get; set; } = default!;
+		public Wrapper<Boolean> Batch { get; set; } = default!;
 
-		public List<Wrapper<ValueExpression>> ArgumentValue { get; set; } = default!;
+		public List<Wrapper<ValueExpression>> Argument { get; set; } = default!;
 
 		#endregion
 
@@ -441,7 +441,7 @@ namespace AssistantPlus.View.CommandSender {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (this.ArgumentValue.All((value) => value.Value == null) || await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
+			if (this.Argument.All((value) => value.Value == null) || await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
 				await this.Host.RemoveCommand(this.Host.uCommandList_ItemsSource.IndexOf(this));
 			}
 			return;
@@ -456,31 +456,31 @@ namespace AssistantPlus.View.CommandSender {
 			return;
 		}
 
-		public Boolean uEnableBatch_IsEnabled {
+		public Boolean uBatch_IsEnabled {
 			get {
-				return this.ItemConfiguration.Batchable != null;
+				return this.ItemConfiguration.Batch != null;
 			}
 		}
 
-		public Boolean uEnableBatch_IsChecked {
+		public Boolean uBatch_IsChecked {
 			get {
-				return this.EnableBatch.Value;
+				return this.Batch.Value;
 			}
 		}
 
-		public async void uEnableBatch_Click (
+		public async void uBatch_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			this.EnableBatch.Value = senders.IsChecked.AsNotNull();
+			this.Batch.Value = senders.IsChecked.AsNotNull();
 			this.NotifyPropertyChanged([
-				nameof(this.uEnableBatch_IsChecked),
+				nameof(this.uBatch_IsChecked),
 			]);
 			return;
 		}
 
-		public MenuFlyout uApplyPreset_Flyout {
+		public MenuFlyout uPreset_Flyout {
 			get {
 				var menu = new MenuFlyout() {
 					Placement = FlyoutPlacementMode.BottomEdgeAlignedRight,
@@ -497,7 +497,7 @@ namespace AssistantPlus.View.CommandSender {
 									foreach (var argument in preset.Argument) {
 										var argumentIndex = this.ItemConfiguration.Argument.FindIndex((value) => (value.Id == argument.Key));
 										GF.AssertTest(argumentIndex != -1);
-										this.ArgumentValue[argumentIndex].Value = ConfigurationHelper.ParseArgumentValueJson(this.ItemConfiguration.Argument[argumentIndex].Type, argument.Value);
+										this.Argument[argumentIndex].Value = ConfigurationHelper.ParseArgumentValueJson(this.ItemConfiguration.Argument[argumentIndex].Type, argument.Value);
 									}
 									this.NotifyPropertyChanged([
 										nameof(this.uArgumentPanel_Stamp),
@@ -511,7 +511,7 @@ namespace AssistantPlus.View.CommandSender {
 			}
 		}
 
-		public String uApplyPresetCount_Text {
+		public String uPresetCount_Text {
 			get {
 				return this.ItemConfiguration.Preset.Count((value) => (value != null)).ToString();
 			}
@@ -527,7 +527,7 @@ namespace AssistantPlus.View.CommandSender {
 
 		public List<Wrapper<ValueExpression>> uArgumentPanel_Value {
 			get {
-				return this.ArgumentValue;
+				return this.Argument;
 			}
 		}
 

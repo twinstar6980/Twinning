@@ -44,14 +44,14 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   late ScrollController                                                                                                           _commandListScrollController;
 
   Future<Void> _appendCommand(
-    String              methodId,
-    Boolean             enableBatch,
-    Map<String, Object> argumentValue,
+    String              method,
+    Boolean             batch,
+    Map<String, Object> argument,
     Boolean             expanded,
   ) async {
-    var groupConfiguration = this._methodConfiguration.firstWhere((value) => methodId.startsWith('${value.id}.'));
-    var itemConfiguration = groupConfiguration.item.firstWhere((value) => methodId == value.id);
-    this._command.add((groupConfiguration, itemConfiguration, Wrapper(enableBatch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argumentValue), Wrapper(expanded)));
+    var groupConfiguration = this._methodConfiguration.firstWhere((value) => method.startsWith('${value.id}.'));
+    var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.id);
+    this._command.add((groupConfiguration, itemConfiguration, Wrapper(batch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument), Wrapper(expanded)));
     await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
     return;
@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     var actualCommand = <List<String>>[];
     for (var itemIndex in index) {
       var item = this._command[itemIndex];
-      var method = modding_worker.ForwardHelper.makeMethodForBatchable(item.$2.id, item.$3.value);
+      var method = modding_worker.ForwardHelper.makeMethodMaybeBatch(item.$2.id, item.$3.value);
       var argument = ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, item.$4);
       actualCommand.add(modding_worker.ForwardHelper.makeArgumentForCommand(null, method, argument));
     }
@@ -202,8 +202,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
                 key: ObjectKey(this._command[index]),
                 groupConfiguration: this._command[index].$1,
                 itemConfiguration: this._command[index].$2,
-                enableBatch: this._command[index].$3,
-                argumentValue: this._command[index].$4,
+                batch: this._command[index].$3,
+                argument: this._command[index].$4,
                 expanded: this._command[index].$5,
                 onRemove: () async {
                   await this._removeCommand(index);

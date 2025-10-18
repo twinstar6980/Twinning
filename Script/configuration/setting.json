@@ -1,0 +1,1513 @@
+{
+	"byte_stream_use_big_endian": false,
+	"common_buffer_size": "64.0m",
+	"json_format_disable_array_trailing_comma": false,
+	"json_format_disable_array_line_breaking": false,
+	"json_format_disable_object_trailing_comma": false,
+	"json_format_disable_object_line_breaking": false,
+	"thread_limit": 0,
+	"external_program_path": {
+		"sh": null,
+		"adb": null,
+		"WwiseConsole.exe": null,
+		"WwiseConsole.sh": null,
+		"vgmstream-cli": null,
+		"dotnet": null,
+		"Il2CppDumper.dll": null,
+	},
+	"console_basic_disable_virtual_terminal_sequence": false,
+	"language": "english",
+	"executor_typical_method_disable_name_filter": false,
+	"executor_typical_method_configuration": {
+		"common.utility": {
+			"update_global_setting": {
+				"filter": null,
+				"argument": {
+					"data": "?input",
+				},
+				"batch": null,
+			},
+			"run_embedded_script": {
+				"filter": null,
+				"argument": {
+					"target_name": "?input",
+				},
+				"batch": null,
+			},
+			"run_custom_script": {
+				"filter": "(\\.js)$",
+				"argument": {
+					"target_file": "?input",
+					"is_module": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+				},
+			},
+		},
+		"data.hash": {
+			"md5": {
+				"filter": "()$",
+				"argument": {
+					"target_file": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+				},
+			},
+		},
+		"data.encoding": {
+			"base64.encode": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"base64.decode": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+		},
+		"data.encryption": {
+			"exor.encrypt": {
+				"filter": "()$",
+				"argument": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+					"key": "?input",
+				},
+				"batch": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+				},
+			},
+			"rijndael.encrypt": {
+				"filter": "()$",
+				"argument": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+					"mode": "?input",
+					"block_size": "?input",
+					"key": "?input",
+					"iv": "?input",
+				},
+				"batch": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+				},
+			},
+			"rijndael.decrypt": {
+				"filter": "()$",
+				"argument": {
+					"cipher_file": "?input",
+					"plain_file": "?automatic",
+					"mode": "?input",
+					"block_size": "?input",
+					"key": "?input",
+					"iv": "?input",
+				},
+				"batch": {
+					"cipher_file": "?input",
+					"plain_file": "?automatic",
+				},
+			},
+		},
+		"data.compression": {
+			"deflate.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"deflate.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"zlib.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"zlib.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"gzip.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"gzip.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"bzip2.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"bzip2.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"lzma.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"lzma.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+		},
+		"data.differentiation": {
+			"vcdiff.encode": {
+				"filter": "()$",
+				"argument": {
+					"after_file": "?input",
+					"patch_file": "?automatic",
+					"before_file": "?input",
+					"buffer_size": "1024.0m",
+				},
+				"batch": null,
+			},
+			"vcdiff.decode": {
+				"filter": "()$",
+				"argument": {
+					"patch_file": "?input",
+					"after_file": "?automatic",
+					"before_file": "?input",
+					"buffer_size": "1024.0m",
+				},
+				"batch": null,
+			},
+		},
+		"text.json": {
+			"format": {
+				"filter": "(\\.json)$",
+				"argument": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+					"disable_array_trailing_comma": "?automatic",
+					"disable_array_line_breaking": "?automatic",
+					"disable_object_trailing_comma": "?automatic",
+					"disable_object_line_breaking": "?automatic",
+				},
+				"batch": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+				},
+			},
+		},
+		"text.xml": {
+			"format": {
+				"filter": "(\\.xml)$",
+				"argument": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+				},
+				"batch": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+				},
+			},
+		},
+		"texture.transformation": {
+			"flip": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+					"horizontal": "?input",
+					"vertical": "?input",
+				},
+				"batch": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+				},
+			},
+			"scale": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+					"size_width": "?input",
+					"size_height": "?input",
+				},
+				"batch": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+				},
+			},
+			"scale_rate": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+					"size_rate": "?input",
+				},
+				"batch": {
+					"source_file": "?input",
+					"destination_file": "?automatic",
+				},
+			},
+		},
+		"texture.encoding": {
+			"encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+					"format": "?input",
+				},
+				"batch": null,
+			},
+			"decode": {
+				"filter": "(\\.bin)$",
+				"argument": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+					"format": "?input",
+					"image_width": "?input",
+					"image_height": "?input",
+				},
+				"batch": null,
+			},
+		},
+		"texture.atlas": {
+			"pack": {
+				"filter": "(\\.atlas\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"sprite_directory": "?automatic",
+					"atlas_file": "?automatic",
+				},
+				"batch": null,
+			},
+			"unpack": {
+				"filter": "(\\.atlas\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"atlas_file": "?automatic",
+					"sprite_directory": "?automatic",
+				},
+				"batch": null,
+			},
+			"pack_automatic": {
+				"filter": "(\\.sprite)$",
+				"argument": {
+					"sprite_directory": "?input",
+					"atlas_file": "?automatic",
+					"definition_file": "?automatic",
+				},
+				"batch": null,
+			},
+		},
+		"wwise.media": {
+			"encode": {
+				"filter": "(\\.wav)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"format": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.wem)$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+		},
+		"wwise.sound_bank": {
+			"encode": {
+				"filter": "(\\.bnk\\.bundle)$",
+				"argument": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": "?input",
+					"buffer_size": "64.0m",
+				},
+				"batch": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.bnk)$",
+				"argument": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+					"version_number": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+			},
+		},
+		"marmalade.dzip": {
+			"pack": {
+				"filter": "(\\.dz\\.bundle)$",
+				"argument": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": 0,
+					"buffer_size": "256.0m",
+				},
+				"batch": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"unpack": {
+				"filter": "(\\.dz)$",
+				"argument": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+					"version_number": 0,
+				},
+				"batch": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+			},
+			"pack_automatic": {
+				"filter": "()$",
+				"argument": {
+					"resource_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": 0,
+				},
+				"batch": null,
+			},
+		},
+		"popcap.zlib": {
+			"compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"version_variant_64": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"version_variant_64": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+		},
+		"popcap.crypt_data": {
+			"encrypt": {
+				"filter": "()$",
+				"argument": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+					"limit": 256,
+					"key": "AS23DSREPLKL335KO4439032N8345NF",
+				},
+				"batch": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+				},
+			},
+			"decrypt": {
+				"filter": "(\\.cdat)$",
+				"argument": {
+					"cipher_file": "?input",
+					"plain_file": "?automatic",
+					"limit": 256,
+					"key": "AS23DSREPLKL335KO4439032N8345NF",
+				},
+				"batch": {
+					"cipher_file": "?input",
+					"plain_file": "?automatic",
+				},
+			},
+		},
+		"popcap.reflection_object_notation": {
+			"encode": {
+				"filter": "(\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_number": 1,
+					"version_native_string_encoding_use_utf8": true,
+					"buffer_size": "64.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.rton)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_number": 1,
+					"version_native_string_encoding_use_utf8": true,
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+			"encrypt": {
+				"filter": "(\\.rton)$",
+				"argument": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+					"key": "?input",
+				},
+				"batch": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+				},
+			},
+			"decrypt": {
+				"filter": "(\\.rton)$",
+				"argument": {
+					"cipher_file": "?input",
+					"plain_file": "?automatic",
+					"key": "?input",
+				},
+				"batch": {
+					"cipher_file": "?input",
+					"plain_file": "?automatic",
+				},
+			},
+			"encode_cipher": {
+				"filter": "(\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_number": 1,
+					"version_native_string_encoding_use_utf8": true,
+					"key": "?input",
+					"buffer_size": "64.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode_cipher": {
+				"filter": "(\\.rton)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_number": 1,
+					"version_native_string_encoding_use_utf8": true,
+					"key": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+			"decode_lenient": {
+				"filter": "(\\.rton)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_number": 1,
+					"version_native_string_encoding_use_utf8": true,
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.texture": {
+			"encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+					"format": "?input",
+				},
+				"batch": null,
+			},
+			"decode": {
+				"filter": "(\\.ptx)$",
+				"argument": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+					"format": "?input",
+					"image_width": "?input",
+					"image_height": "?input",
+				},
+				"batch": null,
+			},
+		},
+		"popcap.u_texture": {
+			"encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+					"version_compress_texture_data": "?input",
+					"format": "?input",
+				},
+				"batch": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.tex)$",
+				"argument": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+					"version_compress_texture_data": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+				},
+			},
+		},
+		"popcap.sexy_texture": {
+			"encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+					"version_number": 0,
+					"format": "?input",
+					"compress_texture_data": "?input",
+				},
+				"batch": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.tex)$",
+				"argument": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+					"version_number": 0,
+				},
+				"batch": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+				},
+			},
+		},
+		"popcap.animation": {
+			"encode": {
+				"filter": "(\\.pam\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_number": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.pam)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_number": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+			"convert.flash.from": {
+				"filter": "(\\.pam\\.json)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_directory": "?automatic",
+					"version_number": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_directory": "?automatic",
+				},
+			},
+			"convert.flash.to": {
+				"filter": "(\\.pam\\.xfl)$",
+				"argument": {
+					"ripe_directory": "?input",
+					"raw_file": "?automatic",
+					"version_number": "?input",
+				},
+				"batch": {
+					"ripe_directory": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"convert.flash.resize": {
+				"filter": "(\\.pam\\.xfl)$",
+				"argument": {
+					"target_directory": "?input",
+					"resolution": "?input",
+				},
+				"batch": {
+					"target_directory": "?input",
+				},
+			},
+			"convert.flash.link_media": {
+				"filter": "(\\.pam\\.xfl)$",
+				"argument": {
+					"target_directory": "?input",
+				},
+				"batch": {
+					"target_directory": "?input",
+				},
+			},
+		},
+		"popcap.re_animation": {
+			"encode": {
+				"filter": "(\\.reanim\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_platform": "?input",
+					"version_variant_64": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.reanim\\.compiled)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_platform": "?input",
+					"version_variant_64": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.particle": {
+			"encode": {
+				"filter": "(\\.particle\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_platform": "?input",
+					"version_variant_64": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.xml\\.compiled)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_platform": "?input",
+					"version_variant_64": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.trail": {
+			"encode": {
+				"filter": "(\\.trail\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_platform": "?input",
+					"version_variant_64": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.trail\\.compiled)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_platform": "?input",
+					"version_variant_64": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.particle_effect": {
+			"encode": {
+				"filter": "(\\.ppf\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_number": 1,
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.ppf)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_number": 1,
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.render_effect": {
+			"encode": {
+				"filter": "(\\.popfx\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"version_number": 1,
+					"version_variant": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.popfx)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+					"version_number": 1,
+					"version_variant": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.character_font_widget_2": {
+			"encode": {
+				"filter": "(\\.cfw2\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"buffer_size": "8.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"decode": {
+				"filter": "(\\.cfw2)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
+		"popcap.package": {
+			"pack": {
+				"filter": "(\\.pak\\.bundle)$",
+				"argument": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": 0,
+					"version_compress_resource_data": "?input",
+					"buffer_size": "256.0m",
+				},
+				"batch": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"unpack": {
+				"filter": "(\\.pak)$",
+				"argument": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+					"version_number": 0,
+					"version_compress_resource_data": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+			},
+			"pack_automatic": {
+				"filter": "()$",
+				"argument": {
+					"resource_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": 0,
+					"version_compress_resource_data": "?input",
+				},
+				"batch": null,
+			},
+			"encrypt": {
+				"filter": "(\\.pak)$",
+				"argument": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+					"key": 247,
+				},
+				"batch": {
+					"plain_file": "?input",
+					"cipher_file": "?automatic",
+				},
+			},
+		},
+		"popcap.resource_stream_group": {
+			"pack": {
+				"filter": "(\\.rsg\\.bundle)$",
+				"argument": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": "?input",
+					"buffer_size": "256.0m",
+				},
+				"batch": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"unpack": {
+				"filter": "(\\.rsg)$",
+				"argument": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+					"version_number": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+			},
+		},
+		"popcap.resource_stream_bundle": {
+			"pack": {
+				"filter": "(\\.rsb\\.bundle)$",
+				"argument": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+					"version_number": "?input",
+					"version_extended_texture_information_for_pvz2_cn": "?input",
+					"layout_mode": "?input",
+					"input_packet": "?input",
+					"output_new_packet": "?input",
+					"buffer_size": "1.25g",
+				},
+				"batch": {
+					"bundle_directory": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"unpack": {
+				"filter": "(\\.rsb)$",
+				"argument": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+					"version_number": "?input",
+					"version_extended_texture_information_for_pvz2_cn": "?input",
+					"layout_mode": "?input",
+					"output_resource": "?input",
+					"output_packet": "?input",
+				},
+				"batch": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+			},
+			"unpack_lenient": {
+				"filter": "(\\.rsb)$",
+				"argument": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+				"batch": {
+					"data_file": "?input",
+					"bundle_directory": "?automatic",
+				},
+			},
+			"resource_convert": {
+				"filter": "(\\.rsb\\.bundle)$",
+				"argument": {
+					"bundle_directory": "?input",
+					"option_recase_path": "?input",
+					"option_rton": "?input",
+					"option_rton_version_number": 1,
+					"option_rton_version_native_string_encoding_use_utf8": true,
+					"option_rton_crypt": "?input",
+					"option_rton_crypt_key": "?input",
+					"option_ptx": "?input",
+					"option_ptx_format": "?input",
+					"option_ptx_atlas": "?input",
+					"option_ptx_atlas_resize": "?input",
+					"option_ptx_sprite": "?input",
+					"option_pam": "?input",
+					"option_pam_version_number": 6,
+					"option_pam_json": "?input",
+					"option_pam_flash": "?input",
+					"option_bnk": "?input",
+					"option_bnk_version_number": "?input",
+					"option_wem": "?input",
+				},
+				"batch": {
+					"bundle_directory": "?input",
+				},
+			},
+		},
+		"popcap.resource_stream_bundle_patch": {
+			"encode": {
+				"filter": "(\\.rsb)$",
+				"argument": {
+					"after_file": "?input",
+					"patch_file": "?automatic",
+					"before_file": "?input",
+					"version_number": 1,
+					"use_raw_packet": "?input",
+					"buffer_size": "1024.0m",
+				},
+				"batch": null,
+			},
+			"decode": {
+				"filter": "(\\.rsbpatch)$",
+				"argument": {
+					"patch_file": "?input",
+					"after_file": "?automatic",
+					"before_file": "?input",
+					"version_number": 1,
+					"use_raw_packet": "?input",
+					"buffer_size": "1024.0m",
+				},
+				"batch": null,
+			},
+		},
+		"pvz2.text_table": {
+			"convert": {
+				"filter": "(\\.(txt|json))$",
+				"argument": {
+					"source_file": "?input",
+					"destination_version": "?input",
+					"destination_file": "?automatic",
+				},
+				"batch": null,
+			},
+		},
+		"pvz2.resource_manifest": {
+			"new_type_object_notation.encode": {
+				"filter": "(\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"buffer_size": "64.0m",
+				},
+				"batch": null,
+			},
+			"new_type_object_notation.decode": {
+				"filter": "(\\.newton)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+				"batch": null,
+			},
+			"regular.from": {
+				"filter": "(\\.json)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": null,
+			},
+			"regular.to": {
+				"filter": "(\\.json)$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"use_array_style_path": "?input",
+				},
+				"batch": null,
+			},
+		},
+		"pvz2.package_project": {
+			"transpile": {
+				"filter": "(\\.pvz2_package_project)$",
+				"argument": {
+					"project_directory": "?input",
+					"target_scope": "?input",
+					"target_package": "?input",
+					"option_generalize_rton": "?input",
+					"option_generalize_ptx": "?input",
+					"option_generalize_pam": "?input",
+					"option_generalize_wem": "?input",
+					"option_specialize_rton": "?input",
+					"option_specialize_ptx": "?input",
+					"option_specialize_pam": "?input",
+					"option_specialize_wem": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": null,
+			},
+			"compile": {
+				"filter": "(\\.pvz2_package_project)$",
+				"argument": {
+					"project_directory": "?input",
+					"target_scope": "?input",
+					"target_package": "?input",
+					"buffer_size": "8.0m",
+				},
+				"batch": null,
+			},
+			"link": {
+				"filter": "(\\.pvz2_package_project)$",
+				"argument": {
+					"project_directory": "?input",
+					"target_package": "?input",
+					"remake_manifest": "?input",
+					"buffer_size": "1024.0m",
+				},
+				"batch": null,
+			},
+			"parse": {
+				"filter": "(\\.pvz2_package_project)$",
+				"argument": {
+					"project_directory": "?input",
+					"package_directory": "?input",
+					"package_name": "?automatic",
+					"package_version_number": "?input",
+					"package_version_extended_texture_information_for_pvz2_cn": "?input",
+				},
+				"batch": null,
+			},
+		},
+		"pvz2.remote_project": {
+			"execute": {
+				"filter": "(\\.pvz2_remote_project)$",
+				"argument": {
+					"project_directory": "?input",
+					"action": "?input",
+					"target": "?input",
+					"rton_version_number": 1,
+					"rton_version_native_string_encoding_use_utf8": true,
+					"rton_encode_buffer_size": "4.0m",
+				},
+				"batch": null,
+			},
+		},
+		"kairosoft.game": {
+			"encrypt_record": {
+				"filter": "()$",
+				"argument": {
+					"target_directory": "?input",
+					"key": "?input",
+				},
+				"batch": null,
+			},
+			"modify_program": {
+				"filter": "()$",
+				"argument": {
+					"target_directory": "?input",
+					"disable_record_encryption": "?input",
+					"enable_debug_mode": "?input",
+				},
+				"batch": null,
+			},
+		},
+	},
+	"executor_pvz2_resource_convert_ptx_format_map_list": {
+		"iphone": [
+			{
+				"index": 0,
+				"format": "argb_8888",
+			},
+			{
+				"index": 1,
+				"format": "rgba_4444",
+			},
+			{
+				"index": 2,
+				"format": "rgb_565",
+			},
+			{
+				"index": 3,
+				"format": "rgba_5551",
+			},
+			{
+				"index": 21,
+				"format": "rgba_4444_tiled",
+			},
+			{
+				"index": 22,
+				"format": "rgb_565_tiled",
+			},
+			{
+				"index": 23,
+				"format": "rgba_5551_tiled",
+			},
+			{
+				"index": 30,
+				"format": "rgba_pvrtc4",
+			},
+			{
+				"index": 148,
+				"format": "rgb_pvrtc4_a_8",
+			},
+		],
+		"android": [
+			{
+				"index": 0,
+				"format": "rgba_8888_o",
+			},
+			{
+				"index": 1,
+				"format": "rgba_4444",
+			},
+			{
+				"index": 2,
+				"format": "rgb_565",
+			},
+			{
+				"index": 3,
+				"format": "rgba_5551",
+			},
+			{
+				"index": 21,
+				"format": "rgba_4444_tiled",
+			},
+			{
+				"index": 22,
+				"format": "rgb_565_tiled",
+			},
+			{
+				"index": 23,
+				"format": "rgba_5551_tiled",
+			},
+			{
+				"index": 147,
+				"format": "rgb_etc1_a_8",
+			},
+		],
+		"android_pvz2_cn": [
+			{
+				"index": 0,
+				"format": "rgba_8888_o",
+			},
+			{
+				"index": 147,
+				"format": "rgb_etc1_a_palette",
+			},
+		],
+	},
+	"executor_pvz2_package_project_conversion_setting": {
+		"rton": [
+			{
+				"name": "@:default",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": true,
+				},
+				"key": null,
+			},
+			{
+				"name": "#:1_eascii_plain",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": false,
+				},
+				"key": null,
+			},
+			{
+				"name": "#:1_utf8_plain",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": true,
+				},
+				"key": null,
+			},
+			{
+				"name": "#:1_eascii_cipher",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": false,
+				},
+				"key": "<set-your-key>",
+			},
+			{
+				"name": "#:1_utf8_cipher",
+				"version": {
+					"number": 1,
+					"native_string_encoding_use_utf8": true,
+				},
+				"key": "<set-your-key>",
+			},
+		],
+		"ptx": [
+			{
+				"name": "@:original",
+				"format": "rgba_8888_o",
+				"index": 0,
+			},
+			{
+				"name": "@:compressed",
+				"format": "rgb_etc1_a_8",
+				"index": 147,
+			},
+			{
+				"name": "#:rgba_8888_o",
+				"format": "rgba_8888_o",
+				"index": 0,
+			},
+			{
+				"name": "#:argb_8888",
+				"format": "argb_8888",
+				"index": 0,
+			},
+			{
+				"name": "#:rgba_4444",
+				"format": "rgba_4444",
+				"index": 1,
+			},
+			{
+				"name": "#:rgb_565",
+				"format": "rgb_565",
+				"index": 2,
+			},
+			{
+				"name": "#:rgba_5551",
+				"format": "rgba_5551",
+				"index": 3,
+			},
+			{
+				"name": "#:rgba_4444_tiled",
+				"format": "rgba_4444_tiled",
+				"index": 21,
+			},
+			{
+				"name": "#:rgb_565_tiled",
+				"format": "rgb_565_tiled",
+				"index": 22,
+			},
+			{
+				"name": "#:rgba_5551_tiled",
+				"format": "rgba_5551_tiled",
+				"index": 23,
+			},
+			{
+				"name": "#:rgba_pvrtc4",
+				"format": "rgba_pvrtc4",
+				"index": 30,
+			},
+			{
+				"name": "#:rgb_pvrtc4_a_8",
+				"format": "rgb_pvrtc4_a_8",
+				"index": 148,
+			},
+			{
+				"name": "#:rgb_etc1_a_8",
+				"format": "rgb_etc1_a_8",
+				"index": 147,
+			},
+			{
+				"name": "#:rgb_etc1_a_palette",
+				"format": "rgb_etc1_a_palette",
+				"index": 147,
+			},
+		],
+		"pam": [
+			{
+				"name": "#:1",
+				"version": {
+					"number": 1,
+				},
+			},
+			{
+				"name": "#:2",
+				"version": {
+					"number": 2,
+				},
+			},
+			{
+				"name": "#:3",
+				"version": {
+					"number": 3,
+				},
+			},
+			{
+				"name": "#:4",
+				"version": {
+					"number": 4,
+				},
+			},
+			{
+				"name": "#:5",
+				"version": {
+					"number": 5,
+				},
+			},
+			{
+				"name": "#:6",
+				"version": {
+					"number": 6,
+				},
+			},
+		],
+		"wem": [
+			{
+				"name": "#:pcm",
+				"format": "pcm",
+			},
+			{
+				"name": "#:adpcm",
+				"format": "adpcm",
+			},
+			{
+				"name": "#:vorbis",
+				"format": "vorbis",
+			},
+			{
+				"name": "#:aac",
+				"format": "aac",
+			},
+			{
+				"name": "#:opus",
+				"format": "opus",
+			},
+			{
+				"name": "#:wemopus",
+				"format": "wemopus",
+			},
+		],
+	},
+	"command_notification_time_limit": 15000,
+}

@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
       var groupMatch = <(Boolean, Boolean, Boolean, Boolean)>[];
       for (var item in group.item) {
         var singleEnabled = true;
-        var batchEnabled = item.batchable;
+        var batchEnabled = item.batch;
         if (item.filter != null) {
           for (var resource in this._resource) {
             singleEnabled &= switch (item.filter!.type) {
@@ -116,7 +116,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     Map<String, Object>? argument,
   ) async {
     var actualInput = this._resource.isNotEmpty ? this._resource.map((value) => value.$1).toList() : <String?>[null];
-    var actualMethod = method == null ? null : modding_worker.ForwardHelper.makeMethodForBatchable(method, this._enableBatch);
+    var actualMethod = method == null ? null : modding_worker.ForwardHelper.makeMethodMaybeBatch(method, this._enableBatch);
     var actualCommand = actualInput.map((value) => modding_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
     await modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
     return;

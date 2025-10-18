@@ -1,5 +1,5 @@
 name: assistant
-version: 117.0.0+117
+version: 118.0.0+118
 publish_to: 'none'
 environment:
   sdk: ^3.9.2
@@ -21,7 +21,7 @@ dependencies:
   url_launcher: 6.3.2
   app_links: 6.4.1
   file_selector: 1.0.4
-  flutter_local_notifications: 19.4.2
+  flutter_local_notifications: 19.5.0
   super_drag_and_drop: 0.9.1
   single_child_two_dimensional_scroll_view: 0.0.3
 dev_dependencies:

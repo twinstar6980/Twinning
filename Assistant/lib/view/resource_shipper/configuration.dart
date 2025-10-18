@@ -30,14 +30,14 @@ class OptionConfiguration {
   String                     name;
   String                     icon;
   FilterConfiguration?       filter;
-  Boolean                    batchable;
+  Boolean                    batch;
   String?                    method;
   List<PresetConfiguration?> preset;
   OptionConfiguration({
     required this.name,
     required this.icon,
     required this.filter,
-    required this.batchable,
+    required this.batch,
     required this.method,
     required this.preset,
   });
@@ -73,7 +73,7 @@ class ConfigurationHelper {
           name: (jsonFilter['name'] as String),
           type: (jsonFilter['type'] as String).selfLet((it) => FilterType.values.byName(it)),
         )),
-        batchable: (jsonItem['batchable'] as Boolean),
+        batch: (jsonItem['batch'] as Boolean),
         method: (jsonItem['method'] as String?),
         preset: (jsonItem['preset'] as List<dynamic>).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
           name: (jsonPreset['name'] as String),

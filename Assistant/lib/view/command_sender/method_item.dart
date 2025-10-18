@@ -37,8 +37,8 @@ class MethodItem extends StatelessWidget {
             message: this.configuration.name,
           ),
           trailing: Visibility(
-            visible: this.configuration.batchable != null,
-            child: Icon(IconSymbols.layers, color: theme.colorScheme.primary).withTooltip(message: 'Batchable'),
+            visible: this.configuration.batch != null,
+            child: Icon(IconSymbols.layers, color: theme.colorScheme.primary).withTooltip(message: 'Batch'),
           ),
           onTap: () async {
             this.onSelect(this.configuration.id);

@@ -20,6 +20,8 @@ def fs_copy(source: str, destination: str) -> None:
     return
 
 def fs_remove(source: str) -> None:
+    if pathlib.Path(source).is_symlink():
+        os.remove(source)
     if pathlib.Path(source).is_file():
         os.remove(source)
     if pathlib.Path(source).is_dir():
@@ -197,28 +199,17 @@ def sign_android_apk(target: str) -> None:
         certificate_file, certificate_password = get_project_certificate('jks')
         if certificate_file == None:
             return
-        fs_copy(
-            f'{target}',
-            f'{temporary}/original.apk',
-        )
-        execute_command(temporary, [
-            'zipalign',
-            '-f',
-            '-p', '4',
-            f'{temporary}/original.apk',
-            f'{temporary}/aligned.apk',
-        ])
         execute_command(temporary, [
             'apksigner',
             'sign',
+            '--v1-signing-enabled', f'false',
+            '--v2-signing-enabled', f'false',
+            '--v3-signing-enabled', f'true',
+            '--v4-signing-enabled', f'false',
             '--ks', f'{certificate_file}',
             '--ks-pass', f'pass:{certificate_password}',
-            f'{temporary}/aligned.apk',
-        ])
-        fs_copy(
-            f'{temporary}/aligned.apk',
             f'{target}',
-        )
+        ])
     return
 
 # ----------------

@@ -38,11 +38,11 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		// ----------------
 
-		public static String MakeMethodForBatchable (
+		public static String MakeMethodMaybeBatch (
 			String  method,
-			Boolean enableBatch
+			Boolean batch
 		) {
-			return $"{method}{(!enableBatch ? "" : "!batch")}";
+			return $"{method}{(!batch ? "" : "!batch")}";
 		}
 
 		public static List<String> MakeArgumentForCommand (

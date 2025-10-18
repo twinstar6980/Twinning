@@ -7,7 +7,7 @@
 				"name": "Launch",
 				"icon": "send",
 				"filter": null,
-				"batchable": true,
+				"batch": true,
 				"method": null,
 				"preset": [
 				],
@@ -19,7 +19,7 @@
 					"type": "any",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": null,
 				"preset": [
 				],
@@ -31,31 +31,12 @@
 		"icon": "handyman",
 		"item": [
 			{
-				"name": "Set global configuration",
+				"name": "Update global setting",
 				"icon": "settings",
 				"filter": null,
-				"batchable": false,
-				"method": "common.utility.set_global_configuration",
+				"batch": false,
+				"method": "common.utility.update_global_setting",
 				"preset": [
-					{
-						"name": "Language - English",
-						"argument": {
-							"data": "{\"language\":\"English\"}",
-						},
-					},
-					{
-						"name": "Language - Chinese",
-						"argument": {
-							"data": "{\"language\":\"Chinese\"}",
-						},
-					},
-					{
-						"name": "Language - Vietnamese",
-						"argument": {
-							"data": "{\"language\":\"Vietnamese\"}",
-						},
-					},
-					null,
 					{
 						"name": "Byte endian - Little",
 						"argument": {
@@ -76,9 +57,41 @@
 						},
 					},
 					{
-						"name": "JSON format - Compat",
+						"name": "JSON format - Compatible",
 						"argument": {
 							"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}",
+						},
+					},
+					null,
+					{
+						"name": "Language - English",
+						"argument": {
+							"data": "{\"language\":\"English\"}",
+						},
+					},
+					{
+						"name": "Language - Chinese",
+						"argument": {
+							"data": "{\"language\":\"Chinese\"}",
+						},
+					},
+					{
+						"name": "Language - Vietnamese",
+						"argument": {
+							"data": "{\"language\":\"Vietnamese\"}",
+						},
+					},
+					null,
+					{
+						"name": "Executor name filter - Enabled",
+						"argument": {
+							"data": "{\"executor_typical_method_disable_name_filter\":false}",
+						},
+					},
+					{
+						"name": "Executor name filter - Disabled",
+						"argument": {
+							"data": "{\"executor_typical_method_disable_name_filter\":true}",
 						},
 					},
 				],
@@ -87,7 +100,7 @@
 				"name": "Run embedded script",
 				"icon": "extension",
 				"filter": null,
-				"batchable": false,
+				"batch": false,
 				"method": "common.utility.run_embedded_script",
 				"preset": [
 					{
@@ -123,7 +136,7 @@
 					"type": "file",
 					"name": "(\\.js)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "common.utility.run_custom_script",
 				"preset": [
 					{
@@ -153,7 +166,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.hash.md5",
 				"preset": [
 				],
@@ -165,7 +178,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.encoding.base64.encode",
 				"preset": [
 				],
@@ -177,7 +190,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.encoding.base64.decode",
 				"preset": [
 				],
@@ -189,7 +202,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.encryption.exor.encrypt",
 				"preset": [
 				],
@@ -201,7 +214,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.encryption.rijndael.encrypt",
 				"preset": [
 				],
@@ -213,7 +226,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.encryption.rijndael.decrypt",
 				"preset": [
 				],
@@ -225,7 +238,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.deflate.compress",
 				"preset": [
 				],
@@ -237,7 +250,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.deflate.uncompress",
 				"preset": [
 				],
@@ -249,7 +262,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.zlib.compress",
 				"preset": [
 				],
@@ -261,7 +274,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.zlib.uncompress",
 				"preset": [
 				],
@@ -273,7 +286,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.gzip.compress",
 				"preset": [
 				],
@@ -285,7 +298,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.gzip.uncompress",
 				"preset": [
 				],
@@ -297,7 +310,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.bzip2.compress",
 				"preset": [
 				],
@@ -309,7 +322,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.bzip2.uncompress",
 				"preset": [
 				],
@@ -321,7 +334,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.lzma.compress",
 				"preset": [
 				],
@@ -333,7 +346,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "data.compression.lzma.uncompress",
 				"preset": [
 				],
@@ -345,7 +358,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "data.differentiation.vcdiff.encode",
 				"preset": [
 				],
@@ -357,7 +370,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "data.differentiation.vcdiff.decode",
 				"preset": [
 				],
@@ -375,7 +388,7 @@
 					"type": "file",
 					"name": "(\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "text.json.format",
 				"preset": [
 					{
@@ -424,7 +437,7 @@
 					"type": "file",
 					"name": "(\\.xml)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "text.xml.format",
 				"preset": [
 				],
@@ -442,7 +455,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "texture.transformation.flip",
 				"preset": [
 					{
@@ -475,7 +488,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "texture.transformation.scale",
 				"preset": [
 				],
@@ -487,7 +500,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "texture.transformation.scale_rate",
 				"preset": [
 					{
@@ -511,7 +524,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "texture.encoding.encode",
 				"preset": [
 					{
@@ -658,7 +671,7 @@
 					"type": "file",
 					"name": "(\\.bin)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "texture.encoding.decode",
 				"preset": [
 					{
@@ -805,7 +818,7 @@
 					"type": "file",
 					"name": "(\\.atlas\\.json)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "texture.atlas.pack",
 				"preset": [
 				],
@@ -817,7 +830,7 @@
 					"type": "file",
 					"name": "(\\.atlas\\.json)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "texture.atlas.unpack",
 				"preset": [
 				],
@@ -829,7 +842,7 @@
 					"type": "directory",
 					"name": "(\\.sprite)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "texture.atlas.pack_automatic",
 				"preset": [
 				],
@@ -847,7 +860,7 @@
 					"type": "file",
 					"name": "(\\.wav)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "wwise.media.encode",
 				"preset": [
 					{
@@ -895,7 +908,7 @@
 					"type": "file",
 					"name": "(\\.wem)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "wwise.media.decode",
 				"preset": [
 				],
@@ -913,7 +926,7 @@
 					"type": "directory",
 					"name": "(\\.bnk\\.bundle)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "wwise.sound_bank.encode",
 				"preset": [
 					{
@@ -1009,7 +1022,7 @@
 					"type": "file",
 					"name": "(\\.bnk)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "wwise.sound_bank.decode",
 				"preset": [
 					{
@@ -1111,7 +1124,7 @@
 					"type": "directory",
 					"name": "(\\.dz\\.bundle)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "marmalade.dzip.pack",
 				"preset": [
 					{
@@ -1129,7 +1142,7 @@
 					"type": "file",
 					"name": "(\\.dz)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "marmalade.dzip.unpack",
 				"preset": [
 					{
@@ -1147,7 +1160,7 @@
 					"type": "directory",
 					"name": "()$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "marmalade.dzip.pack_automatic",
 				"preset": [
 					{
@@ -1171,7 +1184,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.zlib.compress",
 				"preset": [
 					{
@@ -1195,7 +1208,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.zlib.uncompress",
 				"preset": [
 					{
@@ -1225,7 +1238,7 @@
 					"type": "file",
 					"name": "()$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.crypt_data.encrypt",
 				"preset": [
 				],
@@ -1237,7 +1250,7 @@
 					"type": "file",
 					"name": "(\\.cdat)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.crypt_data.decrypt",
 				"preset": [
 				],
@@ -1255,7 +1268,7 @@
 					"type": "file",
 					"name": "(\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.encode",
 				"preset": [
 					{
@@ -1281,7 +1294,7 @@
 					"type": "file",
 					"name": "(\\.rton)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.decode",
 				"preset": [
 					{
@@ -1307,7 +1320,7 @@
 					"type": "file",
 					"name": "(\\.rton)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.encrypt",
 				"preset": [
 				],
@@ -1319,7 +1332,7 @@
 					"type": "file",
 					"name": "(\\.rton)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.decrypt",
 				"preset": [
 				],
@@ -1331,7 +1344,7 @@
 					"type": "file",
 					"name": "(\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.encode_cipher",
 				"preset": [
 					{
@@ -1357,7 +1370,7 @@
 					"type": "file",
 					"name": "(\\.rton)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.decode_cipher",
 				"preset": [
 					{
@@ -1383,7 +1396,7 @@
 					"type": "file",
 					"name": "(\\.rton)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.reflection_object_notation.decode_lenient",
 				"preset": [
 					{
@@ -1415,7 +1428,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "popcap.texture.encode",
 				"preset": [
 					{
@@ -1503,7 +1516,7 @@
 					"type": "file",
 					"name": "(\\.ptx)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "popcap.texture.decode",
 				"preset": [
 					{
@@ -1597,7 +1610,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.u_texture.encode",
 				"preset": [
 					{
@@ -1666,7 +1679,7 @@
 					"type": "file",
 					"name": "(\\.tex)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.u_texture.decode",
 				"preset": [
 					{
@@ -1741,7 +1754,7 @@
 					"type": "file",
 					"name": "(\\.png)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.sexy_texture.encode",
 				"preset": [
 					{
@@ -1882,7 +1895,7 @@
 					"type": "file",
 					"name": "(\\.tex)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.sexy_texture.decode",
 				"preset": [
 					{
@@ -2029,7 +2042,7 @@
 					"type": "file",
 					"name": "(\\.pam\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.animation.encode",
 				"preset": [
 					{
@@ -2077,7 +2090,7 @@
 					"type": "file",
 					"name": "(\\.pam)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.animation.decode",
 				"preset": [
 					{
@@ -2125,7 +2138,7 @@
 					"type": "file",
 					"name": "(\\.pam\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.animation.convert.flash.from",
 				"preset": [
 					{
@@ -2173,7 +2186,7 @@
 					"type": "directory",
 					"name": "(\\.pam\\.xfl)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.animation.convert.flash.to",
 				"preset": [
 					{
@@ -2221,7 +2234,7 @@
 					"type": "directory",
 					"name": "(\\.pam\\.xfl)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.animation.convert.flash.resize",
 				"preset": [
 					{
@@ -2264,7 +2277,7 @@
 					"type": "directory",
 					"name": "(\\.pam\\.xfl)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.animation.convert.flash.link_media",
 				"preset": [
 				],
@@ -2282,7 +2295,7 @@
 					"type": "file",
 					"name": "(\\.reanim\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.re_animation.encode",
 				"preset": [
 					{
@@ -2322,7 +2335,7 @@
 					"type": "file",
 					"name": "(\\.reanim\\.compiled)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.re_animation.decode",
 				"preset": [
 					{
@@ -2368,7 +2381,7 @@
 					"type": "file",
 					"name": "(\\.particle\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.particle.encode",
 				"preset": [
 					{
@@ -2408,7 +2421,7 @@
 					"type": "file",
 					"name": "(\\.xml\\.compiled)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.particle.decode",
 				"preset": [
 					{
@@ -2454,7 +2467,7 @@
 					"type": "file",
 					"name": "(\\.trail\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.trail.encode",
 				"preset": [
 					{
@@ -2494,7 +2507,7 @@
 					"type": "file",
 					"name": "(\\.trail\\.compiled)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.trail.decode",
 				"preset": [
 					{
@@ -2540,7 +2553,7 @@
 					"type": "file",
 					"name": "(\\.ppf\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.particle_effect.encode",
 				"preset": [
 					{
@@ -2558,7 +2571,7 @@
 					"type": "file",
 					"name": "(\\.ppf)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.particle_effect.decode",
 				"preset": [
 					{
@@ -2582,7 +2595,7 @@
 					"type": "file",
 					"name": "(\\.popfx\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.render_effect.encode",
 				"preset": [
 					{
@@ -2615,7 +2628,7 @@
 					"type": "file",
 					"name": "(\\.popfx)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.render_effect.decode",
 				"preset": [
 					{
@@ -2654,7 +2667,7 @@
 					"type": "file",
 					"name": "(\\.cfw2\\.json)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.character_font_widget_2.encode",
 				"preset": [
 				],
@@ -2666,7 +2679,7 @@
 					"type": "file",
 					"name": "(\\.cfw2)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.character_font_widget_2.decode",
 				"preset": [
 				],
@@ -2684,7 +2697,7 @@
 					"type": "directory",
 					"name": "(\\.pak\\.bundle)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.package.pack",
 				"preset": [
 					{
@@ -2710,7 +2723,7 @@
 					"type": "file",
 					"name": "(\\.pak)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.package.unpack",
 				"preset": [
 					{
@@ -2736,7 +2749,7 @@
 					"type": "directory",
 					"name": "()$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "popcap.package.pack_automatic",
 				"preset": [
 					{
@@ -2762,7 +2775,7 @@
 					"type": "file",
 					"name": "(\\.pak)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.package.encrypt",
 				"preset": [
 				],
@@ -2780,7 +2793,7 @@
 					"type": "directory",
 					"name": "(\\.rsg\\.bundle)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.resource_stream_group.pack",
 				"preset": [
 					{
@@ -2810,7 +2823,7 @@
 					"type": "file",
 					"name": "(\\.rsg)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.resource_stream_group.unpack",
 				"preset": [
 					{
@@ -2846,7 +2859,7 @@
 					"type": "directory",
 					"name": "(\\.rsb\\.bundle)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.resource_stream_bundle.pack",
 				"preset": [
 					{
@@ -2901,7 +2914,7 @@
 					"type": "file",
 					"name": "(\\.rsb)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.resource_stream_bundle.unpack",
 				"preset": [
 					{
@@ -2956,7 +2969,7 @@
 					"type": "file",
 					"name": "(\\.rsb)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.resource_stream_bundle.unpack_lenient",
 				"preset": [
 				],
@@ -2968,7 +2981,7 @@
 					"type": "directory",
 					"name": "(\\.rsb\\.bundle)$",
 				},
-				"batchable": true,
+				"batch": true,
 				"method": "popcap.resource_stream_bundle.resource_convert",
 				"preset": [
 					{
@@ -3201,7 +3214,7 @@
 					"type": "file",
 					"name": "(\\.rsb)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "popcap.resource_stream_bundle_patch.encode",
 				"preset": [
 				],
@@ -3213,7 +3226,7 @@
 					"type": "file",
 					"name": "(\\.rsbpatch)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "popcap.resource_stream_bundle_patch.decode",
 				"preset": [
 				],
@@ -3231,7 +3244,7 @@
 					"type": "file",
 					"name": "(\\.(txt|json))$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.text_table.convert",
 				"preset": [
 					{
@@ -3267,7 +3280,7 @@
 					"type": "file",
 					"name": "(\\.json)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.resource_manifest.new_type_object_notation.encode",
 				"preset": [
 				],
@@ -3279,7 +3292,7 @@
 					"type": "file",
 					"name": "(\\.newton)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.resource_manifest.new_type_object_notation.decode",
 				"preset": [
 				],
@@ -3291,7 +3304,7 @@
 					"type": "file",
 					"name": "(\\.json)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.resource_manifest.regular.from",
 				"preset": [
 				],
@@ -3303,7 +3316,7 @@
 					"type": "file",
 					"name": "(\\.json)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.resource_manifest.regular.to",
 				"preset": [
 					{
@@ -3333,7 +3346,7 @@
 					"type": "directory",
 					"name": "(\\.pvz2_package_project)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.package_project.transpile",
 				"preset": [
 					{
@@ -3476,7 +3489,7 @@
 					"type": "directory",
 					"name": "(\\.pvz2_package_project)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.package_project.compile",
 				"preset": [
 				],
@@ -3488,7 +3501,7 @@
 					"type": "directory",
 					"name": "(\\.pvz2_package_project)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.package_project.link",
 				"preset": [
 					{
@@ -3512,7 +3525,7 @@
 					"type": "directory",
 					"name": "(\\.pvz2_package_project)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.package_project.parse",
 				"preset": [
 					{
@@ -3573,7 +3586,7 @@
 					"type": "directory",
 					"name": "(\\.pvz2_remote_project)$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "pvz2.remote_project.execute",
 				"preset": [
 					{
@@ -3691,7 +3704,7 @@
 					"type": "directory",
 					"name": "()$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "kairosoft.game.encrypt_record",
 				"preset": [
 				],
@@ -3703,7 +3716,7 @@
 					"type": "directory",
 					"name": "()$",
 				},
-				"batchable": false,
+				"batch": false,
 				"method": "kairosoft.game.modify_program",
 				"preset": [
 					{

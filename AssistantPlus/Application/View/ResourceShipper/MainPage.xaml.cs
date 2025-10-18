@@ -193,7 +193,7 @@ namespace AssistantPlus.View.ResourceShipper {
 			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
 					item.SingleEnabled = true;
-					item.BatchEnabled = item.Configuration.Batchable;
+					item.BatchEnabled = item.Configuration.Batch;
 					if (item.Configuration.Filter != null) {
 						foreach (var resource in this.Resource) {
 							item.SingleEnabled &= item.Configuration.Filter.Type switch {
@@ -285,7 +285,7 @@ namespace AssistantPlus.View.ResourceShipper {
 			Dictionary<String, Object>? argument
 		) {
 			var actualInput = this.Resource.Count != 0 ? this.Resource.Select((value) => value.Item1).Cast<String?>() : [null];
-			var actualMethod = method == null ? null : ModdingWorker.ForwardHelper.MakeMethodForBatchable(method, this.EnableBatch);
+			var actualMethod = method == null ? null : ModdingWorker.ForwardHelper.MakeMethodMaybeBatch(method, this.EnableBatch);
 			var actualCommand = actualInput.Select((value) => (ModdingWorker.ForwardHelper.MakeArgumentForCommand(value, actualMethod, argument))).ToList();
 			await ModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
 			return;

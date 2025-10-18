@@ -19,19 +19,11 @@ def main(platform: str) -> None:
         execute_command(module_directory, [
             'tsc',
         ])
-        configuration_list = filter(
-            lambda it: it != 'tsconfig.json' and not it.startswith('.build'),
-            map(
-                lambda it: f'{it.relative_to(module_directory)}',
-                list(pathlib.Path(f'{module_directory}').glob('**/*.json')),
-            ),
+        fs_create_link(
+            f'{module_directory}/.build/configuration',
+            f'{module_directory}/configuration',
+            False,
         )
-        for configuration_file in configuration_list:
-            fs_create_link(
-                f'{module_directory}/.build/{configuration_file}',
-                f'{module_directory}/{configuration_file}',
-                False,
-            )
         pack_zip(
             'script',
             f'{module_directory}/.build',

@@ -42,11 +42,11 @@ class ForwardHelper {
 
   // ----------------
 
-  static String makeMethodForBatchable(
+  static String makeMethodMaybeBatch(
     String  method,
-    Boolean enableBatch,
+    Boolean batch,
   ) {
-    return '${method}${!enableBatch ? '' : '!batch'}';
+    return '${method}${!batch ? '' : '!batch'}';
   }
 
   static List<String> makeArgumentForCommand(

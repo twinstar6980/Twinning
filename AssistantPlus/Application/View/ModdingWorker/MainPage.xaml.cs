@@ -598,7 +598,7 @@ namespace AssistantPlus.View.ModdingWorker {
 
 		private async Task<ValueTuple<String>> CallbackName (
 		) {
-			var name = "assistant.plus";
+			var name = "assistant_plus";
 			return new (name);
 		}
 

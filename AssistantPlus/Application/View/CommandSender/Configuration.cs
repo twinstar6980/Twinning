@@ -28,12 +28,12 @@ namespace AssistantPlus.View.CommandSender {
 	}
 
 	public record MethodConfiguration {
-		public String                      Id        = default!;
-		public String                      Name      = default!;
-		public String                      Icon      = default!;
-		public List<ArgumentConfiguration> Argument  = default!;
-		public List<String>?               Batchable = default!;
-		public List<PresetConfiguration?>  Preset    = default!;
+		public String                      Id       = default!;
+		public String                      Name     = default!;
+		public String                      Icon     = default!;
+		public List<ArgumentConfiguration> Argument = default!;
+		public List<String>?               Batch    = default!;
+		public List<PresetConfiguration?>  Preset   = default!;
 	}
 
 	public record MethodGroupConfiguration {

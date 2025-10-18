@@ -41,14 +41,14 @@ class MethodConfiguration {
   String                      name;
   String                      icon;
   List<ArgumentConfiguration> argument;
-  List<String>?               batchable;
+  List<String>?               batch;
   List<PresetConfiguration?>  preset;
   MethodConfiguration({
     required this.id,
     required this.name,
     required this.icon,
     required this.argument,
-    required this.batchable,
+    required this.batch,
     required this.preset,
   });
 }
@@ -165,7 +165,7 @@ class ConfigurationHelper {
           type: (jsonArgument['type'] as String).selfLet((it) => ArgumentType.values.byName(it)),
           option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),
         )).toList(),
-        batchable: (jsonItem['batchable'] as List<dynamic>?)?.cast<String>(),
+        batch: (jsonItem['batch'] as List<dynamic>?)?.cast<String>(),
         preset: (jsonItem['preset'] as List<dynamic>).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
           name: (jsonPreset['name'] as String),
           argument: (jsonPreset['argument'] as Map<dynamic, dynamic>).cast<String, Object>(),

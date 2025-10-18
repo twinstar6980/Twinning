@@ -15,8 +15,8 @@ class CommandPanel extends StatelessWidget {
     super.key,
     required this.groupConfiguration,
     required this.itemConfiguration,
-    required this.enableBatch,
-    required this.argumentValue,
+    required this.batch,
+    required this.argument,
     required this.expanded,
     required this.onRemove,
     required this.onForward,
@@ -26,8 +26,8 @@ class CommandPanel extends StatelessWidget {
 
   final MethodGroupConfiguration        groupConfiguration;
   final MethodConfiguration             itemConfiguration;
-  final Wrapper<Boolean>                enableBatch;
-  final List<Wrapper<ValueExpression?>> argumentValue;
+  final Wrapper<Boolean>                batch;
+  final List<Wrapper<ValueExpression?>> argument;
   final Wrapper<Boolean>                expanded;
   final Void Function()                 onRemove;
   final Void Function()                 onForward;
@@ -70,7 +70,7 @@ class CommandPanel extends StatelessWidget {
                     isSelected: false,
                     icon: Icon(IconSymbols.remove),
                     onPressed: () async {
-                      if (this.argumentValue.every((value) => value.value == null) || await ControlHelper.showDialogForConfirm(context)) {
+                      if (this.argument.every((value) => value.value == null) || await ControlHelper.showDialogForConfirm(context)) {
                         this.onRemove();
                       }
                     },
@@ -80,7 +80,7 @@ class CommandPanel extends StatelessWidget {
               ),
               Divider(),
               if (!this.expanded.value)
-                ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argumentValue[argumentIndex].value == null
+                ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argument[argumentIndex].value == null
                   ? SizedBox()
                   : Container(
                     margin: EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -98,7 +98,7 @@ class CommandPanel extends StatelessWidget {
                         ).withExpanded(),
                         SizedBox(width: 8),
                         Text(
-                          ValueExpressionHelper.makeString(this.argumentValue[argumentIndex].value!),
+                          ValueExpressionHelper.makeString(this.argument[argumentIndex].value!),
                           overflow: TextOverflow.clip,
                           textAlign: TextAlign.end,
                           style: theme.textTheme.bodyMedium!,
@@ -108,7 +108,7 @@ class CommandPanel extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (!this.expanded.value && this.argumentValue.where((value) => value.value != null).isEmpty)
+              if (!this.expanded.value && this.argument.where((value) => value.value != null).isEmpty)
                 SizedBox(height: 16),
               if (!this.expanded.value)
                 Divider(),
@@ -119,7 +119,7 @@ class CommandPanel extends StatelessWidget {
                     name: argumentConfiguration.name,
                     type: argumentConfiguration.type,
                     option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
-                    value: this.argumentValue[argumentIndex],
+                    value: this.argument[argumentIndex],
                   ),
                 )),
               SizedBox(height: 8),
@@ -132,7 +132,7 @@ class CommandPanel extends StatelessWidget {
                       padding: WidgetStatePropertyAll(EdgeInsets.zero),
                       overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     ),
-                    tooltip: 'Apply Preset',
+                    tooltip: 'Preset',
                     isSelected: false,
                     icon: Stack(
                       children: [
@@ -178,7 +178,7 @@ class CommandPanel extends StatelessWidget {
                               for (var argument in value.argument.entries) {
                                 var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.id == argument.key);
                                 assertTest(argumentIndex != -1);
-                                this.argumentValue[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
+                                this.argument[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
                               }
                               await refreshState(setState);
                             },
@@ -191,14 +191,14 @@ class CommandPanel extends StatelessWidget {
                   ),
                   SizedBox(width: 8),
                   IconButton.filledTonal(
-                    tooltip: this.itemConfiguration.batchable == null ? '' : 'Enable Batch',
-                    isSelected: this.enableBatch.value,
+                    tooltip: this.itemConfiguration.batch == null ? '' : 'Batch',
+                    isSelected: this.batch.value,
                     icon: Icon(IconSymbols.layers),
                     selectedIcon: Icon(IconSymbols.layers, fill: 1),
-                    onPressed: this.itemConfiguration.batchable == null
+                    onPressed: this.itemConfiguration.batch == null
                       ? null
                       : () async {
-                        this.enableBatch.value = !this.enableBatch.value;
+                        this.batch.value = !this.batch.value;
                         await refreshState(setState);
                       },
                   ),
