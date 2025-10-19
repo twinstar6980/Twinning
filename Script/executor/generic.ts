@@ -42,7 +42,7 @@ namespace Twinning.Script.Executor {
 			}
 			if (command_reader.check('-argument')) {
 				let argument = KernelX.JSON.read_s_js(command_reader.next_string());
-				if (!is_object_of_object(argument)) {
+				if (!CheckHelper.is_object_of_object(argument)) {
 					throw new Error(`argument must be a object`);
 				}
 				command.argument = argument as Argument;
@@ -116,7 +116,7 @@ namespace Twinning.Script.Executor {
 			state = target_method.worker(actual_argument);
 		}
 		while (false);
-		if (is_string(state)) {
+		if (CheckHelper.is_string(state)) {
 			Console.warning(los('executor.generic:finish_skipped'), [state]);
 		}
 		else {
@@ -127,7 +127,7 @@ namespace Twinning.Script.Executor {
 				Console.success(los('executor.generic:finish_succeeded'), [los('executor.generic:duration', (state[1] / 1000).toFixed(3))]);
 			}
 		}
-		return is_string(state) ? null : state;
+		return CheckHelper.is_string(state) ? null : state;
 	}
 
 	// #endregion

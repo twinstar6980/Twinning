@@ -28,13 +28,13 @@ namespace Twinning.Script.Executor.Implement.Kairosoft.Game {
 				worker: ({ target_directory, key }, temporary: {}) => {
 					let key_value = [] as Array<bigint>;
 					if (key.startsWith('d32:')) {
-						key_value = make_integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4);
+						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4);
 					}
 					else if (key.startsWith('d64:')) {
-						key_value = make_integer_to_byte_array(BigInt(key.substring('d64:'.length)), 8);
+						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d64:'.length)), 8);
 					}
 					else {
-						key_value = make_string_to_byte_array(key);
+						key_value = ConvertHelper.make_string_to_byte_array(key);
 					}
 					Support.Kairosoft.Game.EncryptRecord.process_fs(target_directory, key_value);
 					return;

@@ -3,6 +3,7 @@
 
 using AssistantPlus;
 using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 
 namespace AssistantPlus.Utility {
 
@@ -31,11 +32,16 @@ namespace AssistantPlus.Utility {
 		}
 
 		public static void Push (
-			AppNotification notification
+			String title,
+			String description
 		) {
 			if (!AppNotificationManager.IsSupported()) {
 				return;
 			}
+			var notification = new AppNotificationBuilder()
+				.AddText(title)
+				.AddText(description)
+				.BuildNotification();
 			AppNotificationManager.Default.Show(notification);
 			return;
 		}

@@ -257,7 +257,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				null,
 			);
 			Console.warning(`The output of Il2CppDumper:`, [il2cpp_dumper_program_result.output]);
-			if (!normalize_string_line_feed(il2cpp_dumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
+			if (!ConvertHelper.normalize_string_line_feed(il2cpp_dumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
 				throw new Error(`execute failed by Il2CppDumper`);
 			}
 			dump_data = KernelX.Storage.read_file_s(`${StorageHelper.parent(il2cpp_dumper_program_path)}/dump.cs`).split('\n');

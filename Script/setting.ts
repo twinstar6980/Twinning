@@ -31,7 +31,7 @@ namespace Twinning.Script {
 				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
 			},
 			common_buffer_size: (value) => {
-				KernelX.g_common_buffer.allocate(Kernel.Size.value(parse_size_from_string(value)));
+				KernelX.g_common_buffer.allocate(Kernel.Size.value(ConvertHelper.parse_size_from_string(value)));
 			},
 			json_format_disable_array_trailing_comma: (value) => {
 				KernelX.JSON.g_format.disable_array_trailing_comma = value;

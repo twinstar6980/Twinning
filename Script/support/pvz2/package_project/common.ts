@@ -205,7 +205,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 	): string {
 		let result = '';
 		let variable_name: null | string = null;
-		format = format.slice(0, not_or(format.indexOf('~'), -1, undefined));
+		format = format.slice(0, CheckHelper.not_or(format.indexOf('~'), -1, undefined));
 		for (let index = 0; index < format.length; index++) {
 			let character = format[index];
 			if (character === '{') {

@@ -5,7 +5,7 @@ namespace Twinning.Script.ProcessHelper {
 	export function parse_environment(
 		list: Array<string>,
 	): Record<string, string> {
-		return record_from_array(
+		return ConvertHelper.record_from_array(
 			list,
 			(index, element) => {
 				let split_index = element.indexOf('=');
@@ -46,7 +46,7 @@ namespace Twinning.Script.ProcessHelper {
 		environment: null | Array<string>,
 		input_data:  null | string,
 	): ProgramResult {
-		if (is_object_of_array(program)) {
+		if (CheckHelper.is_object_of_array(program)) {
 			program = search_program_ensure(program[0], true);
 		}
 		if (environment === null) {
@@ -74,7 +74,7 @@ namespace Twinning.Script.ProcessHelper {
 		let code = KernelX.Process.run_process(program, argument, environment, input, output, error);
 		let read_file = (path: string) => {
 			let data = KernelX.Storage.read_file_s(path);
-			return normalize_string_line_feed(data);
+			return ConvertHelper.normalize_string_line_feed(data);
 		};
 		let result: ProgramResult = {
 			code: code,

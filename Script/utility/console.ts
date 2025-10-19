@@ -142,7 +142,7 @@ namespace Twinning.Script.Console {
 	export function error_of(
 		exception: any,
 	): void {
-		let [title, description] = generate_exception_message(exception);
+		let [title, description] = ConvertHelper.generate_exception_message(exception);
 		error(title, description);
 		return;
 	}
@@ -172,7 +172,7 @@ namespace Twinning.Script.Console {
 				input = inputer();
 				echoer(input);
 				let convert_result = converter(input);
-				if (is_string(convert_result)) {
+				if (CheckHelper.is_string(convert_result)) {
 					state = convert_result;
 				}
 				else {
@@ -220,8 +220,8 @@ namespace Twinning.Script.Console {
 				return;
 			},
 			converter,
-			not_null_or(nullable, false),
-			not_null_or(checker, () => (null)),
+			CheckHelper.not_null_or(nullable, false),
+			CheckHelper.not_null_or(checker, () => (null)),
 			initial,
 		);
 	}
@@ -242,8 +242,8 @@ namespace Twinning.Script.Console {
 				return;
 			},
 			converter,
-			not_null_or(nullable, false),
-			not_null_or(checker, () => (null)),
+			CheckHelper.not_null_or(nullable, false),
+			CheckHelper.not_null_or(checker, () => (null)),
 			initial,
 		);
 	}
@@ -301,7 +301,7 @@ namespace Twinning.Script.Console {
 			if (regexp_check_result !== null) {
 				return los('console:boolean_format_error');
 			}
-			return [parse_boolean_from_string_of_confirmation_character(value)];
+			return [ConvertHelper.parse_boolean_from_string_of_confirmation_character(value)];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -484,7 +484,7 @@ namespace Twinning.Script.Console {
 			if (regexp_check_result !== null) {
 				return los('console:size_format_error', regexp_check_result);
 			}
-			return [parse_size_from_string(value)];
+			return [ConvertHelper.parse_size_from_string(value)];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -631,7 +631,7 @@ namespace Twinning.Script.Console {
 			}
 			let result: string;
 			if (value[0] !== '?') {
-				result = HomePath.of(StorageHelper.regularize(unquote_string(value)));
+				result = HomePath.of(StorageHelper.regularize(ConvertHelper.unquote_string(value)));
 			}
 			else {
 				if (value[1] === '?') {
@@ -870,7 +870,7 @@ namespace Twinning.Script.Console {
 	export function option_size<Value extends bigint>(
 		value: Array<Value>,
 	): Array<[Value, string, null | string]> {
-		return value.map((value, index) => ([value, `${index + 1}`, `${make_size_to_string(value)}`]));
+		return value.map((value, index) => ([value, `${index + 1}`, `${ConvertHelper.make_size_to_string(value)}`]));
 	}
 
 	export function option_string<Value extends string>(

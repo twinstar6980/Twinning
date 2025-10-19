@@ -33,7 +33,7 @@ namespace Twinning.Script.HomePath {
 		name: null | string,
 		create: null | 'file' | 'directory',
 	): string {
-		let temporary_name = name !== null ? name : make_date_to_string_simple(new Date());
+		let temporary_name = name !== null ? name : ConvertHelper.make_date_to_string_simple(new Date());
 		let temporary_path = StorageHelper.generate_suffix_path(`${temporary()}/${temporary_name}`, null);
 		if (create === 'file') {
 			KernelX.Storage.create_file(temporary_path);

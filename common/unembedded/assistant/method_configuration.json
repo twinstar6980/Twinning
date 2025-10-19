@@ -6083,6 +6083,26 @@
 							"player_profile",
 						],
 					},
+					{
+						"id": "rton_version_number",
+						"name": "RTON - Version number",
+						"type": "integer",
+						"option": [
+							1,
+						],
+					},
+					{
+						"id": "rton_version_native_string_encoding_use_utf8",
+						"name": "RTON - Native string encoding use UTF-8",
+						"type": "boolean",
+						"option": null,
+					},
+					{
+						"id": "buffer_size",
+						"name": "RTON - Buffer memory size",
+						"type": "size",
+						"option": null,
+					},
 				],
 				"batch": null,
 				"preset": [

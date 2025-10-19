@@ -108,7 +108,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 		data: Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation,
 		resolution: null | bigint,
 	): void {
-		resolution = not_null_or(resolution, k_standard_resolution);
+		resolution = CheckHelper.not_null_or(resolution, k_standard_resolution);
 		create(data, resolution).forEach((value, index) => {
 			KernelX.XML.write_fs_js(`${directory}/LIBRARY/source/source_${index + 1}.xml`, XML.wrap_element(value));
 		});

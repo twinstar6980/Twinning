@@ -114,7 +114,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					resource_setting.property = {
 						conversion: conversion_setting.name,
 						path: resource_property.path,
-						resolution: not_null_or(resource_setting.category.resolution, 0n),
+						resolution: CheckHelper.not_null_or(resource_setting.category.resolution, 0n),
 						sprite: new_sprite_property_list,
 					} as SpecialPTXResourceProperty;
 				}
@@ -158,7 +158,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 						source_list[sprite_resource_property.source] = [source, source_view];
 					}
 					let sprite_list = source_list;
-					let sprite_item_map = record_transform(sprite_list, (key, value) => ([key, { w: Number(value[0].size().value[0]), h: Number(value[0].size().value[1]) }]));
+					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, { w: Number(value[0].size().value[0]), h: Number(value[0].size().value[1]) }]));
 					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
 					let atlas_size = PopCap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));

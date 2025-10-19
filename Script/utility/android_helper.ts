@@ -143,7 +143,7 @@ namespace Twinning.Script.AndroidHelper {
 	): boolean {
 		let shell_result: string;
 		shell_result = shell(`if [ -e ${escape(target)} ] ; then echo y ; else echo n ; fi`);
-		return split_string_by_line_feed(shell_result, true)[0] === 'y';
+		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
 	export function fs_exist_file(
@@ -151,7 +151,7 @@ namespace Twinning.Script.AndroidHelper {
 	): boolean {
 		let shell_result: string;
 		shell_result = shell(`if [ -f ${escape(target)} ] ; then echo y ; else echo n ; fi`);
-		return split_string_by_line_feed(shell_result, true)[0] === 'y';
+		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
 	export function fs_exist_directory(
@@ -159,7 +159,7 @@ namespace Twinning.Script.AndroidHelper {
 	): boolean {
 		let shell_result: string;
 		shell_result = shell(`if [ -d ${escape(target)} ] ; then echo y ; else echo n ; fi`);
-		return split_string_by_line_feed(shell_result, true)[0] === 'y';
+		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
 	export function fs_copy(
@@ -192,7 +192,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: string,
 		mode: null | string,
 	): void {
-		mode = not_null_or(mode, '777');
+		mode = CheckHelper.not_null_or(mode, '777');
 		let shell_result: string;
 		shell_result = shell(`mkdir -p -m ${escape(mode)} ${escape(target)}`);
 		return;
@@ -273,7 +273,7 @@ namespace Twinning.Script.AndroidHelper {
 	): Array<string> {
 		let shell_result: string;
 		shell_result = shell(`pm list packages`);
-		let id = split_string_by_line_feed(shell_result, true).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
+		let id = ConvertHelper.split_string_by_line_feed(shell_result, true).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
 		return id;
 	}
 

@@ -65,6 +65,7 @@ namespace Twinning.Script {
 			size: number,
 			initializer: null | (() => any),
 		): void {
+			this.wait();
 			this.m_pool = new Array(size);
 			for (let index = 0; index < size; index++) {
 				this.m_pool[index] = {

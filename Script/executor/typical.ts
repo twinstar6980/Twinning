@@ -60,7 +60,7 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			GivenValue: undefined!,
 			id: object.id,
-			initial_echoer: (value) => (make_boolean_to_string_of_confirmation_character(value)),
+			initial_echoer: (value) => (ConvertHelper.make_boolean_to_string_of_confirmation_character(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (Console.boolean(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -82,7 +82,7 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			GivenValue: undefined!,
 			id: object.id,
-			initial_echoer: (value) => (make_integer_to_string(value)),
+			initial_echoer: (value) => (ConvertHelper.make_integer_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.integer(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -104,7 +104,7 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			GivenValue: undefined!,
 			id: object.id,
-			initial_echoer: (value) => (make_floater_to_string(value)),
+			initial_echoer: (value) => (ConvertHelper.make_floater_to_string(value)),
 			given_converter: (argument, given) => (given),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.floater(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
@@ -126,8 +126,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			GivenValue: undefined!,
 			id: object.id,
-			initial_echoer: (value) => (make_size_to_string(value)),
-			given_converter: (argument, given) => (parse_size_from_string(given)),
+			initial_echoer: (value) => (ConvertHelper.make_size_to_string(value)),
+			given_converter: (argument, given) => (ConvertHelper.parse_size_from_string(given)),
 			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
 			input_generator: (argument, initial) => (object.option === null ? Console.size(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_size(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
 			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
@@ -361,7 +361,7 @@ namespace Twinning.Script.Executor {
 				timer.stop();
 				return [state, timer.duration()];
 			},
-			default_argument: record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
+			default_argument: ConvertHelper.record_from_array(source.argument, (index, element) => ([element.id, element.default])) as typeof source.GivenArgument,
 			input_filter: (input) => {
 				let state = true;
 				if (source.filter === null) {

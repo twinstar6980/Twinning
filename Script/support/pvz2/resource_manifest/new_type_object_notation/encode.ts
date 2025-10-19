@@ -49,14 +49,14 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		write_integer(data, BigInt(definition.groups.length));
 		for (let groups_index = 0; groups_index < definition.groups.length; groups_index++) {
 			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = { ...definition.groups[groups_index] } as any;
-			group.subgroups = not_undefined_or(group.subgroups, []);
-			group.resources = not_undefined_or(group.resources, []);
+			group.subgroups = CheckHelper.not_undefined_or(group.subgroups, []);
+			group.resources = CheckHelper.not_undefined_or(group.resources, []);
 			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index!;
 			if (group.type === undefined) {
 				throw new Error(`unknown group type value ${group.type}`);
 			}
 			write_enumeration(data, group_type_index);
-			write_integer(data, not_undefined_or(group.res, 0n));
+			write_integer(data, CheckHelper.not_undefined_or(group.res, 0n));
 			write_integer(data, BigInt(group.subgroups.length));
 			write_integer(data, BigInt(group.resources.length));
 			write_boolean(data, true);
@@ -67,7 +67,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 			}
 			for (let subgroups_index = 0; subgroups_index < group.subgroups.length; subgroups_index++) {
 				let subgroup: ResourceManifest.CompositeGroupAdditional['subgroups'][number] = group.subgroups[subgroups_index];
-				write_integer(data, not_undefined_or(subgroup.res, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(subgroup.res, 0n));
 				write_string(data, subgroup.id);
 			}
 			for (let resources_index = 0; resources_index < group.resources.length; resources_index++) {
@@ -81,22 +81,22 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 				}
 				write_enumeration(data, resource_type_index);
 				write_integer(data, resource.slot);
-				write_integer(data, not_undefined_or(resource.width, 0n));
-				write_integer(data, not_undefined_or(resource.height, 0n));
-				write_integer(data, not_undefined_or(resource.x, 0n));
-				write_integer(data, not_undefined_or(resource.y, 0n));
-				write_integer(data, not_undefined_or(resource.ax, 0n));
-				write_integer(data, not_undefined_or(resource.ay, 0n));
-				write_integer(data, not_undefined_or(resource.aw, 0n));
-				write_integer(data, not_undefined_or(resource.ah, 0n));
-				write_integer(data, not_undefined_or(resource.cols, 1n));
-				write_integer(data, not_undefined_or(resource.rows, 1n));
-				write_boolean(data, not_undefined_or(resource.atlas, false));
+				write_integer(data, CheckHelper.not_undefined_or(resource.width, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.height, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.x, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.y, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.ax, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.ay, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.aw, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.ah, 0n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.cols, 1n));
+				write_integer(data, CheckHelper.not_undefined_or(resource.rows, 1n));
+				write_boolean(data, CheckHelper.not_undefined_or(resource.atlas, false));
 				write_boolean(data, true);
 				write_boolean(data, true);
 				write_boolean(data, resource.parent !== undefined);
 				write_string(data, resource.id);
-				write_string(data, is_string(resource.path) ? resource.path : resource.path.join('\\'));
+				write_string(data, CheckHelper.is_string(resource.path) ? resource.path : resource.path.join('\\'));
 				if (resource.parent !== undefined) {
 					write_string(data, resource.parent);
 				}

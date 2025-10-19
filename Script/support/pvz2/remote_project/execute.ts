@@ -70,7 +70,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 		let remote_application_obb_directory = `${remote_external_directory}/Android/obb/${application.id}`;
 		let remote = {
 			main_package: `${remote_application_obb_directory}/main.${application.version_code}.${application.id}.obb`,
-			content_delivery: `${remote_application_data_directory}/files/No_Backup/CDN.${application.version_name.slice(0, not_or(application.version_name.lastIndexOf('.'), -1, undefined))}`,
+			content_delivery: `${remote_application_data_directory}/files/No_Backup/CDN.${application.version_name.slice(0, CheckHelper.not_or(application.version_name.lastIndexOf('.'), -1, undefined))}`,
 			local_profile: `${remote_application_data_directory}/files/No_Backup/local_profiles`,
 			player_profile: `${remote_application_data_directory}/files/No_Backup/pp.dat`,
 			player_profile_snapshot_1: `${remote_application_data_directory}/files/No_Backup/snapshot1.dat`,

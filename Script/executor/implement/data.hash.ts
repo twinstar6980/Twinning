@@ -29,7 +29,7 @@ namespace Twinning.Script.Executor.Implement.Data.Hash {
 				],
 				worker: ({ target_file }, temporary: {}) => {
 					let result = KernelX.Tool.Data.Hash.MD5.hash_fs(target_file);
-					Console.success(`${parse_string_from_byte_array(make_integer_to_byte_array(result, 16, 'little'), false)}`, []);
+					Console.success(`${ConvertHelper.parse_string_from_byte_array(ConvertHelper.make_integer_to_byte_array(result, 16, 'little'), false)}`, []);
 					return;
 				},
 			}),

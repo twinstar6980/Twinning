@@ -1,95 +1,32 @@
-namespace Twinning.Script {
+namespace Twinning.Script.ConvertHelper {
 
-	// #region check
+	// #region exception
 
-	export function is_boolean(
-		value: unknown,
-	): value is boolean {
-		return typeof value === 'boolean';
-	}
-
-	export function is_bigint(
-		value: unknown,
-	): value is bigint {
-		return typeof value === 'bigint';
-	}
-
-	export function is_number(
-		value: unknown,
-	): value is number {
-		return typeof value === 'number';
-	}
-
-	export function is_string(
-		value: unknown,
-	): value is string {
-		return typeof value === 'string';
-	}
-
-	export function is_object(
-		value: unknown,
-	): value is object {
-		return typeof value === 'object' && value !== null;
-	}
-
-	export function is_object_of_object(
-		value: unknown,
-	): value is Record<any, any> {
-		return is_object(value) && value.constructor.name === 'Object';
-	}
-
-	export function is_object_of_array(
-		value: unknown,
-	): value is Array<any> {
-		return is_object(value) && value.constructor.name === 'Array';
-	}
-
-	// ----------------
-
-	export function is_or<Value, Except extends Value, Fallback>(
-		value: Value,
-		expect: Except,
-		fallback: Fallback,
-	): Except | Fallback {
-		return value === expect ? value as Except : fallback;
-	}
-
-	export function not_or<Value, Except extends Value, Fallback>(
-		value: Value,
-		expect: Except,
-		fallback: Fallback,
-	): Exclude<Value, Except> | Fallback {
-		return value !== expect ? value as Exclude<Value, Except> : fallback;
-	}
-
-	// ----------------
-
-	export function is_undefined_or<Value, Fallback>(
-		value: Value | undefined,
-		fallback: Fallback,
-	): undefined | Fallback {
-		return is_or(value, undefined, fallback);
-	}
-
-	export function not_undefined_or<Value, Fallback>(
-		value: Value | undefined,
-		fallback: Fallback,
-	): Value | Fallback {
-		return not_or(value, undefined, fallback);
-	}
-
-	export function is_null_or<Value, Fallback>(
-		value: Value | null,
-		fallback: Fallback,
-	): null | Fallback {
-		return is_or(value, null, fallback);
-	}
-
-	export function not_null_or<Value, Fallback>(
-		value: Value | null,
-		fallback: Fallback,
-	): Value | Fallback {
-		return not_or(value, null, fallback);
+	export function generate_exception_message(
+		exception: any,
+	): [string, Array<string>] {
+		let title: string = '';
+		let description: Array<string> = [];
+		if (exception instanceof Error) {
+			if (exception.name === 'NativeError') {
+				title = `${exception.name}`;
+				description.push(...exception.message.split('\n'));
+			}
+			else {
+				title = `${exception.name}: ${exception.message}`;
+			}
+			if (exception.stack !== undefined) {
+				description.push(...exception.stack.split('\n').slice(0, -1)
+					.map((value) => (/^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(value)))
+					.filter((value) => (value !== null))
+					.map((value) => (`@ ${['native', 'missing', 'null'].includes(value[2]) ? `<${value[2]}>` : value[2]}:${value[3] === undefined ? '?' : value[3]}:${value[4] === undefined ? '?' : value[4]} ${value[1]}`))
+				);
+			}
+		}
+		else {
+			title = `${exception}`;
+		}
+		return [title, description];
 	}
 
 	// #endregion

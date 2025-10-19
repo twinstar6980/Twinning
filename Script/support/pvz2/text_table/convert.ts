@@ -26,11 +26,11 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 			try {
 				let source = KernelX.JSON.read(source_data).value as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
-				if (is_object_of_object(source_variant)) {
+				if (CheckHelper.is_object_of_object(source_variant)) {
 					source_map = source_variant;
 					source_version = 'json_map';
 				}
-				else if (is_object_of_array(source_variant)) {
+				else if (CheckHelper.is_object_of_array(source_variant)) {
 					source_list = source_variant;
 					source_version = 'json_list';
 				}
@@ -44,7 +44,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 		}
 		switch (source_version) {
 			case 'text': {
-				if (check_string_data_maybe_utf16(source_data)) {
+				if (ConvertHelper.check_string_data_maybe_utf16(source_data)) {
 					throw new Error(`unsupport charset UTF-16`);
 				}
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
@@ -64,13 +64,13 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 				if (source_map === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues;
-					if (!is_object_of_object(source_map)) {
+					if (!CheckHelper.is_object_of_object(source_map)) {
 						throw new Error(`invalid source`);
 					}
 				}
 				for (let key in source_map) {
 					let value = source_map[key];
-					if (!is_string(value)) {
+					if (!CheckHelper.is_string(value)) {
 						throw new Error(`invalid map element`);
 					}
 					string_map[key] = value;
@@ -81,7 +81,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 				if (source_list === null) {
 					let source = KernelX.JSON.read(source_data).value as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues;
-					if (!is_object_of_array(source_list)) {
+					if (!CheckHelper.is_object_of_array(source_list)) {
 						throw new Error(`invalid source`);
 					}
 				}
@@ -91,7 +91,7 @@ namespace Twinning.Script.Support.PvZ2.TextTable.Convert {
 				for (let index = 0; index < source_list.length; index += 2) {
 					let key = source_list[index + 0];
 					let value = source_list[index + 1];
-					if (!is_string(key) || !is_string(value)) {
+					if (!CheckHelper.is_string(key) || !CheckHelper.is_string(value)) {
 						throw new Error(`invalid list element`);
 					}
 					string_map[key] = value;

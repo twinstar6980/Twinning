@@ -177,7 +177,7 @@ namespace AssistantPlus.Utility {
 		public static async Task<WriteableBitmap> ParseBitmapFromBinary (
 			Byte[] data
 		) {
-			var stream = data.AsBuffer().AsStream().AsRandomAccessStream();
+			using var stream = data.AsBuffer().AsStream().AsRandomAccessStream();
 			var decoder = await BitmapDecoder.CreateAsync(stream);
 			var image = new WriteableBitmap(decoder.PixelWidth.CastPrimitive<Size>(), decoder.PixelHeight.CastPrimitive<Size>());
 			stream.Seek(0);

@@ -71,7 +71,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 			if (group_base.type === undefined) {
 				throw new Error(`unknown group type index ${group_type_index}`);
 			}
-			group_simple.res = not_or(read_integer(data), 0n, undefined);
+			group_simple.res = CheckHelper.not_or(read_integer(data), 0n, undefined);
 			group_composite.subgroups.length = Number(read_integer(data));
 			group_simple.resources.length = Number(read_integer(data));
 			assert_test(read_boolean(data) === true);
@@ -85,9 +85,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 					id: undefined!,
 					res: undefined!,
 				};
-				subgroup_base.res = not_or(read_integer(data), 0n, undefined);
+				subgroup_base.res = CheckHelper.not_or(read_integer(data), 0n, undefined);
 				subgroup_base.id = read_string(data);
-				group_composite.subgroups[subgroups_index] = object_clear_undefined({
+				group_composite.subgroups[subgroups_index] = ConvertHelper.object_clear_undefined({
 					...subgroup_base,
 				});
 			}
@@ -141,12 +141,12 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 					resource_sprite.parent = read_string(data);
 				}
 				if (resource_base.type !== 'Image') {
-					group_simple.resources[resources_index] = object_clear_undefined({
+					group_simple.resources[resources_index] = ConvertHelper.object_clear_undefined({
 						...resource_base,
 					});
 				}
 				if (resource_base.type === 'Image') {
-					group_simple.resources[resources_index] = object_clear_undefined({
+					group_simple.resources[resources_index] = ConvertHelper.object_clear_undefined({
 						...resource_base,
 						...(!resource_has_parent ? resource_atlas : resource_sprite),
 					});
@@ -154,14 +154,14 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 			}
 			if (group_base.type === 'composite') {
 				assert_test(group_simple.resources.length === 0);
-				definition.groups[groups_index] = object_clear_undefined({
+				definition.groups[groups_index] = ConvertHelper.object_clear_undefined({
 					...group_base,
 					...group_composite,
 				});
 			}
 			if (group_base.type === 'simple') {
 				assert_test(group_composite.subgroups.length === 0);
-				definition.groups[groups_index] = object_clear_undefined({
+				definition.groups[groups_index] = ConvertHelper.object_clear_undefined({
 					...group_base,
 					...group_simple,
 				});

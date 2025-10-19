@@ -30,11 +30,11 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 			},
 			resolution: {
 				name: '#resolution',
-				value: not_undefined_or(resource_setting.category.resolution?.toString(), ''),
+				value: CheckHelper.not_undefined_or(resource_setting.category.resolution?.toString(), ''),
 			},
 			locale: {
 				name: '#locale',
-				value: not_undefined_or(resource_setting.category.locale?.toString(), ''),
+				value: CheckHelper.not_undefined_or(resource_setting.category.locale?.toString(), ''),
 			},
 		};
 		variable_list.unshift(runtime_variable.group, runtime_variable.resolution, runtime_variable.locale);
@@ -226,7 +226,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							Kernel.Tool.Texture.Transformation.Scale.process(sprite_view, current_sprite_view);
 						}
 					}
-					let sprite_item_map = record_transform(sprite_list, (key, value) => ([key, { w: Number(value[1].size().value[0]), h: Number(value[1].size().value[1]) }]));
+					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, { w: Number(value[1].size().value[0]), h: Number(value[1].size().value[1]) }]));
 					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
 					let atlas_size = PopCap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));

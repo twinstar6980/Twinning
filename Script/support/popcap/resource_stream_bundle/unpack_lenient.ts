@@ -102,14 +102,14 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 				return Number(stream.u32());
 			},
 		);
-		let group_id_map = record_transform(group_id_list, (key, value) => ([String(value), key]));
+		let group_id_map = ConvertHelper.record_transform(group_id_list, (key, value) => ([String(value), key]));
 		let subgroup_id_list = decode_compiled_map(
 			new ByteListView(package_data.sub(package_header.subgroup_id_offset, package_header.subgroup_id_size)),
 			(stream) => {
 				return Number(stream.u32());
 			},
 		);
-		let subgroup_id_map = record_transform(subgroup_id_list, (key, value) => ([String(value), key]));
+		let subgroup_id_map = ConvertHelper.record_transform(subgroup_id_list, (key, value) => ([String(value), key]));
 		let resource_path_list = decode_compiled_map(
 			new ByteListView(package_data.sub(package_header.resource_path_offset, package_header.resource_path_size)),
 			(stream) => {

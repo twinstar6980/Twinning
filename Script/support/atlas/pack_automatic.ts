@@ -139,7 +139,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		item_weighter: (it: Box) => number,
 	): null | Record<string, Rect> {
 		let space_list: Array<Rect> = [{ x: 0, y: 0, ...container }];
-		let item_list = record_to_array(item_map, (key, value) => ({ name: key, box: item_map[key] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
+		let item_list = ConvertHelper.record_to_array(item_map, (key, value) => ({ name: key, box: item_map[key] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
 		let result: Record<string, Rect> = {};
 		for (let item of item_list) {
 			let box = item.box;

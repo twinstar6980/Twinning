@@ -86,7 +86,7 @@ namespace Twinning.Script.StorageHelper {
 		path: string,
 		infix: null | string,
 	): string {
-		infix = not_null_or(infix, '.');
+		infix = CheckHelper.not_null_or(infix, '.');
 		let result = path;
 		let suffix = 0;
 		while (KernelX.Storage.exist(result)) {

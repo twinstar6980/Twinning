@@ -6,19 +6,19 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 		x_Matrix: Kernel.XML.JS_Element,
 	): Transform {
 		return [
-			Number(not_undefined_or(x_Matrix.attribute.a, '1')),
-			Number(not_undefined_or(x_Matrix.attribute.b, '0')),
-			Number(not_undefined_or(x_Matrix.attribute.c, '0')),
-			Number(not_undefined_or(x_Matrix.attribute.d, '1')),
-			Number(not_undefined_or(x_Matrix.attribute.tx, '0')),
-			Number(not_undefined_or(x_Matrix.attribute.ty, '0')),
+			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.a, '1')),
+			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.b, '0')),
+			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.c, '0')),
+			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.d, '1')),
+			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.tx, '0')),
+			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.ty, '0')),
 		];
 	}
 
 	function parse_color(
 		x_Matrix: Kernel.XML.JS_Element,
 	): Color {
-		let compute = (multiplier_s: undefined | string, offset_s: undefined | string) => (Math.max(0, Math.min(255, Number(not_undefined_or(multiplier_s, '1')) * 255 + Number(not_undefined_or(offset_s, '0')))) / 255);
+		let compute = (multiplier_s: undefined | string, offset_s: undefined | string) => (Math.max(0, Math.min(255, Number(CheckHelper.not_undefined_or(multiplier_s, '1')) * 255 + Number(CheckHelper.not_undefined_or(offset_s, '0')))) / 255);
 		return [
 			compute(x_Matrix.attribute.redMultiplier, x_Matrix.attribute.redOffset),
 			compute(x_Matrix.attribute.greenMultiplier, x_Matrix.attribute.greenOffset),
@@ -91,7 +91,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 			let x_frames = XML.find_child_element_unique(x_DOMLayer, 'frames');
 			let x_DOMFrame = XML.find_child_element_unique(x_frames, 'DOMFrame');
 			let frame_index = BigInt(x_DOMFrame.attribute.index);
-			let frame_duration = BigInt(not_undefined_or(x_DOMFrame.attribute.duration, '1'));
+			let frame_duration = BigInt(CheckHelper.not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 			assert_test(frame_index === 0n && frame_duration > 0n);
 			let x_elements = XML.find_child_element_unique(x_DOMFrame, 'elements');
 			assert_test(x_elements.child.length === 0);
@@ -124,7 +124,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 			};
 			for (let x_DOMFrame of x_DOMFrame_list) {
 				let frame_index = BigInt(x_DOMFrame.attribute.index);
-				let frame_duration = BigInt(not_undefined_or(x_DOMFrame.attribute.duration, '1'));
+				let frame_duration = BigInt(CheckHelper.not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 				let transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform;
 				let color: Color;
 				let x_elements = XML.find_child_element_unique_or_none(x_DOMFrame, 'elements');
@@ -212,7 +212,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.To {
 	): void {
 		let x_DOMDocument = document;
 		assert_test(x_DOMDocument.name === 'DOMDocument');
-		let frame_rate = BigInt(not_undefined_or(x_DOMDocument.attribute.frameRate, '24'));
+		let frame_rate = BigInt(CheckHelper.not_undefined_or(x_DOMDocument.attribute.frameRate, '24'));
 		animation.frame_rate = frame_rate;
 		animation.size = [
 			Number(x_DOMDocument.attribute.width),

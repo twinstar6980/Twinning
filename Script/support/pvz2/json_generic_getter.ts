@@ -13,16 +13,16 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (is_boolean(source)) {
+		if (CheckHelper.is_boolean(source)) {
 			return source;
 		}
-		if (is_bigint(source)) {
+		if (CheckHelper.is_bigint(source)) {
 			return source !== 0n;
 		}
-		if (is_number(source)) {
+		if (CheckHelper.is_number(source)) {
 			return source !== 0;
 		}
-		if (is_string(source)) {
+		if (CheckHelper.is_string(source)) {
 			return source !== '';
 		}
 		throw new Error(`type error`);
@@ -35,16 +35,16 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (is_number(source)) {
+		if (CheckHelper.is_number(source)) {
 			return source;
 		}
-		if (is_boolean(source)) {
+		if (CheckHelper.is_boolean(source)) {
 			return source ? 1 : 0;
 		}
-		if (is_bigint(source)) {
+		if (CheckHelper.is_bigint(source)) {
 			return Number(source);
 		}
-		if (is_string(source)) {
+		if (CheckHelper.is_string(source)) {
 			return Number(source);
 		}
 		throw new Error(`type error`);
@@ -57,16 +57,16 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (is_bigint(source)) {
+		if (CheckHelper.is_bigint(source)) {
 			return source;
 		}
-		if (is_boolean(source)) {
+		if (CheckHelper.is_boolean(source)) {
 			return source ? 1n : 0n;
 		}
-		if (is_number(source)) {
+		if (CheckHelper.is_number(source)) {
 			return BigInt(Math.trunc(source));
 		}
-		if (is_string(source)) {
+		if (CheckHelper.is_string(source)) {
 			return BigInt(Math.trunc(Number(source)));
 		}
 		throw new Error(`type error`);
@@ -79,7 +79,7 @@ namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
-		if (is_string(source)) {
+		if (CheckHelper.is_string(source)) {
 			return source;
 		}
 		throw new Error(`type error`);

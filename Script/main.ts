@@ -1,12 +1,10 @@
 namespace Twinning.Script {
 
-	// #region version
+	// #region common
 
-	export const k_version = '144';
+	export const k_version = '145';
 
-	// #endregion
-
-	// #region exception
+	// ----------------
 
 	export function assert_test(
 		condition: boolean,
@@ -20,91 +18,73 @@ namespace Twinning.Script {
 		return;
 	}
 
-	export function generate_exception_message(
-		exception: any,
-	): [string, Array<string>] {
-		let title: string = '';
-		let description: Array<string> = [];
-		if (exception instanceof Error) {
-			if (exception.name === 'NativeError') {
-				title = `${exception.name}`;
-				description.push(...exception.message.split('\n'));
-			}
-			else {
-				title = `${exception.name}: ${exception.message}`;
-			}
-			if (exception.stack !== undefined) {
-				description.push(...exception.stack.split('\n').slice(0, -1)
-					.map((value) => (/^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(value)))
-					.filter((value) => (value !== null))
-					.map((value) => (`@ ${['native', 'missing', 'null'].includes(value[2]) ? `<${value[2]}>` : value[2]}:${value[3] === undefined ? '?' : value[3]}:${value[4] === undefined ? '?' : value[4]} ${value[1]}`))
-				);
-			}
-		}
-		else {
-			title = `${exception}`;
-		}
-		return [title, description];
-	}
-
 	// #endregion
 
-	// #region implement
+	// #region main
 
-	namespace Detail {
+	export namespace MainScript {
 
 		// #region utility
 
-		export function exist_file(
-			target: string,
-		): boolean {
-			return Kernel.Storage.exist_file(Kernel.Path.value(target)).value;
-		}
-
-		export function exist_directory(
-			target: string,
-		): boolean {
-			return Kernel.Storage.exist_directory(Kernel.Path.value(target)).value;
+		function query_environment(
+			name: string,
+		): string {
+			let value = null as string | null;
+			if (name === 'kernel_version') {
+				value = Kernel.Miscellaneous.g_version.value;
+			}
+			if (name === 'shell_name') {
+				value = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
+			}
+			if (name === 'shell_version') {
+				value = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0];
+			}
+			if (name === 'script_version') {
+				value = k_version;
+			}
+			if (name === 'platform_system') {
+				value = Kernel.Miscellaneous.g_system.value;
+			}
+			if (name === 'platform_architecture') {
+				value = Kernel.Miscellaneous.g_architecture.value;
+			}
+			if (value === null) {
+				throw new Error(`information name invalid`);
+			}
+			return value;
 		}
 
 		// ----------------
 
-		export function get_workspace(
+		function get_process_workspace(
 		): string {
 			return Kernel.Process.get_workspace().value;
 		}
 
 		// ----------------
 
-		export function read_json<Constraint extends Kernel.JSON.JS_Value>(
-			file: string,
-		): Constraint {
-			let data = Kernel.Storage.read_file(Kernel.Path.value(file));
-			let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
-			let value = Kernel.JSON.Value.default<Constraint>();
-			let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(0x400n));
-			let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(buffer.view()));
-			Kernel.Tool.Data.Serialization.JSON.Read.process(data_stream, value, buffer_stream);
-			return value.value;
+		function set_module_home(
+			path: string,
+		): void {
+			Kernel.Miscellaneous.g_context.query_module_home().value = path;
+			return;
 		}
 
-		// ----------------
-
-		export function evaluate_script(
-			script_file: string,
+		function load_script_file(
+			path: string,
 			name: string,
 		): any {
-			let script = Kernel.Storage.read_file(Kernel.Path.value(script_file));
+			let script = Kernel.Storage.read_file(Kernel.Path.value(path));
 			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
 		}
 
 		// ----------------
 
-		export function output_text(
+		function console_output_text(
 			title: string,
 			description: Array<string>,
 		): void {
-			let shell_name = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
+			let shell_name = query_environment('shell_name');
 			if (shell_name === 'basic') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `● ${title}\n`]));
 				for (let description_item of description) {
@@ -118,12 +98,6 @@ namespace Twinning.Script {
 		}
 
 		// #endregion
-
-	}
-
-	// ----------------
-
-	export namespace MainScript {
 
 		// #region variable
 
@@ -236,15 +210,18 @@ namespace Twinning.Script {
 
 		// #region life
 
-		async function run(
+		export async function run(
 			argument: Array<string>,
 		): Promise<Array<string>> {
-			Detail.output_text([
+			if (!['basic', 'assistant', 'assistant_plus'].includes(query_environment('shell_name'))) {
+				throw new Error(`shell client unsupported`);
+			}
+			console_output_text([
 				`Twinning`,
-				` ~ Kernel:${Kernel.Miscellaneous.g_version.value}`,
-				` & Shell:${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0]}.${Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0]}`,
-				` & Script:${k_version}`,
-				` ~ ${Kernel.Miscellaneous.g_system.value}.${Kernel.Miscellaneous.g_architecture.value}`,
+				` ~ Kernel:${query_environment('kernel_version')}`,
+				` & Shell:${query_environment('shell_version')}.${query_environment('shell_name')}`,
+				` & Script:${query_environment('script_version')}`,
+				` ~ ${query_environment('platform_system')}.${query_environment('platform_architecture')}`,
 			].join(''), argument);
 			if (argument.length < 1) {
 				throw new Error(`argument too few`);
@@ -253,24 +230,24 @@ namespace Twinning.Script {
 			// parse home path
 			let home_path = argument[0].replaceAll(`\\`, '/');
 			if (/^\.{1,2}[\/]/.test(home_path)) {
-				home_path = `${Detail.get_workspace()}/${home_path}`;
+				home_path = `${get_process_workspace()}/${home_path}`;
 			}
 			// set module home
-			Kernel.Miscellaneous.g_context.query_module_home().value = `${home_path}/script`;
+			set_module_home(`${home_path}/script`);
 			// load partition
 			for (let partition of k_partition) {
 				let script_name = `script/${partition}.js`;
-				Detail.evaluate_script(`${home_path}/${script_name}`, script_name);
+				load_script_file(`${home_path}/${script_name}`, script_name);
 			}
-			// load setting
-			let setting_data = Detail.read_json(`${home_path}/script/configuration/setting.json`);
-			if (setting_data === null || typeof setting_data !== 'object' || setting_data.constructor.name !== 'Object') {
-				throw new Error(`setting data invalid`);
-			}
-			g_setting = setting_data as Setting;
 			// initialize resource
 			g_thread_manager = new ThreadManager();
 			HomePath.initialize(home_path);
+			// load setting
+			let setting_data = KernelX.JSON.read_fs_js(HomePath.of(`~/script/configuration/setting.json`));
+			if (!CheckHelper.is_object_of_object(setting_data)) {
+				throw new Error(`setting data invalid`);
+			}
+			g_setting = setting_data as Setting;
 			update_setting(g_setting, g_setting);
 			// activate executor
 			let executor_implement = Executor.Implement as Record<string, Record<string, Executor.TypicalMethodImplementeModule>>;
@@ -283,7 +260,7 @@ namespace Twinning.Script {
 			}
 			let load_timer_end = Date.now();
 			// execute runner
-			let result = '';
+			let result = null as null | string;
 			try {
 				Console.success(los('main:load_finish'), [
 					los('main:load_duration', ((load_timer_end - load_timer_begin) / 1000).toFixed(3)),
@@ -292,39 +269,44 @@ namespace Twinning.Script {
 			}
 			catch (e) {
 				Console.error_of(e);
-				throw '';
 			}
 			// finalize resource
 			g_thread_manager.resize(0, null);
+			// check result
+			if (result === null) {
+				throw '';
+			}
 			return [result];
-		}
-
-		export function runWrapper(
-			data: {
-				argument: Array<string>;
-				result: undefined | Array<string>;
-				exception: undefined | any;
-			},
-		): void {
-			data.result = [];
-			run(data.argument)
-				.then(
-					(value) => {
-						data.result = value;
-					},
-					(reason) => {
-						data.exception = reason;
-					},
-				);
-			return;
 		}
 
 		// #endregion
 
 	}
 
+	// ----------------
+
+	export function main(
+		data: {
+			argument: Array<string>;
+			result: undefined | Array<string>;
+			exception: undefined | any;
+		},
+	): void {
+		data.result = [];
+		MainScript.run(data.argument)
+			.then(
+				(value) => {
+					data.result = value;
+				},
+				(reason) => {
+					data.exception = reason;
+				},
+			);
+		return;
+	}
+
 	// #endregion
 
 }
 
-Twinning.Script.MainScript.runWrapper;
+Twinning.Script.main;

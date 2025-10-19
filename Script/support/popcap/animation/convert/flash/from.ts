@@ -57,7 +57,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 			]),
 		]), {
 			name: image.name,
-			size: not_undefined_or(image.size, [0n, 0n]),
+			size: CheckHelper.not_undefined_or(image.size, [0n, 0n]),
 		}];
 	}
 
@@ -184,7 +184,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 					name: index === null ? `main_sprite` : `sprite_${index + 1}`,
 				}, [
 					XML.create_element_node('layers', {}, [
-						...record_to_array(frame_node_list, (layer_index, layer) => (
+						...ConvertHelper.record_to_array(frame_node_list, (layer_index, layer) => (
 							XML.create_element_node('DOMLayer', {
 								name: `${layer_index + 1}`,
 							}, [
@@ -207,8 +207,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.From {
 				]),
 			]),
 		]), {
-			name: not_undefined_or(sprite.name, ''),
-			frame_rate: not_undefined_or(sprite.frame_rate, 0.0),
+			name: CheckHelper.not_undefined_or(sprite.name, ''),
+			frame_rate: CheckHelper.not_undefined_or(sprite.frame_rate, 0.0),
 			work_area: version.number < 5n ? null : sprite.work_area![0] === 0n && sprite.work_area![1] === BigInt(sprite.frame.length - 1) ? null : sprite.work_area!,
 		}];
 	}

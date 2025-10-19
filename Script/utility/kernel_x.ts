@@ -536,7 +536,7 @@ namespace Twinning.Script.KernelX {
 						let data = Storage.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.MD5.Hash.process(data.view(), value);
-						return parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
 					}
 
 				}
@@ -551,7 +551,7 @@ namespace Twinning.Script.KernelX {
 						let data = Storage.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.FNV.Mode.value(mode), Kernel.Tool.Data.Hash.FNV.BitCount.value(bit_count));
-						return parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 					export function hash_s(
@@ -562,7 +562,7 @@ namespace Twinning.Script.KernelX {
 						let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data_string));
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.FNV.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.FNV.Mode.value(mode), Kernel.Tool.Data.Hash.FNV.BitCount.value(bit_count));
-						return parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 				}
@@ -2221,7 +2221,7 @@ namespace Twinning.Script.KernelX {
 					let alpha_count: Record<number, number> = {};
 					for (let value of new Uint8Array(data_stream.stream_view().value)) {
 						let alpha_4 = (value >> 4) & ~(~0 << 4);
-						alpha_count[alpha_4] = not_undefined_or(alpha_count[alpha_4], 0) + 1;
+						alpha_count[alpha_4] = CheckHelper.not_undefined_or(alpha_count[alpha_4], 0) + 1;
 					}
 					let palette = Object.keys(alpha_count).map(BigInt);
 					if (palette.length <= 2) {

@@ -5,7 +5,6 @@ using AssistantPlus;
 using AssistantPlus.Utility;
 using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.Windows.AppNotifications.Builder;
 
 namespace AssistantPlus.View.ModdingWorker {
 
@@ -667,12 +666,7 @@ namespace AssistantPlus.View.ModdingWorker {
 			String title,
 			String description
 		) {
-			NotificationHelper.Push(
-				new AppNotificationBuilder()
-					.AddText(title)
-					.AddText(description)
-					.BuildNotification()
-			);
+			NotificationHelper.Push(title, description);
 			return new ();
 		}
 
