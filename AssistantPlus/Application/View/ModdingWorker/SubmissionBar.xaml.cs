@@ -751,10 +751,10 @@ namespace AssistantPlus.View.ModdingWorker {
 			if (this.Type != SubmissionType.Enumeration) {
 				return;
 			}
-			var item = senders.SelectedItem?.As<String>();
-			if (item != null) {
-				this.ValueOfEnumeration = new () { Item = item };
+			if (senders.SelectedIndex == -1) {
+				return;
 			}
+			this.ValueOfEnumeration = new () { Item = senders.SelectedItem.As<String>() };
 			return;
 		}
 

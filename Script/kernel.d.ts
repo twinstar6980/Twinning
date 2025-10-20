@@ -4523,7 +4523,7 @@ declare namespace Twinning.Kernel {
 			// ----------------
 
 			/**
-			 * 模块加载时的主目录，默认为null，全局作用域
+			 * 模块加载时的主目录，默认为null，进程作用域
 			 * @returns 引用变量
 			 */
 			query_module_home(

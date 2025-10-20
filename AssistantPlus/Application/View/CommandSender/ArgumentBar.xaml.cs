@@ -631,7 +631,10 @@ namespace AssistantPlus.View.CommandSender {
 			if (this.Type == null || this.Option == null) {
 				return;
 			}
-			this.Value.Value = senders.SelectedIndex == -1 ? null : this.Option[senders.SelectedIndex];
+			if (senders.SelectedIndex == -1) {
+				return;
+			}
+			this.Value.Value = this.Option[senders.SelectedIndex];
 			return;
 		}
 

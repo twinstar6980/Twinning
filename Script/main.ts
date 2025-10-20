@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '145';
+	export const k_version = '146';
 
 	// ----------------
 
@@ -236,8 +236,8 @@ namespace Twinning.Script {
 			set_module_home(`${home_path}/script`);
 			// load partition
 			for (let partition of k_partition) {
-				let script_name = `script/${partition}.js`;
-				load_script_file(`${home_path}/${script_name}`, script_name);
+				let partition_name = `script/${partition}.js`;
+				load_script_file(`${home_path}/${partition_name}`, partition_name);
 			}
 			// initialize resource
 			g_thread_manager = new ThreadManager();

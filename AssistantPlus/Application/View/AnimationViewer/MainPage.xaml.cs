@@ -1335,18 +1335,19 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			if (args.AddedItems.Count == 1) {
-				var newLabel = args.AddedItems[0].As<String>();
-				var newRange = new GameAnimationHelper.FrameRange() {
-					Begin = 0,
-					End = this.ActiveSprite.AsNotNull().Frame.Count - 1,
-				};
-				if (newLabel != this.uActiveFrameRangeLabel__ItemNameOfAll) {
-					newRange = this.ActiveFrameLabel.Find((value) => (value.Item1 == newLabel)).AsNotNull().Item2;
-				}
-				if (newRange != this.ActiveFrameRange) {
-					await this.ChangeFrameRange(newRange);
-				}
+			if (senders.SelectedIndex == -1) {
+				return;
+			}
+			var newLabel = senders.SelectedItem.As<String>();
+			var newRange = new GameAnimationHelper.FrameRange() {
+				Begin = 0,
+				End = this.ActiveSprite.AsNotNull().Frame.Count - 1,
+			};
+			if (newLabel != this.uActiveFrameRangeLabel__ItemNameOfAll) {
+				newRange = this.ActiveFrameLabel.Find((value) => (value.Item1 == newLabel)).AsNotNull().Item2;
+			}
+			if (newRange != this.ActiveFrameRange) {
+				await this.ChangeFrameRange(newRange);
 			}
 			return;
 		}
@@ -1750,13 +1751,14 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
 				return;
 			}
-			if (args.AddedItems.Count == 1) {
-				var targetLayer = $"custom_{args.AddedItems[0].As<String>()}";
-				await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
-				this.NotifyPropertyChanged([
-					nameof(this.uPlantCustomLayer_SelectedItem),
-				]);
+			if (senders.SelectedIndex == -1) {
+				return;
 			}
+			var targetLayer = $"custom_{senders.SelectedItem.As<String>()}";
+			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+			this.NotifyPropertyChanged([
+				nameof(this.uPlantCustomLayer_SelectedItem),
+			]);
 			return;
 		}
 
@@ -1817,13 +1819,14 @@ namespace AssistantPlus.View.AnimationViewer {
 			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
 				return;
 			}
-			if (args.AddedItems.Count == 1) {
-				var targetLayer = args.AddedItems[0].As<String>();
-				await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
-				this.NotifyPropertyChanged([
-					nameof(this.uZombieStateLayer_SelectedItem),
-				]);
+			if (senders.SelectedIndex == -1) {
+				return;
 			}
+			var targetLayer = senders.SelectedItem.As<String>();
+			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+			this.NotifyPropertyChanged([
+				nameof(this.uZombieStateLayer_SelectedItem),
+			]);
 			return;
 		}
 

@@ -86,7 +86,12 @@
 						"id": "target_name",
 						"name": "Target name",
 						"type": "string",
-						"option": null,
+						"option": [
+							"ScriptConsole",
+							"CompareLanguageFile",
+							"ComputeWwiseShortID",
+							"ExtractRSBFromPvZ2CNAPKDirectory",
+						],
 					},
 				],
 				"batch": null,
