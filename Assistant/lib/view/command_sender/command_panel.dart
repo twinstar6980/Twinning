@@ -79,49 +79,21 @@ class CommandPanel extends StatelessWidget {
                 ],
               ),
               Divider(),
-              if (!this.expanded.value)
-                ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => this.argument[argumentIndex].value == null
-                  ? SizedBox()
-                  : Container(
-                    margin: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: theme.textTheme.labelLarge!.textBaseline,
-                      children: [
-                        Text(
-                          argumentConfiguration.name,
-                          overflow: TextOverflow.clip,
-                          textAlign: TextAlign.start,
-                          style: theme.textTheme.labelLarge!.copyWith(
-                            color: theme.colorScheme.primary,
-                          ),
-                        ).withExpanded(),
-                        SizedBox(width: 8),
-                        Text(
-                          ValueExpressionHelper.makeString(this.argument[argumentIndex].value!),
-                          overflow: TextOverflow.clip,
-                          textAlign: TextAlign.end,
-                          style: theme.textTheme.bodyMedium!,
-                        ).withSelectionArea(
-                        ).withExpanded(),
-                      ],
-                    ),
-                  ),
+              ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => Container(
+                margin: !this.expanded.value && this.argument[argumentIndex].value == null ? EdgeInsets.zero : EdgeInsets.fromLTRB(0, 8, 0, 8),
+                child: ArgumentBar(
+                  name: argumentConfiguration.name,
+                  type: argumentConfiguration.type,
+                  option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
+                  value: this.argument[argumentIndex],
+                  batch: this.batch.value && (this.itemConfiguration.batch?.contains(argumentConfiguration.id) ?? false),
+                  expanded: this.expanded.value,
                 ),
+              )),
               if (!this.expanded.value && this.argument.where((value) => value.value != null).isEmpty)
                 SizedBox(height: 16),
               if (!this.expanded.value)
                 Divider(),
-              if (this.expanded.value)
-                ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => Container(
-                  margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: ArgumentBar(
-                    name: argumentConfiguration.name,
-                    type: argumentConfiguration.type,
-                    option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
-                    value: this.argument[argumentIndex],
-                  ),
-                )),
               SizedBox(height: 8),
               Row(
                 children: [

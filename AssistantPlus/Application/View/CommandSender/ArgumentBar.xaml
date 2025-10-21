@@ -28,6 +28,7 @@
 			<TextBlock
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
+				Foreground="{x:Bind Controller.uLabelText_Foreground}"
 				Style="{ThemeResource BodyStrongTextBlockStyle}"
 				TextWrapping="NoWrap"
 				Text="{x:Bind Controller.uLabelText_Text}"

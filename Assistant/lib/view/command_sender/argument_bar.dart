@@ -15,15 +15,19 @@ class _BasicArgumentBar extends StatelessWidget {
   const _BasicArgumentBar({
     super.key, // ignore: unused_element_parameter
     required this.name,
-    required this.icon,
+    required this.value,
+    required this.batch,
+    required this.expanded,
     required this.content,
   });
 
   // ----------------
 
-  final String   name;
-  final IconData icon;
-  final Widget   content;
+  final String           name;
+  final ValueExpression? value;
+  final Boolean          batch;
+  final Boolean          expanded;
+  final Widget           content;
 
   // ----------------
 
@@ -32,21 +36,49 @@ class _BasicArgumentBar extends StatelessWidget {
     var theme = Theme.of(context);
     return Column(
       children: [
-        Row(
-          children: [
-            SizedBox(width: 8),
-            Text(
-              this.name,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelLarge!.copyWith(
-                color: theme.colorScheme.primary,
-              ),
-            ).withTooltip(
-              message: this.name,
-            ).withExpanded(),
-          ],
-        ),
-        this.content,
+        if (!this.expanded && this.value != null)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: theme.textTheme.labelLarge!.textBaseline,
+            children: [
+              SizedBox(width: 8),
+              Text(
+                this.name,
+                overflow: TextOverflow.clip,
+                textAlign: TextAlign.start,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: !this.batch ? theme.colorScheme.primary : theme.colorScheme.tertiary,
+                ),
+              ).withExpanded(),
+              SizedBox(width: 8),
+              Text(
+                ValueExpressionHelper.makeString(this.value!),
+                overflow: TextOverflow.clip,
+                textAlign: TextAlign.end,
+                style: theme.textTheme.bodyMedium!,
+              ).withSelectionArea(
+              ).withExpanded(),
+              SizedBox(width: 8),
+            ],
+          ),
+        if (this.expanded)
+          Row(
+            children: [
+              SizedBox(width: 8),
+              Text(
+                this.name,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: !this.batch ? theme.colorScheme.primary : theme.colorScheme.tertiary,
+                ),
+              ).withTooltip(
+                message: this.name,
+              ).withExpanded(),
+              SizedBox(width: 8),
+            ],
+          ),
+        if (this.expanded)
+          this.content,
       ],
     );
   }
@@ -61,12 +93,16 @@ class _BooleanArgumentBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
 
   final String                      name;
   final Wrapper<BooleanExpression?> value;
+  final Boolean                     batch;
+  final Boolean                     expanded;
 
   // ----------------
 
@@ -75,7 +111,9 @@ class _BooleanArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.check_box,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomTextField(
           keyboardType: TextInputType.text,
           inputFormatters: [],
@@ -135,12 +173,16 @@ class _IntegerArgumentBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
 
   final String                      name;
   final Wrapper<IntegerExpression?> value;
+  final Boolean                     batch;
+  final Boolean                     expanded;
 
   // ----------------
 
@@ -149,7 +191,9 @@ class _IntegerArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.speed_1_2,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomTextField(
           keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
           inputFormatters: [],
@@ -186,12 +230,16 @@ class _FloaterArgumentBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
 
   final String                      name;
   final Wrapper<FloaterExpression?> value;
+  final Boolean                     batch;
+  final Boolean                     expanded;
 
   // ----------------
 
@@ -200,7 +248,9 @@ class _FloaterArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.speed_1_2,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomTextField(
           keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
           inputFormatters: [],
@@ -237,12 +287,16 @@ class _SizeArgumentBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
 
   final String                   name;
   final Wrapper<SizeExpression?> value;
+  final Boolean                  batch;
+  final Boolean                  expanded;
 
   // ----------------
 
@@ -251,7 +305,9 @@ class _SizeArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.memory,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomTextField(
           keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
           inputFormatters: [],
@@ -317,12 +373,16 @@ class _StringArgumentBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
 
   final String                     name;
   final Wrapper<StringExpression?> value;
+  final Boolean                    batch;
+  final Boolean                    expanded;
 
   // ----------------
 
@@ -331,7 +391,9 @@ class _StringArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.text_fields,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomTextField(
           keyboardType: TextInputType.text,
           inputFormatters: [],
@@ -365,12 +427,16 @@ class _PathArgumentBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.name,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
 
   final String                   name;
   final Wrapper<PathExpression?> value;
+  final Boolean                  batch;
+  final Boolean                  expanded;
 
   // ----------------
 
@@ -379,7 +445,9 @@ class _PathArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.link,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomFileDropRegion(
           onDrop: (item) async {
             this.value.value = PathExpression(item.first);
@@ -433,6 +501,8 @@ class _EnumerationArgumentBar extends StatelessWidget {
     required this.name,
     required this.option,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
@@ -440,6 +510,8 @@ class _EnumerationArgumentBar extends StatelessWidget {
   final String                    name;
   final List<ValueExpression>     option;
   final Wrapper<ValueExpression?> value;
+  final Boolean                   batch;
+  final Boolean                   expanded;
 
   // ----------------
 
@@ -448,7 +520,9 @@ class _EnumerationArgumentBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicArgumentBar(
         name: this.name,
-        icon: IconSymbols.menu,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
         content: CustomOptionField(
           decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
@@ -491,6 +565,8 @@ class ArgumentBar extends StatelessWidget {
     required this.type,
     required this.option,
     required this.value,
+    required this.batch,
+    required this.expanded,
   });
 
   // ----------------
@@ -499,6 +575,8 @@ class ArgumentBar extends StatelessWidget {
   final ArgumentType              type;
   final List<ValueExpression>?    option;
   final Wrapper<ValueExpression?> value;
+  final Boolean                   batch;
+  final Boolean                   expanded;
 
   // ----------------
 
@@ -509,26 +587,38 @@ class ArgumentBar extends StatelessWidget {
         ArgumentType.boolean => _BooleanArgumentBar(
           name: this.name,
           value: this.value.cast(),
+          batch: this.batch,
+          expanded: this.expanded,
         ),
         ArgumentType.integer => _IntegerArgumentBar(
           name: this.name,
           value: this.value.cast(),
+          batch: this.batch,
+          expanded: this.expanded,
         ),
         ArgumentType.floater => _FloaterArgumentBar(
           name: this.name,
           value: this.value.cast(),
+          batch: this.batch,
+          expanded: this.expanded,
         ),
         ArgumentType.size => _SizeArgumentBar(
           name: this.name,
           value: this.value.cast(),
+          batch: this.batch,
+          expanded: this.expanded,
         ),
         ArgumentType.string => _StringArgumentBar(
           name: this.name,
           value: this.value.cast(),
+          batch: this.batch,
+          expanded: this.expanded,
         ),
         ArgumentType.path => _PathArgumentBar(
           name: this.name,
           value: this.value.cast(),
+          batch: this.batch,
+          expanded: this.expanded,
         ),
       };
     }
@@ -537,6 +627,8 @@ class ArgumentBar extends StatelessWidget {
         name: this.name,
         option: this.option!,
         value: this.value,
+        batch: this.batch,
+        expanded: this.expanded,
       );
     }
   }

@@ -3,6 +3,7 @@
 
 using AssistantPlus;
 using AssistantPlus.Utility;
+using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Globalization.NumberFormatting;
 
@@ -90,6 +91,20 @@ namespace AssistantPlus.View.CommandSender {
 			set => this.SetValue(ArgumentBar.ValueProperty, value);
 		}
 
+		// ----------------
+
+		public static readonly DependencyProperty BatchProperty = DependencyProperty.Register(
+			nameof(ArgumentBar.Batch),
+			typeof(Boolean),
+			typeof(ArgumentBar),
+			new (false)
+		);
+
+		public Boolean Batch {
+			get => this.GetValue(ArgumentBar.BatchProperty).As<Boolean>();
+			set => this.SetValue(ArgumentBar.BatchProperty, value);
+		}
+
 		#endregion
 
 	}
@@ -110,6 +125,8 @@ namespace AssistantPlus.View.CommandSender {
 
 		public Wrapper<ValueExpression> Value => this.View.Value;
 
+		public Boolean Batch => this.View.Batch;
+
 		#endregion
 
 		#region life
@@ -118,6 +135,7 @@ namespace AssistantPlus.View.CommandSender {
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uLabel_ToolTip),
+				nameof(this.uLabelText_Foreground),
 				nameof(this.uLabelText_Text),
 			]);
 			if (this.Type != null) {
@@ -185,6 +203,12 @@ namespace AssistantPlus.View.CommandSender {
 		public String uLabel_ToolTip {
 			get {
 				return this.Label;
+			}
+		}
+
+		public Brush uLabelText_Foreground {
+			get {
+				return this.View.FindResource(!this.Batch ? "TextFillColorPrimaryBrush" : "AccentTextFillColorPrimaryBrush").As<Brush>();
 			}
 		}
 

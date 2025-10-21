@@ -29,6 +29,7 @@
 					Type="{x:Bind uValue_Type}"
 					Option="{x:Bind uValue_Option}"
 					Value="{x:Bind uValue_Value}"
+					Batch="{x:Bind uValue_Batch}"
 					Stamp="{x:Bind uValue_Stamp}"
 					/>
 			</DataTemplate>

@@ -298,6 +298,7 @@
 									VerticalAlignment="Stretch"
 									Configuration="{x:Bind uArgumentPanel_Configuration}"
 									Value="{x:Bind uArgumentPanel_Value}"
+									Batch="{x:Bind uArgumentPanel_Batch}"
 									Stamp="{x:Bind uArgumentPanel_Stamp}"
 									/>
 							</my:Stack>

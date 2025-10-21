@@ -476,6 +476,8 @@ namespace AssistantPlus.View.CommandSender {
 			this.Batch.Value = senders.IsChecked.AsNotNull();
 			this.NotifyPropertyChanged([
 				nameof(this.uBatch_IsChecked),
+				nameof(this.uArgumentPanel_Batch),
+				nameof(this.uArgumentPanel_Stamp),
 			]);
 			return;
 		}
@@ -528,6 +530,12 @@ namespace AssistantPlus.View.CommandSender {
 		public List<Wrapper<ValueExpression>> uArgumentPanel_Value {
 			get {
 				return this.Argument;
+			}
+		}
+
+		public List<Boolean> uArgumentPanel_Batch {
+			get {
+				return this.ItemConfiguration.Argument.Select((value) => (this.Batch.Value && (this.ItemConfiguration.Batch?.Contains(value.Id) ?? false))).ToList();
 			}
 		}
 

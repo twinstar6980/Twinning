@@ -81,7 +81,10 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async Task UpdateView (
 		) {
-			this.uList_ItemsSource = this.Source.Select((value) => (new PackagePartPanelItemController() { Host = this, Name = value })).ToList();
+			this.uList_ItemsSource = this.Source.Select((value) => (new PackagePartPanelItemController() {
+				Host = this,
+				Name = value,
+			})).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uList_ItemsSource),
 			]);

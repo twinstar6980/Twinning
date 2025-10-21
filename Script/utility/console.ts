@@ -623,7 +623,6 @@ namespace Twinning.Script.Console {
 		};
 		if (initial !== undefined && initial !== null) {
 			initial = HomePath.of(StorageHelper.regularize(initial));
-			state_data.last_value = initial;
 		}
 		let converter = (value: string): string | [null | string] => {
 			if (value === '') {
@@ -710,6 +709,7 @@ namespace Twinning.Script.Console {
 			return [result];
 		};
 		let checker_proxy = (value: string): null | string => {
+			state_data.last_value = value;
 			if (value.length === 0) {
 				return los('console:path_is_empty');
 			}
@@ -729,7 +729,6 @@ namespace Twinning.Script.Console {
 					return los('console:path_is_exist');
 				}
 			}
-			state_data.last_value = value;
 			state_data.allow_overwrite = false;
 			return checker === null ? null : checker(value);
 		};

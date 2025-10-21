@@ -59,6 +59,20 @@ namespace AssistantPlus.View.CommandSender {
 			set => this.SetValue(ArgumentPanel.ValueProperty, value);
 		}
 
+		// ----------------
+
+		public static readonly DependencyProperty BatchProperty = DependencyProperty.Register(
+			nameof(ArgumentPanel.Batch),
+			typeof(List<Boolean>),
+			typeof(ArgumentPanel),
+			new (new List<Boolean>())
+		);
+
+		public List<Boolean> Batch {
+			get => this.GetValue(ArgumentPanel.BatchProperty).As<List<Boolean>>();
+			set => this.SetValue(ArgumentPanel.BatchProperty, value);
+		}
+
 		#endregion
 
 	}
@@ -75,6 +89,8 @@ namespace AssistantPlus.View.CommandSender {
 
 		public List<Wrapper<ValueExpression>> Value => this.View.Value;
 
+		public List<Boolean> Batch => this.View.Batch;
+
 		#endregion
 
 		#region life
@@ -82,7 +98,12 @@ namespace AssistantPlus.View.CommandSender {
 		public async Task UpdateView (
 		) {
 			GF.AssertTest(this.Configuration.Count == this.Value.Count);
-			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() { Host = this, Configuration = value, Value = this.Value[index] })).ToList();
+			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() {
+				Host = this,
+				Configuration = value,
+				Value = this.Value[index],
+				Batch = this.Batch[index],
+			})).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uList_ItemsSource),
 			]);
@@ -111,6 +132,8 @@ namespace AssistantPlus.View.CommandSender {
 
 		public Wrapper<ValueExpression> Value { get; set; } = default!;
 
+		public Boolean Batch { get; set; } = default!;
+
 		#endregion
 
 		#region view
@@ -136,6 +159,12 @@ namespace AssistantPlus.View.CommandSender {
 		public Wrapper<ValueExpression> uValue_Value {
 			get {
 				return this.Value;
+			}
+		}
+
+		public Boolean uValue_Batch {
+			get {
+				return this.Batch;
 			}
 		}
 

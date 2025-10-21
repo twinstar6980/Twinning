@@ -65,7 +65,10 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		public async Task UpdateView (
 		) {
-			this.uList_ItemsSource = this.Value.Select((value) => (new VariableListPanelItemController() { Host = this, Item = value })).ToObservableCollection();
+			this.uList_ItemsSource = this.Value.Select((value) => (new VariableListPanelItemController() {
+				Host = this,
+				Item = value,
+			})).ToObservableCollection();
 			this.NotifyPropertyChanged([
 				nameof(this.uList_ItemsSource),
 			]);
