@@ -1,11 +1,11 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
-using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
+using FluentIconGlyph = Twinning.AssistantPlus.Control.FluentIconGlyph;
 
-namespace AssistantPlus.View.CommandSender {
+namespace Twinning.AssistantPlus.View.CommandSender {
 
 	public sealed partial class MainPage : Page, Home.IModulePage {
 

@@ -1,9 +1,9 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
+using Twinning.AssistantPlus;
 
-namespace AssistantPlus.Utility {
+namespace Twinning.AssistantPlus.Utility {
 
 	public class CommandLineReader {
 

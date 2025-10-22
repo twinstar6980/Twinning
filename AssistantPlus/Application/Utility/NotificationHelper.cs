@@ -1,11 +1,11 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
+using Twinning.AssistantPlus;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 
-namespace AssistantPlus.Utility {
+namespace Twinning.AssistantPlus.Utility {
 
 	public static class NotificationHelper {
 

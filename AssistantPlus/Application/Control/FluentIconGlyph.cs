@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable InconsistentNaming IdentifierTypo
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 
-namespace AssistantPlus.Control {
+namespace Twinning.AssistantPlus.Control {
 
 	public static class FluentIconGlyph {
 

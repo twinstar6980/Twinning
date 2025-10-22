@@ -1,13 +1,13 @@
 #pragma warning disable 0,
 // ReSharper disable CheckNamespace
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace AssistantPlus {
+namespace Twinning.AssistantPlus {
 
 	public static class GameAnimationHelper {
 

@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 
-namespace AssistantPlus.View.CommandSender {
+namespace Twinning.AssistantPlus.View.CommandSender {
 
 	public record Setting {
 		public String  MethodConfiguration = default!;

@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 
-namespace AssistantPlus.View.ModdingWorker {
+namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 	public record ValueExpression {
 	}

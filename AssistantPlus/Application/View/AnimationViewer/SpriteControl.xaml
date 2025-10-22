@@ -5,8 +5,8 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:community="using:CommunityToolkit.WinUI"
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
-	xmlns:local="using:AssistantPlus"
+	xmlns:local="using:Twinning.AssistantPlus"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="AssistantPlus.View.AnimationViewer.SpriteControl"
+	x:Class="Twinning.AssistantPlus.View.AnimationViewer.SpriteControl"
 	/>

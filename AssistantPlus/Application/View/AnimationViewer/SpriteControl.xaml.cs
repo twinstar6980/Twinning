@@ -1,13 +1,13 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace AssistantPlus.View.AnimationViewer {
+namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 	public sealed partial class SpriteControl : UserControl {
 

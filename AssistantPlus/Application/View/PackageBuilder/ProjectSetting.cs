@@ -1,12 +1,12 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-namespace AssistantPlus.View.PackageBuilder {
+namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 	public record PackageVersion {
 		public Integer Number                              = default!;

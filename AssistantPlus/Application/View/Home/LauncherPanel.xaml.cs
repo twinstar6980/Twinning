@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 
-namespace AssistantPlus.View.Home {
+namespace Twinning.AssistantPlus.View.Home {
 
 	public sealed partial class LauncherPanel : CustomControl {
 

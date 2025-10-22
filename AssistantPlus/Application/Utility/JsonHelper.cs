@@ -1,7 +1,7 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
+using Twinning.AssistantPlus;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.Encodings.Web;
 
-namespace AssistantPlus.Utility {
+namespace Twinning.AssistantPlus.Utility {
 
 	public static class JsonHelper {
 

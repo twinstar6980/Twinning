@@ -1,13 +1,13 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Globalization.NumberFormatting;
 using Microsoft.UI.Xaml.Media;
 
-namespace AssistantPlus.View.ModdingWorker {
+namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 	public sealed partial class SubmissionBar : CustomControl {
 

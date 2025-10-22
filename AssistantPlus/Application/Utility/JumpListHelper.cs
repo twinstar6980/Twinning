@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
+using Twinning.AssistantPlus;
 using Windows.UI.StartScreen;
 
-namespace AssistantPlus.Utility {
+namespace Twinning.AssistantPlus.Utility {
 
 	public static class JumpListHelper {
 

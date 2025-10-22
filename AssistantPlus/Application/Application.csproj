@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-    <RootNamespace>AssistantPlus</RootNamespace>
+    <RootNamespace>Twinning.AssistantPlus</RootNamespace>
     <ApplicationManifest>App.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
@@ -24,7 +24,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Asset\Library\Forwarder.dll" />
     <Content Include="Asset\Library\libc++.dll" />
     <Content Include="Asset\Library\libunwind.dll" />
     <Content Include="Asset\Logo.ico" />
@@ -53,6 +52,12 @@
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="$(SolutionDir).build\bin\Forwarder\$(Platform).$(Configuration)\Forwarder.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
@@ -74,6 +79,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.WindowsAppSDK" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Forwarder\Forwarder.vcxproj" />
   </ItemGroup>
 
   <!--

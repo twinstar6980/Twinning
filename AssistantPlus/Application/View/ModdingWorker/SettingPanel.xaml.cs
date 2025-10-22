@@ -1,11 +1,11 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Microsoft.Graphics.Canvas.Text;
 
-namespace AssistantPlus.View.ModdingWorker {
+namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 	public sealed partial class SettingPanel : CustomControl {
 

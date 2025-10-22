@@ -1,11 +1,11 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Windows.Globalization.NumberFormatting;
 
-namespace AssistantPlus.View.PackageBuilder {
+namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 	public sealed partial class TextureResourcePropertyPanel : CustomControl {
 

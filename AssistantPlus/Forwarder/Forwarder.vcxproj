@@ -58,9 +58,6 @@
       <ModuleDefinitionFile>main.def</ModuleDefinitionFile>
       <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(SolutionDir).build\bin\$(ProjectName)\$(Platform).$(Configuration)\Forwarder.dll" /B "$(SolutionDir)Application\Asset\Library\Forwarder.dll" /Y</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -81,9 +78,6 @@
       <ModuleDefinitionFile>main.def</ModuleDefinitionFile>
       <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(SolutionDir).build\bin\$(ProjectName)\$(Platform).$(Configuration)\Forwarder.dll" /B "$(SolutionDir)Application\Asset\Library\Forwarder.dll" /Y</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="common.hpp" />

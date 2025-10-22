@@ -1,14 +1,14 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Windows.System;
 using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 
-namespace AssistantPlus.View.Home {
+namespace Twinning.AssistantPlus.View.Home {
 
 	public partial class MainWindow : Window {
 

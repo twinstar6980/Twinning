@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable CheckNamespace
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 
-namespace AssistantPlus {
+namespace Twinning.AssistantPlus {
 
 	public static class GameAnimationModel {
 

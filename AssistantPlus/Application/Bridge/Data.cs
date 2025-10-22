@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 
-namespace AssistantPlus.Bridge {
+namespace Twinning.AssistantPlus.Bridge {
 
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct Message {

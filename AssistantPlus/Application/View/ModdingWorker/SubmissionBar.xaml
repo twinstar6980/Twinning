@@ -5,12 +5,12 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:community="using:CommunityToolkit.WinUI"
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
-	xmlns:local="using:AssistantPlus"
-	xmlns:localViewModdingWorker="using:AssistantPlus.View.ModdingWorker"
-	xmlns:my="using:AssistantPlus.Control"
+	xmlns:local="using:Twinning.AssistantPlus"
+	xmlns:localViewModdingWorker="using:Twinning.AssistantPlus.View.ModdingWorker"
+	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="AssistantPlus.View.ModdingWorker.SubmissionBar"
+	x:Class="Twinning.AssistantPlus.View.ModdingWorker.SubmissionBar"
 	>
 	<my:Stack
 		HorizontalAlignment="Stretch"

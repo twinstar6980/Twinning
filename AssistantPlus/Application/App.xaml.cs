@@ -1,12 +1,12 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel;
 
-namespace AssistantPlus {
+namespace Twinning.AssistantPlus {
 
 	public partial class App : Application {
 

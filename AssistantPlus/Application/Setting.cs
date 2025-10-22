@@ -1,15 +1,15 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Windows.ApplicationModel;
 using Windows.UI.StartScreen;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
 using Colors = Microsoft.UI.Colors;
 
-namespace AssistantPlus {
+namespace Twinning.AssistantPlus {
 
 	public record SettingData {
 		public Integer                           Version                      = default!;

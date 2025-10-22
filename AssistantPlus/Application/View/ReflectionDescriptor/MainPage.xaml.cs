@@ -1,11 +1,11 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace AssistantPlus.View.ReflectionDescriptor {
+namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 	public sealed partial class MainPage : Page, Home.IModulePage {
 

@@ -1,10 +1,10 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
+using Twinning.AssistantPlus;
 using Microsoft.UI.Windowing;
 
-namespace AssistantPlus.Utility {
+namespace Twinning.AssistantPlus.Utility {
 
 	public static class WindowHelper {
 

@@ -1,12 +1,12 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Media;
 
-namespace AssistantPlus.View.ModdingWorker {
+namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 	public sealed partial class MainPage : Page, Home.IModulePage {
 

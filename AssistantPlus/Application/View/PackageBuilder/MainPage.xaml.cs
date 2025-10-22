@@ -1,14 +1,14 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using System.Text.Json.Nodes;
 using Windows.ApplicationModel.DataTransfer;
 using WinRT;
-using FluentIconGlyph = AssistantPlus.Control.FluentIconGlyph;
+using FluentIconGlyph = Twinning.AssistantPlus.Control.FluentIconGlyph;
 
-namespace AssistantPlus.View.PackageBuilder {
+namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 	public sealed partial class MainPage : Page, Home.IModulePage {
 
@@ -128,9 +128,9 @@ namespace AssistantPlus.View.PackageBuilder {
 
 		#region action
 
-		public static String DataViewFormatForGroup = $"{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Group";
+		public static String DataViewFormatForGroup = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Group";
 
-		public static String DataViewFormatForResource = $"{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Resource";
+		public static String DataViewFormatForResource = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(PackageBuilder)}.Resource";
 
 		// ----------------
 

@@ -1,13 +1,13 @@
 #pragma warning disable 0,
 // ReSharper disable
 
-using AssistantPlus;
-using AssistantPlus.Utility;
+using Twinning.AssistantPlus;
+using Twinning.AssistantPlus.Utility;
 using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Globalization.NumberFormatting;
 
-namespace AssistantPlus.View.CommandSender {
+namespace Twinning.AssistantPlus.View.CommandSender {
 
 	public sealed partial class ArgumentBar : CustomControl {
 
