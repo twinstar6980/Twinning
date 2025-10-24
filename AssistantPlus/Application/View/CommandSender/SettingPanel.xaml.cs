@@ -39,6 +39,7 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			typeof(SettingPanel),
 			new (new Setting() {
 				MethodConfiguration = "",
+				ParallelForward = false,
 			})
 		);
 

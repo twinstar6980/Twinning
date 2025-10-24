@@ -106,26 +106,26 @@ namespace Twinning.AssistantPlus {
 		// ----------------
 
 		public record ImageVisual {
-			public required Canvas Canvas;
+			public Canvas Canvas = default!;
 		}
 
 		public record SpriteVisual {
-			public required Canvas     Canvas;
-			public required Storyboard Storyboard;
+			public Canvas     Canvas     = default!;
+			public Storyboard Storyboard = default!;
 		}
 
 		public record FrameRange {
-			public required Size Begin;
-			public required Size End;
+			public Size Begin = default!;
+			public Size End   = default!;
 		}
 
 		private record VisualLayer {
-			public required Canvas                        Canvas;
-			public required Storyboard                    Storyboard;
-			public required ObjectAnimationUsingKeyFrames Visibility;
-			public required ObjectAnimationUsingKeyFrames Transform;
-			public required ObjectAnimationUsingKeyFrames ColorAlpha;
-			public required Boolean                       IsFirst;
+			public Canvas                        Canvas     = default!;
+			public Storyboard                    Storyboard = default!;
+			public ObjectAnimationUsingKeyFrames Visibility = default!;
+			public ObjectAnimationUsingKeyFrames Transform  = default!;
+			public ObjectAnimationUsingKeyFrames ColorAlpha = default!;
+			public Boolean                       IsFirst    = default!;
 		}
 
 		// ----------------

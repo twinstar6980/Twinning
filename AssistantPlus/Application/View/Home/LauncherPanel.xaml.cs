@@ -38,6 +38,8 @@ namespace Twinning.AssistantPlus.View.Home {
 		public void OnPanelEnter (
 		) => this.PanelEnter?.Invoke();
 
+		// ----------------
+
 		public event Action? PanelExit;
 
 		public void OnPanelExit (
@@ -191,7 +193,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public ModuleLauncherCategory Category { get; set; } = default;
+		public ModuleLauncherCategory Category { get; set; } = default!;
 
 		public ModuleLauncherConfiguration Configuration { get; set; } = default!;
 

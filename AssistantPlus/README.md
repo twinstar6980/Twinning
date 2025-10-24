@@ -1,4 +1,4 @@
-# Assistant Plus - Windows
+# Assistant Plus
 
 助理+，面向 Windows 平台的特化版本。
 
@@ -20,4 +20,4 @@
 	
 	应用内包含了 `Kernel` 动态库所依赖的库文件，这些库文件应与 `Kernel` 编译时所依赖的相匹配。
 	
-	* `libc++.dll` & `libunwind.dll` @ `llvm-mingw-20250924-ucrt-x86_64` 。
+	* `libc++.dll` & `libunwind.dll` @ `llvm-mingw-20251021-ucrt-x86_64` 。

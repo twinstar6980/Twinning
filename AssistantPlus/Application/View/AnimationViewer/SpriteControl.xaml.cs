@@ -278,7 +278,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
-		private Boolean mShowBoundary;
+		private Boolean mShowBoundary = false;
 
 		public Boolean ShowBoundary {
 			get {
