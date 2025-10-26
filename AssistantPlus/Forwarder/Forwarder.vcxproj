@@ -55,7 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>main.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>library.def</ModuleDefinitionFile>
       <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -75,7 +75,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>main.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>library.def</ModuleDefinitionFile>
       <AdditionalDependencies>Shlwapi.lib;RuntimeObject.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -87,16 +87,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="main.def" />
+    <Image Include="asset\logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="main.manifest" />
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource\resource.rc" />
+    <None Include="library.def" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resource\logo.ico" />
+    <Manifest Include="application.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,9 +8,9 @@ add_library(${PROJECT_NAME} SHARED
   "common.hpp"
   "forwarder_explorer_command.cppm"
   "main.cpp"
-  "main.def"
-  "main.manifest"
-  "resource/resource.rc"
+  "resource.rc"
+  "library.def"
+  "application.manifest"
 )
 
 apply_standard_settings(${PROJECT_NAME})

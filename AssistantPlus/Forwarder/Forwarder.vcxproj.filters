@@ -8,24 +8,22 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="main.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="main.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="resource">
+    <Filter Include="asset">
       <UniqueIdentifier>{9bf95ffe-dedb-4f62-ab09-bf4b5a3be4de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource\resource.rc">
-      <Filter>resource</Filter>
-    </ResourceCompile>
+    <Image Include="asset\logo.ico">
+      <Filter>asset</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resource\logo.ico">
-      <Filter>resource</Filter>
-    </Image>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="library.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="application.manifest" />
   </ItemGroup>
 </Project>

@@ -222,8 +222,6 @@ export namespace Twinning::Assistant::Forwarder {
 			return destination;
 		}
 
-		// ----------------
-
 		auto open_link (
 			std::wstring const & link
 		) -> void {
@@ -232,8 +230,6 @@ export namespace Twinning::Assistant::Forwarder {
 			assert_test(reinterpret_cast<INT_PTR>(state_hi) > 32);
 			return;
 		}
-
-		// ----------------
 
 		auto forward_resource (
 			std::vector<std::wstring> const & resource
