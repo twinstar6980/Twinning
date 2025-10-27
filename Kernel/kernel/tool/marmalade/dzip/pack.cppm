@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {
-			data.write_constant(Structure::k_magic_identifier);
+			data.write_constant(Structure::k_magic_marker);
 			struct {
 				OutputByteStreamView archive_setting{};
 				OutputByteStreamView resource_file{};

@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::CharacterType {
 
 	inline constexpr auto k_path_separator_set = StaticArray<Character, 2_sz>{{k_path_separator_generic, k_path_separator_windows}};
 
-	inline constexpr auto k_case_diff = Character{'a'_c - 'A'_c};
+	inline constexpr auto k_letter_case_offset = Character{'a'_c - 'A'_c};
 
 	#pragma endregion
 
@@ -66,167 +66,152 @@ export namespace Twinning::Kernel::CharacterType {
 
 	#pragma endregion
 
-	#pragma region alpha
+	#pragma region letter
 
-	inline constexpr auto is_alpha_lower (
+	inline constexpr auto is_letter_lower (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, 'a'_c, 'z'_c);
 	}
 
-	inline constexpr auto is_alpha_upper (
+	inline constexpr auto is_letter_upper (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, 'A'_c, 'Z'_c);
 	}
 
-	inline constexpr auto is_alpha (
+	inline constexpr auto is_letter (
 		Character const & character
 	) -> Boolean {
-		return is_alpha_lower(character) || is_alpha_upper(character);
+		return is_letter_lower(character) || is_letter_upper(character);
 	}
 
-	#pragma endregion
+	// ----------------
 
-	#pragma region hex alpha
-
-	inline constexpr auto is_alpha_hex_lower (
+	inline constexpr auto is_letter_hexadecimal_lower (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, 'a'_c, 'f'_c);
 	}
 
-	inline constexpr auto is_alpha_hex_upper (
+	inline constexpr auto is_letter_hexadecimal_upper (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, 'A'_c, 'F'_c);
 	}
 
-	inline constexpr auto is_alpha_hex (
+	inline constexpr auto is_letter_hexadecimal (
 		Character const & character
 	) -> Boolean {
-		return is_alpha_hex_lower(character) || is_alpha_hex_upper(character);
+		return is_letter_hexadecimal_lower(character) || is_letter_hexadecimal_upper(character);
 	}
 
 	#pragma endregion
 
 	#pragma region number
 
-	inline constexpr auto is_number_bin (
+	inline constexpr auto is_number_binary (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, '0'_c, '1'_c);
 	}
 
-	inline constexpr auto is_number_oct (
+	inline constexpr auto is_number_octal (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, '0'_c, '7'_c);
 	}
 
-	inline constexpr auto is_number_dec (
+	inline constexpr auto is_number_decimal (
 		Character const & character
 	) -> Boolean {
 		return Math::between(character, '0'_c, '9'_c);
 	}
 
-	inline constexpr auto is_number_hex_lower (
+	inline constexpr auto is_number_hexadecimal_lower (
 		Character const & character
 	) -> Boolean {
-		return is_number_dec(character) || is_alpha_hex_lower(character);
+		return is_number_decimal(character) || is_letter_hexadecimal_lower(character);
 	}
 
-	inline constexpr auto is_number_hex_upper (
+	inline constexpr auto is_number_hexadecimal_upper (
 		Character const & character
 	) -> Boolean {
-		return is_number_dec(character) || is_alpha_hex_upper(character);
+		return is_number_decimal(character) || is_letter_hexadecimal_upper(character);
 	}
 
-	inline constexpr auto is_number_hex (
+	inline constexpr auto is_number_hexadecimal (
 		Character const & character
 	) -> Boolean {
-		return is_number_dec(character) || is_alpha_hex_lower(character) || is_alpha_hex_upper(character);
+		return is_number_decimal(character) || is_letter_hexadecimal_lower(character) || is_letter_hexadecimal_upper(character);
 	}
 
 	#pragma endregion
 
-	#pragma region alpha cast
+	#pragma region letter convert
 
-	inline constexpr auto as_alpha_lower (
+	inline constexpr auto as_letter_lower (
 		Character & character
 	) -> Void {
-		if (is_alpha_upper(character)) {
-			character += k_case_diff;
+		if (is_letter_upper(character)) {
+			character += k_letter_case_offset;
 		}
 		return;
 	}
 
-	inline constexpr auto as_alpha_upper (
+	inline constexpr auto as_letter_upper (
 		Character & character
 	) -> Void {
-		if (is_alpha_lower(character)) {
-			character -= k_case_diff;
+		if (is_letter_lower(character)) {
+			character -= k_letter_case_offset;
 		}
 		return;
 	}
 
 	// ----------------
 
-	inline constexpr auto to_alpha_lower (
+	inline constexpr auto to_letter_lower (
 		Character const & character
 	) -> Character {
-		return is_alpha_upper(character) ? (character + k_case_diff) : (character);
+		return is_letter_upper(character) ? (character + k_letter_case_offset) : (character);
 	}
 
-	inline constexpr auto to_alpha_upper (
+	inline constexpr auto to_letter_upper (
 		Character const & character
 	) -> Character {
-		return is_alpha_upper(character) ? (character - k_case_diff) : (character);
+		return is_letter_upper(character) ? (character - k_letter_case_offset) : (character);
 	}
 
 	#pragma endregion
 
-	#pragma region alpha comparison
+	#pragma region number convert
 
-	inline constexpr auto equal_icase (
-		Character const & thix,
-		Character const & that
-	) -> Boolean {
-		return thix == that || to_alpha_lower(thix) == to_alpha_lower(that);
-	}
-
-	#pragma endregion
-
-	#pragma region oct number convert
-
-	inline constexpr auto from_number_oct (
+	inline constexpr auto from_number_octal (
 		Character const & character
 	) -> IntegerU8 {
-		assert_test(is_number_oct(character));
+		assert_test(is_number_octal(character));
 		return cbox<IntegerU8>(character - '0'_c);
 	}
 
-	inline constexpr auto to_number_oct (
+	inline constexpr auto to_number_octal (
 		IntegerU8 const & number
 	) -> Character {
 		assert_test(number < 010_iu8);
 		return '0'_c + cbox<Character>(number);
 	}
 
-	#pragma endregion
+	// ----------------
 
-	#pragma region hex number convert
-
-	inline constexpr auto from_number_hex (
+	inline constexpr auto from_number_hexadecimal (
 		Character const & character
 	) -> IntegerU8 {
-		if (is_alpha_hex_lower(character)) {
+		if (is_letter_hexadecimal_lower(character)) {
 			return 0xa_iu8 + cbox<IntegerU8>(character - 'a'_c);
 		}
-		else if (is_alpha_hex_upper(character)) {
+		else if (is_letter_hexadecimal_upper(character)) {
 			return 0xA_iu8 + cbox<IntegerU8>(character - 'A'_c);
 		}
-		else if (is_number_dec(character)) {
+		else if (is_number_decimal(character)) {
 			return 0x0_iu8 + cbox<IntegerU8>(character - '0'_c);
 		}
 		else {
@@ -234,7 +219,7 @@ export namespace Twinning::Kernel::CharacterType {
 		}
 	}
 
-	inline constexpr auto to_number_hex_lower (
+	inline constexpr auto to_number_hexadecimal_lower (
 		IntegerU8 const & number
 	) -> Character {
 		assert_test(number < 0x10_iu8);
@@ -246,7 +231,7 @@ export namespace Twinning::Kernel::CharacterType {
 		}
 	}
 
-	inline constexpr auto to_number_hex_upper (
+	inline constexpr auto to_number_hexadecimal_upper (
 		IntegerU8 const & number
 	) -> Character {
 		assert_test(number < 0x10_iu8);

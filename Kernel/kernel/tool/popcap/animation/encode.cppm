@@ -20,9 +20,9 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 
 		using typename Common::Definition;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::VersionNumber;
 
@@ -385,7 +385,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 			OutputByteStreamView &                 data,
 			typename Definition::Animation const & definition
 		) -> Void {
-			data.write_constant(k_magic_identifier);
+			data.write_constant(k_magic_marker);
 			data.write_constant(cbox<VersionNumber>(version.number));
 			exchange_animation(data, definition);
 			return;

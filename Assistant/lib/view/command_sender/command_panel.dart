@@ -86,7 +86,7 @@ class CommandPanel extends StatelessWidget {
                   type: argumentConfiguration.type,
                   option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
                   value: this.argument[argumentIndex],
-                  batch: this.batch.value && (this.itemConfiguration.batch?.contains(argumentConfiguration.id) ?? false),
+                  batch: this.batch.value && (this.itemConfiguration.batch?.contains(argumentConfiguration.identifier) ?? false),
                   expanded: this.expanded.value,
                 ),
               )),
@@ -148,7 +148,7 @@ class CommandPanel extends StatelessWidget {
                             ],
                             onSelected: (value) async {
                               for (var argument in value.argument.entries) {
-                                var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.id == argument.key);
+                                var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
                                 assertTest(argumentIndex != -1);
                                 this.argument[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
                               }

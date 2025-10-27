@@ -6,38 +6,38 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 	): void {
 		push_typical_method('popcap.package', [
 			typical_method({
-				id: 'pack',
+				identifier: 'pack',
 				filter: ['directory', /(\.pak\.bundle)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.pak\.bundle)?$/i, '.pak')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Package.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_compress_resource_data',
+						identifier: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -46,7 +46,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -54,7 +54,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
@@ -73,32 +73,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				},
 			}),
 			typical_method({
-				id: 'unpack',
+				identifier: 'unpack',
 				filter: ['file', /(\.pak)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.pak)?$/i, '.pak.bundle')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Package.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_compress_resource_data',
+						identifier: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -106,7 +106,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -114,7 +114,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
@@ -130,32 +130,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				},
 			}),
 			typical_method({
-				id: 'pack_automatic',
+				identifier: 'pack_automatic',
 				filter: ['directory', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'resource_directory',
+						identifier: 'resource_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { resource_directory: string; }) => (argument.resource_directory.replace(/()?$/i, '.pak')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Package.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_compress_resource_data',
+						identifier: 'version_compress_resource_data',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -169,25 +169,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				},
 			}),
 			typical_method({
-				id: 'encrypt',
+				identifier: 'encrypt',
 				filter: ['file', /(\.pak)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/(\.pak)?$/i, '.cipher.pak')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: (argument: {}, value) => ((0n < value && value < 256n) ? null : los('executor.implement:*.illegal_key')),
 						automatic: null,
@@ -196,7 +196,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -204,7 +204,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),

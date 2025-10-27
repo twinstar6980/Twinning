@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
 		) -> Void {
-			data.write_constant(Structure::k_magic_identifier);
+			data.write_constant(Structure::k_magic_marker);
 			data.write_constant(cbox<Structure::VersionNumber>(version.number));
 			struct {
 				OutputByteStreamView resource_information{};

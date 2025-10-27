@@ -6,31 +6,31 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 	): void {
 		push_typical_method('texture.transformation', [
 			typical_method({
-				id: 'flip',
+				identifier: 'flip',
 				filter: ['file', /(\.png)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.png)?$/i, '.flip.png')),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'horizontal',
+						identifier: 'horizontal',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'vertical',
+						identifier: 'vertical',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -38,7 +38,7 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -46,7 +46,7 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.scale'),
@@ -60,32 +60,32 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 				},
 			}),
 			typical_method({
-				id: 'scale',
+				identifier: 'scale',
 				filter: ['file', /(\.png)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.png)?$/i, '.scale.png')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'size_width',
+						identifier: 'size_width',
 						option: null,
 						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'size_height',
+						identifier: 'size_height',
 						option: null,
 						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
 						automatic: null,
@@ -94,7 +94,7 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -102,7 +102,7 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.scale'),
@@ -116,25 +116,25 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 				},
 			}),
 			typical_method({
-				id: 'scale_rate',
+				identifier: 'scale_rate',
 				filter: ['file', /(\.png)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.png)?$/i, '.scale.png')),
 						condition: null,
 					}),
 					typical_argument_floater({
-						id: 'size_rate',
+						identifier: 'size_rate',
 						option: null,
 						checker: (argument: {}, value) => ((0.0 < value) ? null : los('executor.implement:*.rate_should_be_bigger_then_zero')),
 						automatic: null,
@@ -143,7 +143,7 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -151,7 +151,7 @@ namespace Twinning.Script.Executor.Implement.Texture.Transformation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.scale'),

@@ -116,9 +116,9 @@
 						},
 					},
 					{
-						"name": "ComputeWwiseShortID",
+						"name": "ComputeWwiseShortIdentifier",
 						"argument": {
-							"target_name": "ComputeWwiseShortID",
+							"target_name": "ComputeWwiseShortIdentifier",
 						},
 					},
 					{

@@ -58,7 +58,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 	};
 
 	export type TextureResourcePropertySpriteProperty = {
-		id: string;
+		identifier: string;
 		path: string;
 		position: [bigint, bigint];
 		size: [bigint, bigint];
@@ -85,7 +85,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 
 	export type SpecialPTXResourcePropertySpriteProperty = {
 		source: string;
-		id: string;
+		identifier: string;
 		path: string;
 		offset: [bigint, bigint];
 		separate: [bigint, bigint];

@@ -6,32 +6,32 @@ namespace Twinning.Script.Executor.Implement.Wwise.SoundBank {
 	): void {
 		push_typical_method('wwise.sound_bank', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['directory', /(\.bnk\.bundle)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.bnk\.bundle)?$/i, '.bnk')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.Wwise.SoundBank.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.SoundBank {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -48,7 +48,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.SoundBank {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
@@ -67,25 +67,25 @@ namespace Twinning.Script.Executor.Implement.Wwise.SoundBank {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.bnk)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.bnk)?$/i, '.bnk.bundle')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.Wwise.SoundBank.VersionNumberE,
 						checker: null,
 						automatic: null,
@@ -94,7 +94,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.SoundBank {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -102,7 +102,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.SoundBank {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),

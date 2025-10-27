@@ -56,7 +56,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 		};
 		Console.information(`Extracting manifest ...`, []);
 		do {
-			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.id)));
+			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.identifier)));
 			if (group_list.length !== 1) {
 				break;
 			}
@@ -65,14 +65,14 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 				break;
 			}
 			let subgroup = group.subgroup[0];
-			if (subgroup.id !== group.id) {
+			if (subgroup.identifier !== group.identifier) {
 				break;
 			}
 			let resource_list = subgroup.resource.filter((value) => (/^properties\/resources(.+)?\.(rton|newton)$/i.test(value.path)));
 			if (resource_list.length === 0) {
 				break;
 			}
-			package_setting.manifest.suffix = group.id.slice('__MANIFESTGROUP__'.length);
+			package_setting.manifest.suffix = group.identifier.slice('__MANIFESTGROUP__'.length);
 			let resource_path_list = resource_list.map((value) => (value.path.toLowerCase()));
 			let resource_path: undefined | string;
 			resource_path = resource_path_list.find((value) => (value.endsWith('.newton')));
@@ -100,15 +100,15 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 		let package_manifest = RegularResourceManifest.Convert.from_official(package_manifest_official);
 		Console.information(`Converting resource ...`, []);
 		for (let group_manifest of package_manifest.group) {
-			let group_directory = make_scope_child_path(part_directory, group_manifest.id);
+			let group_directory = make_scope_child_path(part_directory, group_manifest.identifier);
 			let group_setting: GroupSetting = {
 				variable: [],
 			};
-			let group_definition = find_item_ignore_case(package_definition.group, 'id', group_manifest.id);
+			let group_definition = find_item_ignore_case(package_definition.group, 'identifier', group_manifest.identifier);
 			assert_test(group_definition !== null);
 			KernelX.JSON.write_fs_js(make_scope_setting_path(group_directory), group_setting);
 			for (let subgroup_manifest of group_manifest.subgroup) {
-				let subgroup_definition = find_item_ignore_case(group_definition.subgroup, 'id', subgroup_manifest.id);
+				let subgroup_definition = find_item_ignore_case(group_definition.subgroup, 'identifier', subgroup_manifest.identifier);
 				assert_test(subgroup_definition !== null);
 				{
 					if (subgroup_definition.category.resolution !== null && !package_setting.category.resolution.includes(subgroup_definition.category.resolution)) {
@@ -122,7 +122,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 					}
 				}
 				for (let resource_manifest of subgroup_manifest.resource) {
-					let resource_directory = make_scope_child_path(group_directory, resource_manifest.id);
+					let resource_directory = make_scope_child_path(group_directory, resource_manifest.identifier);
 					let resource_setting: null | ResourceSetting = null;
 					if (resource_manifest.additional.type === 'dummy') {
 						resource_setting = {

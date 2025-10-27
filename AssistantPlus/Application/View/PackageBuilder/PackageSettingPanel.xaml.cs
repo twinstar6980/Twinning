@@ -271,7 +271,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where((value) => (value != null)).Select(GF.AsNotNull).ToList();
+			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where((value) => (value != null)).Select(CommonUtility.AsNotNull).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uCategoryResolution_Text),
 			]);
@@ -291,7 +291,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where((value) => (value != null)).Select(GF.AsNotNull).ToList();
+			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where((value) => (value != null)).Select(CommonUtility.AsNotNull).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uCategoryLocale_Text),
 			]);

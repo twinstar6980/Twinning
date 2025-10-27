@@ -20,12 +20,12 @@ namespace Twinning.Script.Language {
 	// ----------------
 
 	export function query(
-		id: string,
+		key: string,
 		...argumant: any[]
 	): string {
-		let format = g_map[id];
+		let format = g_map[key];
 		if (format === undefined) {
-			throw new Error(`locale id not found '${id}'`);
+			throw new Error(`locale key not found '${key}'`);
 		}
 		let result = '';
 		let argument_index = 0;

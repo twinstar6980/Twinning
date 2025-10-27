@@ -150,13 +150,6 @@ export namespace Twinning::Kernel {
 
 		#pragma region comparison
 
-		auto equal_icase (
-			ConstantView const & that
-		) const -> Boolean requires
-			(IsSame<Element, Character>) {
-			return thiz.as_view().equal_icase(that);
-		}
-
 		auto compare_3way (
 			ConstantView const & that
 		) const -> StrongOrdering requires

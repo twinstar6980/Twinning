@@ -58,9 +58,9 @@ namespace Twinning.AssistantPlus {
 					return;
 				});
 				var argument = Environment.GetCommandLineArgs();
-				App.PackageDirectory = StorageHelper.Parent(argument[0]).AsNotNull();
+				App.PackageDirectory = StorageHelper.Regularize(Package.Current.InstalledPath);
 				App.ProgramFile = $"{App.PackageDirectory}/Application.exe";
-				App.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{Package.Current.Id.Name}");
+				App.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{ApplicationInformation.Identifier}");
 				App.CacheDirectory = $"{App.SharedDirectory}/Cache";
 				argument = argument[1..];
 				try {
@@ -91,7 +91,7 @@ namespace Twinning.AssistantPlus {
 				}
 				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
 					await ControlHelper.PostTask(App.MainWindow.Content.As<FrameworkElement>(), async () => {
-						if (argument.Length == 1 && argument[0].StartsWith("twinstar.twinning.assistant-plus:")) {
+						if (argument.Length == 1 && argument[0].StartsWith($"{ApplicationInformation.Identifier}:")) {
 							await this.HandleLink(new (argument[0]));
 						}
 						else if (argument.Length >= 1 && argument[0] == "Application") {
@@ -190,7 +190,7 @@ namespace Twinning.AssistantPlus {
 					return;
 				};
 				WindowHelper.SetIcon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
-				WindowHelper.SetTitle(window, Package.Current.DisplayName);
+				WindowHelper.SetTitle(window, ApplicationInformation.Name);
 				WindowHelper.SetTitleBar(window, true, null, false);
 				WindowHelper.Activate(window);
 				await this.HandleException(exception, window);
@@ -301,7 +301,7 @@ namespace Twinning.AssistantPlus {
 		public async Task HandleLink (
 			Uri link
 		) {
-			if (link.Scheme != "twinstar.twinning.assistant-plus" || link.Authority != "" || link.AbsolutePath != "/Application") {
+			if (link.Scheme != ApplicationInformation.Identifier || link.Authority != "" || link.AbsolutePath != "/Application") {
 				throw new ($"Invalid link.");
 			}
 			var command = link.GetComponents(UriComponents.Query, UriFormat.UriEscaped)

@@ -20,18 +20,18 @@ namespace Twinning.AssistantPlus {
 			var indexA1 = result.IndexOf('(');
 			var indexA2 = result.IndexOf(')');
 			if (indexA1 != -1 || indexA2 != -1) {
-				GF.AssertTest(indexA1 != -1 && indexA2 != -1 && indexA1 < indexA2);
+				AssertTest(indexA1 != -1 && indexA2 != -1 && indexA1 < indexA2);
 				result = result[..indexA1] + result[(indexA2 + 1)..];
 			}
 			var indexB1 = result.IndexOf('$');
 			if (indexB1 != -1) {
-				GF.AssertTest(indexA1 == -1 && indexA2 == -1);
+				AssertTest(indexA1 == -1 && indexA2 == -1);
 				result = result[(indexB1 + 1)..];
 			}
 			var indexC1 = result.IndexOf('[');
 			var indexC2 = result.IndexOf(']');
 			if (indexC1 != -1 || indexC2 != -1) {
-				GF.AssertTest(indexC1 != -1 && indexC2 != -1 && indexC1 < indexC2);
+				AssertTest(indexC1 != -1 && indexC2 != -1 && indexC1 < indexC2);
 				result = result[..indexC1] + result[(indexC2 + 1)..];
 			}
 			var indexD1 = result.IndexOf('|');
@@ -214,7 +214,7 @@ namespace Twinning.AssistantPlus {
 			foreach (var frame in sprite.Frame) {
 				var keyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(frameIndex));
 				foreach (var action in frame.Remove) {
-					GF.AssertTest(layerList.ContainsKey(action.Index));
+					AssertTest(layerList.ContainsKey(action.Index));
 					var layer = layerList[action.Index];
 					if (layer == null) {
 						continue;
@@ -227,7 +227,7 @@ namespace Twinning.AssistantPlus {
 					);
 				}
 				foreach (var action in frame.Append) {
-					GF.AssertTest(!layerList.ContainsKey(action.Index));
+					AssertTest(!layerList.ContainsKey(action.Index));
 					var skip = !action.Sprite ? !imageFilter[action.Resource.CastPrimitive<Size>()] : !spriteFilter[action.Resource.CastPrimitive<Size>()];
 					var layer = layerList[action.Index] = skip
 						? null
@@ -282,7 +282,7 @@ namespace Twinning.AssistantPlus {
 					layer.IsFirst = true;
 				}
 				foreach (var action in frame.Change) {
-					GF.AssertTest(layerList.ContainsKey(action.Index));
+					AssertTest(layerList.ContainsKey(action.Index));
 					var layer = layerList[action.Index];
 					if (layer == null) {
 						continue;

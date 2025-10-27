@@ -21,9 +21,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::VersionNumber;
 
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 		using Common::uncompress_packet;
 
-		using Common::indexing_subgroup_information_by_id;
+		using Common::indexing_subgroup_information_by_identifier;
 
 		// ----------------
 
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			InputByteStreamView &  patch,
 			Boolean const &        use_raw_packet
 		) -> Void {
-			patch.read_constant(k_magic_identifier);
+			patch.read_constant(k_magic_marker);
 			patch.read_constant(cbox<VersionNumber>(version.number));
 			auto package_information = PackageInformation{};
 			patch.read(package_information);
@@ -94,7 +94,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			}
 			read_package_information_structure(as_left(InputByteStreamView{after.view()}), information_section_after_structure);
 			assert_test(packet_count == information_section_after_structure.subgroup_information.size());
-			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_id(information_section_before_structure.subgroup_information);
+			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_identifier(information_section_before_structure.subgroup_information);
 			auto packet_before_raw_container = ByteArray{};
 			auto packet_after_raw_container = ByteArray{};
 			auto before_end_position = cbox<Size>(information_section_before_structure.header.information_section_size);
@@ -108,7 +108,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 				{
 					auto packet_name_upper = packet_name;
 					packet_name_upper.as_upper_case();
-					auto packet_after_subgroup_index = cbox<Size>(information_section_after_structure.subgroup_id[packet_name_upper]);
+					auto packet_after_subgroup_index = cbox<Size>(information_section_after_structure.subgroup_identifier[packet_name_upper]);
 					assert_test(packet_after_subgroup_index == packet_index);
 				}
 				auto packet_before = ConstantByteListView{};

@@ -61,7 +61,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public String NextString (
 		) {
-			GF.AssertTest(!this.Done());
+			AssertTest(!this.Done());
 			var value = this.mView[this.mPosition];
 			this.mPosition++;
 			return value;

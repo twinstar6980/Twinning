@@ -46,19 +46,19 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 							continue;
 						}
 						let group_state = part_state.group[group_name];
-						let group_definition = package_definition.group.find((value) => (value.id === group_state.id));
+						let group_definition = package_definition.group.find((value) => (value.identifier === group_state.identifier));
 						if (group_definition === undefined) {
 							group_definition = {
-								id: group_state.id,
+								identifier: group_state.identifier,
 								composite: true,
 								subgroup: [],
 							};
 							package_definition.group.push(group_definition);
 						}
-						let group_manifest = package_manifest.group.find((value) => (value.id === group_state.id));
+						let group_manifest = package_manifest.group.find((value) => (value.identifier === group_state.identifier));
 						if (group_manifest === undefined) {
 							group_manifest = {
-								id: group_state.id,
+								identifier: group_state.identifier,
 								composite: true,
 								subgroup: [],
 							};
@@ -77,16 +77,16 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 								if (resource_state_item.category.locale !== null && !package_setting.category.locale.includes(resource_state_item.category.locale)) {
 									continue;
 								}
-								let subgroup_name = make_subgroup_name(group_state.id, resource_state_item.category);
-								let subgroup_definition = group_definition.subgroup.find((value) => (value.id === subgroup_name));
+								let subgroup_name = make_subgroup_name(group_state.identifier, resource_state_item.category);
+								let subgroup_definition = group_definition.subgroup.find((value) => (value.identifier === subgroup_name));
 								if (subgroup_definition === undefined) {
 									subgroup_definition = {
-										id: subgroup_name,
+										identifier: subgroup_name,
 										category: {
 											resolution: resource_state_item.category.resolution,
 											...(package_setting.version.number < 3n ? {} : { locale: resource_state_item.category.locale }),
 										},
-										compression: package_setting.compression.filter.includes(group_state.id) ? package_compression_none : package_compression_default,
+										compression: package_setting.compression.filter.includes(group_state.identifier) ? package_compression_none : package_compression_default,
 										resource: [],
 									};
 									group_definition.subgroup.push(subgroup_definition);
@@ -94,10 +94,10 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 								if (resource_state_item.definition !== null) {
 									subgroup_definition.resource.push(resource_state_item.definition);
 								}
-								let subgroup_manifest = group_manifest.subgroup.find((value) => (value.id === subgroup_name));
+								let subgroup_manifest = group_manifest.subgroup.find((value) => (value.identifier === subgroup_name));
 								if (subgroup_manifest === undefined) {
 									subgroup_manifest = {
-										id: subgroup_name,
+										identifier: subgroup_name,
 										category: resource_state_item.category,
 										resource: [],
 									};
@@ -133,11 +133,11 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Link {
 					}
 					KernelX.Storage.remove_if(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
 					package_definition.group.push({
-						id: manifest_group_name,
+						identifier: manifest_group_name,
 						composite: false,
 						subgroup: [
 							{
-								id: manifest_group_name,
+								identifier: manifest_group_name,
 								category: {
 									resolution: null,
 									...(package_setting.version.number < 3n ? {} : { locale: null }),

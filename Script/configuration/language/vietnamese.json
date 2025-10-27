@@ -36,8 +36,8 @@
 	"support.popcap.package.pack_automatic:total": "{} tệp tài nguyên tổng cộng",
 	"support.popcap.package.pack_automatic:finish": "Đóng gói hoàn tất",
 	// support/popcap/resource_stream_bundle/unpack_lenient
-	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "Group ID không rõ",
-	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "Subgroup ID không rõ",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_identifier": "Mã định danh nhóm không xác định",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_identifier": "Mã định danh nhóm con không xác định",
 	// support/pvz2/remote_project/execute
 	"support.pvz2.remote_project.execute:application_found_none": "PvZ-2 không tìm thấy",
 	"support.pvz2.remote_project.execute:application_found_single": "PvZ-2 đã tìm thấy",
@@ -68,7 +68,7 @@
 	"executor.generic:method_select": "Chọn các phương thức để áp dụng",
 	"executor.generic:method_select_null_to_skip": "Nhập chuỗi trống để bỏ qua lệnh này",
 	"executor.generic:method_unavailable": "Không tìm thấy phương thức có sẵn, lệnh đã bị bỏ qua",
-	"executor.generic:method_invalid": "ID phương thức không hợp lệ",
+	"executor.generic:method_invalid": "Mã định danh phương thức không hợp lệ",
 	"executor.generic:finish_skipped": "Lệnh bị bỏ qua khi thực hiện",
 	"executor.generic:finish_failed": "Lệnh thực hiện thất bại",
 	"executor.generic:finish_succeeded": "Lệnh thực hiện thành công",
@@ -653,8 +653,8 @@
 	// executable/compare_language_file
 	"executable.compare_language_file:please_input_original_file": "Hãy nhập đường dẫn tệp tin ngôn ngữ gốc",
 	"executable.compare_language_file:please_input_translation_file": "Hãy nhập đường dẫn tệp tin ngôn ngữ dịch",
-	// executable/compute_wwise_short_id
-	"executable.compute_wwise_short_id:please_input_string": "Vui lòng nhập chuỗi ID Wwise, nhập chuỗi trống để kết thúc",
+	// executable/compute_wwise_short_identifier
+	"executable.compute_wwise_short_identifier:please_input_string": "Vui lòng nhập chuỗi định danh wwise, nhập chuỗi trống để kết thúc",
 	// executable/extract_rsb_from_pvz2_cn_apk_directory
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory": "Hãy cung cấp thư mục của một APK đã được giải nén sẽ được giải nén sâu hơn bằng công cụ này",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory": "Cung cấp thư mục đầu ra",

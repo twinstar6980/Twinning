@@ -103,7 +103,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 						KernelX.Image.File.PNG.write_fs(make_scope_child_path(new_source_data_directory, source_sprite.path + '.png'), sprite_image_view);
 						new_sprite_property_list.push({
 							source: source_sprite.path,
-							id: source_sprite.id,
+							identifier: source_sprite.identifier,
 							path: source_sprite.path,
 							offset: source_sprite.offset,
 							separate: source_sprite.separate,
@@ -166,7 +166,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Transpile {
 					for (let sprite_resource_property of resource_property.sprite) {
 						let sprite_rect = sprite_rect_list[sprite_resource_property.source];
 						let sprite_resource_manifest: TextureResourcePropertySpriteProperty = {
-							id: sprite_resource_property.id,
+							identifier: sprite_resource_property.identifier,
 							path: sprite_resource_property.path,
 							position: [BigInt(sprite_rect.x), BigInt(sprite_rect.y)],
 							size: [BigInt(sprite_rect.w), BigInt(sprite_rect.h)],

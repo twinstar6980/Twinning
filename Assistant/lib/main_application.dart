@@ -158,7 +158,7 @@ class MainApplication {
   static Future<Void> _handleLink(
     Uri link,
   ) async {
-    if (link.scheme != 'twinstar.twinning.assistant' || link.authority != '' || link.path != '/application') {
+    if (link.scheme != ApplicationInformation.identifier || link.authority != '' || link.path != '/application') {
       throw Exception('invalid link');
     }
     var command = link.queryParametersAll['command'] ?? [];

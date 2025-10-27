@@ -69,7 +69,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			Object? sender,
 			Object  args
 		) {
-			GF.AssertTest(this.Loaded);
+			AssertTest(this.Loaded);
 			this.State = StateType.Idle;
 			if (this.RepeatPlay) {
 				this.State = StateType.Playing;
@@ -98,7 +98,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			List<Boolean>                    spriteFilter,
 			GameAnimationModel.Sprite        activeSprite
 		) {
-			GF.AssertTest(!this.Loaded);
+			AssertTest(!this.Loaded);
 			var visual = GameAnimationHelper.VisualizeSprite(animation, texture, activeSprite, imageFilter, spriteFilter);
 			this.Width = animation.Size.Item1;
 			this.Height = animation.Size.Item2;
@@ -122,7 +122,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public void Unload (
 		) {
-			GF.AssertTest(this.Loaded);
+			AssertTest(this.Loaded);
 			this.State = StateType.Idle;
 			this.Content = null;
 			this.Canvas = null;
@@ -145,11 +145,11 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public StateType State {
 			get {
-				GF.AssertTest(this.Loaded);
+				AssertTest(this.Loaded);
 				return this.mState;
 			}
 			set {
-				GF.AssertTest(this.Loaded);
+				AssertTest(this.Loaded);
 				if (this.mState != value) {
 					switch (value) {
 						case StateType.Idle: {
@@ -192,11 +192,11 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public GameAnimationHelper.FrameRange FrameRange {
 			get {
-				GF.AssertTest(this.Loaded);
+				AssertTest(this.Loaded);
 				return this.mFrameRange.AsNotNull();
 			}
 			set {
-				GF.AssertTest(this.Loaded);
+				AssertTest(this.Loaded);
 				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Begin) / this.FrameSpeed;
 				this.Storyboard.Duration = new (TimeSpan.FromSeconds(value.End + 1) - this.BasicTimeOffsetValue);
 				this.mFrameRange = value;
@@ -208,13 +208,13 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public TimeSpan CurrentTime {
 			get {
-				GF.AssertTest(this.Loaded);
-				GF.AssertTest(this.State != StateType.Idle);
+				AssertTest(this.Loaded);
+				AssertTest(this.State != StateType.Idle);
 				return this.Storyboard.GetCurrentTime();
 			}
 			set {
-				GF.AssertTest(this.Loaded);
-				GF.AssertTest(this.State != StateType.Idle);
+				AssertTest(this.Loaded);
+				AssertTest(this.State != StateType.Idle);
 				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + value) / this.FrameSpeed + this.BasicTimeOffset);
 				return;
 			}

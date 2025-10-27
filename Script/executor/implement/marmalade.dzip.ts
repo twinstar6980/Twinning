@@ -6,32 +6,32 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 	): void {
 		push_typical_method('marmalade.dzip', [
 			typical_method({
-				id: 'pack',
+				identifier: 'pack',
 				filter: ['directory', /(\.dz\.bundle)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.dz\.bundle)?$/i, '.dz')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.Marmalade.DZip.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -48,7 +48,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
@@ -67,25 +67,25 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 				},
 			}),
 			typical_method({
-				id: 'unpack',
+				identifier: 'unpack',
 				filter: ['file', /(\.dz)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.dz)?$/i, '.dz.bundle')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.Marmalade.DZip.VersionNumberE,
 						checker: null,
 						automatic: null,
@@ -94,7 +94,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -102,7 +102,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'bundle_directory',
+						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
@@ -118,25 +118,25 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 				},
 			}),
 			typical_method({
-				id: 'pack_automatic',
+				identifier: 'pack_automatic',
 				filter: ['directory', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'resource_directory',
+						identifier: 'resource_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { resource_directory: string; }) => (argument.resource_directory.replace(/()?$/i, '.dz')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.Marmalade.DZip.VersionNumberE,
 						checker: null,
 						automatic: null,

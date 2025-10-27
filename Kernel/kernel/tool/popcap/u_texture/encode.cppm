@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::Header;
 
@@ -34,7 +34,7 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format
 		) -> Void {
-			data.write_constant(k_magic_identifier);
+			data.write_constant(k_magic_marker);
 			auto header_stream = OutputByteStreamView{data.forward_view(bs_static_size<Header>())};
 			auto image_format = Integer{};
 			switch (format.value) {
@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 			Texture::Encoding::Format const & format
 		) -> Void {
 			data_size_bound = k_none_size;
-			data_size_bound += bs_static_size<MagicIdentifier>();
+			data_size_bound += bs_static_size<MagicMarker>();
 			data_size_bound += bs_static_size<Header>();
 			auto texture_data_size = image_size.area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_size_bound = Size{};

@@ -21,9 +21,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::VersionNumber;
 
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 		using Common::uncompress_packet;
 
-		using Common::indexing_subgroup_information_by_id;
+		using Common::indexing_subgroup_information_by_identifier;
 
 		// ----------------
 
@@ -75,7 +75,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			OutputByteStreamView & patch,
 			Boolean const &        use_raw_packet
 		) -> Void {
-			patch.write_constant(k_magic_identifier);
+			patch.write_constant(k_magic_marker);
 			patch.write_constant(cbox<VersionNumber>(version.number));
 			auto package_information_stream = OutputByteStreamView{patch.forward_view(bs_static_size<PackageInformation>())};
 			auto package_information = PackageInformation{};
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			}
 			package_information.patch_exist = cbox<IntegerU32>(information_section_patch_exist);
 			package_information.patch_size = cbox<IntegerU32>(information_section_patch_size);
-			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_id(information_section_before_structure.subgroup_information);
+			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_identifier(information_section_before_structure.subgroup_information);
 			auto packet_before_raw_container = ByteArray{};
 			auto packet_after_raw_container = ByteArray{};
 			auto before_end_position = cbox<Size>(information_section_before_structure.header.information_section_size);
@@ -111,7 +111,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 				auto   packet_name = String{};
 				auto   packet_patch_exist = Boolean{};
 				auto   packet_patch_size = Size{};
-				packet_name = String{packet_after_subgroup_information.id.begin(), null_terminated_string_size_of(packet_after_subgroup_information.id.begin())};
+				packet_name = String{packet_after_subgroup_information.identifier.begin(), null_terminated_string_size_of(packet_after_subgroup_information.identifier.begin())};
 				auto packet_before = ConstantByteListView{};
 				if (auto packet_before_subgroup_information_index = packet_before_subgroup_information_index_map.query_if(packet_name)) {
 					auto & packet_before_subgroup_information = information_section_before_structure.subgroup_information[cbox<Size>(packet_before_subgroup_information_index.get().value)];

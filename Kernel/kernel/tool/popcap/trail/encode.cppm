@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 
 		using typename Common::Definition;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::IntegerOfPlatform;
 
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 			OutputByteStreamView &             data,
 			typename Definition::Trail const & value
 		) -> Void {
-			data.write_constant(k_magic_identifier);
+			data.write_constant(k_magic_marker);
 			exchange_trail(data, value);
 			return;
 		}

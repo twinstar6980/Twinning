@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.Texture.Atlas {
 	): void {
 		push_typical_method('texture.atlas', [
 			typical_method({
-				id: 'pack',
+				identifier: 'pack',
 				filter: ['file', /(\.atlas\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'sprite_directory',
+						identifier: 'sprite_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.sprite')),
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'atlas_file',
+						identifier: 'atlas_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.atlas.png')),
@@ -38,25 +38,25 @@ namespace Twinning.Script.Executor.Implement.Texture.Atlas {
 				},
 			}),
 			typical_method({
-				id: 'unpack',
+				identifier: 'unpack',
 				filter: ['file', /(\.atlas\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'atlas_file',
+						identifier: 'atlas_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.atlas.png')),
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'sprite_directory',
+						identifier: 'sprite_directory',
 						rule: ['directory', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.atlas\.json)?$/i, '.sprite')),
@@ -70,25 +70,25 @@ namespace Twinning.Script.Executor.Implement.Texture.Atlas {
 				},
 			}),
 			typical_method({
-				id: 'pack_automatic',
+				identifier: 'pack_automatic',
 				filter: ['directory', /(\.sprite)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'sprite_directory',
+						identifier: 'sprite_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'atlas_file',
+						identifier: 'atlas_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { sprite_directory: string; }) => (argument.sprite_directory.replace(/(\.sprite)?$/i, '.atlas.png')),
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { sprite_directory: string; }) => (argument.sprite_directory.replace(/(\.sprite)?$/i, '.atlas.json')),

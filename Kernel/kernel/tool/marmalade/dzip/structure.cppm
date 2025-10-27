@@ -8,11 +8,11 @@ import twinning.kernel.tool.marmalade.dzip.version;
 
 export namespace Twinning::Kernel::Tool::Marmalade::DZip::Structure {
 
-	#pragma region magic identifier
+	#pragma region magic marker
 
-	using MagicIdentifier = StaticByteArray<4_sz>;
+	using MagicMarker = StaticByteArray<4_sz>;
 
-	inline constexpr auto k_magic_identifier = MagicIdentifier{{'D'_b, 'T'_b, 'R'_b, 'Z'_b}};
+	inline constexpr auto k_magic_marker = MagicMarker{{'D'_b, 'T'_b, 'R'_b, 'Z'_b}};
 
 	#pragma endregion
 

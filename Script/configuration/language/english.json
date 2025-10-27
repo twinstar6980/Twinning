@@ -36,8 +36,8 @@
 	"support.popcap.package.pack_automatic:total": "{} resource file(s) in total",
 	"support.popcap.package.pack_automatic:finish": "Packing finished",
 	// support/popcap/resource_stream_bundle/unpack_lenient
-	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "Group ID is unknown",
-	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "Subgroup ID is unknown",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_identifier": "Group Identifier is unknown",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_identifier": "Subgroup Identifier is unknown",
 	// support/pvz2/remote_project/execute
 	"support.pvz2.remote_project.execute:application_found_none": "PvZ-2 not found",
 	"support.pvz2.remote_project.execute:application_found_single": "PvZ-2 has been founded",
@@ -68,7 +68,7 @@
 	"executor.generic:method_select": "Select methods to apply",
 	"executor.generic:method_select_null_to_skip": "Enter empty string to skip this command",
 	"executor.generic:method_unavailable": "No available methods found, command skipped",
-	"executor.generic:method_invalid": "Invalid method id",
+	"executor.generic:method_invalid": "Invalid method identifier",
 	"executor.generic:finish_skipped": "Command execute skipped",
 	"executor.generic:finish_failed": "Command execute failed",
 	"executor.generic:finish_succeeded": "Command execute succeeded",
@@ -653,8 +653,8 @@
 	// executable/compare_language_file
 	"executable.compare_language_file:please_input_original_file": "Please input the original text file",
 	"executable.compare_language_file:please_input_translation_file": "Please input the translation text file",
-	// executable/compute_wwise_short_id
-	"executable.compute_wwise_short_id:please_input_string": "Please enter the wwise id string, enter empty strings to finish",
+	// executable/compute_wwise_short_identifier
+	"executable.compute_wwise_short_identifier:please_input_string": "Please enter the wwise identifier string, enter empty strings to finish",
 	// executable/extract_rsb_from_pvz2_cn_apk_directory
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory": "Provide the directory of an extracted APK that is to be deeper extracted by this tool",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory": "Provide output directory",

@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 		) -> Void {
 			auto rijndael_data_size = Size{};
 			estimate_whole(cipher.reserve(), rijndael_data_size);
-			cipher.read_constant(k_magic_identifier);
+			cipher.read_constant(k_magic_marker);
 			auto rijndael_cipher = InputByteStreamView{cipher.forward_view(rijndael_data_size)};
 			auto rijndael_plain = OutputByteStreamView{plain.forward_view(rijndael_data_size)};
 			auto rijndael_key = compute_rijndael_key(key);
@@ -40,8 +40,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 			Size &       plain_size
 		) -> Void {
 			plain_size = k_none_size;
-			assert_test(cipher_size >= bs_static_size<MagicIdentifier>());
-			auto rijndael_data_size = cipher_size - bs_static_size<MagicIdentifier>();
+			assert_test(cipher_size >= bs_static_size<MagicMarker>());
+			auto rijndael_data_size = cipher_size - bs_static_size<MagicMarker>();
 			assert_test(is_padded_size(rijndael_data_size, k_crypt_block_size));
 			plain_size += rijndael_data_size;
 			return;

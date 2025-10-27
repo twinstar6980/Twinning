@@ -20,9 +20,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
 
 		using typename Common::Definition;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::VersionNumber;
 
@@ -468,7 +468,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
 			InputByteStreamView &         data,
 			typename Definition::Effect & definition
 		) -> Void {
-			data.read_constant(k_magic_identifier);
+			data.read_constant(k_magic_marker);
 			data.read_constant(cbox<VersionNumber>(version.number));
 			process_effect(data, definition);
 			return;

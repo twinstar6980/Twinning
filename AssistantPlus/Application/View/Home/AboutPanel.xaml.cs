@@ -63,15 +63,15 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region description
 
-		public String uDescriptionLabel_Text {
+		public String uVersionLabel_Text {
 			get {
-				return $"{Package.Current.DisplayName} - v{Package.Current.Id.Version.Major}";
+				return $"{ApplicationInformation.Name} - v{ApplicationInformation.Version}";
 			}
 		}
 
 		public String uCopyrightLabel_Text {
 			get {
-				return $"\u00A9 2023-2025 {Package.Current.PublisherDisplayName}. All rights reserved.";
+				return $"\u00A9 {ApplicationInformation.Year} {ApplicationInformation.Developer}. All rights reserved.";
 			}
 		}
 

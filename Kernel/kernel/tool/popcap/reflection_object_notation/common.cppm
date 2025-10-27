@@ -11,15 +11,15 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {
 
-		using MagicIdentifier = StaticByteArray<4_sz>;
+		using MagicMarker = StaticByteArray<4_sz>;
 
-		inline static constexpr auto k_magic_identifier = MagicIdentifier{{'R'_b, 'T'_b, 'O'_b, 'N'_b}};
+		inline static constexpr auto k_magic_marker = MagicMarker{{'R'_b, 'T'_b, 'O'_b, 'N'_b}};
 
 		// ----------------
 
-		using DoneIdentifier = StaticByteArray<4_sz>;
+		using DoneMarker = StaticByteArray<4_sz>;
 
-		inline static constexpr auto k_done_identifier = DoneIdentifier{{'D'_b, 'O'_b, 'N'_b, 'E'_b}};
+		inline static constexpr auto k_done_marker = DoneMarker{{'D'_b, 'O'_b, 'N'_b, 'E'_b}};
 
 		// ----------------
 
@@ -104,9 +104,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		struct ReferenceTypeIdentifierEnumeration {
 			enum class Type : ZByte {
-				null  = 0x00,
-				uid   = 0x02,
-				alias = 0x03,
+				null       = 0x00,
+				identifier = 0x02,
+				alias      = 0x03,
 			};
 		};
 
@@ -114,7 +114,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		inline static constexpr auto k_reference_expression_format_of_null = StringFormatter{"RTID(0)"_sf};
 
-		inline static constexpr auto k_reference_expression_format_of_uid = StringFormatter{"RTID({:d}.{:d}.{:08x}@{:s})"_sf};
+		inline static constexpr auto k_reference_expression_format_of_identifier = StringFormatter{"RTID({:d}.{:d}.{:08x}@{:s})"_sf};
 
 		inline static constexpr auto k_reference_expression_format_of_alias = StringFormatter{"RTID({:s}@{:s})"_sf};
 
@@ -132,13 +132,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			if (!at_position.has()) {
 				return k_null_optional;
 			}
-			// TODO: should test the content is number or not?
 			if (Range::count(content.head(at_position.get()), '.'_c) == 2_sz) {
-				auto uid_part = split_string<String>(content.head(at_position.get()), StaticArray<Character, 1_sz>{{'.'_c}});
-				if (Range::all_of(uid_part[1_ix], &CharacterType::is_number_dec) &&
-					Range::all_of(uid_part[2_ix], &CharacterType::is_number_dec) &&
-					Range::all_of(uid_part[3_ix], &CharacterType::is_number_hex)) {
-					return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::uid});
+				auto identifier_part = split_string<String>(content.head(at_position.get()), StaticArray<Character, 1_sz>{{'.'_c}});
+				if (Range::all_of(identifier_part[1_ix], &CharacterType::is_number_decimal) &&
+					Range::all_of(identifier_part[2_ix], &CharacterType::is_number_decimal) &&
+					Range::all_of(identifier_part[3_ix], &CharacterType::is_number_hexadecimal)) {
+					return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::identifier});
 				}
 			}
 			return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::alias});

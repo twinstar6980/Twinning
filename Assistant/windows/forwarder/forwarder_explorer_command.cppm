@@ -38,7 +38,7 @@ export namespace Twinning::Assistant::Forwarder {
 			m_state_file{} {
 			thiz.m_application_name = L"Twinning Assistant";
 			thiz.m_application_logo = thiz.get_library_file_path();
-			thiz.m_state_file = thiz.get_data_directory_path() + L"\\TwinStar.Twinning.Assistant\\forwarder";
+			thiz.m_state_file = thiz.get_data_directory_path() + L"\\com.twinstar.twinning.assistant\\forwarder";
 			return;
 		}
 
@@ -239,7 +239,7 @@ export namespace Twinning::Assistant::Forwarder {
 			command.append_range(resource);
 			auto link = std::wstring{};
 			link.reserve(1024);
-			link += L"twinstar.twinning.assistant:/application?";
+			link += L"com.twinstar.twinning.assistant:/application?";
 			for (auto & item : command) {
 				link += L"command=";
 				link += thiz.encode_percent_string(item);

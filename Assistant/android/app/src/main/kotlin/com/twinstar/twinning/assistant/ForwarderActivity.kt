@@ -83,7 +83,7 @@ class ForwarderActivity : Activity() {
 		val command = mutableListOf<String>()
 		command.add("-forward")
 		command.addAll(resource.map() { item -> item.toString() })
-		val link = Uri.parse("twinstar.twinning.assistant:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
+		val link = Uri.parse("com.twinstar.twinning.assistant:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
 		this.openLink(link, resource)
 		return
 	}

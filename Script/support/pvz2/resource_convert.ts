@@ -50,10 +50,10 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		resource_manifest: RegularResourceManifest.Package,
 		option: Option,
 	): void {
-		let find_item_by_id_ignore_case = <T extends { id: string }>(list: Array<T>, value: string): null | T => {
+		let find_item_by_identifier_ignore_case = <T extends { identifier: string }>(list: Array<T>, value: string): null | T => {
 			let value_lower = value.toLowerCase();
 			for (let item of list) {
-				let item_value = item.id;
+				let item_value = item.identifier;
 				if (item_value.toLowerCase() === value_lower) {
 					return item;
 				}
@@ -82,20 +82,20 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			for (let package_group of package_definition.group) {
 				group_progress.increase();
 				if (show_group_progress) {
-					Console.information(`${group_progress} - ${package_group.id}`, []);
+					Console.information(`${group_progress} - ${package_group.identifier}`, []);
 				}
-				if (/__MANIFESTGROUP__(.+)?/.test(package_group.id)) {
+				if (/__MANIFESTGROUP__(.+)?/.test(package_group.identifier)) {
 					continue;
 				}
-				let group = find_item_by_id_ignore_case(resource_manifest.group, package_group.id);
+				let group = find_item_by_identifier_ignore_case(resource_manifest.group, package_group.identifier);
 				if (group === null) {
-					Console.warning(`group not found in resource manifest '${package_group.id}'`, []);
+					Console.warning(`group not found in resource manifest '${package_group.identifier}'`, []);
 					continue;
 				}
 				for (let package_subgroup of package_group.subgroup) {
-					let subgroup = find_item_by_id_ignore_case(group.subgroup, package_subgroup.id);
+					let subgroup = find_item_by_identifier_ignore_case(group.subgroup, package_subgroup.identifier);
 					if (subgroup === null) {
-						Console.warning(`subgroup not found in resource manifest '${package_subgroup.id}'`, []);
+						Console.warning(`subgroup not found in resource manifest '${package_subgroup.identifier}'`, []);
 						continue;
 					}
 					for (let package_resource of package_subgroup.resource) {
@@ -109,9 +109,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 							continue;
 						}
 						worker(
-							[group.id, group, package_group],
-							[subgroup.id, subgroup, package_subgroup],
-							[resource.id, resource, package_resource],
+							[group.identifier, group, package_group],
+							[subgroup.identifier, subgroup, package_subgroup],
+							[resource.identifier, resource, package_resource],
 						);
 					}
 				}
@@ -270,7 +270,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		Console.information(los('support.pvz2.resource_convert:extract_resource_manifest'), []);
 		let resource_manifest: ResourceManifest.Package;
 		{
-			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.id)));
+			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.identifier)));
 			if (group_list.length !== 1) {
 				throw new Error(`package must contain unique MANIFEST group`);
 			}
@@ -279,8 +279,8 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 				throw new Error(`MANIFEST group must contain unique subgroup`);
 			}
 			let subgroup = group.subgroup[0];
-			if (subgroup.id !== group.id) {
-				throw new Error(`MANIFEST subgroup id must equal the group id`);
+			if (subgroup.identifier !== group.identifier) {
+				throw new Error(`MANIFEST subgroup identifier must equal the group identifier`);
 			}
 			let resource_list = subgroup.resource.filter((value) => (/^properties\/resources(.+)?\.(rton|newton)$/i.test(value.path)));
 			if (resource_list.length === 0) {

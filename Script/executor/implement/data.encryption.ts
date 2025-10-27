@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 	): void {
 		push_typical_method('data.encryption', [
 			typical_method({
-				id: 'exor.encrypt',
+				identifier: 'exor.encrypt',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: (argument: {}, value) => ((/^(( )*[0-9a-fA-F]{2,2}( )*)+$/.test(value)) ? null : los('executor.implement:*.illegal_key')),
 						automatic: null,
@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -41,7 +41,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
@@ -55,46 +55,46 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 				},
 			}),
 			typical_method({
-				id: 'rijndael.encrypt',
+				identifier: 'rijndael.encrypt',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'mode',
+						identifier: 'mode',
 						option: KernelX.Tool.Data.Encryption.Rijndael.ModeE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'block_size',
+						identifier: 'block_size',
 						option: KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los('executor.implement:*.illegal_key_length')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'iv',
+						identifier: 'iv',
 						option: null,
 						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
 						automatic: null,
@@ -103,7 +103,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -111,7 +111,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
@@ -125,46 +125,46 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 				},
 			}),
 			typical_method({
-				id: 'rijndael.decrypt',
+				identifier: 'rijndael.decrypt',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'mode',
+						identifier: 'mode',
 						option: KernelX.Tool.Data.Encryption.Rijndael.ModeE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'block_size',
+						identifier: 'block_size',
 						option: KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los('executor.implement:*.illegal_key_length')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'iv',
+						identifier: 'iv',
 						option: null,
 						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
 						automatic: null,
@@ -173,7 +173,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -181,7 +181,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file + '.decrypt'),

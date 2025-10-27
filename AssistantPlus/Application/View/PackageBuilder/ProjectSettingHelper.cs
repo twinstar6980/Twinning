@@ -8,7 +8,30 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 	public static class ProjectSettingHelper {
 
-		#region check
+		#region version
+
+		private static readonly Integer Version = 3;
+
+		// ----------------
+
+		public static async Task<Boolean> CheckVersionFile (
+			String projectDirectory
+		) {
+			var result = true;
+			try {
+				var versionFile = $"{projectDirectory}/version.txt";
+				var versionText = await StorageHelper.ReadFileText(versionFile);
+				AssertTest(versionText == ProjectSettingHelper.Version.ToString());
+			}
+			catch (Exception) {
+				result = false;
+			}
+			return result;
+		}
+
+		#endregion
+
+		#region category
 
 		public static Integer? ParseResolutionString (
 			String   text,

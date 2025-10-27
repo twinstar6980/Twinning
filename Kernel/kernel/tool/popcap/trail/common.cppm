@@ -16,20 +16,20 @@ export namespace Twinning::Kernel::Tool::PopCap::Trail {
 
 		// ----------------
 
-		using MagicIdentifier = IntegerU32;
+		using MagicMarker = IntegerU32;
 
-		inline static constexpr auto k_magic_identifier = [] {
+		inline static constexpr auto k_magic_marker = [] {
 			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
-				return MagicIdentifier{0xAB8B62B3_iu32};
+				return MagicMarker{0xAB8B62B3_iu32};
 			}
 			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {false})) {
-				return MagicIdentifier{0xAB8B62B3_iu32};
+				return MagicMarker{0xAB8B62B3_iu32};
 			}
 			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {true})) {
-				return MagicIdentifier{0x8488BC08_iu32};
+				return MagicMarker{0x8488BC08_iu32};
 			}
 			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {false})) {
-				return MagicIdentifier{0xAB8B62B3_iu32};
+				return MagicMarker{0xAB8B62B3_iu32};
 			}
 		}();
 

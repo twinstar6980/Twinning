@@ -18,9 +18,11 @@ typedef Floater = double;
 
 final class ApplicationInformation {
 
-  static const String name = 'Twinning Assistant';
+  static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '121';
+  static const String version = '122';
+
+  static const String name = 'Twinning Assistant';
 
   static const String developer = 'TwinStar';
 
@@ -178,6 +180,8 @@ extension CommonObjectExtension<TType extends Object> on TType {
 
 // ----------------
 
+typedef IconSymbols = Symbols;
+
 Future<Void> refreshState(
   Void Function(Void Function()) setState,
 ) async {
@@ -262,5 +266,3 @@ extension CommonWidgetExtension<TType extends Widget> on TType {
   }
 
 }
-
-typedef IconSymbols = Symbols;

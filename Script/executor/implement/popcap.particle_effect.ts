@@ -6,32 +6,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 	): void {
 		push_typical_method('popcap.particle_effect', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.ppf\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.ppf\.json)?$/i, '.ppf')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ParticleEffect.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -48,7 +48,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
@@ -65,25 +65,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.ppf)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.ppf)?$/i, '.ppf.json')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ParticleEffect.VersionNumberE,
 						checker: null,
 						automatic: null,
@@ -92,7 +92,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -100,7 +100,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),

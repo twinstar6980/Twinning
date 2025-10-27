@@ -12,7 +12,7 @@ using Colors = Microsoft.UI.Colors;
 namespace Twinning.AssistantPlus {
 
 	public record SettingData {
-		public Integer                           Version                      = default!;
+		public String                            Version                      = default!;
 		public CustomThemeBackdrop               ThemeBackdrop                = default!;
 		public CustomThemeMode                   ThemeMode                    = default!;
 		public Boolean                           ThemeColorState              = default!;
@@ -168,7 +168,7 @@ namespace Twinning.AssistantPlus {
 		) {
 			file ??= this.File;
 			this.Data = await JsonHelper.DeserializeFile<SettingData>(file);
-			GF.AssertTest(this.Data.Version == Package.Current.Id.Version.Major);
+			AssertTest(this.Data.Version == ApplicationInformation.Version);
 			return;
 		}
 
@@ -191,7 +191,7 @@ namespace Twinning.AssistantPlus {
 		private static SettingData CreateDefaultData (
 		) {
 			return new () {
-				Version = Package.Current.Id.Version.Major,
+				Version = ApplicationInformation.Version,
 				ThemeBackdrop = CustomThemeBackdrop.MicaBase,
 				ThemeMode = CustomThemeMode.System,
 				ThemeColorState = false,

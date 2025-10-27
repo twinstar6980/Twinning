@@ -6,32 +6,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 	): void {
 		push_typical_method('popcap.crypt_data', [
 			typical_method({
-				id: 'encrypt',
+				identifier: 'encrypt',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.cdat')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'limit',
+						identifier: 'limit',
 						option: null,
 						checker: (argument: {}, value) => (0x00n <= value ? null : los('executor.implement:*.out_of_range')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -48,7 +48,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
@@ -62,32 +62,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 				},
 			}),
 			typical_method({
-				id: 'decrypt',
+				identifier: 'decrypt',
 				filter: ['file', /(\.cdat)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file.replace(/(\.cdat)?$/i, '')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'limit',
+						identifier: 'limit',
 						option: null,
 						checker: (argument: {}, value) => (0x00n <= value ? null : los('executor.implement:*.out_of_range')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -96,7 +96,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -104,7 +104,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file + '.decrypt'),

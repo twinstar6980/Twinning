@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 	): void {
 		push_typical_method('popcap.zlib', [
 			typical_method({
-				id: 'compress',
+				identifier: 'compress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_variant_64',
+						identifier: 'version_variant_64',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -32,7 +32,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
@@ -54,25 +54,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 				},
 			}),
 			typical_method({
-				id: 'uncompress',
+				identifier: 'uncompress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_variant_64',
+						identifier: 'version_variant_64',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -80,7 +80,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -88,7 +88,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),

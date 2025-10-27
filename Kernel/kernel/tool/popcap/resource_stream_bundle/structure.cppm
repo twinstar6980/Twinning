@@ -9,11 +9,11 @@ import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 
 export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
 
-	#pragma region magic identifier
+	#pragma region magic marker
 
-	using MagicIdentifier = IntegerU32;
+	using MagicMarker = IntegerU32;
 
-	inline constexpr auto k_magic_identifier = MagicIdentifier{0x72736231_iu32};
+	inline constexpr auto k_magic_marker = MagicMarker{0x72736231_iu32};
 
 	#pragma endregion
 
@@ -38,16 +38,16 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 			(IntegerU32) resource_path_section_offset,
 			(ConstantBlock<0x00000000_iu32>) unknown_5,
 			(ConstantBlock<0x00000000_iu32>) unknown_6,
-			(IntegerU32) subgroup_id_section_size,
-			(IntegerU32) subgroup_id_section_offset,
+			(IntegerU32) subgroup_identifier_section_size,
+			(IntegerU32) subgroup_identifier_section_offset,
 			(IntegerU32) subgroup_information_section_block_count,
 			(IntegerU32) subgroup_information_section_offset,
 			(IntegerU32) subgroup_information_section_block_size,
 			(IntegerU32) group_information_section_block_count,
 			(IntegerU32) group_information_section_offset,
 			(IntegerU32) group_information_section_block_size,
-			(IntegerU32) group_id_section_size,
-			(IntegerU32) group_id_section_offset,
+			(IntegerU32) group_identifier_section_size,
+			(IntegerU32) group_identifier_section_offset,
 			(IntegerU32) pool_information_section_block_count,
 			(IntegerU32) pool_information_section_offset,
 			(IntegerU32) pool_information_section_block_size,
@@ -72,16 +72,16 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 			(IntegerU32) resource_path_section_offset,
 			(ConstantBlock<0x00000000_iu32>) unknown_5,
 			(ConstantBlock<0x00000000_iu32>) unknown_6,
-			(IntegerU32) subgroup_id_section_size,
-			(IntegerU32) subgroup_id_section_offset,
+			(IntegerU32) subgroup_identifier_section_size,
+			(IntegerU32) subgroup_identifier_section_offset,
 			(IntegerU32) subgroup_information_section_block_count,
 			(IntegerU32) subgroup_information_section_offset,
 			(IntegerU32) subgroup_information_section_block_size,
 			(IntegerU32) group_information_section_block_count,
 			(IntegerU32) group_information_section_offset,
 			(IntegerU32) group_information_section_block_size,
-			(IntegerU32) group_id_section_size,
-			(IntegerU32) group_id_section_offset,
+			(IntegerU32) group_identifier_section_size,
+			(IntegerU32) group_identifier_section_offset,
 			(IntegerU32) pool_information_section_block_count,
 			(IntegerU32) pool_information_section_offset,
 			(IntegerU32) pool_information_section_block_size,
@@ -135,7 +135,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 	M_record_of_data(
 		M_wrap(GroupInformation<t_version>),
 		M_wrap(
-			(StringBlockFixed128) id,
+			(StringBlockFixed128) identifier,
 			(StaticArray<SimpleSubgroupInformation<t_version>, 64_sz>) subgroup_information,
 			(IntegerU32) subgroup_count,
 		),
@@ -152,7 +152,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 	M_record_of_data(
 		M_wrap(SubgroupInformation<t_version>),
 		M_wrap(
-			(StringBlockFixed128) id,
+			(StringBlockFixed128) identifier,
 			(IntegerU32) offset,
 			(IntegerU32) size,
 			(IntegerU32) pool,
@@ -179,7 +179,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 	M_record_of_data(
 		M_wrap(SubgroupInformation<t_version>),
 		M_wrap(
-			(StringBlockFixed128) id,
+			(StringBlockFixed128) identifier,
 			(IntegerU32) offset,
 			(IntegerU32) size,
 			(IntegerU32) pool,
@@ -213,7 +213,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 	M_record_of_data(
 		M_wrap(PoolInformation<t_version>),
 		M_wrap(
-			(StringBlockFixed128) id,
+			(StringBlockFixed128) identifier,
 			(IntegerU32) texture_resource_data_section_offset,
 			(IntegerU32) texture_resource_data_section_size,
 			(IntegerU32) instance_count,
@@ -298,9 +298,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 		M_wrap(
 			(Header<t_version>) header,
 			(Map<String, IntegerU32>) resource_path,
-			(Map<String, IntegerU32>) subgroup_id,
+			(Map<String, IntegerU32>) subgroup_identifier,
 			(List<GroupInformation<t_version>>) group_information,
-			(Map<String, IntegerU32> ) group_id,
+			(Map<String, IntegerU32> ) group_identifier,
 			(List<SubgroupInformation<t_version>>) subgroup_information,
 			(List<PoolInformation<t_version>>) pool_information,
 			(List<TextureResourceInformation<t_version>>) texture_resource_information,
@@ -323,7 +323,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 			(IntegerU16) header_size,
 			(IntegerU32) property_information_offset,
 			(IntegerU32) image_property_information_offset,
-			(IntegerU32) id_offset,
+			(IntegerU32) identifier_offset,
 			(IntegerU32) path_offset,
 			(IntegerU32) property_information_count,
 		),
@@ -430,7 +430,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 		M_wrap(SubgroupBasicManifestInformation<t_version>),
 		M_wrap(
 			(IntegerU32) resolution,
-			(IntegerU32) id_offset,
+			(IntegerU32) identifier_offset,
 			(IntegerU32) resource_count,
 		),
 	);
@@ -443,7 +443,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 		M_wrap(
 			(IntegerU32) resolution,
 			(IntegerU32) locale,
-			(IntegerU32) id_offset,
+			(IntegerU32) identifier_offset,
 			(IntegerU32) resource_count,
 		),
 	);
@@ -475,7 +475,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure
 	M_record_of_data(
 		M_wrap(GroupBasicManifestInformation<t_version>),
 		M_wrap(
-			(IntegerU32) id_offset,
+			(IntegerU32) identifier_offset,
 			(IntegerU32) subgroup_count,
 			(IntegerU32) subgroup_information_size,
 		),

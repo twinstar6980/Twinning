@@ -6,18 +6,18 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 	): void {
 		push_typical_method('data.compression', [
 			typical_method({
-				id: 'deflate.compress',
+				identifier: 'deflate.compress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
@@ -26,7 +26,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -34,7 +34,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
@@ -48,25 +48,25 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'deflate.uncompress',
+				identifier: 'deflate.uncompress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -75,7 +75,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -83,7 +83,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
@@ -100,18 +100,18 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'zlib.compress',
+				identifier: 'zlib.compress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
@@ -120,7 +120,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -128,7 +128,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
@@ -142,25 +142,25 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'zlib.uncompress',
+				identifier: 'zlib.uncompress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -169,7 +169,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -177,7 +177,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
@@ -194,18 +194,18 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'gzip.compress',
+				identifier: 'gzip.compress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
@@ -214,7 +214,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -222,7 +222,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
@@ -236,25 +236,25 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'gzip.uncompress',
+				identifier: 'gzip.uncompress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -263,7 +263,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -271,7 +271,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
@@ -288,18 +288,18 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'bzip2.compress',
+				identifier: 'bzip2.compress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
@@ -308,7 +308,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -316,7 +316,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
@@ -330,25 +330,25 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'bzip2.uncompress',
+				identifier: 'bzip2.uncompress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -357,7 +357,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -365,7 +365,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
@@ -382,18 +382,18 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'lzma.compress',
+				identifier: 'lzma.compress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
@@ -402,7 +402,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -410,7 +410,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
@@ -424,25 +424,25 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				},
 			}),
 			typical_method({
-				id: 'lzma.uncompress',
+				identifier: 'lzma.uncompress',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -451,7 +451,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -459,7 +459,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),

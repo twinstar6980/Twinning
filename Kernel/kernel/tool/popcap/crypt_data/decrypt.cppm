@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::Header;
 
@@ -31,8 +31,8 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 			Size const &           limit,
 			String const &         key
 		) -> Void {
-			if (cipher.reserve() >= limit + bs_static_size<MagicIdentifier>() + bs_static_size<Header>()) {
-				cipher.read_constant(k_magic_identifier);
+			if (cipher.reserve() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
+				cipher.read_constant(k_magic_marker);
 				auto header = Header{};
 				cipher.read(header);
 				auto plain_data_size = cbox<Size>(header.plain_size);
@@ -54,9 +54,9 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 			Size const &                 limit
 		) -> Void {
 			plain_size = k_none_size;
-			if (cipher.size() >= limit + bs_static_size<MagicIdentifier>() + bs_static_size<Header>()) {
+			if (cipher.size() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
 				auto cipher_stream = InputByteStreamView{cipher};
-				cipher_stream.read_constant(k_magic_identifier);
+				cipher_stream.read_constant(k_magic_marker);
 				auto header = Header{};
 				cipher_stream.read(header);
 				auto plain_data_size = cbox<Size>(header.plain_size);

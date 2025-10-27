@@ -10,7 +10,7 @@
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
   IgnorableNamespaces="mp uap rescap com desktop desktop4 desktop5 desktop6">
-  <Identity Name="TwinStar.Twinning.Assistant" Publisher="CN=TwinStar" Version="121.0.0.0" />
+  <Identity Name="com.twinstar.twinning.assistant" Publisher="CN=TwinStar" Version="122.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="23C814C0-C764-4268-808A-9044C9CFBAEB" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Twinning Assistant</DisplayName>
@@ -31,7 +31,7 @@
       <uap:VisualElements DisplayName="Twinning Assistant" Description="None" BackgroundColor="transparent" Square150x150Logo="Asset\Logo\Square150x150Logo.png" Square44x44Logo="Asset\Logo\Square44x44Logo.png" />
       <Extensions>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="twinstar.twinning.assistant" />
+          <uap:Protocol Name="com.twinstar.twinning.assistant" />
         </uap:Extension>
         <desktop:Extension Category="windows.toastNotificationActivation">
           <desktop:ToastNotificationActivation ToastActivatorCLSID="3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A" />

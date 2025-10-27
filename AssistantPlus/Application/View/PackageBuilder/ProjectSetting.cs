@@ -65,12 +65,12 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 	}
 
 	public record TextureResourcePropertySpriteResource {
-		public String        Id       = default!;
-		public String        Path     = default!;
-		public List<Integer> Position = default!;
-		public List<Integer> Size     = default!;
-		public List<Integer> Offset   = default!;
-		public List<Integer> Separate = default!;
+		public String        Identifier = default!;
+		public String        Path       = default!;
+		public List<Integer> Position   = default!;
+		public List<Integer> Size       = default!;
+		public List<Integer> Offset     = default!;
+		public List<Integer> Separate   = default!;
 	}
 
 	public record TextureResourceProperty {
@@ -88,11 +88,11 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 	}
 
 	public record SpecialPtxResourcePropertySpriteResource {
-		public String        Source   = default!;
-		public String        Id       = default!;
-		public String        Path     = default!;
-		public List<Integer> Offset   = default!;
-		public List<Integer> Separate = default!;
+		public String        Source     = default!;
+		public String        Identifier = default!;
+		public String        Path       = default!;
+		public List<Integer> Offset     = default!;
+		public List<Integer> Separate   = default!;
 	}
 
 	public record SpecialPtxResourceProperty {

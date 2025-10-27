@@ -10,9 +10,9 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 
 	struct Common {
 
-		using MagicIdentifier = StaticByteArray<2_sz>;
+		using MagicMarker = StaticByteArray<2_sz>;
 
-		inline static constexpr auto k_magic_identifier = MagicIdentifier{{0x10_b, 0x00_b}};
+		inline static constexpr auto k_magic_marker = MagicMarker{{0x10_b, 0x00_b}};
 
 		// ----------------
 
@@ -29,8 +29,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::PvZ2CNCryptData {
 			auto value_byte = ByteArray{};
 			Data::Hash::MD5::Hash::process(to_byte_view(key.view()), value_byte);
 			for (auto & element : value_byte) {
-				string.append(CharacterType::to_number_hex_lower(cbox<IntegerU8>(element / 0x10_b)));
-				string.append(CharacterType::to_number_hex_lower(cbox<IntegerU8>(element % 0x10_b)));
+				string.append(CharacterType::to_number_hexadecimal_lower(cbox<IntegerU8>(element / 0x10_b)));
+				string.append(CharacterType::to_number_hexadecimal_lower(cbox<IntegerU8>(element % 0x10_b)));
 			}
 			return string;
 		}

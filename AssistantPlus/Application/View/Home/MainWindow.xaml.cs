@@ -22,7 +22,7 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			this.InitializeComponent();
 			WindowHelper.SetIcon(this, $"{App.PackageDirectory}/Asset/Logo.ico");
-			WindowHelper.SetTitle(this, Package.Current.DisplayName);
+			WindowHelper.SetTitle(this, ApplicationInformation.Name);
 			WindowHelper.SetTitleBar(this, true, this.uTab.TabStripFooter.As<UIElement>(), false);
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();
@@ -199,7 +199,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public async Task ShowLauncherPanel (
 		) {
-			GF.AssertTest(!this.View.uLauncherFlyout.IsOpen);
+			AssertTest(!this.View.uLauncherFlyout.IsOpen);
 			this.NotifyPropertyChanged([
 				nameof(this.uLauncher_Stamp),
 			]);
@@ -209,7 +209,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public async Task HideLauncherPanel (
 		) {
-			GF.AssertTest(this.View.uLauncherFlyout.IsOpen);
+			AssertTest(this.View.uLauncherFlyout.IsOpen);
 			this.View.uLauncherFlyout.Hide();
 			return;
 		}

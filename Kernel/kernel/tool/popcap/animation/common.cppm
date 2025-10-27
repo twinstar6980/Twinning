@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::PopCap::Animation {
 
 		// ----------------
 
-		using MagicIdentifier = IntegerU32;
+		using MagicMarker = IntegerU32;
 
-		inline static constexpr auto k_magic_identifier = MagicIdentifier{0xBAF01954_iu32};
+		inline static constexpr auto k_magic_marker = MagicMarker{0xBAF01954_iu32};
 
 		// ----------------
 

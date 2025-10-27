@@ -6,43 +6,43 @@ namespace Twinning.Script.Executor.Implement.Text.JSON {
 	): void {
 		push_typical_method('text.json', [
 			typical_method({
-				id: 'format',
+				identifier: 'format',
 				filter: ['file', /(\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.json)?$/i, '.format.json')),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'disable_array_trailing_comma',
+						identifier: 'disable_array_trailing_comma',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_trailing_comma),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'disable_array_line_breaking',
+						identifier: 'disable_array_line_breaking',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_line_breaking),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'disable_object_trailing_comma',
+						identifier: 'disable_object_trailing_comma',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_trailing_comma),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'disable_object_line_breaking',
+						identifier: 'disable_object_line_breaking',
 						checker: null,
 						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_line_breaking),
 						condition: null,
@@ -50,7 +50,7 @@ namespace Twinning.Script.Executor.Implement.Text.JSON {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -58,7 +58,7 @@ namespace Twinning.Script.Executor.Implement.Text.JSON {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.format'),

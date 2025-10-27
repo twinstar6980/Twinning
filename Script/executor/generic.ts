@@ -5,7 +5,7 @@ namespace Twinning.Script.Executor {
 	export type Argument = Record<string, null | boolean | bigint | number | string>;
 
 	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends Exclude<keyof Argument, number> = Exclude<keyof Argument, number>> = {
-		id: string;
+		identifier: string;
 		name(): string;
 		worker(argument: Argument): string | [boolean, number];
 		default_argument: Argument;
@@ -84,7 +84,7 @@ namespace Twinning.Script.Executor {
 						Console.information(los('executor.generic:method_select'), [
 							los('executor.generic:method_select_null_to_skip'),
 						]);
-						actual_method = Console.enumeration(available_method.map((value) => ([value[1].id, `${value[0]}`, value[1].name()])), true, null);
+						actual_method = Console.enumeration(available_method.map((value) => ([value[1].identifier, `${value[0]}`, value[1].name()])), true, null);
 						if (actual_method !== null) {
 							break;
 						}
@@ -95,9 +95,9 @@ namespace Twinning.Script.Executor {
 				state = los('executor.generic:method_unavailable');
 				break;
 			}
-			let target_method = candidate_method.find((value) => (value !== null && value.id === actual_method));
+			let target_method = candidate_method.find((value) => (value !== null && value.identifier === actual_method));
 			if (target_method === undefined) {
-				target_method = candidate_method_fallback.find((value) => (value !== null && value.id === actual_method));
+				target_method = candidate_method_fallback.find((value) => (value !== null && value.identifier === actual_method));
 			}
 			if (target_method === undefined) {
 				state = los('executor.generic:method_invalid');

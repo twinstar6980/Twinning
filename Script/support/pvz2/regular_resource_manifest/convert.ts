@@ -15,7 +15,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 			switch (source_group.type) {
 				case 'composite': {
 					destination.group.push({
-						id: source_group.id,
+						identifier: source_group.id,
 						composite: true,
 						subgroup: [],
 					});
@@ -26,21 +26,21 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 					let destination_group: RegularResourceManifest.Group;
 					if (source_subgroup.parent === undefined) {
 						destination_group = {
-							id: source_group.id,
+							identifier: source_group.id,
 							composite: false,
 							subgroup: [],
 						};
 						destination.group.push(destination_group);
 					}
 					else {
-						let destination_group_if = destination.group.find((value) => (value.id === source_subgroup.parent));
+						let destination_group_if = destination.group.find((value) => (value.identifier === source_subgroup.parent));
 						if (destination_group_if === undefined) {
 							throw new Error(`subgroup's parent is not found '${source_group.id}'`);
 						}
 						destination_group = destination_group_if;
 					}
 					let destination_subgroup: RegularResourceManifest.Subgroup = {
-						id: source_group.id,
+						identifier: source_group.id,
 						category: {
 							resolution: CheckHelper.not_or(JSONGenericGetter.integer(source_subgroup.res, 0n), 0n, null),
 							locale: CheckHelper.not_or(JSONGenericGetter.string(source_subgroup.loc, ''), '', null),
@@ -52,7 +52,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 						let destination_resource_path = CheckHelper.is_string(source_resource.path) ? StorageHelper.regularize(source_resource.path) : StorageHelper.catenate(source_resource.path);
 						if (destination_resource_path === '!program') {
 							destination_subgroup.resource.push({
-								id: source_resource.id,
+								identifier: source_resource.id,
 								additional: {
 									type: 'dummy',
 									value: {
@@ -63,7 +63,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 						else {
 							if ('atlas' in source_resource) {
 								destination_subgroup.resource.push({
-									id: source_resource.id,
+									identifier: source_resource.id,
 									additional: {
 										type: 'texture',
 										value: {
@@ -78,7 +78,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 								});
 							}
 							else if ('parent' in source_resource) {
-								let texture_atlas = destination_subgroup.resource.find((value) => (value.id === (source_resource as ResourceManifest.SpriteImageResourceAdditional).parent));
+								let texture_atlas = destination_subgroup.resource.find((value) => (value.identifier === (source_resource as ResourceManifest.SpriteImageResourceAdditional).parent));
 								if (texture_atlas === undefined) {
 									throw new Error(`sprite's parent is not found '${source_resource.parent}'`);
 								}
@@ -86,7 +86,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 									throw new Error(`sprite's parent is not texture '${source_resource.parent}'`);
 								}
 								texture_atlas.additional.value.sprite.push({
-									id: source_resource.id,
+									identifier: source_resource.id,
 									path: destination_resource_path,
 									position: [
 										JSONGenericGetter.integer(source_resource.ax),
@@ -108,7 +108,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 							}
 							else {
 								destination_subgroup.resource.push({
-									id: source_resource.id,
+									identifier: source_resource.id,
 									additional: {
 										type: 'general',
 										value: {
@@ -150,54 +150,54 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 			let destination_group: null | (ResourceManifest.GroupBase & ResourceManifest.CompositeGroupAdditional) = null;
 			if (source_group.composite) {
 				destination_group = {
-					id: source_group.id,
+					id: source_group.identifier,
 					type: 'composite',
 					subgroups: [],
 				};
 				destination.groups.push(destination_group);
 			}
 			for (let source_subgroup of source_group.subgroup) {
-				let category_property = {} as Pick<ResourceManifest.CompositeGroupAdditional['subgroups'][number], 'res' | 'loc'>;
+				let optional_property = {} as Pick<ResourceManifest.SimpleGroupAdditional, 'res' | 'loc' | 'parent'>;
 				if (source_subgroup.category.resolution !== null) {
-					category_property.res = source_subgroup.category.resolution;
+					optional_property.res = source_subgroup.category.resolution;
 				}
 				if (source_subgroup.category.locale !== null) {
-					category_property.loc = source_subgroup.category.locale;
+					optional_property.loc = source_subgroup.category.locale;
+				}
+				if (source_group.composite) {
+					destination_group!.subgroups.push({
+						id: source_subgroup.identifier,
+						...optional_property,
+					});
+					optional_property.parent = source_group.identifier;
 				}
 				let destination_subgroup: ResourceManifest.GroupBase & ResourceManifest.SimpleGroupAdditional = {
-					id: source_subgroup.id,
+					id: source_subgroup.identifier,
 					type: 'simple',
-					...category_property,
+					...optional_property,
 					resources: [],
 				};
-				if (source_group.composite) {
-					destination_subgroup.parent = source_group.id;
-					destination_group!.subgroups.push({
-						id: source_subgroup.id,
-						...category_property,
-					});
-				}
 				for (let source_resource of source_subgroup.resource) {
 					if (source_resource.additional.type === 'dummy') {
 						destination_subgroup.resources.push({
-							slot: slot_of(source_resource.id),
-							id: source_resource.id,
+							slot: slot_of(source_resource.identifier),
+							id: source_resource.identifier,
 							path: !use_array_style_path ? StorageHelper.to_windows_style('!program') : StorageHelper.split('!program'),
 							type: 'Image',
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 					}
 					if (source_resource.additional.type === 'general') {
 						destination_subgroup.resources.push({
-							slot: slot_of(source_resource.id),
-							id: source_resource.id,
+							slot: slot_of(source_resource.identifier),
+							id: source_resource.identifier,
 							path: !use_array_style_path ? StorageHelper.to_windows_style(source_resource.additional.value.path) : StorageHelper.split(source_resource.additional.value.path),
 							type: source_resource.additional.value.type,
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 					}
 					if (source_resource.additional.type === 'texture') {
 						destination_subgroup.resources.push({
-							slot: slot_of(source_resource.id),
-							id: source_resource.id,
+							slot: slot_of(source_resource.identifier),
+							id: source_resource.identifier,
 							path: !use_array_style_path ? StorageHelper.to_windows_style(source_resource.additional.value.path) : StorageHelper.split(source_resource.additional.value.path),
 							type: 'Image',
 							atlas: true,
@@ -206,11 +206,11 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 						for (let source_sprite_resource of source_resource.additional.value.sprite) {
 							destination_subgroup.resources.push({
-								slot: slot_of(source_sprite_resource.id),
-								id: source_sprite_resource.id,
+								slot: slot_of(source_sprite_resource.identifier),
+								id: source_sprite_resource.identifier,
 								path: !use_array_style_path ? StorageHelper.to_windows_style(source_sprite_resource.path) : StorageHelper.split(source_sprite_resource.path),
 								type: 'Image',
-								parent: source_resource.id,
+								parent: source_resource.identifier,
 								ax: source_sprite_resource.position[0],
 								ay: source_sprite_resource.position[1],
 								aw: source_sprite_resource.size[0],

@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::IntegerOfPlatform;
 
@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 			OutputByteStreamView & raw,
 			Size const &           window_bits
 		) -> Void {
-			ripe.read_constant(k_magic_identifier);
+			ripe.read_constant(k_magic_marker);
 			if constexpr (check_version(version, {true})) {
 				ripe.read_constant(0x00000000_iu32);
 			}
@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 		) -> Void {
 			raw_size = k_none_size;
 			auto ripe_stream = InputByteStreamView{ripe};
-			ripe_stream.read_constant(k_magic_identifier);
+			ripe_stream.read_constant(k_magic_marker);
 			if constexpr (check_version(version, {true})) {
 				ripe_stream.read_constant(0x00000000_iu32);
 			}

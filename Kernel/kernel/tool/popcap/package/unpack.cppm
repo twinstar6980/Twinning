@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Package {
 			typename Definition::Package & definition,
 			Optional<Path> const &         resource_directory
 		) -> Void {
-			data.read_constant(Structure::k_magic_identifier);
+			data.read_constant(Structure::k_magic_marker);
 			data.read_constant(cbox<Structure::VersionNumber>(version.number));
 			auto information_structure = Structure::Information<version>{};
 			{

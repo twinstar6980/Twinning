@@ -49,18 +49,18 @@ export namespace Twinning::Kernel::StringParser {
 		if (character >= 0x100_u) {
 			if (character >= 0x10000_u) {
 				stream.write('U'_c);
-				stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 29_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 25_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 21_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 17_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 29_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 25_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 21_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 17_ix, 4_sz))));
 			}
 			else {
 				stream.write('u'_c);
 			}
-			stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 13_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 9_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 13_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 9_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
 		}
 		else {
 			switch (character.value) {
@@ -110,8 +110,8 @@ export namespace Twinning::Kernel::StringParser {
 				}
 				default: {
 					stream.write('x'_c);
-					stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-					stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
 					break;
 				}
 			}
@@ -172,28 +172,28 @@ export namespace Twinning::Kernel::StringParser {
 			case 'o': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{3_sz}) {
-					character = character << 3_sz | cbox<Unicode>(CharacterType::from_number_oct(stream.read_of()));
+					character = character << 3_sz | cbox<Unicode>(CharacterType::from_number_octal(stream.read_of()));
 				}
 				break;
 			}
 			case 'x': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{2_sz}) {
-					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hex(stream.read_of()));
+					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
 				}
 				break;
 			}
 			case 'u': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{4_sz}) {
-					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hex(stream.read_of()));
+					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
 				}
 				break;
 			}
 			case 'U': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{8_sz}) {
-					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hex(stream.read_of()));
+					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
 				}
 				break;
 			}
@@ -475,7 +475,7 @@ export namespace Twinning::Kernel::StringParser {
 	inline auto write_string_until (
 		OutputCharacterStreamView & stream,
 		ConstantStringView const &  string,
-		Character const &           end_identifier
+		Character const &           end_marker
 	) -> Void {
 		for (auto & character : string) {
 			stream.write(character);
@@ -486,12 +486,12 @@ export namespace Twinning::Kernel::StringParser {
 	inline auto read_string_until (
 		InputCharacterStreamView & stream,
 		ConstantStringView &       string,
-		Character const &          end_identifier
+		Character const &          end_marker
 	) -> Void {
 		auto string_stream = InputCharacterStreamView{stream.reserve_view()};
 		while (k_true) {
 			auto character = string_stream.read_of();
-			if (character == end_identifier) {
+			if (character == end_marker) {
 				string_stream.backward();
 				break;
 			}
@@ -508,11 +508,11 @@ export namespace Twinning::Kernel::StringParser {
 	inline auto write_escape_utf8_string_until (
 		OutputCharacterStreamView & stream,
 		InputCharacterStreamView &  string,
-		Character const &           end_identifier
+		Character const &           end_marker
 	) -> Void {
 		while (!string.full()) {
 			auto current = string.read_of();
-			if (CharacterType::is_control(current) || current == CharacterType::k_escape_slash || current == end_identifier) {
+			if (CharacterType::is_control(current) || current == CharacterType::k_escape_slash || current == end_marker) {
 				stream.write(CharacterType::k_escape_slash);
 				write_escape_character(stream, cbox<Unicode>(current));
 			}
@@ -535,11 +535,11 @@ export namespace Twinning::Kernel::StringParser {
 	inline auto read_escape_utf8_string_until (
 		InputCharacterStreamView &  stream,
 		OutputCharacterStreamView & string,
-		Character const &           end_identifier
+		Character const &           end_marker
 	) -> Void {
 		while (k_true) {
 			auto current = stream.read_of();
-			if (current == end_identifier) {
+			if (current == end_marker) {
 				stream.backward();
 				break;
 			}
@@ -712,7 +712,7 @@ export namespace Twinning::Kernel::StringParser {
 		else if (current == '-'_c) {
 		}
 		else {
-			assert_test(CharacterType::is_number_dec(current));
+			assert_test(CharacterType::is_number_decimal(current));
 		}
 		while (!stream.full()) {
 			current = stream.read_of();
@@ -781,7 +781,7 @@ export namespace Twinning::Kernel::StringParser {
 		else if (current == '-'_c) {
 		}
 		else {
-			assert_test(CharacterType::is_number_dec(current));
+			assert_test(CharacterType::is_number_decimal(current));
 		}
 		while (!stream.full()) {
 			current = stream.read_of();
@@ -803,7 +803,7 @@ export namespace Twinning::Kernel::StringParser {
 					assert_test(!is_floater);
 					is_floater = k_true;
 					current = stream.read_of();
-					assert_test(CharacterType::is_number_dec(current));
+					assert_test(CharacterType::is_number_decimal(current));
 					continue;
 					break;
 				}
@@ -814,7 +814,7 @@ export namespace Twinning::Kernel::StringParser {
 					current = stream.read_of();
 					assert_test(current == '+'_c || current == '-'_c);
 					current = stream.read_of();
-					assert_test(CharacterType::is_number_dec(current));
+					assert_test(CharacterType::is_number_decimal(current));
 					continue;
 					break;
 				}
@@ -869,7 +869,7 @@ export namespace Twinning::Kernel::StringParser {
 		else if (current == '-'_c) {
 		}
 		else {
-			assert_test(CharacterType::is_number_dec(current));
+			assert_test(CharacterType::is_number_decimal(current));
 		}
 		while (!stream.full()) {
 			current = stream.read_of();
@@ -891,7 +891,7 @@ export namespace Twinning::Kernel::StringParser {
 					assert_test(!is_floater);
 					is_floater = k_true;
 					current = stream.read_of();
-					assert_test(CharacterType::is_number_dec(current));
+					assert_test(CharacterType::is_number_decimal(current));
 					continue;
 					break;
 				}
@@ -902,7 +902,7 @@ export namespace Twinning::Kernel::StringParser {
 					current = stream.read_of();
 					assert_test(current == '+'_c || current == '-'_c);
 					current = stream.read_of();
-					assert_test(CharacterType::is_number_dec(current));
+					assert_test(CharacterType::is_number_decimal(current));
 					continue;
 					break;
 				}
@@ -934,8 +934,8 @@ export namespace Twinning::Kernel::StringParser {
 		OutputCharacterStreamView & stream,
 		Byte const &                value
 	) -> Void {
-		stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(value, 5_ix, 4_sz))));
-		stream.write(CharacterType::to_number_hex_upper(cbox<IntegerU8>(clip_bit(value, 1_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(value, 5_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(value, 1_ix, 4_sz))));
 		return;
 	}
 
@@ -944,8 +944,8 @@ export namespace Twinning::Kernel::StringParser {
 		Byte &                     value
 	) -> Void {
 		value = 0x00_b;
-		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hex(stream.read_of()));
-		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hex(stream.read_of()));
+		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
+		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
 		return;
 	}
 

@@ -258,7 +258,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.Category == ModuleLauncherCategory.Module);
+			AssertTest(this.Category == ModuleLauncherCategory.Module);
 			this.Host.PanelExit();
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", ModuleHelper.Query(this.Configuration.Type).SettingPanel(), null);
 			await App.Setting.Save();
@@ -277,7 +277,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.Category == ModuleLauncherCategory.Pinned || this.Category == ModuleLauncherCategory.Recent);
+			AssertTest(this.Category == ModuleLauncherCategory.Pinned || this.Category == ModuleLauncherCategory.Recent);
 			if (this.Category == ModuleLauncherCategory.Pinned) {
 				this.Host.PanelExit();
 				if (await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
@@ -306,7 +306,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.Category == ModuleLauncherCategory.Recent);
+			AssertTest(this.Category == ModuleLauncherCategory.Recent);
 			App.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
 			App.Setting.Data.ModuleLauncher.Pinned.Add(this.Configuration);
 			this.Host.uPinnedLauncherList_ItemsSource.Add(new () { Host = this.Host, Category = ModuleLauncherCategory.Pinned, Configuration = this.Configuration });

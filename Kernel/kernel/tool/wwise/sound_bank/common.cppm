@@ -27,7 +27,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_data(
 			M_wrap(ChunkSign),
 			M_wrap(
-				(FourCharacterCode) id,
+				(FourCharacterCode) identifier,
 				(IntegerU32) size,
 			),
 		);
@@ -56,15 +56,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		struct IDWrapper {
+		struct IdentifierWrapper {
 
-			typename Definition::ID value{};
+			typename Definition::Identifier value{};
 
 		};
 
 		// ----------------
 
-		using CommonPropertyValue = Variant<Boolean, Integer, Floater, Enumerated, IDWrapper>;
+		using CommonPropertyValue = Variant<Boolean, Integer, Floater, Enumerated, IdentifierWrapper>;
 
 		template <typename Type> requires
 			CategoryConstraint<>
@@ -323,7 +323,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -360,7 +360,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -374,7 +374,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				midi_filter_velocity_maximum,
 				midi_filter_channel,
 				midi_clip_tempo_source,
-				midi_target_id,
+				midi_target_identifier,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
 				playback_initial_delay,
@@ -382,7 +382,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				playback_speed,
 				motion_volume_offset,
 				motion_low_pass_filter,
-				mixer_id,
+				mixer_identifier,
 			),
 		);
 
@@ -420,7 +420,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -434,13 +434,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				midi_filter_velocity_maximum,
 				midi_filter_channel,
 				midi_clip_tempo_source,
-				midi_target_id,
+				midi_target_identifier,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
 				playback_initial_delay,
 				playback_loop,
 				playback_speed,
-				mixer_id,
+				mixer_identifier,
 			),
 		);
 
@@ -476,11 +476,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_x,
 				positioning_speaker_panning_y,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
-				positioning_listener_routing_attenuation_id,
+				positioning_listener_routing_attenuation_identifier,
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -494,13 +494,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				midi_filter_velocity_maximum,
 				midi_filter_channel,
 				midi_clip_tempo_source,
-				midi_target_id,
+				midi_target_identifier,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
 				playback_initial_delay,
 				playback_loop,
 				playback_speed,
-				mixer_id,
+				mixer_identifier,
 			),
 		);
 
@@ -537,11 +537,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_x,
 				positioning_speaker_panning_y,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
-				positioning_listener_routing_attenuation_id,
+				positioning_listener_routing_attenuation_identifier,
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -555,13 +555,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				midi_filter_velocity_maximum,
 				midi_filter_channel,
 				midi_clip_tempo_source,
-				midi_target_id,
+				midi_target_identifier,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
 				playback_initial_delay,
 				playback_loop,
 				playback_speed,
-				mixer_id,
+				mixer_identifier,
 			),
 		);
 
@@ -599,11 +599,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_y,
 				positioning_speaker_panning_z,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
-				positioning_listener_routing_attenuation_id,
+				positioning_listener_routing_attenuation_identifier,
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -617,13 +617,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				midi_filter_velocity_maximum,
 				midi_filter_channel,
 				midi_clip_tempo_source,
-				midi_target_id,
+				midi_target_identifier,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
 				playback_initial_delay,
 				playback_loop,
 				playback_speed,
-				mixer_id,
+				mixer_identifier,
 			),
 		);
 
@@ -661,11 +661,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				positioning_speaker_panning_y,
 				positioning_speaker_panning_z,
 				positioning_listener_routing_speaker_panning_division_spatialization_mix,
-				positioning_listener_routing_attenuation_id,
+				positioning_listener_routing_attenuation_identifier,
 				hdr_threshold,
 				hdr_ratio,
 				hdr_release_time,
-				hdr_window_tap_output_game_parameter_id,
+				hdr_window_tap_output_game_parameter_identifier,
 				hdr_window_tap_output_game_parameter_minimum,
 				hdr_window_tap_output_game_parameter_maximum,
 				hdr_envelope_tracking_active_range,
@@ -679,7 +679,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				midi_filter_velocity_maximum,
 				midi_filter_channel,
 				midi_clip_tempo_source,
-				midi_target_id,
+				midi_target_identifier,
 				playback_priority_value,
 				playback_priority_offset_at_maximum_distance,
 				playback_initial_delay,
@@ -772,8 +772,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<29_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<29_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<30_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -837,8 +837,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<29_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<29_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<30_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -865,8 +865,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<53_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<56_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
@@ -881,8 +881,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<8_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
 						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// mixer_id,
-						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+						// mixer_identifier,
+						TypePackage<ValuePackage<57_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>
 					>;
 					return declare<Type>();
 				}
@@ -928,8 +928,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<30_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -956,8 +956,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<53_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<56_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
@@ -972,8 +972,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<9_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// motion_low_pass_filter,
 						TypePackage<ValuePackage<10_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// mixer_id,
-						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+						// mixer_identifier,
+						TypePackage<ValuePackage<57_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>
 					>;
 					return declare<Type>();
 				}
@@ -1039,8 +1039,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<30_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -1067,8 +1067,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<53_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<56_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
@@ -1079,8 +1079,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
 						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
-						// mixer_id,
-						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+						// mixer_identifier,
+						TypePackage<ValuePackage<57_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>
 					>;
 					return declare<Type>();
 				}
@@ -1142,16 +1142,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
 						TypePackage<ValuePackage<71_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
-						// positioning_listener_routing_attenuation_id,
-						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// positioning_listener_routing_attenuation_identifier,
+						TypePackage<ValuePackage<70_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_threshold,
 						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<30_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -1178,8 +1178,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<53_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<56_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
@@ -1190,8 +1190,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
 						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
-						// mixer_id,
-						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+						// mixer_identifier,
+						TypePackage<ValuePackage<57_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>
 					>;
 					return declare<Type>();
 				}
@@ -1255,16 +1255,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<13_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
 						TypePackage<ValuePackage<71_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
-						// positioning_listener_routing_attenuation_id,
-						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// positioning_listener_routing_attenuation_identifier,
+						TypePackage<ValuePackage<70_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_threshold,
 						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<30_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -1291,8 +1291,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<53_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<56_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
@@ -1303,8 +1303,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
 						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
-						// mixer_id,
-						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+						// mixer_identifier,
+						TypePackage<ValuePackage<57_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>
 					>;
 					return declare<Type>();
 				}
@@ -1370,16 +1370,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<73_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
 						TypePackage<ValuePackage<71_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
-						// positioning_listener_routing_attenuation_id,
-						TypePackage<ValuePackage<70_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// positioning_listener_routing_attenuation_identifier,
+						TypePackage<ValuePackage<70_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_threshold,
 						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<30_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<30_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<31_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -1406,8 +1406,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<53_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<55_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<56_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<56_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<7_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,
@@ -1418,8 +1418,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<58_e>, TypePackage<Integer>, ValuePackage<0_i>>,
 						// playback_speed,
 						TypePackage<ValuePackage<54_e>, TypePackage<Floater>, ValuePackage<1.0_f>>,
-						// mixer_id,
-						TypePackage<ValuePackage<57_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>
+						// mixer_identifier,
+						TypePackage<ValuePackage<57_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>
 					>;
 					return declare<Type>();
 				}
@@ -1485,16 +1485,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<37_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// positioning_listener_routing_speaker_panning_division_spatialization_mix,
 						TypePackage<ValuePackage<42_e>, TypePackage<Floater>, ValuePackage<100.0_f>>,
-						// positioning_listener_routing_attenuation_id,
-						TypePackage<ValuePackage<85_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// positioning_listener_routing_attenuation_identifier,
+						TypePackage<ValuePackage<85_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_threshold,
 						TypePackage<ValuePackage<27_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_ratio,
 						TypePackage<ValuePackage<28_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_release_time,
 						TypePackage<ValuePackage<29_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
-						// hdr_window_tap_output_game_parameter_id,
-						TypePackage<ValuePackage<61_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// hdr_window_tap_output_game_parameter_identifier,
+						TypePackage<ValuePackage<61_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// hdr_window_tap_output_game_parameter_minimum,
 						TypePackage<ValuePackage<62_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// hdr_window_tap_output_game_parameter_maximum,
@@ -1521,8 +1521,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						TypePackage<ValuePackage<81_e>, TypePackage<Integer>, ValuePackage<65535_i>>,
 						// midi_clip_tempo_source,
 						TypePackage<ValuePackage<82_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
-						// midi_target_id,
-						TypePackage<ValuePackage<83_e>, TypePackage<IDWrapper>, ValuePackage<IDWrapper{.value = 0_i}>>,
+						// midi_target_identifier,
+						TypePackage<ValuePackage<83_e>, TypePackage<IdentifierWrapper>, ValuePackage<IdentifierWrapper{.value = 0_i}>>,
 						// playback_priority_value,
 						TypePackage<ValuePackage<6_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
 						// playback_priority_offset_at_maximum_distance,

@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::Header;
 
@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 			String const &         key
 		) -> Void {
 			if (plain.reserve() >= limit) {
-				cipher.write_constant(k_magic_identifier);
+				cipher.write_constant(k_magic_marker);
 				auto header = Header{};
 				header.plain_size = cbox<IntegerU64>(plain.reserve());
 				cipher.write(header);
@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 		) -> Void {
 			cipher_size = k_none_size;
 			if (plain_size >= limit) {
-				cipher_size += bs_static_size<MagicIdentifier>();
+				cipher_size += bs_static_size<MagicMarker>();
 				cipher_size += bs_static_size<Header>();
 			}
 			cipher_size += plain_size;

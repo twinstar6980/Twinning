@@ -16,20 +16,20 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 
 		// ----------------
 
-		using MagicIdentifier = IntegerU32;
+		using MagicMarker = IntegerU32;
 
-		inline static constexpr auto k_magic_identifier = [] {
+		inline static constexpr auto k_magic_marker = [] {
 			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
-				return MagicIdentifier{0xB393B4C0_iu32};
+				return MagicMarker{0xB393B4C0_iu32};
 			}
 			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {false})) {
-				return MagicIdentifier{0xFF2565B5_iu32};
+				return MagicMarker{0xFF2565B5_iu32};
 			}
 			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {true})) {
-				return MagicIdentifier{0xC046E570_iu32};
+				return MagicMarker{0xC046E570_iu32};
 			}
 			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {false})) {
-				return MagicIdentifier{0x00000000_iu32};
+				return MagicMarker{0x00000000_iu32};
 			}
 		}();
 

@@ -9,11 +9,11 @@ import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 
 export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
 
-	#pragma region magic identifier
+	#pragma region magic marker
 
-	using MagicIdentifier = IntegerU32;
+	using MagicMarker = IntegerU32;
 
-	inline constexpr auto k_magic_identifier = MagicIdentifier{0x72736770_iu32};
+	inline constexpr auto k_magic_marker = MagicMarker{0x72736770_iu32};
 
 	#pragma endregion
 

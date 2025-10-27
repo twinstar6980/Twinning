@@ -21,26 +21,26 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 	}
 
 	public record ArgumentConfiguration {
-		public String        Id     = default!;
-		public String        Name   = default!;
-		public ArgumentType  Type   = default!;
-		public List<Object>? Option = default!;
+		public String        Identifier = default!;
+		public String        Name       = default!;
+		public ArgumentType  Type       = default!;
+		public List<Object>? Option     = default!;
 	}
 
 	public record MethodConfiguration {
-		public String                      Id       = default!;
-		public String                      Name     = default!;
-		public String                      Icon     = default!;
-		public List<ArgumentConfiguration> Argument = default!;
-		public List<String>?               Batch    = default!;
-		public List<PresetConfiguration?>  Preset   = default!;
+		public String                      Identifier = default!;
+		public String                      Name       = default!;
+		public String                      Icon       = default!;
+		public List<ArgumentConfiguration> Argument   = default!;
+		public List<String>?               Batch      = default!;
+		public List<PresetConfiguration?>  Preset     = default!;
 	}
 
 	public record MethodGroupConfiguration {
-		public String                    Id   = default!;
-		public String                    Name = default!;
-		public String                    Icon = default!;
-		public List<MethodConfiguration> Item = default!;
+		public String                    Identifier = default!;
+		public String                    Name       = default!;
+		public String                    Icon       = default!;
+		public List<MethodConfiguration> Item       = default!;
 	}
 
 }

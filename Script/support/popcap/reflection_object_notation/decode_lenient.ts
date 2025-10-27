@@ -312,10 +312,10 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 						if (sheet_actual_size.value !== Number(sheet_size)) {
 							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
 						}
-						let uid_middle = read_pb_varint_unsigned(data);
-						let uid_first = read_pb_varint_unsigned(data);
-						let uid_last = data.u32();
-						value = `RTID(${uid_first}.${uid_middle}.${uid_last}@${sheet_content})`;
+						let identifier_middle = read_pb_varint_unsigned(data);
+						let identifier_first = read_pb_varint_unsigned(data);
+						let identifier_last = data.u32();
+						value = `RTID(${identifier_first}.${identifier_middle}.${identifier_last}@${sheet_content})`;
 						break;
 					}
 					case 0x03n: {

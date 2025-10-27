@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 	): void {
 		push_typical_method('pvz2.resource_manifest', [
 			typical_method({
-				id: 'new_type_object_notation.encode',
+				identifier: 'new_type_object_notation.encode',
 				filter: ['file', /(\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.json)?$/i, '.newton')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -41,18 +41,18 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 				},
 			}),
 			typical_method({
-				id: 'new_type_object_notation.decode',
+				identifier: 'new_type_object_notation.decode',
 				filter: ['file', /(\.newton)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.newton)?$/i, '.json')),
@@ -66,18 +66,18 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 				},
 			}),
 			typical_method({
-				id: 'regular.from',
+				identifier: 'regular.from',
 				filter: ['file', /(\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/(\.json)?$/i, '.regular.json')),
@@ -93,25 +93,25 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 				},
 			}),
 			typical_method({
-				id: 'regular.to',
+				identifier: 'regular.to',
 				filter: ['file', /(\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/(\.json)?$/i, '.official.json')),
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'use_array_style_path',
+						identifier: 'use_array_style_path',
 						checker: null,
 						automatic: null,
 						condition: null,

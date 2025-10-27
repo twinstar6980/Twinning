@@ -37,13 +37,13 @@ namespace Twinning.AssistantPlus.Bridge {
 		public void Open (
 			String path
 		) {
-			GF.AssertTest(!this.State());
+			AssertTest(!this.State());
 			var handle = Win32.PInvoke.LoadLibrary($"{path}.");
-			GF.AssertTest(!handle.IsNull);
+			AssertTest(!handle.IsNull);
 			var symbol = default(Win32.Foundation.FARPROC);
 			try {
 				symbol = Win32.PInvoke.GetProcAddress(handle, "_ZN8Twinning6Kernel9Interface7serviceE");
-				GF.AssertTest(!symbol.IsNull);
+				AssertTest(!symbol.IsNull);
 			}
 			catch (Exception) {
 				Win32.PInvoke.FreeLibrary(handle);
@@ -57,7 +57,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		public void Close (
 		) {
-			GF.AssertTest(this.State());
+			AssertTest(this.State());
 			(*(Service*)this.mSymbol.AsNotNull().Value).finalize();
 			this.mSymbol = null;
 			Win32.PInvoke.FreeLibrary(this.mHandle.AsNotNull());
@@ -69,7 +69,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		public ref Service Symbol (
 		) {
-			GF.AssertTest(this.State());
+			AssertTest(this.State());
 			return ref *(Service*)this.mSymbol.AsNotNull().Value;
 		}
 

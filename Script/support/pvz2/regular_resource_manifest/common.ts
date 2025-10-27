@@ -23,7 +23,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 	};
 
 	export type TextureResourceAdditionalSprite = {
-		id: string;
+		identifier: string;
 		path: string;
 		position: [bigint, bigint];
 		size: [bigint, bigint];
@@ -49,7 +49,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 	};
 
 	export type ResourceBase = {
-		id: string;
+		identifier: string;
 	};
 
 	export type Resource = ResourceBase & {
@@ -64,7 +64,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 	};
 
 	export type Subgroup = {
-		id: string;
+		identifier: string;
 		category: SubgroupCategory;
 		resource: Array<Resource>;
 	};
@@ -72,7 +72,7 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
 	// ----------------
 
 	export type Group = {
-		id: string;
+		identifier: string;
 		composite: boolean;
 		subgroup: Array<Subgroup>;
 	};

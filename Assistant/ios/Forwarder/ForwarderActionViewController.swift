@@ -109,7 +109,7 @@ class ForwarderActionViewController: UIViewController {
 		var command: Array<String> = []
 		command.append("-forward")
 		command.append(contentsOf: try resource.map({ (item) in try self.parsePathOfFileURL(url: item) }))
-		let link = URL(string: "twinstar.twinning.assistant:/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
+		let link = URL(string: "com.twinstar.twinning.assistant:/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
 		try self.openLink(link: link)
 		return
 	}

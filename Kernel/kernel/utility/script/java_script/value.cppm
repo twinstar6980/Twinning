@@ -193,7 +193,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsSameOf<finalizer, ClassFinalizer>)
 		auto register_class (
-			Integer &      id,
+			Integer &      identifier,
 			String const & name
 		) -> Void;
 
@@ -354,11 +354,11 @@ export namespace Twinning::Kernel::JavaScript {
 		#pragma region class
 
 		auto get_class_proto (
-			Integer const & id
+			Integer const & identifier
 		) -> Value;
 
 		auto set_class_proto (
-			Integer const & id,
+			Integer const & identifier,
 			Value &&        value
 		) -> Void;
 
@@ -1423,7 +1423,7 @@ export namespace Twinning::Kernel::JavaScript {
 		CategoryConstraint<>
 		&& (IsSameOf<finalizer, ClassFinalizer>)
 	inline auto Runtime::register_class (
-		Integer &      id,
+		Integer &      identifier,
 		String const & name
 	) -> Void {
 		auto name_null_terminated = make_null_terminated_string(name);
@@ -1434,10 +1434,10 @@ export namespace Twinning::Kernel::JavaScript {
 			.call = nullptr,
 			.exotic = nullptr,
 		};
-		auto id_value = static_cast<Third::quickjs_ng::$JSClassID>(id.value);
-		Third::quickjs_ng::$JS_NewClassID(thiz._runtime(), &id_value);
-		id.value = static_cast<ZInteger>(id_value);
-		auto result = Third::quickjs_ng::$JS_NewClass(thiz._runtime(), id_value, &definition);
+		auto identifier_value = static_cast<Third::quickjs_ng::$JSClassID>(identifier.value);
+		Third::quickjs_ng::$JS_NewClassID(thiz._runtime(), &identifier_value);
+		identifier.value = static_cast<ZInteger>(identifier_value);
+		auto result = Third::quickjs_ng::$JS_NewClass(thiz._runtime(), identifier_value, &definition);
 		assert_test(result == 0);
 		return;
 	}
@@ -1501,16 +1501,16 @@ export namespace Twinning::Kernel::JavaScript {
 	// ----------------
 
 	inline auto Context::get_class_proto (
-		Integer const & id
+		Integer const & identifier
 	) -> Value {
-		return Value::new_instance(thiz._context(), Third::quickjs_ng::$JS_GetClassProto(thiz._context(), static_cast<Third::quickjs_ng::$JSClassID>(id.value)));
+		return Value::new_instance(thiz._context(), Third::quickjs_ng::$JS_GetClassProto(thiz._context(), static_cast<Third::quickjs_ng::$JSClassID>(identifier.value)));
 	}
 
 	inline auto Context::set_class_proto (
-		Integer const & id,
+		Integer const & identifier,
 		Value &&        value
 	) -> Void {
-		Third::quickjs_ng::$JS_SetClassProto(thiz._context(), static_cast<Third::quickjs_ng::$JSClassID>(id.value), value._release_value());
+		Third::quickjs_ng::$JS_SetClassProto(thiz._context(), static_cast<Third::quickjs_ng::$JSClassID>(identifier.value), value._release_value());
 		return;
 	}
 

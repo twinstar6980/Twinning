@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 			typename Definition::Package & definition,
 			Optional<Path> const &         resource_directory
 		) -> Void {
-			data.read_constant(Structure::k_magic_identifier);
+			data.read_constant(Structure::k_magic_marker);
 			auto information_structure = Structure::Information<version>{};
 			{
 				data.read(information_structure.archive_setting);

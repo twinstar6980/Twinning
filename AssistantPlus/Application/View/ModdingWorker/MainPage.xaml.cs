@@ -240,7 +240,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 		public async Task<List<String>?> LaunchSession (
 		) {
-			GF.AssertTest(!this.SessionRunning);
+			AssertTest(!this.SessionRunning);
 			var result = default(List<String>?);
 			var exception = default(Exception?);
 			this.SessionRunning = true;
@@ -513,14 +513,14 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 		public override void Start (
 		) {
-			GF.AssertTest(!this.mRunning);
+			AssertTest(!this.mRunning);
 			this.mRunning = true;
 			return;
 		}
 
 		public override void Finish (
 		) {
-			GF.AssertTest(this.mRunning);
+			AssertTest(this.mRunning);
 			this.mRunning = false;
 			return;
 		}
@@ -530,28 +530,28 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 		public override List<String> Callback (
 			List<String> argument
 		) {
-			GF.AssertTest(this.mRunning);
+			AssertTest(this.mRunning);
 			var result = new List<String>();
-			GF.AssertTest(argument.Count >= 1);
+			AssertTest(argument.Count >= 1);
 			try {
 				this.mController.View.DispatcherQueue.EnqueueAsync(async () => {
 					switch (argument[0]) {
 						case "name": {
-							GF.AssertTest(argument.Count == 1);
+							AssertTest(argument.Count == 1);
 							var detail = await this.CallbackName();
 							var detailName = detail.Item1;
 							result.Add(detailName);
 							break;
 						}
 						case "version": {
-							GF.AssertTest(argument.Count == 1);
+							AssertTest(argument.Count == 1);
 							var detail = await this.CallbackVersion();
 							var detailVersion = detail.Item1;
 							result.Add(detailVersion);
 							break;
 						}
 						case "send_message": {
-							GF.AssertTest(argument.Count >= 3);
+							AssertTest(argument.Count >= 3);
 							var detailType = argument[1];
 							var detailTitle = argument[2];
 							var detailDescription = argument[3..];
@@ -559,7 +559,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 							break;
 						}
 						case "receive_submission": {
-							GF.AssertTest(argument.Count >= 2);
+							AssertTest(argument.Count >= 2);
 							var detailType = argument[1];
 							var detailOption = argument[2..];
 							var detail = await this.CallbackReceiveSubmission(detailType, detailOption);
@@ -568,7 +568,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 							break;
 						}
 						case "pick_storage_item": {
-							GF.AssertTest(argument.Count == 2);
+							AssertTest(argument.Count == 2);
 							var detailType = argument[1];
 							var detail = await this.CallbackPickStorageItem(detailType);
 							var detailTarget = detail.Item1;
@@ -576,7 +576,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 							break;
 						}
 						case "push_system_notification": {
-							GF.AssertTest(argument.Count == 3);
+							AssertTest(argument.Count == 3);
 							var detailType = argument[1];
 							var detailDescription = argument[2];
 							var detail = await this.CallbackPushSystemNotification(detailType, detailDescription);
@@ -603,7 +603,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 		private async Task<ValueTuple<String>> CallbackVersion (
 		) {
-			var version = Package.Current.Id.Version.Major.ToString();
+			var version = ApplicationInformation.Version;
 			return new (version);
 		}
 

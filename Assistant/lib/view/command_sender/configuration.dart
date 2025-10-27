@@ -24,12 +24,12 @@ enum ArgumentType {
 }
 
 class ArgumentConfiguration {
-  String        id;
+  String        identifier;
   String        name;
   ArgumentType  type;
   List<Object>? option;
   ArgumentConfiguration({
-    required this.id,
+    required this.identifier,
     required this.name,
     required this.type,
     required this.option,
@@ -37,14 +37,14 @@ class ArgumentConfiguration {
 }
 
 class MethodConfiguration {
-  String                      id;
+  String                      identifier;
   String                      name;
   String                      icon;
   List<ArgumentConfiguration> argument;
   List<String>?               batch;
   List<PresetConfiguration?>  preset;
   MethodConfiguration({
-    required this.id,
+    required this.identifier,
     required this.name,
     required this.icon,
     required this.argument,
@@ -54,12 +54,12 @@ class MethodConfiguration {
 }
 
 class MethodGroupConfiguration {
-  String                    id;
+  String                    identifier;
   String                    name;
   String                    icon;
   List<MethodConfiguration> item;
   MethodGroupConfiguration({
-    required this.id,
+    required this.identifier,
     required this.name,
     required this.icon,
     required this.item,
@@ -125,7 +125,7 @@ class ConfigurationHelper {
       var itemConfiguration = configuration[index];
       var itemValue = value[index];
       if (itemValue.value != null) {
-        json[itemConfiguration.id] = makeArgumentValueJson(itemValue.value!);
+        json[itemConfiguration.identifier] = makeArgumentValueJson(itemValue.value!);
       }
     }
     return json;
@@ -138,7 +138,7 @@ class ConfigurationHelper {
     var value = <Wrapper<ValueExpression?>>[];
     for (var index = 0; index < configuration.length; index++) {
       var itemConfiguration = configuration[index];
-      var itemJson = json[itemConfiguration.id];
+      var itemJson = json[itemConfiguration.identifier];
       value.add(Wrapper(itemJson == null ? null : ConfigurationHelper.parseArgumentValueJson(itemConfiguration.type, itemJson)));
     }
     return value;
@@ -152,15 +152,15 @@ class ConfigurationHelper {
     dynamic json,
   ) {
     return (json as List<dynamic>).map((jsonGroup) => MethodGroupConfiguration(
-      id: (jsonGroup['id'] as String),
+      identifier: (jsonGroup['identifier'] as String),
       name: (jsonGroup['name'] as String),
       icon: (jsonGroup['icon'] as String),
       item: (jsonGroup['item'] as List<dynamic>).map((jsonItem) => MethodConfiguration(
-        id: (jsonItem['id'] as String),
+        identifier: (jsonItem['identifier'] as String),
         name: (jsonItem['name'] as String),
         icon: (jsonItem['icon'] as String),
         argument: (jsonItem['argument'] as List<dynamic>).map((jsonArgument) => ArgumentConfiguration(
-          id: (jsonArgument['id'] as String),
+          identifier: (jsonArgument['identifier'] as String),
           name: (jsonArgument['name'] as String),
           type: (jsonArgument['type'] as String).selfLet((it) => ArgumentType.values.byName(it)),
           option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),

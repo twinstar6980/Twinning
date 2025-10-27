@@ -322,11 +322,11 @@ export namespace Twinning::Kernel::JavaScript {
 
 	namespace Detail {
 
-		inline constexpr auto k_invalid_native_class_id = Integer{0};
+		inline constexpr auto k_invalid_native_class_identifier = Integer{0};
 
 		template <typename Class> requires
 			CategoryConstraint<IsPureInstance<Class>>
-		inline auto g_native_class_id = Integer{0};
+		inline auto g_native_class_identifier = Integer{0};
 
 		// ----------------
 
@@ -336,7 +336,7 @@ export namespace Twinning::Kernel::JavaScript {
 			Runtime & rt,
 			Value &   obj
 		) -> Void {
-			delete static_cast<NativeValueHandler<Class> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), static_cast<Third::quickjs_ng::$JSClassID>(g_native_class_id<Class>.value)));
+			delete static_cast<NativeValueHandler<Class> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), static_cast<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<Class>.value)));
 			return;
 		}
 
@@ -399,8 +399,8 @@ export namespace Twinning::Kernel::JavaScript {
 			thiz.m_parent = Value{parent};
 			thiz.m_proto = thiz.m_parent.new_value();
 			thiz.m_proto.set_object_of_object();
-			thiz.m_parent.context().runtime().template register_class<&Detail::free_native_class<Class>>(Detail::g_native_class_id<Class>, name);
-			thiz.m_parent.context().set_class_proto(Detail::g_native_class_id<Class>, Value{thiz.m_proto});
+			thiz.m_parent.context().runtime().template register_class<&Detail::free_native_class<Class>>(Detail::g_native_class_identifier<Class>, name);
+			thiz.m_parent.context().set_class_proto(Detail::g_native_class_identifier<Class>, Value{thiz.m_proto});
 			return;
 		}
 

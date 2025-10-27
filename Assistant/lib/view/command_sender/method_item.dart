@@ -41,7 +41,7 @@ class MethodItem extends StatelessWidget {
             child: Icon(IconSymbols.layers, color: theme.colorScheme.primary).withTooltip(message: 'Batch'),
           ),
           onTap: () async {
-            this.onSelect(this.configuration.id);
+            this.onSelect(this.configuration.identifier);
           },
         ),
       ],

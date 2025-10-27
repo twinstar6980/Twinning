@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.Wwise.Media {
 	): void {
 		push_typical_method('wwise.media', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.wav)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/(\.wav)?$/i, '.wem')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'format',
+						identifier: 'format',
 						option: Support.Wwise.Media.FormatE,
 						checker: null,
 						automatic: null,
@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.Media {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -41,7 +41,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.Media {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.encode'),
@@ -55,18 +55,18 @@ namespace Twinning.Script.Executor.Implement.Wwise.Media {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.wem)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/(\.wem)?$/i, '.wav')),
@@ -75,7 +75,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.Media {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -83,7 +83,7 @@ namespace Twinning.Script.Executor.Implement.Wwise.Media {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.decode'),

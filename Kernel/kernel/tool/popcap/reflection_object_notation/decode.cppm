@@ -16,13 +16,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
-		using typename Common::DoneIdentifier;
+		using typename Common::DoneMarker;
 
-		using Common::k_done_identifier;
+		using Common::k_done_marker;
 
 		using typename Common::VersionNumber;
 
@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		using Common::k_reference_expression_format_of_null;
 
-		using Common::k_reference_expression_format_of_uid;
+		using Common::k_reference_expression_format_of_identifier;
 
 		using Common::k_reference_expression_format_of_alias;
 
@@ -222,17 +222,17 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 							value.set_string(k_reference_expression_format_of_null());
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::uid: {
+						case ReferenceTypeIdentifier::Value::identifier: {
 							auto sheet_length = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 							auto sheet_content = ConstantStringView{};
 							StringParser::read_utf8_string(self_cast<InputCharacterStreamView>(data), sheet_content, sheet_length);
 							assert_test(sheet_content.size() == sheet_size);
-							// TODO: unknown type of uid value, define them be 'int-var-u32'
-							auto uid_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
-							auto uid_first = ProtocolBufferVariableLengthInteger::decode_u32(data);
-							auto uid_last = data.read_of<IntegerU32>();
-							value.set_string(k_reference_expression_format_of_uid(uid_first, uid_middle, uid_last, sheet_content));
+							// TODO: unknown type of identifier value, define them be 'int-var-u32'
+							auto identifier_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
+							auto identifier_first = ProtocolBufferVariableLengthInteger::decode_u32(data);
+							auto identifier_last = data.read_of<IntegerU32>();
+							value.set_string(k_reference_expression_format_of_identifier(identifier_first, identifier_middle, identifier_last, sheet_content));
 							break;
 						}
 						case ReferenceTypeIdentifier::Value::alias: {
@@ -313,7 +313,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			InputByteStreamView & data,
 			JSON::Value &         definition
 		) -> Void {
-			data.read_constant(k_magic_identifier);
+			data.read_constant(k_magic_marker);
 			data.read_constant(cbox<VersionNumber>(version.number));
 			auto native_string_upper_bound = k_none_size;
 			auto unicode_string_upper_bound = k_none_size;
@@ -336,7 +336,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			auto native_string_index_list = List<ConstantStringView>{native_string_upper_bound};
 			auto unicode_string_index_list = List<ConstantStringView>{unicode_string_upper_bound};
 			process_value(data, definition, native_string_index_list, unicode_string_index_list, TypeIdentifier{TypeIdentifier::Value::object_begin});
-			data.read_constant(k_done_identifier);
+			data.read_constant(k_done_marker);
 			return;
 		}
 

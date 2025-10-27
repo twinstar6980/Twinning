@@ -97,7 +97,7 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 
 		public async Task UpdateView (
 		) {
-			GF.AssertTest(this.Configuration.Count == this.Value.Count);
+			AssertTest(this.Configuration.Count == this.Value.Count);
 			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() {
 				Host = this,
 				Configuration = value,

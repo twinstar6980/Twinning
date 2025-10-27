@@ -23,7 +23,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 
 	// #region version
 
-	export const k_version = 2n;
+	export const k_version = 3n;
 
 	// ----------------
 
@@ -122,7 +122,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 	}>;
 
 	export type GroupState = {
-		id: string;
+		identifier: string;
 		resource: Record<string, ResourceState>;
 	};
 
@@ -153,7 +153,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		let group_state = part_state.group[group_name];
 		if (group_state === undefined) {
 			group_state = {
-				id: '',
+				identifier: '',
 				resource: {
 				},
 			};

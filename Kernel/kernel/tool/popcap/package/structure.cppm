@@ -8,11 +8,11 @@ import twinning.kernel.tool.popcap.package.version;
 
 export namespace Twinning::Kernel::Tool::PopCap::Package::Structure {
 
-	#pragma region magic identifier
+	#pragma region magic marker
 
-	using MagicIdentifier = IntegerU32;
+	using MagicMarker = IntegerU32;
 
-	inline constexpr auto k_magic_identifier = MagicIdentifier{0xBAC04AC0_iu32};
+	inline constexpr auto k_magic_marker = MagicMarker{0xBAC04AC0_iu32};
 
 	#pragma endregion
 

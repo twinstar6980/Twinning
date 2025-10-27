@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::Header;
 
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image
 		) -> Void {
-			data.read_constant(k_magic_identifier);
+			data.read_constant(k_magic_marker);
 			auto header = Header{};
 			data.read(header);
 			assert_test(image.size() == Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)});
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel::Tool::PopCap::UTexture {
 			Image::ImageSize &           image_size
 		) -> Void {
 			auto data_stream = InputByteStreamView{data};
-			data_stream.read_constant(k_magic_identifier);
+			data_stream.read_constant(k_magic_marker);
 			auto header = Header{};
 			data_stream.read(header);
 			image_size = Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)};

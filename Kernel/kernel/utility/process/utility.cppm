@@ -348,9 +348,9 @@ export namespace Twinning::Kernel::Process {
 		auto input_string = String{};
 		auto output_string = String{};
 		auto error_string = String{};
-		auto process_id = Third::system::posix::$pid_t{};
+		auto process_identifier = Third::system::posix::$pid_t{};
 		auto spawn_file_action = Third::system::posix::$posix_spawn_file_actions_t{};
-		auto wait_info = Third::system::posix::$siginfo_t{};
+		auto wait_information = Third::system::posix::$siginfo_t{};
 		program_string = make_null_terminated_string(program.to_string());
 		argument_string.allocate(1_sz + argument.size());
 		argument_string.append(program_string);
@@ -382,13 +382,13 @@ export namespace Twinning::Kernel::Process {
 		assert_test(state_i == 0);
 		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDERR_FILENO, cast_pointer<char>(error_string.begin()).value, Third::system::posix::$O_WRONLY, 0);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn(&process_id, cast_pointer<char>(program_string.begin()).value, &spawn_file_action, nullptr, cast_pointer<char *>(argument_string_list.begin()).value, cast_pointer<char *>(environment_string_list.begin()).value);
+		state_i = Third::system::posix::$posix_spawn(&process_identifier, cast_pointer<char>(program_string.begin()).value, &spawn_file_action, nullptr, cast_pointer<char *>(argument_string_list.begin()).value, cast_pointer<char *>(environment_string_list.begin()).value);
 		assert_test(state_i == 0);
 		state_i = Third::system::posix::$posix_spawn_file_actions_destroy(&spawn_file_action);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$waitid(Third::system::posix::$P_PID, static_cast<Third::system::posix::$id_t>(process_id), &wait_info, Third::system::posix::$WEXITED | Third::system::posix::$WSTOPPED);
+		state_i = Third::system::posix::$waitid(Third::system::posix::$P_PID, static_cast<Third::system::posix::$id_t>(process_identifier), &wait_information, Third::system::posix::$WEXITED | Third::system::posix::$WSTOPPED);
 		assert_test(state_i == 0);
-		result = mbox<IntegerU32>(wait_info.si_status);
+		result = mbox<IntegerU32>(wait_information.si_status);
 		#endif
 		return result;
 	}

@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 	): void {
 		push_typical_method('popcap.character_font_widget_2', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.cfw2\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -41,7 +41,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
@@ -58,18 +58,18 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.cfw2)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.cfw2)?$/i, '.cfw2.json')),
@@ -78,7 +78,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -86,7 +86,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),

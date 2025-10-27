@@ -46,7 +46,7 @@ namespace Twinning.AssistantPlus.Bridge {
 				}
 				dataPosition += dataPadding;
 			}
-			GF.AssertTest(dataPosition == instance->size.CastPrimitive<Size>());
+			AssertTest(dataPosition == instance->size.CastPrimitive<Size>());
 			return proxy;
 		}
 
@@ -87,7 +87,7 @@ namespace Twinning.AssistantPlus.Bridge {
 				}
 				dataPosition += dataPadding;
 			}
-			GF.AssertTest(dataPosition == instance->size.CastPrimitive<Size>());
+			AssertTest(dataPosition == instance->size.CastPrimitive<Size>());
 			return;
 		}
 
@@ -132,7 +132,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			Message*  exception
 		);
 
-		private static readonly Dictionary<IntPtr, Tuple<GCHandle, GCHandle>> sGuard = [];
+		private static readonly Dictionary<IntPtr, Tuple<GCHandle, GCHandle>> Guard = [];
 
 		// ----------------
 
@@ -220,8 +220,8 @@ namespace Twinning.AssistantPlus.Bridge {
 				}
 				return;
 			}));
-			GF.AssertTest(!ExecutorProxy.sGuard.ContainsKey((IntPtr)instance));
-			ExecutorProxy.sGuard.Add((IntPtr)instance, new (guardForInvoke, guardForClear));
+			AssertTest(!ExecutorProxy.Guard.ContainsKey((IntPtr)instance));
+			ExecutorProxy.Guard.Add((IntPtr)instance, new (guardForInvoke, guardForClear));
 			instance->invoke = (delegate* unmanaged<Executor*, Executor*, Message*, Message*, Message*, void>)Marshal.GetFunctionPointerForDelegate(guardForInvoke.Target.AsNotNull());
 			instance->clear = (delegate* unmanaged<Executor*, Executor*, Message*, Message*, Message*, void>)Marshal.GetFunctionPointerForDelegate(guardForClear.Target.AsNotNull());
 			return;
@@ -230,10 +230,10 @@ namespace Twinning.AssistantPlus.Bridge {
 		public static unsafe void Destruct (
 			Executor* instance
 		) {
-			var guard = ExecutorProxy.sGuard[(IntPtr)instance];
+			var guard = ExecutorProxy.Guard[(IntPtr)instance];
 			guard.Item1.Free();
 			guard.Item2.Free();
-			GF.AssertTest(ExecutorProxy.sGuard.Remove((IntPtr)instance));
+			AssertTest(ExecutorProxy.Guard.Remove((IntPtr)instance));
 			instance->invoke = null;
 			instance->clear = null;
 			return;

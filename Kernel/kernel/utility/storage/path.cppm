@@ -232,7 +232,7 @@ export namespace Twinning::Kernel::Storage {
 			thiz.m_absolute = k_false;
 			thiz.m_relative.reset();
 			auto relative_path_begin = k_begin_index;
-			if (path.size() >= 2_sz && path[2_ix] == ':'_c && CharacterType::is_alpha(path[1_ix])) {
+			if (path.size() >= 2_sz && path[2_ix] == ':'_c && CharacterType::is_letter(path[1_ix])) {
 				thiz.m_root.set(path.sub(1_ix, 2_sz));
 				relative_path_begin += 2_sz;
 			}

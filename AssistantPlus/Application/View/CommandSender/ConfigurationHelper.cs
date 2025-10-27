@@ -40,7 +40,7 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 				},
 				ArgumentType.Size => new SizeExpression() {
 					Count = json.As<String>().SelfLet((it) => (Floater.Parse(it[..^1]))),
-					Exponent = json.As<String>().SelfLet((it) => (new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(it[^1]))).SelfAlso((it) => { GF.AssertTest(it != -1); }),
+					Exponent = json.As<String>().SelfLet((it) => (new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(it[^1]))).SelfAlso((it) => { AssertTest(it != -1); }),
 				},
 				ArgumentType.String => new StringExpression() {
 					Value = json.As<String>(),
@@ -58,13 +58,13 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			List<ArgumentConfiguration>    configuration,
 			List<Wrapper<ValueExpression>> value
 		) {
-			GF.AssertTest(configuration.Count == value.Count);
+			AssertTest(configuration.Count == value.Count);
 			var json = new Dictionary<String, Object>();
 			for (var index = 0; index < configuration.Count; index++) {
 				var itemConfiguration = configuration[index];
 				var itemValue = value[index];
 				if (itemValue.Value != null) {
-					json.Add(itemConfiguration.Id, ConfigurationHelper.MakeArgumentValueJson(itemValue.Value));
+					json.Add(itemConfiguration.Identifier, ConfigurationHelper.MakeArgumentValueJson(itemValue.Value));
 				}
 			}
 			return json;
@@ -77,7 +77,7 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			var value = new List<Wrapper<ValueExpression>>();
 			for (var index = 0; index < configuration.Count; index++) {
 				var itemConfiguration = configuration[index];
-				var itemJson = json.GetValueOrDefault(itemConfiguration.Id);
+				var itemJson = json.GetValueOrDefault(itemConfiguration.Identifier);
 				value.Add(new (itemJson == null ? null : ConfigurationHelper.ParseArgumentValueJson(itemConfiguration.Type, itemJson)));
 			}
 			return value;

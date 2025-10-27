@@ -260,7 +260,7 @@ namespace Twinning.Script.AndroidHelper {
 	// #region application
 
 	export type ApplicationInformation = {
-		id: string;
+		identifier: string;
 		version_code: bigint;
 		version_name: string;
 		user: string;
@@ -273,8 +273,8 @@ namespace Twinning.Script.AndroidHelper {
 	): Array<string> {
 		let shell_result: string;
 		shell_result = shell(`pm list packages`);
-		let id = ConvertHelper.split_string_by_line_feed(shell_result, true).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
-		return id;
+		let result = ConvertHelper.split_string_by_line_feed(shell_result, true).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
+		return result;
 	}
 
 	export function application_query(
@@ -283,7 +283,7 @@ namespace Twinning.Script.AndroidHelper {
 		let shell_result: string;
 		let match: null | RegExpMatchArray;
 		let result: ApplicationInformation = {} as any;
-		result.id = application;
+		result.identifier = application;
 		shell_result = shell(`pm dump ${escape(application)}`);
 		match = /versionCode=([0-9]+)/.exec(shell_result);
 		assert_test(match !== null);

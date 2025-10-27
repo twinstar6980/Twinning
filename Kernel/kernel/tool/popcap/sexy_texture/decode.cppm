@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::VersionNumber;
 
@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image
 		) -> Void {
-			data.read_constant(k_magic_identifier);
+			data.read_constant(k_magic_marker);
 			data.read_constant(cbox<VersionNumber>(version.number));
 			auto header = Header{};
 			data.read(header);
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
 			Image::ImageSize &           image_size
 		) -> Void {
 			auto data_stream = InputByteStreamView{data};
-			data_stream.read_constant(k_magic_identifier);
+			data_stream.read_constant(k_magic_marker);
 			data_stream.read_constant(cbox<VersionNumber>(version.number));
 			auto header = Header{};
 			data_stream.read(header);

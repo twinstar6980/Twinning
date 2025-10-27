@@ -75,16 +75,16 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 			information_size: Number(package_data.u32(0x0C)),
 			resource_path_size: Number(package_data.u32(0x10)),
 			resource_path_offset: Number(package_data.u32(0x14)),
-			subgroup_id_size: Number(package_data.u32(0x20)),
-			subgroup_id_offset: Number(package_data.u32(0x24)),
+			subgroup_identifier_size: Number(package_data.u32(0x20)),
+			subgroup_identifier_offset: Number(package_data.u32(0x24)),
 			subgroup_information_block_count: Number(package_data.u32(0x28)),
 			subgroup_information_offset: Number(package_data.u32(0x2C)),
 			subgroup_information_block_size: Number(package_data.u32(0x30)),
 			group_information_block_count: Number(package_data.u32(0x34)),
 			group_information_offset: Number(package_data.u32(0x38)),
 			group_information_block_size: Number(package_data.u32(0x3C)),
-			group_id_size: Number(package_data.u32(0x40)),
-			group_id_offset: Number(package_data.u32(0x44)),
+			group_identifier_size: Number(package_data.u32(0x40)),
+			group_identifier_offset: Number(package_data.u32(0x44)),
 			pool_information_block_count: Number(package_data.u32(0x48)),
 			pool_information_offset: Number(package_data.u32(0x4C)),
 			pool_information_block_size: Number(package_data.u32(0x50)),
@@ -96,20 +96,20 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 			manifest_string_information_offset: Number(package_data.u32(0x68)),
 			information_without_manifest_size: Number(package_data.u32(0x6C)),
 		};
-		let group_id_list = decode_compiled_map(
-			new ByteListView(package_data.sub(package_header.group_id_offset, package_header.group_id_size)),
+		let group_identifier_list = decode_compiled_map(
+			new ByteListView(package_data.sub(package_header.group_identifier_offset, package_header.group_identifier_size)),
 			(stream) => {
 				return Number(stream.u32());
 			},
 		);
-		let group_id_map = ConvertHelper.record_transform(group_id_list, (key, value) => ([String(value), key]));
-		let subgroup_id_list = decode_compiled_map(
-			new ByteListView(package_data.sub(package_header.subgroup_id_offset, package_header.subgroup_id_size)),
+		let group_identifier_map = ConvertHelper.record_transform(group_identifier_list, (key, value) => ([String(value), key]));
+		let subgroup_identifier_list = decode_compiled_map(
+			new ByteListView(package_data.sub(package_header.subgroup_identifier_offset, package_header.subgroup_identifier_size)),
 			(stream) => {
 				return Number(stream.u32());
 			},
 		);
-		let subgroup_id_map = ConvertHelper.record_transform(subgroup_id_list, (key, value) => ([String(value), key]));
+		let subgroup_identifier_map = ConvertHelper.record_transform(subgroup_identifier_list, (key, value) => ([String(value), key]));
 		let resource_path_list = decode_compiled_map(
 			new ByteListView(package_data.sub(package_header.resource_path_offset, package_header.resource_path_size)),
 			(stream) => {
@@ -119,21 +119,21 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		for (let group_index = 0; group_index < package_header.group_information_block_count; group_index++) {
 			let group_information_data = new ByteListView(package_data.sub(package_header.group_information_offset + package_header.group_information_block_size * group_index, package_header.group_information_block_size), 0);
 			let subgroup_count = Number(group_information_data.u32(0x480));
-			let group_id = group_id_map[group_index];
-			if (group_id === undefined) {
-				Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id'), []);
-				group_id = `<unknown>:${group_index}`;
+			let group_identifier = group_identifier_map[group_index];
+			if (group_identifier === undefined) {
+				Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_identifier'), []);
+				group_identifier = `<unknown>:${group_index}`;
 			}
 			let group_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group = {
-				id: '',
+				identifier: '',
 				composite: true,
 				subgroup: [],
 			};
-			if (group_id.endsWith('_COMPOSITESHELL')) {
-				group_id = group_id.substring(0, group_id.length - '_COMPOSITESHELL'.length);
+			if (group_identifier.endsWith('_COMPOSITESHELL')) {
+				group_identifier = group_identifier.substring(0, group_identifier.length - '_COMPOSITESHELL'.length);
 				group_definition.composite = false;
 			}
-			group_definition.id = group_id;
+			group_definition.identifier = group_identifier;
 			package_definition.group.push(group_definition);
 			for (let subgroup_index = 0; subgroup_index < subgroup_count; subgroup_index++) {
 				try {
@@ -167,13 +167,13 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						texture_resource_data_size: Number(pool_information_data.u32(0x84)),
 					};
 					subgroup_information.texture_resource_data_size_original = pool_information.texture_resource_data_size;
-					let subgroup_id = subgroup_id_map[simple_subgroup_information.index];
-					if (subgroup_id === undefined) {
-						Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id'), []);
-						subgroup_id = `<unknown>:${simple_subgroup_information.index}`;
+					let subgroup_identifier = subgroup_identifier_map[simple_subgroup_information.index];
+					if (subgroup_identifier === undefined) {
+						Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_identifier'), []);
+						subgroup_identifier = `<unknown>:${simple_subgroup_information.index}`;
 					}
 					let subgroup_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup = {
-						id: subgroup_id,
+						identifier: subgroup_identifier,
 						category: {
 							resolution: null,
 							locale: null,
@@ -193,7 +193,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						String.fromCharCode((simple_subgroup_information.locale & 0x000000FF) >> 0);
 					subgroup_definition.compression.general = (subgroup_information.resource_data_store_mode & 0b10) !== 0;
 					subgroup_definition.compression.texture = (subgroup_information.resource_data_store_mode & 0b01) !== 0;
-					Console.verbosity(`${group_index}.${subgroup_index} ${simple_subgroup_information.index} ${group_id}.${subgroup_id} ${subgroup_information.offset.toString(16)}`, []);
+					Console.verbosity(`${group_index}.${subgroup_index} ${simple_subgroup_information.index} ${group_identifier}.${subgroup_identifier} ${subgroup_information.offset.toString(16)}`, []);
 					let packet_data = new ByteListView(package_data.sub(subgroup_information.offset, package_data.size() - subgroup_information.offset));
 					let packet_header = {
 						resource_data_store_mode: Number(packet_data.u32(0x10)),

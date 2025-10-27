@@ -6,32 +6,32 @@ namespace Twinning.Script.Executor.Implement.Data.Differentiation {
 	): void {
 		push_typical_method('data.differentiation', [
 			typical_method({
-				id: 'vcdiff.encode',
+				identifier: 'vcdiff.encode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'after_file',
+						identifier: 'after_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'patch_file',
+						identifier: 'patch_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { after_file: string; }) => (argument.after_file.replace(/()?$/i, '.patch.bin')),
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'before_file',
+						identifier: 'before_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -45,32 +45,32 @@ namespace Twinning.Script.Executor.Implement.Data.Differentiation {
 				},
 			}),
 			typical_method({
-				id: 'vcdiff.decode',
+				identifier: 'vcdiff.decode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'patch_file',
+						identifier: 'patch_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'after_file',
+						identifier: 'after_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { patch_file: string; }) => (argument.patch_file.replace(/()?$/i, '.after.bin')),
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'before_file',
+						identifier: 'before_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,

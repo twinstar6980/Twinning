@@ -20,9 +20,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 
 		using typename Common::Definition;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::IntegerOfPlatform;
 
@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
 			OutputByteStreamView &                 data,
 			typename Definition::Animation const & definition
 		) -> Void {
-			data.write_constant(k_magic_identifier);
+			data.write_constant(k_magic_marker);
 			exchange_animation(data, definition);
 			return;
 		}

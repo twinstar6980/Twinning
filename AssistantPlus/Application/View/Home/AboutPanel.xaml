@@ -30,7 +30,7 @@
 				VerticalAlignment="Stretch"
 				Style="{ThemeResource BodyStrongTextBlockStyle}"
 				TextWrapping="NoWrap"
-				Text="{x:Bind Controller.uDescriptionLabel_Text}"
+				Text="{x:Bind Controller.uVersionLabel_Text}"
 				/>
 			<TextBlock
 				HorizontalAlignment="Stretch"

@@ -6,18 +6,18 @@ namespace Twinning.Script.Executor.Implement.Text.XML {
 	): void {
 		push_typical_method('text.xml', [
 			typical_method({
-				id: 'format',
+				identifier: 'format',
 				filter: ['file', /(\.xml)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.xml)?$/i, '.format.xml')),
@@ -26,7 +26,7 @@ namespace Twinning.Script.Executor.Implement.Text.XML {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'source_file',
+						identifier: 'source_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -34,7 +34,7 @@ namespace Twinning.Script.Executor.Implement.Text.XML {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'destination_file',
+						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { source_file: string; }) => (argument.source_file + '.format'),

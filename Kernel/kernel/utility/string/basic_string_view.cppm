@@ -95,7 +95,7 @@ export namespace Twinning::Kernel {
 		) const -> Void requires
 			(!constant.value) &&
 			(IsSame<Element, Character>) {
-			Range::each(thiz, CharacterType::as_alpha_lower);
+			Range::each(thiz, CharacterType::as_letter_lower);
 			return;
 		}
 
@@ -103,20 +103,13 @@ export namespace Twinning::Kernel {
 		) const -> Void requires
 			(!constant.value) &&
 			(IsSame<Element, Character>) {
-			Range::each(thiz, CharacterType::as_alpha_upper);
+			Range::each(thiz, CharacterType::as_letter_upper);
 			return;
 		}
 
 		#pragma endregion
 
 		#pragma region comparison
-
-		constexpr auto equal_icase (
-			ConstantView const & that
-		) const -> Boolean requires
-			(IsSame<Element, Character>) {
-			return Range::equal(thiz, that, CharacterType::equal_icase);
-		}
 
 		constexpr auto compare_3way (
 			ConstantView const & that

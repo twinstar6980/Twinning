@@ -1,16 +1,16 @@
 [
 	{
-		"id": "common.utility",
+		"identifier": "common.utility",
 		"name": "Utility",
 		"icon": "handyman",
 		"item": [
 			{
-				"id": "common.utility.update_global_setting",
+				"identifier": "common.utility.update_global_setting",
 				"name": "Update global setting",
 				"icon": "settings",
 				"argument": [
 					{
-						"id": "data",
+						"identifier": "data",
 						"name": "Data",
 						"type": "string",
 						"option": null,
@@ -78,18 +78,18 @@
 				],
 			},
 			{
-				"id": "common.utility.run_embedded_script",
+				"identifier": "common.utility.run_embedded_script",
 				"name": "Run embedded script",
 				"icon": "extension",
 				"argument": [
 					{
-						"id": "target_name",
+						"identifier": "target_name",
 						"name": "Target name",
 						"type": "string",
 						"option": [
 							"ScriptConsole",
 							"CompareLanguageFile",
-							"ComputeWwiseShortID",
+							"ComputeWwiseShortIdentifier",
 							"ExtractRSBFromPvZ2CNAPKDirectory",
 						],
 					},
@@ -109,9 +109,9 @@
 						},
 					},
 					{
-						"name": "ComputeWwiseShortID",
+						"name": "ComputeWwiseShortIdentifier",
 						"argument": {
-							"target_name": "ComputeWwiseShortID",
+							"target_name": "ComputeWwiseShortIdentifier",
 						},
 					},
 					{
@@ -123,18 +123,18 @@
 				],
 			},
 			{
-				"id": "common.utility.run_custom_script",
+				"identifier": "common.utility.run_custom_script",
 				"name": "Run custom script",
 				"icon": "code",
 				"argument": [
 					{
-						"id": "target_file",
+						"identifier": "target_file",
 						"name": "Target file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "is_module",
+						"identifier": "is_module",
 						"name": "Run as module",
 						"type": "boolean",
 						"option": null,
@@ -161,17 +161,17 @@
 		],
 	},
 	{
-		"id": "data",
+		"identifier": "data",
 		"name": "Data",
 		"icon": "draft",
 		"item": [
 			{
-				"id": "data.hash.md5",
+				"identifier": "data.hash.md5",
 				"name": "MD5 Hash",
 				"icon": "check_box",
 				"argument": [
 					{
-						"id": "target_file",
+						"identifier": "target_file",
 						"name": "Target file",
 						"type": "path",
 						"option": null,
@@ -184,18 +184,18 @@
 				],
 			},
 			{
-				"id": "data.encoding.base64.encode",
+				"identifier": "data.encoding.base64.encode",
 				"name": "Base64 Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -209,18 +209,18 @@
 				],
 			},
 			{
-				"id": "data.encoding.base64.decode",
+				"identifier": "data.encoding.base64.decode",
 				"name": "Base64 Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -234,24 +234,24 @@
 				],
 			},
 			{
-				"id": "data.encryption.exor.encrypt",
+				"identifier": "data.encryption.exor.encrypt",
 				"name": "EXOR Encrypt",
 				"icon": "lock",
 				"argument": [
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -265,24 +265,24 @@
 				],
 			},
 			{
-				"id": "data.encryption.rijndael.encrypt",
+				"identifier": "data.encryption.rijndael.encrypt",
 				"name": "Rijndael Encrypt",
 				"icon": "lock",
 				"argument": [
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "mode",
+						"identifier": "mode",
 						"name": "Algorithm mode",
 						"type": "string",
 						"option": [
@@ -292,7 +292,7 @@
 						],
 					},
 					{
-						"id": "block_size",
+						"identifier": "block_size",
 						"name": "Block size",
 						"type": "integer",
 						"option": [
@@ -302,13 +302,13 @@
 						],
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "iv",
+						"identifier": "iv",
 						"name": "Initialization vector",
 						"type": "string",
 						"option": null,
@@ -322,24 +322,24 @@
 				],
 			},
 			{
-				"id": "data.encryption.rijndael.decrypt",
+				"identifier": "data.encryption.rijndael.decrypt",
 				"name": "Rijndael Decrypt",
 				"icon": "key",
 				"argument": [
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "mode",
+						"identifier": "mode",
 						"name": "Algorithm mode",
 						"type": "string",
 						"option": [
@@ -349,7 +349,7 @@
 						],
 					},
 					{
-						"id": "block_size",
+						"identifier": "block_size",
 						"name": "Block size",
 						"type": "integer",
 						"option": [
@@ -359,13 +359,13 @@
 						],
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "iv",
+						"identifier": "iv",
 						"name": "Initialization vector",
 						"type": "string",
 						"option": null,
@@ -379,18 +379,18 @@
 				],
 			},
 			{
-				"id": "data.compression.deflate.compress",
+				"identifier": "data.compression.deflate.compress",
 				"name": "Deflate Compress",
 				"icon": "close_fullscreen",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -404,24 +404,24 @@
 				],
 			},
 			{
-				"id": "data.compression.deflate.uncompress",
+				"identifier": "data.compression.deflate.uncompress",
 				"name": "Deflate Uncompress",
 				"icon": "open_in_full",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -435,18 +435,18 @@
 				],
 			},
 			{
-				"id": "data.compression.zlib.compress",
+				"identifier": "data.compression.zlib.compress",
 				"name": "ZLib Compress",
 				"icon": "close_fullscreen",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -460,24 +460,24 @@
 				],
 			},
 			{
-				"id": "data.compression.zlib.uncompress",
+				"identifier": "data.compression.zlib.uncompress",
 				"name": "ZLib Uncompress",
 				"icon": "open_in_full",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -491,18 +491,18 @@
 				],
 			},
 			{
-				"id": "data.compression.gzip.compress",
+				"identifier": "data.compression.gzip.compress",
 				"name": "GZip Compress",
 				"icon": "close_fullscreen",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -516,24 +516,24 @@
 				],
 			},
 			{
-				"id": "data.compression.gzip.uncompress",
+				"identifier": "data.compression.gzip.uncompress",
 				"name": "GZip Uncompress",
 				"icon": "open_in_full",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -547,18 +547,18 @@
 				],
 			},
 			{
-				"id": "data.compression.bzip2.compress",
+				"identifier": "data.compression.bzip2.compress",
 				"name": "BZip2 Compress",
 				"icon": "close_fullscreen",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -572,24 +572,24 @@
 				],
 			},
 			{
-				"id": "data.compression.bzip2.uncompress",
+				"identifier": "data.compression.bzip2.uncompress",
 				"name": "BZip2 Uncompress",
 				"icon": "open_in_full",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -603,18 +603,18 @@
 				],
 			},
 			{
-				"id": "data.compression.lzma.compress",
+				"identifier": "data.compression.lzma.compress",
 				"name": "Lzma Compress",
 				"icon": "close_fullscreen",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -628,24 +628,24 @@
 				],
 			},
 			{
-				"id": "data.compression.lzma.uncompress",
+				"identifier": "data.compression.lzma.uncompress",
 				"name": "Lzma Uncompress",
 				"icon": "open_in_full",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -659,30 +659,30 @@
 				],
 			},
 			{
-				"id": "data.differentiation.vcdiff.encode",
+				"identifier": "data.differentiation.vcdiff.encode",
 				"name": "VCDiff Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "after_file",
+						"identifier": "after_file",
 						"name": "After file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "patch_file",
+						"identifier": "patch_file",
 						"name": "Patch file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "before_file",
+						"identifier": "before_file",
 						"name": "Before file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -693,30 +693,30 @@
 				],
 			},
 			{
-				"id": "data.differentiation.vcdiff.decode",
+				"identifier": "data.differentiation.vcdiff.decode",
 				"name": "VCDiff Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "patch_file",
+						"identifier": "patch_file",
 						"name": "Patch file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "after_file",
+						"identifier": "after_file",
 						"name": "After file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "before_file",
+						"identifier": "before_file",
 						"name": "Before file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -729,47 +729,47 @@
 		],
 	},
 	{
-		"id": "text",
+		"identifier": "text",
 		"name": "Text",
 		"icon": "description",
 		"item": [
 			{
-				"id": "text.json.format",
+				"identifier": "text.json.format",
 				"name": "JSON Format",
 				"icon": "format_list_bulleted",
 				"argument": [
 					{
-						"id": "source_file",
+						"identifier": "source_file",
 						"name": "Source file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "destination_file",
+						"identifier": "destination_file",
 						"name": "Destination file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "disable_array_trailing_comma",
+						"identifier": "disable_array_trailing_comma",
 						"name": "Disable array trailing comma",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "disable_array_line_breaking",
+						"identifier": "disable_array_line_breaking",
 						"name": "Disable array line breaking",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "disable_object_trailing_comma",
+						"identifier": "disable_object_trailing_comma",
 						"name": "Disable object trailing comma",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "disable_object_line_breaking",
+						"identifier": "disable_object_line_breaking",
 						"name": "Disable object line breaking",
 						"type": "boolean",
 						"option": null,
@@ -820,18 +820,18 @@
 				],
 			},
 			{
-				"id": "text.xml.format",
+				"identifier": "text.xml.format",
 				"name": "XML Format",
 				"icon": "format_list_bulleted",
 				"argument": [
 					{
-						"id": "source_file",
+						"identifier": "source_file",
 						"name": "Source file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "destination_file",
+						"identifier": "destination_file",
 						"name": "Destination file",
 						"type": "path",
 						"option": null,
@@ -847,35 +847,35 @@
 		],
 	},
 	{
-		"id": "texture",
+		"identifier": "texture",
 		"name": "Texture",
 		"icon": "imagesmode",
 		"item": [
 			{
-				"id": "texture.transformation.flip",
+				"identifier": "texture.transformation.flip",
 				"name": "Flip",
 				"icon": "settings_backup_restore",
 				"argument": [
 					{
-						"id": "source_file",
+						"identifier": "source_file",
 						"name": "Source file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "destination_file",
+						"identifier": "destination_file",
 						"name": "Destination file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "horizontal",
+						"identifier": "horizontal",
 						"name": "Flip horizontal",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "vertical",
+						"identifier": "vertical",
 						"name": "Flip vertical",
 						"type": "boolean",
 						"option": null,
@@ -910,30 +910,30 @@
 				],
 			},
 			{
-				"id": "texture.transformation.scale",
+				"identifier": "texture.transformation.scale",
 				"name": "Scale",
 				"icon": "branding_watermark",
 				"argument": [
 					{
-						"id": "source_file",
+						"identifier": "source_file",
 						"name": "Source file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "destination_file",
+						"identifier": "destination_file",
 						"name": "Destination file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "size_width",
+						"identifier": "size_width",
 						"name": "Width",
 						"type": "integer",
 						"option": null,
 					},
 					{
-						"id": "size_height",
+						"identifier": "size_height",
 						"name": "Height",
 						"type": "integer",
 						"option": null,
@@ -947,24 +947,24 @@
 				],
 			},
 			{
-				"id": "texture.transformation.scale_rate",
+				"identifier": "texture.transformation.scale_rate",
 				"name": "Scale by rate",
 				"icon": "branding_watermark",
 				"argument": [
 					{
-						"id": "source_file",
+						"identifier": "source_file",
 						"name": "Source file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "destination_file",
+						"identifier": "destination_file",
 						"name": "Destination file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "size_rate",
+						"identifier": "size_rate",
 						"name": "Size rate",
 						"type": "floater",
 						"option": null,
@@ -990,24 +990,24 @@
 				],
 			},
 			{
-				"id": "texture.encoding.encode",
+				"identifier": "texture.encoding.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Texture format",
 						"type": "string",
 						"option": [
@@ -1175,24 +1175,24 @@
 				],
 			},
 			{
-				"id": "texture.encoding.decode",
+				"identifier": "texture.encoding.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Texture format",
 						"type": "string",
 						"option": [
@@ -1220,13 +1220,13 @@
 						],
 					},
 					{
-						"id": "image_width",
+						"identifier": "image_width",
 						"name": "Image width",
 						"type": "integer",
 						"option": null,
 					},
 					{
-						"id": "image_height",
+						"identifier": "image_height",
 						"name": "Image height",
 						"type": "integer",
 						"option": null,
@@ -1372,24 +1372,24 @@
 				],
 			},
 			{
-				"id": "texture.atlas.pack",
+				"identifier": "texture.atlas.pack",
 				"name": "Atlas Pack",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "sprite_directory",
+						"identifier": "sprite_directory",
 						"name": "Sprite directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "atlas_file",
+						"identifier": "atlas_file",
 						"name": "Atlas file",
 						"type": "path",
 						"option": null,
@@ -1400,24 +1400,24 @@
 				],
 			},
 			{
-				"id": "texture.atlas.unpack",
+				"identifier": "texture.atlas.unpack",
 				"name": "Atlas Unpack",
 				"icon": "orders",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "atlas_file",
+						"identifier": "atlas_file",
 						"name": "Atlas file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "sprite_directory",
+						"identifier": "sprite_directory",
 						"name": "Sprite directory",
 						"type": "path",
 						"option": null,
@@ -1428,24 +1428,24 @@
 				],
 			},
 			{
-				"id": "texture.atlas.pack_automatic",
+				"identifier": "texture.atlas.pack_automatic",
 				"name": "Atlas Pack by automatic",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "sprite_directory",
+						"identifier": "sprite_directory",
 						"name": "Sprite directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "atlas_file",
+						"identifier": "atlas_file",
 						"name": "Atlas file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
@@ -1458,29 +1458,29 @@
 		],
 	},
 	{
-		"id": "wwise.media",
+		"identifier": "wwise.media",
 		"name": "Wwise Media",
 		"icon": "genres",
 		"item": [
 			{
-				"id": "wwise.media.encode",
+				"identifier": "wwise.media.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original File",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Audio format",
 						"type": "string",
 						"option": [
@@ -1537,18 +1537,18 @@
 				],
 			},
 			{
-				"id": "wwise.media.decode",
+				"identifier": "wwise.media.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original File",
 						"type": "path",
 						"option": null,
@@ -1564,29 +1564,29 @@
 		],
 	},
 	{
-		"id": "wwise.sound_bank",
+		"identifier": "wwise.sound_bank",
 		"name": "Wwise Sound-Bank",
 		"icon": "genres",
 		"item": [
 			{
-				"id": "wwise.sound_bank.encode",
+				"identifier": "wwise.sound_bank.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -1607,7 +1607,7 @@
 						],
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -1705,24 +1705,24 @@
 				],
 			},
 			{
-				"id": "wwise.sound_bank.decode",
+				"identifier": "wwise.sound_bank.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -1837,29 +1837,29 @@
 		],
 	},
 	{
-		"id": "marmalade.dzip",
+		"identifier": "marmalade.dzip",
 		"name": "Marmalade DZip",
 		"icon": "deployed_code",
 		"item": [
 			{
-				"id": "marmalade.dzip.pack",
+				"identifier": "marmalade.dzip.pack",
 				"name": "Pack",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -1867,7 +1867,7 @@
 						],
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -1887,24 +1887,24 @@
 				],
 			},
 			{
-				"id": "marmalade.dzip.unpack",
+				"identifier": "marmalade.dzip.unpack",
 				"name": "Unpack",
 				"icon": "orders",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -1926,24 +1926,24 @@
 				],
 			},
 			{
-				"id": "marmalade.dzip.pack_automatic",
+				"identifier": "marmalade.dzip.pack_automatic",
 				"name": "Pack by automatic",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "resource_directory",
+						"identifier": "resource_directory",
 						"name": "Resource directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -1964,29 +1964,29 @@
 		],
 	},
 	{
-		"id": "popcap.zlib",
+		"identifier": "popcap.zlib",
 		"name": "PopCap ZLib",
 		"icon": "folder_zip",
 		"item": [
 			{
-				"id": "popcap.zlib.compress",
+				"identifier": "popcap.zlib.compress",
 				"name": "Compress",
 				"icon": "close_fullscreen",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
@@ -2012,24 +2012,24 @@
 				],
 			},
 			{
-				"id": "popcap.zlib.uncompress",
+				"identifier": "popcap.zlib.uncompress",
 				"name": "Uncompress",
 				"icon": "open_in_full",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
@@ -2057,35 +2057,35 @@
 		],
 	},
 	{
-		"id": "popcap.crypt_data",
+		"identifier": "popcap.crypt_data",
 		"name": "PopCap Crypt-Data",
 		"icon": "folder_zip",
 		"item": [
 			{
-				"id": "popcap.crypt_data.encrypt",
+				"identifier": "popcap.crypt_data.encrypt",
 				"name": "Encrypt",
 				"icon": "lock",
 				"argument": [
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "limit",
+						"identifier": "limit",
 						"name": "Limit",
 						"type": "integer",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -2099,30 +2099,30 @@
 				],
 			},
 			{
-				"id": "popcap.crypt_data.decrypt",
+				"identifier": "popcap.crypt_data.decrypt",
 				"name": "Decrypt",
 				"icon": "key",
 				"argument": [
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "limit",
+						"identifier": "limit",
 						"name": "Limit",
 						"type": "integer",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -2138,29 +2138,29 @@
 		],
 	},
 	{
-		"id": "popcap.reflection_object_notation",
+		"identifier": "popcap.reflection_object_notation",
 		"name": "PopCap Reflection-Object-Notation",
 		"icon": "description",
 		"item": [
 			{
-				"id": "popcap.reflection_object_notation.encode",
+				"identifier": "popcap.reflection_object_notation.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -2168,13 +2168,13 @@
 						],
 					},
 					{
-						"id": "version_native_string_encoding_use_utf8",
+						"identifier": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -2202,24 +2202,24 @@
 				],
 			},
 			{
-				"id": "popcap.reflection_object_notation.decode",
+				"identifier": "popcap.reflection_object_notation.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -2227,7 +2227,7 @@
 						],
 					},
 					{
-						"id": "version_native_string_encoding_use_utf8",
+						"identifier": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
@@ -2255,24 +2255,24 @@
 				],
 			},
 			{
-				"id": "popcap.reflection_object_notation.encrypt",
+				"identifier": "popcap.reflection_object_notation.encrypt",
 				"name": "Encrypt",
 				"icon": "lock",
 				"argument": [
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -2286,24 +2286,24 @@
 				],
 			},
 			{
-				"id": "popcap.reflection_object_notation.decrypt",
+				"identifier": "popcap.reflection_object_notation.decrypt",
 				"name": "Decrypt",
 				"icon": "key",
 				"argument": [
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -2317,24 +2317,24 @@
 				],
 			},
 			{
-				"id": "popcap.reflection_object_notation.encode_cipher",
+				"identifier": "popcap.reflection_object_notation.encode_cipher",
 				"name": "Encode for cipher",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -2342,19 +2342,19 @@
 						],
 					},
 					{
-						"id": "version_native_string_encoding_use_utf8",
+						"identifier": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -2382,24 +2382,24 @@
 				],
 			},
 			{
-				"id": "popcap.reflection_object_notation.decode_cipher",
+				"identifier": "popcap.reflection_object_notation.decode_cipher",
 				"name": "Decode for cipher",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -2407,13 +2407,13 @@
 						],
 					},
 					{
-						"id": "version_native_string_encoding_use_utf8",
+						"identifier": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -2441,24 +2441,24 @@
 				],
 			},
 			{
-				"id": "popcap.reflection_object_notation.decode_lenient",
+				"identifier": "popcap.reflection_object_notation.decode_lenient",
 				"name": "Decode by lenient",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -2466,7 +2466,7 @@
 						],
 					},
 					{
-						"id": "version_native_string_encoding_use_utf8",
+						"identifier": "version_native_string_encoding_use_utf8",
 						"name": "Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
@@ -2496,29 +2496,29 @@
 		],
 	},
 	{
-		"id": "popcap.texture",
+		"identifier": "popcap.texture",
 		"name": "PopCap Texture",
 		"icon": "imagesmode",
 		"item": [
 			{
-				"id": "popcap.texture.encode",
+				"identifier": "popcap.texture.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Texture format",
 						"type": "string",
 						"option": [
@@ -2618,24 +2618,24 @@
 				],
 			},
 			{
-				"id": "popcap.texture.decode",
+				"identifier": "popcap.texture.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Texture format",
 						"type": "string",
 						"option": [
@@ -2654,13 +2654,13 @@
 						],
 					},
 					{
-						"id": "image_width",
+						"identifier": "image_width",
 						"name": "Image width",
 						"type": "integer",
 						"option": null,
 					},
 					{
-						"id": "image_height",
+						"identifier": "image_height",
 						"name": "Image height",
 						"type": "integer",
 						"option": null,
@@ -2749,35 +2749,35 @@
 		],
 	},
 	{
-		"id": "popcap.u_texture",
+		"identifier": "popcap.u_texture",
 		"name": "PopCap U-Texture",
 		"icon": "imagesmode",
 		"item": [
 			{
-				"id": "popcap.u_texture.encode",
+				"identifier": "popcap.u_texture.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_compress_texture_data",
+						"identifier": "version_compress_texture_data",
 						"name": "Compress texture data",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Texture format",
 						"type": "string",
 						"option": [
@@ -2853,24 +2853,24 @@
 				],
 			},
 			{
-				"id": "popcap.u_texture.decode",
+				"identifier": "popcap.u_texture.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_compress_texture_data",
+						"identifier": "version_compress_texture_data",
 						"name": "Compress texture data",
 						"type": "boolean",
 						"option": null,
@@ -2943,29 +2943,29 @@
 		],
 	},
 	{
-		"id": "popcap.sexy_texture",
+		"identifier": "popcap.sexy_texture",
 		"name": "PopCap Sexy-Texture",
 		"icon": "imagesmode",
 		"item": [
 			{
-				"id": "popcap.sexy_texture.encode",
+				"identifier": "popcap.sexy_texture.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -2973,7 +2973,7 @@
 						],
 					},
 					{
-						"id": "format",
+						"identifier": "format",
 						"name": "Texture format",
 						"type": "string",
 						"option": [
@@ -2988,7 +2988,7 @@
 						],
 					},
 					{
-						"id": "compress_texture_data",
+						"identifier": "compress_texture_data",
 						"name": "Compress texture data",
 						"type": "boolean",
 						"option": null,
@@ -3131,24 +3131,24 @@
 				],
 			},
 			{
-				"id": "popcap.sexy_texture.decode",
+				"identifier": "popcap.sexy_texture.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "image_file",
+						"identifier": "image_file",
 						"name": "Image file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -3295,29 +3295,29 @@
 		],
 	},
 	{
-		"id": "popcap.animation",
+		"identifier": "popcap.animation",
 		"name": "PopCap Animation",
 		"icon": "thread_unread",
 		"item": [
 			{
-				"id": "popcap.animation.encode",
+				"identifier": "popcap.animation.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -3330,7 +3330,7 @@
 						],
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -3380,24 +3380,24 @@
 				],
 			},
 			{
-				"id": "popcap.animation.decode",
+				"identifier": "popcap.animation.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -3454,24 +3454,24 @@
 				],
 			},
 			{
-				"id": "popcap.animation.convert.flash.from",
+				"identifier": "popcap.animation.convert.flash.from",
 				"name": "Flash Convert from JSON",
 				"icon": "swipe_right_alt",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_directory",
+						"identifier": "ripe_directory",
 						"name": "Finished directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -3528,24 +3528,24 @@
 				],
 			},
 			{
-				"id": "popcap.animation.convert.flash.to",
+				"identifier": "popcap.animation.convert.flash.to",
 				"name": "Flash Convert to JSON",
 				"icon": "swipe_left_alt",
 				"argument": [
 					{
-						"id": "ripe_directory",
+						"identifier": "ripe_directory",
 						"name": "Finished directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -3602,18 +3602,18 @@
 				],
 			},
 			{
-				"id": "popcap.animation.convert.flash.resize",
+				"identifier": "popcap.animation.convert.flash.resize",
 				"name": "Flash Resize image",
 				"icon": "branding_watermark",
 				"argument": [
 					{
-						"id": "target_directory",
+						"identifier": "target_directory",
 						"name": "Target directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "resolution",
+						"identifier": "resolution",
 						"name": "Image resolution",
 						"type": "integer",
 						"option": [
@@ -3663,12 +3663,12 @@
 				],
 			},
 			{
-				"id": "popcap.animation.convert.flash.link_media",
+				"identifier": "popcap.animation.convert.flash.link_media",
 				"name": "Flash Create links for image files",
 				"icon": "link",
 				"argument": [
 					{
-						"id": "target_directory",
+						"identifier": "target_directory",
 						"name": "Target directory",
 						"type": "path",
 						"option": null,
@@ -3683,29 +3683,29 @@
 		],
 	},
 	{
-		"id": "popcap.re_animation",
+		"identifier": "popcap.re_animation",
 		"name": "PopCap Re-Animation",
 		"icon": "thread_unread",
 		"item": [
 			{
-				"id": "popcap.re_animation.encode",
+				"identifier": "popcap.re_animation.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_platform",
+						"identifier": "version_platform",
 						"name": "Version platform",
 						"type": "string",
 						"option": [
@@ -3715,13 +3715,13 @@
 						],
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -3763,24 +3763,24 @@
 				],
 			},
 			{
-				"id": "popcap.re_animation.decode",
+				"identifier": "popcap.re_animation.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_platform",
+						"identifier": "version_platform",
 						"name": "Version platform",
 						"type": "string",
 						"option": [
@@ -3790,7 +3790,7 @@
 						],
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
@@ -3834,29 +3834,29 @@
 		],
 	},
 	{
-		"id": "popcap.particle",
+		"identifier": "popcap.particle",
 		"name": "PopCap Particle",
 		"icon": "motion_blur",
 		"item": [
 			{
-				"id": "popcap.particle.encode",
+				"identifier": "popcap.particle.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_platform",
+						"identifier": "version_platform",
 						"name": "Version platform",
 						"type": "string",
 						"option": [
@@ -3866,13 +3866,13 @@
 						],
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -3914,24 +3914,24 @@
 				],
 			},
 			{
-				"id": "popcap.particle.decode",
+				"identifier": "popcap.particle.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_platform",
+						"identifier": "version_platform",
 						"name": "Version platform",
 						"type": "string",
 						"option": [
@@ -3941,7 +3941,7 @@
 						],
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
@@ -3985,29 +3985,29 @@
 		],
 	},
 	{
-		"id": "popcap.trail",
+		"identifier": "popcap.trail",
 		"name": "PopCap Trail",
 		"icon": "motion_blur",
 		"item": [
 			{
-				"id": "popcap.trail.encode",
+				"identifier": "popcap.trail.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_platform",
+						"identifier": "version_platform",
 						"name": "Version platform",
 						"type": "string",
 						"option": [
@@ -4017,13 +4017,13 @@
 						],
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4065,24 +4065,24 @@
 				],
 			},
 			{
-				"id": "popcap.trail.decode",
+				"identifier": "popcap.trail.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_platform",
+						"identifier": "version_platform",
 						"name": "Version platform",
 						"type": "string",
 						"option": [
@@ -4092,7 +4092,7 @@
 						],
 					},
 					{
-						"id": "version_variant_64",
+						"identifier": "version_variant_64",
 						"name": "Use the 64-bit variant",
 						"type": "boolean",
 						"option": null,
@@ -4136,29 +4136,29 @@
 		],
 	},
 	{
-		"id": "popcap.particle_effect",
+		"identifier": "popcap.particle_effect",
 		"name": "PopCap Particle-Effect",
 		"icon": "motion_blur",
 		"item": [
 			{
-				"id": "popcap.particle_effect.encode",
+				"identifier": "popcap.particle_effect.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4166,7 +4166,7 @@
 						],
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4186,24 +4186,24 @@
 				],
 			},
 			{
-				"id": "popcap.particle_effect.decode",
+				"identifier": "popcap.particle_effect.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4227,29 +4227,29 @@
 		],
 	},
 	{
-		"id": "popcap.render_effect",
+		"identifier": "popcap.render_effect",
 		"name": "PopCap Render-Effect",
 		"icon": "motion_blur",
 		"item": [
 			{
-				"id": "popcap.render_effect.encode",
+				"identifier": "popcap.render_effect.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4257,7 +4257,7 @@
 						],
 					},
 					{
-						"id": "version_variant",
+						"identifier": "version_variant",
 						"name": "Version variant",
 						"type": "integer",
 						"option": [
@@ -4267,7 +4267,7 @@
 						],
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4302,24 +4302,24 @@
 				],
 			},
 			{
-				"id": "popcap.render_effect.decode",
+				"identifier": "popcap.render_effect.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4327,7 +4327,7 @@
 						],
 					},
 					{
-						"id": "version_variant",
+						"identifier": "version_variant",
 						"name": "Version variant",
 						"type": "integer",
 						"option": [
@@ -4368,29 +4368,29 @@
 		],
 	},
 	{
-		"id": "popcap.character_font_widget_2",
+		"identifier": "popcap.character_font_widget_2",
 		"name": "PopCap Character-Font-Widget-2",
 		"icon": "custom_typography",
 		"item": [
 			{
-				"id": "popcap.character_font_widget_2.encode",
+				"identifier": "popcap.character_font_widget_2.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4404,18 +4404,18 @@
 				],
 			},
 			{
-				"id": "popcap.character_font_widget_2.decode",
+				"identifier": "popcap.character_font_widget_2.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
@@ -4431,29 +4431,29 @@
 		],
 	},
 	{
-		"id": "popcap.package",
+		"identifier": "popcap.package",
 		"name": "PopCap Package",
 		"icon": "deployed_code",
 		"item": [
 			{
-				"id": "popcap.package.pack",
+				"identifier": "popcap.package.pack",
 				"name": "Pack",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4461,13 +4461,13 @@
 						],
 					},
 					{
-						"id": "version_compress_resource_data",
+						"identifier": "version_compress_resource_data",
 						"name": "Compress resource data",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4495,24 +4495,24 @@
 				],
 			},
 			{
-				"id": "popcap.package.unpack",
+				"identifier": "popcap.package.unpack",
 				"name": "Unpack",
 				"icon": "orders",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4520,7 +4520,7 @@
 						],
 					},
 					{
-						"id": "version_compress_resource_data",
+						"identifier": "version_compress_resource_data",
 						"name": "Compress resource data",
 						"type": "boolean",
 						"option": null,
@@ -4548,24 +4548,24 @@
 				],
 			},
 			{
-				"id": "popcap.package.pack_automatic",
+				"identifier": "popcap.package.pack_automatic",
 				"name": "Pack by automatic",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "resource_directory",
+						"identifier": "resource_directory",
 						"name": "Resource directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4573,7 +4573,7 @@
 						],
 					},
 					{
-						"id": "version_compress_resource_data",
+						"identifier": "version_compress_resource_data",
 						"name": "Compress resource data",
 						"type": "boolean",
 						"option": null,
@@ -4598,24 +4598,24 @@
 				],
 			},
 			{
-				"id": "popcap.package.encrypt",
+				"identifier": "popcap.package.encrypt",
 				"name": "Encrypt",
 				"icon": "lock",
 				"argument": [
 					{
-						"id": "plain_file",
+						"identifier": "plain_file",
 						"name": "Plaintext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "cipher_file",
+						"identifier": "cipher_file",
 						"name": "Ciphertext file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "integer",
 						"option": null,
@@ -4631,29 +4631,29 @@
 		],
 	},
 	{
-		"id": "popcap.resource_stream_group",
+		"identifier": "popcap.resource_stream_group",
 		"name": "PopCap Resource-Stream-Group",
 		"icon": "deployed_code",
 		"item": [
 			{
-				"id": "popcap.resource_stream_group.pack",
+				"identifier": "popcap.resource_stream_group.pack",
 				"name": "Pack",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4663,7 +4663,7 @@
 						],
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4695,24 +4695,24 @@
 				],
 			},
 			{
-				"id": "popcap.resource_stream_group.unpack",
+				"identifier": "popcap.resource_stream_group.unpack",
 				"name": "Unpack",
 				"icon": "orders",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4750,29 +4750,29 @@
 		],
 	},
 	{
-		"id": "popcap.resource_stream_bundle",
+		"identifier": "popcap.resource_stream_bundle",
 		"name": "PopCap Resource-Stream-Bundle",
 		"icon": "deployed_code",
 		"item": [
 			{
-				"id": "popcap.resource_stream_bundle.pack",
+				"identifier": "popcap.resource_stream_bundle.pack",
 				"name": "Pack",
 				"icon": "inventory_2",
 				"argument": [
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4782,7 +4782,7 @@
 						],
 					},
 					{
-						"id": "version_extended_texture_information_for_pvz2_cn",
+						"identifier": "version_extended_texture_information_for_pvz2_cn",
 						"name": "Extended version of texture information for PvZ-2 CN version",
 						"type": "integer",
 						"option": [
@@ -4793,7 +4793,7 @@
 						],
 					},
 					{
-						"id": "layout_mode",
+						"identifier": "layout_mode",
 						"name": "Layout mode",
 						"type": "string",
 						"option": [
@@ -4803,19 +4803,19 @@
 						],
 					},
 					{
-						"id": "input_packet",
+						"identifier": "input_packet",
 						"name": "Use packets that already exists",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "output_new_packet",
+						"identifier": "output_new_packet",
 						"name": "Export newly packed packets",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -4872,24 +4872,24 @@
 				],
 			},
 			{
-				"id": "popcap.resource_stream_bundle.unpack",
+				"identifier": "popcap.resource_stream_bundle.unpack",
 				"name": "Unpack",
 				"icon": "orders",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -4899,7 +4899,7 @@
 						],
 					},
 					{
-						"id": "version_extended_texture_information_for_pvz2_cn",
+						"identifier": "version_extended_texture_information_for_pvz2_cn",
 						"name": "Extended version of texture information for PvZ-2 CN version",
 						"type": "integer",
 						"option": [
@@ -4910,7 +4910,7 @@
 						],
 					},
 					{
-						"id": "layout_mode",
+						"identifier": "layout_mode",
 						"name": "Layout mode",
 						"type": "string",
 						"option": [
@@ -4920,13 +4920,13 @@
 						],
 					},
 					{
-						"id": "output_resource",
+						"identifier": "output_resource",
 						"name": "Export resources",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "output_packet",
+						"identifier": "output_packet",
 						"name": "Export packet",
 						"type": "boolean",
 						"option": null,
@@ -4983,18 +4983,18 @@
 				],
 			},
 			{
-				"id": "popcap.resource_stream_bundle.unpack_lenient",
+				"identifier": "popcap.resource_stream_bundle.unpack_lenient",
 				"name": "Unpack by lenient",
 				"icon": "orders",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
@@ -5008,30 +5008,30 @@
 				],
 			},
 			{
-				"id": "popcap.resource_stream_bundle.resource_convert",
+				"identifier": "popcap.resource_stream_bundle.resource_convert",
 				"name": "Resource convert",
 				"icon": "lightning_stand",
 				"argument": [
 					{
-						"id": "bundle_directory",
+						"identifier": "bundle_directory",
 						"name": "Bundle directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "option_recase_path",
+						"identifier": "option_recase_path",
 						"name": "Recase resource path",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_rton",
+						"identifier": "option_rton",
 						"name": "Extract RTON",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_rton_version_number",
+						"identifier": "option_rton_version_number",
 						"name": "Extract RTON - Version number",
 						"type": "integer",
 						"option": [
@@ -5039,31 +5039,31 @@
 						],
 					},
 					{
-						"id": "option_rton_version_native_string_encoding_use_utf8",
+						"identifier": "option_rton_version_native_string_encoding_use_utf8",
 						"name": "Extract RTON - Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_rton_crypt",
+						"identifier": "option_rton_crypt",
 						"name": "Extract RTON - Enable encryption",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_rton_crypt_key",
+						"identifier": "option_rton_crypt_key",
 						"name": "Extract RTON - Key for encryption",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "option_ptx",
+						"identifier": "option_ptx",
 						"name": "Extract PTX",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_ptx_format",
+						"identifier": "option_ptx_format",
 						"name": "Extract PTX - Format category",
 						"type": "string",
 						"option": [
@@ -5073,31 +5073,31 @@
 						],
 					},
 					{
-						"id": "option_ptx_atlas",
+						"identifier": "option_ptx_atlas",
 						"name": "Extract PTX - Extract as atlas",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_ptx_atlas_resize",
+						"identifier": "option_ptx_atlas_resize",
 						"name": "Extract PTX - Adjust atlas size",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_ptx_sprite",
+						"identifier": "option_ptx_sprite",
 						"name": "Extract PTX - Extract as sprite",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_pam",
+						"identifier": "option_pam",
 						"name": "Extract PAM",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_pam_version_number",
+						"identifier": "option_pam_version_number",
 						"name": "Extract PAM - Version number",
 						"type": "integer",
 						"option": [
@@ -5110,25 +5110,25 @@
 						],
 					},
 					{
-						"id": "option_pam_json",
+						"identifier": "option_pam_json",
 						"name": "Extract PAM - Extract as JSON",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_pam_flash",
+						"identifier": "option_pam_flash",
 						"name": "Extract PAM - Extract as Flash",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_bnk",
+						"identifier": "option_bnk",
 						"name": "Extract BNK",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_bnk_version_number",
+						"identifier": "option_bnk_version_number",
 						"name": "Extract BNK - Version number",
 						"type": "integer",
 						"option": [
@@ -5149,7 +5149,7 @@
 						],
 					},
 					{
-						"id": "option_wem",
+						"identifier": "option_wem",
 						"name": "Extract WEM",
 						"type": "boolean",
 						"option": null,
@@ -5379,35 +5379,35 @@
 		],
 	},
 	{
-		"id": "popcap.resource_stream_bundle_patch",
+		"identifier": "popcap.resource_stream_bundle_patch",
 		"name": "PopCap Resource-Stream-Bundle-Patch",
 		"icon": "extension",
 		"item": [
 			{
-				"id": "popcap.resource_stream_bundle_patch.encode",
+				"identifier": "popcap.resource_stream_bundle_patch.encode",
 				"name": "Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "after_file",
+						"identifier": "after_file",
 						"name": "After file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "patch_file",
+						"identifier": "patch_file",
 						"name": "Patch file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "before_file",
+						"identifier": "before_file",
 						"name": "Before file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -5415,13 +5415,13 @@
 						],
 					},
 					{
-						"id": "use_raw_packet",
+						"identifier": "use_raw_packet",
 						"name": "Use raw packet",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -5432,30 +5432,30 @@
 				],
 			},
 			{
-				"id": "popcap.resource_stream_bundle_patch.decode",
+				"identifier": "popcap.resource_stream_bundle_patch.decode",
 				"name": "Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "patch_file",
+						"identifier": "patch_file",
 						"name": "Patch file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "after_file",
+						"identifier": "after_file",
 						"name": "After file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "before_file",
+						"identifier": "before_file",
 						"name": "Before file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "version_number",
+						"identifier": "version_number",
 						"name": "Version number",
 						"type": "integer",
 						"option": [
@@ -5463,13 +5463,13 @@
 						],
 					},
 					{
-						"id": "use_raw_packet",
+						"identifier": "use_raw_packet",
 						"name": "Use raw packet",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -5482,23 +5482,23 @@
 		],
 	},
 	{
-		"id": "pvz2.text_table",
+		"identifier": "pvz2.text_table",
 		"name": "PvZ-2 Text-Table",
 		"icon": "description",
 		"item": [
 			{
-				"id": "pvz2.text_table.convert",
+				"identifier": "pvz2.text_table.convert",
 				"name": "Convert",
 				"icon": "repeat",
 				"argument": [
 					{
-						"id": "source_file",
+						"identifier": "source_file",
 						"name": "Source file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "destination_version",
+						"identifier": "destination_version",
 						"name": "Destination version",
 						"type": "string",
 						"option": [
@@ -5508,7 +5508,7 @@
 						],
 					},
 					{
-						"id": "destination_file",
+						"identifier": "destination_file",
 						"name": "Destination file",
 						"type": "path",
 						"option": null,
@@ -5539,29 +5539,29 @@
 		],
 	},
 	{
-		"id": "pvz2.resource_manifest",
+		"identifier": "pvz2.resource_manifest",
 		"name": "PvZ-2 Resource-Manifest",
 		"icon": "description",
 		"item": [
 			{
-				"id": "pvz2.resource_manifest.new_type_object_notation.encode",
+				"identifier": "pvz2.resource_manifest.new_type_object_notation.encode",
 				"name": "New-Type-Object-Notation Encode",
 				"icon": "skip_next",
 				"argument": [
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -5572,18 +5572,18 @@
 				],
 			},
 			{
-				"id": "pvz2.resource_manifest.new_type_object_notation.decode",
+				"identifier": "pvz2.resource_manifest.new_type_object_notation.decode",
 				"name": "New-Type-Object-Notation Decode",
 				"icon": "skip_previous",
 				"argument": [
 					{
-						"id": "data_file",
+						"identifier": "data_file",
 						"name": "Data file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "definition_file",
+						"identifier": "definition_file",
 						"name": "Definition file",
 						"type": "path",
 						"option": null,
@@ -5594,18 +5594,18 @@
 				],
 			},
 			{
-				"id": "pvz2.resource_manifest.regular.from",
+				"identifier": "pvz2.resource_manifest.regular.from",
 				"name": "Regular Convert from official data",
 				"icon": "swipe_right_alt",
 				"argument": [
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
@@ -5616,24 +5616,24 @@
 				],
 			},
 			{
-				"id": "pvz2.resource_manifest.regular.to",
+				"identifier": "pvz2.resource_manifest.regular.to",
 				"name": "Regular Convert to official data",
 				"icon": "swipe_left_alt",
 				"argument": [
 					{
-						"id": "ripe_file",
+						"identifier": "ripe_file",
 						"name": "Finished file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "raw_file",
+						"identifier": "raw_file",
 						"name": "Original file",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "use_array_style_path",
+						"identifier": "use_array_style_path",
 						"name": "Use array style path",
 						"type": "boolean",
 						"option": null,
@@ -5658,83 +5658,83 @@
 		],
 	},
 	{
-		"id": "pvz2.package_project",
+		"identifier": "pvz2.package_project",
 		"name": "PvZ-2 Package-Project",
 		"icon": "deployed_code",
 		"item": [
 			{
-				"id": "pvz2.package_project.transpile",
+				"identifier": "pvz2.package_project.transpile",
 				"name": "Transpile",
 				"icon": "repeat",
 				"argument": [
 					{
-						"id": "project_directory",
+						"identifier": "project_directory",
 						"name": "Project directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "target_scope",
+						"identifier": "target_scope",
 						"name": "Target scope",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "target_package",
+						"identifier": "target_package",
 						"name": "Target package",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "option_generalize_rton",
+						"identifier": "option_generalize_rton",
 						"name": "Generalize RTON",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_generalize_ptx",
+						"identifier": "option_generalize_ptx",
 						"name": "Generalize PTX",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_generalize_pam",
+						"identifier": "option_generalize_pam",
 						"name": "Generalize PAM",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_generalize_wem",
+						"identifier": "option_generalize_wem",
 						"name": "Generalize WEM",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_specialize_rton",
+						"identifier": "option_specialize_rton",
 						"name": "Specialize RTON",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_specialize_ptx",
+						"identifier": "option_specialize_ptx",
 						"name": "Specialize PTX",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_specialize_pam",
+						"identifier": "option_specialize_pam",
 						"name": "Specialize PAM",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "option_specialize_wem",
+						"identifier": "option_specialize_wem",
 						"name": "Specialize WEM",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -5876,30 +5876,30 @@
 				],
 			},
 			{
-				"id": "pvz2.package_project.compile",
+				"identifier": "pvz2.package_project.compile",
 				"name": "Compile",
 				"icon": "sound_sampler",
 				"argument": [
 					{
-						"id": "project_directory",
+						"identifier": "project_directory",
 						"name": "Project directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "target_scope",
+						"identifier": "target_scope",
 						"name": "Target scope",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "target_package",
+						"identifier": "target_package",
 						"name": "Target package",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -5910,30 +5910,30 @@
 				],
 			},
 			{
-				"id": "pvz2.package_project.link",
+				"identifier": "pvz2.package_project.link",
 				"name": "link",
 				"icon": "linked_services",
 				"argument": [
 					{
-						"id": "project_directory",
+						"identifier": "project_directory",
 						"name": "Project directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "target_package",
+						"identifier": "target_package",
 						"name": "Target package",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "remake_manifest",
+						"identifier": "remake_manifest",
 						"name": "Remake manifest",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -5956,30 +5956,30 @@
 				],
 			},
 			{
-				"id": "pvz2.package_project.parse",
+				"identifier": "pvz2.package_project.parse",
 				"name": "Parse",
 				"icon": "barcode_reader",
 				"argument": [
 					{
-						"id": "project_directory",
+						"identifier": "project_directory",
 						"name": "Project directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "package_directory",
+						"identifier": "package_directory",
 						"name": "Package directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "package_name",
+						"identifier": "package_name",
 						"name": "Package name",
 						"type": "string",
 						"option": null,
 					},
 					{
-						"id": "package_version_number",
+						"identifier": "package_version_number",
 						"name": "Package version number",
 						"type": "integer",
 						"option": [
@@ -5989,7 +5989,7 @@
 						],
 					},
 					{
-						"id": "package_version_extended_texture_information_for_pvz2_cn",
+						"identifier": "package_version_extended_texture_information_for_pvz2_cn",
 						"name": "Package extended version of texture information for PvZ-2 CN version",
 						"type": "integer",
 						"option": [
@@ -6050,23 +6050,23 @@
 		],
 	},
 	{
-		"id": "pvz2.remote_project",
+		"identifier": "pvz2.remote_project",
 		"name": "PvZ-2 Remote-Project",
 		"icon": "cloud",
 		"item": [
 			{
-				"id": "pvz2.remote_project.execute",
+				"identifier": "pvz2.remote_project.execute",
 				"name": "Execute",
 				"icon": "sound_sampler",
 				"argument": [
 					{
-						"id": "project_directory",
+						"identifier": "project_directory",
 						"name": "Project directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "action",
+						"identifier": "action",
 						"name": "Action",
 						"type": "string",
 						"option": [
@@ -6078,7 +6078,7 @@
 						],
 					},
 					{
-						"id": "target",
+						"identifier": "target",
 						"name": "Target",
 						"type": "string",
 						"option": [
@@ -6089,7 +6089,7 @@
 						],
 					},
 					{
-						"id": "rton_version_number",
+						"identifier": "rton_version_number",
 						"name": "RTON - Version number",
 						"type": "integer",
 						"option": [
@@ -6097,13 +6097,13 @@
 						],
 					},
 					{
-						"id": "rton_version_native_string_encoding_use_utf8",
+						"identifier": "rton_version_native_string_encoding_use_utf8",
 						"name": "RTON - Native string encoding use UTF-8",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "buffer_size",
+						"identifier": "buffer_size",
 						"name": "RTON - Buffer memory size",
 						"type": "size",
 						"option": null,
@@ -6216,23 +6216,23 @@
 		],
 	},
 	{
-		"id": "kairosoft.game",
+		"identifier": "kairosoft.game",
 		"name": "Kairosoft Game",
 		"icon": "sports_esports",
 		"item": [
 			{
-				"id": "kairosoft.game.encrypt_record",
+				"identifier": "kairosoft.game.encrypt_record",
 				"name": "Encrypt record",
 				"icon": "lock_open",
 				"argument": [
 					{
-						"id": "target_directory",
+						"identifier": "target_directory",
 						"name": "Target directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "key",
+						"identifier": "key",
 						"name": "Key",
 						"type": "string",
 						"option": null,
@@ -6243,24 +6243,24 @@
 				],
 			},
 			{
-				"id": "kairosoft.game.modify_program",
+				"identifier": "kairosoft.game.modify_program",
 				"name": "Modify program",
 				"icon": "build",
 				"argument": [
 					{
-						"id": "target_directory",
+						"identifier": "target_directory",
 						"name": "Target directory",
 						"type": "path",
 						"option": null,
 					},
 					{
-						"id": "disable_record_encryption",
+						"identifier": "disable_record_encryption",
 						"name": "Disable record encryption",
 						"type": "boolean",
 						"option": null,
 					},
 					{
-						"id": "enable_debug_mode",
+						"identifier": "enable_debug_mode",
 						"name": "Enable debug mode",
 						"type": "boolean",
 						"option": null,

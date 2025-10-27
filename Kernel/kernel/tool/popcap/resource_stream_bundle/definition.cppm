@@ -119,7 +119,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(Subgroup_<_>),
 			M_wrap(
-				(String) id,
+				(String) identifier,
 				(SubgroupCategory) category,
 				(PacketCompression) compression,
 				(List<Resource>) resource,
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 		M_record_of_map(
 			M_wrap(Group_<_>),
 			M_wrap(
-				(String) id,
+				(String) identifier,
 				(Boolean) composite,
 				(List<Subgroup>) subgroup,
 			),

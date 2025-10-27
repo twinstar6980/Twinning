@@ -6,32 +6,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 	): void {
 		push_typical_method('popcap.animation', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.pam\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.pam\.json)?$/i, '.pam')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -48,7 +48,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
@@ -65,25 +65,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.pam)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.pam)?$/i, '.pam.json')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
@@ -92,7 +92,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -100,7 +100,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
@@ -114,25 +114,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				},
 			}),
 			typical_method({
-				id: 'convert.flash.from',
+				identifier: 'convert.flash.from',
 				filter: ['file', /(\.pam\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_directory',
+						identifier: 'ripe_directory',
 						rule: ['directory', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/(\.pam\.json)?$/i, '.pam.xfl')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
@@ -141,7 +141,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -149,7 +149,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_directory',
+						identifier: 'ripe_directory',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.from'),
@@ -166,25 +166,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				},
 			}),
 			typical_method({
-				id: 'convert.flash.to',
+				identifier: 'convert.flash.to',
 				filter: ['directory', /(\.pam\.xfl)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_directory',
+						identifier: 'ripe_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory.replace(/(\.pam\.xfl)?$/i, '.pam.json')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
@@ -193,7 +193,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_directory',
+						identifier: 'ripe_directory',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -201,7 +201,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_directory: string; }) => (argument.ripe_directory + '.to'),
@@ -215,18 +215,18 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				},
 			}),
 			typical_method({
-				id: 'convert.flash.resize',
+				identifier: 'convert.flash.resize',
 				filter: ['directory', /(\.pam\.xfl)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'target_directory',
+						identifier: 'target_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'resolution',
+						identifier: 'resolution',
 						option: null,
 						checker: (argument, value) => (value > 0n ? null : los('executor.implement:*.resolution_should_be_bigger_then_zero')),
 						automatic: null,
@@ -235,7 +235,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'target_directory',
+						identifier: 'target_directory',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -249,11 +249,11 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				},
 			}),
 			typical_method({
-				id: 'convert.flash.link_media',
+				identifier: 'convert.flash.link_media',
 				filter: ['directory', /(\.pam\.xfl)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'target_directory',
+						identifier: 'target_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
@@ -262,7 +262,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'target_directory',
+						identifier: 'target_directory',
 						rule: 'input',
 						checker: null,
 						automatic: null,

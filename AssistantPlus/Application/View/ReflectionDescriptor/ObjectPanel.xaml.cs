@@ -139,7 +139,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uTitle_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index];
 				return model.Name;
 			}
@@ -147,7 +147,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uTitle_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index];
 				return model.Name;
 			}
@@ -157,7 +157,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public List<ObjectPropertyItemController> uList_ItemsSource {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index];
 				return Enumerable.Range(0, model.Property.Count).Select((propertyIndex) => (new ObjectPropertyItemController() { Host = this.Host, Index = new (this.Index, propertyIndex) })).ToList();
 			}
@@ -186,7 +186,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(model.Name); }));
 			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
@@ -195,7 +195,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uNameText_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 				return model.Name;
 			}
@@ -203,7 +203,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uNameText_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 				return model.Name;
 			}
@@ -213,7 +213,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uType_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 				return GameReflectionHelper.MakeTypeName(model.Type);
 			}
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uDescription_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 				return model.Description;
 			}

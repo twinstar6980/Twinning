@@ -10,7 +10,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		resource_state: ResourceState,
-		group_id: string,
+		group_identifier: string,
 		buffer: Kernel.ByteArray,
 	): void {
 		Console.information(`Compiling ...`, [`${package_setting.name}/${part_name}/${group_name}/${resource_name}`]);
@@ -26,7 +26,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		let runtime_variable = {
 			group: {
 				name: '#group',
-				value: group_id,
+				value: group_identifier,
 			},
 			resolution: {
 				name: '#resolution',
@@ -38,17 +38,17 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 			},
 		};
 		variable_list.unshift(runtime_variable.group, runtime_variable.resolution, runtime_variable.locale);
-		let resource_id = parse_variable_string(resource_name, variable_list).toUpperCase();
+		let resource_identifier = parse_variable_string(resource_name, variable_list).toUpperCase();
 		switch (resource_setting.type) {
 			case 'dummy': {
 				let resource_property = resource_setting.property as DummyResourceProperty;
 				{
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
 					resource_state.push({
 						category: resource_setting.category,
 						definition: null,
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'dummy',
 								value: {
@@ -63,7 +63,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as GeneralResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.bin');
 				{
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list);
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
@@ -84,7 +84,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							},
 						},
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'general',
 								value: {
@@ -101,7 +101,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let resource_property = resource_setting.property as TextureResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.ptx');
 				{
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
@@ -114,7 +114,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 					let resource_manifest_additional_sprite: Array<TextureResourcePropertySpriteProperty> = [];
 					for (let sprite_resource_property of resource_property.sprite) {
 						resource_manifest_additional_sprite.push({
-							id: parse_variable_string(sprite_resource_property.id, variable_list),
+							identifier: parse_variable_string(sprite_resource_property.identifier, variable_list),
 							path: parse_variable_string(sprite_resource_property.path, variable_list),
 							position: sprite_resource_property.position,
 							size: sprite_resource_property.size,
@@ -138,7 +138,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							},
 						},
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'texture',
 								value: {
@@ -157,7 +157,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'rton', resource_property.conversion);
 				{
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.rton';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
@@ -173,7 +173,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							},
 						},
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'general',
 								value: {
@@ -203,7 +203,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 						locale: resource_setting.category.locale,
 					};
 					runtime_variable.resolution.value = resource_resolution.toString();
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
@@ -234,7 +234,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 					for (let sprite_resource_property of resource_property.sprite) {
 						let sprite_rect = sprite_rect_list[sprite_resource_property.source];
 						let sprite_resource_manifest: TextureResourcePropertySpriteProperty = {
-							id: parse_variable_string(sprite_resource_property.id, variable_list),
+							identifier: parse_variable_string(sprite_resource_property.identifier, variable_list),
 							path: parse_variable_string(sprite_resource_property.path, variable_list),
 							position: [BigInt(sprite_rect.x), BigInt(sprite_rect.y)],
 							size: [BigInt(sprite_rect.w), BigInt(sprite_rect.h)],
@@ -276,7 +276,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							},
 						},
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'texture',
 								value: {
@@ -295,7 +295,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'pam', resource_property.conversion);
 				{
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.pam';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
@@ -311,7 +311,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							},
 						},
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'general',
 								value: {
@@ -329,7 +329,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.wav');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'wem', resource_property.conversion);
 				{
-					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_id, resource_setting.category));
+					KernelX.Storage.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.wem';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
@@ -345,7 +345,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 							},
 						},
 						manifest: {
-							id: resource_id,
+							identifier: resource_identifier,
 							additional: {
 								type: 'general',
 								value: {
@@ -379,9 +379,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		let group_directory = make_scope_root_path(project_directory, part_name, group_name);
 		let group_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(group_directory)) as GroupSetting;
 		variable_list = merge_variable_list(variable_list, group_setting.variable);
-		group_state.id = parse_variable_string(group_name, variable_list);
+		group_state.identifier = parse_variable_string(group_name, variable_list);
 		for (let resource_name of list_scope_child_name(group_directory, resource_scope)) {
-			compile_resource(project_directory, part_name, group_name, resource_name, package_setting, variable_list, query_state_of_resource(group_state, resource_name), group_state.id, buffer);
+			compile_resource(project_directory, part_name, group_name, resource_name, package_setting, variable_list, query_state_of_resource(group_state, resource_name), group_state.identifier, buffer);
 		}
 		return;
 	}

@@ -20,9 +20,9 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 
 		using typename Common::Definition;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::IntegerOfPlatform;
 
@@ -173,7 +173,7 @@ export namespace Twinning::Kernel::Tool::PopCap::Particle {
 			OutputByteStreamView &                data,
 			typename Definition::Particle const & definition
 		) -> Void {
-			data.write_constant(k_magic_identifier);
+			data.write_constant(k_magic_marker);
 			exchange_particle(data, definition);
 			return;
 		}

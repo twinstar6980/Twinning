@@ -6,11 +6,11 @@ namespace Twinning.Script.Executor.Implement.Data.Hash {
 	): void {
 		push_typical_method('data.hash', [
 			typical_method({
-				id: 'md5',
+				identifier: 'md5',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'target_file',
+						identifier: 'target_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
@@ -19,7 +19,7 @@ namespace Twinning.Script.Executor.Implement.Data.Hash {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'target_file',
+						identifier: 'target_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,

@@ -200,7 +200,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 		public async Task Load (
 			String descriptorFile
 		) {
-			GF.AssertTest(!this.IsLoaded);
+			AssertTest(!this.IsLoaded);
 			var descriptorArchive = await GameReflectionHelper.LoadDescriptorArchive(descriptorFile);
 			var descriptorMap = GameReflectionHelper.CompileDescriptorArchive(descriptorArchive);
 			this.DescriptorFile = descriptorFile;
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public async Task Unload (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.DescriptorFile = null;
 			this.DescriptorArchive = null;
 			this.DescriptorMap = null;
@@ -280,7 +280,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 					break;
 				}
 				case "Clear": {
-					GF.AssertTest(this.IsLoaded);
+					AssertTest(this.IsLoaded);
 					await this.Unload();
 					break;
 				}
@@ -302,7 +302,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 			TreeViewItemInvokedEventArgs args
 		) {
 			var senders = sender.As<TreeView>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.uObjectList_SelectedItem = args.InvokedItem.As<ObjectItemController>();
 			this.NotifyPropertyChanged([
 				nameof(this.uPropertyExport_IsEnabled),
@@ -318,7 +318,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 			TreeViewCollapsedEventArgs args
 		) {
 			var senders = sender.As<TreeView>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.NotifyPropertyChanged([
 				nameof(this.uObjectList_SelectedItem),
 			]);
@@ -330,7 +330,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 			TreeViewExpandingEventArgs args
 		) {
 			var senders = sender.As<TreeView>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.NotifyPropertyChanged([
 				nameof(this.uObjectList_SelectedItem),
 			]);
@@ -381,7 +381,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var objectType = new GameReflectionModel.CompositeType() { Primitive = GameReflectionModel.PrimitiveType.Object, Element = null, Class = this.uObjectList_SelectedItem.AsNotNull().Descriptor.Name };
 			var objectValue = GameReflectionHelper.GenerateDataValueDefault(this.DescriptorMap, objectType, true).As<GameReflectionModel.FixedObject>();
 			var resultValue = GameReflectionHelper.MakeDataValue(this.DescriptorMap, objectType, objectValue);
@@ -413,7 +413,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public List<ObjectItemController> uRoot_ItemsSource {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Children;
 			}
 		}
@@ -422,21 +422,21 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public String uContent_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Descriptor.Name;
 			}
 		}
 
 		public String uContent_Name {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Descriptor.Name;
 			}
 		}
 
 		public Style uContentProperty_Style {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Host.View.FindResource(this.Descriptor.Property.Count switch {
 					0 => "InformationalValueInfoBadgeStyle",
 					_ => "AttentionValueInfoBadgeStyle",
@@ -446,14 +446,14 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public Size uContentProperty_Value {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Descriptor.Property.Count;
 			}
 		}
 
 		public Style uContentDerived_Style {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Host.View.FindResource(this.Descriptor.Derived.Count switch {
 					0 => "InformationalValueInfoBadgeStyle",
 					_ => "AttentionValueInfoBadgeStyle",
@@ -463,7 +463,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public Size uContentDerived_Value {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Descriptor.Derived.Count;
 			}
 		}

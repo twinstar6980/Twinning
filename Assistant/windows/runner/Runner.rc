@@ -95,7 +95,7 @@ BEGIN
             VALUE "InternalName", "" "\0"
             VALUE "LegalCopyright", "" "\0"
             VALUE "OriginalFilename", "" "\0"
-            VALUE "ProductName", "TwinStar.Twinning.Assistant" "\0"
+            VALUE "ProductName", "com.twinstar.twinning.assistant" "\0"
             VALUE "ProductVersion", "" "\0"
         END
     END

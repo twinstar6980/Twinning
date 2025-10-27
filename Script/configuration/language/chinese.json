@@ -36,8 +36,8 @@
 	"support.popcap.package.pack_automatic:total": "共 {} 个资源文件",
 	"support.popcap.package.pack_automatic:finish": "打包完成",
 	// support/popcap/resource_stream_bundle/unpack_lenient
-	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_id": "群ID未知",
-	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_id": "子群ID未知",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_identifier": "群标识符未知",
+	"support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_identifier": "子群标识符未知",
 	// support/pvz2/remote_project/execute
 	"support.pvz2.remote_project.execute:application_found_none": "检测到 PvZ-2 应用不存在",
 	"support.pvz2.remote_project.execute:application_found_single": "检测到 PvZ-2 应用存在",
@@ -68,7 +68,7 @@
 	"executor.generic:method_select": "请选择需要应用的功能",
 	"executor.generic:method_select_null_to_skip": "输入为空则跳过此条命令",
 	"executor.generic:method_unavailable": "没有可用的功能",
-	"executor.generic:method_invalid": "指定的功能ID无效",
+	"executor.generic:method_invalid": "指定的功能标识符无效",
 	"executor.generic:finish_skipped": "命令已跳过",
 	"executor.generic:finish_failed": "命令执行失败",
 	"executor.generic:finish_succeeded": "命令执行成功",
@@ -653,8 +653,8 @@
 	// executable/compare_language_file
 	"executable.compare_language_file:please_input_original_file": "请输入原文文件",
 	"executable.compare_language_file:please_input_translation_file": "请输入译文文件",
-	// executable/compute_wwise_short_id
-	"executable.compute_wwise_short_id:please_input_string": "请输入 Wwise ID 字符串，输入为空则结束",
+	// executable/compute_wwise_short_identifier
+	"executable.compute_wwise_short_identifier:please_input_string": "请输入 Wwise 标识符字符串，输入为空则结束",
 	// executable/extract_rsb_from_pvz2_cn_apk_directory
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory": "请提供需要提取的 APK 解压所得的目录",
 	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory": "请提供输出目录",

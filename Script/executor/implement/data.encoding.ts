@@ -6,18 +6,18 @@ namespace Twinning.Script.Executor.Implement.Data.Encoding {
 	): void {
 		push_typical_method('data.encoding', [
 			typical_method({
-				id: 'base64.encode',
+				identifier: 'base64.encode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
@@ -26,7 +26,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encoding {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -34,7 +34,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encoding {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.encode'),
@@ -48,18 +48,18 @@ namespace Twinning.Script.Executor.Implement.Data.Encoding {
 				},
 			}),
 			typical_method({
-				id: 'base64.decode',
+				identifier: 'base64.decode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
@@ -68,7 +68,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encoding {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'ripe_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -76,7 +76,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encoding {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'raw_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.decode'),

@@ -6,11 +6,11 @@ namespace Twinning.Script.Executor.Implement.Common.Utility {
 	): void {
 		push_typical_method('common.utility', [
 			typical_method({
-				id: 'update_global_setting',
+				identifier: 'update_global_setting',
 				filter: null,
 				argument: [
 					typical_argument_string({
-						id: 'data',
+						identifier: 'data',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -24,11 +24,11 @@ namespace Twinning.Script.Executor.Implement.Common.Utility {
 				},
 			}),
 			typical_method({
-				id: 'run_embedded_script',
+				identifier: 'run_embedded_script',
 				filter: null,
 				argument: [
 					typical_argument_string({
-						id: 'target_name',
+						identifier: 'target_name',
 						option: Object.keys(Executable),
 						checker: null,
 						automatic: null,
@@ -42,18 +42,18 @@ namespace Twinning.Script.Executor.Implement.Common.Utility {
 				},
 			}),
 			typical_method({
-				id: 'run_custom_script',
+				identifier: 'run_custom_script',
 				filter: ['file', /(\.js)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'target_file',
+						identifier: 'target_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'is_module',
+						identifier: 'is_module',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -61,7 +61,7 @@ namespace Twinning.Script.Executor.Implement.Common.Utility {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'target_file',
+						identifier: 'target_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,

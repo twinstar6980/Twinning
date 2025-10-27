@@ -108,12 +108,12 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			foreach (var item in args.AddedItems.Select(GF.As<PackagePartPanelItemController>)) {
+			foreach (var item in args.AddedItems.Select(CommonUtility.As<PackagePartPanelItemController>)) {
 				if (!this.Value.Contains(item.Name)) {
 					this.Value.Add(item.Name);
 				}
 			}
-			foreach (var item in args.RemovedItems.Select(GF.As<PackagePartPanelItemController>)) {
+			foreach (var item in args.RemovedItems.Select(CommonUtility.As<PackagePartPanelItemController>)) {
 				if (this.Value.Contains(item.Name)) {
 					this.Value.Remove(item.Name);
 				}

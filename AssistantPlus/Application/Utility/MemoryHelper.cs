@@ -17,7 +17,7 @@ namespace Twinning.AssistantPlus.Utility {
 			Size size
 		) {
 			var data = Win32.PInvoke.HeapAlloc(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_ZERO_MEMORY, size.CastPrimitive<IntegerUN>());
-			GF.AssertTest(data != null);
+			AssertTest(data != null);
 			return data;
 		}
 
@@ -25,7 +25,7 @@ namespace Twinning.AssistantPlus.Utility {
 			void* data
 		) {
 			var state = Win32.PInvoke.HeapFree(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_NONE, data);
-			GF.AssertTest(state);
+			AssertTest(state);
 			return;
 		}
 

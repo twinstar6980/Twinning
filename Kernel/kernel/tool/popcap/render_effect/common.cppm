@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::PopCap::RenderEffect {
 
 		// ----------------
 
-		using MagicIdentifier = IntegerU32;
+		using MagicMarker = IntegerU32;
 
-		inline static constexpr auto k_magic_identifier = MagicIdentifier{0x70636678_iu32};
+		inline static constexpr auto k_magic_marker = MagicMarker{0x70636678_iu32};
 
 		// ----------------
 

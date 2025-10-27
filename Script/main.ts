@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '147';
+	export const k_version = '148';
 
 	// ----------------
 
@@ -134,6 +134,7 @@ namespace Twinning.Script {
 			`support/popcap/animation/convert/flash/to`,
 			`support/popcap/animation/convert/flash/source_manager`,
 			`support/popcap/package/pack_automatic`,
+			`support/popcap/resource_stream_bundle/common`,
 			`support/popcap/resource_stream_bundle/unpack_lenient`,
 			`support/pvz2/text_table/convert`,
 			`support/pvz2/json_generic_getter`,
@@ -194,7 +195,7 @@ namespace Twinning.Script {
 			`executor/implement/kairosoft.game`,
 			`executable/script_console`,
 			`executable/compare_language_file`,
-			`executable/compute_wwise_short_id`,
+			`executable/compute_wwise_short_identifier`,
 			`executable/extract_rsb_from_pvz2_cn_apk_directory`,
 			`runner/runner`,
 			`setting`,

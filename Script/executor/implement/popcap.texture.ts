@@ -6,25 +6,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.Texture {
 	): void {
 		push_typical_method('popcap.texture', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.png)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'image_file',
+						identifier: 'image_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { image_file: string; }) => (argument.image_file.replace(/(\.png)?$/i, '.ptx')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'format',
+						identifier: 'format',
 						option: Support.PopCap.Texture.Encoding.FormatE,
 						checker: null,
 						automatic: null,
@@ -38,39 +38,39 @@ namespace Twinning.Script.Executor.Implement.PopCap.Texture {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.ptx)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'image_file',
+						identifier: 'image_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.ptx)?$/i, '.png')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'format',
+						identifier: 'format',
 						option: Support.PopCap.Texture.Encoding.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'image_width',
+						identifier: 'image_width',
 						option: null,
 						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'image_height',
+						identifier: 'image_height',
 						option: null,
 						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
 						automatic: null,

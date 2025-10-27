@@ -49,8 +49,8 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     Map<String, Object> argument,
     Boolean             expanded,
   ) async {
-    var groupConfiguration = this._methodConfiguration.firstWhere((value) => method.startsWith('${value.id}.'));
-    var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.id);
+    var groupConfiguration = this._methodConfiguration.firstWhere((value) => method.startsWith('${value.identifier}.'));
+    var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.identifier);
     this._command.add((groupConfiguration, itemConfiguration, Wrapper(batch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument), Wrapper(expanded)));
     await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     var actualCommand = <List<String>>[];
     for (var itemIndex in index) {
       var item = this._command[itemIndex];
-      var method = modding_worker.ForwardHelper.makeMethodMaybeBatch(item.$2.id, item.$3.value);
+      var method = modding_worker.ForwardHelper.makeMethodMaybeBatch(item.$2.identifier, item.$3.value);
       var argument = ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, item.$4);
       actualCommand.add(modding_worker.ForwardHelper.makeArgumentForCommand(null, method, argument));
     }
@@ -146,7 +146,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     }
     if (option.check('-command')) {
       for (var item in this._command) {
-        option.nextString(item.$2.id);
+        option.nextString(item.$2.identifier);
         option.nextBoolean(item.$3.value);
         option.nextString(item.$4.selfLet((it) => JsonHelper.serializeText(ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, it), indented: false)));
         option.nextBoolean(item.$5.value);

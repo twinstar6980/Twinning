@@ -9,7 +9,7 @@ class PlatformMethod {
 
   static final MethodChannel? _channel = () {
     if (SystemChecker.isAndroid || SystemChecker.isIphone) {
-      return MethodChannel('com.twinstar.twinning.assistant.CustomMethodChannel');
+      return MethodChannel('${ApplicationInformation.identifier}.CustomMethodChannel');
     }
     return null;
   }();

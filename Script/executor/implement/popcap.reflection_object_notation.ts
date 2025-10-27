@@ -6,38 +6,38 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 	): void {
 		push_typical_method('popcap.reflection_object_notation', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.json)?$/i, '.rton')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_native_string_encoding_use_utf8',
+						identifier: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -46,7 +46,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -54,7 +54,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
@@ -71,32 +71,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rton)?$/i, '.json')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_native_string_encoding_use_utf8',
+						identifier: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -104,7 +104,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -112,7 +112,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
@@ -126,25 +126,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				},
 			}),
 			typical_method({
-				id: 'encrypt',
+				identifier: 'encrypt',
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/(\.rton)?$/i, '.cipher.rton')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -153,7 +153,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -161,7 +161,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
@@ -175,25 +175,25 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				},
 			}),
 			typical_method({
-				id: 'decrypt',
+				identifier: 'decrypt',
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file.replace(/(\.rton)?$/i, '.plain.rton')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -202,7 +202,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'cipher_file',
+						identifier: 'cipher_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -210,7 +210,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'plain_file',
+						identifier: 'plain_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file + '.decrypt'),
@@ -224,45 +224,45 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				},
 			}),
 			typical_method({
-				id: 'encode_cipher',
+				identifier: 'encode_cipher',
 				filter: ['file', /(\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.json)?$/i, '.rton')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_native_string_encoding_use_utf8',
+						identifier: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -271,7 +271,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -279,7 +279,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode_cipher'),
@@ -296,38 +296,38 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				},
 			}),
 			typical_method({
-				id: 'decode_cipher',
+				identifier: 'decode_cipher',
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rton)?$/i, '.json')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_native_string_encoding_use_utf8',
+						identifier: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -336,7 +336,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -344,7 +344,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode_cipher'),
@@ -358,32 +358,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				},
 			}),
 			typical_method({
-				id: 'decode_lenient',
+				identifier: 'decode_lenient',
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rton)?$/i, '.json')),
 						condition: null,
 					}),
 					typical_argument_integer({
-						id: 'version_number',
+						identifier: 'version_number',
 						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_native_string_encoding_use_utf8',
+						identifier: 'version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -391,7 +391,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -399,7 +399,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode_lenient'),

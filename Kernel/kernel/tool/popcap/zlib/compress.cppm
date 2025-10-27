@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
 		using typename Common::IntegerOfPlatform;
 
@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 			Size const &                                 memory_level,
 			Data::Compression::Deflate::Strategy const & strategy
 		) -> Void {
-			ripe.write_constant(k_magic_identifier);
+			ripe.write_constant(k_magic_marker);
 			if constexpr (check_version(version, {true})) {
 				ripe.write_constant(0x00000000_iu32);
 			}
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ZLib {
 			Size const & memory_level
 		) -> Void {
 			ripe_size_bound = k_none_size;
-			ripe_size_bound += bs_static_size<MagicIdentifier>();
+			ripe_size_bound += bs_static_size<MagicMarker>();
 			if constexpr (check_version(version, {true})) {
 				ripe_size_bound += bs_static_size<IntegerU32>();
 			}

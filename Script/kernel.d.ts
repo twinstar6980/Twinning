@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 98
+ * @version 99
  */
 declare namespace Twinning.Kernel {
 
@@ -2202,8 +2202,8 @@ declare namespace Twinning.Kernel {
 
 						/** 声音库 */
 						type SoundBank = {
-							/** ID */
-							id: bigint;
+							/** 标识符 */
+							identifier: bigint;
 							/** BNK头扩展数据 */
 							header_expand: string;
 						};
@@ -4055,8 +4055,8 @@ declare namespace Twinning.Kernel {
 
 						/** 子群 */
 						type Subgroup = {
-							/** ID */
-							id: string;
+							/** 标识符 */
+							identifier: string;
 							/** 类别 */
 							category: SubgroupCategory;
 							/** 压缩 */
@@ -4067,8 +4067,8 @@ declare namespace Twinning.Kernel {
 
 						/** 群 */
 						type Group = {
-							/** ID */
-							id: string;
+							/** 标识符 */
+							identifier: string;
 							/** 是否为复合群 */
 							composite: boolean;
 							/** 子群 */

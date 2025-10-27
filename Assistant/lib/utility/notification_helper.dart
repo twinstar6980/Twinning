@@ -30,7 +30,7 @@ class NotificationHelper {
         ),
         windows: WindowsInitializationSettings(
           appName: ApplicationInformation.name,
-          appUserModelId: 'TwinStar.Twinning.Assistant.Notification',
+          appUserModelId: ApplicationInformation.identifier,
           guid: '3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A',
           iconPath: 'asset/logo.png',
         ),
@@ -55,7 +55,7 @@ class NotificationHelper {
       description,
       NotificationDetails(
         android: AndroidNotificationDetails(
-          'com.twinstar.twinning.assistant.notification_channel.main',
+          '${ApplicationInformation.identifier}.notification_channel.main',
           'Main',
         ),
         iOS: DarwinNotificationDetails(

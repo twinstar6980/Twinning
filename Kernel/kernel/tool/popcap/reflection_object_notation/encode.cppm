@@ -17,13 +17,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		using Common = Common<version>;
 
-		using typename Common::MagicIdentifier;
+		using typename Common::MagicMarker;
 
-		using Common::k_magic_identifier;
+		using Common::k_magic_marker;
 
-		using typename Common::DoneIdentifier;
+		using typename Common::DoneMarker;
 
-		using Common::k_done_identifier;
+		using Common::k_done_marker;
 
 		using typename Common::VersionNumber;
 
@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		using Common::k_reference_expression_format_of_null;
 
-		using Common::k_reference_expression_format_of_uid;
+		using Common::k_reference_expression_format_of_identifier;
 
 		using Common::k_reference_expression_format_of_alias;
 
@@ -123,28 +123,28 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 						case ReferenceTypeIdentifier::Value::null: {
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::uid: {
+						case ReferenceTypeIdentifier::Value::identifier: {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
-							auto uid = content.head(at_position);
-							auto uid_part = split_string<String>(uid, StaticArray<Character, 1_sz>{{'.'_c}});
-							assert_test(uid_part.size() == 3_sz);
-							assert_test(Range::all_of(uid_part[1_ix], &CharacterType::is_number_dec));
-							assert_test(Range::all_of(uid_part[2_ix], &CharacterType::is_number_dec));
-							assert_test(Range::all_of(uid_part[3_ix], &CharacterType::is_number_hex));
-							auto uid_first = IntegerU32{};
-							auto uid_middle = IntegerU32{};
-							auto uid_last = IntegerU32{};
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[1_ix].begin()).value, cast_pointer<char>(uid_part[1_ix].end()).value, uid_first.value, 10).ec == std::errc{});
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[2_ix].begin()).value, cast_pointer<char>(uid_part[2_ix].end()).value, uid_middle.value, 10).ec == std::errc{});
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(uid_part[3_ix].begin()).value, cast_pointer<char>(uid_part[3_ix].end()).value, uid_last.value, 16).ec == std::errc{});
+							auto identifier = content.head(at_position);
+							auto identifier_part = split_string<String>(identifier, StaticArray<Character, 1_sz>{{'.'_c}});
+							assert_test(identifier_part.size() == 3_sz);
+							assert_test(Range::all_of(identifier_part[1_ix], &CharacterType::is_number_decimal));
+							assert_test(Range::all_of(identifier_part[2_ix], &CharacterType::is_number_decimal));
+							assert_test(Range::all_of(identifier_part[3_ix], &CharacterType::is_number_hexadecimal));
+							auto identifier_first = IntegerU32{};
+							auto identifier_middle = IntegerU32{};
+							auto identifier_last = IntegerU32{};
+							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(identifier_part[1_ix].begin()).value, cast_pointer<char>(identifier_part[1_ix].end()).value, identifier_first.value, 10).ec == std::errc{});
+							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(identifier_part[2_ix].begin()).value, cast_pointer<char>(identifier_part[2_ix].end()).value, identifier_middle.value, 10).ec == std::errc{});
+							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(identifier_part[3_ix].begin()).value, cast_pointer<char>(identifier_part[3_ix].end()).value, identifier_last.value, 16).ec == std::errc{});
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(sheet.size()));
 							data.write(sheet);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, uid_middle);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, uid_first);
-							data.write(uid_last);
+							ProtocolBufferVariableLengthInteger::encode_u32(data, identifier_middle);
+							ProtocolBufferVariableLengthInteger::encode_u32(data, identifier_first);
+							data.write(identifier_last);
 							break;
 						}
 						case ReferenceTypeIdentifier::Value::alias: {
@@ -245,7 +245,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 			Boolean const &        enable_string_index,
 			Boolean const &        enable_reference
 		) -> Void {
-			data.write_constant(k_magic_identifier);
+			data.write_constant(k_magic_marker);
 			auto version_data = OutputByteStreamView{data.forward_view(bs_static_size<VersionNumber>())};
 			data.backward(bs_static_size<TypeIdentifier>());
 			auto native_string_index = Optional<std::unordered_map<ConstantStringView, Size>>{};
@@ -253,7 +253,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				native_string_index.set();
 			}
 			process_value(data, definition.get_object(), native_string_index, enable_reference);
-			data.write_constant(k_done_identifier);
+			data.write_constant(k_done_marker);
 			version_data.write_constant(cbox<VersionNumber>(version.number));
 			return;
 		}

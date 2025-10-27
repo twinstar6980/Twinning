@@ -377,7 +377,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 		public async Task Load (
 			String animationFile
 		) {
-			GF.AssertTest(!this.Loaded && !this.Activated);
+			AssertTest(!this.Loaded && !this.Activated);
 			var animation = await GameAnimationHelper.LoadAnimation(animationFile);
 			var texture = await GameAnimationHelper.LoadTexture(StorageHelper.Parent(animationFile).AsNotNull(), animation);
 			this.AnimationFile = animationFile;
@@ -420,7 +420,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public async Task Unload (
 		) {
-			GF.AssertTest(this.Loaded && !this.Activated);
+			AssertTest(this.Loaded && !this.Activated);
 			this.View.uImageList.DeselectRange(new (0, this.Animation.Image.Count.CastPrimitive<SizeU>()));
 			this.View.uSpriteList.DeselectRange(new (0, this.Animation.Sprite.Count.CastPrimitive<SizeU>()));
 			if (this.Animation.MainSprite != null) {
@@ -466,7 +466,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			Boolean?                        progressState,
 			TimeSpan?                       initialTime
 		) {
-			GF.AssertTest(this.Loaded && !this.Activated);
+			AssertTest(this.Loaded && !this.Activated);
 			var activeSprite = default(GameAnimationModel.Sprite);
 			if (!target.Item1) {
 				var originalTarget = GameAnimationHelper.SelectImage(this.Animation, target.Item2.CastPrimitive<Size>());
@@ -507,7 +507,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			else {
 				var originalTarget = GameAnimationHelper.SelectSprite(this.Animation, target.Item2);
 				activeSprite = originalTarget;
-				GF.AssertTest(activeSprite.Frame.Count != 0);
+				AssertTest(activeSprite.Frame.Count != 0);
 			}
 			this.ActiveTarget = target;
 			this.ActiveSprite = activeSprite;
@@ -516,7 +516,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			this.ActiveFrameSpeed = frameSpeed ?? this.ActiveSprite.FrameRate ?? this.Animation.FrameRate.CastPrimitive<Floater>();
 			this.ActiveProgressState = progressState ?? this.AutomaticPlay;
 			this.View.uSprite.Load(this.Animation, this.Texture, this.ImageFilter, this.SpriteFilter, this.ActiveSprite);
-			GF.AssertTest(this.View.uSprite.Loaded);
+			AssertTest(this.View.uSprite.Loaded);
 			var sliderAnimation = new ObjectAnimationUsingKeyFrames();
 			for (var frameIndex = 0; frameIndex < this.ActiveSprite.Frame.Count; frameIndex++) {
 				sliderAnimation.KeyFrames.Add(
@@ -595,7 +595,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public async Task Deactivate (
 		) {
-			GF.AssertTest(this.Loaded && this.Activated);
+			AssertTest(this.Loaded && this.Activated);
 			this.ActiveTarget = null;
 			this.ActiveSprite = null;
 			this.ActiveFrameLabel = null;
@@ -650,9 +650,9 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			List<Boolean?>? imageFilter,
 			List<Boolean?>? spriteFilter
 		) {
-			GF.AssertTest(this.Loaded);
-			GF.AssertTest(imageFilter == null || imageFilter.Count == this.Animation.Image.Count);
-			GF.AssertTest(spriteFilter == null || spriteFilter.Count == this.Animation.Sprite.Count);
+			AssertTest(this.Loaded);
+			AssertTest(imageFilter == null || imageFilter.Count == this.Animation.Image.Count);
+			AssertTest(spriteFilter == null || spriteFilter.Count == this.Animation.Sprite.Count);
 			if (this.SuppressApplyFilterChanged) {
 				return;
 			}
@@ -711,7 +711,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public async Task ChangeElementFilterByRule (
 		) {
-			GF.AssertTest(this.Loaded);
+			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
 				this.Animation.Image.Select((value) => (this.ImageFilterRule.Length != 0 && Regex.IsMatch(GameAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null)).ToList(),
 				this.Animation.Sprite.Select((value) => (value.Name != null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null)).ToList()
@@ -722,7 +722,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 		public async Task ChangeFrameRange (
 			GameAnimationHelper.FrameRange frameRange
 		) {
-			GF.AssertTest(this.Loaded && this.Activated);
+			AssertTest(this.Loaded && this.Activated);
 			this.ActiveFrameRange = frameRange;
 			this.View.uSprite.FrameRange = frameRange;
 			this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(frameRange.Begin);
@@ -755,7 +755,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				await this.Unload();
 			}
 			await this.Load(animationFile);
-			GF.AssertTest(this.Loaded);
+			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
 				imageFilter == null ? null : this.Animation.Image.Select((value, index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
 				spriteFilter == null ? null : this.Animation.Sprite.Select((value, index) => (Boolean?)!spriteFilter.Contains(index)).ToList()
@@ -982,7 +982,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 					break;
 				}
 				case "Clear": {
-					GF.AssertTest(this.Loaded);
+					AssertTest(this.Loaded);
 					if (this.Activated) {
 						await this.Deactivate();
 					}
@@ -1018,10 +1018,10 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (this.SuppressFilterListSelectionChanged) {
 				return;
 			}
-			foreach (var item in args.AddedItems.Select(GF.As<MainPageImageItemController>)) {
+			foreach (var item in args.AddedItems.Select(CommonUtility.As<MainPageImageItemController>)) {
 				this.ImageFilter[item.Index] = true;
 			}
-			foreach (var item in args.RemovedItems.Select(GF.As<MainPageImageItemController>)) {
+			foreach (var item in args.RemovedItems.Select(CommonUtility.As<MainPageImageItemController>)) {
 				this.ImageFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
@@ -1065,10 +1065,10 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (this.SuppressFilterListSelectionChanged) {
 				return;
 			}
-			foreach (var item in args.AddedItems.Select(GF.As<MainPageSpriteItemController>)) {
+			foreach (var item in args.AddedItems.Select(CommonUtility.As<MainPageSpriteItemController>)) {
 				this.SpriteFilter[item.Index] = true;
 			}
-			foreach (var item in args.RemovedItems.Select(GF.As<MainPageSpriteItemController>)) {
+			foreach (var item in args.RemovedItems.Select(CommonUtility.As<MainPageSpriteItemController>)) {
 				this.SpriteFilter[item.Index] = false;
 			}
 			this.SuppressApplyFilterChanged = true;
@@ -1459,7 +1459,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				return;
 			}
 			if (Floater.IsFinite(args.NewValue) && args.NewValue != 0.0) {
-				GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
+				AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 				if (this.uActiveProgress__Changeable) {
 					this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(args.NewValue - 1.0);
 				}
@@ -1481,7 +1481,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			this.uActiveProgress__Changeable = true;
 			this.uActiveProgress__ChangingWhenPlaying = this.ActiveProgressState.AsNotNull();
 			if (this.uActiveProgress__ChangingWhenPlaying) {
@@ -1502,7 +1502,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			if (this.uActiveProgress__ChangingWhenPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Playing;
 				this.ActiveProgressState = true;
@@ -1536,7 +1536,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newState = this.View.uSprite.State != SpriteControl.StateType.Playing;
 			this.View.uSprite.State = !newState ? SpriteControl.StateType.Paused : SpriteControl.StateType.Playing;
 			this.ActiveProgressState = newState;
@@ -1576,7 +1576,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newTime = this.View.uSprite.CurrentTime - TimeSpan.FromSeconds(1.0);
 			var beginTime = TimeSpan.FromSeconds(this.ActiveFrameRange.Begin);
 			if (newTime < beginTime) {
@@ -1605,7 +1605,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			GF.AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
+			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			var newTime = this.View.uSprite.CurrentTime + TimeSpan.FromSeconds(1.0);
 			var endTime = TimeSpan.FromSeconds(this.ActiveFrameRange.End);
 			if (newTime > endTime) {
@@ -1900,7 +1900,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public String uTitle_ToolTip {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				return GameAnimationHelper.ParseImageFileName(model.Name);
 			}
@@ -1908,7 +1908,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public String uTitle_Text {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				return GameAnimationHelper.ParseImageFileName(model.Name);
 			}
@@ -1916,7 +1916,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public String uDescription_Text {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				var texture = this.Host.Texture.GetValueOrDefault(model.Name);
 				return $"{model.Size?.Item1 ?? texture?.PixelWidth ?? 0} x {model.Size?.Item2 ?? texture?.PixelHeight ?? 0}";
@@ -1925,7 +1925,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public UIElement uPreview_Content {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Image[this.Index];
 				var texture = this.Host.Texture.GetValueOrDefault(model.Name);
 				if (texture != null) {
@@ -1949,7 +1949,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public Boolean uToggle_IsChecked {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				return this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == false && this.Host.ActiveTarget.Item2 == this.Index;
 			}
 		}
@@ -1959,7 +1959,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			GF.AssertTest(this.Host.Loaded);
+			AssertTest(this.Host.Loaded);
 			var needActivate = !(this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == false && this.Host.ActiveTarget.Item2 == this.Index);
 			var newFrameSpeed = !this.Host.KeepSpeed ? null : this.Host.ActiveFrameSpeed;
 			if (this.Host.Activated) {
@@ -1991,7 +1991,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public String uTitle_ToolTip {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
 				return model.Name ?? "";
 			}
@@ -1999,7 +1999,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public String uTitle_Text {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
 				return model.Name ?? "";
 			}
@@ -2007,7 +2007,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public String uDescription_Text {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
 				return $"{model.FrameRate ?? 0.0:F0} - {model.Frame.Count}";
 			}
@@ -2015,7 +2015,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public UIElement uPreview_Content {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.Sprite[this.Index];
 				var texture = default(ImageSource?);
 				if (model.Frame.Count == 1 && model.Frame[0].Append.Count == 1 && model.Frame[0].Change.Count == 1 && !model.Frame[0].Append[0].Sprite) {
@@ -2042,7 +2042,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public Boolean uToggle_IsChecked {
 			get {
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				return this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == true && this.Host.ActiveTarget.Item2 == this.Index;
 			}
 		}
@@ -2052,7 +2052,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			GF.AssertTest(this.Host.Loaded);
+			AssertTest(this.Host.Loaded);
 			var needActivate = !(this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == true && this.Host.ActiveTarget.Item2 == this.Index);
 			var newFrameSpeed = !this.Host.KeepSpeed ? null : this.Host.ActiveFrameSpeed;
 			if (this.Host.Activated) {
@@ -2087,7 +2087,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				if (this.Index == null) {
 					return "";
 				}
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.MainSprite!;
 				return model.Name ?? "";
 			}
@@ -2098,7 +2098,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				if (this.Index == null) {
 					return "";
 				}
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.MainSprite!;
 				return model.Name ?? "";
 			}
@@ -2109,7 +2109,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				if (this.Index == null) {
 					return "";
 				}
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				var model = this.Host.Animation.MainSprite!;
 				return $"{model.FrameRate ?? 0.0:F0} - {model.Frame.Count}";
 			}
@@ -2133,7 +2133,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				if (this.Index == null) {
 					return false;
 				}
-				GF.AssertTest(this.Host.Loaded);
+				AssertTest(this.Host.Loaded);
 				return this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == true && this.Host.ActiveTarget.Item2 == this.Index;
 			}
 		}
@@ -2143,7 +2143,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			GF.AssertTest(this.Host.Loaded);
+			AssertTest(this.Host.Loaded);
 			var needActivate = !(this.Host.ActiveTarget != null && this.Host.ActiveTarget.Item1 == true && this.Host.ActiveTarget.Item2 == this.Index);
 			var newFrameSpeed = !this.Host.KeepSpeed ? null : this.Host.ActiveFrameSpeed;
 			if (this.Host.Activated) {

@@ -6,18 +6,18 @@ namespace Twinning.Script.Executor.Implement.Kairosoft.Game {
 	): void {
 		push_typical_method('kairosoft.game', [
 			typical_method({
-				id: 'encrypt_record',
+				identifier: 'encrypt_record',
 				filter: ['directory', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'target_directory',
+						identifier: 'target_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'key',
+						identifier: 'key',
 						option: null,
 						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los('executor.implement:*.illegal_key')),
 						automatic: null,
@@ -41,24 +41,24 @@ namespace Twinning.Script.Executor.Implement.Kairosoft.Game {
 				},
 			}),
 			typical_method({
-				id: 'modify_program',
+				identifier: 'modify_program',
 				filter: ['directory', /()$/i],
 				argument: [
 					typical_argument_path({
-						id: 'target_directory',
+						identifier: 'target_directory',
 						rule: ['directory', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'disable_record_encryption',
+						identifier: 'disable_record_encryption',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'enable_debug_mode',
+						identifier: 'enable_debug_mode',
 						checker: null,
 						automatic: null,
 						condition: null,

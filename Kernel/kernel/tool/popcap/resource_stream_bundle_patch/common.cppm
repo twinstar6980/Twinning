@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 	template <auto version> requires (check_version(version, {}))
 	struct Common {
 
-		using MagicIdentifier = IntegerU32;
+		using MagicMarker = IntegerU32;
 
-		inline static constexpr auto k_magic_identifier = MagicIdentifier{0x52534250_iu32};
+		inline static constexpr auto k_magic_marker = MagicMarker{0x52534250_iu32};
 
 		// ----------------
 
@@ -60,15 +60,15 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			InputByteStreamView &                                           data,
 			ResourceStreamBundle::Structure::Information<package_version> & information_structure
 		) -> Void {
-			data.read_constant(ResourceStreamBundle::Structure::k_magic_identifier);
+			data.read_constant(ResourceStreamBundle::Structure::k_magic_marker);
 			data.read_constant(cbox<ResourceStreamBundle::Structure::VersionNumber>(package_version.number));
 			data.read(information_structure.header);
 			assert_test(cbox<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::GroupInformation<package_version>>());
 			assert_test(cbox<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::SubgroupInformation<package_version>>());
 			assert_test(cbox<Size>(information_structure.header.pool_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::PoolInformation<package_version>>());
 			assert_test(cbox<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<ResourceStreamBundle::Structure::TextureResourceInformation<package_version>>());
-			CompiledMapData::decode(information_structure.group_id, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.group_id_section_offset), cbox<Size>(information_structure.header.group_id_section_size))}));
-			CompiledMapData::decode(information_structure.subgroup_id, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.subgroup_id_section_offset), cbox<Size>(information_structure.header.subgroup_id_section_size))}));
+			CompiledMapData::decode(information_structure.group_identifier, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.group_identifier_section_offset), cbox<Size>(information_structure.header.group_identifier_section_size))}));
+			CompiledMapData::decode(information_structure.subgroup_identifier, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.subgroup_identifier_section_offset), cbox<Size>(information_structure.header.subgroup_identifier_section_size))}));
 			CompiledMapData::decode(information_structure.resource_path, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_path_section_offset), cbox<Size>(information_structure.header.resource_path_section_size))}));
 			data.set_position(cbox<Size>(information_structure.header.group_information_section_offset));
 			data.read(information_structure.group_information, cbox<Size>(information_structure.header.group_information_section_block_count));
@@ -78,8 +78,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			data.read(information_structure.pool_information, cbox<Size>(information_structure.header.pool_information_section_block_count));
 			data.set_position(cbox<Size>(information_structure.header.texture_resource_information_section_offset));
 			data.read(information_structure.texture_resource_information, cbox<Size>(information_structure.header.texture_resource_information_section_block_count));
-			assert_test(information_structure.group_id.size() == cbox<Size>(information_structure.header.group_information_section_block_count));
-			assert_test(information_structure.subgroup_id.size() == cbox<Size>(information_structure.header.subgroup_information_section_block_count));
+			assert_test(information_structure.group_identifier.size() == cbox<Size>(information_structure.header.group_information_section_block_count));
+			assert_test(information_structure.subgroup_identifier.size() == cbox<Size>(information_structure.header.subgroup_information_section_block_count));
 			return;
 		}
 
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			InputByteStreamView &  raw,
 			OutputByteStreamView & ripe
 		) -> ResourceStreamGroup::Structure::Information<packet_version> {
-			raw.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
+			raw.read_constant(ResourceStreamGroup::Structure::k_magic_marker);
 			raw.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 			auto information_structure = ResourceStreamGroup::Structure::Information<packet_version>{};
 			{
@@ -138,7 +138,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 				}
 				information_structure.header.texture_resource_data_section_size = cbox<IntegerU32>(ripe.position()) - information_structure.header.texture_resource_data_section_offset;
 			}
-			OutputByteStreamView{ripe.sub_view(bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>(), bs_size(information_structure.header))}.write(information_structure.header);
+			OutputByteStreamView{ripe.sub_view(bs_static_size<ResourceStreamGroup::Structure::MagicMarker>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>(), bs_size(information_structure.header))}.write(information_structure.header);
 			return information_structure;
 		}
 
@@ -146,7 +146,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw
 		) -> ResourceStreamGroup::Structure::Information<packet_version> {
-			ripe.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
+			ripe.read_constant(ResourceStreamGroup::Structure::k_magic_marker);
 			ripe.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 			auto information_structure = ResourceStreamGroup::Structure::Information<packet_version>{};
 			{
@@ -194,14 +194,14 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		inline static auto indexing_subgroup_information_by_id (
+		inline static auto indexing_subgroup_information_by_identifier (
 			List<ResourceStreamBundle::Structure::SubgroupInformation<package_version>> const & list
 		) -> Map<String, Size> {
 			auto index_map = Map<String, Size>{};
 			index_map.allocate(list.size());
 			for (auto & index : SizeRange{list.size()}) {
 				auto & item = list[index];
-				index_map.append(String{item.id.begin(), null_terminated_string_size_of(item.id.begin())}, index);
+				index_map.append(String{item.identifier.begin(), null_terminated_string_size_of(item.identifier.begin())}, index);
 			}
 			return index_map;
 		}

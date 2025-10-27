@@ -37,7 +37,7 @@
 			<string>Twinning Assistant</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>twinstar.twinning.assistant</string>
+				<string>com.twinstar.twinning.assistant</string>
 			</array>
 		</dict>
 	</array>

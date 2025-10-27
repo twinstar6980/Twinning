@@ -11,9 +11,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 	template <auto version> requires (check_version(version, {}))
 	struct Definition {
 
-		#pragma region id
+		#pragma region identifier
 
-		using ID = Integer;
+		using Identifier = Integer;
 
 		#pragma endregion
 
@@ -139,15 +139,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct CoordinateIDPoint_;
+		struct CoordinateIdentifierPoint_;
 
-		using CoordinateIDPoint = CoordinateIDPoint_<>;
+		using CoordinateIdentifierPoint = CoordinateIdentifierPoint_<>;
 
 		template <typename _> requires (check_version(version, {72}))
 		M_record_of_map(
-			M_wrap(CoordinateIDPoint_<_>),
+			M_wrap(CoordinateIdentifierPoint_<_>),
 			M_wrap(
-				(Position2<Floater, ID>) position,
+				(Position2<Floater, Identifier>) position,
 				(Curve) curve,
 			),
 		);
@@ -214,7 +214,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_list(
 			M_wrap(Parameter_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 			),
 		);
 
@@ -222,7 +222,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_list(
 			M_wrap(Parameter_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(ParameterCategory) category,
 			),
 		);
@@ -242,7 +242,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Integer) type,
 				(Parameter) parameter,
-				(ID) u2,
+				(Identifier) u2,
 				(CoordinateMode) mode,
 				(List<CoordinatePoint>) point,
 			),
@@ -255,7 +255,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(Integer) type,
 				(Parameter) parameter,
 				(PropertyCategory) u1,
-				(ID) u2,
+				(Identifier) u2,
 				(CoordinateMode) mode,
 				(List<CoordinatePoint>) point,
 			),
@@ -315,8 +315,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(StateSettingApplyItem_<_>),
 			M_wrap(
-				(ID) target,
-				(ID) setting,
+				(Identifier) target,
+				(Identifier) setting,
 			),
 		);
 
@@ -331,7 +331,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(StateSettingItem_<_>),
 			M_wrap(
-				(ID) group,
+				(Identifier) group,
 				(TimePoint) change_occur_at,
 				(List<StateSettingApplyItem>) apply,
 			),
@@ -540,7 +540,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioOutputBusSetting_<_>),
 			M_wrap(
-				(ID) bus,
+				(Identifier) bus,
 				(RegularValue<Floater>) volume,
 				(RegularValue<Floater>) low_pass_filter,
 			),
@@ -550,7 +550,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioOutputBusSetting_<_>),
 			M_wrap(
-				(ID) bus,
+				(Identifier) bus,
 				(RegularValue<Floater>) volume,
 				(RegularValue<Floater>) low_pass_filter,
 				(RegularValue<Floater>) high_pass_filter,
@@ -597,7 +597,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
 			M_wrap(
-				(ID) bus,
+				(Identifier) bus,
 				(RegularValue<Floater>) volume,
 			),
 		);
@@ -606,7 +606,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
 			M_wrap(
-				(ID) bus,
+				(Identifier) bus,
 				(RegularValue<Floater>) volume,
 				(RegularValue<Floater>) low_pass_filter,
 				(RegularValue<Floater>) high_pass_filter,
@@ -643,7 +643,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioEarlyReflectionAuxiliarySendSetting_<_>),
 			M_wrap(
-				(ID) bus,
+				(Identifier) bus,
 				(RegularValue<Floater>) volume,
 			),
 		);
@@ -688,7 +688,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(AudioEffectSettingItem_<_>),
 			M_wrap(
 				(Integer) index,
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) use_share_set,
 				(Boolean) u1,
 			),
@@ -699,7 +699,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(AudioEffectSettingItem_<_>),
 			M_wrap(
 				(Integer) index,
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) use_share_set,
 				(Boolean) bypass,
 			),
@@ -744,7 +744,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(AudioMetadataSettingItem_<_>),
 			M_wrap(
 				(Integer) index,
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) use_share_set,
 			),
 		);
@@ -948,7 +948,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioPositioningSettingListenerRoutingAttenuation_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 			),
 		);
 
@@ -957,7 +957,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(AudioPositioningSettingListenerRoutingAttenuation_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(ID) id,
+				(Identifier) identifier,
 			),
 		);
 
@@ -1164,7 +1164,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioMixerSetting_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 			),
 		);
 
@@ -1197,7 +1197,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusAutomaticDuckingSettingBus_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Floater) volume,
 				(Integer) fade_out,
 				(Integer) fade_in,
@@ -1289,9 +1289,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemSource_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(TimePoint) exit_source_at,
-				(ID) exit_source_at_custom_cue_match,
+				(Identifier) exit_source_at_custom_cue_match,
 				(Boolean) play_post_exit,
 				(MusicTransitionSettingItemFade) fade_out,
 			),
@@ -1308,11 +1308,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemDestination_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(MusicTransitionSettingSynchronizeMode) synchronize_to,
 				(Boolean) play_pre_entry,
 				(Boolean) custom_cue_filter_match_source_cue_name,
-				(ID) custom_cue_filter_match_target,
+				(Identifier) custom_cue_filter_match_target,
 				(MusicTransitionSettingItemFade) fade_in,
 			),
 		);
@@ -1321,12 +1321,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItemDestination_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(MusicTransitionSettingJumpMode) jump_to,
 				(MusicTransitionSettingSynchronizeMode) synchronize_to,
 				(Boolean) play_pre_entry,
 				(Boolean) custom_cue_filter_match_source_cue_name,
-				(ID) custom_cue_filter_match_target,
+				(Identifier) custom_cue_filter_match_target,
 				(MusicTransitionSettingItemFade) fade_in,
 			),
 		);
@@ -1343,7 +1343,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(MusicTransitionSettingItemSegment_<_>),
 			M_wrap(
 				(Boolean) enable,
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) play_pre_entry,
 				(MusicTransitionSettingItemFade) fade_in,
 				(Boolean) play_post_exit,
@@ -1362,7 +1362,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTransitionSettingItem_<_>),
 			M_wrap(
-				(ID) u1,
+				(Identifier) u1,
 				(MusicTransitionSettingItemSource) source,
 				(MusicTransitionSettingItemDestination) destination,
 				(MusicTransitionSettingItemSegment) segment,
@@ -1398,7 +1398,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(MusicTrackTransitionSettingItemSource_<_>),
 			M_wrap(
 				(TimePoint) exit_source_at,
-				(ID) exit_source_at_custom_cue_match,
+				(Identifier) exit_source_at_custom_cue_match,
 				(MusicTransitionSettingItemFade) fade_out,
 			),
 		);
@@ -1429,7 +1429,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrackTransitionSetting_<_>),
 			M_wrap(
-				(ID) switcher,
+				(Identifier) switcher,
 				(MusicTrackTransitionSettingItemSource) source,
 				(MusicTrackTransitionSettingItemDestination) destination,
 			),
@@ -1448,10 +1448,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicStingerSettingItem_<_>),
 			M_wrap(
-				(ID) trigger,
-				(ID) segment_to_play,
+				(Identifier) trigger,
+				(Identifier) segment_to_play,
 				(TimePoint) play_at,
-				(ID) cue_name,
+				(Identifier) cue_name,
 				(Integer) do_not_play_this_stinger_again_for,
 				(Boolean) allow_playing_stinger_in_next_segment,
 			),
@@ -1501,7 +1501,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(BusHDRSettingWindowTopOutputGameParameter_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Floater) minimum,
 				(Floater) maximum,
 			),
@@ -1692,7 +1692,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicMIDISettingTarget_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 			),
 		);
 
@@ -1943,8 +1943,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(AudioSwitcherSetting_<_>),
 			M_wrap(
 				(Boolean) is_state,
-				(ID) group,
-				(ID) default_item,
+				(Identifier) group,
+				(Identifier) default_item,
 			),
 		);
 
@@ -1977,7 +1977,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioAssociationSettingArgument_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 			),
 		);
 
@@ -1985,7 +1985,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioAssociationSettingArgument_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) is_state,
 			),
 		);
@@ -2001,8 +2001,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioAssociationSettingPath_<_>),
 			M_wrap(
-				(ID) u1,
-				(ID) object,
+				(Identifier) u1,
+				(Identifier) object,
 				(Integer) weight,
 				(Integer) probability,
 			),
@@ -2066,10 +2066,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioSourceSetting_<_>),
 			M_wrap(
-				(ID) plug_in,
+				(Identifier) plug_in,
 				(AudioSourceType) type,
-				(ID) source,
-				(ID) resource,
+				(Identifier) source,
+				(Identifier) resource,
 				(Integer) resource_offset,
 				(Integer) resource_size,
 				(Boolean) is_voice,
@@ -2080,10 +2080,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioSourceSetting_<_>),
 			M_wrap(
-				(ID) plug_in,
+				(Identifier) plug_in,
 				(AudioSourceType) type,
-				(ID) source,
-				(ID) resource,
+				(Identifier) source,
+				(Identifier) resource,
 				(Integer) resource_offset,
 				(Integer) resource_size,
 				(Boolean) is_voice,
@@ -2095,9 +2095,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioSourceSetting_<_>),
 			M_wrap(
-				(ID) plug_in,
+				(Identifier) plug_in,
 				(AudioSourceType) type,
-				(ID) resource,
+				(Identifier) resource,
 				(Integer) resource_size,
 				(Boolean) is_voice,
 				(Boolean) non_cachable_stream,
@@ -2297,8 +2297,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(StateGroupCustomTransition_<_>),
 			M_wrap(
-				(ID) from,
-				(ID) to,
+				(Identifier) from,
+				(Identifier) to,
 				(Integer) time,
 			),
 		);
@@ -2314,7 +2314,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(StateGroup_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Integer) default_transition,
 				(List<StateGroupCustomTransition>) custom_transition,
 			),
@@ -2333,9 +2333,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SwitchGroup_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Parameter) parameter,
-				(List<CoordinateIDPoint>) point,
+				(List<CoordinateIdentifierPoint>) point,
 			),
 		);
 
@@ -2406,7 +2406,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(GameParameter_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Floater) range_default,
 			),
 		);
@@ -2415,7 +2415,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(GameParameter_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Floater) range_default,
 				(GameParameterInterpolationMode) interpolation_mode,
 				(Floater) interpolation_attack,
@@ -2437,7 +2437,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(GameSynchronizationU1_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Floater) u1,
 				(Floater) u2,
 				(Floater) u3,
@@ -2476,7 +2476,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(StatefulPropertySetting_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(List<StatefulPropertySettingItem>) value,
 			),
 		);
@@ -2533,7 +2533,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					(RandomizableValue<Integer>) fade_time,
 					(Curve) fade_curve,
 					(Floater) probability,
-					(ID) sound_bank,
+					(Identifier) sound_bank,
 				),
 			);
 
@@ -2856,8 +2856,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				M_wrap(ActivateState_<_>),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
-					(ID) group,
-					(ID) item,
+					(Identifier) group,
+					(Identifier) item,
 				),
 			);
 
@@ -2873,8 +2873,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				M_wrap(ActivateSwitch_<_>),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
-					(ID) group,
-					(ID) item,
+					(Identifier) group,
+					(Identifier) item,
 				),
 			);
 
@@ -3165,7 +3165,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(EventActionException_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) u1,
 			),
 		);
@@ -3181,8 +3181,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(EventAction_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) target,
+				(Identifier) identifier,
+				(Identifier) target,
 				(EventActionMode) mode,
 				(List<EventActionException>) exception,
 				(EventActionScope) scope,
@@ -3204,8 +3204,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Event_<_>),
 			M_wrap(
-				(ID) id,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(List<Identifier>) child,
 			),
 		);
 
@@ -3222,7 +3222,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(DialogueEvent_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(AudioAssociationSetting) association,
 			),
 		);
@@ -3231,7 +3231,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(DialogueEvent_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Integer) probability,
 				(AudioAssociationSetting) association,
 			),
@@ -3368,7 +3368,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Attenuation_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(AttenuationApplySetting) apply,
 				(List<AttenuationCurve>) curve,
 				(AttenuationCone) cone,
@@ -3380,7 +3380,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Attenuation_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(AttenuationApplySetting) apply,
 				(List<AttenuationCurve>) curve,
 				(Boolean) height_spread,
@@ -3468,7 +3468,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(LowFrequencyOscillatorModulator_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(RandomizableValue<Floater>) depth,
 				(RandomizableValue<Floater>) frequency,
 				(ModulatorWaveform) waveform,
@@ -3492,7 +3492,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(EnvelopeModulator_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(RandomizableValue<Floater>) attack_time,
 				(RandomizableValue<Floater>) attack_curve,
 				(RandomizableValue<Floater>) decay_time,
@@ -3517,7 +3517,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(TimeModulator_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(RandomizableValue<Floater>) initial_delay,
 				(RegularValue<Floater>) duration,
 				(RandomizableValue<Integer>) loop,
@@ -3568,8 +3568,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Effect_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
@@ -3579,8 +3579,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Effect_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(List<EffectU1>) u1,
@@ -3591,8 +3591,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Effect_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
@@ -3611,8 +3611,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Source_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
@@ -3622,8 +3622,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Source_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(List<EffectU1>) u1,
@@ -3634,8 +3634,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Source_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
@@ -3654,8 +3654,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioDevice_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
@@ -3667,8 +3667,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioDevice_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) plug_in,
+				(Identifier) identifier,
+				(Identifier) plug_in,
 				(ByteList) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
@@ -3720,8 +3720,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(BusVoiceSetting) voice,
 				(BusBusSetting) bus,
 				(AudioEffectSetting) effect,
@@ -3737,8 +3737,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioBusConfiguration) bus_configuration,
 				(BusVoiceSetting) voice,
 				(BusBusSetting) bus,
@@ -3758,9 +3758,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3781,9 +3781,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3805,10 +3805,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) audio_device,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) audio_device,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3831,10 +3831,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) audio_device,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) audio_device,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3865,8 +3865,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(BusVoiceSetting) voice,
 				(BusBusSetting) bus,
 				(AudioEffectSetting) effect,
@@ -3882,8 +3882,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioBusConfiguration) bus_configuration,
 				(BusVoiceSetting) voice,
 				(BusBusSetting) bus,
@@ -3903,9 +3903,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3926,9 +3926,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3950,10 +3950,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) audio_device,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) audio_device,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -3976,10 +3976,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(AuxiliaryAudioBus_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(ID) audio_device,
-				(ID) mixer,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(Identifier) audio_device,
+				(Identifier) mixer,
 				(AudioBusConfiguration) bus_configuration,
 				(AudioBusMuteForBackgroundMusic) mute_for_background_music,
 				(BusVoiceSetting) voice,
@@ -4036,8 +4036,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4065,8 +4065,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4098,8 +4098,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4136,8 +4136,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4173,8 +4173,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4211,8 +4211,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4251,8 +4251,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(Sound_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(AudioSourceSetting) source,
 				(SoundPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
@@ -4312,7 +4312,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainerPlaylistItem_<_>),
 			M_wrap(
-				(ID) item,
+				(Identifier) item,
 				(Integer) weight,
 			),
 		);
@@ -4362,9 +4362,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioOutputBusSetting) output_bus,
@@ -4391,9 +4391,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4424,9 +4424,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4462,9 +4462,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4499,9 +4499,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4537,9 +4537,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4577,9 +4577,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4622,7 +4622,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainerObjectAttributeItem_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(Boolean) play_first_only,
 				(Boolean) continue_to_play_across_switch,
 				(Integer) u1,
@@ -4642,8 +4642,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainerObjectAssignItem_<_>),
 			M_wrap(
-				(ID) item,
-				(List<ID>) object,
+				(Identifier) item,
+				(List<Identifier>) object,
 			),
 		);
 
@@ -4688,9 +4688,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioOutputBusSetting) output_bus,
@@ -4717,9 +4717,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4750,9 +4750,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4788,9 +4788,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4825,9 +4825,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4863,9 +4863,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4903,9 +4903,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundSwitchContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -4948,7 +4948,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainerTrackChildItem_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(List<CoordinatePoint>) point,
 			),
 		);
@@ -4964,7 +4964,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainerTrackItem_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(Parameter) cross_fade,
 				(List<SoundBlendContainerTrackChildItem>) child,
@@ -5016,9 +5016,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioOutputBusSetting) output_bus,
@@ -5045,9 +5045,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5078,9 +5078,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5116,9 +5116,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5153,9 +5153,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5191,9 +5191,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5231,9 +5231,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBlendContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(SoundBlendContainerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5290,9 +5290,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioOutputBusSetting) output_bus,
@@ -5319,9 +5319,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5352,9 +5352,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5390,9 +5390,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5427,9 +5427,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5465,9 +5465,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5505,9 +5505,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(ActorMixer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(ActorMixerPlaybackSetting) playback_setting,
 				(AudioVoice) voice,
 				(AudioVoiceVolumeGainSetting) voice_volume_gain,
@@ -5628,7 +5628,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(MusicTrackClipItem_<_>),
 			M_wrap(
 				(Integer) u1,
-				(ID) source,
+				(Identifier) source,
 				(Floater) offset,
 				(Floater) begin,
 				(Floater) end,
@@ -5641,8 +5641,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(MusicTrackClipItem_<_>),
 			M_wrap(
 				(Integer) u1,
-				(ID) source,
-				(ID) event,
+				(Identifier) source,
+				(Identifier) event,
 				(Floater) offset,
 				(Floater) begin,
 				(Floater) end,
@@ -5720,8 +5720,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5750,8 +5750,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5784,8 +5784,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5823,8 +5823,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5861,8 +5861,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5900,8 +5900,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5941,8 +5941,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicTrack_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
+				(Identifier) identifier,
+				(Identifier) parent,
 				(List<AudioSourceSetting>) source,
 				(MusicTrackPlaybackSetting) playback_setting,
 				(MusicTrackStream) stream,
@@ -5987,7 +5987,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegmentCueItem_<_>),
 			M_wrap(
-				(ID) name,
+				(Identifier) name,
 				(Floater) time,
 			),
 		);
@@ -6044,9 +6044,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6076,9 +6076,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6112,9 +6112,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6153,9 +6153,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6193,9 +6193,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6234,9 +6234,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6277,9 +6277,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSegment_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSegmentPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6325,10 +6325,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainerPlaylistItem_<_>),
 			M_wrap(
-				(ID) u1,
+				(Identifier) u1,
 				(Boolean) group,
 				(Integer) child_count,
-				(ID) item,
+				(Identifier) item,
 				(AudioPlayType) play_type,
 				(AudioPlayMode) play_mode,
 				(AudioPlayTypeRandomSetting) random_setting,
@@ -6372,9 +6372,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6405,9 +6405,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6442,9 +6442,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6484,9 +6484,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6525,9 +6525,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6567,9 +6567,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6611,9 +6611,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicPlaylistContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicPlaylistContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6660,8 +6660,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainerAssociationItem_<_>),
 			M_wrap(
-				(ID) item,
-				(ID) child,
+				(Identifier) item,
+				(Identifier) child,
 			),
 		);
 
@@ -6703,9 +6703,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6736,9 +6736,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6773,9 +6773,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6815,9 +6815,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6856,9 +6856,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6898,9 +6898,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -6942,9 +6942,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(MusicSwitchContainer_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) parent,
-				(List<ID>) child,
+				(Identifier) identifier,
+				(Identifier) parent,
+				(List<Identifier>) child,
 				(MusicSwitchContainerPlaybackSetting) playback_setting,
 				(AudioTimeSetting) time_setting,
 				(AudioVoice) voice,
@@ -7229,7 +7229,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBankReference_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(String) name,
 			),
 		);
@@ -7245,7 +7245,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(PlugInReference_<_>),
 			M_wrap(
-				(ID) id,
+				(Identifier) identifier,
 				(String) library,
 			),
 		);
@@ -7411,10 +7411,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		M_record_of_map(
 			M_wrap(SoundBank_<_>),
 			M_wrap(
-				(ID) id,
-				(ID) language,
+				(Identifier) identifier,
+				(Identifier) language,
 				(ByteList) header_expand,
-				(List<ID>) embedded_media,
+				(List<Identifier>) embedded_media,
 				(List<SoundBankReference>) reference,
 				(Optional<Setting>) setting,
 				(Optional<GameSynchronization>) game_synchronization,

@@ -31,21 +31,21 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 
 	function collect_application_information(
 	): null | AndroidHelper.ApplicationInformation {
-		let id: string;
-		let id_list = AndroidHelper.application_find(/^com\.ea\.game\.pvz2_[a-z]+$/);
-		if (id_list.length === 0) {
+		let identifier: string;
+		let identifier_list = AndroidHelper.application_find(/^com\.ea\.game\.pvz2_[a-z]+$/);
+		if (identifier_list.length === 0) {
 			Console.warning(los('support.pvz2.remote_project.execute:application_found_none'), []);
 			return null;
 		}
-		if (id_list.length === 1) {
-			Console.information(los('support.pvz2.remote_project.execute:application_found_single'), [id_list[0]]);
-			id = id_list[0];
+		if (identifier_list.length === 1) {
+			Console.information(los('support.pvz2.remote_project.execute:application_found_single'), [identifier_list[0]]);
+			identifier = identifier_list[0];
 		}
 		else {
 			Console.information(los('support.pvz2.remote_project.execute:application_found_multi'), []);
-			id = Console.enumeration(Console.option_string(id_list), null, null);
+			identifier = Console.enumeration(Console.option_string(identifier_list), null, null);
 		}
-		return AndroidHelper.application_query(id);
+		return AndroidHelper.application_query(identifier);
 	}
 
 	// ----------------
@@ -66,10 +66,10 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 			los('support.pvz2.remote_project.execute:version_name', application.version_name),
 		]);
 		let remote_external_directory = `/storage/emulated/0`;
-		let remote_application_data_directory = `${remote_external_directory}/Android/data/${application.id}`;
-		let remote_application_obb_directory = `${remote_external_directory}/Android/obb/${application.id}`;
+		let remote_application_data_directory = `${remote_external_directory}/Android/data/${application.identifier}`;
+		let remote_application_obb_directory = `${remote_external_directory}/Android/obb/${application.identifier}`;
 		let remote = {
-			main_package: `${remote_application_obb_directory}/main.${application.version_code}.${application.id}.obb`,
+			main_package: `${remote_application_obb_directory}/main.${application.version_code}.${application.identifier}.obb`,
 			content_delivery: `${remote_application_data_directory}/files/No_Backup/CDN.${application.version_name.slice(0, CheckHelper.not_or(application.version_name.lastIndexOf('.'), -1, undefined))}`,
 			local_profile: `${remote_application_data_directory}/files/No_Backup/local_profiles`,
 			player_profile: `${remote_application_data_directory}/files/No_Backup/pp.dat`,
@@ -90,7 +90,7 @@ namespace Twinning.Script.Support.PvZ2.RemoteProject {
 		};
 		switch (action) {
 			case 'launch': {
-				AndroidHelper.application_start(application.id, 'com.popcap.PvZ2.PvZ2GameActivity');
+				AndroidHelper.application_start(application.identifier, 'com.popcap.PvZ2.PvZ2GameActivity');
 				break;
 			}
 			case 'check': {

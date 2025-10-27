@@ -166,7 +166,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			List<String>? targetScope,
 			Boolean?      mode
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			if (this.View.uPackageList.SelectedItems.Count != 1) {
 				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
 				return;
@@ -200,13 +200,13 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task WorkerDoCompile (
 			List<String>? targetScope
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.compile",
 				new ([
 					new ("project_directory", this.MakeScopeRootPath()),
-					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
+					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
 					new ("target_scope", targetScope == null ? "*" : String.Join('|', targetScope)),
 				])
 			));
@@ -216,13 +216,13 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task WorkerDoLink (
 			Boolean remakeManifest
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			await this.WorkerExecuteCommand(ModdingWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.link",
 				new ([
 					new ("project_directory", this.MakeScopeRootPath()),
-					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
+					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
 					new ("remake_manifest", remakeManifest),
 				])
 			));
@@ -231,26 +231,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		// ----------------
 
-		public async Task<Boolean> CheckVersionFile (
-			String projectDirectory
-		) {
-			var result = true;
-			try {
-				var versionFile = $"{projectDirectory}/version.txt";
-				var versionText = await StorageHelper.ReadFileText(versionFile);
-				GF.AssertTest(versionText == "2");
-			}
-			catch (Exception) {
-				result = false;
-			}
-			return result;
-		}
-
-		// ----------------
-
 		public String MakeScopeRootPath (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
 			return $"{projectDirectory}";
 		}
@@ -258,7 +241,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public String MakeScopeRootPath (
 			String part
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
 			return $"{projectDirectory}/{part}";
 		}
@@ -267,7 +250,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String part,
 			String group
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
 			return $"{projectDirectory}/{part}/{group}";
 		}
@@ -277,7 +260,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String group,
 			String resource
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
 			return $"{projectDirectory}/{part}/{group}/{resource}";
 		}
@@ -286,21 +269,21 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String parent,
 			String name
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return $"{parent}/{name}";
 		}
 
 		public String MakeScopeSettingPath (
 			String parent
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return $"{parent}/setting.json";
 		}
 
 		public List<String> ListScopeChildName (
 			String parent
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return StorageHelper.ListDirectory(parent, 1, false, true).Where((value) => (!value.StartsWith("."))).ToList();
 		}
 
@@ -308,7 +291,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String parent,
 			String name
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var index = 0;
 			var nameRequest = name;
 			while (StorageHelper.ExistDirectory($"{parent}/{nameRequest}")) {
@@ -323,7 +306,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public MainPagePartItemController FindScopeNode (
 			String part
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return this.uPartList_ItemsSource.First((value) => (value.Name == part));
 		}
 
@@ -331,7 +314,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String part,
 			String group
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return this.FindScopeNode(part).Children.First((value) => (value.Name == group));
 		}
 
@@ -340,7 +323,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String group,
 			String resource
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return this.FindScopeNode(part, group).Children.First((value) => (value.Name == resource));
 		}
 
@@ -349,8 +332,8 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task ProjectOpen (
 			String projectDirectory
 		) {
-			GF.AssertTest(!this.IsLoaded);
-			if (!(await this.CheckVersionFile(projectDirectory))) {
+			AssertTest(!this.IsLoaded);
+			if (!(await ProjectSettingHelper.CheckVersionFile(projectDirectory))) {
 				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
@@ -367,7 +350,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task ProjectClose (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.uPackageList_ItemsSource.Clear();
 			this.uPartList_ItemsSource.Clear();
 			this.uGroupList_ItemsSource.Clear();
@@ -387,9 +370,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task ProjectReload (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var projectDirectory = this.MakeScopeRootPath();
-			GF.AssertTest(StorageHelper.ExistDirectory(projectDirectory));
+			AssertTest(StorageHelper.ExistDirectory(projectDirectory));
 			this.uPackageList_ItemsSource.Clear();
 			this.uPartList_ItemsSource.Clear();
 			this.uGroupList_ItemsSource.Clear();
@@ -442,9 +425,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task ProjectReveal (
 			Boolean forSetting
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath();
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -456,7 +439,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task ProjectSaveSetting (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			await JsonHelper.SerializeFile(this.MakeScopeSettingPath(this.MakeScopeRootPath()), this.ProjectSetting);
 			return;
 		}
@@ -465,7 +448,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task PackageAppend (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationPackage = new PackageSetting() {
 				Name = "__",
 				Part = [],
@@ -509,7 +492,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			PackageSetting sourcePackage,
 			String         destinationPackage
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			sourcePackage.Name = destinationPackage;
 			var itemNode = this.uPackageList_ItemsSource.First((value) => (Object.ReferenceEquals(value.Setting, sourcePackage)));
 			itemNode.NotifyPropertyChanged([
@@ -523,7 +506,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task PackageDelete (
 			PackageSetting sourcePackage
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.ProjectSetting.Package.Remove(sourcePackage);
 			await this.ProjectSaveSetting();
 			var itemNode = this.uPackageList_ItemsSource.First((value) => (Object.ReferenceEquals(value.Setting, sourcePackage)));
@@ -534,7 +517,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task PackageCopy (
 			PackageSetting sourcePackage
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationPackage = new PackageSetting() {
 				Name = sourcePackage.Name + "~copy",
 				Part = sourcePackage.Part.ToList(),
@@ -574,9 +557,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String  sourcePart,
 			Boolean forRefresh = true
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var partDirectory = this.MakeScopeRootPath(sourcePart);
-			GF.AssertTest(StorageHelper.ExistDirectory(partDirectory));
+			AssertTest(StorageHelper.ExistDirectory(partDirectory));
 			var partSetting = await JsonHelper.DeserializeFile<PartSetting>(this.MakeScopeSettingPath(partDirectory));
 			var partNode = default(MainPagePartItemController);
 			if (!forRefresh) {
@@ -630,9 +613,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String  sourcePart,
 			Boolean forSetting
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -644,10 +627,10 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task PartAppend (
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), "__");
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new PartSetting() {
 				Variable = [],
 			};
@@ -668,14 +651,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourcePart,
 			String destinationPart
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			if (destinationPart == sourcePart) {
 				return;
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			itemNode.Name = destinationPart;
@@ -703,9 +686,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task PartDelete (
 			String sourcePart
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			this.uPartList_ItemsSource.Remove(itemNode);
@@ -722,12 +705,12 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task PartCopy (
 			String sourcePart
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), sourcePart);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Copy(sourceDirectory, destinationDirectory);
 			await this.PartReload(destinationPart, false);
 			return;
@@ -740,9 +723,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String  sourceGroup,
 			Boolean forRefresh = true
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var groupDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
-			GF.AssertTest(StorageHelper.ExistDirectory(groupDirectory));
+			AssertTest(StorageHelper.ExistDirectory(groupDirectory));
 			var groupSetting = await JsonHelper.DeserializeFile<GroupSetting>(this.MakeScopeSettingPath(groupDirectory));
 			var groupNode = default(MainPageGroupItemController)!;
 			if (!forRefresh) {
@@ -786,9 +769,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String  sourceGroup,
 			Boolean forSetting
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -801,10 +784,10 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task GroupAppend (
 			String sourcePart
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationGroup = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), "__");
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new GroupSetting() {
 				Variable = [],
 			};
@@ -831,14 +814,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourceGroup,
 			String destinationGroup
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			if (destinationGroup == sourceGroup) {
 				return;
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Name = destinationGroup;
@@ -860,9 +843,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourcePart,
 			String sourceGroup
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
@@ -876,12 +859,12 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourcePart,
 			String sourceGroup
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationGroup = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), sourceGroup);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Copy(sourceDirectory, destinationDirectory);
 			await this.GroupReload(sourcePart, destinationGroup, false);
 			return;
@@ -892,14 +875,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourceGroup,
 			String destinationPart
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			if (destinationPart == sourcePart) {
 				return;
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart, sourceGroup);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
@@ -922,9 +905,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String  sourceResource,
 			Boolean forRefresh = true
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var resourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
-			GF.AssertTest(StorageHelper.ExistDirectory(resourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(resourceDirectory));
 			var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 			var resourceNode = default(MainPageResourceItemController);
 			if (!forRefresh) {
@@ -960,9 +943,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String  sourceResource,
 			Boolean forSetting
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -976,10 +959,10 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourcePart,
 			String sourceGroup
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationResource = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), "__");
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new ResourceSetting() {
 				Category = new () {
 					Resolution = null,
@@ -1012,14 +995,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourceResource,
 			String destinationResource
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			if (destinationResource == sourceResource) {
 				return;
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Name = destinationResource;
@@ -1035,9 +1018,9 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourceGroup,
 			String sourceResource
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
 			StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
@@ -1052,12 +1035,12 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String sourceGroup,
 			String sourceResource
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			var destinationResource = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), sourceResource);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Copy(sourceDirectory, destinationDirectory);
 			await this.ResourceReload(sourcePart, sourceGroup, destinationResource, false);
 			return;
@@ -1070,14 +1053,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			String destinationPart,
 			String destinationGroup
 		) {
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			if (destinationPart == sourcePart && destinationGroup == sourceGroup) {
 				return;
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart, destinationGroup, sourceResource);
-			GF.AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			GF.AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
 			StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
@@ -1205,7 +1188,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			await this.ProjectClose();
 			return;
 		}
@@ -1217,7 +1200,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.ProjectReload();
@@ -1272,7 +1255,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragItemsCompletedEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			this.ProjectSetting.Package = this.uPackageList_ItemsSource.Select((value) => (value.Setting)).ToList();
 			await this.ProjectSaveSetting();
 			return;
@@ -1285,7 +1268,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			return;
 		}
 
@@ -1296,16 +1279,16 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Delete": {
-					foreach (var item in this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).ToList()) {
+					foreach (var item in this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).ToList()) {
 						await this.PackageDelete(item.Setting);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uPackageList.SelectedItems.Select(GF.As<MainPagePackageItemController>).ToList()) {
+					foreach (var item in this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).ToList()) {
 						await this.PackageCopy(item.Setting);
 					}
 					break;
@@ -1320,7 +1303,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			await this.PackageAppend();
 			return;
 		}
@@ -1336,11 +1319,11 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			GF.AssertTest(this.IsLoaded);
-			foreach (var item in args.RemovedItems.Select(GF.As<MainPagePartItemController>)) {
+			AssertTest(this.IsLoaded);
+			foreach (var item in args.RemovedItems.Select(CommonUtility.As<MainPagePartItemController>)) {
 				this.uGroupList_ItemsSource.Remove(this.uGroupList_ItemsSource.First((value) => (value.PartName == item.Name)));
 			}
-			foreach (var item in args.AddedItems.Select(GF.As<MainPagePartItemController>)) {
+			foreach (var item in args.AddedItems.Select(CommonUtility.As<MainPagePartItemController>)) {
 				this.uGroupList_ItemsSource.Add(new () {
 					Host = this,
 					PartName = item.Name,
@@ -1357,61 +1340,61 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "RevealRoot": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReveal(item.Name, false);
 					}
 					break;
 				}
 				case "RevealSetting": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReveal(item.Name, true);
 					}
 					break;
 				}
 				case "Delete": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartDelete(item.Name);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartCopy(item.Name);
 					}
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), null);
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), null);
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), false);
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), false);
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), true);
-					foreach (var item in this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), true);
+					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(GF.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -1424,7 +1407,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			await this.PartAppend();
 			return;
 		}
@@ -1438,8 +1421,8 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragItemsStartingEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			GF.AssertTest(this.IsLoaded);
-			args.Data.SetData(MainPageController.DataViewFormatForGroup, String.Join('\n', args.Items.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"{value.Parent.Name}/{value.Name}"))));
+			AssertTest(this.IsLoaded);
+			args.Data.SetData(MainPageController.DataViewFormatForGroup, String.Join('\n', args.Items.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"{value.Parent.Name}/{value.Name}"))));
 			return;
 		}
 
@@ -1450,11 +1433,11 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			GF.AssertTest(this.IsLoaded);
-			foreach (var item in args.RemovedItems.Select(GF.As<MainPageGroupItemController>)) {
+			AssertTest(this.IsLoaded);
+			foreach (var item in args.RemovedItems.Select(CommonUtility.As<MainPageGroupItemController>)) {
 				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => (value.PartName == item.Parent.Name && value.GroupName == item.Name)));
 			}
-			foreach (var item in args.AddedItems.Select(GF.As<MainPageGroupItemController>)) {
+			foreach (var item in args.AddedItems.Select(CommonUtility.As<MainPageGroupItemController>)) {
 				this.uResourceList_ItemsSource.Add(new () {
 					Host = this,
 					PartName = item.Parent.Name,
@@ -1472,61 +1455,61 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "RevealRoot": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReveal(item.Parent.Name, item.Name, false);
 					}
 					break;
 				}
 				case "RevealSetting": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReveal(item.Parent.Name, item.Name, true);
 					}
 					break;
 				}
 				case "Delete": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupDelete(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupCopy(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), null);
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), null);
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), false);
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), false);
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), true);
-					foreach (var item in this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), true);
+					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(GF.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -1545,8 +1528,8 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragItemsStartingEventArgs args
 		) {
 			var senders = sender.As<ListView>();
-			GF.AssertTest(this.IsLoaded);
-			args.Data.SetData(MainPageController.DataViewFormatForResource, String.Join('\n', args.Items.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}"))));
+			AssertTest(this.IsLoaded);
+			args.Data.SetData(MainPageController.DataViewFormatForResource, String.Join('\n', args.Items.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}"))));
 			return;
 		}
 
@@ -1557,61 +1540,61 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.IsLoaded);
+			AssertTest(this.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "RevealRoot": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReveal(item.Parent.Parent.Name, item.Parent.Name, item.Name, false);
 					}
 					break;
 				}
 				case "RevealSetting": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReveal(item.Parent.Parent.Name, item.Parent.Name, item.Name, true);
 					}
 					break;
 				}
 				case "Delete": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceDelete(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Copy": {
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceCopy(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), null);
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), null);
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), false);
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), false);
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), true);
-					foreach (var item in this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).ToList()) {
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), true);
+					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(GF.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -1641,7 +1624,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task SaveSetting (
 		) {
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await this.Host.ProjectSaveSetting();
 			return;
 		}
@@ -1652,35 +1635,35 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uName_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Name;
 			}
 		}
 
 		public Boolean uName_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return !this.IsNameEditing;
 			}
 		}
 
 		public String uName_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Name;
 			}
 		}
 
 		public Boolean uNameEdit_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
 
 		public Boolean uNameEdit_IsEnabled {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
@@ -1690,7 +1673,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DependencyPropertyChangedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
 			}
@@ -1702,7 +1685,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
@@ -1718,7 +1701,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public Size uCount_Value {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Part.Count;
 			}
 		}
@@ -1730,7 +1713,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Rename": {
 					this.IsNameEditing = true;
@@ -1820,7 +1803,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task SaveSetting (
 		) {
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await JsonHelper.SerializeFile(this.Host.MakeScopeSettingPath(this.Host.MakeScopeRootPath(this.Name)), this.Setting);
 			return;
 		}
@@ -1834,7 +1817,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragEventArgs args
 		) {
 			var senders = sender.As<Panel>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForGroup)) {
 				args.AcceptedOperation = DataPackageOperation.Move;
 			}
@@ -1846,7 +1829,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragEventArgs args
 		) {
 			var senders = sender.As<Panel>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForGroup)) {
 				args.Handled = true;
 				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForGroup)).As<String>();
@@ -1865,35 +1848,35 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uName_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Name;
 			}
 		}
 
 		public Boolean uName_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return !this.IsNameEditing;
 			}
 		}
 
 		public String uName_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Name;
 			}
 		}
 
 		public Boolean uNameEdit_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
 
 		public Boolean uNameEdit_IsEnabled {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
@@ -1903,7 +1886,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DependencyPropertyChangedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
 			}
@@ -1915,7 +1898,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
@@ -1931,7 +1914,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public Size uCount_Value {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Children.Count;
 			}
 		}
@@ -1943,7 +1926,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.Host.PartReload(this.Name);
@@ -2035,14 +2018,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uName_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return $"{this.PartName}";
 			}
 		}
 
 		public String uName_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return $"{this.PartName}";
 			}
 		}
@@ -2054,7 +2037,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await this.Host.GroupAppend(this.PartName);
 			return;
 		}
@@ -2089,7 +2072,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task SaveSetting (
 		) {
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await JsonHelper.SerializeFile(this.Host.MakeScopeSettingPath(this.Host.MakeScopeRootPath(this.Parent.Name, this.Name)), this.Setting);
 			return;
 		}
@@ -2103,7 +2086,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragEventArgs args
 		) {
 			var senders = sender.As<Panel>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForResource)) {
 				args.AcceptedOperation = DataPackageOperation.Move;
 			}
@@ -2115,7 +2098,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DragEventArgs args
 		) {
 			var senders = sender.As<Panel>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (args.DataView.Contains(MainPageController.DataViewFormatForResource)) {
 				args.Handled = true;
 				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForResource)).As<String>();
@@ -2134,35 +2117,35 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uName_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Name;
 			}
 		}
 
 		public Boolean uName_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return !this.IsNameEditing;
 			}
 		}
 
 		public String uName_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Name;
 			}
 		}
 
 		public Boolean uNameEdit_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
 
 		public Boolean uNameEdit_IsEnabled {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
@@ -2172,7 +2155,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DependencyPropertyChangedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
 			}
@@ -2184,7 +2167,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
@@ -2200,7 +2183,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public Size uCount_Value {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Children.Count;
 			}
 		}
@@ -2212,7 +2195,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.Host.GroupReload(this.Parent.Name, this.Name);
@@ -2306,14 +2289,14 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uName_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return $"{this.PartName} - {this.GroupName}";
 			}
 		}
 
 		public String uName_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return $"{this.PartName} - {this.GroupName}";
 			}
 		}
@@ -2325,7 +2308,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await this.Host.ResourceAppend(this.PartName, this.GroupName);
 			return;
 		}
@@ -2358,7 +2341,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task SaveSetting (
 		) {
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await JsonHelper.SerializeFile(this.Host.MakeScopeSettingPath(this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name)), this.Setting);
 			return;
 		}
@@ -2369,35 +2352,35 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uName_ToolTip {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Name;
 			}
 		}
 
 		public Boolean uName_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return !this.IsNameEditing;
 			}
 		}
 
 		public String uName_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Name;
 			}
 		}
 
 		public Boolean uNameEdit_Visibility {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
 
 		public Boolean uNameEdit_IsEnabled {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.IsNameEditing;
 			}
 		}
@@ -2407,7 +2390,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			DependencyPropertyChangedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			if (senders.IsEnabled) {
 				senders.Focus(FocusState.Pointer);
 			}
@@ -2419,7 +2402,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			this.IsNameEditing = false;
 			this.NotifyPropertyChanged([
 				nameof(this.uName_Visibility),
@@ -2437,7 +2420,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public Style uCategory_Style {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Host.View.FindResource(this.Setting.Category.Resolution == null && this.Setting.Category.Locale == null ? "DefaultButtonStyle" : "AccentButtonStyle").As<Style>();
 			}
 		}
@@ -2447,7 +2430,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			Object args
 		) {
 			var senders = sender.As<FlyoutBase>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			await this.SaveSetting();
 			return;
 		}
@@ -2457,7 +2440,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			this.Setting.Category.Resolution = ProjectSettingHelper.ParseResolutionString(senders.Text, this.Setting.Category.Resolution);
 			this.NotifyPropertyChanged([
 				nameof(this.uCategoryResolution_Text),
@@ -2468,7 +2451,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uCategoryResolution_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Category.Resolution?.ToString() ?? "";
 			}
 		}
@@ -2478,7 +2461,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			this.Setting.Category.Locale = ProjectSettingHelper.ParseLocaleString(senders.Text, this.Setting.Category.Locale);
 			this.NotifyPropertyChanged([
 				nameof(this.uCategoryLocale_Text),
@@ -2489,7 +2472,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uCategoryLocale_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Category.Locale ?? "";
 			}
 		}
@@ -2498,7 +2481,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uTypeIcon_Glyph {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Type switch {
 					ResourceType.Dummy       => FluentIconGlyph.Preview,
 					ResourceType.General     => FluentIconGlyph.Document,
@@ -2514,7 +2497,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public String uTypeText_Text {
 			get {
-				GF.AssertTest(this.Host.IsLoaded);
+				AssertTest(this.Host.IsLoaded);
 				return this.Setting.Type switch {
 					ResourceType.Dummy       => "Dummy",
 					ResourceType.General     => "General",
@@ -2533,7 +2516,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			var property = this.Setting.Type switch {
 				ResourceType.Dummy       => JsonHelper.DeserializeNode<DummyResourceProperty>(this.Setting.Property) as Object,
 				ResourceType.General     => JsonHelper.DeserializeNode<GeneralResourceProperty>(this.Setting.Property),
@@ -2603,7 +2586,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
 			StorageHelper.Trash(resourceDirectory);
 			StorageHelper.CreateDirectory(resourceDirectory);
@@ -2696,7 +2679,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			GF.AssertTest(this.Host.IsLoaded);
+			AssertTest(this.Host.IsLoaded);
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
 					await this.Host.ResourceReload(this.Parent.Parent.Name, this.Parent.Name, this.Name);

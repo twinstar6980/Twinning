@@ -6,38 +6,38 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 	): void {
 		push_typical_method('popcap.re_animation', [
 			typical_method({
-				id: 'encode',
+				identifier: 'encode',
 				filter: ['file', /(\.reanim\.json)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.reanim\.json)?$/i, '.reanim.compiled')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'version_platform',
+						identifier: 'version_platform',
 						option: KernelX.Tool.PopCap.ReAnimation.VersionPlatformE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_variant_64',
+						identifier: 'version_variant_64',
 						checker: null,
 						automatic: null,
 						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
 					}),
 					typical_argument_size({
-						id: 'buffer_size',
+						identifier: 'buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
@@ -46,7 +46,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -54,7 +54,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
@@ -71,32 +71,32 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 				},
 			}),
 			typical_method({
-				id: 'decode',
+				identifier: 'decode',
 				filter: ['file', /(\.reanim\.compiled)$/i],
 				argument: [
 					typical_argument_path({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.reanim\.compiled)?$/i, '.reanim.json')),
 						condition: null,
 					}),
 					typical_argument_string({
-						id: 'version_platform',
+						identifier: 'version_platform',
 						option: KernelX.Tool.PopCap.ReAnimation.VersionPlatformE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						id: 'version_variant_64',
+						identifier: 'version_variant_64',
 						checker: null,
 						automatic: null,
 						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
@@ -104,7 +104,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 				],
 				batch: [
 					typical_argument_batch({
-						id: 'data_file',
+						identifier: 'data_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -112,7 +112,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						id: 'definition_file',
+						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
 						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),

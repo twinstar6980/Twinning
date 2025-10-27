@@ -37,15 +37,15 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto make_standard_group_id (
-			ConstantStringView const & group_id,
+		inline static auto make_standard_group_identifier (
+			ConstantStringView const & group_identifier,
 			Boolean const &            is_composite
 		) -> String {
-			auto standard_id = String{group_id};
+			auto standard_identifier = String{group_identifier};
 			if (!is_composite) {
-				standard_id.append_list(k_suffix_of_composite_shell);
+				standard_identifier.append_list(k_suffix_of_composite_shell);
 			}
-			return standard_id;
+			return standard_identifier;
 		}
 
 		// ----------------
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			for (auto & group_index : SizeRange{manifest.group.size()}) {
 				auto & group_manifest = manifest.group[group_index];
 				auto & group_manifest_information_structure = group_manifest_information_structure_list[group_index];
-				group_manifest_information_structure.id_offset = set_string(make_standard_group_id(group_manifest.id, group_manifest.composite));
+				group_manifest_information_structure.identifier_offset = set_string(make_standard_group_identifier(group_manifest.identifier, group_manifest.composite));
 				group_manifest_information_structure.subgroup_count = cbox<IntegerU32>(group_manifest.subgroup.size());
 				group_manifest_information_structure.subgroup_information_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupBasicManifestInformation<version>>());
 				group_manifest_information_structure.subgroup_information.allocate_full(group_manifest.subgroup.size());
@@ -106,7 +106,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							subgroup_manifest_information_structure.locale = four_character_code_to_integer(subgroup_manifest.category.locale.get().template to_of<FourCharacterCode>());
 						}
 					}
-					subgroup_manifest_information_structure.id_offset = set_string(subgroup_manifest.id);
+					subgroup_manifest_information_structure.identifier_offset = set_string(subgroup_manifest.identifier);
 					subgroup_manifest_information_structure.resource_count = cbox<IntegerU32>(subgroup_manifest.resource.size());
 					subgroup_manifest_information_structure.resource_information.allocate_full(subgroup_manifest.resource.size());
 					for (auto & resource_index : SizeRange{subgroup_manifest.resource.size()}) {
@@ -114,7 +114,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						auto & resource_manifest_information_structure = subgroup_manifest_information_structure.resource_information[resource_index];
 						auto & resource_detail_manifest_information_structure = resource_detail_manifest_information_structure_list.append();
 						resource_manifest_information_structure.detail_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
-						resource_detail_manifest_information_structure.id_offset = set_string(resource_manifest.id);
+						resource_detail_manifest_information_structure.identifier_offset = set_string(resource_manifest.identifier);
 						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.to_string(CharacterType::k_path_separator_windows));
 						resource_detail_manifest_information_structure.header_size = cbox<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<version>>());
 						resource_detail_manifest_information_structure.type = cbox<IntegerU16>(resource_manifest.type);
@@ -179,14 +179,14 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			Optional<Path> const &                       new_packet_file
 		) -> Void {
 			constexpr auto packet_version = ResourceStreamGroup::Version{.number = version.number};
-			data.write_constant(Structure::k_magic_identifier);
+			data.write_constant(Structure::k_magic_marker);
 			data.write_constant(cbox<Structure::VersionNumber>(version.number));
 			struct {
 				OutputByteStreamView header{};
-				Size                 group_id_offset{};
-				OutputByteStreamView group_id{};
-				Size                 subgroup_id_offset{};
-				OutputByteStreamView subgroup_id{};
+				Size                 group_identifier_offset{};
+				OutputByteStreamView group_identifier{};
+				Size                 subgroup_identifier_offset{};
+				OutputByteStreamView subgroup_identifier{};
 				Size                 resource_path_offset{};
 				OutputByteStreamView resource_path{};
 				Size                 group_information_offset{};
@@ -225,9 +225,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						}
 					}
 				}
-				information_structure.group_id.allocate_full(global_group_count);
+				information_structure.group_identifier.allocate_full(global_group_count);
 				information_structure.group_information.allocate_full(global_group_count);
-				information_structure.subgroup_id.allocate_full(global_subgroup_count);
+				information_structure.subgroup_identifier.allocate_full(global_subgroup_count);
 				information_structure.subgroup_information.allocate_full(global_subgroup_count);
 				information_structure.pool_information.allocate_full(global_subgroup_count);
 				information_structure.resource_path.allocate_full(global_resource_count);
@@ -239,13 +239,13 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 				auto global_texture_resource_index = k_begin_index;
 				for (auto & group_index : SizeRange{definition.group.size()}) {
 					auto & group_definition = definition.group[group_index];
-					auto & group_id_structure = information_structure.group_id.at(global_group_index);
-					auto   standard_group_id = make_standard_group_id(group_definition.id, group_definition.composite);
-					group_id_structure.key = standard_group_id;
+					auto & group_identifier_structure = information_structure.group_identifier.at(global_group_index);
+					auto   standard_group_identifier = make_standard_group_identifier(group_definition.identifier, group_definition.composite);
+					group_identifier_structure.key = standard_group_identifier;
 					for (auto & subgroup_index : SizeRange{group_definition.subgroup.size()}) {
 						auto & subgroup_definition = group_definition.subgroup[subgroup_index];
-						auto & subgroup_id_structure = information_structure.subgroup_id.at(global_subgroup_index);
-						subgroup_id_structure.key = subgroup_definition.id;
+						auto & subgroup_identifier_structure = information_structure.subgroup_identifier.at(global_subgroup_index);
+						subgroup_identifier_structure.key = subgroup_definition.identifier;
 						for (auto & resource_index : SizeRange{subgroup_definition.resource.size()}) {
 							auto & resource_definition = subgroup_definition.resource[resource_index];
 							auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
@@ -270,8 +270,8 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 					}
 					++global_group_index;
 				}
-				CompiledMapData::adjust_sequence(information_structure.group_id);
-				CompiledMapData::adjust_sequence(information_structure.subgroup_id);
+				CompiledMapData::adjust_sequence(information_structure.group_identifier);
+				CompiledMapData::adjust_sequence(information_structure.subgroup_identifier);
 				CompiledMapData::adjust_sequence(information_structure.resource_path);
 				information_data.header = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.header))
@@ -280,17 +280,17 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 				information_data.resource_path = OutputByteStreamView{
 					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_path))
 				};
-				information_data.subgroup_id_offset = data.position();
-				information_data.subgroup_id = OutputByteStreamView{
-					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.subgroup_id))
+				information_data.subgroup_identifier_offset = data.position();
+				information_data.subgroup_identifier = OutputByteStreamView{
+					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.subgroup_identifier))
 				};
 				information_data.group_information_offset = data.position();
 				information_data.group_information = OutputByteStreamView{
 					data.forward_view(bs_size(information_structure.group_information))
 				};
-				information_data.group_id_offset = data.position();
-				information_data.group_id = OutputByteStreamView{
-					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.group_id))
+				information_data.group_identifier_offset = data.position();
+				information_data.group_identifier = OutputByteStreamView{
+					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.group_identifier))
 				};
 				information_data.subgroup_information_offset = data.position();
 				information_data.subgroup_information = OutputByteStreamView{
@@ -339,16 +339,16 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			}
 			information_structure.header.resource_path_section_size = cbox<IntegerU32>(information_data.resource_path.size());
 			information_structure.header.resource_path_section_offset = cbox<IntegerU32>(information_data.resource_path_offset);
-			information_structure.header.subgroup_id_section_size = cbox<IntegerU32>(information_data.subgroup_id.size());
-			information_structure.header.subgroup_id_section_offset = cbox<IntegerU32>(information_data.subgroup_id_offset);
+			information_structure.header.subgroup_identifier_section_size = cbox<IntegerU32>(information_data.subgroup_identifier.size());
+			information_structure.header.subgroup_identifier_section_offset = cbox<IntegerU32>(information_data.subgroup_identifier_offset);
 			information_structure.header.subgroup_information_section_block_count = cbox<IntegerU32>(global_subgroup_count);
 			information_structure.header.subgroup_information_section_offset = cbox<IntegerU32>(information_data.subgroup_information_offset);
 			information_structure.header.subgroup_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupInformation<version>>());
 			information_structure.header.group_information_section_block_count = cbox<IntegerU32>(global_group_count);
 			information_structure.header.group_information_section_offset = cbox<IntegerU32>(information_data.group_information_offset);
 			information_structure.header.group_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::GroupInformation<version>>());
-			information_structure.header.group_id_section_size = cbox<IntegerU32>(information_data.group_id.size());
-			information_structure.header.group_id_section_offset = cbox<IntegerU32>(information_data.group_id_offset);
+			information_structure.header.group_identifier_section_size = cbox<IntegerU32>(information_data.group_identifier.size());
+			information_structure.header.group_identifier_section_offset = cbox<IntegerU32>(information_data.group_identifier_offset);
 			information_structure.header.pool_information_section_block_count = cbox<IntegerU32>(global_subgroup_count);
 			information_structure.header.pool_information_section_offset = cbox<IntegerU32>(information_data.pool_information_offset);
 			information_structure.header.pool_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::PoolInformation<version>>());
@@ -369,9 +369,9 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			}
 			data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
 			information_structure.header.information_section_size = cbox<IntegerU32>(data.position());
-			information_structure.group_id.allocate_full(global_group_count);
+			information_structure.group_identifier.allocate_full(global_group_count);
 			information_structure.group_information.allocate_full(global_group_count);
-			information_structure.subgroup_id.allocate_full(global_subgroup_count);
+			information_structure.subgroup_identifier.allocate_full(global_subgroup_count);
 			information_structure.subgroup_information.allocate_full(global_subgroup_count);
 			information_structure.pool_information.allocate_full(global_subgroup_count);
 			information_structure.resource_path.allocate_full(global_resource_count);
@@ -383,17 +383,17 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 			auto global_texture_resource_index = k_begin_index;
 			for (auto & group_index : SizeRange{definition.group.size()}) {
 				auto & group_definition = definition.group[group_index];
-				auto & group_id_structure = information_structure.group_id.at(global_group_index);
+				auto & group_identifier_structure = information_structure.group_identifier.at(global_group_index);
 				auto & group_information_structure = information_structure.group_information[global_group_index];
-				auto   standard_group_id = make_standard_group_id(group_definition.id, group_definition.composite);
-				group_id_structure.key = standard_group_id;
-				group_id_structure.value = cbox<IntegerU32>(global_group_index);
-				group_information_structure.id = string_block_fixed_128_from_string(standard_group_id);
+				auto   standard_group_identifier = make_standard_group_identifier(group_definition.identifier, group_definition.composite);
+				group_identifier_structure.key = standard_group_identifier;
+				group_identifier_structure.value = cbox<IntegerU32>(global_group_index);
+				group_information_structure.identifier = string_block_fixed_128_from_string(standard_group_identifier);
 				group_information_structure.subgroup_count = cbox<IntegerU32>(group_definition.subgroup.size());
 				for (auto & subgroup_index : SizeRange{group_definition.subgroup.size()}) {
 					auto & subgroup_definition = group_definition.subgroup[subgroup_index];
 					auto & simple_subgroup_information_structure = group_information_structure.subgroup_information[subgroup_index];
-					auto & subgroup_id_structure = information_structure.subgroup_id.at(global_subgroup_index);
+					auto & subgroup_identifier_structure = information_structure.subgroup_identifier.at(global_subgroup_index);
 					auto & subgroup_information_structure = information_structure.subgroup_information[global_subgroup_index];
 					auto & pool_information_structure = information_structure.pool_information[global_subgroup_index];
 					auto   packet_package_definition = typename ResourceStreamGroup::Definition<packet_version>::Package{};
@@ -414,11 +414,11 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 							simple_subgroup_information_structure.locale = four_character_code_to_integer(subgroup_definition.category.locale.get().template to_of<FourCharacterCode>());
 						}
 					}
-					subgroup_id_structure.key = subgroup_definition.id;
-					subgroup_id_structure.value = cbox<IntegerU32>(global_subgroup_index);
-					subgroup_information_structure.id = string_block_fixed_128_from_string(subgroup_definition.id);
+					subgroup_identifier_structure.key = subgroup_definition.identifier;
+					subgroup_identifier_structure.value = cbox<IntegerU32>(global_subgroup_index);
+					subgroup_information_structure.identifier = string_block_fixed_128_from_string(subgroup_definition.identifier);
 					subgroup_information_structure.pool = cbox<IntegerU32>(global_subgroup_index);
-					pool_information_structure.id = string_block_fixed_128_from_string(subgroup_definition.id + k_suffix_of_automation_pool);
+					pool_information_structure.identifier = string_block_fixed_128_from_string(subgroup_definition.identifier + k_suffix_of_automation_pool);
 					pool_information_structure.instance_count = 1_iu32;
 					pool_information_structure.flag = 0_iu32;
 					packet_package_definition.compression = subgroup_definition.compression;
@@ -426,7 +426,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 					auto make_formatted_path = [&] (
 						Path const & path_format
 					) -> Path {
-						return Path{format_string(path_format.to_string(), group_definition.id, subgroup_definition.id)};
+						return Path{format_string(path_format.to_string(), group_definition.identifier, subgroup_definition.identifier)};
 					};
 					auto texture_resource_begin = global_texture_resource_index;
 					auto texture_resource_count = k_none_size;
@@ -475,7 +475,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						if (Storage::exist_file(make_formatted_path(packet_file.get()))) {
 							auto legacy_packet_size = Storage::read_file_stream(make_formatted_path(packet_file.get()), packet_data);
 							auto legacy_packet_stream = InputByteStreamView{packet_data.previous_view(legacy_packet_size)};
-							legacy_packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_identifier);
+							legacy_packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_marker);
 							legacy_packet_stream.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 							legacy_packet_stream.read(packet_header_structure);
 							use_legacy_packet = k_true;
@@ -486,7 +486,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 						if (new_packet_file.has()) {
 							Storage::write_file(make_formatted_path(new_packet_file.get()), packet_data.stream_view());
 						}
-						auto legacy_packet_stream = InputByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicIdentifier>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
+						auto legacy_packet_stream = InputByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicMarker>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
 						legacy_packet_stream.read(packet_header_structure);
 					}
 					subgroup_information_structure.offset = cbox<IntegerU32>(data.position());
@@ -518,15 +518,15 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
 				}
 				++global_group_index;
 			}
-			CompiledMapData::adjust_sequence(information_structure.group_id);
-			CompiledMapData::adjust_sequence(information_structure.subgroup_id);
+			CompiledMapData::adjust_sequence(information_structure.group_identifier);
+			CompiledMapData::adjust_sequence(information_structure.subgroup_identifier);
 			CompiledMapData::adjust_sequence(information_structure.resource_path);
 			{
 				information_data.header.write(information_structure.header);
 				CompiledMapData::encode(information_structure.resource_path, information_data.resource_path);
-				CompiledMapData::encode(information_structure.subgroup_id, information_data.subgroup_id);
+				CompiledMapData::encode(information_structure.subgroup_identifier, information_data.subgroup_identifier);
 				information_data.group_information.write(information_structure.group_information);
-				CompiledMapData::encode(information_structure.group_id, information_data.group_id);
+				CompiledMapData::encode(information_structure.group_identifier, information_data.group_identifier);
 				information_data.subgroup_information.write(information_structure.subgroup_information);
 				information_data.pool_information.write(information_structure.pool_information);
 				information_data.texture_resource_information.write(information_structure.texture_resource_information);
