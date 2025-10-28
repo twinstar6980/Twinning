@@ -16,7 +16,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 			await App.Instance.HandleLaunch(
 				ModuleHelper.Query(ModuleType.ModdingWorker).Name,
 				ModuleType.ModdingWorker,
-				["-AdditionalArgument", ..argument]
+				["-additional_argument", ..argument]
 			);
 			return;
 		}

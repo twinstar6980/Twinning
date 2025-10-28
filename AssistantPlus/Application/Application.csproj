@@ -24,8 +24,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Asset\Library\libc++.dll" />
-    <Content Include="Asset\Library\libunwind.dll" />
     <Content Include="Asset\Logo.ico" />
     <Content Include="Asset\Logo.png" />
     <Content Include="Asset\Logo\Square150x150Logo.scale-100.png" />
@@ -49,13 +47,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Manifest Include="$(ApplicationManifest)" />
+    <Content Include="Asset\Library\libc++.dll">
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </Content>
+    <Content Include="Asset\Library\libunwind.dll">
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </Content>
+    <Content Include="$(SolutionDir).build\bin\Forwarder\$(Platform).$(Configuration)\Forwarder.dll">
+      <Link>Asset\Library\%(Filename)%(Extension)</Link>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir).build\bin\Forwarder\$(Platform).$(Configuration)\Forwarder.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
   <!--

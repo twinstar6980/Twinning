@@ -72,7 +72,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public void InitializeView (
 		) {
 			this.View.uWorkerPage.Tag = new List<String>([
-				"-ImmediateLaunch",
+				"-immediate_launch",
 				"false",
 			]);
 			return;
@@ -103,7 +103,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		) {
 			var optionProjectDirectory = default(String?);
 			var option = new CommandLineReader(optionView);
-			if (option.Check("-ProjectDirectory")) {
+			if (option.Check("-project_directory")) {
 				optionProjectDirectory = option.NextString();
 			}
 			if (!option.Done()) {
@@ -118,7 +118,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-ProjectDirectory", this.ProjectDirectory != null)) {
+			if (option.Check("-project_directory", this.ProjectDirectory != null)) {
 				option.NextString(this.ProjectDirectory.AsNotNull());
 			}
 			return option.Done();

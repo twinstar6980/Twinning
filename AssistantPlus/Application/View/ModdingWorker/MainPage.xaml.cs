@@ -122,16 +122,16 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 			var optionImmediateLaunch = default(Boolean?);
 			var optionAdditionalArgument = default(List<String>?);
 			var option = new CommandLineReader(optionView);
-			if (option.Check("-AutomaticScroll")) {
+			if (option.Check("-automatic_scroll")) {
 				optionAutomaticScroll = option.NextBoolean();
 			}
-			if (option.Check("-ImmediateLaunch")) {
+			if (option.Check("-immediate_launch")) {
 				optionImmediateLaunch = option.NextBoolean();
 			}
 			else {
 				optionImmediateLaunch = App.Setting.Data.ModdingWorker.ImmediateLaunch;
 			}
-			if (option.Check("-AdditionalArgument")) {
+			if (option.Check("-additional_argument")) {
 				optionAdditionalArgument = option.NextStringList();
 			}
 			if (!option.Done()) {
@@ -160,10 +160,10 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-AutomaticScroll")) {
+			if (option.Check("-automatic_scroll")) {
 				option.NextBoolean(this.AutomaticScroll);
 			}
-			if (option.Check("-AdditionalArgument")) {
+			if (option.Check("-additional_argument")) {
 				option.NextStringList(this.AdditionalArgument);
 			}
 			return option.Done();

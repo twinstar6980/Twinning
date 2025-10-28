@@ -497,7 +497,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					break;
 				}
 				case "Export": {
-					var file = await StorageHelper.PickSaveFile(App.MainWindow, $"@Application.SettingFile", "Setting.json");
+					var file = await StorageHelper.PickSaveFile(App.MainWindow, $"@Application.SettingFile", "setting.json");
 					if (file != null) {
 						await App.Setting.Save(file, false);
 						changed = true;

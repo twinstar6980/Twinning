@@ -69,7 +69,7 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.ModdingWorker.SettingPanel() {
 					Data = App.Setting.Data.ModdingWorker,
 				},
-				GenerateForwardOption = (resource) => ["-AdditionalArgument", ..resource],
+				GenerateForwardOption = (resource) => ["-additional_argument", ..resource],
 			},
 			new () {
 				Type = ModuleType.CommandSender,
@@ -89,7 +89,7 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.ResourceShipper.SettingPanel() {
 					Data = App.Setting.Data.ResourceShipper,
 				},
-				GenerateForwardOption = (resource) => ["-Resource", ..resource],
+				GenerateForwardOption = (resource) => ["-resource", ..resource],
 			},
 			new () {
 				Type = ModuleType.AnimationViewer,
@@ -99,7 +99,7 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.AnimationViewer.SettingPanel() {
 					Data = App.Setting.Data.AnimationViewer,
 				},
-				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-AnimationFile", resource[0]],
+				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-animation_file", resource[0]],
 			},
 			new () {
 				Type = ModuleType.ReflectionDescriptor,
@@ -109,7 +109,7 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.ReflectionDescriptor.SettingPanel() {
 					Data = App.Setting.Data.ReflectionDescriptor,
 				},
-				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-DescriptorFile", resource[0]],
+				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-descriptor_file", resource[0]],
 			},
 			new () {
 				Type = ModuleType.PackageBuilder,
@@ -119,7 +119,7 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.PackageBuilder.SettingPanel() {
 					Data = App.Setting.Data.PackageBuilder,
 				},
-				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistDirectory(resource[0]) ? null : ["-ProjectDirectory", resource[0]],
+				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistDirectory(resource[0]) ? null : ["-project_directory", resource[0]],
 			},
 		];
 
@@ -142,9 +142,9 @@ namespace Twinning.AssistantPlus {
 			ModuleLauncherConfiguration launcher
 		) {
 			return [
-				"Application",
+				"application",
 				..launcher.Command,
-				"-Launch",
+				"-launch",
 				launcher.Title,
 				launcher.Type.ToString(),
 				..launcher.Option,

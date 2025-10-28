@@ -11,7 +11,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		private static String StateFile {
 			get {
-				return $"{App.SharedDirectory}/Forwarder";
+				return $"{App.SharedDirectory}/forwarder";
 			}
 		}
 

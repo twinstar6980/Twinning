@@ -106,10 +106,10 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			var optionParallelForward = default(Boolean?);
 			var optionCommand = default(List<Tuple<String, Boolean, Dictionary<String, Object>>>?);
 			var option = new CommandLineReader(optionView);
-			if (option.Check("-ParallelForward")) {
+			if (option.Check("-parallel_forward")) {
 				optionParallelForward = option.NextBoolean();
 			}
-			if (option.Check("-Command")) {
+			if (option.Check("-command")) {
 				optionCommand = [];
 				while (!option.Done()) {
 					optionCommand.Add(new (
@@ -139,10 +139,10 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-ParallelForward")) {
+			if (option.Check("-parallel_forward")) {
 				option.NextBoolean(this.ParallelForward);
 			}
-			if (option.Check("-Command")) {
+			if (option.Check("-command")) {
 				foreach (var item in this.Command) {
 					option.NextString(item.Item2.Identifier);
 					option.NextBoolean(item.Item3.Value);

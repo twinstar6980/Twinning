@@ -2,7 +2,7 @@ namespace Twinning.Script.AndroidHelper {
 
 	// #region common
 
-	export const k_remote_temporary_directory = `/data/local/tmp/twinning`;
+	export const k_temporary_directory = `/data/local/tmp/twinning`;
 
 	// ----------------
 
@@ -89,8 +89,8 @@ namespace Twinning.Script.AndroidHelper {
 				run_adb([`push`, local, remote]);
 			}
 			else {
-				fs_create_directory(k_remote_temporary_directory, null);
-				let remote_temporary = `${k_remote_temporary_directory}/${StorageHelper.name(local)}`;
+				fs_create_directory(k_temporary_directory, null);
+				let remote_temporary = `${k_temporary_directory}/${StorageHelper.name(local)}`;
 				run_adb([`push`, local, remote_temporary]);
 				fs_copy(remote_temporary, remote);
 				fs_remove(remote_temporary);

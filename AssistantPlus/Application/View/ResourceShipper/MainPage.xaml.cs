@@ -120,16 +120,16 @@ namespace Twinning.AssistantPlus.View.ResourceShipper {
 			var optionEnableBatch = default(Boolean?);
 			var optionResource = default(List<Tuple<String>>?);
 			var option = new CommandLineReader(optionView);
-			if (option.Check("-ParallelForward")) {
+			if (option.Check("-parallel_forward")) {
 				optionParallelForward = option.NextBoolean();
 			}
-			if (option.Check("-EnableFilter")) {
+			if (option.Check("-enable_filter")) {
 				optionEnableFilter = option.NextBoolean();
 			}
-			if (option.Check("-EnableBatch")) {
+			if (option.Check("-enable_batch")) {
 				optionEnableBatch = option.NextBoolean();
 			}
-			if (option.Check("-Resource")) {
+			if (option.Check("-resource")) {
 				optionResource = [];
 				while (!option.Done()) {
 					optionResource.Add(new (
@@ -167,16 +167,16 @@ namespace Twinning.AssistantPlus.View.ResourceShipper {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-ParallelForward")) {
+			if (option.Check("-parallel_forward")) {
 				option.NextBoolean(this.ParallelForward);
 			}
-			if (option.Check("-EnableFilter")) {
+			if (option.Check("-enable_filter")) {
 				option.NextBoolean(this.EnableFilter);
 			}
-			if (option.Check("-EnableBatch")) {
+			if (option.Check("-enable_batch")) {
 				option.NextBoolean(this.EnableBatch);
 			}
-			if (option.Check("-Resource")) {
+			if (option.Check("-resource")) {
 				foreach (var item in this.Resource) {
 					option.NextString(item.Item1);
 				}

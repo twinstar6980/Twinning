@@ -30,7 +30,7 @@ namespace Twinning.Script.ProcessHelper {
 
 	// #endregion
 
-	// #region child
+	// #region process
 
 	export type ProgramResult = {
 		code: bigint;
@@ -62,7 +62,7 @@ namespace Twinning.Script.ProcessHelper {
 		let error = `${temporary_directory}/error`;
 		KernelX.Storage.write_file_s(input, input_data);
 		if (KernelX.is_android && !Shell.is_basic) {
-			temporary_directory_fallback = `${AndroidHelper.k_remote_temporary_directory}/${StorageHelper.name(temporary_directory)}`;
+			temporary_directory_fallback = `${AndroidHelper.k_temporary_directory}/${StorageHelper.name(temporary_directory)}`;
 			output = `${temporary_directory_fallback}/output`;
 			error = `${temporary_directory_fallback}/error`;
 			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output} ; chmod 777 ${output} ; touch ${error} ; chmod 777 ${error}"`) === 0n);
@@ -91,7 +91,7 @@ namespace Twinning.Script.ProcessHelper {
 
 	// #endregion
 
-	// #region program path
+	// #region program
 
 	export let g_program_path_map: Record<string, null | string> = {};
 
@@ -111,8 +111,11 @@ namespace Twinning.Script.ProcessHelper {
 			throw new Error(`could not find 'PATH' environment`);
 		}
 		let path_list = path_environment.split(item_delimiter);
+		if (KernelX.is_windows) {
+			path_list = path_list.map((value) => (StorageHelper.regularize(value)));
+		}
 		let path_extension_list = [''];
-		if (allow_extension && KernelX.is_windows) {
+		if (KernelX.is_windows && allow_extension) {
 			let path_extension_environment = KernelX.Process.get_environment('PATHEXT');
 			if (path_extension_environment === null) {
 				throw new Error(`could not find 'PATHEXT' environment`);

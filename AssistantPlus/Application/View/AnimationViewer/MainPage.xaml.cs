@@ -177,52 +177,52 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			var optionActiveFrameSpeed = default(Floater?);
 			var optionActiveProgressState = default(Boolean?);
 			var option = new CommandLineReader(optionView);
-			if (option.Check("-ImmediateSelect")) {
+			if (option.Check("-immediate_select")) {
 				optionImmediateSelect = option.NextBoolean();
 			}
-			if (option.Check("-AutomaticPlay")) {
+			if (option.Check("-automatic_play")) {
 				optionAutomaticPlay = option.NextBoolean();
 			}
-			if (option.Check("-RepeatPlay")) {
+			if (option.Check("-repeat_play")) {
 				optionRepeatPlay = option.NextBoolean();
 			}
-			if (option.Check("-KeepSpeed")) {
+			if (option.Check("-keep_speed")) {
 				optionKeepSpeed = option.NextBoolean();
 			}
-			if (option.Check("-ShowBoundary")) {
+			if (option.Check("-show_boundary")) {
 				optionShowBoundary = option.NextBoolean();
 			}
-			if (option.Check("-ImageFilterRule")) {
+			if (option.Check("-image_filter_rule")) {
 				optionImageFilterRule = option.NextString();
 			}
-			if (option.Check("-SpriteFilterRule")) {
+			if (option.Check("-sprite_filter_rule")) {
 				optionSpriteFilterRule = option.NextString();
 			}
-			if (option.Check("-AnimationFile")) {
+			if (option.Check("-animation_file")) {
 				optionAnimationFile = option.NextString();
 			}
-			if (option.Check("-ImageFilter")) {
+			if (option.Check("-image_filter")) {
 				optionImageFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
 			}
-			if (option.Check("-SpriteFilter")) {
+			if (option.Check("-sprite_filter")) {
 				optionSpriteFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
 			}
-			if (option.Check("-ActiveTarget")) {
+			if (option.Check("-active_target")) {
 				optionActiveTarget = new (
 					option.NextBoolean(),
 					option.NextInteger()
 				);
 			}
-			if (option.Check("-ActiveFrameRange")) {
+			if (option.Check("-active_frame_range")) {
 				optionActiveFrameRange = new (
 					option.NextInteger(),
 					option.NextInteger()
 				);
 			}
-			if (option.Check("-ActiveFrameSpeed")) {
+			if (option.Check("-active_frame_speed")) {
 				optionActiveFrameSpeed = option.NextFloater();
 			}
-			if (option.Check("-ActiveProgressState")) {
+			if (option.Check("-active_progress_state")) {
 				optionActiveProgressState = option.NextBoolean();
 			}
 			if (!option.Done()) {
@@ -287,48 +287,48 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-ImmediateSelect")) {
+			if (option.Check("-immediate_select")) {
 				option.NextBoolean(this.ImmediateSelect);
 			}
-			if (option.Check("-AutomaticPlay")) {
+			if (option.Check("-automatic_play")) {
 				option.NextBoolean(this.AutomaticPlay);
 			}
-			if (option.Check("-RepeatPlay")) {
+			if (option.Check("-repeat_play")) {
 				option.NextBoolean(this.RepeatPlay);
 			}
-			if (option.Check("-KeepSpeed")) {
+			if (option.Check("-keep_speed")) {
 				option.NextBoolean(this.KeepSpeed);
 			}
-			if (option.Check("-ShowBoundary")) {
+			if (option.Check("-show_boundary")) {
 				option.NextBoolean(this.ShowBoundary);
 			}
-			if (option.Check("-ImageFilterRule")) {
+			if (option.Check("-image_filter_rule")) {
 				option.NextString(this.ImageFilterRule);
 			}
-			if (option.Check("-SpriteFilterRule")) {
+			if (option.Check("-sprite_filter_rule")) {
 				option.NextString(this.SpriteFilterRule);
 			}
-			if (option.Check("-AnimationFile", this.Loaded)) {
+			if (option.Check("-animation_file", this.Loaded)) {
 				option.NextString(this.AnimationFile.AsNotNull());
 			}
-			if (option.Check("-ImageFilter", this.Loaded)) {
+			if (option.Check("-image_filter", this.Loaded)) {
 				option.NextString(this.ImageFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
 			}
-			if (option.Check("-SpriteFilter", this.Loaded)) {
+			if (option.Check("-sprite_filter", this.Loaded)) {
 				option.NextString(this.SpriteFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
 			}
-			if (option.Check("-ActiveTarget", this.Activated)) {
+			if (option.Check("-active_target", this.Activated)) {
 				option.NextBoolean(this.ActiveTarget.AsNotNull().Item1);
 				option.NextInteger(this.ActiveTarget.AsNotNull().Item2);
 			}
-			if (option.Check("-ActiveFrameRange", this.Activated)) {
+			if (option.Check("-active_frame_range", this.Activated)) {
 				option.NextInteger(this.ActiveFrameRange.AsNotNull().Begin);
 				option.NextInteger(this.ActiveFrameRange.AsNotNull().End);
 			}
-			if (option.Check("-ActiveFrameSpeed", this.Activated)) {
+			if (option.Check("-active_frame_speed", this.Activated)) {
 				option.NextFloater(this.ActiveFrameSpeed.AsNotNull());
 			}
-			if (option.Check("-ActiveProgressState", this.Activated)) {
+			if (option.Check("-active_progress_state", this.Activated)) {
 				option.NextBoolean(this.ActiveProgressState.AsNotNull());
 			}
 			return option.Done();

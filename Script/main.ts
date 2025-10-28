@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '148';
+	export const k_version = '149';
 
 	// ----------------
 

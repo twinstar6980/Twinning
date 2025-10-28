@@ -57,12 +57,11 @@ namespace Twinning.AssistantPlus {
 					_ = this.HandleException(exception, App.MainWindow);
 					return;
 				});
-				var argument = Environment.GetCommandLineArgs();
 				App.PackageDirectory = StorageHelper.Regularize(Package.Current.InstalledPath);
 				App.ProgramFile = $"{App.PackageDirectory}/Application.exe";
 				App.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{ApplicationInformation.Identifier}");
-				App.CacheDirectory = $"{App.SharedDirectory}/Cache";
-				argument = argument[1..];
+				App.CacheDirectory = $"{App.SharedDirectory}/cache";
+				var argument = Environment.GetCommandLineArgs()[1..];
 				try {
 					await App.Setting.Load();
 				}
@@ -70,9 +69,6 @@ namespace Twinning.AssistantPlus {
 					await App.Setting.Reset();
 				}
 				await App.Setting.Save();
-				unsafe {
-					Win32.PInvoke.AddDllDirectory($"{App.PackageDirectory}/Asset/Library");
-				}
 				NotificationHelper.Initialize(async () => {
 					if (App.MainWindowIsInitialized) {
 						WindowHelper.SetAsForeground(App.MainWindow);
@@ -94,7 +90,7 @@ namespace Twinning.AssistantPlus {
 						if (argument.Length == 1 && argument[0].StartsWith($"{ApplicationInformation.Identifier}:")) {
 							await this.HandleLink(new (argument[0]));
 						}
-						else if (argument.Length >= 1 && argument[0] == "Application") {
+						else if (argument.Length >= 1 && argument[0] == "application") {
 							await this.HandleCommand(argument[1..].ToList());
 						}
 						else {
@@ -253,26 +249,26 @@ namespace Twinning.AssistantPlus {
 			var optionLaunch = default(Tuple<String, ModuleType, List<String>>?);
 			var optionForward = default(Tuple<List<String>>?);
 			var option = new CommandLineReader(command);
-			if (option.Check("-WindowPosition")) {
+			if (option.Check("-window_position")) {
 				optionWindowPosition = new (
 					option.NextInteger(),
 					option.NextInteger()
 				);
 			}
-			if (option.Check("-WindowSize")) {
+			if (option.Check("-window_size")) {
 				optionWindowSize = new (
 					option.NextInteger(),
 					option.NextInteger()
 				);
 			}
-			if (option.Check("-Launch")) {
+			if (option.Check("-launch")) {
 				optionLaunch = new (
 					option.NextString(),
 					option.NextString().SelfLet((it) => (Enum.Parse<ModuleType>(it))),
 					option.NextStringList()
 				);
 			}
-			if (option.Check("-Forward")) {
+			if (option.Check("-forward")) {
 				optionForward = new (
 					option.NextStringList()
 				);
@@ -301,7 +297,7 @@ namespace Twinning.AssistantPlus {
 		public async Task HandleLink (
 			Uri link
 		) {
-			if (link.Scheme != ApplicationInformation.Identifier || link.Authority != "" || link.AbsolutePath != "/Application") {
+			if (link.Scheme != ApplicationInformation.Identifier || link.Authority != "" || link.AbsolutePath != "/application") {
 				throw new ($"Invalid link.");
 			}
 			var command = link.GetComponents(UriComponents.Query, UriFormat.UriEscaped)
@@ -309,7 +305,7 @@ namespace Twinning.AssistantPlus {
 				.Where((item) => (item.Count((it) => (it == '=')) == 1))
 				.Select((item) => (item.Split("=").Select(Uri.UnescapeDataString).ToList()))
 				.Select((item) => (new KeyValuePair<String, String>(item[0], item[1])))
-				.Where((item) => (item.Key == "Command"))
+				.Where((item) => (item.Key == "command"))
 				.Select((item) => (item.Value))
 				.ToList();
 			await this.HandleCommand(command);

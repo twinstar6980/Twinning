@@ -242,26 +242,27 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
+		Console.information(`Phase: dump program information`, []);
 		let dump_data: Array<string> = [];
-		if (disable_record_encryption || enable_debug_mode) {
-			Console.information(`Phase: dump program information`, []);
-			let il2cpp_dumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
-			let il2cpp_dumper_program_result = ProcessHelper.run_process(
+		{
+			let il2cppdumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
+			let il2cppdumper_program_result = ProcessHelper.run_process(
 				['dotnet'],
 				[
-					il2cpp_dumper_program_path,
+					il2cppdumper_program_path,
 					program_file,
 					metadata_file,
 				],
 				null,
 				null,
 			);
-			Console.warning(`The output of Il2CppDumper:`, [il2cpp_dumper_program_result.output]);
-			if (!ConvertHelper.normalize_string_line_feed(il2cpp_dumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
+			Console.warning(`The output of Il2CppDumper:`, [il2cppdumper_program_result.output]);
+			if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
 				throw new Error(`execute failed by Il2CppDumper`);
 			}
-			dump_data = KernelX.Storage.read_file_s(`${StorageHelper.parent(il2cpp_dumper_program_path)}/dump.cs`).split('\n');
+			dump_data = KernelX.Storage.read_file_s(`${StorageHelper.parent(il2cppdumper_program_path)}/dump.cs`).split('\n');
 		}
+		Console.information(`Phase: parse symbol address`, []);
 		let symbol_address = {
 			CRC64: {
 				GetValue: [] as Array<number>,
@@ -279,52 +280,47 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				DEBUG: 0,
 			},
 		};
-		if (disable_record_encryption || enable_debug_mode) {
-			Console.information(`Phase: parse symbol address`, []);
-			{
-				let search_result = search_method_from_dump_data(dump_data, 'CRC64', 'GetValue');
-				assert_test(search_result.length === 1);
-				symbol_address.CRC64.GetValue = search_result.map((value) => (value.address));
-			}
-			{
-				let search_result = search_method_from_dump_data(dump_data, 'Encrypter', 'Encode');
-				assert_test(search_result.length === 3);
-				symbol_address.Encrypter.Encode = search_result.map((value) => (value.address));
-			}
-			{
-				let search_result = search_method_from_dump_data(dump_data, 'Encrypter', 'Decode');
-				assert_test(search_result.length === 3);
-				symbol_address.Encrypter.Decode = search_result.map((value) => (value.address));
-			}
-			{
-				let search_result = search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.static && value.parameter === `int rcId`));
-				assert_test(search_result.length === 1);
-				symbol_address.RecordStore.ReadRecord = search_result[0].address;
-			}
-			{
-				let search_result = search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.static && value.parameter === `int rcId, byte[][] data`));
-				assert_test(search_result.length === 1);
-				symbol_address.RecordStore.WriteRecord = search_result[0].address;
-			}
-			{
-				let search_result = search_method_from_dump_data(dump_data, 'MyConfig', '.cctor');
-				assert_test(search_result.length === 1);
-				symbol_address.MyConfig._cctor = search_result[0].address;
-			}
-			{
-				let search_result = search_field_from_dump_data(dump_data, 'MyConfig', 'DEBUG');
-				assert_test(search_result !== null);
-				symbol_address.MyConfig.DEBUG = search_result.address;
-			}
-			Console.warning(`The symbol address was parsed`, [
-				`CRC64.GetValue           ${symbol_address.CRC64.GetValue.map((value) => (value.toString(16))).join(',')}`,
-				`Encrypter.Encode         ${symbol_address.Encrypter.Encode.map((value) => (value.toString(16))).join(',')}`,
-				`Encrypter.Decode         ${symbol_address.Encrypter.Decode.map((value) => (value.toString(16))).join(',')}`,
-				`RecordStore.ReadRecord   ${symbol_address.RecordStore.ReadRecord.toString(16)}`,
-				`RecordStore.WriteRecord  ${symbol_address.RecordStore.WriteRecord.toString(16)}`,
-				`MyConfig..cctor          ${symbol_address.MyConfig._cctor.toString(16)}`,
-				`MyConfig.DEBUG          +${symbol_address.MyConfig.DEBUG.toString(16)}`,
-			]);
+		{
+			let search_result = search_method_from_dump_data(dump_data, 'CRC64', 'GetValue');
+			assert_test(search_result.length === 1);
+			symbol_address.CRC64.GetValue = search_result.map((value) => (value.address));
+			Console.information(`The symbol 'CRC64.GetValue' at ${symbol_address.CRC64.GetValue.map((value) => (value.toString(16))).join(',')}`, []);
+		}
+		{
+			let search_result = search_method_from_dump_data(dump_data, 'Encrypter', 'Encode');
+			assert_test(search_result.length === 3);
+			symbol_address.Encrypter.Encode = search_result.map((value) => (value.address));
+			Console.information(`The symbol 'Encrypter.Encode' at ${symbol_address.Encrypter.Encode.map((value) => (value.toString(16))).join(',')}`, []);
+		}
+		{
+			let search_result = search_method_from_dump_data(dump_data, 'Encrypter', 'Decode');
+			assert_test(search_result.length === 3);
+			symbol_address.Encrypter.Decode = search_result.map((value) => (value.address));
+			Console.information(`The symbol 'Encrypter.Decode' at ${symbol_address.Encrypter.Decode.map((value) => (value.toString(16))).join(',')}`, []);
+		}
+		{
+			let search_result = search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.static && value.parameter === `int rcId`));
+			assert_test(search_result.length === 1);
+			symbol_address.RecordStore.ReadRecord = search_result[0].address;
+			Console.information(`The symbol 'RecordStore.ReadRecord' at ${symbol_address.RecordStore.ReadRecord.toString(16)}`, []);
+		}
+		{
+			let search_result = search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.static && value.parameter === `int rcId, byte[][] data`));
+			assert_test(search_result.length === 1);
+			symbol_address.RecordStore.WriteRecord = search_result[0].address;
+			Console.information(`The symbol 'RecordStore.WriteRecord' at ${symbol_address.RecordStore.WriteRecord.toString(16)}`, []);
+		}
+		{
+			let search_result = search_method_from_dump_data(dump_data, 'MyConfig', '.cctor');
+			assert_test(search_result.length === 1);
+			symbol_address.MyConfig._cctor = search_result[0].address;
+			Console.information(`The symbol 'MyConfig..cctor' at ${symbol_address.MyConfig._cctor.toString(16)}`, []);
+		}
+		{
+			let search_result = search_field_from_dump_data(dump_data, 'MyConfig', 'DEBUG');
+			assert_test(search_result !== null);
+			symbol_address.MyConfig.DEBUG = search_result.address;
+			Console.information(`The symbol 'MyConfig.DEBUG' at ${symbol_address.MyConfig.DEBUG.toString(16)}`, []);
 		}
 		Console.information(`Phase: load original program`, []);
 		let program_data = KernelX.Storage.read_file(program_file);

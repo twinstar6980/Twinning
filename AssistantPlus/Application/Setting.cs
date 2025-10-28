@@ -157,7 +157,7 @@ namespace Twinning.AssistantPlus {
 
 		public String File {
 			get {
-				return $"{App.SharedDirectory}/Setting.json";
+				return $"{App.SharedDirectory}/setting.json";
 			}
 		}
 

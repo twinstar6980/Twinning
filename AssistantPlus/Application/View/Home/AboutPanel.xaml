@@ -505,39 +505,39 @@
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  <Italic>Launch</Italic></Bold>
+								<Bold xml:space="preserve">  <Italic>application</Italic></Bold>
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  -WindowPosition</Bold>
+								<Bold xml:space="preserve">  -window_position</Bold>
 								<LineBreak />
-								<Span xml:space="preserve">    X : <Italic>Integer</Italic></Span>
+								<Span xml:space="preserve">    x : <Italic>Integer</Italic></Span>
 								<LineBreak />
-								<Span xml:space="preserve">    Y : <Italic>Integer</Italic></Span>
+								<Span xml:space="preserve">    y : <Italic>Integer</Italic></Span>
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  -WindowSize</Bold>
+								<Bold xml:space="preserve">  -window_size</Bold>
 								<LineBreak />
-								<Span xml:space="preserve">    Width : <Italic>Integer</Italic></Span>
+								<Span xml:space="preserve">    width : <Italic>Integer</Italic></Span>
 								<LineBreak />
-								<Span xml:space="preserve">    Height : <Italic>Integer</Italic></Span>
+								<Span xml:space="preserve">    height : <Italic>Integer</Italic></Span>
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  -Launch</Bold>
+								<Bold xml:space="preserve">  -launch</Bold>
 								<LineBreak />
-								<Span xml:space="preserve">    Title : <Italic>String</Italic></Span>
+								<Span xml:space="preserve">    title : <Italic>String</Italic></Span>
 								<LineBreak />
-								<Span xml:space="preserve">    Type : <Italic>String</Italic></Span>
+								<Span xml:space="preserve">    type : <Italic>String</Italic></Span>
 								<LineBreak />
-								<Span xml:space="preserve">    Option : <Italic>String...</Italic></Span>
+								<Span xml:space="preserve">    option : <Italic>String...</Italic></Span>
 							</Span>
 							<LineBreak />
 							<Span>
-								<Bold xml:space="preserve">  -Forward</Bold>
+								<Bold xml:space="preserve">  -forward</Bold>
 								<LineBreak />
-								<Span xml:space="preserve">    Resource : <Italic>String...</Italic></Span>
+								<Span xml:space="preserve">    resource : <Italic>String...</Italic></Span>
 							</Span>
 						</TextBlock>
 					</Flyout>

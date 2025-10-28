@@ -101,7 +101,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 		) {
 			var optionDescriptorFile = default(String?);
 			var option = new CommandLineReader(optionView);
-			if (option.Check("-DescriptorFile")) {
+			if (option.Check("-descriptor_file")) {
 				optionDescriptorFile = option.NextString();
 			}
 			if (!option.Done()) {
@@ -116,7 +116,7 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 		public async Task<List<String>> CollectOption (
 		) {
 			var option = new CommandLineWriter();
-			if (option.Check("-DescriptorFile", this.DescriptorFile != null)) {
+			if (option.Check("-descriptor_file", this.DescriptorFile != null)) {
 				option.NextString(this.DescriptorFile.AsNotNull());
 			}
 			return option.Done();
