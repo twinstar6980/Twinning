@@ -5,16 +5,10 @@ class ForwarderFinderSync: FIFinderSync {
 
 	// MARK: - variable
 
-	private let applicationName: String
-
-	private let applicationLogo: NSImage
-
 	// MARK: - construct
 
 	public override init(
 	) {
-		self.applicationName = "Twinning Assistant"
-		self.applicationLogo = NSImage(named: "Logo")!
 		super.init()
 		FIFinderSyncController.default().directoryURLs = [URL(fileURLWithPath: "/")]
 		return
@@ -26,8 +20,8 @@ class ForwarderFinderSync: FIFinderSync {
 		for menuKind: FIMenuKind,
 	) -> NSMenu {
 		let menu = NSMenu(title: "")
-		let item = NSMenuItem(title: self.applicationName, action: #selector(self.actionForward(_:)), keyEquivalent: "")
-		item.image = self.applicationLogo
+		let item = NSMenuItem(title: self.toolbarItemName, action: #selector(self.actionForward(_:)), keyEquivalent: "")
+		item.image = self.toolbarItemImage
 		menu.addItem(item)
 		return menu
 	}
@@ -51,7 +45,7 @@ class ForwarderFinderSync: FIFinderSync {
 	}
 
 	public override var toolbarItemName: String {
-		return self.applicationName
+		return (try? self.getApplicationName()) ?? ""
 	}
 
 	public override var toolbarItemToolTip: String {
@@ -59,7 +53,7 @@ class ForwarderFinderSync: FIFinderSync {
 	}
 
 	public override var toolbarItemImage: NSImage {
-		return self.applicationLogo
+		return (try? self.getApplicationLogo()) ?? NSImage()
 	}
 
 	// MARK: - action
@@ -80,7 +74,34 @@ class ForwarderFinderSync: FIFinderSync {
 
 	// MARK: - utility
 
-	private func parsePathOfFileURL(
+	private func getApplicationIdentifier(
+	) throws -> String {
+		guard let extensionIdentifier = Bundle.main.bundleIdentifier else {
+			throw NSError(domain: "failed to get extension identifier.", code: 0)
+		}
+		let extensionSuffix = ".Forwarder"
+		guard extensionIdentifier.hasSuffix(extensionSuffix) else {
+			throw NSError(domain: "unknown extension identifier.", code: 0)
+		}
+		return String(extensionIdentifier.prefix(extensionIdentifier.count - extensionSuffix.count))
+	}
+
+	private func getApplicationName(
+	) throws -> String {
+		guard let extensionName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String else {
+			throw NSError(domain: "failed to get extension name.", code: 0)
+		}
+		return extensionName
+	}
+
+	private func getApplicationLogo(
+	) throws -> NSImage {
+		return NSImage(named: "Logo")!
+	}
+
+	// ----------------
+
+	private func getFileActualPath(
 		url: URL,
 	) throws -> String {
 		guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -115,16 +136,7 @@ class ForwarderFinderSync: FIFinderSync {
 		return
 	}
 
-	private func forwardResource(
-		resource: Array<URL>,
-	) throws -> Void {
-		var command: Array<String> = []
-		command.append("-forward")
-		command.append(contentsOf: try resource.map({ (item) in try self.parsePathOfFileURL(url: item) }))
-		let link = URL(string: "com.twinstar.twinning.assistant:/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
-		try self.openLink(link: link)
-		return
-	}
+	// ----------------
 
 	private func showException(
 		exception: Error,
@@ -139,6 +151,17 @@ class ForwarderFinderSync: FIFinderSync {
 			alert.runModal()
 			action()
 		}
+		return
+	}
+
+	private func forwardResource(
+		resource: Array<URL>,
+	) throws -> Void {
+		var command: Array<String> = []
+		command.append("-forward")
+		command.append(contentsOf: try resource.map({ (item) in try self.getFileActualPath(url: item) }))
+		let link = URL(string: "\(try self.getApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
+		try self.openLink(link: link)
 		return
 	}
 

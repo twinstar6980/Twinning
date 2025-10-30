@@ -9,6 +9,10 @@ import android.widget.Toast
 
 class ForwarderActivity : Activity() {
 
+	// region variable
+
+	// endregion
+
 	// region implement Activity
 
 	protected override fun onCreate(
@@ -35,6 +39,13 @@ class ForwarderActivity : Activity() {
 	// endregion
 
 	// region utility
+
+	private fun getApplicationIdentifier(
+	): String {
+		return this.packageName
+	}
+
+	// ----------------
 
 	private fun encodePercentString(
 		source: String,
@@ -77,21 +88,23 @@ class ForwarderActivity : Activity() {
 		return
 	}
 
+	// ----------------
+
+	private fun showException(
+		exception: Exception,
+	): Unit {
+		Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show()
+		return
+	}
+
 	private fun forwardResource(
 		resource: List<Uri>,
 	): Unit {
 		val command = mutableListOf<String>()
 		command.add("-forward")
 		command.addAll(resource.map() { item -> item.toString() })
-		val link = Uri.parse("com.twinstar.twinning.assistant:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
+		val link = Uri.parse("${this.getApplicationIdentifier()}:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
 		this.openLink(link, resource)
-		return
-	}
-
-	private fun showException(
-		exception: Exception,
-	): Unit {
-		Toast.makeText(this, exception.toString(), Toast.LENGTH_LONG).show()
 		return
 	}
 

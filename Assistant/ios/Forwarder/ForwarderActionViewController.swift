@@ -51,7 +51,21 @@ class ForwarderActionViewController: UIViewController {
 
 	// MARK: - utility
 
-	private func parsePathOfFileURL(
+	private func getApplicationIdentifier(
+	) throws -> String {
+		guard let extensionIdentifier = Bundle.main.bundleIdentifier else {
+			throw NSError(domain: "failed to get extension identifier.", code: 0)
+		}
+		let extensionSuffix = ".Forwarder"
+		guard extensionIdentifier.hasSuffix(extensionSuffix) else {
+			throw NSError(domain: "unknown extension identifier.", code: 0)
+		}
+		return String(extensionIdentifier.prefix(extensionIdentifier.count - extensionSuffix.count))
+	}
+
+	// ----------------
+
+	private func getFileActualPath(
 		url: URL,
 	) throws -> String {
 		guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -103,16 +117,7 @@ class ForwarderActionViewController: UIViewController {
 		return
 	}
 
-	private func forwardResource(
-		resource: Array<URL>,
-	) throws -> Void {
-		var command: Array<String> = []
-		command.append("-forward")
-		command.append(contentsOf: try resource.map({ (item) in try self.parsePathOfFileURL(url: item) }))
-		let link = URL(string: "com.twinstar.twinning.assistant:/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
-		try self.openLink(link: link)
-		return
-	}
+	// ----------------
 
 	private func showException(
 		exception: Error,
@@ -121,6 +126,17 @@ class ForwarderActionViewController: UIViewController {
 		let alter = UIAlertController(title: "Exception", message: exception.localizedDescription, preferredStyle: .alert)
 		alter.addAction(UIAlertAction(title: "Close", style: .destructive, handler: { (_) in action() }))
 		self.present(alter, animated: true, completion: nil)
+		return
+	}
+
+	private func forwardResource(
+		resource: Array<URL>,
+	) throws -> Void {
+		var command: Array<String> = []
+		command.append("-forward")
+		command.append(contentsOf: try resource.map({ (item) in try self.getFileActualPath(url: item) }))
+		let link = URL(string: "\(try self.getApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
+		try self.openLink(link: link)
 		return
 	}
 

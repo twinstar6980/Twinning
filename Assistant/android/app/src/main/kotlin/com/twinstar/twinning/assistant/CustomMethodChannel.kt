@@ -1,6 +1,5 @@
 package com.twinstar.twinning.assistant
 
-import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
@@ -53,7 +52,7 @@ class CustomMethodChannel {
 	): Unit {
 		MethodChannel(
 			flutterEngine.dartExecutor.binaryMessenger,
-			"com.twinstar.twinning.assistant.CustomMethodChannel",
+			"${this.host.packageName}.CustomMethodChannel",
 		).setMethodCallHandler { call, result ->
 			CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
 			return@setMethodCallHandler
@@ -67,12 +66,12 @@ class CustomMethodChannel {
 		data: Intent?,
 	): Unit {
 		when (requestCode) {
-			REQUEST_PICK_STORAGE_ITEM -> {
+			this.requestCodeForPickStorageItem -> {
 				runBlocking {
 					this@CustomMethodChannel.continuation.send(data?.data)
 				}
 			}
-			REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION -> {
+			this.requestForRequestExternalStoragePermission -> {
 				runBlocking {
 					this@CustomMethodChannel.continuation.send(null)
 				}
@@ -165,10 +164,10 @@ class CustomMethodChannel {
 			intent.putExtra(Intent.EXTRA_TITLE, name)
 		}
 		val timeBeforePick = Date().time
-		this.host.startActivityForResult(intent, REQUEST_PICK_STORAGE_ITEM)
+		this.host.startActivityForResult(intent, this.requestCodeForPickStorageItem)
 		val targetUri = this.continuation.receive() as Uri?
 		if (type == "save_file") {
-			if (targetUri != null && queryDatabaseOfContentUri<Long>(targetUri, DocumentsContract.Document.COLUMN_LAST_MODIFIED, this.host.contentResolver)!! > timeBeforePick) {
+			if (targetUri != null && queryDatabaseOfContentUri<Long>(targetUri, DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
 				check(DocumentsContract.deleteDocument(this.host.contentResolver, targetUri))
 			}
 		}
@@ -183,7 +182,7 @@ class CustomMethodChannel {
 		check(File(placement).isDirectory)
 		val sourceUri = source.toUri()
 		check(sourceUri.scheme == "content")
-		val destinationName = queryDatabaseOfContentUri<String>(sourceUri, OpenableColumns.DISPLAY_NAME, this.host.contentResolver)
+		val destinationName = this.queryDatabaseOfContentUri<String>(sourceUri, OpenableColumns.DISPLAY_NAME)
 		check(destinationName != null)
 		val destination = "${placement}/${destinationName}"
 		if (File(destination).exists()) {
@@ -202,7 +201,7 @@ class CustomMethodChannel {
 	): Boolean {
 		check(mode == "check" || mode == "request")
 		if (mode == "request") {
-			this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION)
+			this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), this.requestForRequestExternalStoragePermission)
 			this.continuation.receive()
 		}
 		return Environment.isExternalStorageManager()
@@ -215,42 +214,31 @@ class CustomMethodChannel {
 
 	// endregion
 
-	// region static
+	// region utility
 
-	companion object {
+	private val requestCodeForPickStorageItem: Int = 1001
 
-		// region request code
+	private val requestForRequestExternalStoragePermission: Int = 1002
 
-		private const val REQUEST_PICK_STORAGE_ITEM: Int = 1001
+	// ----------------
 
-		private const val REQUEST_REQUEST_EXTERNAL_STORAGE_PERMISSION: Int = 1002
-
-		// endregion
-
-		// region content uri
-
-		private inline fun <reified T> queryDatabaseOfContentUri(
-			uri: Uri,
-			name: String,
-			contentResolver: ContentResolver,
-		): T? {
-			var value = null as T?
-			contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
-				check(cursor != null)
-				check(cursor.columnCount == 1)
-				check(cursor.moveToFirst())
-				value = when (T::class.java) {
-					java.lang.Long::class.java -> cursor.getLongOrNull(0) as T?
-					java.lang.Float::class.java -> cursor.getFloatOrNull(0) as T?
-					java.lang.String::class.java -> cursor.getStringOrNull(0) as T?
-					else -> throw Exception()
-				}
+	private inline fun <reified Value> queryDatabaseOfContentUri(
+		uri: Uri,
+		name: String,
+	): Value? {
+		var value = null as Value?
+		this.host.contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
+			check(cursor != null)
+			check(cursor.columnCount == 1)
+			check(cursor.moveToFirst())
+			value = when (Value::class.java) {
+				java.lang.Long::class.java -> cursor.getLongOrNull(0) as Value?
+				java.lang.Float::class.java -> cursor.getFloatOrNull(0) as Value?
+				java.lang.String::class.java -> cursor.getStringOrNull(0) as Value?
+				else -> throw Exception()
 			}
-			return value
 		}
-
-		// endregion
-
+		return value
 	}
 
 	// endregion

@@ -2,7 +2,9 @@ module;
 
 #include <Shlwapi.h>
 #include <ShlObj_core.h>
+#include <Windows.h>
 #include <winrt/base.h>
+#include <winrt/windows.applicationmodel.h>
 #include "./common.hpp"
 
 #define ForwarderExplorerCommandClassFactory_UUID "9992EC48-22A5-86FA-EA42-72DA1A53F23D"
@@ -18,27 +20,13 @@ export namespace Twinning::Assistant::Forwarder {
 	class ForwarderExplorerCommand :
 		public winrt::implements<ForwarderExplorerCommand, IExplorerCommand> {
 
-	private:
-
-		std::wstring m_application_name;
-
-		std::wstring m_application_logo;
-
-		std::wstring m_state_file;
-
 	public:
 
 		#pragma region constructor
 
 		explicit ForwarderExplorerCommand (
 		) :
-			winrt::implements<ForwarderExplorerCommand, IExplorerCommand>{},
-			m_application_name{},
-			m_application_logo{},
-			m_state_file{} {
-			thiz.m_application_name = L"Twinning Assistant";
-			thiz.m_application_logo = thiz.get_library_file_path();
-			thiz.m_state_file = thiz.get_data_directory_path() + L"\\com.twinstar.twinning.assistant\\forwarder";
+			winrt::implements<ForwarderExplorerCommand, IExplorerCommand>{} {
 			return;
 		}
 
@@ -50,7 +38,7 @@ export namespace Twinning::Assistant::Forwarder {
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszName
 		) override {
-			if (SHStrDupW(thiz.m_application_name.data(), ppszName) != S_OK) {
+			if (SHStrDupW(thiz.get_application_name().data(), ppszName) != S_OK) {
 				return S_FALSE;
 			}
 			return S_OK;
@@ -60,7 +48,7 @@ export namespace Twinning::Assistant::Forwarder {
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszIcon
 		) override {
-			if (SHStrDupW(thiz.m_application_logo.data(), ppszIcon) != S_OK) {
+			if (SHStrDupW(thiz.get_application_logo().data(), ppszIcon) != S_OK) {
 				return S_FALSE;
 			}
 			return S_OK;
@@ -87,7 +75,7 @@ export namespace Twinning::Assistant::Forwarder {
 			EXPCMDSTATE *     pCmdState
 		) override {
 			*pCmdState = ECS_HIDDEN;
-			if (std::filesystem::exists(thiz.m_state_file)) {
+			if (std::filesystem::exists(thiz.get_state_file())) {
 				*pCmdState = ECS_ENABLED;
 			}
 			return S_OK;
@@ -148,7 +136,22 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma region utility
 
-		auto get_library_file_path (
+		auto get_application_identifier (
+		) -> std::wstring {
+			return std::wstring{winrt::Windows::ApplicationModel::Package::Current().Id().Name()};
+		}
+
+		auto get_application_name (
+		) -> std::wstring {
+			return std::wstring{winrt::Windows::ApplicationModel::Package::Current().DisplayName()};
+		}
+
+		auto get_application_logo (
+		) -> std::wstring {
+			return std::format(L"{},0", thiz.get_library_file());
+		}
+
+		auto get_library_file (
 		) -> std::wstring {
 			auto state_d = DWORD{};
 			auto handle = reinterpret_cast<HMODULE>(&__ImageBase);
@@ -167,17 +170,19 @@ export namespace Twinning::Assistant::Forwarder {
 			return result;
 		}
 
-		auto get_data_directory_path (
+		auto get_state_file (
 		) -> std::wstring {
 			auto state_h = DWORD{};
-			auto result = std::wstring{};
-			auto result_data = LPWSTR{};
-			state_h = SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &result_data);
+			auto parent = std::wstring{};
+			auto parent_data = LPWSTR{};
+			state_h = SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &parent_data);
 			assert_test(state_h == S_OK);
-			result = std::wstring{result_data};
-			CoTaskMemFree(result_data);
-			return result;
+			parent = std::wstring{parent_data};
+			CoTaskMemFree(parent_data);
+			return std::format(L"{}\\{}\\forwarder", parent, thiz.get_application_identifier());
 		}
+
+		// ----------------
 
 		auto get_file_long_path (
 			std::wstring const & source
@@ -231,26 +236,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return;
 		}
 
-		auto forward_resource (
-			std::vector<std::wstring> const & resource
-		) -> void {
-			auto command = std::vector<std::wstring>{};
-			command.emplace_back(L"-forward");
-			command.append_range(resource);
-			auto link = std::wstring{};
-			link.reserve(1024);
-			link += L"com.twinstar.twinning.assistant:/application?";
-			for (auto & item : command) {
-				link += L"command=";
-				link += thiz.encode_percent_string(item);
-				link += L"&";
-			}
-			if (!command.empty()) {
-				link.pop_back();
-			}
-			thiz.open_link(link);
-			return;
-		}
+		// ----------------
 
 		auto show_exception (
 			std::exception_ptr const & exception
@@ -268,8 +254,30 @@ export namespace Twinning::Assistant::Forwarder {
 			auto message_h = winrt::to_hstring(message);
 			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
 			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-			TaskDialog(nullptr, nullptr, thiz.m_application_name.data(), L"Exception", message_h.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
+			TaskDialog(nullptr, nullptr, thiz.get_application_name().data(), L"Exception", message_h.data(), TDCBF_CLOSE_BUTTON, TD_ERROR_ICON, nullptr);
 			SetThreadDpiAwarenessContext(original_thread_dpi_awareness_context);
+			return;
+		}
+
+		auto forward_resource (
+			std::vector<std::wstring> const & resource
+		) -> void {
+			auto command = std::vector<std::wstring>{};
+			command.emplace_back(L"-forward");
+			command.append_range(resource);
+			auto link = std::format(
+				L"{}:/application?{}",
+				thiz.get_application_identifier(),
+				command
+				| std::views::transform(
+					[&] (auto & item) {
+						return std::format(L"command={}", thiz.encode_percent_string(item));
+					}
+				)
+				| std::views::join_with(L'&')
+				| std::ranges::to<std::wstring>()
+			);
+			thiz.open_link(link);
 			return;
 		}
 

@@ -21,6 +21,7 @@ namespace Twinning.AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
+		public String                            Identifier            = default!;
 		public ModuleType                        Type                  = default!;
 		public String                            Icon                  = default!;
 		public String                            Name                  = default!;
@@ -62,6 +63,7 @@ namespace Twinning.AssistantPlus {
 
 		private static readonly List<ModuleInformation> Information = [
 			new () {
+				Identifier = "modding_worker",
 				Type = ModuleType.ModdingWorker,
 				Icon = FluentIconGlyph.ProvisioningPackage,
 				Name = "Modding Worker",
@@ -72,6 +74,7 @@ namespace Twinning.AssistantPlus {
 				GenerateForwardOption = (resource) => ["-additional_argument", ..resource],
 			},
 			new () {
+				Identifier = "command_sender",
 				Type = ModuleType.CommandSender,
 				Icon = FluentIconGlyph.Send,
 				Name = "Command Sender",
@@ -82,6 +85,7 @@ namespace Twinning.AssistantPlus {
 				GenerateForwardOption = (resource) => null,
 			},
 			new () {
+				Identifier = "resource_shipper",
 				Type = ModuleType.ResourceShipper,
 				Icon = FluentIconGlyph.Share,
 				Name = "Resource Shipper",
@@ -92,6 +96,7 @@ namespace Twinning.AssistantPlus {
 				GenerateForwardOption = (resource) => ["-resource", ..resource],
 			},
 			new () {
+				Identifier = "animation_viewer",
 				Type = ModuleType.AnimationViewer,
 				Icon = FluentIconGlyph.HomeGroup,
 				Name = "Animation Viewer",
@@ -102,6 +107,7 @@ namespace Twinning.AssistantPlus {
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-animation_file", resource[0]],
 			},
 			new () {
+				Identifier = "reflection_descriptor",
 				Type = ModuleType.ReflectionDescriptor,
 				Icon = FluentIconGlyph.Library,
 				Name = "Reflection Descriptor",
@@ -112,6 +118,7 @@ namespace Twinning.AssistantPlus {
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-descriptor_file", resource[0]],
 			},
 			new () {
+				Identifier = "package_builder",
 				Type = ModuleType.PackageBuilder,
 				Icon = FluentIconGlyph.DialShape3,
 				Name = "Package Builder",
@@ -127,6 +134,12 @@ namespace Twinning.AssistantPlus {
 			ModuleType type
 		) {
 			return ModuleHelper.Information[type.CastPrimitive<Size>()];
+		}
+
+		public static ModuleInformation QueryByIdentifier (
+			String identifier
+		) {
+			return ModuleHelper.Information.First((it) => it.Identifier == identifier);
 		}
 
 		// ----------------
@@ -146,7 +159,7 @@ namespace Twinning.AssistantPlus {
 				..launcher.Command,
 				"-launch",
 				launcher.Title,
-				launcher.Type.ToString(),
+				ModuleHelper.Query(launcher.Type).Identifier,
 				..launcher.Option,
 			];
 		}

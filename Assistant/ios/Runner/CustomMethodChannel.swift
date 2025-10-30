@@ -28,7 +28,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   ) -> Void {
     let rootView = self.host.window?.rootViewController as! FlutterViewController
     FlutterMethodChannel(
-      name: "com.twinstar.twinning.assistant.CustomMethodChannel",
+      name: "\(Bundle.main.bundleIdentifier!).CustomMethodChannel",
       binaryMessenger: rootView.binaryMessenger,
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
@@ -99,7 +99,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     rootView.present(pickerView, animated: true)
     let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as? URL
     self.continuation = nil
-    let target = targetUrl == nil ? nil : try self.parsePathOfFileURL(url: targetUrl!)
+    let target = targetUrl == nil ? nil : try self.getFileActualPath(url: targetUrl!)
     return target
   }
 
@@ -124,7 +124,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   // MARK: - utility
 
-  private func parsePathOfFileURL(
+  private func getFileActualPath(
     url: URL,
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
