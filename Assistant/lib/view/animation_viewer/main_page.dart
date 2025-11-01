@@ -13,7 +13,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart';
+import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart' as lib;
 
 // ----------------
 
@@ -553,7 +553,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 Container(
                   color: theme.colorScheme.surfaceContainer,
                   child: LayoutBuilder(
-                    builder: (context, constraints) => SingleChildTwoDimensionalScrollView(
+                    builder: (context, constraints) => lib.SingleChildTwoDimensionalScrollView(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       padding: EdgeInsets.symmetric(
                         horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),

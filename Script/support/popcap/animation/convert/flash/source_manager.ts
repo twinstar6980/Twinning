@@ -5,8 +5,8 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert.Flash.SourceManager {
 	function make_scale_matrix(
 		resolution: bigint,
 	): {
-		a: string,
-		d: string,
+		a: string;
+		d: string;
 	} {
 		let scale = Number(k_standard_resolution) / Number(resolution);
 		return {

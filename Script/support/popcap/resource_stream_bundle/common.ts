@@ -21,11 +21,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle {
 		packet_file: string;
 		packet_definition_file: string;
 	} {
-		let result: {
-			resource_directory: string;
-			packet_file: string;
-			packet_definition_file: string;
-		};
+		let result: ReturnType<typeof make_package_relative_path>;
 		switch (layout_mode) {
 			case 'group': {
 				result = {

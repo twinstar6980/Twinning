@@ -471,7 +471,7 @@ class _SettingPanelState extends State<SettingPanel> {
           label: 'Forwarder Extension',
           content: [
             Text(
-              this._forwarderExtensionState == null ? 'System' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled',
+              this._forwarderExtensionState == null ? 'Unknown' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled',
               overflow: TextOverflow.ellipsis,
             ),
           ],
@@ -480,10 +480,9 @@ class _SettingPanelState extends State<SettingPanel> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Switch(
-                thumbIcon: this._forwarderExtensionState != null ? null : WidgetStatePropertyAll(Icon(IconSymbols.question_mark)),
-                value: this._forwarderExtensionState == null ? false : this._forwarderExtensionState!,
+                value: this._forwarderExtensionState!,
                 onChanged: (value) async {
-                  await ForwarderExtensionHelper.toggle();
+                  await ForwarderExtensionHelper.toggle(!this._forwarderExtensionState!);
                   this._forwarderExtensionState = await ForwarderExtensionHelper.check();
                   await refreshState(setStateForPanel);
                   await refreshState(this.setState);

@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart' as lib;
 
 // ----------------
 
@@ -20,7 +20,7 @@ final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '123';
+  static const String version = '124';
 
   static const String name = 'Twinning Assistant';
 
@@ -180,7 +180,7 @@ extension CommonObjectExtension<TType extends Object> on TType {
 
 // ----------------
 
-typedef IconSymbols = Symbols;
+typedef IconSymbols = lib.Symbols;
 
 Future<Void> refreshState(
   Void Function(Void Function()) setState,

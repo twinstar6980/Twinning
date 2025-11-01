@@ -7,10 +7,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:path/path.dart' as path_library;
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:file_selector/file_selector.dart' as file_selector;
+import 'package:path/path.dart' as lib;
+import 'package:path_provider/path_provider.dart' as lib;
+import 'package:file_selector/file_selector.dart' as lib;
+import 'package:url_launcher/url_launcher.dart' as lib;
 
 // ----------------
 
@@ -41,13 +41,13 @@ class StorageHelper {
   static String parent(
     String path,
   ) {
-    return regularize(path_library.dirname(path));
+    return regularize(lib.dirname(path));
   }
 
   static String name(
     String path,
   ) {
-    return regularize(path_library.basename(path));
+    return regularize(lib.basename(path));
   }
 
   // ----------------
@@ -260,13 +260,13 @@ class StorageHelper {
     assertTest(await exist(target));
     var revealed = false;
     if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isLinux) {
-      revealed = await launchUrl(Uri.file(target), mode: LaunchMode.externalApplication);
+      revealed = await lib.launchUrl(Uri.file(target), mode: lib.LaunchMode.externalApplication);
     }
     if (SystemChecker.isAndroid) {
       throw UnsupportedException();
     }
     if (SystemChecker.isIphone) {
-      revealed = await launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: LaunchMode.externalApplication);
+      revealed = await lib.launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: lib.LaunchMode.externalApplication);
     }
     assertTest(revealed);
     return;
@@ -295,14 +295,14 @@ class StorageHelper {
     if (SystemChecker.isWindows) {
       locationPath ??= 'C:/';
       if (type == 'load_file') {
-        target = (await file_selector.openFile(initialDirectory: toWindowsStyle(locationPath)))?.path;
+        target = (await lib.openFile(initialDirectory: toWindowsStyle(locationPath)))?.path;
       }
       if (type == 'load_directory') {
         // use `file_selector.getDirectoryPath` instead of `FilePicker.platform.getDirectoryPath`, on windows, the later one will throw an exception if it is the first file dialog since application start
-        target = await file_selector.getDirectoryPath(initialDirectory: toWindowsStyle(locationPath));
+        target = await lib.getDirectoryPath(initialDirectory: toWindowsStyle(locationPath));
       }
       if (type == 'save_file') {
-        target = (await file_selector.getSaveLocation(initialDirectory: toWindowsStyle(locationPath), suggestedName: name))?.path;
+        target = (await lib.getSaveLocation(initialDirectory: toWindowsStyle(locationPath), suggestedName: name))?.path;
       }
       if (target != null) {
         target = regularize(target);
@@ -314,13 +314,13 @@ class StorageHelper {
     if (SystemChecker.isLinux || SystemChecker.isMacintosh) {
       locationPath ??= '/';
       if (type == 'load_file') {
-        target = (await file_selector.openFile(initialDirectory: locationPath))?.path;
+        target = (await lib.openFile(initialDirectory: locationPath))?.path;
       }
       if (type == 'load_directory') {
-        target = await file_selector.getDirectoryPath(initialDirectory: locationPath);
+        target = await lib.getDirectoryPath(initialDirectory: locationPath);
       }
       if (type == 'save_file') {
-        target = (await file_selector.getSaveLocation(initialDirectory: locationPath, suggestedName: name))?.path;
+        target = (await lib.getSaveLocation(initialDirectory: locationPath, suggestedName: name))?.path;
       }
     }
     if (SystemChecker.isAndroid) {
@@ -392,20 +392,20 @@ class StorageHelper {
   ) async {
     var result = null as String?;
     if (SystemChecker.isWindows) {
-      result = (await path_provider.getApplicationSupportDirectory()).path;
+      result = (await lib.getApplicationSupportDirectory()).path;
       result = regularize(result);
     }
     if (SystemChecker.isLinux) {
-      result = (await path_provider.getApplicationSupportDirectory()).path;
+      result = (await lib.getApplicationSupportDirectory()).path;
     }
     if (SystemChecker.isMacintosh) {
-      result = (await path_provider.getApplicationSupportDirectory()).path;
+      result = (await lib.getApplicationSupportDirectory()).path;
     }
     if (SystemChecker.isAndroid) {
-      result = (await path_provider.getExternalStorageDirectory())!.path;
+      result = (await lib.getExternalStorageDirectory())!.path;
     }
     if (SystemChecker.isIphone) {
-      result = (await path_provider.getApplicationDocumentsDirectory()).path;
+      result = (await lib.getApplicationDocumentsDirectory()).path;
     }
     return result!;
   }
@@ -417,7 +417,7 @@ class StorageHelper {
       result = (await queryApplicationSharedDirectory()) + '/cache';
     }
     if (SystemChecker.isAndroid) {
-      result = (await path_provider.getApplicationCacheDirectory()).path;
+      result = (await lib.getApplicationCacheDirectory()).path;
     }
     return result!;
   }

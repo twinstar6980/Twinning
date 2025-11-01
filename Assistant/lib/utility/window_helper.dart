@@ -1,6 +1,6 @@
 import '/common.dart';
 import 'package:flutter/widgets.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:window_manager/window_manager.dart' as lib;
 
 // ----------------
 
@@ -12,7 +12,7 @@ class WindowHelper {
     Floater x,
     Floater y,
   ) async {
-    await windowManager.setPosition(Offset(x, y));
+    await lib.windowManager.setPosition(Offset(x, y));
     return;
   }
 
@@ -20,13 +20,13 @@ class WindowHelper {
     Floater width,
     Floater height,
   ) async {
-    await windowManager.setSize(Size(width, height));
+    await lib.windowManager.setSize(Size(width, height));
     return;
   }
 
   static Future<Void> setAtCenter(
   ) async {
-    await windowManager.center();
+    await lib.windowManager.center();
     return;
   }
 
@@ -34,7 +34,7 @@ class WindowHelper {
 
   static Future<Void> show(
   ) async {
-    await windowManager.show();
+    await lib.windowManager.show();
     return;
   }
 
@@ -42,13 +42,13 @@ class WindowHelper {
 
   static Future<Void> ensureInitialized(
   ) async {
-    await windowManager.ensureInitialized();
+    await lib.windowManager.ensureInitialized();
     return;
   }
 
   static Future<Void> waitUntilReadyToShow(
   ) async {
-    await windowManager.waitUntilReadyToShow();
+    await lib.windowManager.waitUntilReadyToShow();
     return;
   }
 

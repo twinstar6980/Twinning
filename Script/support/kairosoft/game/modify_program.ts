@@ -245,22 +245,22 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		Console.information(`Phase: dump program information`, []);
 		let dump_data: Array<string> = [];
 		{
-			let il2cppdumper_program_path = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
-			let il2cppdumper_program_result = ProcessHelper.run_process(
+			let il2cppdumper_program = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
+			let il2cppdumper_result = ProcessHelper.run_process(
 				['dotnet'],
 				[
-					il2cppdumper_program_path,
+					il2cppdumper_program,
 					program_file,
 					metadata_file,
 				],
 				null,
 				null,
 			);
-			Console.warning(`The output of Il2CppDumper:`, [il2cppdumper_program_result.output]);
-			if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_program_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
+			Console.warning(`The output of Il2CppDumper:`, [il2cppdumper_result.output]);
+			if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
 				throw new Error(`execute failed by Il2CppDumper`);
 			}
-			dump_data = KernelX.Storage.read_file_s(`${StorageHelper.parent(il2cppdumper_program_path)}/dump.cs`).split('\n');
+			dump_data = KernelX.Storage.read_file_s(`${StorageHelper.parent(il2cppdumper_program)}/dump.cs`).split('\n');
 		}
 		Console.information(`Phase: parse symbol address`, []);
 		let symbol_address = {

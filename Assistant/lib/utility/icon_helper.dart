@@ -1,6 +1,6 @@
 import '/common.dart'; // ignore: unused_import
 import 'package:flutter/widgets.dart';
-import 'package:material_symbols_icons/get.dart';
+import 'package:material_symbols_icons/get.dart' as lib;
 
 // ----------------
 
@@ -11,7 +11,7 @@ class IconHelper {
   static IconData queryOutlined(
     String name,
   ) {
-    return SymbolsGet.get(name, SymbolStyle.outlined);
+    return lib.SymbolsGet.get(name, lib.SymbolStyle.outlined);
   }
 
   // #endregion

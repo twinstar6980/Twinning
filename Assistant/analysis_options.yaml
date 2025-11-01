@@ -20,4 +20,5 @@ linter:
     prefer_function_declarations_over_variables: false
     prefer_interpolation_to_compose_strings: false
     prefer_initializing_formals: false
+    prefer_conditional_assignment: false
     use_build_context_synchronously: false

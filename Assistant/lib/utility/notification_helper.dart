@@ -1,6 +1,6 @@
 import '/common.dart';
 import '/utility/window_helper.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' as lib;
 
 // ----------------
 
@@ -8,27 +8,27 @@ class NotificationHelper {
 
   // #region utility
 
-  static FlutterLocalNotificationsPlugin? _plugin = null;
+  static lib.FlutterLocalNotificationsPlugin? _plugin = null;
 
   // ----------------
 
   static Future<Void> initialize(
   ) async {
-    _plugin = FlutterLocalNotificationsPlugin();
+    _plugin = lib.FlutterLocalNotificationsPlugin();
     await _plugin!.initialize(
-      InitializationSettings(
-        android: AndroidInitializationSettings(
+      lib.InitializationSettings(
+        android: lib.AndroidInitializationSettings(
           '@mipmap/ic_launcher_foreground',
         ),
-        iOS: DarwinInitializationSettings(
+        iOS: lib.DarwinInitializationSettings(
         ),
-        macOS: DarwinInitializationSettings(
+        macOS: lib.DarwinInitializationSettings(
         ),
-        linux: LinuxInitializationSettings(
+        linux: lib.LinuxInitializationSettings(
           defaultActionName: '',
-          defaultIcon: AssetsLinuxIcon('asset/logo.png'),
+          defaultIcon: lib.AssetsLinuxIcon('asset/logo.png'),
         ),
-        windows: WindowsInitializationSettings(
+        windows: lib.WindowsInitializationSettings(
           appName: ApplicationInformation.name,
           appUserModelId: ApplicationInformation.identifier,
           guid: '3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A',
@@ -53,18 +53,18 @@ class NotificationHelper {
       DateTime.now().millisecondsSinceEpoch % 0x80000000,
       title,
       description,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
+      lib.NotificationDetails(
+        android: lib.AndroidNotificationDetails(
           '${ApplicationInformation.identifier}.notification_channel.main',
           'Main',
         ),
-        iOS: DarwinNotificationDetails(
+        iOS: lib.DarwinNotificationDetails(
         ),
-        macOS: DarwinNotificationDetails(
+        macOS: lib.DarwinNotificationDetails(
         ),
-        linux: LinuxNotificationDetails(
+        linux: lib.LinuxNotificationDetails(
         ),
-        windows: WindowsNotificationDetails(
+        windows: lib.WindowsNotificationDetails(
         ),
       ),
     );

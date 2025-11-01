@@ -1,6 +1,6 @@
 import '/common.dart';
 import 'package:flutter/widgets.dart';
-import 'package:stack_trace/stack_trace.dart';
+import 'package:stack_trace/stack_trace.dart' as lib;
 
 // ----------------
 
@@ -31,7 +31,7 @@ class ExceptionHelper {
   ) {
     var result = '${exception}';
     if (stack != null) {
-      var trace = Trace.from(stack);
+      var trace = lib.Trace.from(stack);
       for (var frame in trace.frames) {
         result += '\n@ ${frame.library.selfLet((it) => it.startsWith('package:assistant') ? it.substring('package:'.length) : it)}:${frame.line ?? '?'}:${frame.column ?? '?'} ${frame.member ?? '?'}';
       }

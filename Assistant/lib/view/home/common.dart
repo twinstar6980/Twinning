@@ -4,7 +4,7 @@ import '/utility/system_overlay_helper.dart';
 import '/utility/storage_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart' as lib;
 
 // ----------------
 
@@ -902,19 +902,19 @@ class CustomFileDropRegion extends StatelessWidget {
   build(context) {
     return !(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh)
       ? this.child
-      : DropRegion(
+      : lib.DropRegion(
         hitTestBehavior: HitTestBehavior.opaque,
-        formats: [Formats.fileUri],
+        formats: [lib.Formats.fileUri],
         onDropOver: (event) async {
-          if (this.onDrop != null && event.session.items.every((item) => item.canProvide(Formats.fileUri))) {
-            return DropOperation.link;
+          if (this.onDrop != null && event.session.items.every((item) => item.canProvide(lib.Formats.fileUri))) {
+            return lib.DropOperation.link;
           }
-          return DropOperation.none;
+          return lib.DropOperation.none;
         },
         onPerformDrop: (event) async {
           var result = <String>[];
           for (var item in event.session.items) {
-            var progress = item.dataReader!.getValue(Formats.fileUri, (uri) async {
+            var progress = item.dataReader!.getValue(lib.Formats.fileUri, (uri) async {
               uri!;
               var path = Uri.decodeComponent(uri.path);
               assertTest(path.startsWith('/'));

@@ -1,6 +1,6 @@
 import '/common.dart';
 import '/utility/storage_helper.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '/utility/process_helper.dart';
 
 // ----------------
 
@@ -19,7 +19,15 @@ class ForwarderExtensionHelper {
       result = false;
     }
     if (SystemChecker.isMacintosh) {
-      result = null;
+      var pluginkitResult = await ProcessHelper.runProcess(
+        '/usr/bin/pluginkit',
+        [
+          '-m',
+          '-i', '${ApplicationInformation.identifier}.Forwarder',
+        ],
+        null,
+      );
+      result = pluginkitResult.$1 == 0 && pluginkitResult.$2.startsWith('+');
     }
     if (SystemChecker.isAndroid) {
       result = true;
@@ -30,34 +38,43 @@ class ForwarderExtensionHelper {
     return result;
   }
 
-  static Future<Boolean?> toggle(
+  static Future<Void> toggle(
+    Boolean? state,
   ) async {
-    var result = null as Boolean?;
+    if (state == null) {
+      return;
+    }
     if (SystemChecker.isWindows) {
       var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
-      if (!await StorageHelper.exist(stateFile)) {
-        await StorageHelper.createFile(stateFile);
-      }
-      else {
+      var exist = await StorageHelper.exist(stateFile);
+      if (!state && exist) {
         await StorageHelper.remove(stateFile);
       }
-      result = true;
+      if (state && !exist) {
+        await StorageHelper.createFile(stateFile);
+      }
     }
     if (SystemChecker.isLinux) {
-      result = false;
+      throw UnsupportedException();
     }
     if (SystemChecker.isMacintosh) {
-      // Ventura 13 and later
-      await launchUrl(Uri.parse('x-apple.systempreferences:com.apple.ExtensionsPreferences?extensionPointIdentifier=com.apple.fileprovider-nonui'), mode: LaunchMode.externalApplication);
-      result = null;
+      var pluginkitResult = await ProcessHelper.runProcess(
+        '/usr/bin/pluginkit',
+        [
+          '-e', '${!state ? 'ignore' : 'use'}',
+          '-i', '${ApplicationInformation.identifier}.Forwarder',
+        ],
+        null,
+      );
+      assertTest(pluginkitResult.$1 == 0);
     }
     if (SystemChecker.isAndroid) {
-      result = false;
+      throw UnsupportedException();
     }
     if (SystemChecker.isIphone) {
-      result = false;
+      throw UnsupportedException();
     }
-    return result;
+    return;
   }
 
   // #endregion

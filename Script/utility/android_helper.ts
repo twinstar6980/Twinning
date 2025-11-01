@@ -15,21 +15,21 @@ namespace Twinning.Script.AndroidHelper {
 	function run_sh(
 		argument: Array<string>,
 	): string {
-		let program_result = ProcessHelper.run_process(['sh'], argument, null, null);
-		if (program_result.code !== 0n) {
-			throw new Error(`sh execute failed: ${program_result.code}\n${program_result.output}\n${program_result.error}`);
+		let result = ProcessHelper.run_process(['sh'], argument, null, null);
+		if (result.code !== 0n) {
+			throw new Error(`sh execute failed: ${result.code}\n${result.output}\n${result.error}`);
 		}
-		return program_result.output;
+		return result.output;
 	}
 
 	function run_adb(
 		argument: Array<string>,
 	): string {
-		let program_result = ProcessHelper.run_process(['adb'], argument, null, null);
-		if (program_result.code !== 0n) {
-			throw new Error(`adb execute failed: ${program_result.code}\n${program_result.output}\n${program_result.error}`);
+		let result = ProcessHelper.run_process(['adb'], argument, null, null);
+		if (result.code !== 0n) {
+			throw new Error(`adb execute failed: ${result.code}\n${result.output}\n${result.error}`);
 		}
-		return program_result.output;
+		return result.output;
 	}
 
 	// #endregion

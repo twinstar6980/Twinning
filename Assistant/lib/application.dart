@@ -3,7 +3,7 @@ import '/setting.dart';
 import '/view/home/main_page.dart' as home;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dynamic_color/dynamic_color.dart';
+import 'package:dynamic_color/dynamic_color.dart' as lib;
 
 // ----------------
 
@@ -25,7 +25,7 @@ class Application extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: this.setting,
       child: Consumer<SettingProvider>(
-        builder: (context, setting, child) => DynamicColorBuilder(
+        builder: (context, setting, child) => lib.DynamicColorBuilder(
           builder: (lightColor, darkColor) {
             // fix for dynamic color error on flutter 3.22+, see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
             if (SystemChecker.isAndroid) {

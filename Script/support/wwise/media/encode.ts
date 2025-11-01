@@ -309,7 +309,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		let wwise_project_directory = `${temporary_directory}/Sample`;
 		let wwise_wproj_file = `${wwise_project_directory}/Sample.wproj`;
 		while (true) {
-			let wwise_program_result = ProcessHelper.run_process(
+			let wwise_result = ProcessHelper.run_process(
 				[wwise_program_name],
 				[
 					'create-new-project',
@@ -321,7 +321,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				null,
 				null,
 			);
-			if (wwise_program_result.code !== 0n) {
+			if (wwise_result.code !== 0n) {
 				throw new Error(`execute failed by Wwise`);
 			}
 			if (KernelX.Storage.exist_file(wwise_wproj_file)) {
@@ -350,7 +350,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			'opus': 'Android',
 			'wemopus': 'Android',
 		})[format];
-		let wwise_program_result = ProcessHelper.run_process(
+		let wwise_result = ProcessHelper.run_process(
 			[wwise_program_name],
 			[
 				'convert-external-source',
@@ -363,7 +363,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			null,
 			null,
 		);
-		if (wwise_program_result.code !== 0n) {
+		if (wwise_result.code !== 0n) {
 			throw new Error(`execute failed by Wwise`);
 		}
 		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);

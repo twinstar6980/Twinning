@@ -138,7 +138,7 @@ namespace Twinning.AssistantPlus {
 				await App.MainWindow.InsertTabItem(launcher);
 			}
 			else {
-				await ProcessHelper.RunProcess(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), false);
+				await ProcessHelper.RunProcess(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), null, false);
 			}
 			return;
 		}

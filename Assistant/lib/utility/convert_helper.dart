@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'package:decimal/decimal.dart';
+import 'package:decimal/decimal.dart' as lib;
 
 // ----------------
 
@@ -49,7 +49,7 @@ class ConvertHelper {
     Floater value,
     Boolean showPositiveSign,
   ) {
-    var valueDecimal = Decimal.parse(value.toString());
+    var valueDecimal = lib.Decimal.parse(value.toString());
     return switch (value) {
       0.0   => '0',
       < 0.0 => '${valueDecimal}',

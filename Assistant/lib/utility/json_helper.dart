@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/utility/storage_helper.dart';
 import 'dart:convert';
-import 'package:json5/json5.dart';
+import 'package:json5/json5.dart' as lib;
 
 // ----------------
 
@@ -25,7 +25,7 @@ class JsonHelper {
   static Object? deserializeText(
     String text,
   ) {
-    return json5Decode(text);
+    return lib.json5Decode(text);
   }
 
   // ----------------

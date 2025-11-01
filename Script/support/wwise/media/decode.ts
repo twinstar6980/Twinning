@@ -20,7 +20,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (raw_file_directory !== null) {
 			KernelX.Storage.create_directory(raw_file_directory);
 		}
-		let vgmstream_program_result = ProcessHelper.run_process(
+		let vgmstream_result = ProcessHelper.run_process(
 			['vgmstream-cli'],
 			[
 				'-o',
@@ -33,10 +33,10 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (ripe_file_fallback_temporary !== null) {
 			KernelX.Storage.remove(ripe_file_fallback_temporary);
 		}
-		if (vgmstream_program_result.code !== 0n) {
+		if (vgmstream_result.code !== 0n) {
 			throw new Error(`execute failed by vgmstream-cli`);
 		}
-		let regex_result = /^encoding: (.+)$/m.exec(vgmstream_program_result.output);
+		let regex_result = /^encoding: (.+)$/m.exec(vgmstream_result.output);
 		assert_test(regex_result !== null);
 		let encoding = regex_result[1];
 		let format: null | Format = null;
