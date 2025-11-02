@@ -23,12 +23,14 @@ namespace Twinning.AssistantPlus.Utility {
 		}
 
 		public static void Toggle (
+			Boolean state
 		) {
-			if (!StorageHelper.Exist(ForwarderExtensionHelper.StateFile)) {
-				StorageHelper.CreateFile(ForwarderExtensionHelper.StateFile);
-			}
-			else {
+			var exist = StorageHelper.Exist(ForwarderExtensionHelper.StateFile);
+			if (!state && exist) {
 				StorageHelper.Remove(ForwarderExtensionHelper.StateFile);
+			}
+			if (state && !exist) {
+				StorageHelper.CreateFile(ForwarderExtensionHelper.StateFile);
 			}
 			return;
 		}

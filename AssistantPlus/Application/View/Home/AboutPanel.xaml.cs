@@ -372,7 +372,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			ForwarderExtensionHelper.Toggle();
+			ForwarderExtensionHelper.Toggle(!ForwarderExtensionHelper.Check());
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingForwarderExtension_IsChecked),
 				nameof(this.uSettingForwarderExtension_Content),
