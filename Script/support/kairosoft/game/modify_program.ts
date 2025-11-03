@@ -68,12 +68,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		static: boolean;
 		type: string;
 	} {
-		let result: null | {
-			address: number;
-			access: string;
-			static: boolean;
-			type: string;
-		} = null;
+		let result: ReturnType<typeof search_field_from_dump_data> = null;
 		for (let index = 0; index < source.length; index++) {
 			let class_match = /^(private|protected|public)? class ([^ ]+)?/.exec(source[index]);
 			if (class_match !== null && class_match[2] === class_name) {
