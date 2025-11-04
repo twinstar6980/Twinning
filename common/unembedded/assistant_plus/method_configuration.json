@@ -6221,28 +6221,6 @@
 		"icon": "Game",
 		"item": [
 			{
-				"identifier": "kairosoft.game.encrypt_record",
-				"name": "Encrypt record",
-				"icon": "Unlock",
-				"argument": [
-					{
-						"identifier": "target_directory",
-						"name": "Target directory",
-						"type": "path",
-						"option": null,
-					},
-					{
-						"identifier": "key",
-						"name": "Key",
-						"type": "string",
-						"option": null,
-					},
-				],
-				"batch": null,
-				"preset": [
-				],
-			},
-			{
 				"identifier": "kairosoft.game.modify_program",
 				"name": "Modify program",
 				"icon": "Repair",
@@ -6297,6 +6275,28 @@
 							"enable_debug_mode": true,
 						},
 					},
+				],
+			},
+			{
+				"identifier": "kairosoft.game.encrypt_record",
+				"name": "Encrypt record",
+				"icon": "Unlock",
+				"argument": [
+					{
+						"identifier": "target_directory",
+						"name": "Target directory",
+						"type": "path",
+						"option": null,
+					},
+					{
+						"identifier": "key",
+						"name": "Key",
+						"type": "string",
+						"option": null,
+					},
+				],
+				"batch": null,
+				"preset": [
 				],
 			},
 		],

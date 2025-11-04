@@ -5,16 +5,16 @@ using Twinning.AssistantPlus;
 
 namespace Twinning.AssistantPlus.Utility {
 
-	public partial class Finalizer : IDisposable {
+	public partial class Finalizer : IDisposable, IAsyncDisposable {
 
 		#region constructor
 
-		private Action mAction;
+		private Func<Task> mAction;
 
 		// ----------------
 
 		public Finalizer (
-			Action action
+			Func<Task> action
 		) {
 			this.mAction = action;
 			return;
@@ -27,6 +27,17 @@ namespace Twinning.AssistantPlus.Utility {
 		public void Dispose (
 		) {
 			this.mAction();
+			GC.SuppressFinalize(this);
+			return;
+		}
+
+		#endregion
+
+		#region implement IAsyncDisposable
+
+		public async ValueTask DisposeAsync (
+		) {
+			await this.mAction();
 			GC.SuppressFinalize(this);
 			return;
 		}

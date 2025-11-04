@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '151';
+	export const k_version = '152';
 
 	// ----------------
 
@@ -153,8 +153,8 @@ namespace Twinning.Script {
 			`support/pvz2/package_project/parse`,
 			`support/pvz2/remote_project/execute`,
 			`support/pvz2/resource_convert`,
-			`support/kairosoft/game/encrypt_record`,
 			`support/kairosoft/game/modify_program`,
+			`support/kairosoft/game/encrypt_record`,
 			`executor/generic`,
 			`executor/typical`,
 			`executor/implement/common.utility`,

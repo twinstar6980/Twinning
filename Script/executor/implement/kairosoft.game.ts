@@ -6,6 +6,36 @@ namespace Twinning.Script.Executor.Implement.Kairosoft.Game {
 	): void {
 		push_typical_method('kairosoft.game', [
 			typical_method({
+				identifier: 'modify_program',
+				filter: ['directory', /()$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'target_directory',
+						rule: ['directory', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_boolean({
+						identifier: 'disable_record_encryption',
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_boolean({
+						identifier: 'enable_debug_mode',
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+				],
+				batch: null,
+				worker: ({ target_directory, disable_record_encryption, enable_debug_mode }, temporary: {}) => {
+					Support.Kairosoft.Game.ModifyProgram.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
+					return;
+				},
+			}),
+			typical_method({
 				identifier: 'encrypt_record',
 				filter: ['directory', /()$/i],
 				argument: [
@@ -37,36 +67,6 @@ namespace Twinning.Script.Executor.Implement.Kairosoft.Game {
 						key_value = ConvertHelper.make_string_to_byte_array(key);
 					}
 					Support.Kairosoft.Game.EncryptRecord.process_fs(target_directory, key_value);
-					return;
-				},
-			}),
-			typical_method({
-				identifier: 'modify_program',
-				filter: ['directory', /()$/i],
-				argument: [
-					typical_argument_path({
-						identifier: 'target_directory',
-						rule: ['directory', 'input'],
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-					typical_argument_boolean({
-						identifier: 'disable_record_encryption',
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-					typical_argument_boolean({
-						identifier: 'enable_debug_mode',
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-				],
-				batch: null,
-				worker: ({ target_directory, disable_record_encryption, enable_debug_mode }, temporary: {}) => {
-					Support.Kairosoft.Game.ModifyProgram.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
 					return;
 				},
 			}),

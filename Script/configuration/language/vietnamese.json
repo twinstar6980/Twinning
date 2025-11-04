@@ -639,14 +639,14 @@
 	"executor.implement:pvz2.remote_project.execute:rton_version_native_string_encoding_use_utf8": "RTON - Xâu ký tự sử dụng UTF-8",
 	"executor.implement:pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - Kích thước bộ nhớ đệm",
 	// executor/implement/kairosoft.game
-	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Mã hoá bản ghi",
-	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Thư mục đích",
-	"executor.implement:kairosoft.game.encrypt_record:key": "Mật mã",
-	// 
 	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game Sửa đổi chương trình",
 	"executor.implement:kairosoft.game.modify_program:target_directory": "Thư mục đích",
 	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Tắt mã hóa bản ghi",
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Bật chế độ gỡ lỗi",
+	// 
+	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Mã hoá bản ghi",
+	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Thư mục đích",
+	"executor.implement:kairosoft.game.encrypt_record:key": "Mật mã",
 	// executable/script_console
 	"executable.script_console:start": "Chế độ Tương tác JS được bật",
 	"executable.script_console:description": "Nhập trống sẽ kết thúc tương tác và nếu tập lệnh kéo dài nhiều dòng, hãy thêm ký tự '\\' ở cuối dòng",

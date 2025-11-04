@@ -337,14 +337,13 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
-			var hideDialog = await ControlHelper.ShowDialogForWait(this.View);
+			await using var hideDialogFinalizer = new Finalizer(await ControlHelper.ShowDialogForWait(this.View));
 			this.ProjectDirectory = projectDirectory;
 			this.NotifyPropertyChanged([
 				nameof(this.uLoadedAction_IsEnabled),
 				nameof(this.uProjectDirectory_Text),
 			]);
 			await this.ProjectReload();
-			await hideDialog();
 			return;
 		}
 

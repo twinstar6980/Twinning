@@ -290,7 +290,7 @@ namespace Twinning.AssistantPlus.Utility {
 			await Task.Run(() => {
 				unsafe {
 					Win32.PInvoke.CoInitialize(null);
-					using var comFinalizer = new Finalizer(() => {
+					using var comFinalizer = new Finalizer(async () => {
 						Win32.PInvoke.CoUninitialize();
 					});
 					Win32.PInvoke.CoCreateInstance<Win32.UI.Shell.IFileDialog>(
@@ -304,7 +304,7 @@ namespace Twinning.AssistantPlus.Utility {
 						Win32.System.Com.CLSCTX.CLSCTX_INPROC_SERVER,
 						out var dialog
 					).ThrowOnFailure();
-					using var dialogFinalizer = new Finalizer(() => {
+					using var dialogFinalizer = new Finalizer(async () => {
 						dialog->Release();
 					});
 					dialog->GetOptions(out var option).ThrowOnFailure();
@@ -320,7 +320,7 @@ namespace Twinning.AssistantPlus.Utility {
 						typeof(Win32.UI.Shell.IShellItem).GUID,
 						out var locationItem
 					).ThrowOnFailure();
-					using var locationItemFinalizer = new Finalizer(() => {
+					using var locationItemFinalizer = new Finalizer(async () => {
 						((Win32.UI.Shell.IShellItem*)locationItem)->Release();
 					});
 					dialog->SetFolder((Win32.UI.Shell.IShellItem*)locationItem).ThrowOnFailure();
@@ -335,11 +335,11 @@ namespace Twinning.AssistantPlus.Utility {
 						var targetItem = default(Win32.UI.Shell.IShellItem*);
 						dialog->GetResult(&targetItem).ThrowOnFailure();
 						var targetItemPointer = &targetItem;
-						using var targetItemFinalizer = new Finalizer(() => {
+						using var targetItemFinalizer = new Finalizer(async () => {
 							(*targetItemPointer)->Release();
 						});
 						targetItem->GetDisplayName(Win32.UI.Shell.SIGDN.SIGDN_FILESYSPATH, out var targetPath).ThrowOnFailure();
-						using var targetPathFinalizer = new Finalizer(() => {
+						using var targetPathFinalizer = new Finalizer(async () => {
 							Win32.PInvoke.CoTaskMemFree(targetPath.Value);
 						});
 						target = targetPath == null ? null : StorageHelper.Regularize(targetPath.ToString());

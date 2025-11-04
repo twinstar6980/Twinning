@@ -3698,18 +3698,6 @@
 		"icon": "Game",
 		"item": [
 			{
-				"name": "Encrypt record",
-				"icon": "Unlock",
-				"filter": {
-					"type": "directory",
-					"name": "()$",
-				},
-				"batch": false,
-				"method": "kairosoft.game.encrypt_record",
-				"preset": [
-				],
-			},
-			{
 				"name": "Modify program",
 				"icon": "Repair",
 				"filter": {
@@ -3748,6 +3736,18 @@
 							"enable_debug_mode": true,
 						},
 					},
+				],
+			},
+			{
+				"name": "Encrypt record",
+				"icon": "Unlock",
+				"filter": {
+					"type": "directory",
+					"name": "()$",
+				},
+				"batch": false,
+				"method": "kairosoft.game.encrypt_record",
+				"preset": [
 				],
 			},
 		],

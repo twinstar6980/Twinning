@@ -639,14 +639,14 @@
 	"executor.implement:pvz2.remote_project.execute:rton_version_native_string_encoding_use_utf8": "RTON - 本地字符串编码使用UTF-8",
 	"executor.implement:pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - 内存缓冲区大小",
 	// executor/implement/kairosoft.game
-	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game 加密存档",
-	"executor.implement:kairosoft.game.encrypt_record:target_directory": "目标目录",
-	"executor.implement:kairosoft.game.encrypt_record:key": "密钥",
-	// 
 	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game 修改程序",
 	"executor.implement:kairosoft.game.modify_program:target_directory": "目标目录",
 	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "禁用存档加密",
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "启用调试模式",
+	// 
+	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game 加密存档",
+	"executor.implement:kairosoft.game.encrypt_record:target_directory": "目标目录",
+	"executor.implement:kairosoft.game.encrypt_record:key": "密钥",
 	// executable/script_console
 	"executable.script_console:start": "JS交互模式已开启",
 	"executable.script_console:description": "输入为空将结束交互，若脚本跨越多行，请在行末尾添加 '\\' 字符",

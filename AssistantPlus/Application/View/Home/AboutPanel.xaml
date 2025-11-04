@@ -246,6 +246,7 @@
 									VerticalAlignment="Center"
 									Width="18"
 									Style="{StaticResource BodyTextBlockStyle}"
+									TextWrapping="NoWrap"
 									TextAlignment="Center"
 									Text="X"
 									/>
@@ -272,6 +273,7 @@
 									VerticalAlignment="Center"
 									Width="18"
 									Style="{StaticResource BodyTextBlockStyle}"
+									TextWrapping="NoWrap"
 									TextAlignment="Center"
 									Text="Y"
 									/>
@@ -341,6 +343,7 @@
 									VerticalAlignment="Center"
 									Width="18"
 									Style="{StaticResource BodyTextBlockStyle}"
+									TextWrapping="NoWrap"
 									TextAlignment="Center"
 									Text="W"
 									/>
@@ -367,6 +370,7 @@
 									VerticalAlignment="Center"
 									Width="18"
 									Style="{StaticResource BodyTextBlockStyle}"
+									TextWrapping="NoWrap"
 									TextAlignment="Center"
 									Text="H"
 									/>

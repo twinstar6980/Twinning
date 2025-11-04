@@ -639,14 +639,14 @@
 	"executor.implement:pvz2.remote_project.execute:rton_version_native_string_encoding_use_utf8": "RTON - Native string encoding use UTF-8",
 	"executor.implement:pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - Buffer memory size",
 	// executor/implement/kairosoft.game
-	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Encrypt record",
-	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Target directory",
-	"executor.implement:kairosoft.game.encrypt_record:key": "Key",
-	// 
 	"executor.implement:kairosoft.game.modify_program": "Kairosoft Game Modify program",
 	"executor.implement:kairosoft.game.modify_program:target_directory": "Target directory",
 	"executor.implement:kairosoft.game.modify_program:disable_record_encryption": "Disable record encryption",
 	"executor.implement:kairosoft.game.modify_program:enable_debug_mode": "Enable debug mode",
+	// 
+	"executor.implement:kairosoft.game.encrypt_record": "Kairosoft Game Encrypt record",
+	"executor.implement:kairosoft.game.encrypt_record:target_directory": "Target directory",
+	"executor.implement:kairosoft.game.encrypt_record:key": "Key",
 	// executable/script_console
 	"executable.script_console:start": "JS interation mode enabled",
 	"executable.script_console:description": "Entering empty will end the interaction, and if the script spans multiple lines, add the '\\' character at the end of the line",
