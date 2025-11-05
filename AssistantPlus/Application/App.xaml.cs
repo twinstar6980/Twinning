@@ -153,9 +153,10 @@ namespace Twinning.AssistantPlus {
 				if (window != null) {
 					await window.DispatcherQueue.EnqueueAsync(async () => {
 						await ControlHelper.PostTask(window.Content.As<FrameworkElement>(), async () => {
-							await ControlHelper.ShowDialogAsAutomatic(window.Content, "Unhandled Exception", new TextBlock() {
+							await ControlHelper.ShowDialogAsAutomatic(window.Content.As<FrameworkElement>(), "Unhandled Exception", new TextBlock() {
 								HorizontalAlignment = HorizontalAlignment.Stretch,
 								VerticalAlignment = VerticalAlignment.Stretch,
+								Style = window.Content.As<FrameworkElement>().FindResource("BodyTextBlockStyle").As<Style>(),
 								IsTextSelectionEnabled = true,
 								TextWrapping = TextWrapping.Wrap,
 								Text = ExceptionHelper.GenerateMessage(exception),
@@ -219,7 +220,7 @@ namespace Twinning.AssistantPlus {
 		) {
 			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
 			var targetType = forwardOption[App.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
-			var canContinue = (App.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Forward", new ItemsRepeater() {
+			var canContinue = (App.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content.As<FrameworkElement>(), "Forward", new ItemsRepeater() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch,
 				ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {

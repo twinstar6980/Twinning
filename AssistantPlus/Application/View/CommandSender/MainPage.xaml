@@ -237,7 +237,7 @@
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"
 										Margin="8,0,0,0"
-										Style="{ThemeResource SubtitleTextBlockStyle}"
+										Style="{StaticResource SubtitleTextBlockStyle}"
 										TextWrapping="NoWrap"
 										Text="{x:Bind uTitle_Text}"
 										/>

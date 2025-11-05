@@ -28,7 +28,7 @@
 			<TextBlock
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Style="{ThemeResource BodyStrongTextBlockStyle}"
+				Style="{StaticResource BodyStrongTextBlockStyle}"
 				TextWrapping="NoWrap"
 				Text="{x:Bind Controller.uVersionLabel_Text}"
 				/>

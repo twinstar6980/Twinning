@@ -43,7 +43,7 @@
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							Style="{ThemeResource BodyTextBlockStyle}"
+							Style="{StaticResource BodyTextBlockStyle}"
 							TextWrapping="NoWrap"
 							Text="{x:Bind uName_Text}"
 							/>

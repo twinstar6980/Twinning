@@ -135,7 +135,7 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uLabel_ToolTip),
-				nameof(this.uLabelText_Foreground),
+				nameof(this.uLabel_Style),
 				nameof(this.uLabelText_Text),
 			]);
 			if (this.Type != null) {
@@ -206,9 +206,9 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			}
 		}
 
-		public Brush uLabelText_Foreground {
+		public Style uLabel_Style {
 			get {
-				return this.View.FindResource(!this.Batch ? "TextFillColorPrimaryBrush" : "AccentTextFillColorPrimaryBrush").As<Brush>();
+				return this.View.FindResource(!this.Batch ? "DefaultButtonStyle" : "AccentButtonStyle").As<Style>();
 			}
 		}
 

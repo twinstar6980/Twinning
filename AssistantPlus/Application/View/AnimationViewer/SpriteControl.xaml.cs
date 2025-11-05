@@ -3,7 +3,6 @@
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 
@@ -39,31 +38,9 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		#region element
 
-		private Canvas? mCanvas = null;
+		public Canvas? Canvas { get; private set; } = null;
 
-		public Canvas? Canvas {
-			get {
-				return this.mCanvas;
-			}
-			private set {
-				this.mCanvas = value;
-				return;
-			}
-		}
-
-		// ----------------
-
-		private Storyboard? mStoryboard = null;
-
-		public Storyboard? Storyboard {
-			get {
-				return this.mStoryboard;
-			}
-			private set {
-				this.mStoryboard = value;
-				return;
-			}
-		}
+		public Storyboard? Storyboard { get; private set; } = null;
 
 		private void Storyboard_Completed (
 			Object? sender,
@@ -100,8 +77,6 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 		) {
 			AssertTest(!this.Loaded);
 			var visual = GameAnimationHelper.VisualizeSprite(animation, texture, activeSprite, imageFilter, spriteFilter);
-			this.Width = animation.Size.Item1;
-			this.Height = animation.Size.Item2;
 			this.Padding = new (animation.Position.Item1, animation.Position.Item2, 0.0, 0.0);
 			this.Canvas = visual.Canvas;
 			this.Storyboard = visual.Storyboard;
@@ -115,7 +90,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			this.RepeatPlay = this.RepeatPlay;
 			this.FrameSpeed = this.FrameSpeed;
 			this.ShowBoundary = this.ShowBoundary;
-			this.Content = this.Canvas;
+			this.uCanvas.Content = this.Canvas;
 			this.State = StateType.Idle;
 			return;
 		}
@@ -124,7 +99,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 		) {
 			AssertTest(this.Loaded);
 			this.State = StateType.Idle;
-			this.Content = null;
+			this.uCanvas.Content = null;
 			this.Canvas = null;
 			this.Storyboard = null;
 			this.mFrameRange = null;
@@ -285,15 +260,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				return this.mShowBoundary;
 			}
 			set {
-				if (this.Loaded) {
-					if (value) {
-						// TODO: incorrect if theme != system
-						this.Canvas.Background = this.FindResource("CardBackgroundFillColorDefaultBrush").As<Brush>();
-					}
-					else {
-						this.Canvas.Background = null;
-					}
-				}
+				this.uBackground.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
 				this.mShowBoundary = value;
 				return;
 			}

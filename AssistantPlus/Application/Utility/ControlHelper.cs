@@ -64,7 +64,7 @@ namespace Twinning.AssistantPlus.Utility {
 		// ----------------
 
 		public static async Task<ContentDialogResult> ShowDialogAsAutomatic (
-			UIElement                         root,
+			FrameworkElement                  root,
 			String                            title,
 			Object?                           content,
 			Tuple<String?, String?, String?>? action
@@ -72,7 +72,13 @@ namespace Twinning.AssistantPlus.Utility {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
 				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
-				Title = title,
+				Title = new TextBlock() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
+					Style = root.As<FrameworkElement>().FindResource("SubtitleTextBlockStyle").As<Style>(),
+					TextWrapping = TextWrapping.NoWrap,
+					Text = title,
+				},
 				Content = content == null
 					? null
 					: new ScrollViewer() {
@@ -102,7 +108,7 @@ namespace Twinning.AssistantPlus.Utility {
 		}
 
 		public static async Task<ContentDialogResult> ShowDialogAsFixed (
-			UIElement                         root,
+			FrameworkElement                  root,
 			String                            title,
 			Object?                           content,
 			Tuple<String?, String?, String?>? action,
@@ -111,7 +117,13 @@ namespace Twinning.AssistantPlus.Utility {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
 				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
-				Title = title,
+				Title = new TextBlock() {
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
+					Style = root.As<FrameworkElement>().FindResource("SubtitleTextBlockStyle").As<Style>(),
+					TextWrapping = TextWrapping.NoWrap,
+					Text = title,
+				},
 				Content = content == null
 					? null
 					: new ScrollViewer() {
@@ -149,7 +161,7 @@ namespace Twinning.AssistantPlus.Utility {
 		// ----------------
 
 		public static async Task<Func<Task>> ShowDialogForWait (
-			UIElement root
+			FrameworkElement root
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
@@ -172,9 +184,9 @@ namespace Twinning.AssistantPlus.Utility {
 		}
 
 		public static async Task<Boolean> ShowDialogForConfirm (
-			UIElement root,
-			String?   title,
-			Object?   content
+			FrameworkElement root,
+			String?          title,
+			Object?          content
 		) {
 			return await ControlHelper.ShowDialogAsAutomatic(root, title ?? "Confirm ?", content, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
 		}

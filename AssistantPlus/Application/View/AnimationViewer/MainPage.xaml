@@ -91,7 +91,7 @@
 									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
-									Style="{ThemeResource BodyTextBlockStyle}"
+									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{x:Bind uTitle_Text}"
 									/>
@@ -99,7 +99,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Foreground="{ThemeResource TextFillColorSecondary}"
-									Style="{ThemeResource CaptionTextBlockStyle}"
+									Style="{StaticResource CaptionTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{x:Bind uDescription_Text}"
 									/>
@@ -753,7 +753,7 @@
 									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
-									Style="{ThemeResource BodyTextBlockStyle}"
+									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{x:Bind uTitle_Text}"
 									/>
@@ -761,7 +761,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Foreground="{ThemeResource TextFillColorSecondary}"
-									Style="{ThemeResource CaptionTextBlockStyle}"
+									Style="{StaticResource CaptionTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{x:Bind uDescription_Text}"
 									/>
@@ -829,7 +829,7 @@
 									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
-									Style="{ThemeResource BodyTextBlockStyle}"
+									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{x:Bind uTitle_Text}"
 									/>
@@ -837,7 +837,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Foreground="{ThemeResource TextFillColorSecondary}"
-									Style="{ThemeResource CaptionTextBlockStyle}"
+									Style="{StaticResource CaptionTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{x:Bind uDescription_Text}"
 									/>

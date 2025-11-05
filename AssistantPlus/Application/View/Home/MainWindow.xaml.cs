@@ -366,7 +366,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			switch (senders.Tag.As<String>()) {
 				case "Rename": {
 					var title = "";
-					var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Tab Rename", new TextBox() {
+					var canContinue = await ControlHelper.ShowDialogAsAutomatic(this.Host.View.Content.As<FrameworkElement>(), "Tab Rename", new TextBox() {
 						HorizontalAlignment = HorizontalAlignment.Stretch,
 						VerticalAlignment = VerticalAlignment.Stretch,
 						TextWrapping = TextWrapping.NoWrap,

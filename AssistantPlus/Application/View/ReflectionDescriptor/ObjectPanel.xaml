@@ -40,7 +40,7 @@
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Bottom"
-							Style="{ThemeResource SubtitleTextBlockStyle}"
+							Style="{StaticResource SubtitleTextBlockStyle}"
 							TextWrapping="NoWrap"
 							Text="{x:Bind uTitle_Text}"
 							/>
@@ -73,7 +73,7 @@
 											ToolTipService.ToolTip="{x:Bind uNameText_ToolTip}"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Stretch"
-											Style="{ThemeResource BodyStrongTextBlockStyle}"
+											Style="{StaticResource BodyStrongTextBlockStyle}"
 											TextWrapping="NoWrap"
 											Text="{x:Bind uNameText_Text}"
 											/>
@@ -101,7 +101,7 @@
 										<TextBlock
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Stretch"
-											Style="{ThemeResource BodyTextBlockStyle}"
+											Style="{StaticResource BodyTextBlockStyle}"
 											IsTextSelectionEnabled="True"
 											TextWrapping="Wrap"
 											Text="{x:Bind uDescription_Text}"

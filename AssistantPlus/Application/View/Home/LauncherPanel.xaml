@@ -33,7 +33,7 @@
 					my:Stack.Weight="1"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Center"
-					Style="{ThemeResource BodyStrongTextBlockStyle}"
+					Style="{StaticResource BodyStrongTextBlockStyle}"
 					TextWrapping="NoWrap"
 					Text="{x:Bind uTitle_Text}"
 					/>
@@ -132,7 +132,7 @@
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
-						Style="{ThemeResource BodyStrongTextBlockStyle}"
+						Style="{StaticResource BodyStrongTextBlockStyle}"
 						TextWrapping="NoWrap"
 						Text="Command"
 						/>
@@ -156,7 +156,7 @@
 					my:Stack.Weight="1"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Bottom"
-					Style="{ThemeResource SubtitleTextBlockStyle}"
+					Style="{StaticResource SubtitleTextBlockStyle}"
 					TextWrapping="NoWrap"
 					Text="Module"
 					/>
@@ -188,7 +188,7 @@
 					my:Stack.Weight="1"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Bottom"
-					Style="{ThemeResource SubtitleTextBlockStyle}"
+					Style="{StaticResource SubtitleTextBlockStyle}"
 					TextWrapping="NoWrap"
 					Text="Pinned"
 					/>
@@ -227,7 +227,7 @@
 					my:Stack.Weight="1"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Bottom"
-					Style="{ThemeResource SubtitleTextBlockStyle}"
+					Style="{StaticResource SubtitleTextBlockStyle}"
 					TextWrapping="NoWrap"
 					Text="Recent"
 					/>

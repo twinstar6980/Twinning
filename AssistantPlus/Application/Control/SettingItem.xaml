@@ -43,7 +43,7 @@
 									my:Stack.Weight="1"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
-									Style="{ThemeResource BodyStrongTextBlockStyle}"
+									Style="{StaticResource BodyStrongTextBlockStyle}"
 									TextWrapping="NoWrap"
 									Text="{TemplateBinding Title}"
 									/>

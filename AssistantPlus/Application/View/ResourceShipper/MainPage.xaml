@@ -113,7 +113,7 @@
 														my:Stack.Weight="1"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
-														Style="{ThemeResource BodyTextBlockStyle}"
+														Style="{StaticResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
 														Text="Remove All"
 														/>
@@ -144,7 +144,7 @@
 														my:Stack.Weight="1"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
-														Style="{ThemeResource BodyTextBlockStyle}"
+														Style="{StaticResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
 														Text="Append New"
 														/>
@@ -175,7 +175,7 @@
 														my:Stack.Weight="1"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
-														Style="{ThemeResource BodyTextBlockStyle}"
+														Style="{StaticResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
 														Text="Pick File"
 														/>
@@ -206,7 +206,7 @@
 														my:Stack.Weight="1"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
-														Style="{ThemeResource BodyTextBlockStyle}"
+														Style="{StaticResource BodyTextBlockStyle}"
 														TextWrapping="NoWrap"
 														Text="Pick Directory"
 														/>

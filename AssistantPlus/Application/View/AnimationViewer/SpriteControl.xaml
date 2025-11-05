@@ -6,7 +6,29 @@
 	xmlns:community="using:CommunityToolkit.WinUI"
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Twinning.AssistantPlus"
+	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
 	x:Class="Twinning.AssistantPlus.View.AnimationViewer.SpriteControl"
-	/>
+	Width="0"
+	Height="0"
+	>
+	<my:Box
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		>
+		<my:Box
+			x:Name="uBackground"
+			x:FieldModifier="public"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+			/>
+		<ContentPresenter
+			x:Name="uCanvas"
+			x:FieldModifier="public"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			/>
+	</my:Box>
+</UserControl>

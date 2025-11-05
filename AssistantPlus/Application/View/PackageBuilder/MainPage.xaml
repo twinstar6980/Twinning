@@ -1165,7 +1165,7 @@
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"
-											Style="{ThemeResource BodyTextBlockStyle}"
+											Style="{StaticResource BodyTextBlockStyle}"
 											TextWrapping="NoWrap"
 											TextAlignment="Center"
 											Text="{x:Bind uTypeText_Text}"

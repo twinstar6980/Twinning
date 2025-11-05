@@ -415,12 +415,16 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 				nameof(this.uZombieGroundSwatchLayer_IsEnabled),
 				nameof(this.uZombieGroundSwatchLayer_IsChecked),
 			]);
+			this.View.uSprite.Width = this.Animation.Size.Item1;
+			this.View.uSprite.Height = this.Animation.Size.Item2;
 			return;
 		}
 
 		public async Task Unload (
 		) {
 			AssertTest(this.Loaded && !this.Activated);
+			this.View.uSprite.Width = 0;
+			this.View.uSprite.Height = 0;
 			this.View.uImageList.DeselectRange(new (0, this.Animation.Image.Count.CastPrimitive<SizeU>()));
 			this.View.uSpriteList.DeselectRange(new (0, this.Animation.Sprite.Count.CastPrimitive<SizeU>()));
 			if (this.Animation.MainSprite != null) {

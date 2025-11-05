@@ -24,12 +24,12 @@
 			VerticalAlignment="Stretch"
 			HorizontalContentAlignment="Stretch"
 			Width="208"
+			Style="{x:Bind Controller.uLabel_Style}"
 			>
 			<TextBlock
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Foreground="{x:Bind Controller.uLabelText_Foreground}"
-				Style="{ThemeResource BodyStrongTextBlockStyle}"
+				Style="{StaticResource BodyStrongTextBlockStyle}"
 				TextWrapping="NoWrap"
 				Text="{x:Bind Controller.uLabelText_Text}"
 				/>

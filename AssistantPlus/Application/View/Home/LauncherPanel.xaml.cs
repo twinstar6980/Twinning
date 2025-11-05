@@ -89,7 +89,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			var senders = sender.As<Button>();
 			this.PanelExit();
 			var command = new List<String>();
-			var canContinue = await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content, "Command", new TextBox() {
+			var canContinue = await ControlHelper.ShowDialogAsAutomatic(this.View, "Command", new TextBox() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch,
 				TextWrapping = TextWrapping.Wrap,
