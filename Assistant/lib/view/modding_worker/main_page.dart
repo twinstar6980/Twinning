@@ -3,7 +3,6 @@ import '/setting.dart';
 import '/utility/wrapper.dart';
 import '/utility/exception_helper.dart';
 import '/utility/convert_helper.dart';
-import '/utility/control_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/command_line_reader.dart';
@@ -11,14 +10,15 @@ import '/utility/command_line_writer.dart';
 import '/bridge/library.dart' as bridge;
 import '/bridge/client.dart' as bridge;
 import '/bridge/launcher.dart' as bridge;
-import '/view/home/common.dart';
+import '/widget/export.dart';
+import '/view/home/module_page.dart';
 import '/view/modding_worker/message_type.dart';
 import '/view/modding_worker/message_card.dart';
 import '/view/modding_worker/submission_type.dart';
 import '/view/modding_worker/submission_bar.dart';
 import '/view/modding_worker/value_expression.dart';
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // ----------------
@@ -41,7 +41,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> implements CustomModulePageState {
+class _MainPageState extends State<MainPage> implements ModulePageState {
 
   late List<String>                _additionalArgument;
   late List<Widget>                _messageList;
@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     List<String> description,
   ) async {
     this._messageList.add(
-      Container(
+      BoxContainer.of(
         margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
         child: MessageCard(
           type: type,
@@ -158,7 +158,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
   @override
   modulePageCloseView() async {
     if (this._sessionRunning) {
-      await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+      await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
         title: 'Session In Progress',
         contentBuilder: (context, setStaate) => [],
         actionBuilder: null,
@@ -242,7 +242,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     );
     this._sessionClient = _MainPageBridgeClient(this);
     this._sessionRunning = false;
-    ControlHelper.postTask(() async {
+    postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
@@ -264,65 +264,57 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    return CustomModulePageRegion(
+    return ModulePageRegion(
       onDropFile: null,
-      content: Column(
-        children: [
-          ListView(
-            padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
-            controller: this._messageListScrollController,
-            children: [...this._messageList],
-          ).withScrollbar(
-            controller: this._messageListScrollController,
-          ).withExpanded(),
-          LinearProgressIndicator(
-            value: !this._sessionRunning ? 1 : this._submissionBar.type == null ? null : 1,
-            color: !this._sessionRunning ? null : this._submissionBar.type == null ? null : theme.colorScheme.tertiary,
-          ),
-        ],
-      ),
+      content: FlexContainer.vertical([
+        ListContainer.of(
+          padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
+          controller: this._messageListScrollController,
+          itemCount:this._messageList.length,
+          itemBuilder: (context, index) => this._messageList[index],
+        ).withStyledScrollBar(
+          controller: this._messageListScrollController,
+        ).withFlexExpanded(),
+        StyledProgress.linear(
+          paused: !this._sessionRunning ? false : this._submissionBar.type != null,
+          value: !this._sessionRunning ? 1.0 : null,
+        ),
+      ]),
       bottom: this._sessionRunning
         ? this._submissionBar
-        : CustomBottomBarContent(
-          primary: FloatingActionButton(
+        : StyledBottomBar.standard(
+          primary: StyledFloatingButton.standard(
             tooltip: 'Launch',
-            elevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-            disabledElevation: 0,
-            child: Icon(IconSymbols.play_circle),
-            onPressed: () async {
+            icon: Icon(IconSet.play_circle),
+            onPressed: (context) async {
               this._launchSession();
             },
           ),
           secondary: [
-            Badge.count(
-              textStyle: theme.textTheme.labelSmall!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-              count: this._additionalArgument.length,
-              child: IconButton.filledTonal(
+            StyledBadge.standard(
+              label: StyledText.custom(
+                '${this._additionalArgument.length}',
+                style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+              ),
+              child: StyledIconButton.filledTonal(
                 tooltip: 'Additional Argument',
-                padding: EdgeInsets.zero,
-                icon: SizedBox(
-                  width: 56,
-                  child: Icon(IconSymbols.attach_file),
+                icon: Box.of(
+                  width: 40,
+                  child: Icon(IconSet.attach_file, fill: 1),
                 ),
-                onPressed: () async {
-                  await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
+                onPressed: (context) async {
+                  await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
                     title: 'Additional Argument',
                     contentBuilder: (context, setStateForPanel) => [
-                      CustomTextField(
-                        keyboardType: TextInputType.multiline,
-                        inputFormatters: [],
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                          filled: false,
-                          border: OutlineInputBorder(),
-                        ),
-                        style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
+                      StyledInput.outlined(
+                        style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+                        type: StyledInputType.multiline,
+                        format: [],
+                        hint: null,
+                        prefix: null,
+                        suffix: null,
                         value: ConvertHelper.makeStringListToStringWithLine(this._additionalArgument),
-                        onChanged: (value) async {
+                        onChanged: (context, value) async {
                           this._additionalArgument.clear();
                           this._additionalArgument.addAll(ConvertHelper.parseStringListFromStringWithLine(value));
                           await refreshState(setStateForPanel);

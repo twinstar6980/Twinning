@@ -1,7 +1,8 @@
-import '/common.dart';
+import '/common.dart'; // ignore: unused_import
 import '/setting.dart';
-import '/view/home/common.dart';
-import 'package:flutter/material.dart';
+import '/widget/export.dart';
+import '/view/home/module_page.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // ----------------
@@ -18,29 +19,24 @@ class BlankPage extends StatelessWidget {
 
   @override
   build(context) {
-    return CustomModulePageRegion(
+    return ModulePageRegion(
       onDropFile: null,
-      content: Container(
-        alignment: Alignment.center,
+      content: BoxContainer.of(
         padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-        child: SizedBox(
+        align: BoxContainerAlign.center,
+        child: Box.of(
           width: 256,
           height: 256,
-          child: FloatingActionButton.large(
+          child: StyledFloatingButton.larger(
             tooltip: 'Launcher',
-            elevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-            disabledElevation: 0,
-            child: Icon(IconSymbols.widgets, size: 128),
-            onPressed: () async {
+            icon: Icon(IconSet.widgets, size: 128),
+            onPressed: (context) async {
               Provider.of<SettingProvider>(context, listen: false).state.homeShowLauncherPanel!();
             },
           ),
         ),
       ),
-      bottom: CustomBottomBarContent(
+      bottom: StyledBottomBar.standard(
         primary: null,
         secondary: [],
       ),

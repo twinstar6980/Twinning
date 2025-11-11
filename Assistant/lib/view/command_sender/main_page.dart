@@ -4,15 +4,15 @@ import '/utility/wrapper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
 import '/utility/json_helper.dart';
-import '/utility/control_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
+import '/view/home/module_page.dart';
 import '/view/command_sender/value_expression.dart';
 import '/view/command_sender/configuration.dart';
 import '/view/command_sender/method_item.dart';
 import '/view/command_sender/command_panel.dart';
 import '/view/modding_worker/forward_helper.dart' as modding_worker;
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // ----------------
@@ -35,7 +35,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> implements CustomModulePageState {
+class _MainPageState extends State<MainPage> implements ModulePageState {
 
   late List<MethodGroupConfiguration>                                                                                             _methodConfiguration;
   late Boolean                                                                                                                    _parallelForward;
@@ -166,7 +166,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._methodExpanded = [];
     this._command = [];
     this._commandListScrollController = ScrollController();
-    ControlHelper.postTask(() async {
+    postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
@@ -188,54 +188,46 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   build(context) {
-    return CustomModulePageRegion(
+    return ModulePageRegion(
       onDropFile: null,
-      content: Column(
-        children: [
-          ListView.builder(
-            padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
-            controller: this._commandListScrollController,
-            itemCount: this._command.length,
-            itemBuilder: (context, index) => Container(
-              padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
-              child: CommandPanel(
-                key: ObjectKey(this._command[index]),
-                groupConfiguration: this._command[index].$1,
-                itemConfiguration: this._command[index].$2,
-                batch: this._command[index].$3,
-                argument: this._command[index].$4,
-                expanded: this._command[index].$5,
-                onRemove: () async {
-                  await this._removeCommand(index);
-                },
-                onForward: () async {
-                  await this._forwardCommand([index]);
-                },
-              ),
+      content: FlexContainer.vertical([
+        ListContainer.of(
+          padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+          controller: this._commandListScrollController,
+          itemCount: this._command.length,
+          itemBuilder: (context, index) => BoxContainer.of(
+            padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+            child: CommandPanel(
+              key: ObjectKey(this._command[index]),
+              groupConfiguration: this._command[index].$1,
+              itemConfiguration: this._command[index].$2,
+              batch: this._command[index].$3,
+              argument: this._command[index].$4,
+              expanded: this._command[index].$5,
+              onRemove: () async {
+                await this._removeCommand(index);
+              },
+              onForward: () async {
+                await this._forwardCommand([index]);
+              },
             ),
-          ).withScrollbar(
-            controller: this._commandListScrollController,
-          ).withExpanded(),
-        ],
-      ),
-      bottom: CustomBottomBarContent(
-        primary: Badge.count(
-          count: this._methodConfiguration.fold(0, (currentValue, item) => currentValue + item.item.length),
-          child: FloatingActionButton(
+          ),
+        ).withStyledScrollBar(
+          controller: this._commandListScrollController,
+        ).withFlexExpanded(),
+      ]),
+      bottom: StyledBottomBar.standard(
+        primary: StyledBadge.standard(
+          label: StyledText.inherit('${this._methodConfiguration.fold<Integer>(0, (currentValue, item) => currentValue + item.item.length)}'),
+          child: StyledFloatingButton.standard(
             tooltip: 'Method',
-            elevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-            disabledElevation: 0,
-            child: Icon(IconSymbols.format_list_bulleted_add),
-            onPressed: () async {
-              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+            icon: Icon(IconSet.format_list_bulleted_add),
+            onPressed: (context) async {
+              await StyledBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
                 title: 'Method',
                 contentBuilder: (context, setStateForPanel) => [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                  ListContainer.of(
+                    shrink: true,
                     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                     itemCount: this._methodConfiguration.length,
                     itemBuilder: (context, index) => MethodGroupItem(
@@ -257,21 +249,21 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
           ),
         ),
         secondary: [
-          IconButton.filledTonal(
+          StyledIconButton.filledTonal(
             tooltip: 'Parallel Forward',
-            isSelected: this._parallelForward,
-            icon: Icon(IconSymbols.shuffle),
-            selectedIcon: Icon(IconSymbols.shuffle, fill: 1),
-            onPressed: () async {
+            selected: this._parallelForward,
+            icon: Icon(IconSet.shuffle),
+            iconOnSelected: Icon(IconSet.shuffle, fill: 1),
+            onPressed: (context) async {
               this._parallelForward = !this._parallelForward;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Forward',
-            icon: Icon(IconSymbols.send, fill: 1),
-            onPressed: () async {
+            icon: Icon(IconSet.send, fill: 1),
+            onPressed: (context) async {
               await this._forwardCommand(this._command.mapIndexed((index, value) => index).toList());
             },
           ),

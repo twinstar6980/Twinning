@@ -1,5 +1,6 @@
 import '/common.dart'; // ignore: unused_import
-import 'package:flutter/material.dart';
+import '/widget/export.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -15,15 +16,15 @@ enum MessageType {
 extension MessageTypeExtension on MessageType {
 
   Color color(
-    ThemeData theme,
+    BuildContext context,
   ) {
     return [
-      theme.colorScheme.onSurface,
-      Colors.blue,
-      Colors.yellow,
-      Colors.red,
-      Colors.green,
-      Colors.purple,
+      StyledColorExtension.value(context, StyledColor.onSurface),
+      ColorSet.blue,
+      ColorSet.yellow,
+      ColorSet.red,
+      ColorSet.green,
+      ColorSet.purple,
     ][this.index];
   }
 

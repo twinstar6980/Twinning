@@ -3,19 +3,20 @@ import '/module.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
+import '/widget/common.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
 import '/view/modding_worker/submission_type.dart' as modding_worker;
 import '/view/modding_worker/value_expression.dart' as modding_worker;
 import '/view/command_sender/setting.dart' as command_sender;
 import '/view/resource_shipper/setting.dart' as resource_shipper;
 import '/view/animation_viewer/setting.dart' as animation_viewer;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
 class SettingData {
   String                   version;
-  ThemeMode                themeMode;
+  StyledThemeMode          themeMode;
   Boolean                  themeColorState;
   Color                    themeColorLight;
   Color                    themeColorDark;
@@ -170,7 +171,7 @@ class SettingProvider with ChangeNotifier {
   ) {
     return SettingData(
       version: ApplicationInformation.version,
-      themeMode: ThemeMode.system,
+      themeMode: StyledThemeMode.system,
       themeColorState: false,
       themeColorLight: Color(0xFF6200EE),
       themeColorDark: Color(0xFFBB86FC),
@@ -306,7 +307,7 @@ class SettingProvider with ChangeNotifier {
   ) {
     return SettingData(
       version: (json['version'] as String).selfAlso((it) { assertTest(it == ApplicationInformation.version); }),
-      themeMode: (json['theme_mode'] as String).selfLet((it) => ThemeMode.values.byName(it)),
+      themeMode: (json['theme_mode'] as String).selfLet((it) => StyledThemeMode.values.byName(it)),
       themeColorState: (json['theme_color_state'] as Boolean),
       themeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => Color(it)),
       themeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => Color(it)),

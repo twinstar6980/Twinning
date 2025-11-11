@@ -5,14 +5,13 @@ import '/application.dart';
 import '/utility/exception_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/command_line_reader.dart';
-import '/utility/control_helper.dart';
 import '/utility/window_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/custom_link_helper.dart';
-import '/view/home/common.dart';
+import 'widget/export.dart';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
 // ----------------
@@ -26,20 +25,18 @@ class MainApplication {
     StackTrace? stack,
   ) async {
     try {
-      await ControlHelper.postTask(() async {
+      await postTask(() async {
         if (_setting.state.applicationNavigatorKey.currentContext != null) {
-          await ControlHelper.showDialogAsModal<Void>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
+          await StyledModalDialogExtension.show<Void>(_setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
             title: 'Unhandled Exception',
             contentBuilder: (context, setStateForPanel) => [
-              Row(
-                children: [
-                  Text(
-                    ExceptionHelper.generateMessage(exception, stack),
-                    overflow: TextOverflow.clip,
-                  ).withSelectionArea(
-                  ).withExpanded(),
-                ],
-              ),
+              FlexContainer.horizontal([
+                StyledText.custom(
+                  ExceptionHelper.generateMessage(exception, stack),
+                  overflow: TextOverflow.clip,
+                ).withSelectableArea(
+                ).withFlexExpanded(),
+              ]),
             ],
             actionBuilder: null,
           ));
@@ -73,39 +70,30 @@ class MainApplication {
     var setting = Provider.of<SettingProvider>(_setting.state.applicationNavigatorKey.currentContext!, listen: false);
     var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
     var targetType = forwardOption[setting.data.forwarderDefaultTarget.index] != null ? setting.data.forwarderDefaultTarget : null;
-    var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await ControlHelper.showDialogAsModal<Boolean>(_setting.state.applicationNavigatorKey.currentContext!, CustomModalDialog(
+    var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await StyledModalDialogExtension.show<Boolean>(_setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
       title: 'Forward',
       contentBuilder: (context, setStateForPanel) => [
-        RadioGroup<ModuleType>(
-          groupValue: targetType,
-          onChanged: (value) async {
-            targetType = value;
-            await refreshState(setStateForPanel);
-          },
-          child: Column(
-            children: ModuleType.values.map((item) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              enabled: forwardOption[item.index] != null,
-              leading: Radio(
-                enabled: forwardOption[item.index] != null,
-                value: item,
-              ),
-              title: Text(
-                ModuleHelper.query(item).name,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )).toList(),
+        ...ModuleType.values.map((item) => StyledListTile.standardTight(
+          enabled: forwardOption[item.index] != null,
+          leading: StyledRadio.standard(
+            enabled: forwardOption[item.index] != null,
+            value: targetType == item,
+            onChanged: (context) async {
+              targetType = item;
+              await refreshState(setStateForPanel);
+            },
           ),
-        ),
+          content: StyledText.inherit(ModuleHelper.query(item).name),
+        )),
       ],
       actionBuilder: (context) => [
-        TextButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.pop(context, false),
+        StyledButton.text(
+          content: StyledText.inherit('Cancel'),
+          onPressed: (context) => Navigator.pop(context, false),
         ),
-        TextButton(
-          child: Text('Continue'),
-          onPressed: () => Navigator.pop(context, true),
+        StyledButton.text(
+          content: StyledText.inherit('Continue'),
+          onPressed: (context) => Navigator.pop(context, true),
         ),
       ],
     )) ?? false);
@@ -211,13 +199,13 @@ class MainApplication {
         await WindowHelper.show();
       }
       CustomLinkHelper.listen((link) async {
-        ControlHelper.postTask(() async {
+        postTask(() async {
           await _handleLink(link);
         });
         return;
       });
       if (await CustomLinkHelper.getFirst() == null) {
-        ControlHelper.postTask(() async {
+        postTask(() async {
           if (argument.length >= 1 && argument[0] == 'application') {
             await _handleCommand(argument.slice(1));
           }

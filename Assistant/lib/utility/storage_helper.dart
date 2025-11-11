@@ -1,11 +1,10 @@
 import '/common.dart';
 import '/setting.dart';
-import '/utility/control_helper.dart';
 import '/utility/platform_method.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as lib;
 import 'package:path_provider/path_provider.dart' as lib;
@@ -488,27 +487,26 @@ class StorageHelper {
       }
     }
     if (result == null) {
-      var canDuplicate = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
+      var canDuplicate = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
         title: 'Unknown Content Uri',
         contentBuilder: (context, setStateForPanel) => [
-          Row(
-            children: [
-              Text(
-                uri.toString(),
-                overflow: TextOverflow.clip,
-              ).withSelectionArea(
-              ).withExpanded(),
-            ],
-          ),
+          FlexContainer.horizontal([
+            StyledText.custom(
+              uri.toString(),
+              overflow: TextOverflow.clip,
+            ).withSelectableArea(
+            ).withFlexExpanded(),
+          ]),
         ],
         actionBuilder: (context) => [
-          TextButton(
-            child: Text('Ignore'),
-            onPressed: () => Navigator.pop(context, false),
+          StyledButton.text(
+            content: StyledText.inherit('Ignore'),
+            onPressed: (context) => Navigator.pop(context, false),
           ),
-          TextButton(
-            child: Text('Duplicate'),
-            onPressed: !copyable ? null : () => Navigator.pop(context, true),
+          StyledButton.text(
+            enabled: copyable,
+            content: StyledText.inherit('Duplicate'),
+            onPressed: (context) => Navigator.pop(context, true),
           ),
         ],
       )) ?? false;

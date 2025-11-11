@@ -2,11 +2,12 @@ import '/common.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
 import '/view/command_sender/configuration.dart';
 import '/view/command_sender/value_expression.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' as material;
 
 // ----------------
 
@@ -33,54 +34,41 @@ class _BasicArgumentBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    return Column(
-      children: [
-        if (!this.expanded && this.value != null)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: theme.textTheme.labelLarge!.textBaseline,
-            children: [
-              SizedBox(width: 8),
-              Text(
-                this.name,
-                overflow: TextOverflow.clip,
-                textAlign: TextAlign.start,
-                style: theme.textTheme.labelLarge!.copyWith(
-                  color: !this.batch ? theme.colorScheme.primary : theme.colorScheme.tertiary,
-                ),
-              ).withExpanded(),
-              SizedBox(width: 8),
-              Text(
-                ValueExpressionHelper.makeString(this.value!),
-                overflow: TextOverflow.clip,
-                textAlign: TextAlign.end,
-                style: theme.textTheme.bodyMedium!,
-              ).withSelectionArea(
-              ).withExpanded(),
-              SizedBox(width: 8),
-            ],
-          ),
-        if (this.expanded)
-          Row(
-            children: [
-              SizedBox(width: 8),
-              Text(
-                this.name,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelLarge!.copyWith(
-                  color: !this.batch ? theme.colorScheme.primary : theme.colorScheme.tertiary,
-                ),
-              ).withTooltip(
-                message: this.name,
-              ).withExpanded(),
-              SizedBox(width: 8),
-            ],
-          ),
-        if (this.expanded)
-          this.content,
-      ],
-    );
+    return FlexContainer.vertical([
+      if (!this.expanded && this.value != null)
+        FlexContainer.horizontal(textBaseline: material.Theme.of(context).textTheme.labelLarge!.textBaseline!, [
+          Gap.horizontal(8),
+          StyledText.custom(
+            this.name,
+            variant: StyledTextVariant.labelLarge,
+            color: !this.batch ? StyledColor.primary : StyledColor.tertiary,
+            overflow: TextOverflow.clip,
+            align: TextAlign.start,
+          ).withFlexExpanded(),
+          Gap.horizontal(8),
+          StyledText.custom(
+            ValueExpressionHelper.makeString(this.value!),
+            variant: StyledTextVariant.bodyMedium,
+            overflow: TextOverflow.clip,
+            align: TextAlign.end,
+          ).withSelectableArea(
+          ).withFlexExpanded(),
+          Gap.horizontal(8),
+        ]),
+      if (this.expanded)
+        FlexContainer.horizontal([
+          Gap.horizontal(8),
+          StyledText.custom(
+            this.name,
+            variant: StyledTextVariant.labelLarge,
+            tooltip: true,
+            color: !this.batch ? StyledColor.primary : StyledColor.tertiary,
+          ).withFlexExpanded(),
+          Gap.horizontal(8),
+        ]),
+      if (this.expanded)
+        this.content,
+    ]);
   }
 
 }
@@ -114,42 +102,36 @@ class _BooleanArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomTextField(
-          keyboardType: TextInputType.text,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Boolean',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-                IconButton(
-                  tooltip: 'No',
-                  isSelected: this.value.value == null ? false : this.value.value!.value == false,
-                  icon: Icon(IconSymbols.do_not_disturb_on),
-                  selectedIcon: Icon(IconSymbols.do_not_disturb_on, fill: 1),
-                  onPressed: () async {
-                    this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
-                    await refreshState(setState);
-                  },
-                ),
-                SizedBox(width: 4),
-                IconButton(
-                  tooltip: 'Yes',
-                  isSelected: this.value.value == null ? false : this.value.value!.value == true,
-                  icon: Icon(IconSymbols.check_circle),
-                  selectedIcon: Icon(IconSymbols.check_circle, fill: 1),
-                  onPressed: () async {
-                    this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
-                    await refreshState(setState);
-                  },
-                ),
-              ],
+        content: StyledInput.underlined(
+          type: StyledInputType.text,
+          format: [],
+          hint: 'Boolean',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'No',
+              selected: this.value.value == null ? false : this.value.value!.value == false,
+              icon: Icon(IconSet.do_not_disturb_on),
+              iconOnSelected: Icon(IconSet.do_not_disturb_on, fill: 1),
+              onPressed: (context) async {
+                this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
+                await refreshState(setState);
+              },
             ),
-          ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Yes',
+              selected: this.value.value == null ? false : this.value.value!.value == true,
+              icon: Icon(IconSet.check_circle),
+              iconOnSelected: Icon(IconSet.check_circle, fill: 1),
+              onPressed: (context) async {
+                this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
+                await refreshState(setState);
+              },
+            ),
+          ],
           value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -194,18 +176,14 @@ class _IntegerArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomTextField(
-          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Integer',
-            suffixIcon: null,
-          ),
+        content: StyledInput.underlined(
+          type: StyledInputType.numberWithOptions(signed: true, decimal: false),
+          format: [],
+          hint: 'Integer',
+          prefix: null,
+          suffix: null,
           value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -251,18 +229,14 @@ class _FloaterArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomTextField(
-          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Floater',
-            suffixIcon: null,
-          ),
+        content: StyledInput.underlined(
+          type: StyledInputType.numberWithOptions(signed: true, decimal: true),
+          format: [],
+          hint: 'Floater',
+          prefix: null,
+          suffix: null,
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -308,47 +282,39 @@ class _SizeArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomTextField(
-          keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Size',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-                PopupMenuButton(
-                  tooltip: 'Exponent',
-                  position: PopupMenuPosition.under,
-                  icon: this.value.value == null
-                    ? Icon(IconSymbols.expand_circle_down)
-                    : Container(
-                      alignment: Alignment.center,
-                      width: 24,
-                      height: 24,
-                      child: Text(
-                        ['B', 'K', 'M', 'G'][this.value.value!.exponent],
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  itemBuilder: (context) => ['B', 'K', 'M', 'G'].mapIndexed((index, value) => PopupMenuItem(
-                    value: index,
-                    child: Text(
-                      value,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )).toList(),
-                  onSelected: (value) async {
-                    this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
-                    await refreshState(setState);
-                  },
+        content: StyledInput.underlined(
+          type: StyledInputType.numberWithOptions(signed: false, decimal: true),
+          format: [],
+          hint: 'Size',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Exponent',
+              icon: this.value.value == null
+                ? Icon(IconSet.expand_circle_down)
+                : BoxContainer.of(
+                  width: 24,
+                  height: 24,
+                  align: BoxContainerAlign.center,
+                  child: StyledText.inherit(['B', 'K', 'M', 'G'][this.value.value!.exponent]),
                 ),
-              ],
+              onPressed: (context) async {
+                var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
+                  position: StyledMenuPosition.under,
+                  children: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
+                    value: index,
+                    content: StyledText.inherit(value),
+                  )),
+                ));
+                if (value != null) {
+                  this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
+                  await refreshState(setState);
+                }
+              },
             ),
-          ),
+          ],
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -394,18 +360,14 @@ class _StringArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomTextField(
-          keyboardType: TextInputType.text,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'String',
-            suffixIcon: null,
-          ),
+        content: StyledInput.underlined(
+          type: StyledInputType.text,
+          format: [],
+          hint: 'String',
+          prefix: null,
+          suffix: null,
           value: this.value.value == null ? '' : this.value.value!.value,
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -448,36 +410,37 @@ class _PathArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomFileDropRegion(
+        content: StorageDropRegion(
           onDrop: (item) async {
             this.value.value = PathExpression(item.first);
             await refreshState(setState);
           },
-          child: CustomTextField(
-            keyboardType: TextInputType.text,
-            inputFormatters: [],
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-              filled: false,
-              border: UnderlineInputBorder(),
-              hintText: 'Path',
-              suffixIcon: CustomTextFieldSuffixRegion(
-                children: [
-                  CustomStorageItemPickerButton(
+          child: StyledInput.underlined(
+            type: StyledInputType.text,
+            format: [],
+            hint: 'Path',
+            prefix: null,
+            suffix: [
+              StyledIconButton.standard(
+                tooltip: 'Pick',
+                icon: Icon(IconSet.open_in_new),
+                onPressed: (context) async {
+                  var target = await pickStorageItem(
+                    context: context,
                     allowLoadFile: true,
                     allowLoadDirectory: true,
                     allowSaveFile: true,
                     location: '@CommandSender.Generic',
-                    onPicked: (target) async {
-                      this.value.value = PathExpression(target);
-                      await refreshState(setState);
-                    },
-                  ),
-                ],
+                  );
+                  if (target != null) {
+                    this.value.value = PathExpression(target);
+                    await refreshState(setState);
+                  }
+                },
               ),
-            ),
+            ],
             value: this.value.value == null ? '' : this.value.value!.content,
-            onChanged: (text) async {
+            onChanged: (context, text) async {
               if (text.isEmpty) {
                 this.value.value = null;
               }
@@ -523,28 +486,22 @@ class _EnumerationArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: CustomOptionField(
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Enumeration',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-                IconButton(
-                  tooltip: 'Reset',
-                  icon: Icon(IconSymbols.restart_alt),
-                  onPressed: () async {
-                    this.value.value = null;
-                    await refreshState(setState);
-                  },
-                ),
-              ],
+        content: StyledInputCombo.underlined(
+          hint: 'Enumeration',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Reset',
+              icon: Icon(IconSet.restart_alt),
+              onPressed: (context) async {
+                this.value.value = null;
+                await refreshState(setState);
+              },
             ),
-          ),
+          ],
           option: this.option.map((value) => (value, ValueExpressionHelper.makeString(value))).toList(),
           value: this.value.value == null ? '' : ValueExpressionHelper.makeString(this.value.value!),
-          onChanged: (value) async {
+          onChanged: (context, value) async {
             this.value.value = value as ValueExpression;
             await refreshState(setState);
           },

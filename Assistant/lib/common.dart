@@ -1,18 +1,20 @@
-import 'dart:core';
+import 'dart:core' as lib;
+import 'dart:core' hide Object, bool, int, double, String;
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart' as lib;
 
 // ----------------
 
 typedef Void = void;
 
-typedef Boolean = bool;
+typedef Object = lib.Object;
 
-typedef Integer = int;
+typedef Boolean = lib.bool;
 
-typedef Floater = double;
+typedef Integer = lib.int;
+
+typedef Floater = lib.double;
+
+typedef String = lib.String;
 
 // ----------------
 
@@ -20,7 +22,7 @@ final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '124';
+  static const String version = '125';
 
   static const String name = 'Twinning Assistant';
 
@@ -174,95 +176,6 @@ extension CommonObjectExtension<TType extends Object> on TType {
   TTarget as<TTarget>(
   ) {
     return this as TTarget;
-  }
-
-}
-
-// ----------------
-
-typedef IconSymbols = lib.Symbols;
-
-Future<Void> refreshState(
-  Void Function(Void Function()) setState,
-) async {
-  setState(() {});
-  await WidgetsBinding.instance.endOfFrame;
-  return;
-}
-
-extension CommonWidgetExtension<TType extends Widget> on TType {
-
-  Widget withExpanded({
-    Integer? flex = null,
-  }) {
-    flex ??= 1;
-    return Expanded(
-      flex: flex,
-      child: this,
-    );
-  }
-
-  SelectionArea withSelectionArea({
-    ValueChanged<SelectedContent?>? onSelectionChanged = null,
-  }) {
-    return SelectionArea(
-      onSelectionChanged: onSelectionChanged,
-      child: this,
-    );
-  }
-
-  Scrollbar withScrollbar({
-    Boolean?          interactive = null,
-    ScrollController? controller = null,
-  }) {
-    interactive ??= true;
-    return Scrollbar(
-      interactive: interactive,
-      controller: controller,
-      child: this,
-    );
-  }
-
-  SingleChildScrollView withSingleChildScrollView({
-    Axis?             scrollDirection = null,
-    ScrollController? controller      = null,
-  }) {
-    scrollDirection ??= Axis.vertical;
-    return SingleChildScrollView(
-      scrollDirection: scrollDirection,
-      controller: controller,
-      child: this,
-    );
-  }
-
-  IgnorePointer withIgnorePointer({
-    Boolean? ignoring = null,
-  }) {
-    ignoring ??= true;
-    return IgnorePointer(
-      ignoring: ignoring,
-      child: this,
-    );
-  }
-
-  Tooltip withTooltip({
-    String? message = null,
-  }) {
-    message ??= '';
-    return Tooltip(
-      message: message,
-      child: this,
-    );
-  }
-
-  Material withMaterial({
-    MaterialType? type = null,
-  }) {
-    type ??= MaterialType.transparency;
-    return Material(
-      type: type,
-      child: this,
-    );
   }
 
 }

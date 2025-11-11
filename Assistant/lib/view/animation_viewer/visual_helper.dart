@@ -1,11 +1,12 @@
 import '/common.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
+import '/widget/export.dart';
 import '/view/animation_viewer/model.dart' as model;
 import 'dart:ui';
 import 'dart:math';
 import 'dart:collection';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -155,7 +156,7 @@ class VisualHelper {
     model.Image                                    image,
   ) {
     var textureData = texture[image.name];
-    return Transform(
+    return BoxContainer.of(
       transform: _makeMatrix(image.transform),
       child: textureData == null
         ? null
@@ -205,14 +206,12 @@ class VisualHelper {
             var index = subController.value;
             var property = layer.property[index];
             if (property == null) {
-              return SizedBox();
+              return Box.none();
             }
-            return ColorFiltered(
+            return BoxContainer.of(
+              transform: property.$1,
               colorFilter: property.$2,
-              child: Transform(
-                transform: property.$1,
-                child: subView,
-              ),
+              child: subView,
             );
           },
         );
@@ -260,10 +259,9 @@ class VisualHelper {
       }
       frameIndex++;
     }
-    return Stack(
-      fit: StackFit.passthrough,
-      children: layerList.values.nonNulls.map((value) => value.view).toList(),
-    );
+    return StackContainer.of(fit: StackContainerFit.passthrough, [
+      ...layerList.values.nonNulls.map((value) => value.view),
+    ]);
   }
 
   // #endregion

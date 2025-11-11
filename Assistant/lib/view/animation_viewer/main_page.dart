@@ -4,16 +4,15 @@ import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
-import '/utility/control_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
+import '/view/home/module_page.dart';
 import '/view/animation_viewer/model.dart' as model;
 import '/view/animation_viewer/visual_helper.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart' as lib;
 
 // ----------------
 
@@ -35,7 +34,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin implements CustomModulePageState {
+class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin implements ModulePageState {
 
   late Boolean                                         _immediateSelect;
   late Boolean                                         _automaticPlay;
@@ -198,7 +197,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(0 <= frameRange.$2 && frameRange.$2 < this._activeSprite!.frame.length);
     assertTest(frameRange.$1 <= frameRange.$2);
     this._activeFrameRange = frameRange;
-    // TODO
+    // TODO: unimplemented
     await refreshState(this.setState);
     return;
   }
@@ -503,7 +502,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._animationVisual = null;
     this._stageHorizontalScrollSontroller = ScrollController();
     this._stageVerticalScrollSontroller = ScrollController();
-    ControlHelper.postTask(() async {
+    postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
@@ -529,675 +528,534 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    return CustomModulePageRegion(
+    return ModulePageRegion(
       onDropFile: (item) async {
         if (item.length != 1) {
-          await ControlHelper.showSnackBar(context, 'Source is multiply.');
+          await StyledSnackExtension.show(context, 'Source is multiply.');
           return;
         }
         if (!await StorageHelper.existFile(item.first)) {
-          await ControlHelper.showSnackBar(context, 'Source is not a file.');
+          await StyledSnackExtension.show(context, 'Source is not a file.');
           return;
         }
         await this._applyLoad(item.first, null, null, null, null, null, null, null);
         return;
       },
-      content: Column(
-        children: [
-          Card.outlined(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            margin: EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: Column(
-              children: [
-                Container(
-                  color: theme.colorScheme.surfaceContainer,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) => lib.SingleChildTwoDimensionalScrollView(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
-                        vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
-                      ),
-                      horizontalController: this._stageHorizontalScrollSontroller,
-                      verticalController: this._stageVerticalScrollSontroller,
-                      child: Container(
-                        color: !this._showBoundary ? null : theme.colorScheme.surfaceContainerHighest,
-                        child: !this._loaded
-                          ? SizedBox()
-                          : SizedBox.fromSize(
-                            size: Size(this._animation!.size.$1, this._animation!.size.$2),
-                            child: UnconstrainedBox(
-                              child: SizedOverflowBox(
-                                alignment: AlignmentDirectional.topStart,
-                                size: Size(this._animation!.size.$1, this._animation!.size.$2),
-                                child: this._animationVisual,
-                              ),
-                            ),
-                          ),
-                      ),
-                    ).withScrollbar(
-                      controller: this._stageVerticalScrollSontroller,
-                    ).withScrollbar(
-                      controller: this._stageHorizontalScrollSontroller,
-                    ),
+      content: FlexContainer.vertical([
+        StyledCard.outlined(
+          margin: EdgeInsets.fromLTRB(16, 12, 16, 12),
+          content: FlexContainer.vertical([
+            BoxContainer.of(
+              color: StyledColorExtension.value(context, StyledColor.surfaceContainer),
+              child: LayoutBuilder(
+                builder: (context, constraints) => BoxContainer.of(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
+                    vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                   ),
-                ).withExpanded(),
-                Divider(height: 0),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    SizedBox(width: 12),
-                    LayoutBuilder(
-                      builder: (context, constraints) => IntrinsicHeight(
-                        child: OverflowBox(
-                          maxWidth: constraints.maxWidth + 16,
-                          child: StreamBuilder(
-                            stream: this._activeProgressIndexStream.stream,
-                            builder: (context, snapshot) => Slider(
-                              min: 1.0,
-                              max: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
-                              value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
-                              onChanged: !this._activated
-                                ? null
-                                : (value) async {
-                                  await this._changeProgressIndex(value.round() - 1);
-                                  this._activeProgressIndexStream.sink.add(null);
-                                },
-                              onChangeStart: !this._activated
-                                ? null
-                                : (value) async {
-                                  this._activeProgressChangingContinue = this._queryProgressState();
-                                  if (this._activeProgressChangingContinue) {
-                                    await this._changeProgressState(false);
-                                  }
-                                },
-                              onChangeEnd: !this._activated
-                                ? null
-                                : (value) async {
-                                  if (this._activeProgressChangingContinue) {
-                                    await this._changeProgressState(true);
-                                  }
-                                  this._activeProgressChangingContinue = false;
-                                },
-                            ).withTooltip(
-                              message: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
-                            ),
-                          ),
+                  color: !this._showBoundary ? null : StyledColorExtension.value(context, StyledColor.surfaceContainerHighest),
+                  child: !this._loaded
+                    ? Box.none()
+                    : Box.of(
+                      width: this._animation!.size.$1,
+                      height: this._animation!.size.$2,
+                      child: UnconstrainedBox(
+                        child: SizedOverflowBox(
+                          alignment: AlignmentDirectional.topStart,
+                          size: Size(this._animation!.size.$1, this._animation!.size.$2),
+                          child: this._animationVisual,
                         ),
                       ),
-                    ).withExpanded(),
-                    SizedBox(width: 12),
-                  ],
+                    ),
+                ).withScrollableArea(
+                  horizontal: this._stageHorizontalScrollSontroller,
+                  vertical: this._stageVerticalScrollSontroller,
+                ).withStyledScrollBar(
+                  controller: this._stageHorizontalScrollSontroller,
+                ).withStyledScrollBar(
+                  controller: this._stageVerticalScrollSontroller,
                 ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    SizedBox(width: 16),
-                    TextButton.icon(
-                      iconAlignment: IconAlignment.start,
-                      icon: Icon(IconSymbols.linear_scale),
-                      label: Row(
-                        children: [
-                          Text(
-                            !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                          ).withExpanded(),
-                        ],
-                      ),
-                      onPressed: !this._activated
-                        ? null
-                        : () async {
-                          var currentValue = this._activeFrameRange!;
-                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                            title: 'Frame Range',
-                            contentBuilder: (context, setStateForPanel) => [
-                              CustomTextField(
-                                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-                                inputFormatters: [],
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                  filled: false,
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(IconSymbols.line_start_circle),
-                                  suffixIcon: CustomTextFieldSuffixRegion(
-                                    children: [
-                                      PopupMenuButton(
-                                        tooltip: 'Preset',
-                                        position: PopupMenuPosition.under,
-                                        icon: Icon(IconSymbols.more_vert),
-                                        itemBuilder: (context) => [
-                                          (1, 'whole'),
-                                          null,
-                                          ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
-                                        ].map((value) => value == null
-                                          ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
-                                          : PopupMenuItem(
-                                            value: value.$1,
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              dense: true,
-                                              title: Text(
-                                                value.$2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              trailing: Text(
-                                                ConvertHelper.makeIntegerToString(value.$1, false),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall!.copyWith(
-                                                  color: theme.colorScheme.onSurfaceVariant,
-                                                ),
-                                              ),
-                                            ),
-                                          )).toList(),
-                                        onSelected: (value) async {
-                                          value as Integer;
-                                          value -= 1;
-                                          currentValue = (value, max(value, currentValue.$2));
-                                          await refreshState(setStateForPanel);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                value: ConvertHelper.makeIntegerToString(currentValue.$1 + 1, false),
-                                onChanged: (text) async {
-                                  var value = Integer.tryParse(text);
-                                  if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                    value -= 1;
-                                    currentValue = (value, max(value, currentValue.$2));
-                                  }
-                                  await refreshState(setStateForPanel);
-                                },
-                              ),
-                              SizedBox(height: 12),
-                              CustomTextField(
-                                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: false),
-                                inputFormatters: [],
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                  filled: false,
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(IconSymbols.line_end_circle),
-                                  suffixIcon: CustomTextFieldSuffixRegion(
-                                    children: [
-                                      PopupMenuButton(
-                                        tooltip: 'Preset',
-                                        position: PopupMenuPosition.under,
-                                        icon: Icon(IconSymbols.more_vert),
-                                        itemBuilder: (context) => [
-                                          (this._activeSprite!.frame.length, 'whole'),
-                                          null,
-                                          ...this._activeFrameLabel!.map((value) => (value.$3 + 1, value.$1)),
-                                        ].map((value) => value == null
-                                          ? PopupMenuDivider().as<PopupMenuEntry<Object>>()
-                                          : PopupMenuItem(
-                                            value: value.$1,
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              dense: true,
-                                              title: Text(
-                                                value.$2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              trailing: Text(
-                                                ConvertHelper.makeIntegerToString(value.$1, false),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: theme.textTheme.labelSmall!.copyWith(
-                                                  color: theme.colorScheme.onSurfaceVariant,
-                                                ),
-                                              ),
-                                            ),
-                                          )).toList(),
-                                        onSelected: (value) async {
-                                          value as Integer;
-                                          value -= 1;
-                                          currentValue = (min(value, currentValue.$1), value);
-                                          await refreshState(setStateForPanel);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                value: ConvertHelper.makeIntegerToString(currentValue.$2 + 1, false),
-                                onChanged: (text) async {
-                                  var value = Integer.tryParse(text);
-                                  if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                                    value -= 1;
-                                    currentValue = (min(value, currentValue.$1), value);
-                                  }
-                                  await refreshState(setStateForPanel);
-                                },
-                              ),
-                            ],
-                            actionBuilder: null,
-                          ));
-                          await this._changeFrameRange(currentValue);
+              ),
+            ).withFlexExpanded(),
+            StyledDivider.minimal(),
+            Gap.vertical(8),
+            FlexContainer.horizontal([
+              Gap.horizontal(12),
+              LayoutBuilder(
+                builder: (context, constraints) => IntrinsicHeight(
+                  child: OverflowBox(
+                    maxWidth: constraints.maxWidth + 16,
+                    child: StreamBuilder(
+                      stream: this._activeProgressIndexStream.stream,
+                      builder: (context, snapshot) => StyledSlider.standard(
+                        enabled: this._activated,
+                        tooltip: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
+                        minimum: 1.0,
+                        maximum: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
+                        value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
+                        onChanged: (context, value) async {
+                          await this._changeProgressIndex(value.round() - 1);
+                          this._activeProgressIndexStream.sink.add(null);
                         },
-                    ).withTooltip(
-                      message: !this._activated ? '' : 'Frame Range',
-                    ).withExpanded(),
-                    SizedBox(width: 12),
-                    IconButton(
-                      tooltip: !this._activated ? '' : 'Previous',
-                      isSelected: true,
-                      icon: Icon(IconSymbols.arrow_back),
-                      onPressed: !this._activated
-                        ? null
-                        : () async {
-                          await this._changeProgressIndex(max(this._queryProgressIndex() - 1, 0));
-                        },
-                    ),
-                    SizedBox(width: 8),
-                    StreamBuilder(
-                      stream: this._activeProgressStateStream.stream,
-                      builder: (context, snapshot) => IconButton.filled(
-                        tooltip: !this._activated ? '' : !this._queryProgressState() ? 'Resume' : 'Pause',
-                        isSelected: true,
-                        icon: Icon(!this._activated ? IconSymbols.play_arrow : !this._queryProgressState() ? IconSymbols.play_arrow : IconSymbols.pause, fill: 1),
-                        onPressed: !this._activated
-                          ? null
-                          : () async {
-                            await this._changeProgressState(!this._queryProgressState());
-                          },
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    IconButton(
-                      tooltip: !this._activated ? '' : 'Next',
-                      isSelected: true,
-                      icon: Icon(IconSymbols.arrow_forward),
-                      onPressed: !this._activated
-                        ? null
-                        : () async {
-                          await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeSprite!.frame.length - 1));
-                        },
-                    ),
-                    SizedBox(width: 12),
-                    TextButton.icon(
-                      iconAlignment: IconAlignment.end,
-                      icon: Icon(IconSymbols.speed),
-                      label: Row(
-                        children: [
-                          Text(
-                            !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.end,
-                          ).withExpanded(),
-                        ],
-                      ),
-                      onPressed: !this._activated
-                        ? null
-                        : () async {
-                          var currentValue = this._activeFrameSpeed!;
-                          var normalSpeed = this._activeSprite?.frameRate ?? this._animation!.frameRate.toDouble();
-                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                            title: 'Frame Speed',
-                            contentBuilder: (context, setStateForPanel) => [
-                              CustomTextField(
-                                keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                                inputFormatters: [],
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                  filled: false,
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(IconSymbols.speed),
-                                  suffixIcon: CustomTextFieldSuffixRegion(
-                                    children: [
-                                      PopupMenuButton(
-                                        tooltip: 'Preset',
-                                        position: PopupMenuPosition.under,
-                                        icon: Icon(IconSymbols.more_vert),
-                                        itemBuilder: (context) => [
-                                          (normalSpeed / 2.0, 'Slow'),
-                                          (normalSpeed, 'Normal'),
-                                          (normalSpeed * 2.0, 'Fast'),
-                                        ].map((value) => PopupMenuItem(
-                                          value: value.$1,
-                                          child: ListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            dense: true,
-                                            title: Text(
-                                              value.$2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            trailing: Text(
-                                              ConvertHelper.makeFloaterToString(value.$1, false),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: theme.textTheme.labelSmall!.copyWith(
-                                                color: theme.colorScheme.onSurfaceVariant,
-                                              ),
-                                            ),
-                                          ),
-                                        )).toList(),
-                                        onSelected: (value) async {
-                                          currentValue = value;
-                                          await refreshState(setStateForPanel);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                value: ConvertHelper.makeFloaterToString(currentValue, false),
-                                onChanged: (text) async {
-                                  var value = Floater.tryParse(text);
-                                  if (value != null && value.isFinite && value > 0.0) {
-                                    currentValue = value;
-                                  }
-                                  await refreshState(setStateForPanel);
-                                },
-                              ),
-                            ],
-                            actionBuilder: null,
-                          ));
-                          await this._changeFrameSpeed(currentValue);
-                        },
-                    ).withTooltip(
-                      message: !this._activated ? '' : 'Frame Speed',
-                    ).withExpanded(),
-                    SizedBox(width: 16),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Divider(height: 0),
-                SizedBox(height: 12),
-                Row(
-                  children: [
-                    SizedBox(width: 16),
-                    TextButton.icon(
-                      iconAlignment: IconAlignment.start,
-                      icon: Icon(IconSymbols.imagesmode),
-                      label: Row(
-                        children: [
-                          Text(
-                            !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                          ).withExpanded(),
-                        ],
-                      ),
-                      onPressed: !this._loaded
-                        ? null
-                        : () async {
-                          var currentValue = [...this._imageFilter!];
-                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                            title: 'Image',
-                            contentBuilder: (context, setStateForPanel) => [
-                              ...this._animation!.image.mapIndexed((index, item) => ListTile(
-                                dense: true,
-                                leading: Checkbox(
-                                  value: currentValue[index],
-                                  onChanged: (value) async {
-                                  },
-                                ).withIgnorePointer(
-                                ),
-                                title: Text(
-                                  VisualHelper.parseImageFileName(item.name),
-                                  overflow: TextOverflow.ellipsis,
-                                ).withTooltip(
-                                  message: VisualHelper.parseImageFileName(item.name),
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '${item.size?.$1 ?? 0} x ${item.size?.$2 ?? 0}',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () async {
-                                  currentValue[index] = !currentValue[index];
-                                  await refreshState(setStateForPanel);
-                                },
-                                onLongPress: () async {
-                                  var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
-                                  if (this._activated) {
-                                    await this._deactivate();
-                                  }
-                                  await this._activate((false, index), null, newFrameSpeed, null, null);
-                                  Navigator.pop(context);
-                                },
-                              )),
-                            ],
-                            actionBuilder: null,
-                          ));
-                          await this._changeElementFilter(currentValue, null);
-                        },
-                    ).withTooltip(
-                      message: !this._loaded ? '' : 'Image',
-                    ).withExpanded(flex: 3),
-                    SizedBox(width: 12),
-                    FilledButton(
-                      style: ButtonStyle(
-                        padding: WidgetStatePropertyAll(EdgeInsets.fromLTRB(8, 8, 8, 8)),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(IconSymbols.arrow_back_ios_new),
-                          SizedBox(width: 8),
-                          if (!this._activated)
-                            Icon(IconSymbols.power_settings_new).withExpanded()
-                          else
-                            Text(
-                              this._activeSprite!.name ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            ).withExpanded(),
-                          SizedBox(width: 8),
-                          Icon(IconSymbols.arrow_forward_ios),
-                        ],
-                      ),
-                      onPressed: !this._loaded
-                        ? null
-                        : () async {
-                          if (this._activated) {
-                            await this._deactivate();
+                        onChangeStart: (context, value) async {
+                          this._activeProgressChangingContinue = this._queryProgressState();
+                          if (this._activeProgressChangingContinue) {
+                            await this._changeProgressState(false);
                           }
-                          else {
-                            if (this._animation!.mainSprite == null) {
-                              await ControlHelper.showSnackBar(context, 'The animation does not contain main sprite.');
-                            }
-                            else {
-                              await this._activate((true, this._animation!.sprite.length), null, null, null, null);
-                            }
+                        },
+                        onChangeEnd: (context, value) async {
+                          if (this._activeProgressChangingContinue) {
+                            await this._changeProgressState(true);
                           }
-                          await refreshState(this.setState);
+                          this._activeProgressChangingContinue = false;
                         },
-                    ).withTooltip(
-                      message: !this._loaded ? '' : !this._activated ? 'Activate' : 'Deactivate',
-                    ).withExpanded(flex: 5),
-                    SizedBox(width: 12),
-                    TextButton.icon(
-                      iconAlignment: IconAlignment.end,
-                      icon: Icon(IconSymbols.thread_unread),
-                      label: Row(
-                        children: [
-                          Text(
-                            !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.end,
-                          ).withExpanded(),
-                        ],
                       ),
-                      onPressed: !this._loaded
-                        ? null
-                        : () async {
-                          var currentValue = [...this._spriteFilter!];
-                          await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-                            title: 'Sprite',
-                            contentBuilder: (context, setStateForPanel) => [
-                              ...this._animation!.sprite.mapIndexed((index, item) => ListTile(
-                                dense: true,
-                                leading: Checkbox(
-                                  value: currentValue[index],
-                                  onChanged: (value) async {
-                                  },
-                                ).withIgnorePointer(
-                                ),
-                                title: Text(
-                                  item.name ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                ).withTooltip(
-                                  message: item.name ?? '',
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () async {
-                                  currentValue[index] = !currentValue[index];
-                                  await refreshState(setStateForPanel);
-                                },
-                                onLongPress: () async {
-                                  var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
-                                  if (this._activated) {
-                                    await this._deactivate();
-                                  }
-                                  await this._activate((true, index), null, newFrameSpeed, null, null);
-                                  Navigator.pop(context);
-                                },
-                              )),
-                            ],
-                            actionBuilder: null,
-                          ));
-                          await this._changeElementFilter(null, currentValue);
-                        },
-                    ).withTooltip(
-                      message: !this._loaded ? '' : 'Sprite',
-                    ).withExpanded(flex: 3),
-                    SizedBox(width: 16),
-                  ],
-                ),
-                SizedBox(height: 12),
-              ],
-            ),
-          ).withExpanded(),
-        ],
-      ),
-      bottom: CustomBottomBarContent(
-        primary: FloatingActionButton(
-          tooltip: 'Source',
-          elevation: 0,
-          focusElevation: 0,
-          hoverElevation: 0,
-          highlightElevation: 0,
-          disabledElevation: 0,
-          child: Icon(IconSymbols.description),
-          onPressed: () async {
-            await ControlHelper.showDialogAsModal<Void>(context, CustomModalDialog(
-              title: 'Source',
-              contentBuilder: (context, setStateForPanel) => [
-                CustomTextField(
-                  keyboardType: TextInputType.none,
-                  inputFormatters: [],
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    filled: false,
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(IconSymbols.attachment),
+                    ),
                   ),
-                  value: !this._loaded ? '' : this._animationFile!,
-                  onChanged: null,
                 ),
-                SizedBox(height: 12),
-                Row(
-                  children: [
-                    OutlinedButton.icon(
-                      icon: Icon(IconSymbols.clear_all),
-                      label: Text(
-                        'Clear',
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onPressed: !this._loaded
-                        ? null
-                        : () async {
-                          if (this._activated) {
-                            await this._deactivate();
+              ).withFlexExpanded(),
+              Gap.horizontal(12),
+            ]),
+            Gap.vertical(4),
+            FlexContainer.horizontal([
+              Gap.horizontal(16),
+              StyledButton.text(
+                enabled: this._activated,
+                tooltip: 'Frame Range',
+                iconAlign: StyledButtonIconAlign.start,
+                icon: Icon(IconSet.linear_scale),
+                content: FlexContainer.horizontal([
+                  StyledText.custom(
+                    !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
+                    align: TextAlign.start,
+                  ).withFlexExpanded(),
+                ]),
+                onPressed: (context) async {
+                  var currentValue = this._activeFrameRange!;
+                  await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
+                    title: 'Frame Range',
+                    contentBuilder: (context, setStateForPanel) => [
+                      StyledInput.outlined(
+                        type: StyledInputType.numberWithOptions(signed: false, decimal: false),
+                        format: [],
+                        hint: null,
+                        prefix: IconSet.line_start_circle,
+                        suffix: [
+                          StyledIconButton.standard(
+                            tooltip: 'Preset',
+                            icon: Icon(IconSet.more_vert),
+                            onPressed: (context) async {
+                              var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
+                                position: StyledMenuPosition.under,
+                                children: [
+                                  (1, 'whole'),
+                                  null,
+                                  ...this._activeFrameLabel!.map((value) => (value.$2 + 1, value.$1)),
+                                ].map((value) => value == null ? null : StyledMenuItem.standard(
+                                  value: value.$1,
+                                  content: StyledText.inherit(value.$2),
+                                  trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.$1, false)),
+                                )),
+                              ));
+                              if (value != null) {
+                                var selectedValue = value;
+                                selectedValue -= 1;
+                                currentValue = (selectedValue, max(selectedValue, currentValue.$2));
+                                await refreshState(setStateForPanel);
+                              }
+                            },
+                          ),
+                        ],
+                        value: ConvertHelper.makeIntegerToString(currentValue.$1 + 1, false),
+                        onChanged: (context, text) async {
+                          var value = Integer.tryParse(text);
+                          if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
+                            value -= 1;
+                            currentValue = (value, max(value, currentValue.$2));
                           }
-                          await this._unload();
                           await refreshState(setStateForPanel);
                         },
-                    ).withExpanded(),
-                    SizedBox(width: 8),
-                    FilledButton.icon(
-                      icon: Icon(IconSymbols.open_in_new),
-                      label: Text(
-                        'Pick',
-                        overflow: TextOverflow.ellipsis,
                       ),
-                      onPressed: () async {
-                        var animationFile = await StorageHelper.pickLoadFile(context, '@AnimationViewer.AnimationFile');
-                        if (animationFile != null) {
-                          Navigator.pop(context);
-                          await this._applyLoad(animationFile, null, null, null, null, null, null, null);
-                        }
-                      },
-                    ).withExpanded(),
-                  ],
+                      Gap.vertical(12),
+                      StyledInput.outlined(
+                        type: StyledInputType.numberWithOptions(signed: false, decimal: false),
+                        format: [],
+                        hint: null,
+                        prefix: IconSet.line_end_circle,
+                        suffix: [
+                          StyledIconButton.standard(
+                            tooltip: 'Preset',
+                            icon: Icon(IconSet.more_vert),
+                            onPressed: (context) async {
+                              var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
+                                position: StyledMenuPosition.under,
+                                children: [
+                                  (this._activeSprite!.frame.length, 'whole'),
+                                  null,
+                                  ...this._activeFrameLabel!.map((value) => (value.$3 + 1, value.$1)),
+                                ].map((value) => value == null ? null : StyledMenuItem.standard(
+                                  value: value.$1,
+                                  content: StyledText.inherit(value.$2),
+                                  trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.$1, false)),
+                                )),
+                              ));
+                              if (value != null) {
+                                var selectedValue = value;
+                                selectedValue -= 1;
+                                currentValue = (min(selectedValue, currentValue.$1), selectedValue);
+                                await refreshState(setStateForPanel);
+                              }
+                            },
+                          ),
+                        ],
+                        value: ConvertHelper.makeIntegerToString(currentValue.$2 + 1, false),
+                        onChanged: (context, text) async {
+                          var value = Integer.tryParse(text);
+                          if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
+                            value -= 1;
+                            currentValue = (min(value, currentValue.$1), value);
+                          }
+                          await refreshState(setStateForPanel);
+                        },
+                      ),
+                    ],
+                    actionBuilder: null,
+                  ));
+                  await this._changeFrameRange(currentValue);
+                },
+              ).withFlexExpanded(),
+              Gap.horizontal(12),
+              StyledIconButton.standard(
+                enabled: this._activated,
+                tooltip: 'Previous',
+                selected: true,
+                icon: Icon(IconSet.arrow_back),
+                onPressed: (context) async {
+                  await this._changeProgressIndex(max(this._queryProgressIndex() - 1, 0));
+                },
+              ),
+              Gap.horizontal(8),
+              StreamBuilder(
+                stream: this._activeProgressStateStream.stream,
+                builder: (context, snapshot) => StyledIconButton.filled(
+                  enabled: this._activated,
+                  tooltip: !this._activated ? null : !this._queryProgressState() ? 'Resume' : 'Pause',
+                  selected: true,
+                  icon: Icon(!this._activated ? IconSet.play_arrow : !this._queryProgressState() ? IconSet.play_arrow : IconSet.pause, fill: 1),
+                  onPressed: (context) async {
+                    await this._changeProgressState(!this._queryProgressState());
+                  },
                 ),
+              ),
+              Gap.horizontal(8),
+              StyledIconButton.standard(
+                enabled: this._activated,
+                tooltip: 'Next',
+                selected: true,
+                icon: Icon(IconSet.arrow_forward),
+                onPressed: (context) async {
+                  await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeSprite!.frame.length - 1));
+                },
+              ),
+              Gap.horizontal(12),
+              StyledButton.text(
+                enabled: this._activated,
+                tooltip: 'Frame Speed',
+                iconAlign: StyledButtonIconAlign.end,
+                icon: Icon(IconSet.speed),
+                content: FlexContainer.horizontal([
+                  StyledText.custom(
+                    !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
+                    align: TextAlign.end,
+                  ).withFlexExpanded(),
+                ]),
+                onPressed: (context) async {
+                  var currentValue = this._activeFrameSpeed!;
+                  var normalSpeed = this._activeSprite?.frameRate ?? this._animation!.frameRate.toDouble();
+                  await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
+                    title: 'Frame Speed',
+                    contentBuilder: (context, setStateForPanel) => [
+                      StyledInput.outlined(
+                        type: StyledInputType.numberWithOptions(signed: false, decimal: true),
+                        format: [],
+                        hint: null,
+                        prefix: IconSet.speed,
+                        suffix: [
+                          StyledIconButton.standard(
+                            tooltip: 'Preset',
+                            icon: Icon(IconSet.more_vert),
+                            onPressed: (context) async {
+                              var value = await StyledMenuExtension.show<Floater>(context, StyledMenu.standard(
+                                position: StyledMenuPosition.under,
+                                children: [
+                                  (normalSpeed / 2.0, 'Slow'),
+                                  (normalSpeed, 'Normal'),
+                                  (normalSpeed * 2.0, 'Fast'),
+                                ].map((value) => StyledMenuItem.standard(
+                                  value: value.$1,
+                                  content: StyledText.inherit(value.$2),
+                                  trailing: StyledText.inherit(ConvertHelper.makeFloaterToString(value.$1, false)),
+                                )),
+                              ));
+                              if (value != null) {
+                                currentValue = value;
+                                await refreshState(setStateForPanel);
+                              }
+                            },
+                          ),
+                        ],
+                        value: ConvertHelper.makeFloaterToString(currentValue, false),
+                        onChanged: (context, text) async {
+                          var value = Floater.tryParse(text);
+                          if (value != null && value.isFinite && value > 0.0) {
+                            currentValue = value;
+                          }
+                          await refreshState(setStateForPanel);
+                        },
+                      ),
+                    ],
+                    actionBuilder: null,
+                  ));
+                  await this._changeFrameSpeed(currentValue);
+                },
+              ).withFlexExpanded(),
+              Gap.horizontal(16),
+            ]),
+            Gap.vertical(12),
+            StyledDivider.minimal(),
+            Gap.vertical(12),
+            FlexContainer.horizontal([
+              Gap.horizontal(16),
+              StyledButton.text(
+                enabled: this._loaded,
+                tooltip: 'Image',
+                iconAlign: StyledButtonIconAlign.start,
+                icon: Icon(IconSet.imagesmode),
+                content: FlexContainer.horizontal([
+                  StyledText.custom(
+                    !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
+                    align: TextAlign.start,
+                  ).withFlexExpanded(),
+                ]),
+                onPressed: (context) async {
+                  var currentValue = [...this._imageFilter!];
+                  await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
+                    title: 'Image',
+                    contentBuilder: (context, setStateForPanel) => [
+                      ...this._animation!.image.mapIndexed((index, item) => StyledListTile.standard(
+                        dense: true,
+                        leading: StyledCheck.standard(
+                          value: currentValue[index],
+                          onChanged: (context, value) async {
+                          },
+                        ).withImpenetrableArea(
+                        ),
+                        content: StyledText.inherit(tooltip: true, VisualHelper.parseImageFileName(item.name)),
+                        trailing: FlexContainer.horizontal(mainStretch: false, [
+                          StyledText.custom(
+                            '${item.size?.$1 ?? 0} x ${item.size?.$2 ?? 0}',
+                          ),
+                        ]),
+                        onPressed: (context) async {
+                          currentValue[index] = !currentValue[index];
+                          await refreshState(setStateForPanel);
+                        },
+                        onLongPressed: (context) async {
+                          var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
+                          if (this._activated) {
+                            await this._deactivate();
+                          }
+                          await this._activate((false, index), null, newFrameSpeed, null, null);
+                          Navigator.pop(context);
+                        },
+                      )),
+                    ],
+                    actionBuilder: null,
+                  ));
+                  await this._changeElementFilter(currentValue, null);
+                },
+              ).withFlexExpanded(weight: 3),
+              Gap.horizontal(12),
+              StyledButton.filled(
+                enabled: this._loaded,
+                tooltip: !this._loaded ? '' : !this._activated ? 'Activate' : 'Deactivate',
+                content: !this._activated
+                  ? Icon(IconSet.power_settings_new)
+                  : StyledText.custom(
+                    this._activeSprite!.name ?? '',
+                    align: TextAlign.center,
+                  ),
+                onPressed: (context) async {
+                  if (this._activated) {
+                    await this._deactivate();
+                  }
+                  else {
+                    if (this._animation!.mainSprite == null) {
+                      await StyledSnackExtension.show(context, 'The animation does not contain main sprite.');
+                    }
+                    else {
+                      await this._activate((true, this._animation!.sprite.length), null, null, null, null);
+                    }
+                  }
+                  await refreshState(this.setState);
+                },
+              ).withFlexExpanded(weight: 5),
+              Gap.horizontal(12),
+              StyledButton.text(
+                enabled: this._loaded,
+                tooltip: 'Sprite',
+                iconAlign: StyledButtonIconAlign.end,
+                icon: Icon(IconSet.thread_unread),
+                content: FlexContainer.horizontal([
+                  StyledText.custom(
+                    !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
+                    align: TextAlign.end,
+                  ).withFlexExpanded(),
+                ]),
+                onPressed: (context) async {
+                  var currentValue = [...this._spriteFilter!];
+                  await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
+                    title: 'Sprite',
+                    contentBuilder: (context, setStateForPanel) => [
+                      ...this._animation!.sprite.mapIndexed((index, item) => StyledListTile.standard(
+                        dense: true,
+                        leading: StyledCheck.standard(
+                          value: currentValue[index],
+                          onChanged: (context, value) async {
+                          },
+                        ).withImpenetrableArea(
+                        ),
+                        content: StyledText.inherit(tooltip: true, item.name ?? ''),
+                        trailing: FlexContainer.horizontal(mainStretch: false, [
+                          StyledText.custom(
+                            '${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}',
+                          ),
+                        ]),
+                        onPressed: (context) async {
+                          currentValue[index] = !currentValue[index];
+                          await refreshState(setStateForPanel);
+                        },
+                        onLongPressed: (context) async {
+                          var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
+                          if (this._activated) {
+                            await this._deactivate();
+                          }
+                          await this._activate((true, index), null, newFrameSpeed, null, null);
+                          Navigator.pop(context);
+                        },
+                      )),
+                    ],
+                    actionBuilder: null,
+                  ));
+                  await this._changeElementFilter(null, currentValue);
+                },
+              ).withFlexExpanded(weight: 3),
+              Gap.horizontal(16),
+            ]),
+            Gap.vertical(12),
+          ]),
+        ).withFlexExpanded(),
+      ]),
+      bottom: StyledBottomBar.standard(
+        primary: StyledFloatingButton.standard(
+          tooltip: 'Source',
+          icon: Icon(IconSet.description),
+          onPressed: (context) async {
+            await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
+              title: 'Source',
+              contentBuilder: (context, setStateForPanel) => [
+                StyledInput.outlined(
+                  type: StyledInputType.none,
+                  format: [],
+                  hint: null,
+                  prefix: IconSet.attachment,
+                  suffix: null,
+                  value: !this._loaded ? '' : this._animationFile!,
+                  onChanged: (context, value) async {},
+                ),
+                Gap.vertical(12),
+                FlexContainer.horizontal([
+                  StyledButton.outlined(
+                    enabled: this._loaded,
+                    icon: Icon(IconSet.clear_all),
+                    content: StyledText.inherit('Clear'),
+                    onPressed: (context) async {
+                      if (this._activated) {
+                        await this._deactivate();
+                      }
+                      await this._unload();
+                      await refreshState(setStateForPanel);
+                    },
+                  ).withFlexExpanded(),
+                  Gap.horizontal(8),
+                  StyledButton.filled(
+                    icon: Icon(IconSet.open_in_new),
+                    content: StyledText.inherit('Pick'),
+                    onPressed: (context) async {
+                      var animationFile = await StorageHelper.pickLoadFile(context, '@AnimationViewer.AnimationFile');
+                      if (animationFile != null) {
+                        Navigator.pop(context);
+                        await this._applyLoad(animationFile, null, null, null, null, null, null, null);
+                      }
+                    },
+                  ).withFlexExpanded(),
+                ]),
               ],
               actionBuilder: null,
             ));
           },
         ),
         secondary: [
-          IconButton.filledTonal(
+          StyledIconButton.filledTonal(
             tooltip: 'Immediate Select',
-            isSelected: this._immediateSelect,
-            icon: Icon(IconSymbols.ads_click),
-            selectedIcon: Icon(IconSymbols.ads_click, fill: 1),
-            onPressed: () async {
+            selected: this._immediateSelect,
+            icon: Icon(IconSet.ads_click),
+            iconOnSelected: Icon(IconSet.ads_click, fill: 1),
+            onPressed: (context) async {
               this._immediateSelect = !this._immediateSelect;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Automatic Play',
-            isSelected: this._automaticPlay,
-            icon: Icon(IconSymbols.autoplay),
-            selectedIcon: Icon(IconSymbols.autoplay, fill: 1),
-            onPressed: () async {
+            selected: this._automaticPlay,
+            icon: Icon(IconSet.autoplay),
+            iconOnSelected: Icon(IconSet.autoplay, fill: 1),
+            onPressed: (context) async {
               this._automaticPlay = !this._automaticPlay;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Repeat Play',
-            isSelected: this._repeatPlay,
-            icon: Icon(IconSymbols.repeat),
-            selectedIcon: Icon(IconSymbols.repeat, fill: 1),
-            onPressed: () async {
+            selected: this._repeatPlay,
+            icon: Icon(IconSet.repeat),
+            iconOnSelected: Icon(IconSet.repeat, fill: 1),
+            onPressed: (context) async {
               this._repeatPlay = !this._repeatPlay;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Keep Speed',
-            isSelected: this._keepSpeed,
-            icon: Icon(IconSymbols.lock_reset),
-            selectedIcon: Icon(IconSymbols.lock_reset, fill: 1),
-            onPressed: () async {
+            selected: this._keepSpeed,
+            icon: Icon(IconSet.lock_reset),
+            iconOnSelected: Icon(IconSet.lock_reset, fill: 1),
+            onPressed: (context) async {
               this._keepSpeed = !this._keepSpeed;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Show Boundary',
-            isSelected: this._showBoundary,
-            icon: Icon(IconSymbols.frame_source),
-            selectedIcon: Icon(IconSymbols.frame_source, fill: 1),
-            onPressed: () async {
+            selected: this._showBoundary,
+            icon: Icon(IconSet.frame_source),
+            iconOnSelected: Icon(IconSet.frame_source, fill: 1),
+            onPressed: (context) async {
               this._showBoundary = !this._showBoundary;
               await refreshState(this.setState);
             },

@@ -1,8 +1,8 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
-import '/view/home/common.dart';
-import 'package:flutter/material.dart';
+import '/widget/export.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -24,113 +24,93 @@ class LauncherConfigurationPanel extends StatelessWidget {
   @override
   build(context) {
     return StatefulBuilder(
-      builder: (context, setState) => Column(
-        children: [
-          SizedBox(height: 8),
-          CustomSettingItem(
-            icon: IconSymbols.text_fields,
-            label: 'Title',
-            content: [
-              Text(
-                this.data.title,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-              ).withExpanded(),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: CustomTextField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [],
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    filled: false,
-                    border: OutlineInputBorder(),
-                  ),
-                  value: this.data.title,
-                  onChanged: (value) async {
-                    this.data.title = value;
-                    await refreshState(setStateForPanel);
-                    await refreshState(setState);
-                    this.onUpdate();
-                  },
-                ),
-              ),
-            ],
-          ),
-          CustomSettingItem(
-            icon: IconSymbols.label,
-            label: 'Type',
-            content: [
-              Text(
-                ModuleHelper.query(this.data.type).name,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-              ).withExpanded(),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              RadioGroup<ModuleType>(
-                groupValue: this.data.type,
-                onChanged: (value) async {
-                  this.data.type = value!;
+      builder: (context, setState) => FlexContainer.vertical([
+        Gap.vertical(8),
+        SettingListItem(
+          icon: IconSet.text_fields,
+          label: 'Title',
+          comment: [
+            StyledText.custom(
+              this.data.title,
+              align: TextAlign.right,
+            ).withFlexExpanded(),
+          ],
+          onPressed: null,
+          panelBuilder: (context, setStateForPanel) => [
+            StyledListTile.standardTight(
+              content: StyledInput.outlined(
+                type: StyledInputType.text,
+                format: [],
+                hint: null,
+                prefix: null,
+                suffix: null,
+                value: this.data.title,
+                onChanged: (context, value) async {
+                  this.data.title = value;
                   await refreshState(setStateForPanel);
                   await refreshState(setState);
                   this.onUpdate();
                 },
-                child: Column(
-                  children: ModuleType.values.map((item) => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Radio(
-                      value: item,
-                    ),
-                    title: Text(
-                      ModuleHelper.query(item).name,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )).toList(),
-                ),
               ),
-            ],
-          ),
-          CustomSettingItem(
-            icon: IconSymbols.format_list_bulleted,
-            label: 'Option',
-            content: [
-              Text(
-                '${this.data.option.length}',
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.right,
-              ).withExpanded(),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: CustomTextField(
-                  keyboardType: TextInputType.multiline,
-                  inputFormatters: [],
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    filled: false,
-                    border: OutlineInputBorder(),
-                  ),
-                  value: ConvertHelper.makeStringListToStringWithLine(this.data.option),
-                  onChanged: (value) async {
-                    this.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
-                    await refreshState(setStateForPanel);
-                    await refreshState(setState);
-                    this.onUpdate();
-                  },
-                ),
+            ),
+          ],
+        ),
+        SettingListItem(
+          icon: IconSet.label,
+          label: 'Type',
+          comment: [
+            StyledText.custom(
+              ModuleHelper.query(this.data.type).name,
+              align: TextAlign.right,
+            ).withFlexExpanded(),
+          ],
+          onPressed: null,
+          panelBuilder: (context, setStateForPanel) => [
+            ...ModuleType.values.map((item) => StyledListTile.standardTight(
+              leading: StyledRadio.standard(
+                value: this.data.type == item,
+                onChanged: (context) async {
+                  this.data.type = item;
+                  await refreshState(setStateForPanel);
+                  await refreshState(setState);
+                  this.onUpdate();
+                },
               ),
-            ],
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
+              content: StyledText.inherit(ModuleHelper.query(item).name),
+            )),
+          ],
+        ),
+        SettingListItem(
+          icon: IconSet.format_list_bulleted,
+          label: 'Option',
+          comment: [
+            StyledText.custom(
+              '${this.data.option.length}',
+              align: TextAlign.right,
+            ).withFlexExpanded(),
+          ],
+          onPressed: null,
+          panelBuilder: (context, setStateForPanel) => [
+            StyledListTile.standardTight(
+              content: StyledInput.outlined(
+                type: StyledInputType.multiline,
+                format: [],
+                hint: null,
+                prefix: null,
+                suffix: null,
+                value: ConvertHelper.makeStringListToStringWithLine(this.data.option),
+                onChanged: (context, value) async {
+                  this.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
+                  await refreshState(setStateForPanel);
+                  await refreshState(setState);
+                  this.onUpdate();
+                },
+              ),
+            ),
+          ],
+        ),
+        Gap.vertical(8),
+      ]),
     );
   }
 

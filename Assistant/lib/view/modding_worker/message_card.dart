@@ -1,7 +1,8 @@
 import '/common.dart';
+import '/widget/export.dart';
 import '/view/modding_worker/message_type.dart';
 import '/view/modding_worker/main_page.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -24,61 +25,50 @@ class MessageCard extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    var cardColor = this.type.color(theme);
-    var titleStyle = theme.textTheme.titleSmall!.copyWith(
-      color: theme.colorScheme.onSurface,
-    ).selfLet((it) => withSpecialFontTextStyle(context, it));
-    var descriptionStyle = theme.textTheme.bodySmall!.copyWith(
-      color: theme.colorScheme.onSurfaceVariant,
-    ).selfLet((it) => withSpecialFontTextStyle(context, it));
-    return Card(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), theme.colorScheme.surfaceContainerLow),
-      child: Container(
+    var cardColor = this.type.color(context);
+    var textStyle = TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it));
+    return StyledCard.elevated(
+      color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), StyledColorExtension.value(context, StyledColor.surfaceContainerLow)),
+      content: BoxContainer.of(
         padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  IconSymbols.circle,
-                  size: 12,
-                  fill: 0.6,
-                  color: Color.alphaBlend(cardColor.withValues(alpha: 0.50), theme.colorScheme.onSurface),
-                ),
-                Text(
-                  '',
-                  overflow: TextOverflow.clip,
-                  style: titleStyle,
-                ),
-              ],
+        child: FlexContainer.horizontal(crossAlign: FlexContainerCrossAlign.start, [
+          FlexContainer.horizontal([
+            Icon(
+              IconSet.circle,
+              size: 12,
+              fill: 0.6,
+              color: Color.alphaBlend(cardColor.withValues(alpha: 0.50), StyledColorExtension.value(context, StyledColor.onSurface)),
             ),
-            SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  this.title,
-                  overflow: TextOverflow.clip,
-                  style: titleStyle,
-                ).withSelectionArea(
-                ),
-                ...this.description.expand((item) => [
-                  SizedBox(height: 4),
-                  Text(
-                    item,
-                    overflow: TextOverflow.clip,
-                    style: descriptionStyle,
-                  ).withSelectionArea(
-                  ),
-                ]),
-              ],
-            ).withExpanded(),
-          ],
-        ),
+            StyledText.custom(
+              '',
+              variant: StyledTextVariant.titleSmall,
+              overflow: TextOverflow.clip,
+              style: textStyle,
+            ),
+          ]),
+          Gap.horizontal(8),
+          FlexContainer.vertical(crossAlign: FlexContainerCrossAlign.stretch, [
+            StyledText.custom(
+              this.title,
+              variant: StyledTextVariant.titleSmall,
+                color: StyledColor.onSurface,
+              overflow: TextOverflow.clip,
+              style: textStyle,
+            ).withSelectableArea(
+            ),
+            ...this.description.expand((item) => [
+              Gap.vertical(4),
+              StyledText.custom(
+                item,
+                variant: StyledTextVariant.bodySmall,
+                color: StyledColor.onSurfaceVariant,
+                overflow: TextOverflow.clip,
+                style: textStyle,
+              ).withSelectableArea(
+              ),
+            ]),
+          ]).withFlexExpanded(),
+        ]),
       ),
     );
   }

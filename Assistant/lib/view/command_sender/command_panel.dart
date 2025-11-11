@@ -1,11 +1,11 @@
 import '/common.dart';
 import '/utility/wrapper.dart';
-import '/utility/control_helper.dart';
+import '/widget/export.dart';
 import '/view/command_sender/configuration.dart';
 import '/view/command_sender/value_expression.dart';
 import '/view/command_sender/argument_bar.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -36,157 +36,108 @@ class CommandPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
-      builder: (context, setState) => Card.outlined(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Container(
+      builder: (context, setState) => StyledCard.outlined(
+        content: BoxContainer.of(
           padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  SizedBox(width: 8),
-                  Text(
-                    '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium!,
-                  ).withTooltip(
-                    message: '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
-                  ).withExpanded(),
-                  SizedBox(width: 8),
-                  IconButton(
-                    tooltip: !this.expanded.value ? 'Expand' : 'Collapse',
-                    isSelected: false,
-                    icon: Icon(!this.expanded.value ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_up),
-                    onPressed: () async {
-                      this.expanded.value = !this.expanded.value;
-                      await refreshState(setState);
-                    },
-                  ),
-                  SizedBox(width: 4),
-                  IconButton(
-                    tooltip: 'Remove',
-                    isSelected: false,
-                    icon: Icon(IconSymbols.remove),
-                    onPressed: () async {
-                      if (this.argument.every((value) => value.value == null) || await ControlHelper.showDialogForConfirm(context)) {
-                        this.onRemove();
-                      }
-                    },
-                  ),
-                  SizedBox(width: 4),
-                ],
+          child: FlexContainer.vertical([
+            FlexContainer.horizontal([
+              Gap.horizontal(8),
+              StyledText.custom(
+                '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
+                tooltip: true,
+                variant: StyledTextVariant.titleMedium,
+              ).withFlexExpanded(),
+              Gap.horizontal(8),
+              StyledIconButton.standard(
+                tooltip: !this.expanded.value ? 'Expand' : 'Collapse',
+                icon: Icon(!this.expanded.value ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_up),
+                onPressed: (context) async {
+                  this.expanded.value = !this.expanded.value;
+                  await refreshState(setState);
+                },
               ),
-              Divider(),
-              ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => Container(
-                margin: !this.expanded.value && this.argument[argumentIndex].value == null ? EdgeInsets.zero : EdgeInsets.fromLTRB(0, 8, 0, 8),
-                child: ArgumentBar(
-                  name: argumentConfiguration.name,
-                  type: argumentConfiguration.type,
-                  option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
-                  value: this.argument[argumentIndex],
-                  batch: this.batch.value && (this.itemConfiguration.batch?.contains(argumentConfiguration.identifier) ?? false),
-                  expanded: this.expanded.value,
-                ),
-              )),
-              if (!this.expanded.value && this.argument.where((value) => value.value != null).isEmpty)
-                SizedBox(height: 16),
-              if (!this.expanded.value)
-                Divider(),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  SizedBox().withExpanded(),
-                  SizedBox(width: 8),
-                  IconButton.filledTonal(
-                    style: ButtonStyle(
-                      padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                    ),
-                    tooltip: 'Preset',
-                    isSelected: false,
-                    icon: Stack(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                          height: 40,
-                          child: Row(
-                            children: [
-                              SizedBox(width: 8),
-                              Text(
-                                '${this.itemConfiguration.preset.nonNulls.length}',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(width: 4),
-                              Icon(IconSymbols.flash_on),
-                            ],
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: PopupMenuButton<PresetConfiguration>(
-                            tooltip: '',
-                            position: PopupMenuPosition.under,
-                            offset: Offset(0, 12),
-                            icon: SizedBox(),
-                            itemBuilder: (context) => [
-                              if (this.itemConfiguration.preset.isEmpty)
-                                PopupMenuItem(
-                                  height: 16,
-                                  enabled: false,
-                                  child: null,
-                                ),
-                              ...this.itemConfiguration.preset.map((preset) => preset == null
-                                ? PopupMenuDivider()
-                                : PopupMenuItem(
-                                  value: preset,
-                                  child: Text(
-                                    preset.name,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )),
-                            ],
-                            onSelected: (value) async {
-                              for (var argument in value.argument.entries) {
-                                var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
-                                assertTest(argumentIndex != -1);
-                                this.argument[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
-                              }
-                              await refreshState(setState);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    onPressed: () async {
-                    },
-                  ),
-                  SizedBox(width: 8),
-                  IconButton.filledTonal(
-                    tooltip: this.itemConfiguration.batch == null ? '' : 'Batch',
-                    isSelected: this.batch.value,
-                    icon: Icon(IconSymbols.layers),
-                    selectedIcon: Icon(IconSymbols.layers, fill: 1),
-                    onPressed: this.itemConfiguration.batch == null
-                      ? null
-                      : () async {
-                        this.batch.value = !this.batch.value;
-                        await refreshState(setState);
-                      },
-                  ),
-                  SizedBox(width: 8),
-                  FilledButton.icon(
-                    label: Text(
-                      'Forward',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    icon: Icon(IconSymbols.send, fill: 1),
-                    onPressed: this.onForward,
-                  ),
-                ],
+              Gap.horizontal(4),
+              StyledIconButton.standard(
+                tooltip: 'Remove',
+                icon: Icon(IconSet.remove),
+                onPressed: (context) async {
+                  if (this.argument.every((value) => value.value == null) || await showDialogForConfirm(context)) {
+                    this.onRemove();
+                  }
+                },
               ),
-            ],
-          ),
+              Gap.horizontal(4),
+            ]),
+            StyledDivider.standard(),
+            ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => BoxContainer.of(
+              margin: !this.expanded.value && this.argument[argumentIndex].value == null ? EdgeInsets.zero : EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: ArgumentBar(
+                name: argumentConfiguration.name,
+                type: argumentConfiguration.type,
+                option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
+                value: this.argument[argumentIndex],
+                batch: this.batch.value && (this.itemConfiguration.batch?.contains(argumentConfiguration.identifier) ?? false),
+                expanded: this.expanded.value,
+              ),
+            )),
+            if (!this.expanded.value && this.argument.where((value) => value.value != null).isEmpty)
+              Gap.vertical(16),
+            if (!this.expanded.value)
+              StyledDivider.standard(),
+            Gap.vertical(8),
+            FlexContainer.horizontal([
+              Box.none().withFlexExpanded(),
+              Gap.horizontal(8),
+              StyledIconButton.filledTonal(
+                tooltip: 'Preset',
+                selected: false,
+                icon: FlexContainer.horizontal([
+                  Gap.horizontal(8),
+                  StyledText.inherit('${this.itemConfiguration.preset.nonNulls.length}'),
+                  Gap.horizontal(4),
+                  Icon(IconSet.flash_on),
+                ]),
+                onPressed: (context) async {
+                  var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
+                    position: StyledMenuPosition.under,
+                    children: this.itemConfiguration.preset.map((preset) => preset == null ? null : StyledMenuItem.standard(
+                      value: preset,
+                      content: StyledText.inherit(preset.name),
+                    )),
+                  ));
+                  if (preset != null) {
+                    for (var argument in preset.argument.entries) {
+                      var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
+                      assertTest(argumentIndex != -1);
+                      this.argument[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
+                    }
+                    await refreshState(setState);
+                  }
+                },
+              ),
+              Gap.horizontal(8),
+              StyledIconButton.filledTonal(
+                enabled: this.itemConfiguration.batch != null,
+                tooltip: 'Batch',
+                selected: this.batch.value,
+                icon: Icon(IconSet.layers),
+                iconOnSelected: Icon(IconSet.layers, fill: 1),
+                onPressed: (context) async {
+                  this.batch.value = !this.batch.value;
+                  await refreshState(setState);
+                },
+              ),
+              Gap.horizontal(8),
+              StyledButton.filled(
+                icon: Icon(IconSet.send, fill: 1),
+                content: StyledText.inherit('Forward'),
+                onPressed: (context) async {
+                  this.onForward();
+                },
+              ),
+            ]),
+          ]),
         ),
       ),
     );

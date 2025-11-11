@@ -1,8 +1,8 @@
 import '/common.dart';
 import '/utility/storage_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
 import '/view/command_sender/setting.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -24,89 +24,76 @@ class SettingPanel extends StatelessWidget {
   @override
   build(context) {
     return StatefulBuilder(
-      builder: (context, setState) => Column(
-        children: [
-          SizedBox(height: 8),
-          CustomSettingItem(
-            icon: IconSymbols.description,
-            label: 'Method Configuration',
-            content: [
-              Text(
-                !StorageHelper.existFileSync(this.data.methodConfiguration) ? 'Invalid' : 'Available',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: CustomTextField(
-                  keyboardType: TextInputType.text,
-                  inputFormatters: [],
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    filled: false,
-                    border: OutlineInputBorder(),
-                    suffixIcon: CustomTextFieldSuffixRegion(
-                      children: [
-                        CustomStorageItemPickerButton(
-                          allowLoadFile: true,
-                          allowLoadDirectory: false,
-                          allowSaveFile: false,
-                          location: '@CommandSender.MethodConfiguration',
-                          onPicked: (target) async {
-                            this.data.methodConfiguration = target;
-                            await refreshState(setStateForPanel);
-                            await refreshState(setState);
-                            this.onUpdate();
-                          },
-                        ),
-                      ],
-                    ),
+      builder: (context, setState) => FlexContainer.vertical([
+        Gap.vertical(8),
+        SettingListItem(
+          icon: IconSet.description,
+          label: 'Method Configuration',
+          comment: [
+            StyledText.inherit(!StorageHelper.existFileSync(this.data.methodConfiguration) ? 'Invalid' : 'Available'),
+          ],
+          onPressed: null,
+          panelBuilder: (context, setStateForPanel) => [
+            StyledListTile.standardTight(
+              content: StyledInput.outlined(
+                type: StyledInputType.text,
+                format: [],
+                hint: null,
+                prefix: null,
+                suffix: [
+                  StyledIconButton.standard(
+                    tooltip: 'Pick',
+                    icon: Icon(IconSet.open_in_new),
+                    onPressed: (context) async {
+                      var target = await pickStorageItem(
+                        context: context,
+                        allowLoadFile: true,
+                        location: '@CommandSender.MethodConfiguration',
+                      );
+                      if (target != null) {
+                        this.data.methodConfiguration = target;
+                        await refreshState(setStateForPanel);
+                        await refreshState(setState);
+                        this.onUpdate();
+                      }
+                    },
                   ),
-                  value: this.data.methodConfiguration,
-                  onChanged: (value) async {
-                    this.data.methodConfiguration = StorageHelper.regularize(value);
-                    await refreshState(setStateForPanel);
-                    await refreshState(setState);
-                    this.onUpdate();
-                  },
-                ),
+                ],
+                value: this.data.methodConfiguration,
+                onChanged: (context, value) async {
+                  this.data.methodConfiguration = StorageHelper.regularize(value);
+                  await refreshState(setStateForPanel);
+                  await refreshState(setState);
+                  this.onUpdate();
+                },
               ),
-            ],
-          ),
-          CustomSettingItem(
-            icon: IconSymbols.shuffle,
-            label: 'Parallel Forward',
-            content: [
-              Text(
-                !this.data.parallelForward ? 'Disabled' : 'Enabled',
-                overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+        SettingListItem(
+          icon: IconSet.shuffle,
+          label: 'Parallel Forward',
+          comment: [
+            StyledText.inherit(!this.data.parallelForward ? 'Disabled' : 'Enabled'),
+          ],
+          onPressed: null,
+          panelBuilder: (context, setStateForPanel) => [
+            StyledListTile.standardTight(
+              leading: StyledSwitch.standard(
+                value: this.data.parallelForward,
+                onChanged: (context, value) async {
+                  this.data.parallelForward = value;
+                  await refreshState(setStateForPanel);
+                  await refreshState(setState);
+                  this.onUpdate();
+                },
               ),
-            ],
-            onTap: null,
-            panelBuilder: (context, setStateForPanel) => [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Switch(
-                  value: this.data.parallelForward,
-                  onChanged: (value) async {
-                    this.data.parallelForward = value;
-                    await refreshState(setStateForPanel);
-                    await refreshState(setState);
-                    this.onUpdate();
-                  },
-                ),
-                title: Text(
-                  'Enable',
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
+              content: StyledText.inherit('Enable'),
+            ),
+          ],
+        ),
+        Gap.vertical(8),
+      ]),
     );
   }
 

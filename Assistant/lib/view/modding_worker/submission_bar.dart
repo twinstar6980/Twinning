@@ -2,13 +2,13 @@ import '/common.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
 import '/view/modding_worker/submission_type.dart';
 import '/view/modding_worker/value_expression.dart';
 import '/view/modding_worker/main_page.dart';
 import 'dart:async';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -25,96 +25,62 @@ class _BasicSubmissionBar extends StatelessWidget {
 
   // ----------------
 
-  final Completer<Void>?                  completer;
-  final List<(ValueExpression, Boolean)>? history;
-  final Void Function(ValueExpression)?   onSelect;
-  final IconData                          icon;
-  final Widget                            content;
+  final Completer<Void>?                      completer;
+  final List<(ValueExpression, Boolean)>?     history;
+  final Void Function(ValueExpression value)? onSelect;
+  final IconData                              icon;
+  final Widget                                content;
 
   // ----------------
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    return CustomBottomBarContent(
-      primary: FloatingActionButton(
-        tooltip: this.completer == null ? '' : 'Submit',
-        elevation: 0,
-        focusElevation: 0,
-        hoverElevation: 0,
-        highlightElevation: 0,
-        disabledElevation: 0,
-        child: this.completer == null
-          ? CircularProgressIndicator()
-          : Icon(IconSymbols.send),
-        onPressed: this.completer == null
-          ? null
-          : () async {
-            this.completer?.complete();
-          },
+    return StyledBottomBar.standard(
+      primary: StyledFloatingButton.standard(
+        enabled: this.completer != null,
+        tooltip: 'Submit',
+        icon: this.completer == null
+          ? StyledProgress.circular()
+          : Icon(IconSet.send),
+        onPressed: (context) async {
+          this.completer!.complete();
+        },
       ),
       secondary: [
-        Badge.count(
-          textStyle: theme.textTheme.labelSmall!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          isLabelVisible: this.history != null,
-          count: this.history == null ? 0 : this.history!.length,
-          child: IconButton.filledTonal(
-            style: ButtonStyle(
-              padding: WidgetStatePropertyAll(EdgeInsets.zero),
-              overlayColor: WidgetStatePropertyAll(Colors.transparent),
+        StyledBadge.standard(
+          visible: this.history != null,
+          label: StyledText.custom(
+            '${this.history == null ? 0 : this.history!.length}',
+            style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          ),
+          child: StyledIconButton.filledTonal(
+            enabled: this.history != null,
+            tooltip: 'History',
+            icon: Box.of(
+              width: 40,
+              child: Icon(this.icon, fill: 1),
             ),
-            tooltip: this.history == null ? '' : 'History',
-            icon: Stack(
-              children: [
-                SizedBox(
-                  width: 56,
-                  height: 40,
-                  child: Icon(this.icon, fill: 1),
-                ),
-                Positioned.fill(
-                  child: PopupMenuButton<ValueExpression>(
-                    tooltip: '',
-                    enabled: this.history != null,
-                    position: PopupMenuPosition.under,
-                    icon: SizedBox(),
-                    itemBuilder: (context) => [
-                      if ((this.history ?? []).isEmpty)
-                        PopupMenuItem(
-                          height: 16,
-                          enabled: false,
-                          child: null,
-                        ),
-                      ...(this.history ?? []).mapIndexed((index, value) => PopupMenuItem(
-                        enabled: value.$2,
-                        value: value.$1,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          title: Text(
-                            ValueExpressionHelper.makeString(value.$1),
-                            overflow: TextOverflow.clip,
-                            style: theme.textTheme.labelLarge!.copyWith(
-                              color: value.$2 ? null : theme.disabledColor,
-                            ).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
-                          ),
-                        ),
-                      )),
-                    ],
-                    onSelected: (value) async {
-                      this.onSelect!(value);
-                    },
+            onPressed: (context) async {
+              var value = await StyledMenuExtension.show<ValueExpression>(context, StyledMenu.standard(
+                position: StyledMenuPosition.under,
+                children: (this.history ?? []).mapIndexed((index, value) => StyledMenuItem.standard(
+                  enabled: value.$2,
+                  value: value.$1,
+                  content: StyledText.custom(
+                    ValueExpressionHelper.makeString(value.$1),
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
                   ),
-                ),
-              ],
-            ),
-            onPressed: this.history == null
-              ? null
-              : () async {
-              },
+                )),
+              ));
+              if (value != null) {
+                this.onSelect!(value);
+              }
+            },
           ),
         ),
-        SizedBox(width: 16),
-        this.content.withExpanded(),
+        Gap.horizontal(16),
+        this.content.withFlexExpanded(),
       ],
     );
   }
@@ -139,18 +105,16 @@ class _IdleSubmissionBar extends StatelessWidget {
       completer: null,
       history: null,
       onSelect: null,
-      icon: IconSymbols.more_horiz,
-      content: CustomTextField(
+      icon: IconSet.more_horiz,
+      content: StyledInput.underlined(
         enabled: false,
-        keyboardType: TextInputType.none,
-        inputFormatters: [],
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-          filled: false,
-          border: UnderlineInputBorder(),
-        ),
+        type: StyledInputType.none,
+        format: [],
+        hint: null,
+        prefix: null,
+        suffix: null,
         value: '',
-        onChanged: null,
+        onChanged: (context, value) async {},
       ),
     );
   }
@@ -176,7 +140,6 @@ class _PauseSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -185,20 +148,16 @@ class _PauseSubmissionBar extends StatelessWidget {
           this.value.value = value as PauseExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.pause,
-        content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          keyboardType: TextInputType.none,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Pause',
-            suffixIcon: null,
-          ),
+        icon: IconSet.pause,
+        content: StyledInput.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          type: StyledInputType.none,
+          format: [],
+          hint: 'Pause',
+          prefix: null,
+          suffix: null,
           value: '',
-          onChanged: null,
+          onChanged: (context, value) async {},
         ),
       ),
     );
@@ -225,7 +184,6 @@ class _BooleanSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -234,44 +192,38 @@ class _BooleanSubmissionBar extends StatelessWidget {
           this.value.value = value as BooleanExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.check_box,
-        content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          keyboardType: TextInputType.text,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Boolean',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-                IconButton(
-                  tooltip: 'No',
-                  isSelected: this.value.value == null ? false : this.value.value!.value == false,
-                  icon: Icon(IconSymbols.do_not_disturb_on),
-                  selectedIcon: Icon(IconSymbols.do_not_disturb_on, fill: 1),
-                  onPressed: () async {
-                    this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
-                    await refreshState(setState);
-                  },
-                ),
-                SizedBox(width: 4),
-                IconButton(
-                  tooltip: 'Yes',
-                  isSelected: this.value.value == null ? false : this.value.value!.value == true,
-                  icon: Icon(IconSymbols.check_circle),
-                  selectedIcon: Icon(IconSymbols.check_circle, fill: 1),
-                  onPressed: () async {
-                    this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
-                    await refreshState(setState);
-                  },
-                ),
-              ],
+        icon: IconSet.check_box,
+        content: StyledInput.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          type: StyledInputType.text,
+          format: [],
+          hint: 'Boolean',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'No',
+              selected: this.value.value == null ? false : this.value.value!.value == false,
+              icon: Icon(IconSet.do_not_disturb_on),
+              iconOnSelected: Icon(IconSet.do_not_disturb_on, fill: 1),
+              onPressed: (context) async {
+                this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
+                await refreshState(setState);
+              },
             ),
-          ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Yes',
+              selected: this.value.value == null ? false : this.value.value!.value == true,
+              icon: Icon(IconSet.check_circle),
+              iconOnSelected: Icon(IconSet.check_circle, fill: 1),
+              onPressed: (context) async {
+                this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
+                await refreshState(setState);
+              },
+            ),
+          ],
           value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -308,7 +260,6 @@ class _IntegerSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -317,20 +268,16 @@ class _IntegerSubmissionBar extends StatelessWidget {
           this.value.value = value as IntegerExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.speed_1_2,
-        content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Integer',
-            suffixIcon: null,
-          ),
+        icon: IconSet.speed_1_2,
+        content: StyledInput.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          type: StyledInputType.numberWithOptions(signed: true, decimal: false),
+          format: [],
+          hint: 'Integer',
+          prefix: null,
+          suffix: null,
           value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -368,7 +315,6 @@ class _FloaterSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -377,20 +323,16 @@ class _FloaterSubmissionBar extends StatelessWidget {
           this.value.value = value as FloaterExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.speed_1_2,
-        content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Floater',
-            suffixIcon: null,
-          ),
+        icon: IconSet.speed_1_2,
+        content: StyledInput.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          type: StyledInputType.numberWithOptions(signed: true, decimal: true),
+          format: [],
+          hint: 'Floater',
+          prefix: null,
+          suffix: null,
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -428,7 +370,6 @@ class _SizeSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -437,51 +378,47 @@ class _SizeSubmissionBar extends StatelessWidget {
           this.value.value = value as SizeExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.memory,
-        content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Size',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-                PopupMenuButton(
-                  tooltip: 'Exponent',
-                  position: PopupMenuPosition.under,
-                  icon: this.value.value == null
-                    ? Icon(IconSymbols.expand_circle_down)
-                    : Container(
-                      alignment: Alignment.center,
-                      width: 24,
-                      height: 24,
-                      child: Text(
-                        ['B', 'K', 'M', 'G'][this.value.value!.exponent],
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-                      ),
-                    ),
-                  itemBuilder: (context) => ['B', 'K', 'M', 'G'].mapIndexed((index, value) => PopupMenuItem(
-                    value: index,
-                    child: Text(
-                      value,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
-                    ),
-                  )).toList(),
-                  onSelected: (value) async {
-                    this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
-                    await refreshState(setState);
-                  },
+        icon: IconSet.memory,
+        content: StyledInput.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          type: StyledInputType.numberWithOptions(signed: false, decimal: true),
+          format: [],
+          hint: 'Size',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Exponent',
+              icon: this.value.value == null
+                ? Icon(IconSet.expand_circle_down)
+                : BoxContainer.of(
+                  width: 24,
+                  height: 24,
+                  align: BoxContainerAlign.center,
+                  child: StyledText.custom(
+                    ['B', 'K', 'M', 'G'][this.value.value!.exponent],
+                    style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+                  ),
                 ),
-              ],
+              onPressed: (context) async {
+                var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
+                  position: StyledMenuPosition.under,
+                  children: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
+                    value: index,
+                    content: StyledText.custom(
+                      value,
+                      style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                    ),
+                  )),
+                ));
+                if (value != null) {
+                  this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
+                  await refreshState(setState);
+                }
+              },
             ),
-          ),
+          ],
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -519,7 +456,6 @@ class _StringSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -528,20 +464,16 @@ class _StringSubmissionBar extends StatelessWidget {
           this.value.value = value as StringExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.text_fields,
-        content: CustomTextField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          keyboardType: TextInputType.text,
-          inputFormatters: [],
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'String',
-            suffixIcon: null,
-          ),
+        icon: IconSet.text_fields,
+        content: StyledInput.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          type: StyledInputType.text,
+          format: [],
+          hint: 'String',
+          prefix: null,
+          suffix: null,
           value: this.value.value == null ? '' : this.value.value!.value,
-          onChanged: (text) async {
+          onChanged: (context, text) async {
             if (text.isEmpty) {
               this.value.value = null;
             }
@@ -576,7 +508,6 @@ class _PathSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -585,75 +516,66 @@ class _PathSubmissionBar extends StatelessWidget {
           this.value.value = value as PathExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.link,
-        content: CustomFileDropRegion(
+        icon: IconSet.link,
+        content: StorageDropRegion(
           onDrop: (item) async {
             this.value.value = PathExpression(item.first);
             await refreshState(setState);
           },
-          child: CustomTextField(
-            style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-            keyboardType: TextInputType.text,
-            inputFormatters: [],
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-              filled: false,
-              border: UnderlineInputBorder(),
-              hintText: 'Path',
-              suffixIcon: CustomTextFieldSuffixRegion(
-                children: [
-                  PopupMenuButton(
-                    tooltip: 'Command',
-                    position: PopupMenuPosition.under,
-                    icon: Icon(IconSymbols.adjust),
-                    itemBuilder: (context) => [
+          child: StyledInput.underlined(
+            style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+            type: StyledInputType.text,
+            format: [],
+            hint: 'Path',
+            prefix: null,
+            suffix: [
+              StyledIconButton.standard(
+                tooltip: 'Command',
+                icon: Icon(IconSet.adjust),
+                onPressed: (context) async {
+                  var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
+                    position: StyledMenuPosition.under,
+                    children: [
                       ('?generate', 'Generate'),
                       ('?move', 'Move'),
                       ('?delete', 'Delete'),
                       ('?overwrite', 'Overwrite'),
-                    ].map((value) => PopupMenuItem(
+                    ].mapIndexed((index, value) => StyledMenuItem.standard(
                       value: value.$1,
-                      child: Text(
+                      content: StyledText.custom(
                         value.$2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                        style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
                       ),
-                    )).toList(),
-                    onSelected: (value) async {
-                      this.value.value = PathExpression(value);
-                      await refreshState(setState);
-                    },
-                  ),
-                  SizedBox(width: 4),
-                  PopupMenuButton(
-                    tooltip: 'Pick',
-                    position: PopupMenuPosition.under,
-                    icon: Icon(IconSymbols.open_in_new),
-                    itemBuilder: (context) => [
-                      ('load_file', 'Load File'),
-                      ('load_directory', 'Load Directory'),
-                      ('save_file', 'Save File'),
-                    ].map((value) => PopupMenuItem(
-                      value: value.$1,
-                      child: Text(
-                        value.$2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelLarge!.selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
-                      ),
-                    )).toList(),
-                    onSelected: (value) async {
-                      var target = await StorageHelper.pick(value, context, '@ModdingWorker.Generic', null);
-                      if (target != null) {
-                        this.value.value = PathExpression(target);
-                        await refreshState(setState);
-                      }
-                    },
-                  ),
-                ],
+                    )),
+                  ));
+                  if (value != null) {
+                    this.value.value = PathExpression(value);
+                    await refreshState(setState);
+                  }
+                },
               ),
-            ),
+              Gap.horizontal(4),
+              StyledIconButton.standard(
+                tooltip: 'Pick',
+                icon: Icon(IconSet.open_in_new),
+                onPressed: (context) async {
+                  var target = await pickStorageItem(
+                    context: context,
+                    allowLoadFile: true,
+                    allowLoadDirectory: true,
+                    allowSaveFile: true,
+                    location: '@ModdingWorker.Generic',
+                    textStyle: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                  );
+                  if (target != null) {
+                    this.value.value = PathExpression(target);
+                    await refreshState(setState);
+                  }
+                },
+              ),
+            ],
             value: this.value.value == null ? '' : this.value.value!.content,
-            onChanged: (text) async {
+            onChanged: (context, text) async {
               if (text.isEmpty) {
                 this.value.value = null;
               }
@@ -691,7 +613,6 @@ class _EnumerationSubmissionBar extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
@@ -700,30 +621,24 @@ class _EnumerationSubmissionBar extends StatelessWidget {
           this.value.value = value as EnumerationExpression;
           await refreshState(setState);
         },
-        icon: IconSymbols.menu,
-        content: CustomOptionField(
-          style: theme.textTheme.bodyLarge!.selfLet((it) => withSpecialFontTextStyle(context, it)),
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-            filled: false,
-            border: UnderlineInputBorder(),
-            hintText: 'Enumeration',
-            suffixIcon: CustomTextFieldSuffixRegion(
-              children: [
-                IconButton(
-                  tooltip: 'Reset',
-                  icon: Icon(IconSymbols.restart_alt),
-                  onPressed: () async {
-                    this.value.value = null;
-                    await refreshState(setState);
-                  },
-                ),
-              ],
+        icon: IconSet.menu,
+        content: StyledInputCombo.underlined(
+          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          hint: 'Enumeration',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Reset',
+              icon: Icon(IconSet.restart_alt),
+              onPressed: (context) async {
+                this.value.value = null;
+                await refreshState(setState);
+              },
             ),
-          ),
+          ],
           option: this.option.map((value) => (value, value)).toList(),
           value: this.value.value == null ? '' : this.value.value!.item,
-          onChanged: (value) async {
+          onChanged: (context, value) async {
             this.value.value = EnumerationExpression(value as String);
             await refreshState(setState);
           },

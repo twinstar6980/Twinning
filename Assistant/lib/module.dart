@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/setting.dart';
 import '/utility/storage_helper.dart';
+import 'widget/export.dart';
 import '/view/modding_worker/main_page.dart' as modding_worker;
 import '/view/modding_worker/setting_panel.dart' as modding_worker;
 import '/view/command_sender/main_page.dart' as command_sender;
@@ -10,7 +11,7 @@ import '/view/resource_shipper/setting_panel.dart' as resource_shipper;
 import '/view/animation_viewer/main_page.dart' as animation_viewer;
 import '/view/animation_viewer/setting_panel.dart' as animation_viewer;
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // ----------------
@@ -76,7 +77,7 @@ class ModuleHelper {
   static final List<ModuleInformation> _information = [
     ModuleInformation(
       type: ModuleType.modding_worker,
-      icon: IconSymbols.rule_settings,
+      icon: IconSet.rule_settings,
       name: 'Modding Worker',
       mainPage: (option) => modding_worker.MainPage(
         key: GlobalKey(),
@@ -90,7 +91,7 @@ class ModuleHelper {
     ),
     ModuleInformation(
       type: ModuleType.command_sender,
-      icon: IconSymbols.send,
+      icon: IconSet.send,
       name: 'Command Sender',
       mainPage: (option) => command_sender.MainPage(
         key: GlobalKey(),
@@ -104,7 +105,7 @@ class ModuleHelper {
     ),
     ModuleInformation(
       type: ModuleType.resource_shipper,
-      icon: IconSymbols.share_windows,
+      icon: IconSet.share_windows,
       name: 'Resource Shipper',
       mainPage: (option) => resource_shipper.MainPage(
         key: GlobalKey(),
@@ -118,7 +119,7 @@ class ModuleHelper {
     ),
     ModuleInformation(
       type: ModuleType.animation_viewer,
-      icon: IconSymbols.thread_unread,
+      icon: IconSet.thread_unread,
       name: 'Animation Viewer',
       mainPage: (option) => animation_viewer.MainPage(
         key: GlobalKey(),

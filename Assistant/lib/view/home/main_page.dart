@@ -1,15 +1,14 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
-import '/utility/control_helper.dart';
-import '/utility/system_overlay_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
 import '/view/home/blank_page.dart';
 import '/view/home/launcher_panel.dart';
 import '/view/home/setting_panel.dart';
+import '/view/home/module_page.dart';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -41,11 +40,11 @@ class _MainPageState extends State<MainPage> {
     }
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
     if (this._tabIndex != -1) {
-      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageExitView();
+      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
     }
     this._tabIndex = this._tabList.length - 1;
     await refreshState(this.setState);
-    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageEnterView();
+    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
     await Future.delayed(Duration(milliseconds: 10));
     return;
   }
@@ -54,11 +53,11 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
-    if (!await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageCloseView()) {
+    if (!await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCloseView()) {
       return;
     }
     if (this._tabIndex == index) {
-      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageExitView();
+      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
     }
     this._tabList.removeAt(index);
     if (this._tabIndex > index) {
@@ -69,7 +68,7 @@ class _MainPageState extends State<MainPage> {
         this._tabIndex--;
       }
       if (this._tabIndex != -1) {
-        await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageEnterView();
+        await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
       }
     }
     await refreshState(this.setState);
@@ -97,7 +96,7 @@ class _MainPageState extends State<MainPage> {
     var configuration = ModuleLauncherConfiguration(
       title: this._tabList[index].$1,
       type: this._tabList[index].$2,
-      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageCollectOption(),
+      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
     var setting = Provider.of<SettingProvider>(context, listen: false);
     setting.data.moduleLauncher.pinned.add(configuration);
@@ -112,7 +111,7 @@ class _MainPageState extends State<MainPage> {
     var configuration = ModuleLauncherConfiguration(
       title: this._tabList[index].$1,
       type: this._tabList[index].$2,
-      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageCollectOption(),
+      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
     await this._insertTabItem(configuration);
     return;
@@ -122,16 +121,16 @@ class _MainPageState extends State<MainPage> {
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._tabList.length);
-    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageExitView();
+    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
     this._tabIndex = index;
     await refreshState(this.setState);
-    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<CustomModulePageState>().modulePageEnterView();
+    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
     return;
   }
 
   Future<Void> _showLauncherPanel(
   ) async {
-    await ControlHelper.showBottomSheetAsModal<Void>(this.context, CustomModalBottomSheet(
+    await StyledBottomSheetExtension.show<Void>(this.context, StyledModalBottomSheet.standard(
       title: 'Launcher',
       contentBuilder: (context, setStateForPanel) => [
         LauncherPanel(
@@ -174,43 +173,35 @@ class _MainPageState extends State<MainPage> {
 
   @override
   build(context) {
-    SystemOverlayHelper.apply(Theme.of(context).colorScheme.brightness);
-    return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: SystemOverlayHelper.query(Theme.of(context).colorScheme.brightness),
-        centerTitle: false,
-        elevation: 3,
-        scrolledUnderElevation: 3,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        title: CustomTitleBar(
-          title: this._tabList.isEmpty ? 'Home' : this._tabList[this._tabIndex].$1,
-          leading: Builder(
-            builder: (context) => IconButton(
-              tooltip: 'Navigation',
-              icon: Icon(IconSymbols.menu),
-              onPressed: () async {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          ),
+    return StyledScaffold.standard(
+      title: StyledTitleBar.standard(
+        title: this._tabList.isEmpty ? 'Home' : this._tabList[this._tabIndex].$1,
+        leading: StyledIconButton.standard(
+          tooltip: 'Navigation',
+          icon: Icon(IconSet.menu),
+          onPressed: (context) async {
+            await StyledNavigationDrawerExtension.show(context);
+          },
         ),
       ),
-      drawer: NavigationDrawer(
+      body: StackContainer.at(this._tabIndex + 1, [
+        BlankPage(),
+        ...this._tabList.mapIndexed((index, value) => value.$3),
+      ]),
+      drawer: StyledNavigationDrawer.standard(
         children: [
-          SizedBox(height: 16),
-          CustomNavigationDrawerLabel(
+          Gap.vertical(16),
+          NavigationDrawerLabel(
             label: 'Assistant',
           ),
-          CustomNavigationDrawerItem(
+          NavigationDrawerItem(
             selected: false,
-            icon: IconSymbols.settings,
+            icon: IconSet.settings,
             label: 'Setting',
             action: [],
-            onPressed: () async {
+            onPressed: (context) async {
               Navigator.pop(context);
-              await ControlHelper.showDialogAsFull<Void>(context, CustomFullDialog(
+              await StyledFullDialogExtension.show<Void>(context, StyledFullDialog.standard(
                 title: 'Setting',
                 contentBuilder: (context, setStateForPanel) => [
                   SettingPanel(),
@@ -218,112 +209,103 @@ class _MainPageState extends State<MainPage> {
               ));
             },
           ),
-          CustomNavigationDrawerItem(
+          NavigationDrawerItem(
             selected: false,
-            icon: IconSymbols.widgets,
+            icon: IconSet.widgets,
             label: 'Launcher',
             action: [],
-            onPressed: () async {
+            onPressed: (context) async {
               Navigator.pop(context);
               await this._showLauncherPanel();
             },
           ),
-          CustomNavigationDrawerDivider(),
+          NavigationDrawerDivider(),
           if (this._tabList.isEmpty)
-            SizedBox(height: 16),
-          ...this._tabList.mapIndexed((index, item) => CustomNavigationDrawerItem(
+            Gap.vertical(16),
+          ...this._tabList.mapIndexed((index, item) => NavigationDrawerItem(
             key: ObjectKey(item), // fix button ripple effect error when remove item
             selected: index == this._tabIndex,
             icon: ModuleHelper.query(item.$2).icon,
             label: item.$1,
             action: [
-              PopupMenuButton(
+              StyledIconButton.standard(
                 tooltip: 'Action',
-                position: PopupMenuPosition.under,
-                icon: Icon(IconSymbols.steppers),
-                itemBuilder: (context) => [
-                  ('remove', 'Remove', IconSymbols.cancel),
-                  ('rename', 'Rename', IconSymbols.draw),
-                  ('keep', 'Keep', IconSymbols.pinboard),
-                  ('duplicate', 'Duplicate', IconSymbols.tab_duplicate),
-                ].map((value) => PopupMenuItem(
-                  value: value.$1,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    leading: Icon(value.$3),
-                    title: Text(
-                      value.$2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                )).toList(),
-                onSelected: (value) async {
-                  switch (value) {
-                    case 'remove': {
-                      await this._removeTabItem(index);
-                      break;
-                    }
-                    case 'rename': {
-                      var title = item.$1;
-                      var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                        title: 'Tab Rename',
-                        contentBuilder: (context, setStateForPanel) => [
-                          CustomTextField(
-                            keyboardType: TextInputType.multiline,
-                            inputFormatters: [],
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                              filled: false,
-                              border: OutlineInputBorder(),
-                            ),
-                            value: title,
-                            onChanged: (value) async {
-                              title = value;
-                              await refreshState(setStateForPanel);
-                            },
-                          ),
-                        ],
-                        actionBuilder: (context) => [
-                          TextButton(
-                            child: Text('Cancel'),
-                            onPressed: () => Navigator.pop(context, false),
-                          ),
-                          TextButton(
-                            child: Text('Continue'),
-                            onPressed: () => Navigator.pop(context, true),
-                          ),
-                        ],
-                      )) ?? false;
-                      if (canContinue) {
-                        await this._renameTabItem(index, title);
+                icon: Icon(IconSet.steppers),
+                onPressed: (context) async {
+                  var action = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
+                    position: StyledMenuPosition.under,
+                    children: [
+                      ('remove', 'Remove', IconSet.cancel),
+                      ('rename', 'Rename', IconSet.draw),
+                      ('keep', 'Keep', IconSet.pinboard),
+                      ('duplicate', 'Duplicate', IconSet.tab_duplicate),
+                    ].map((value) => StyledMenuItem.standard(
+                      value: value.$1,
+                      leading: Icon(value.$3),
+                      content: StyledText.inherit(value.$2),
+                    )),
+                  ));
+                  if (action != null) {
+                    switch (action) {
+                      case 'remove': {
+                        await this._removeTabItem(index);
+                        break;
                       }
-                      break;
+                      case 'rename': {
+                        var title = item.$1;
+                        var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
+                          title: 'Tab Rename',
+                          contentBuilder: (context, setStateForPanel) => [
+                            StyledInput.outlined(
+                              type: StyledInputType.multiline,
+                              format: [],
+                              hint: null,
+                              prefix: null,
+                              suffix: null,
+                              value: title,
+                              onChanged: (context, value) async {
+                                title = value;
+                                await refreshState(setStateForPanel);
+                              },
+                            ),
+                          ],
+                          actionBuilder: (context) => [
+                            StyledButton.text(
+                              content: StyledText.inherit('Cancel'),
+                              onPressed: (context) => Navigator.pop(context, false),
+                            ),
+                            StyledButton.text(
+                              content: StyledText.inherit('Continue'),
+                              onPressed: (context) => Navigator.pop(context, true),
+                            ),
+                          ],
+                        )) ?? false;
+                        if (canContinue) {
+                          await this._renameTabItem(index, title);
+                        }
+                        break;
+                      }
+                      case 'keep': {
+                        await this._keepTabItem(index);
+                        break;
+                      }
+                      case 'duplicate': {
+                        await this._duplicateTabItem(index);
+                        break;
+                      }
+                      default: throw UnreachableException();
                     }
-                    case 'keep': {
-                      await this._keepTabItem(index);
-                      break;
-                    }
-                    case 'duplicate': {
-                      await this._duplicateTabItem(index);
-                      break;
-                    }
-                    default: throw UnreachableException();
                   }
                 },
               ),
             ],
-            onPressed: () async {
+            onPressed: (context) async {
               Navigator.pop(context);
               await this._toggleTabItem(index);
             },
           )),
-          SizedBox(height: 16),
+          Gap.vertical(16),
         ],
-      ),
-      body: IndexedStack(
-        index: this._tabIndex + 1,
-        children: [BlankPage(), ...this._tabList.mapIndexed((index, value) => value.$3)],
       ),
     );
   }

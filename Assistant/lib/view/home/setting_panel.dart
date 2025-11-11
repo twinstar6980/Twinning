@@ -3,13 +3,11 @@ import '/setting.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/utility/control_helper.dart';
 import '/utility/permission_helper.dart';
 import '/utility/forwarder_extension_helper.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
 import '/view/home/about_panel.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // ----------------
@@ -41,7 +39,7 @@ class _SettingPanelState extends State<SettingPanel> {
     super.initState();
     this._storagePermissionState = false;
     this._forwarderExtensionState = null;
-    ControlHelper.postTask(() async {
+    postTask(() async {
       this._storagePermissionState = await PermissionHelper.checkStorage();
       this._forwarderExtensionState = await ForwarderExtensionHelper.check();
       await refreshState(this.setState);
@@ -64,619 +62,503 @@ class _SettingPanelState extends State<SettingPanel> {
   @override
   build(context) {
     var setting = Provider.of<SettingProvider>(context);
-    return Column(
-      children: [
-        SizedBox(height: 4),
-        CustomSettingLabel(
-          label: 'Theme',
-          action: null,
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.brightness_4,
-          label: 'Theme Mode',
-          content: [
-            Text(
-              ['System', 'Light', 'Dark'][setting.data.themeMode.index],
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            RadioGroup<ThemeMode>(
-              groupValue: setting.data.themeMode,
-              onChanged: (value) async {
-                setting.data.themeMode = value!;
+    return FlexContainer.vertical([
+      Gap.vertical(4),
+      SettingListLabel(
+        label: 'Theme',
+        action: null,
+      ),
+      SettingListItem(
+        icon: IconSet.brightness_4,
+        label: 'Theme Mode',
+        comment: [
+          StyledText.inherit(['System', 'Light', 'Dark'][setting.data.themeMode.index]),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          ...StyledThemeMode.values.map((item) => StyledListTile.standardTight(
+            leading: StyledRadio.standard(
+              value: setting.data.themeMode == item,
+              onChanged: (context) async {
+                setting.data.themeMode = item;
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();
               },
-              child: Column(
-                children: ThemeMode.values.map((item) => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Radio(
-                    value: item,
-                  ),
-                  title: Text(
-                    ['System', 'Light', 'Dark'][item.index],
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )).toList(),
-              ),
             ),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.colorize,
-          label: 'Theme Color',
-          content: [
-            Text(
-              !setting.data.themeColorState ? 'Default' : 'Custom',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.themeColorState,
-                onChanged: (value) async {
-                  setting.data.themeColorState = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.text,
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconSymbols.light_mode),
-                  suffixIcon: Icon(
-                    IconSymbols.circle,
-                    fill: 0.6,
-                    color: setting.data.themeColorLight,
-                  ),
-                ),
-                value: setting.data.themeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
-                onChanged: (value) async {
-                  setting.data.themeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.text,
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconSymbols.dark_mode),
-                  suffixIcon: Icon(
-                    IconSymbols.circle,
-                    fill: 0.6,
-                    color: setting.data.themeColorDark,
-                  ),
-                ),
-                value: setting.data.themeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
-                onChanged: (value) async {
-                  setting.data.themeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.text_fields,
-          label: 'Theme Font',
-          content: [
-            Text(
-              !setting.data.themeFontState ? 'Default' : 'Custom',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.themeFontState,
-                onChanged: (value) async {
-                  setting.data.themeFontState = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.multiline,
-                inputFormatters: [],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  suffixIcon: CustomTextFieldSuffixRegion(
-                    children: [
-                      CustomStorageItemPickerButton(
-                        allowLoadFile: true,
-                        allowLoadDirectory: false,
-                        allowSaveFile: false,
-                        location: '@Application.ThemeFont',
-                        onPicked: (target) async {
-                          setting.data.themeFontPath = [...setting.data.themeFontPath, target];
-                          await refreshState(setStateForPanel);
-                          await refreshState(this.setState);
-                          await setting.save();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                value: ConvertHelper.makeStringListToStringWithLine(setting.data.themeFontPath),
-                onChanged: (value) async {
-                  setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-          ],
-        ),
-        CustomSettingLabel(
-          label: 'Window',
-          action: null,
-        ),
-        CustomSettingItem(
-          enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
-          icon: IconSymbols.recenter,
-          label: 'Window Position',
-          content: [
-            Text(
-              !setting.data.windowPositionState ? 'Default' : 'Custom',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.windowPositionState,
-                onChanged: (value) async {
-                  setting.data.windowPositionState = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconSymbols.swap_horiz),
-                ),
-                value: setting.data.windowPositionX.toString(),
-                onChanged: (value) async {
-                  setting.data.windowPositionX = Integer.tryParse(value) ?? setting.data.windowPositionX;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconSymbols.swap_vert),
-                ),
-                value: setting.data.windowPositionY.toString(),
-                onChanged: (value) async {
-                  setting.data.windowPositionY = Integer.tryParse(value) ?? setting.data.windowPositionY;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
-          icon: IconSymbols.fit_screen,
-          label: 'Window Size',
-          content: [
-            Text(
-              !setting.data.windowSizeState ? 'Default' : 'Custom',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.windowSizeState,
-                onChanged: (value) async {
-                  setting.data.windowSizeState = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconSymbols.width),
-                ),
-                value: setting.data.windowSizeWidth.toString(),
-                onChanged: (value) async {
-                  setting.data.windowSizeWidth = Integer.tryParse(value) ?? setting.data.windowSizeWidth;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(IconSymbols.height),
-                ),
-                value: setting.data.windowSizeHeight.toString(),
-                onChanged: (value) async {
-                  setting.data.windowSizeHeight = Integer.tryParse(value) ?? setting.data.windowSizeHeight;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-          ],
-        ),
-        CustomSettingLabel(
-          label: 'Storage',
-          action: null,
-        ),
-        CustomSettingItem(
-          enabled: SystemChecker.isAndroid,
-          icon: IconSymbols.key,
-          label: 'Storage Permission',
-          content: [
-            Text(
-              !this._storagePermissionState ? 'Denied' : 'Granted',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: () async {
-            this._storagePermissionState = await PermissionHelper.requestStorage();
-            await refreshState(this.setState);
-          },
-          panelBuilder: null,
-        ),
-        CustomSettingItem(
-          enabled: SystemChecker.isAndroid,
-          icon: IconSymbols.snippet_folder,
-          label: 'Storage Picker Fallback Directory',
-          content: [
-            Text(
-              !StorageHelper.existDirectorySync(setting.data.storagePickerFallbackDirectory) ? 'Invalid' : 'Available',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: CustomTextField(
-                keyboardType: TextInputType.text,
-                inputFormatters: [],
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                  filled: false,
-                  border: OutlineInputBorder(),
-                  suffixIcon: CustomTextFieldSuffixRegion(
-                    children: [
-                      CustomStorageItemPickerButton(
-                        allowLoadFile: false,
-                        allowLoadDirectory: true,
-                        allowSaveFile: false,
-                        location: '@Application.StoragePickerFallbackDirectory',
-                        onPicked: (target) async {
-                          setting.data.storagePickerFallbackDirectory = target;
-                          await refreshState(setStateForPanel);
-                          await refreshState(this.setState);
-                          await setting.save();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                value: setting.data.storagePickerFallbackDirectory,
-                onChanged: (value) async {
-                  setting.data.storagePickerFallbackDirectory = StorageHelper.regularize(value);
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-            ),
-          ],
-        ),
-        CustomSettingLabel(
-          label: 'Forwarder',
-          action: null,
-        ),
-        CustomSettingItem(
-          enabled: SystemChecker.isWindows || SystemChecker.isMacintosh,
-          icon: IconSymbols.send_time_extension,
-          label: 'Forwarder Extension',
-          content: [
-            Text(
-              this._forwarderExtensionState == null ? 'Unknown' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: this._forwarderExtensionState!,
-                onChanged: (value) async {
-                  await ForwarderExtensionHelper.toggle(!this._forwarderExtensionState!);
-                  this._forwarderExtensionState = await ForwarderExtensionHelper.check();
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.nearby,
-          label: 'Forwarder Default Target',
-          content: [
-            Text(
-              ModuleHelper.query(setting.data.forwarderDefaultTarget).name,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            RadioGroup<ModuleType>(
-              groupValue: setting.data.forwarderDefaultTarget,
-              onChanged: (value) async {
-                setting.data.forwarderDefaultTarget = value!;
+            content: StyledText.inherit(['System', 'Light', 'Dark'][item.index]),
+          )),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.colorize,
+        label: 'Theme Color',
+        comment: [
+          StyledText.inherit(!setting.data.themeColorState ? 'Default' : 'Custom'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: setting.data.themeColorState,
+              onChanged: (context, value) async {
+                setting.data.themeColorState = value;
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();
               },
-              child: Column(
-                children: ModuleType.values.map((item) => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Radio(
-                    value: item,
-                  ),
-                  title: Text(
-                    ModuleHelper.query(item).name,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )).toList(),
-              ),
             ),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.touch_app,
-          label: 'Forwarder Immediate Jump',
-          content: [
-            Text(
-              !setting.data.forwarderImmediateJump ? 'Disabled' : 'Enabled',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Switch(
-                value: setting.data.forwarderImmediateJump,
-                onChanged: (value) async {
-                  setting.data.forwarderImmediateJump = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(this.setState);
-                  await setting.save();
-                },
-              ),
-              title: Text(
-                'Enable',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        CustomSettingLabel(
-          label: 'Other',
-          action: null,
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.info,
-          label: 'About',
-          content: [],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            AboutPanel(),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.settings,
-          label: 'Setting File',
-          content: [],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              title: Text(
-                'Reload',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                await setting.load();
+            content: StyledText.inherit('Enable'),
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.text,
+              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+              hint: null,
+              prefix: IconSet.light_mode,
+              suffix: [
+                Icon(
+                  IconSet.circle,
+                  fill: 0.6,
+                  color: setting.data.themeColorLight,
+                ),
+              ],
+              value: setting.data.themeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
+              onChanged: (context, value) async {
+                setting.data.themeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
                 await setting.save();
-                await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
               },
             ),
-            ListTile(
-              title: Text(
-                'Reset',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                if (await ControlHelper.showDialogForConfirm(context)) {
-                  await setting.reset();
-                  await setting.save();
-                  await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
-                }
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.text,
+              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+              hint: null,
+              prefix: IconSet.dark_mode,
+              suffix: [
+                Icon(
+                  IconSet.circle,
+                  fill: 0.6,
+                  color: setting.data.themeColorDark,
+                ),
+              ],
+              value: setting.data.themeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
+              onChanged: (context, value) async {
+                setting.data.themeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
               },
             ),
-            ListTile(
-              title: Text(
-                'Import',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                var file = await StorageHelper.pickLoadFile(context, '@Application.SettingFile');
-                if (file != null) {
-                  await setting.load(file: file);
-                  await setting.save();
-                  await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
-                }
+          ),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.text_fields,
+        label: 'Theme Font',
+        comment: [
+          StyledText.inherit(!setting.data.themeFontState ? 'Default' : 'Custom'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: setting.data.themeFontState,
+              onChanged: (context, value) async {
+                setting.data.themeFontState = value;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
               },
             ),
-            ListTile(
-              title: Text(
-                'Export',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                var file = await StorageHelper.pickSaveFile(context, '@Application.SettingFile', 'setting.json');
-                if (file != null) {
-                  await setting.save(file: file, apply: false);
-                  await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
-                }
+            content: StyledText.inherit('Enable'),
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.multiline,
+              format: [],
+              hint: null,
+              prefix: null,
+              suffix: [
+                StyledIconButton.standard(
+                  tooltip: 'Pick',
+                  icon: Icon(IconSet.open_in_new),
+                  onPressed: (context) async {
+                    var target = await pickStorageItem(
+                      context: context,
+                      allowLoadFile: true,
+                      location: '@Application.ThemeFont',
+                    );
+                    if (target != null) {
+                      setting.data.themeFontPath = [...setting.data.themeFontPath, target];
+                      await refreshState(setStateForPanel);
+                      await refreshState(this.setState);
+                      await setting.save();
+                    }
+                  },
+                ),
+              ],
+              value: ConvertHelper.makeStringListToStringWithLine(setting.data.themeFontPath),
+              onChanged: (context, value) async {
+                setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
               },
             ),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.folder_special,
-          label: 'Shared Directory',
-          content: [],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              title: Text(
-                'Reveal',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                await ControlHelper.showDialogForRevealStoragePath(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
+          ),
+        ],
+      ),
+      SettingListLabel(
+        label: 'Window',
+        action: null,
+      ),
+      SettingListItem(
+        enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
+        icon: IconSet.recenter,
+        label: 'Window Position',
+        comment: [
+          StyledText.inherit(!setting.data.windowPositionState ? 'Default' : 'Custom'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: setting.data.windowPositionState,
+              onChanged: (context, value) async {
+                setting.data.windowPositionState = value;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
               },
             ),
-          ],
-        ),
-        CustomSettingItem(
-          icon: IconSymbols.folder_delete,
-          label: 'Cache Directory',
-          content: [],
-          onTap: null,
-          panelBuilder: (context, setStateForPanel) => [
-            ListTile(
-              title: Text(
-                'Clear',
-                overflow: TextOverflow.ellipsis,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                var cacheDirectory = await StorageHelper.queryApplicationCacheDirectory();
-                if (await StorageHelper.exist(cacheDirectory)) {
-                  await StorageHelper.remove(cacheDirectory);
-                }
-                await ControlHelper.showSnackBar(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
+            content: StyledText.inherit('Enable'),
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.number,
+              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              hint: null,
+              prefix: IconSet.swap_horiz,
+              suffix: null,
+              value: setting.data.windowPositionX.toString(),
+              onChanged: (context, value) async {
+                setting.data.windowPositionX = Integer.tryParse(value) ?? setting.data.windowPositionX;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
               },
             ),
-          ],
-        ),
-        SizedBox(height: 8),
-      ],
-    );
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.number,
+              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              hint: null,
+              prefix: IconSet.swap_vert,
+              suffix: null,
+              value: setting.data.windowPositionY.toString(),
+              onChanged: (context, value) async {
+                setting.data.windowPositionY = Integer.tryParse(value) ?? setting.data.windowPositionY;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+          ),
+        ],
+      ),
+      SettingListItem(
+        enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
+        icon: IconSet.fit_screen,
+        label: 'Window Size',
+        comment: [
+          StyledText.inherit(!setting.data.windowSizeState ? 'Default' : 'Custom'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: setting.data.windowSizeState,
+              onChanged: (context, value) async {
+                setting.data.windowSizeState = value;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+            content: StyledText.inherit('Enable'),
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.number,
+              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              hint: null,
+              prefix: IconSet.width,
+              suffix: null,
+              value: setting.data.windowSizeWidth.toString(),
+              onChanged: (context, value) async {
+                setting.data.windowSizeWidth = Integer.tryParse(value) ?? setting.data.windowSizeWidth;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+          ),
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.number,
+              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              hint: null,
+              prefix: IconSet.height,
+              suffix: null,
+              value: setting.data.windowSizeHeight.toString(),
+              onChanged: (context, value) async {
+                setting.data.windowSizeHeight = Integer.tryParse(value) ?? setting.data.windowSizeHeight;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+          ),
+        ],
+      ),
+      SettingListLabel(
+        label: 'Storage',
+        action: null,
+      ),
+      SettingListItem(
+        enabled: SystemChecker.isAndroid,
+        icon: IconSet.key,
+        label: 'Storage Permission',
+        comment: [
+          StyledText.inherit(!this._storagePermissionState ? 'Denied' : 'Granted'),
+        ],
+        onPressed: (context) async {
+          this._storagePermissionState = await PermissionHelper.requestStorage();
+          await refreshState(this.setState);
+        },
+        panelBuilder: null,
+      ),
+      SettingListItem(
+        enabled: SystemChecker.isAndroid,
+        icon: IconSet.snippet_folder,
+        label: 'Storage Picker Fallback Directory',
+        comment: [
+          StyledText.inherit(!StorageHelper.existDirectorySync(setting.data.storagePickerFallbackDirectory) ? 'Invalid' : 'Available'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: StyledInputType.text,
+              format: [],
+              hint: null,
+              prefix: null,
+              suffix: [
+                StyledIconButton.standard(
+                  tooltip: 'Pick',
+                  icon: Icon(IconSet.open_in_new),
+                  onPressed: (context) async {
+                    var target = await pickStorageItem(
+                      context: context,
+                      allowLoadDirectory: true,
+                      location: '@Application.StoragePickerFallbackDirectory',
+                    );
+                    if (target != null) {
+                      setting.data.storagePickerFallbackDirectory = target;
+                      await refreshState(setStateForPanel);
+                      await refreshState(this.setState);
+                      await setting.save();
+                    }
+                  },
+                ),
+              ],
+              value: setting.data.storagePickerFallbackDirectory,
+              onChanged: (context, value) async {
+                setting.data.storagePickerFallbackDirectory = StorageHelper.regularize(value);
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+          ),
+        ],
+      ),
+      SettingListLabel(
+        label: 'Forwarder',
+        action: null,
+      ),
+      SettingListItem(
+        enabled: SystemChecker.isWindows || SystemChecker.isMacintosh,
+        icon: IconSet.send_time_extension,
+        label: 'Forwarder Extension',
+        comment: [
+          StyledText.inherit(this._forwarderExtensionState == null ? 'Unknown' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: this._forwarderExtensionState!,
+              onChanged: (context, value) async {
+                await ForwarderExtensionHelper.toggle(!this._forwarderExtensionState!);
+                this._forwarderExtensionState = await ForwarderExtensionHelper.check();
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+              },
+            ),
+            content: StyledText.inherit('Enable'),
+          ),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.nearby,
+        label: 'Forwarder Default Target',
+        comment: [
+          StyledText.inherit(ModuleHelper.query(setting.data.forwarderDefaultTarget).name),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          ...ModuleType.values.map((item) => StyledListTile.standardTight(
+            leading: StyledRadio.standard(
+              value: setting.data.forwarderDefaultTarget == item,
+              onChanged: (context) async {
+                setting.data.forwarderDefaultTarget = item;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+            content: StyledText.inherit(ModuleHelper.query(item).name),
+          )),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.touch_app,
+        label: 'Forwarder Immediate Jump',
+        comment: [
+          StyledText.inherit(!setting.data.forwarderImmediateJump ? 'Disabled' : 'Enabled'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: setting.data.forwarderImmediateJump,
+              onChanged: (context, value) async {
+                setting.data.forwarderImmediateJump = value;
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+            content: StyledText.inherit('Enable'),
+          ),
+        ],
+      ),
+      SettingListLabel(
+        label: 'Other',
+        action: null,
+      ),
+      SettingListItem(
+        icon: IconSet.info,
+        label: 'About',
+        comment: [],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          AboutPanel(),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.settings,
+        label: 'Setting File',
+        comment: [],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standard(
+            content: StyledText.inherit('Reload'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              await setting.load();
+              await setting.save();
+              await StyledSnackExtension.show(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
+            },
+          ),
+          StyledListTile.standard(
+            content: StyledText.inherit('Reset'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              if (await showDialogForConfirm(context)) {
+                await setting.reset();
+                await setting.save();
+                await StyledSnackExtension.show(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
+              }
+            },
+          ),
+          StyledListTile.standard(
+            content: StyledText.inherit('Import'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              var file = await StorageHelper.pickLoadFile(context, '@Application.SettingFile');
+              if (file != null) {
+                await setting.load(file: file);
+                await setting.save();
+                await StyledSnackExtension.show(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
+              }
+            },
+          ),
+          StyledListTile.standard(
+            content: StyledText.inherit('Export'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              var file = await StorageHelper.pickSaveFile(context, '@Application.SettingFile', 'setting.json');
+              if (file != null) {
+                await setting.save(file: file, apply: false);
+                await StyledSnackExtension.show(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
+              }
+            },
+          ),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.folder_special,
+        label: 'Shared Directory',
+        comment: [],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standard(
+            content: StyledText.inherit('Reveal'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              await showDialogForRevealStoragePath(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
+            },
+          ),
+        ],
+      ),
+      SettingListItem(
+        icon: IconSet.folder_delete,
+        label: 'Cache Directory',
+        comment: [],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standard(
+            content: StyledText.inherit('Clear'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              var cacheDirectory = await StorageHelper.queryApplicationCacheDirectory();
+              if (await StorageHelper.exist(cacheDirectory)) {
+                await StorageHelper.remove(cacheDirectory);
+              }
+              await StyledSnackExtension.show(setting.state.applicationNavigatorKey.currentContext!, 'Done!');
+            },
+          ),
+        ],
+      ),
+      Gap.vertical(8),
+    ]);
   }
 
 }

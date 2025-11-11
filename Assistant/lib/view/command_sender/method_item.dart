@@ -1,8 +1,8 @@
 import '/common.dart';
-import '/utility/icon_helper.dart';
+import '/widget/export.dart';
 import '/view/command_sender/configuration.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -16,36 +16,28 @@ class MethodItem extends StatelessWidget {
 
   // ----------------
 
-  final MethodConfiguration   configuration;
-  final Void Function(String) onSelect;
+  final MethodConfiguration          configuration;
+  final Void Function(String method) onSelect;
 
   // ----------------
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.fromLTRB(40, 0, 24, 0),
-          dense: true,
-          leading: Icon(IconHelper.queryOutlined(this.configuration.icon)),
-          title: Text(
-            this.configuration.name,
-            overflow: TextOverflow.ellipsis,
-          ).withTooltip(
-            message: this.configuration.name,
-          ),
-          trailing: Visibility(
-            visible: this.configuration.batch != null,
-            child: Icon(IconSymbols.layers, color: theme.colorScheme.primary).withTooltip(message: 'Batch'),
-          ),
-          onTap: () async {
-            this.onSelect(this.configuration.identifier);
-          },
+    return FlexContainer.vertical([
+      StyledListTile.standardCustom(
+        dense: true,
+        padding: EdgeInsets.fromLTRB(40, 0, 24, 0),
+        leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
+        content: StyledText.inherit(tooltip: true, this.configuration.name),
+        trailing: VisibilityArea.of(
+          enabled: this.configuration.batch != null,
+          child: Icon(IconSet.layers, color: StyledColorExtension.value(context, StyledColor.primary)).withStyledTooltip(message: 'Batch'),
         ),
-      ],
-    );
+        onPressed: (context) async {
+          this.onSelect(this.configuration.identifier);
+        },
+      ),
+    ]);
   }
 
 }
@@ -62,49 +54,39 @@ class MethodGroupItem extends StatelessWidget {
 
   // ----------------
 
-  final MethodGroupConfiguration configuration;
-  final Void Function(String)    onSelect;
-  final Boolean                  expanded;
-  final Void Function()          onToggle;
+  final MethodGroupConfiguration     configuration;
+  final Void Function(String method) onSelect;
+  final Boolean                      expanded;
+  final Void Function()              onToggle;
 
   // ----------------
 
   @override
   build(context) {
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
-          leading: Icon(IconHelper.queryOutlined(this.configuration.icon)),
-          title: Text(
-            this.configuration.name,
-            overflow: TextOverflow.ellipsis,
-          ).withTooltip(
-            message: this.configuration.name,
+    return FlexContainer.vertical([
+      StyledListTile.standardCustom(
+        padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+        leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
+        content: StyledText.inherit(tooltip: true, this.configuration.name),
+        trailing: FlexContainer.horizontal(mainStretch: false, [
+          StyledBadge.standard(
+            label: StyledText.inherit('${this.configuration.item.length}'),
           ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Badge.count(
-                count: this.configuration.item.length,
-              ),
-              SizedBox(width: 6),
-              Icon(!this.expanded ? IconSymbols.keyboard_arrow_down : IconSymbols.keyboard_arrow_left),
-            ],
-          ),
-          onTap: this.onToggle,
-        ),
-        Visibility(
-          visible: this.expanded,
-          child: Column(
-            children: this.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItem(
-              configuration: optionItem,
-              onSelect: this.onSelect,
-            )).toList(),
-          ),
-        ),
-      ],
-    );
+          Gap.horizontal(6),
+          Icon(!this.expanded ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_left),
+        ]),
+        onPressed: (context) async {
+          this.onToggle();
+        },
+      ),
+      VisibilityArea.of(
+        enabled: this.expanded,
+        child: FlexContainer.vertical(this.configuration.item.mapIndexed((optionItemIndex, optionItem) => MethodItem(
+          configuration: optionItem,
+          onSelect: this.onSelect,
+        ))),
+      ),
+    ]);
   }
 
 }

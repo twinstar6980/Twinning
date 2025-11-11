@@ -1,5 +1,6 @@
 import '/common.dart';
-import 'package:flutter/material.dart';
+import '/widget/export.dart';
+import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -15,30 +16,23 @@ class AboutPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              '${ApplicationInformation.name} - v${ApplicationInformation.version}',
-              overflow: TextOverflow.clip,
-              style: theme.textTheme.titleMedium!,
-            ).withExpanded(),
-          ],
-        ),
-        SizedBox(height: 8),
-        Row(
-          children: [
-            Text(
-              '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
-              overflow: TextOverflow.clip,
-              style: theme.textTheme.bodyMedium!,
-            ).withExpanded(),
-          ],
-        ),
-      ],
-    );
+    return FlexContainer.vertical([
+      FlexContainer.horizontal([
+        StyledText.custom(
+          '${ApplicationInformation.name} - v${ApplicationInformation.version}',
+          overflow: TextOverflow.clip,
+          variant: StyledTextVariant.titleMedium,
+        ).withFlexExpanded(),
+      ]),
+      Gap.vertical(8),
+      FlexContainer.horizontal([
+        StyledText.custom(
+          '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
+          overflow: TextOverflow.clip,
+          variant: StyledTextVariant.bodyMedium,
+        ).withFlexExpanded(),
+      ]),
+    ]);
   }
 
 }

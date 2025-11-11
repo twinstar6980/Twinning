@@ -1,16 +1,16 @@
 import '/common.dart';
 import '/setting.dart';
 import '/utility/convert_helper.dart';
-import '/utility/control_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
-import '/view/home/common.dart';
+import '/widget/export.dart';
+import '/view/home/module_page.dart';
 import '/view/resource_shipper/configuration.dart';
 import '/view/resource_shipper/option_item.dart';
 import '/view/modding_worker/forward_helper.dart' as modding_worker;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // ----------------
@@ -33,7 +33,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> implements CustomModulePageState {
+class _MainPageState extends State<MainPage> implements ModulePageState {
 
   late List<OptionGroupConfiguration>                   _optionConfiguration;
   late Boolean                                          _parallelForward;
@@ -225,7 +225,7 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
     this._optionMatch = [];
     this._optionExpanded = [];
     this._optionListScrollController = ScrollController();
-    ControlHelper.postTask(() async {
+    postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
     });
@@ -247,206 +247,180 @@ class _MainPageState extends State<MainPage> implements CustomModulePageState {
 
   @override
   build(context) {
-    return CustomModulePageRegion(
+    return ModulePageRegion(
       onDropFile: (item) async {
         await this._appendResource(item);
         return;
       },
-      content: Column(
-        children: [
-          ListView.builder(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            controller: this._optionListScrollController,
-            itemCount: this._optionConfiguration.length,
-            itemBuilder: (context, index) => OptionGroupItem(
-              configuration: this._optionConfiguration[index],
-              match: this._optionMatch[index],
-              enableFilter: this._enableFilter,
-              enableBatch: this._enableBatch,
-              onSelect: this._forwardResource,
-              expanded: this._optionExpanded[index],
-              onToggle: () async {
-                this._optionExpanded[index] = !this._optionExpanded[index];
-                await refreshState(this.setState);
-              },
-            ),
-          ).withScrollbar(
-            controller: this._optionListScrollController,
-          ).withExpanded(),
-        ],
-      ),
-      bottom: CustomBottomBarContent(
-        primary: Badge.count(
-          count: this._resource.length,
-          child: FloatingActionButton(
+      content: FlexContainer.vertical([
+        ListContainer.of(
+          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+          controller: this._optionListScrollController,
+          itemCount: this._optionConfiguration.length,
+          itemBuilder: (context, index) => OptionGroupItem(
+            configuration: this._optionConfiguration[index],
+            match: this._optionMatch[index],
+            enableFilter: this._enableFilter,
+            enableBatch: this._enableBatch,
+            onSelect: this._forwardResource,
+            expanded: this._optionExpanded[index],
+            onToggle: () async {
+              this._optionExpanded[index] = !this._optionExpanded[index];
+              await refreshState(this.setState);
+            },
+          ),
+        ).withStyledScrollBar(
+          controller: this._optionListScrollController,
+        ).withFlexExpanded(),
+      ]),
+      bottom: StyledBottomBar.standard(
+        primary: StyledBadge.standard(
+          label: StyledText.inherit('${this._resource.length}'),
+          child: StyledFloatingButton.standard(
             tooltip: 'Resource',
-            elevation: 0,
-            focusElevation: 0,
-            hoverElevation: 0,
-            highlightElevation: 0,
-            disabledElevation: 0,
-            child: Icon(IconSymbols.attach_file),
-            onPressed: () async {
-              await ControlHelper.showBottomSheetAsModal<Void>(context, CustomModalBottomSheet(
+            icon: Icon(IconSet.attach_file),
+            onPressed: (context) async {
+              await StyledBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
                 title: 'Resource',
                 contentBuilder: (context, setStateForPanel) => [
-                  SizedBox(height: 12),
-                  Row(
-                    children: [
-                      SizedBox(width: 16),
-                      FilledButton.icon(
-                        icon: Icon(IconSymbols.tab_close),
-                        label: Text(
-                          'Remove All',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onPressed: () async {
-                          if (await ControlHelper.showDialogForConfirm(context)) {
-                            await this._removeResource(this._resource.map((value) => value.$1).toList());
-                            await refreshState(setStateForPanel);
-                          }
-                        },
-                      ).withExpanded(),
-                      SizedBox(width: 12),
-                      FilledButton.icon(
-                        icon: Icon(IconSymbols.note_stack_add),
-                        label: Text(
-                          'Append New',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onPressed: () async {
-                          var item = <String>[];
-                          var canContinue = await ControlHelper.showDialogAsModal<Boolean>(context, CustomModalDialog(
-                            title: 'Append New',
-                            contentBuilder: (context, setStateForPanelInner) => [
-                              CustomTextField(
-                                keyboardType: TextInputType.multiline,
-                                inputFormatters: [],
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                                  filled: false,
-                                  border: OutlineInputBorder(),
-                                ),
-                                value: ConvertHelper.makeStringListToStringWithLine(item),
-                                onChanged: (value) async {
-                                  item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
-                                  await refreshState(setStateForPanelInner);
-                                },
-                              ),
-                            ],
-                            actionBuilder: (context) => [
-                              TextButton(
-                                child: Text('Cancel'),
-                                onPressed: () => Navigator.pop(context, false),
-                              ),
-                              TextButton(
-                                child: Text('Continue'),
-                                onPressed: () => Navigator.pop(context, true),
-                              ),
-                            ],
-                          )) ?? false;
-                          if (canContinue) {
-                            await this._appendResource(item);
-                            await refreshState(setStateForPanel);
-                          }
-                        },
-                      ).withExpanded(),
-                      SizedBox(width: 16),
-                    ],
-                  ),
-                  SizedBox(height: 12),
-                  Row(
-                    children: [
-                      SizedBox(width: 16),
-                      FilledButton.tonalIcon(
-                        icon: Icon(IconSymbols.note_add),
-                        label: Text(
-                          'Pick File',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onPressed: () async {
-                          var item = await StorageHelper.pickLoadFile(context, '@ResourceShipper.Resource');
-                          if (item != null) {
-                            await this._appendResource([item]);
-                            await refreshState(setStateForPanel);
-                          }
-                        },
-                      ).withExpanded(),
-                      SizedBox(width: 12),
-                      FilledButton.tonalIcon(
-                        icon: Icon(IconSymbols.create_new_folder),
-                        label: Text(
-                          'Pick Directory',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onPressed: () async {
-                          var item = await StorageHelper.pickLoadDirectory(context, '@ResourceShipper.Resource');
-                          if (item != null) {
-                            await this._appendResource([item]);
-                            await refreshState(setStateForPanel);
-                          }
-                        },
-                      ).withExpanded(),
-                      SizedBox(width: 16),
-                    ],
-                  ),
-                  SizedBox(height: 12),
-                  Divider(height: 1, indent: 16, endIndent: 16),
-                  SizedBox(height: 8),
-                  ...this._resource.map((value) => ListTile(
+                  Gap.vertical(12),
+                  FlexContainer.horizontal([
+                    Gap.horizontal(16),
+                    StyledButton.filled(
+                      icon: Icon(IconSet.tab_close),
+                      content: StyledText.inherit('Remove All'),
+                      onPressed: (context) async {
+                        if (await showDialogForConfirm(context)) {
+                          await this._removeResource(this._resource.map((value) => value.$1).toList());
+                          await refreshState(setStateForPanel);
+                        }
+                      },
+                    ).withFlexExpanded(),
+                    Gap.horizontal(12),
+                    StyledButton.filled(
+                      icon: Icon(IconSet.note_stack_add),
+                      content: StyledText.inherit('Append New'),
+                      onPressed: (context) async {
+                        var item = <String>[];
+                        var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
+                          title: 'Append New',
+                          contentBuilder: (context, setStateForPanelInner) => [
+                            StyledInput.outlined(
+                              type: StyledInputType.multiline,
+                              format: [],
+                              hint: null,
+                              prefix: null,
+                              suffix: null,
+                              value: ConvertHelper.makeStringListToStringWithLine(item),
+                              onChanged: (context, value) async {
+                                item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                                await refreshState(setStateForPanelInner);
+                              },
+                            ),
+                          ],
+                          actionBuilder: (context) => [
+                            StyledButton.text(
+                              content: StyledText.inherit('Cancel'),
+                              onPressed: (context) => Navigator.pop(context, false),
+                            ),
+                            StyledButton.text(
+                              content: StyledText.inherit('Continue'),
+                              onPressed: (context) => Navigator.pop(context, true),
+                            ),
+                          ],
+                        )) ?? false;
+                        if (canContinue) {
+                          await this._appendResource(item);
+                          await refreshState(setStateForPanel);
+                        }
+                      },
+                    ).withFlexExpanded(),
+                    Gap.horizontal(16),
+                  ]),
+                  Gap.vertical(12),
+                  FlexContainer.horizontal([
+                    Gap.horizontal(16),
+                    StyledButton.filledTonal(
+                      icon: Icon(IconSet.note_add),
+                      content: StyledText.inherit('Pick File'),
+                      onPressed: (context) async {
+                        var item = await StorageHelper.pickLoadFile(context, '@ResourceShipper.Resource');
+                        if (item != null) {
+                          await this._appendResource([item]);
+                          await refreshState(setStateForPanel);
+                        }
+                      },
+                    ).withFlexExpanded(),
+                    Gap.horizontal(12),
+                    StyledButton.filledTonal(
+                      icon: Icon(IconSet.create_new_folder),
+                      content: StyledText.inherit('Pick Directory'),
+                      onPressed: (context) async {
+                        var item = await StorageHelper.pickLoadDirectory(context, '@ResourceShipper.Resource');
+                        if (item != null) {
+                          await this._appendResource([item]);
+                          await refreshState(setStateForPanel);
+                        }
+                      },
+                    ).withFlexExpanded(),
+                    Gap.horizontal(16),
+                  ]),
+                  Gap.vertical(12),
+                  StyledDivider.minimal(indent: 16),
+                  Gap.vertical(8),
+                  ...this._resource.map((value) => StyledListTile.standardCustom(
                     key: ObjectKey(value),
-                    contentPadding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
                     leading: Icon(switch (value.$2) {
-                      null  => IconSymbols.hide_source,
-                      false => IconSymbols.draft,
-                      true  => IconSymbols.folder,
+                      null  => IconSet.hide_source,
+                      false => IconSet.draft,
+                      true  => IconSet.folder,
                     }),
-                    title: Text(
+                    content: StyledText.custom(
                       StorageHelper.name(value.$1),
-                      overflow: TextOverflow.ellipsis,
-                    ).withTooltip(
-                      message: value.$1,
+                      tooltip: true,
+                      tooltipText: value.$1,
                     ),
-                    onTap: () async {
+                    onPressed: (context) async {
                       await this._removeResource([value.$1]);
                       await refreshState(setStateForPanel);
                     },
                   )),
-                  SizedBox(height: 8),
+                  Gap.vertical(8),
                 ],
               ));
             },
           ),
         ),
         secondary: [
-          IconButton.filledTonal(
+          StyledIconButton.filledTonal(
             tooltip: 'Parallel Forward',
-            isSelected: this._parallelForward,
-            icon: Icon(IconSymbols.shuffle),
-            selectedIcon: Icon(IconSymbols.shuffle, fill: 1),
-            onPressed: () async {
+            selected: this._parallelForward,
+            icon: Icon(IconSet.shuffle),
+            iconOnSelected: Icon(IconSet.shuffle, fill: 1),
+            onPressed: (context) async {
               this._parallelForward = !this._parallelForward;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Enable Filter',
-            isSelected: this._enableFilter,
-            icon: Icon(IconSymbols.filter_alt),
-            selectedIcon: Icon(IconSymbols.filter_alt, fill: 1),
-            onPressed: () async {
+            selected: this._enableFilter,
+            icon: Icon(IconSet.filter_alt),
+            iconOnSelected: Icon(IconSet.filter_alt, fill: 1),
+            onPressed: (context) async {
               this._enableFilter = !this._enableFilter;
               await refreshState(this.setState);
             },
           ),
-          SizedBox(width: 8),
-          IconButton.filledTonal(
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Enable Batch',
-            isSelected: this._enableBatch,
-            icon: Icon(IconSymbols.stacks),
-            selectedIcon: Icon(IconSymbols.stacks, fill: 1),
-            onPressed: () async {
+            selected: this._enableBatch,
+            icon: Icon(IconSet.stacks),
+            iconOnSelected: Icon(IconSet.stacks, fill: 1),
+            onPressed: (context) async {
               this._enableBatch = !this._enableBatch;
               await refreshState(this.setState);
             },

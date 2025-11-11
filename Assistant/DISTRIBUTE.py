@@ -48,7 +48,7 @@ def main(platform: str) -> None:
         })
         pack_zip(
             'assistant',
-            f'{module_directory}/build/linux/x64/runner/bundle',
+            f'{module_directory}/build/linux/x64/release/bundle',
             f'{module_distribution_file}',
         )
     if platform in ['macintosh.arm64']:
