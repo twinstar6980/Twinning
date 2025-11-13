@@ -9,7 +9,15 @@ import 'package:dynamic_color/dynamic_color.dart' as lib;
 
 // ----------------
 
-// #region color
+// #region common
+
+enum StyledThemeMode {
+  system,
+  light,
+  dark,
+}
+
+// ----------------
 
 enum StyledColor {
   disabled,
@@ -42,29 +50,78 @@ extension StyledColorExtension<TType extends Widget> on TType {
     BuildContext context,
     StyledColor  variant,
   ) {
+    var theme = material.Theme.of(context);
     return switch (variant) {
-      StyledColor.disabled                => material.Theme.of(context).disabledColor,
-      StyledColor.primary                 => material.Theme.of(context).colorScheme.primary,
-      StyledColor.primaryContainer        => material.Theme.of(context).colorScheme.primaryContainer,
-      StyledColor.onPrimary               => material.Theme.of(context).colorScheme.onPrimary,
-      StyledColor.secondary               => material.Theme.of(context).colorScheme.secondary,
-      StyledColor.secondaryContainer      => material.Theme.of(context).colorScheme.secondaryContainer,
-      StyledColor.onSecondary             => material.Theme.of(context).colorScheme.onSecondary,
-      StyledColor.tertiary                => material.Theme.of(context).colorScheme.tertiary,
-      StyledColor.tertiaryContainer       => material.Theme.of(context).colorScheme.tertiaryContainer,
-      StyledColor.onTertiary              => material.Theme.of(context).colorScheme.onTertiary,
-      StyledColor.error                   => material.Theme.of(context).colorScheme.error,
-      StyledColor.errorContainer          => material.Theme.of(context).colorScheme.errorContainer,
-      StyledColor.onError                 => material.Theme.of(context).colorScheme.onError,
-      StyledColor.surface                 => material.Theme.of(context).colorScheme.surface,
-      StyledColor.surfaceTint             => material.Theme.of(context).colorScheme.surfaceTint,
-      StyledColor.surfaceContainerLowest  => material.Theme.of(context).colorScheme.surfaceContainerLowest,
-      StyledColor.surfaceContainerLow     => material.Theme.of(context).colorScheme.surfaceContainerLow,
-      StyledColor.surfaceContainer        => material.Theme.of(context).colorScheme.surfaceContainer,
-      StyledColor.surfaceContainerHigh    => material.Theme.of(context).colorScheme.surfaceContainerHigh,
-      StyledColor.surfaceContainerHighest => material.Theme.of(context).colorScheme.surfaceContainerHighest,
-      StyledColor.onSurface               => material.Theme.of(context).colorScheme.onSurface,
-      StyledColor.onSurfaceVariant        => material.Theme.of(context).colorScheme.onSurfaceVariant,
+      .disabled                => theme.disabledColor,
+      .primary                 => theme.colorScheme.primary,
+      .primaryContainer        => theme.colorScheme.primaryContainer,
+      .onPrimary               => theme.colorScheme.onPrimary,
+      .secondary               => theme.colorScheme.secondary,
+      .secondaryContainer      => theme.colorScheme.secondaryContainer,
+      .onSecondary             => theme.colorScheme.onSecondary,
+      .tertiary                => theme.colorScheme.tertiary,
+      .tertiaryContainer       => theme.colorScheme.tertiaryContainer,
+      .onTertiary              => theme.colorScheme.onTertiary,
+      .error                   => theme.colorScheme.error,
+      .errorContainer          => theme.colorScheme.errorContainer,
+      .onError                 => theme.colorScheme.onError,
+      .surface                 => theme.colorScheme.surface,
+      .surfaceTint             => theme.colorScheme.surfaceTint,
+      .surfaceContainerLowest  => theme.colorScheme.surfaceContainerLowest,
+      .surfaceContainerLow     => theme.colorScheme.surfaceContainerLow,
+      .surfaceContainer        => theme.colorScheme.surfaceContainer,
+      .surfaceContainerHigh    => theme.colorScheme.surfaceContainerHigh,
+      .surfaceContainerHighest => theme.colorScheme.surfaceContainerHighest,
+      .onSurface               => theme.colorScheme.onSurface,
+      .onSurfaceVariant        => theme.colorScheme.onSurfaceVariant,
+    };
+  }
+
+}
+
+// ----------------
+
+enum StyledTypography {
+  displayLarge,
+  displayMedium,
+  displaySmall,
+  headlineLarge,
+  headlineMedium,
+  headlineSmall,
+  titleLarge,
+  titleMedium,
+  titleSmall,
+  bodyLarge,
+  bodyMedium,
+  bodySmall,
+  labelLarge,
+  labelMedium,
+  labelSmall,
+}
+
+extension StyledTypographyExtension<TType extends Widget> on TType {
+
+  static TextStyle value(
+    BuildContext     context,
+    StyledTypography variant,
+  ) {
+    var theme = material.Theme.of(context);
+    return switch (variant) {
+      .displayLarge   => theme.textTheme.displayLarge!,
+      .displayMedium  => theme.textTheme.displayMedium!,
+      .displaySmall   => theme.textTheme.displaySmall!,
+      .headlineLarge  => theme.textTheme.headlineLarge!,
+      .headlineMedium => theme.textTheme.headlineMedium!,
+      .headlineSmall  => theme.textTheme.headlineSmall!,
+      .titleLarge     => theme.textTheme.titleLarge!,
+      .titleMedium    => theme.textTheme.titleMedium!,
+      .titleSmall     => theme.textTheme.titleSmall!,
+      .bodyLarge      => theme.textTheme.bodyLarge!,
+      .bodyMedium     => theme.textTheme.bodyMedium!,
+      .bodySmall      => theme.textTheme.bodySmall!,
+      .labelLarge     => theme.textTheme.labelLarge!,
+      .labelMedium    => theme.textTheme.labelMedium!,
+      .labelSmall     => theme.textTheme.labelSmall!,
     };
   }
 
@@ -91,7 +148,7 @@ class StyledMaterial extends StatelessWidget {
     required Widget child,
   }) : this._(
     key: key,
-    variant: StyledMaterialVariant.standard,
+    variant: .standard,
     child: child,
   );
 
@@ -105,7 +162,7 @@ class StyledMaterial extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledMaterialVariant.standard => material.Material(
+      .standard => material.Material(
         type: material.MaterialType.transparency,
         child: this.child,
       ),
@@ -148,7 +205,7 @@ class StyledTooltip extends StatelessWidget {
     required Widget child,
   }) : this._(
     key: key,
-    variant: StyledTooltipVariant.standard,
+    variant: .standard,
     message: message,
     child: child,
   );
@@ -164,7 +221,7 @@ class StyledTooltip extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledTooltipVariant.standard => material.Tooltip(
+      .standard => material.Tooltip(
         message: this.message == null ? null : this.message == '' ? ' ' : this.message,
         child: this.child,
       ),
@@ -209,7 +266,7 @@ class StyledBadge extends StatelessWidget {
     Widget? child = null,
   }) : this._(
     key: key,
-    variant: StyledBadgeVariant.standard,
+    variant: .standard,
     visible: visible,
     label: label,
     child: child,
@@ -227,7 +284,7 @@ class StyledBadge extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledBadgeVariant.standard => material.Badge(
+      .standard => material.Badge(
         isLabelVisible: this.visible,
         label: this.label,
         child: this.child,
@@ -257,7 +314,7 @@ class StyledDivider extends StatelessWidget {
     Floater indent = 0,
   }) : this._(
     key: key,
-    variant: StyledDividerVariant.standard,
+    variant: .standard,
     indent: indent,
   );
 
@@ -266,7 +323,7 @@ class StyledDivider extends StatelessWidget {
     Floater indent = 0,
   }) : this._(
     key: key,
-    variant: StyledDividerVariant.minimal,
+    variant: .minimal,
     indent: indent,
   );
 
@@ -280,12 +337,12 @@ class StyledDivider extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledDividerVariant.standard => material.Divider(
+      .standard => material.Divider(
         height: 16,
         indent: this.indent,
         endIndent: this.indent,
       ),
-      StyledDividerVariant.minimal => material.Divider(
+      .minimal => material.Divider(
         height: 1,
         indent: this.indent,
         endIndent: this.indent,
@@ -317,7 +374,7 @@ class StyledProgress extends StatelessWidget {
     Floater? value = null,
   }) : this._(
     key: key,
-    variant: StyledProgressVariant.linear,
+    variant: .linear,
     paused: paused,
     value: value,
   );
@@ -328,7 +385,7 @@ class StyledProgress extends StatelessWidget {
     Floater? value = null,
   }) : this._(
     key: key,
-    variant: StyledProgressVariant.circular,
+    variant: .circular,
     paused: paused,
     value: value,
   );
@@ -344,12 +401,12 @@ class StyledProgress extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledProgressVariant.linear => material.LinearProgressIndicator(
-        color: !this.paused ? null : material.Theme.of(context).colorScheme.tertiary,
+      .linear => material.LinearProgressIndicator(
+        color: !this.paused ? null : StyledColorExtension.value(context, .tertiary),
         value: this.value ?? (!this.paused ? null : 1),
       ),
-      StyledProgressVariant.circular => material.CircularProgressIndicator(
-        color: !this.paused ? null : material.Theme.of(context).colorScheme.tertiary,
+      .circular => material.CircularProgressIndicator(
+        color: !this.paused ? null : StyledColorExtension.value(context, .tertiary),
         value: this.value ?? (!this.paused ? null : 1),
       ),
     };
@@ -366,10 +423,10 @@ extension StyledSnackExtension<TType extends Widget> on TType {
     String       content,
   ) async {
     material.ScaffoldMessenger.of(context).showSnackBar(material.SnackBar(
-      behavior: material.SnackBarBehavior.floating,
+      behavior: .floating,
       content: StyledText.custom(
         content,
-        overflow: TextOverflow.clip,
+        overflow: .clip,
       ),
     ));
     return;
@@ -381,37 +438,18 @@ extension StyledSnackExtension<TType extends Widget> on TType {
 
 // #region text
 
-enum StyledTextVariant {
-  displayLarge,
-  displayMedium,
-  displaySmall,
-  headlineLarge,
-  headlineMedium,
-  headlineSmall,
-  titleLarge,
-  titleMedium,
-  titleSmall,
-  bodyLarge,
-  bodyMedium,
-  bodySmall,
-  labelLarge,
-  labelMedium,
-  labelSmall,
-}
-
 typedef StyledTextOverflow = TextOverflow;
 
 typedef StyledTextAlign = TextAlign;
 
-// TODO: unfinished
 class StyledText extends StatelessWidget {
 
   const StyledText._({
     super.key,
     required this.text,
-    required this.variant,
     required this.tooltip,
     required this.tooltipText,
+    required this.typography,
     required this.color,
     required this.overflow,
     required this.align,
@@ -419,42 +457,20 @@ class StyledText extends StatelessWidget {
   });
 
   const StyledText.inherit(
-    String             text, {
-    Key?               key = null,
-    Boolean            tooltip = false,
-    String?            tooltipText = null,
-    StyledColor?       color = null,
-    StyledTextOverflow overflow = TextOverflow.ellipsis,
-    StyledTextAlign    align = TextAlign.start,
-    TextStyle?         style = null,
+    String              text, {
+    Key?                key = null,
+    Boolean             tooltip = false,
+    String?             tooltipText = null,
+    StyledColor?        color = null,
+    StyledTextOverflow? overflow = .ellipsis,
+    StyledTextAlign?    align = null,
+    TextStyle?          style = null,
   }) : this._(
     key: key,
     text: text,
-    variant: null,
     tooltip: tooltip,
     tooltipText: tooltipText,
-    color: color,
-    overflow: overflow,
-    align: align,
-    style: style,
-  );
-
-  const StyledText.variant(
-    StyledTextVariant? variant,
-    String             text, {
-    Key?               key = null,
-    Boolean            tooltip = false,
-    String?            tooltipText = null,
-    StyledColor?       color = null,
-    StyledTextOverflow overflow = TextOverflow.ellipsis,
-    StyledTextAlign    align = TextAlign.start,
-    TextStyle?         style = null,
-  }) : this._(
-    key: key,
-    text: text,
-    variant: variant,
-    tooltip: tooltip,
-    tooltipText: tooltipText,
+    typography: null,
     color: color,
     overflow: overflow,
     align: align,
@@ -462,21 +478,21 @@ class StyledText extends StatelessWidget {
   );
 
   const StyledText.custom(
-    String             text, {
-    Key?               key = null,
-    StyledTextVariant? variant = null,
-    Boolean            tooltip = false,
-    String?            tooltipText = null,
-    StyledColor?       color = null,
-    StyledTextOverflow overflow = TextOverflow.ellipsis,
-    StyledTextAlign    align = TextAlign.start,
-    TextStyle?         style = null,
+    String              text, {
+    Key?                key = null,
+    Boolean             tooltip = false,
+    String?             tooltipText = null,
+    StyledTypography?   typography = null,
+    StyledColor?        color = null,
+    StyledTextOverflow? overflow = .ellipsis,
+    StyledTextAlign?    align = null,
+    TextStyle?          style = null,
   }) : this._(
     key: key,
     text: text,
-    variant: variant,
     tooltip: tooltip,
     tooltipText: tooltipText,
+    typography: typography,
     color: color,
     overflow: overflow,
     align: align,
@@ -485,44 +501,26 @@ class StyledText extends StatelessWidget {
 
   // ----------------
 
-  final String             text;
-  final StyledTextVariant? variant;
-  final StyledColor?       color;
-  final Boolean            tooltip;
-  final String?            tooltipText;
-  final StyledTextOverflow overflow;
-  final StyledTextAlign    align;
-  final TextStyle?         style;
+  final String              text;
+  final Boolean             tooltip;
+  final String?             tooltipText;
+  final StyledTypography?   typography;
+  final StyledColor?        color;
+  final StyledTextOverflow? overflow;
+  final StyledTextAlign?    align;
+  final TextStyle?          style;
 
   // ----------------
 
   @override
   build(context) {
-    var style = switch (this.variant) {
-      null                             => TextStyle(inherit: true),
-      StyledTextVariant.displayLarge   => material.Theme.of(context).textTheme.displayLarge!,
-      StyledTextVariant.displayMedium  => material.Theme.of(context).textTheme.displayMedium!,
-      StyledTextVariant.displaySmall   => material.Theme.of(context).textTheme.displaySmall!,
-      StyledTextVariant.headlineLarge  => material.Theme.of(context).textTheme.headlineLarge!,
-      StyledTextVariant.headlineMedium => material.Theme.of(context).textTheme.headlineMedium!,
-      StyledTextVariant.headlineSmall  => material.Theme.of(context).textTheme.headlineSmall!,
-      StyledTextVariant.titleLarge     => material.Theme.of(context).textTheme.titleLarge!,
-      StyledTextVariant.titleMedium    => material.Theme.of(context).textTheme.titleMedium!,
-      StyledTextVariant.titleSmall     => material.Theme.of(context).textTheme.titleSmall!,
-      StyledTextVariant.bodyLarge      => material.Theme.of(context).textTheme.bodyLarge!,
-      StyledTextVariant.bodyMedium     => material.Theme.of(context).textTheme.bodyMedium!,
-      StyledTextVariant.bodySmall      => material.Theme.of(context).textTheme.bodySmall!,
-      StyledTextVariant.labelLarge     => material.Theme.of(context).textTheme.labelLarge!,
-      StyledTextVariant.labelMedium    => material.Theme.of(context).textTheme.labelMedium!,
-      StyledTextVariant.labelSmall     => material.Theme.of(context).textTheme.labelSmall!,
-    }.merge(this.style).copyWith(
-      color: this.color == null ? null : StyledColorExtension.value(context, this.color!),
-    );
     return Text(
       this.text,
       overflow: this.overflow,
       textAlign: this.align,
-      style: style,
+      style: (this.typography == null ? TextStyle(inherit: true) : StyledTypographyExtension.value(context, this.typography!)).merge(this.style).copyWith(
+        color: this.color == null ? null : StyledColorExtension.value(context, this.color!),
+      ),
     ).selfLet((it) => !this.tooltip ? it : it.withStyledTooltip(message: this.tooltipText ?? this.text));
   }
 
@@ -558,13 +556,13 @@ class StyledButton extends StatelessWidget {
     Key?                                         key = null,
     Boolean                                      enabled = true,
     String?                                      tooltip = null,
-    StyledButtonIconAlign                        iconAlign = StyledButtonIconAlign.start,
+    StyledButtonIconAlign                        iconAlign = .start,
     Widget?                                      icon = null,
     required Widget                              content,
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledButtonVariant.text,
+    variant: .text,
     enabled: enabled,
     tooltip: tooltip,
     iconAlign: iconAlign,
@@ -577,13 +575,13 @@ class StyledButton extends StatelessWidget {
     Key?                                         key = null,
     Boolean                                      enabled = true,
     String?                                      tooltip = null,
-    StyledButtonIconAlign                        iconAlign = StyledButtonIconAlign.start,
+    StyledButtonIconAlign                        iconAlign = .start,
     Widget?                                      icon = null,
     required Widget                              content,
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledButtonVariant.filled,
+    variant: .filled,
     enabled: enabled,
     tooltip: tooltip,
     iconAlign: iconAlign,
@@ -596,13 +594,13 @@ class StyledButton extends StatelessWidget {
     Key?                                         key = null,
     Boolean                                      enabled = true,
     String?                                      tooltip = null,
-    StyledButtonIconAlign                        iconAlign = StyledButtonIconAlign.start,
+    StyledButtonIconAlign                        iconAlign = .start,
     Widget?                                      icon = null,
     required Widget                              content,
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledButtonVariant.filledTonal,
+    variant: .filledTonal,
     enabled: enabled,
     tooltip: tooltip,
     iconAlign: iconAlign,
@@ -615,13 +613,13 @@ class StyledButton extends StatelessWidget {
     Key?                                         key = null,
     Boolean                                      enabled = true,
     String?                                      tooltip = null,
-    StyledButtonIconAlign                        iconAlign = StyledButtonIconAlign.start,
+    StyledButtonIconAlign                        iconAlign = .start,
     Widget?                                      icon = null,
     required Widget                              content,
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledButtonVariant.outlined,
+    variant: .outlined,
     enabled: enabled,
     tooltip: tooltip,
     iconAlign: iconAlign,
@@ -645,25 +643,25 @@ class StyledButton extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledButtonVariant.text => material.TextButton.icon(
+      .text => material.TextButton.icon(
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledButtonVariant.filled => material.FilledButton.icon(
+      .filled => material.FilledButton.icon(
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledButtonVariant.filledTonal => material.FilledButton.tonalIcon(
+      .filledTonal => material.FilledButton.tonalIcon(
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledButtonVariant.outlined => material.OutlinedButton.icon(
+      .outlined => material.OutlinedButton.icon(
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
@@ -706,7 +704,7 @@ class StyledIconButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledIconButtonVariant.standard,
+    variant: .standard,
     enabled: enabled,
     tooltip: tooltip,
     selected: selected,
@@ -725,7 +723,7 @@ class StyledIconButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledIconButtonVariant.filled,
+    variant: .filled,
     enabled: enabled,
     tooltip: tooltip,
     selected: selected,
@@ -744,7 +742,7 @@ class StyledIconButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledIconButtonVariant.filledTonal,
+    variant: .filledTonal,
     enabled: enabled,
     tooltip: tooltip,
     selected: selected,
@@ -763,7 +761,7 @@ class StyledIconButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledIconButtonVariant.outlined,
+    variant: .outlined,
     enabled: enabled,
     tooltip: tooltip,
     selected: selected,
@@ -787,25 +785,25 @@ class StyledIconButton extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledIconButtonVariant.standard => material.IconButton(
+      .standard => material.IconButton(
         isSelected: this.selected,
         icon: this.icon,
         selectedIcon: this.iconOnSelected,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledIconButtonVariant.filled => material.IconButton.filled(
+      .filled => material.IconButton.filled(
         isSelected: this.selected,
         icon: this.icon,
         selectedIcon: this.iconOnSelected,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledIconButtonVariant.filledTonal => material.IconButton.filledTonal(
+      .filledTonal => material.IconButton.filledTonal(
         isSelected: this.selected,
         icon: this.icon,
         selectedIcon: this.iconOnSelected,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledIconButtonVariant.outlined => material.IconButton.outlined(
+      .outlined => material.IconButton.outlined(
         isSelected: this.selected,
         icon: this.icon,
         selectedIcon: this.iconOnSelected,
@@ -845,7 +843,7 @@ class StyledFloatingButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledFloatingButtonVariant.standard,
+    variant: .standard,
     enabled: enabled,
     tooltip: tooltip,
     icon: icon,
@@ -861,7 +859,7 @@ class StyledFloatingButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledFloatingButtonVariant.smaller,
+    variant: .smaller,
     enabled: enabled,
     tooltip: tooltip,
     icon: icon,
@@ -877,7 +875,7 @@ class StyledFloatingButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledFloatingButtonVariant.larger,
+    variant: .larger,
     enabled: enabled,
     tooltip: tooltip,
     icon: icon,
@@ -894,7 +892,7 @@ class StyledFloatingButton extends StatelessWidget {
     required Void Function(BuildContext context) onPressed,
   }) : this._(
     key: key,
-    variant: StyledFloatingButtonVariant.expanded,
+    variant: .expanded,
     enabled: enabled,
     tooltip: tooltip,
     icon: icon,
@@ -916,7 +914,7 @@ class StyledFloatingButton extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledFloatingButtonVariant.standard => material.FloatingActionButton(
+      .standard => material.FloatingActionButton(
         elevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
@@ -925,7 +923,7 @@ class StyledFloatingButton extends StatelessWidget {
         child: this.icon,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledFloatingButtonVariant.smaller => material.FloatingActionButton.small(
+      .smaller => material.FloatingActionButton.small(
         elevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
@@ -934,7 +932,7 @@ class StyledFloatingButton extends StatelessWidget {
         child: this.icon,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledFloatingButtonVariant.larger => material.FloatingActionButton.large(
+      .larger => material.FloatingActionButton.large(
         elevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
@@ -943,7 +941,7 @@ class StyledFloatingButton extends StatelessWidget {
         child: this.icon,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
-      StyledFloatingButtonVariant.expanded => material.FloatingActionButton.extended(
+      .expanded => material.FloatingActionButton.extended(
         elevation: 0,
         focusElevation: 0,
         hoverElevation: 0,
@@ -985,7 +983,7 @@ class StyledCheck extends StatelessWidget {
     required Void Function(BuildContext context, Boolean? value) onChanged,
   }) : this._(
     key: key,
-    variant: StyledCheckVariant.standard,
+    variant: .standard,
     enabled: enabled,
     tooltip: tooltip,
     value: value,
@@ -1005,7 +1003,7 @@ class StyledCheck extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledCheckVariant.standard => material.Checkbox(
+      .standard => material.Checkbox(
         value: this.value,
         onChanged: !this.enabled ? null : (value) => this.onChanged(context, value),
       ),
@@ -1039,7 +1037,7 @@ class StyledSwitch extends StatelessWidget {
     required Void Function(BuildContext context, Boolean value) onChanged,
   }) : this._(
     key: key,
-    variant: StyledSwitchVariant.standard,
+    variant: .standard,
     enabled: enabled,
     tooltip: tooltip,
     value: value,
@@ -1059,7 +1057,7 @@ class StyledSwitch extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledSwitchVariant.standard => material.Switch(
+      .standard => material.Switch(
         value: this.value,
         onChanged: !this.enabled ? null : (value) => this.onChanged(context, value),
       ),
@@ -1093,7 +1091,7 @@ class StyledRadio extends StatelessWidget {
     required Void Function(BuildContext context) onChanged,
   }) : this._(
     key: key,
-    variant: StyledRadioVariant.standard,
+    variant: .standard,
     enabled: enabled,
     tooltip: tooltip,
     value: value,
@@ -1113,7 +1111,7 @@ class StyledRadio extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledRadioVariant.standard => RadioGroup(
+      .standard => RadioGroup(
         groupValue: this.value,
         onChanged: (value) => this.onChanged(context),
         child: material.Radio(
@@ -1159,7 +1157,7 @@ class StyledSlider extends StatelessWidget {
     required Void Function(BuildContext context, Floater value)? onChangeEnd,
   }) : this._(
     key: key,
-    variant: StyledSliderVariant.standard,
+    variant: .standard,
     enabled: enabled,
     tooltip: tooltip,
     minimum: minimum,
@@ -1187,7 +1185,7 @@ class StyledSlider extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledSliderVariant.standard => material.Slider(
+      .standard => material.Slider(
         min: this.minimum,
         max: this.maximum,
         value: this.value,
@@ -1210,9 +1208,7 @@ enum StyledInputVariant {
 
 typedef StyledInputType = TextInputType;
 
-typedef StyledInputFormatter = TextInputFormatter;
-
-typedef StyledInputFilteringFormatter = FilteringTextInputFormatter;
+typedef StyledInputFormatter = RegExp;
 
 class StyledInput extends StatefulWidget {
 
@@ -1235,15 +1231,15 @@ class StyledInput extends StatefulWidget {
     TextStyle?                                                 style = null,
     Boolean                                                    enabled = true,
     required StyledInputType                                   type,
-    required List<StyledInputFormatter>                        format,
+    required StyledInputFormatter?                             format,
     required String?                                           hint,
-    required IconData?                                         prefix,
+    required Widget?                                           prefix,
     required List<Widget>?                                     suffix,
     required String                                            value,
     required Void Function(BuildContext context, String value) onChanged,
   }) : this._(
     key: key,
-    variant: StyledInputVariant.filled,
+    variant: .filled,
     style: style,
     enabled: enabled,
     type: type,
@@ -1260,15 +1256,15 @@ class StyledInput extends StatefulWidget {
     TextStyle?                                                 style = null,
     Boolean                                                    enabled = true,
     required StyledInputType                                   type,
-    required List<StyledInputFormatter>                        format,
+    required StyledInputFormatter?                             format,
     required String?                                           hint,
-    required IconData?                                         prefix,
+    required Widget?                                           prefix,
     required List<Widget>?                                     suffix,
     required String                                            value,
     required Void Function(BuildContext context, String value) onChanged,
   }) : this._(
     key: key,
-    variant: StyledInputVariant.outlined,
+    variant: .outlined,
     style: style,
     enabled: enabled,
     type: type,
@@ -1285,15 +1281,15 @@ class StyledInput extends StatefulWidget {
     TextStyle?                                                 style = null,
     Boolean                                                    enabled = true,
     required StyledInputType                                   type,
-    required List<StyledInputFormatter>                        format,
+    required StyledInputFormatter?                             format,
     required String?                                           hint,
-    required IconData?                                         prefix,
+    required Widget?                                           prefix,
     required List<Widget>?                                     suffix,
     required String                                            value,
     required Void Function(BuildContext context, String value) onChanged,
   }) : this._(
     key: key,
-    variant: StyledInputVariant.underlined,
+    variant: .underlined,
     style: style,
     enabled: enabled,
     type: type,
@@ -1308,12 +1304,12 @@ class StyledInput extends StatefulWidget {
   // ----------------
 
   final StyledInputVariant                                variant;
-  final TextStyle?                                        style;
+  final TextStyle?                                        style; // TODO: remove?
   final Boolean                                           enabled;
   final StyledInputType                                   type;
-  final List<StyledInputFormatter>                        format;
+  final StyledInputFormatter?                             format;
   final String?                                           hint;
-  final IconData?                                         prefix;
+  final Widget?                                           prefix;
   final List<Widget>?                                     suffix;
   final String                                            value;
   final Void Function(BuildContext context, String value) onChanged;
@@ -1358,39 +1354,6 @@ class _StyledInputState extends State<StyledInput> {
 
   @override
   build(context) {
-    var decoration = switch (this.widget.variant) {
-      StyledInputVariant.filled => material.InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-        filled: true,
-        border: material.UnderlineInputBorder(),
-      ),
-      StyledInputVariant.outlined => material.InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-        filled: false,
-        border: material.OutlineInputBorder(),
-      ),
-      StyledInputVariant.underlined => material.InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-        filled: false,
-        border: material.UnderlineInputBorder(),
-      ),
-    };
-    decoration = decoration.copyWith(
-      contentPadding: decoration.contentPadding,
-      filled: decoration.filled,
-      border: decoration.border,
-      hintText: this.widget.hint,
-      prefixIcon: this.widget.prefix == null
-        ? null
-        : Icon(this.widget.prefix!),
-      suffixIcon: this.widget.suffix == null
-        ? null
-        : FlexContainer.horizontal(mainStretch: false, [
-          Gap.horizontal(4),
-          ...this.widget.suffix!,
-          Gap.horizontal(4),
-        ]),
-    );
     return Focus(
       focusNode: this._focusNode,
       onFocusChange: (value) async {
@@ -1402,10 +1365,36 @@ class _StyledInputState extends State<StyledInput> {
         style: this.widget.style,
         enabled: this.widget.enabled,
         keyboardType: this.widget.type,
-        maxLines: this.widget.type == StyledInputType.multiline ? null : 1,
-        inputFormatters: this.widget.format,
-        decoration: decoration,
-        readOnly: this.widget.type == StyledInputType.none,
+        maxLines: this.widget.type == .multiline ? null : 1,
+        inputFormatters: this.widget.format == null ? null : [FilteringTextInputFormatter.allow(this.widget.format!)],
+        decoration: switch (this.widget.variant) {
+          .filled => material.InputDecoration(
+            contentPadding: .fromLTRB(12, 16, 12, 16),
+            filled: true,
+            border: material.UnderlineInputBorder(),
+          ),
+          .outlined => material.InputDecoration(
+            contentPadding: .fromLTRB(12, 16, 12, 16),
+            filled: false,
+            border: material.OutlineInputBorder(),
+          ),
+          .underlined => material.InputDecoration(
+            contentPadding: .fromLTRB(8, 12, 8, 12),
+            filled: false,
+            border: material.UnderlineInputBorder(),
+          ),
+        }.copyWith(
+          hintText: this.widget.hint,
+          prefixIcon: this.widget.prefix,
+          suffixIcon: this.widget.suffix == null
+            ? null
+            : FlexContainer.horizontal(mainStretch: false, [
+              Gap.horizontal(4),
+              ...this.widget.suffix!,
+              Gap.horizontal(4),
+            ]),
+        ),
+        readOnly: this.widget.type == .none,
         controller: this._valueController,
         onTapOutside: (event) async {
           this._focusNode.unfocus();
@@ -1417,6 +1406,12 @@ class _StyledInputState extends State<StyledInput> {
 }
 
 // ----------------
+
+enum StyledInputComboVariant {
+  filled,
+  outlined,
+  underlined,
+}
 
 class StyledInputCombo extends StatefulWidget {
 
@@ -1433,20 +1428,65 @@ class StyledInputCombo extends StatefulWidget {
     required this.onChanged,
   });
 
-  // TODO: variant more
-  const StyledInputCombo.underlined({
+  const StyledInputCombo.filled({
     Key?                                                        key = null,
     TextStyle?                                                  style = null,
     Boolean                                                     enabled = true,
     required String?                                            hint,
-    required IconData?                                          prefix,
+    required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
     required List<(Object, String)>                             option,
     required String                                             value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
     key: key,
-    variant: StyledInputVariant.underlined,
+    variant: .filled,
+    style: style,
+    enabled: enabled,
+    hint: hint,
+    prefix: prefix,
+    suffix: suffix,
+    option: option,
+    value: value,
+    onChanged: onChanged,
+  );
+
+  const StyledInputCombo.outlined({
+    Key?                                                        key = null,
+    TextStyle?                                                  style = null,
+    Boolean                                                     enabled = true,
+    required String?                                            hint,
+    required Widget?                                            prefix,
+    required List<Widget>?                                      suffix,
+    required List<(Object, String)>                             option,
+    required String                                             value,
+    required Void Function(BuildContext context, Object? value) onChanged,
+  }) : this._(
+    key: key,
+    variant: .outlined,
+    style: style,
+    enabled: enabled,
+    hint: hint,
+    prefix: prefix,
+    suffix: suffix,
+    option: option,
+    value: value,
+    onChanged: onChanged,
+  );
+
+  const StyledInputCombo.underlined({
+    Key?                                                        key = null,
+    TextStyle?                                                  style = null,
+    Boolean                                                     enabled = true,
+    required String?                                            hint,
+    required Widget?                                            prefix,
+    required List<Widget>?                                      suffix,
+    required List<(Object, String)>                             option,
+    required String                                             value,
+    required Void Function(BuildContext context, Object? value) onChanged,
+  }) : this._(
+    key: key,
+    variant: .underlined,
     style: style,
     enabled: enabled,
     hint: hint,
@@ -1459,11 +1499,11 @@ class StyledInputCombo extends StatefulWidget {
 
   // ----------------
 
-  final StyledInputVariant                                 variant;
-  final TextStyle?                                         style;
+  final StyledInputComboVariant                            variant;
+  final TextStyle?                                         style; // TODO: remove?
   final Boolean                                            enabled;
   final String?                                            hint;
-  final IconData?                                          prefix;
+  final Widget?                                            prefix;
   final List<Widget>?                                      suffix;
   final List<(Object, String)>                             option;
   final String                                             value;
@@ -1509,45 +1549,11 @@ class _StyledInputComboState extends State<StyledInputCombo> {
 
   @override
   build(context) {
-    var theme = material.Theme.of(context);
-    var decoration = switch (this.widget.variant) {
-      StyledInputVariant.filled => material.InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-        filled: true,
-        border: material.UnderlineInputBorder(),
-      ),
-      StyledInputVariant.outlined => material.InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-        filled: false,
-        border: material.OutlineInputBorder(),
-      ),
-      StyledInputVariant.underlined => material.InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(8, 12, 8, 12),
-        filled: false,
-        border: material.UnderlineInputBorder(),
-      ),
-    };
-    decoration = decoration.copyWith(
-      contentPadding: decoration.contentPadding,
-      filled: decoration.filled,
-      border: decoration.border,
-      hintText: this.widget.hint,
-      prefixIcon: this.widget.prefix == null
-        ? null
-        : Icon(this.widget.prefix!),
-      suffixIcon: this.widget.suffix == null
-        ? null
-        : FlexContainer.horizontal(mainStretch: false, [
-          Gap.horizontal(4),
-          ...this.widget.suffix!,
-          Gap.horizontal(4),
-        ]),
-    );
     return LayoutBuilder(
       builder: (context, constraints) => material.MenuAnchor(
         style: material.MenuStyle(
-          minimumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, 0)),
-          maximumSize: WidgetStatePropertyAll(Size(constraints.maxWidth + 8, Floater.infinity)),
+          minimumSize: .all(Size(constraints.maxWidth + 8, 0)),
+          maximumSize: .all(Size(constraints.maxWidth + 8, Floater.infinity)),
         ),
         crossAxisUnconstrained: false,
         alignmentOffset: Offset(-4, 0),
@@ -1556,17 +1562,22 @@ class _StyledInputComboState extends State<StyledInputCombo> {
             Gap.vertical(16),
           ...this.widget.option.map((value) => material.MenuItemButton(
             style: material.ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(value.$2 != this.widget.value ? null : theme.colorScheme.onSurface.withValues(alpha: 0.12)),
+              backgroundColor: .all(value.$2 != this.widget.value ? null : StyledColorExtension.value(context, .onSurface).withValues(alpha: 0.12)),
             ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: constraints.maxWidth - 16),
-              child: StyledListTile.standardTight(
+            child: BoxContainer.of(
+              constraints: .new(maxWidth: constraints.maxWidth - 16),
+              child: StyledListTile.standardCustom(
                 dense: true,
+                padding: switch (this.widget.variant) {
+                  .filled     => .symmetric(horizontal: 8),
+                  .outlined   => .symmetric(horizontal: 8),
+                  .underlined => .zero,
+                },
                 content: DefaultTextStyle(
-                  style: theme.textTheme.bodyLarge!,
+                  style: StyledTypographyExtension.value(context, .bodyLarge),
                   child: StyledText.custom(
                     value.$2,
-                    overflow: TextOverflow.clip,
+                    overflow: .clip,
                     style: this.widget.style,
                   ),
                 ),
@@ -1581,9 +1592,35 @@ class _StyledInputComboState extends State<StyledInputCombo> {
         builder: (context, controller, child) => material.TextField(
           style: this.widget.style,
           enabled: this.widget.enabled,
-          keyboardType: StyledInputType.none,
+          keyboardType: .none,
           inputFormatters: [],
-          decoration: decoration,
+          decoration: switch (this.widget.variant) {
+            .filled => material.InputDecoration(
+              contentPadding: .fromLTRB(12, 16, 12, 16),
+              filled: true,
+              border: material.UnderlineInputBorder(),
+            ),
+            .outlined => material.InputDecoration(
+              contentPadding: .fromLTRB(12, 16, 12, 16),
+              filled: false,
+              border: material.OutlineInputBorder(),
+            ),
+            .underlined => material.InputDecoration(
+              contentPadding: .fromLTRB(8, 12, 8, 12),
+              filled: false,
+              border: material.UnderlineInputBorder(),
+            ),
+          }.copyWith(
+            hintText: this.widget.hint,
+            prefixIcon: this.widget.prefix,
+            suffixIcon: this.widget.suffix == null
+              ? null
+              : FlexContainer.horizontal(mainStretch: false, [
+                Gap.horizontal(4),
+                ...this.widget.suffix!,
+                Gap.horizontal(4),
+              ]),
+          ),
           readOnly: true,
           controller: this._valueController,
           focusNode: this._focusNode,
@@ -1627,12 +1664,12 @@ class StyledCard extends StatelessWidget {
 
   const StyledCard.elevated({
     Key?               key = null,
-    EdgeInsetsGeometry margin = EdgeInsets.zero,
+    EdgeInsetsGeometry margin = .zero,
     Color?             color = null,
     required Widget    content,
   }) : this._(
     key: key,
-    variant: StyledCardVariant.elevated,
+    variant: .elevated,
     margin: margin,
     color: color,
     content: content,
@@ -1640,12 +1677,12 @@ class StyledCard extends StatelessWidget {
 
   const StyledCard.filled({
     Key?               key = null,
-    EdgeInsetsGeometry margin = EdgeInsets.zero,
+    EdgeInsetsGeometry margin = .zero,
     Color?             color = null,
     required Widget    content,
   }) : this._(
     key: key,
-    variant: StyledCardVariant.filled,
+    variant: .filled,
     margin: margin,
     color: color,
     content: content,
@@ -1653,12 +1690,12 @@ class StyledCard extends StatelessWidget {
 
   const StyledCard.outlined({
     Key?               key = null,
-    EdgeInsetsGeometry margin = EdgeInsets.zero,
+    EdgeInsetsGeometry margin = .zero,
     Color?             color = null,
     required Widget    content,
   }) : this._(
     key: key,
-    variant: StyledCardVariant.outlined,
+    variant: .outlined,
     margin: margin,
     color: color,
     content: content,
@@ -1676,20 +1713,20 @@ class StyledCard extends StatelessWidget {
   @override
   build(context) {
     return switch (variant) {
-      StyledCardVariant.elevated => material.Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+      .elevated => material.Card(
+        clipBehavior: .antiAliasWithSaveLayer,
         margin: this.margin,
         color: this.color,
         child: this.content,
       ),
-      StyledCardVariant.filled => material.Card.filled(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+      .filled => material.Card.filled(
+        clipBehavior: .antiAliasWithSaveLayer,
         margin: this.margin,
         color: this.color,
         child: this.content,
       ),
-      StyledCardVariant.outlined => material.Card.outlined(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+      .outlined => material.Card.outlined(
+        clipBehavior: .antiAliasWithSaveLayer,
         margin: this.margin,
         color: this.color,
         child: this.content,
@@ -1731,7 +1768,7 @@ class StyledListTile extends StatelessWidget {
     Void Function(BuildContext context)? onLongPressed = null,
   }) : this._(
     key: key,
-    variant: StyledListTileVariant.standard,
+    variant: .standard,
     enabled: enabled,
     dense: dense,
     padding: null,
@@ -1754,10 +1791,10 @@ class StyledListTile extends StatelessWidget {
     Void Function(BuildContext context)? onLongPressed = null,
   }) : this._(
     key: key,
-    variant: StyledListTileVariant.standard,
+    variant: .standard,
     enabled: enabled,
     dense: dense,
-    padding: EdgeInsets.zero,
+    padding: .zero,
     leading: leading,
     content: content,
     trailing: trailing,
@@ -1778,7 +1815,7 @@ class StyledListTile extends StatelessWidget {
     Void Function(BuildContext context)? onLongPressed = null,
   }) : this._(
     key: key,
-    variant: StyledListTileVariant.standard,
+    variant: .standard,
     enabled: enabled,
     dense: dense,
     padding: padding,
@@ -1806,7 +1843,7 @@ class StyledListTile extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledListTileVariant.standard => material.ListTile(
+      .standard => material.ListTile(
         enabled: this.enabled,
         dense: this.dense,
         contentPadding: this.padding,
@@ -1844,7 +1881,7 @@ class StyledScrollBar extends StatelessWidget {
     required Widget           child,
   }) : this._(
     key: key,
-    variant: StyledScrollBarVariant.standard,
+    variant: .standard,
     controller: controller,
     child: child,
   );
@@ -1860,7 +1897,7 @@ class StyledScrollBar extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledScrollBarVariant.standard => material.Scrollbar(
+      .standard => material.Scrollbar(
         interactive: true,
         controller: this.controller,
         child: this.child,
@@ -1907,7 +1944,7 @@ class StyledTitleBar extends StatelessWidget {
     required Widget leading,
   }) : this._(
     key: key,
-    variant: StyledTitleBarVariant.standard,
+    variant: .standard,
     title: title,
     leading: leading,
   );
@@ -1923,7 +1960,7 @@ class StyledTitleBar extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledTitleBarVariant.standard => material.AppBar(
+      .standard => material.AppBar(
         systemOverlayStyle: SystemOverlayHelper.query(material.Theme.of(context).colorScheme.brightness),
         centerTitle: false,
         elevation: 3,
@@ -1937,7 +1974,7 @@ class StyledTitleBar extends StatelessWidget {
           Gap.horizontal(12),
           StyledText.custom(
             this.title,
-            variant: StyledTextVariant.titleLarge,
+            typography: .titleLarge,
           ).withFlexExpanded(),
           Gap.horizontal(8),
         ]),
@@ -1968,7 +2005,7 @@ class StyledBottomBar extends StatelessWidget {
     required Iterable<Widget> secondary,
   }) : this._(
     key: key,
-    variant: StyledBottomBarVariant.standard,
+    variant: .standard,
     primary: primary,
     secondary: secondary,
   );
@@ -1984,7 +2021,7 @@ class StyledBottomBar extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledBottomBarVariant.standard => material.BottomAppBar(
+      .standard => material.BottomAppBar(
         child: FlexContainer.horizontal([
           FlexContainer.horizontal(this.secondary).withFlexExpanded(),
           if (this.primary != null)
@@ -2017,7 +2054,7 @@ class StyledNavigationDrawer extends StatelessWidget {
     required Iterable<Widget> children,
   }) : this._(
     key: key,
-    variant: StyledNavigationDrawerVariant.standard,
+    variant: .standard,
     children: children,
   );
 
@@ -2031,7 +2068,7 @@ class StyledNavigationDrawer extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledNavigationDrawerVariant.standard => material.NavigationDrawer(
+      .standard => material.NavigationDrawer(
         children: this.children.toList(),
       ),
     };
@@ -2076,7 +2113,7 @@ class StyledMenuItem<TValue> {
     required Widget content,
     Widget?         trailing = null,
   }) : this._(
-    variant: StyledMenuItemVariant.standard,
+    variant: .standard,
     enabled: enabled,
     value: value,
     leading: leading,
@@ -2117,7 +2154,7 @@ class StyledMenu<TValue> {
     required StyledMenuPosition                position,
     required Iterable<StyledMenuItem<TValue>?> children,
   }) : this._(
-    variant: StyledMenuVariant.standard,
+    variant: .standard,
     position: position,
     children: children,
   );
@@ -2163,16 +2200,16 @@ extension StyledMenuExtension<TType extends Widget> on TType {
             enabled: item.enabled,
             value: item.value,
             child: StyledListTile.standardCustom(
-              padding: EdgeInsets.zero,
+              padding: .zero,
               enabled: item.enabled,
               dense: true,
               leading: item.leading,
               content: item.content,
               trailing: DefaultTextStyle(
-                style: material.Theme.of(context).textTheme.labelSmall!.copyWith(
-                  color: material.Theme.of(context).colorScheme.onSurfaceVariant,
+                style: StyledTypographyExtension.value(context, .labelSmall).copyWith(
+                  color: StyledColorExtension.value(context, .onSurfaceVariant),
                 ),
-                child: item.trailing ?? Box.none(),
+                child: item.trailing ?? BoxContainer.none(),
               ),
             ),
           ).as<material.PopupMenuEntry<TResult>>()).toList(),
@@ -2202,7 +2239,7 @@ class StyledFullDialog extends StatefulWidget {
     required Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder,
   }) : this._(
     key: key,
-    variant: StyledFullDialogVariant.standard,
+    variant: .standard,
     title: title,
     contentBuilder: contentBuilder,
   );
@@ -2251,7 +2288,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
   @override
   build(context) {
     return switch (this.widget.variant) {
-      StyledFullDialogVariant.standard => material.Dialog.fullscreen(
+      .standard => material.Dialog.fullscreen(
         child: StyledScaffold.standard(
           title: StyledTitleBar.standard(
             title: this.widget.title,
@@ -2323,7 +2360,7 @@ class StyledModalDialog extends StatefulWidget {
     required Iterable<Widget> Function(BuildContext context)?                                         actionBuilder,
   }) : this._(
     key: key,
-    variant: StyledModalDialogVariant.standard,
+    variant: .standard,
     title: title,
     contentBuilder: contentBuilder,
     actionBuilder: actionBuilder,
@@ -2374,7 +2411,7 @@ class _StyledModalDialogState extends State<StyledModalDialog> {
   @override
   build(context) {
     return switch (this.widget.variant) {
-      StyledModalDialogVariant.standard => material.AlertDialog(
+      .standard => material.AlertDialog(
         title: StyledText.inherit(this.widget.title),
         content: StatefulBuilder(
           builder: (context, setStateForPanel) => FlexContainer.vertical(mainStretch: false, [
@@ -2435,7 +2472,7 @@ class StyledModalBottomSheet extends StatefulWidget {
     required Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder,
   }) : this._(
     key: key,
-    variant: StyledModalBottomSheetVariant.standard,
+    variant: .standard,
     title: title,
     contentBuilder: contentBuilder,
   );
@@ -2484,15 +2521,14 @@ class _StyledModalBottomSheetState extends State<StyledModalBottomSheet> {
   @override
   build(context) {
     return switch (this.widget.variant) {
-      StyledModalBottomSheetVariant.standard => FlexContainer.vertical([
+      .standard => FlexContainer.vertical([
         BoxContainer.of(
-          padding: EdgeInsets.fromLTRB(24, 12, 24, 12),
+          padding: .fromLTRB(24, 12, 24, 12),
           child: FlexContainer.horizontal([
             StyledText.custom(
               this.widget.title,
-              style: material.Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: material.Theme.of(context).colorScheme.primary,
-              ),
+              typography: .titleMedium,
+              color: .primary,
             ).withFlexExpanded(),
           ]),
         ),
@@ -2554,7 +2590,7 @@ class StyledScaffold extends StatelessWidget {
     Widget?         drawer = null,
   }) : this._(
     key: key,
-    variant: StyledScaffoldVariant.standard,
+    variant: .standard,
     title: title,
     body: body,
     drawer: drawer,
@@ -2572,7 +2608,7 @@ class StyledScaffold extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledScaffoldVariant.standard => material.Scaffold(
+      .standard => material.Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(material.kToolbarHeight),
           child: this.title,
@@ -2602,6 +2638,7 @@ class StyledApplication extends StatelessWidget {
     required this.themeColorLight,
     required this.themeColorDark,
     required this.themeFontFamily,
+    required this.title,
     required this.home,
   });
 
@@ -2613,16 +2650,18 @@ class StyledApplication extends StatelessWidget {
     required Color                     themeColorLight,
     required Color                     themeColorDark,
     required List<String>              themeFontFamily,
+    required String                    title,
     required Widget                    home,
   }) : this._(
     key: key,
-    variant: StyledApplicationVariant.standard,
+    variant: .standard,
     navigatorKey: navigatorKey,
     themeMode: themeMode,
     themeColorState: themeColorState,
     themeColorLight: themeColorLight,
     themeColorDark: themeColorDark,
     themeFontFamily: themeFontFamily,
+    title: title,
     home: home,
   );
 
@@ -2635,6 +2674,7 @@ class StyledApplication extends StatelessWidget {
   final Color                     themeColorLight;
   final Color                     themeColorDark;
   final List<String>              themeFontFamily;
+  final String                    title;
   final Widget                    home;
 
   // ----------------
@@ -2642,24 +2682,24 @@ class StyledApplication extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      StyledApplicationVariant.standard => lib.DynamicColorBuilder(
+      .standard => lib.DynamicColorBuilder(
         builder: (lightColor, darkColor) {
           // fix for dynamic color error on flutter 3.22+, see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
           if (SystemChecker.isAndroid) {
             if (lightColor != null) {
-              lightColor = material.ColorScheme.fromSeed(seedColor: lightColor.primary, brightness: Brightness.light);
+              lightColor = material.ColorScheme.fromSeed(seedColor: lightColor.primary, brightness: .light);
             }
             if (darkColor != null) {
-              darkColor = material.ColorScheme.fromSeed(seedColor: darkColor.primary, brightness: Brightness.dark);
+              darkColor = material.ColorScheme.fromSeed(seedColor: darkColor.primary, brightness: .dark);
             }
           }
           return material.MaterialApp(
             navigatorKey: this.navigatorKey,
             theme: material.ThemeData(
-              materialTapTargetSize: material.MaterialTapTargetSize.shrinkWrap,
-              visualDensity: material.VisualDensity.standard,
-              brightness: Brightness.light,
-              colorScheme: !this.themeColorState ? lightColor : material.ColorScheme.fromSeed(seedColor:this.themeColorLight, brightness: Brightness.light),
+              materialTapTargetSize: .shrinkWrap,
+              visualDensity: .standard,
+              brightness: .light,
+              colorScheme: !this.themeColorState ? lightColor : material.ColorScheme.fromSeed(seedColor:this.themeColorLight, brightness: .light),
               fontFamily: '',
               fontFamilyFallback: [...this.themeFontFamily],
               tooltipTheme: material.TooltipTheme.of(context).copyWith(
@@ -2673,10 +2713,10 @@ class StyledApplication extends StatelessWidget {
               ),
             ),
             darkTheme: material.ThemeData(
-              materialTapTargetSize: material.MaterialTapTargetSize.shrinkWrap,
-              visualDensity: material.VisualDensity.standard,
-              brightness: Brightness.dark,
-              colorScheme: !this.themeColorState ? darkColor : material.ColorScheme.fromSeed(seedColor: this.themeColorDark, brightness: Brightness.dark),
+              materialTapTargetSize: .shrinkWrap,
+              visualDensity: .standard,
+              brightness: .dark,
+              colorScheme: !this.themeColorState ? darkColor : material.ColorScheme.fromSeed(seedColor: this.themeColorDark, brightness: .dark),
               fontFamily: '',
               fontFamilyFallback: [...this.themeFontFamily],
               tooltipTheme: material.TooltipTheme.of(context).copyWith(
@@ -2691,7 +2731,7 @@ class StyledApplication extends StatelessWidget {
             ),
             themeMode: material.ThemeMode.values[this.themeMode.index],
             scrollBehavior: material.MaterialScrollBehavior().copyWith(scrollbars: false),
-            title: ApplicationInformation.name,
+            title: this.title,
             home: Builder(
               builder: (context) {
                 SystemOverlayHelper.apply(material.Theme.of(context).colorScheme.brightness);

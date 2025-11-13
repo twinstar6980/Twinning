@@ -3,7 +3,7 @@ import '/module.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
-import '/widget/common.dart';
+import '/widget/export.dart';
 import '/view/modding_worker/setting.dart' as modding_worker;
 import '/view/modding_worker/submission_type.dart' as modding_worker;
 import '/view/modding_worker/value_expression.dart' as modding_worker;
@@ -171,7 +171,7 @@ class SettingProvider with ChangeNotifier {
   ) {
     return SettingData(
       version: ApplicationInformation.version,
-      themeMode: StyledThemeMode.system,
+      themeMode: .system,
       themeColorState: false,
       themeColorLight: Color(0xFF6200EE),
       themeColorDark: Color(0xFFBB86FC),
@@ -185,7 +185,7 @@ class SettingProvider with ChangeNotifier {
       windowSizeHeight: 0,
       storagePickerFallbackDirectory: '',
       storagePickerHistoryLocation: {},
-      forwarderDefaultTarget: ModuleType.resource_shipper,
+      forwarderDefaultTarget: .resource_shipper,
       forwarderImmediateJump: false,
       moduleLauncher: ModuleLauncherSetting(
         module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
@@ -307,7 +307,7 @@ class SettingProvider with ChangeNotifier {
   ) {
     return SettingData(
       version: (json['version'] as String).selfAlso((it) { assertTest(it == ApplicationInformation.version); }),
-      themeMode: (json['theme_mode'] as String).selfLet((it) => StyledThemeMode.values.byName(it)),
+      themeMode: (json['theme_mode'] as String).selfLet((it) => .values.byName(it)),
       themeColorState: (json['theme_color_state'] as Boolean),
       themeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => Color(it)),
       themeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => Color(it)),
@@ -321,22 +321,22 @@ class SettingProvider with ChangeNotifier {
       windowSizeHeight: (json['window_size_height'] as Integer),
       storagePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
       storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>(),
-      forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ModuleType.values.byName(it)),
+      forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => .values.byName(it)),
       forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
       moduleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
+          type: (jsonItem['type'] as String).selfLet((it) => .values.byName(it)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
         pinned: (jsonPart['pinned'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
+          type: (jsonItem['type'] as String).selfLet((it) => .values.byName(it)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
         recent: (jsonPart['recent'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => ModuleType.values.byName(it)),
+          type: (jsonItem['type'] as String).selfLet((it) => .values.byName(it)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
       )),

@@ -206,7 +206,7 @@ class VisualHelper {
             var index = subController.value;
             var property = layer.property[index];
             if (property == null) {
-              return Box.none();
+              return BoxContainer.none();
             }
             return BoxContainer.of(
               transform: property.$1,
@@ -259,7 +259,7 @@ class VisualHelper {
       }
       frameIndex++;
     }
-    return StackContainer.of(fit: StackContainerFit.passthrough, [
+    return StackContainer.of(fit: .passthrough, [
       ...layerList.values.nonNulls.map((value) => value.view),
     ]);
   }

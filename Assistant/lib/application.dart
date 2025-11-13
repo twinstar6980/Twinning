@@ -32,6 +32,7 @@ class Application extends StatelessWidget {
           themeColorLight: setting.data.themeColorLight,
           themeColorDark: setting.data.themeColorDark,
           themeFontFamily: setting.state.themeFontFamliy,
+          title: ApplicationInformation.name,
           home: home.MainPage(),
         ),
       ),

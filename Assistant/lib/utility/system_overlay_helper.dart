@@ -11,22 +11,22 @@ class SystemOverlayHelper {
   static final SystemUiOverlayStyle _styleForLight = SystemUiOverlayStyle(
     systemNavigationBarColor: ColorSet.transparent,
     systemNavigationBarDividerColor: ColorSet.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
+    systemNavigationBarIconBrightness: .dark,
     systemNavigationBarContrastEnforced: false,
     statusBarColor: ColorSet.transparent,
-    statusBarBrightness: Brightness.light,
-    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: .light,
+    statusBarIconBrightness: .dark,
     systemStatusBarContrastEnforced: false,
   );
 
   static final SystemUiOverlayStyle _styleForDark = SystemUiOverlayStyle(
     systemNavigationBarColor: ColorSet.transparent,
     systemNavigationBarDividerColor: ColorSet.transparent,
-    systemNavigationBarIconBrightness: Brightness.light,
+    systemNavigationBarIconBrightness: .light,
     systemNavigationBarContrastEnforced: false,
     statusBarColor: ColorSet.transparent,
-    statusBarBrightness: Brightness.dark,
-    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: .dark,
+    statusBarIconBrightness: .light,
     systemStatusBarContrastEnforced: false,
   );
 
@@ -35,7 +35,7 @@ class SystemOverlayHelper {
   static SystemUiOverlayStyle query(
     Brightness brightness,
   ) {
-    return brightness == Brightness.light ? _styleForLight : _styleForDark;
+    return brightness == .light ? _styleForLight : _styleForDark;
   }
 
   static Future<Void> apply(

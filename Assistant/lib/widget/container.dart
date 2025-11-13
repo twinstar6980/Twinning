@@ -7,57 +7,6 @@ import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimens
 
 // #region layout
 
-class Box extends StatelessWidget {
-
-  const Box._({
-    super.key,
-    required this.width,
-    required this.height,
-    required this.child,
-  });
-
-  const Box.of({
-    Key?     key = null,
-    Floater? width = null,
-    Floater? height = null,
-    Widget?  child = null,
-  }) : this._(
-    key: key,
-    width: width,
-    height: height,
-    child: child,
-  );
-
-  const Box.none({
-    Key? key = null,
-  }) : this._(
-    key: key,
-    width: 0.0,
-    height: 0.0,
-    child: null,
-  );
-
-  // ----------------
-
-  final Floater? width;
-  final Floater? height;
-  final Widget?  child;
-
-  // ----------------
-
-  @override
-  build(context) {
-    return SizedBox(
-      width: this.width,
-      height: this.height,
-      child: this.child,
-    );
-  }
-
-}
-
-// ----------------
-
 class Gap extends StatelessWidget {
 
   const Gap._({
@@ -109,8 +58,7 @@ class BoxContainer extends StatelessWidget {
 
   const BoxContainer._({
     super.key,
-    required this.width,
-    required this.height,
+    required this.constraints,
     required this.margin,
     required this.padding,
     required this.align,
@@ -122,8 +70,7 @@ class BoxContainer extends StatelessWidget {
 
   const BoxContainer.of({
     Key?                key = null,
-    Floater?            width = null,
-    Floater?            height = null,
+    BoxConstraints?     constraints = null,
     EdgeInsetsGeometry? margin = null,
     EdgeInsetsGeometry? padding = null,
     BoxContainerAlign?  align = null,
@@ -133,8 +80,7 @@ class BoxContainer extends StatelessWidget {
     required Widget?    child,
   }) : this._(
     key: key,
-    width: width,
-    height: height,
+    constraints: constraints,
     margin: margin,
     padding: padding,
     align: align,
@@ -144,10 +90,23 @@ class BoxContainer extends StatelessWidget {
     child: child,
   );
 
+  const BoxContainer.none({
+    Key? key = null,
+  }) : this._(
+    key: key,
+    constraints: null,
+    margin: null,
+    padding: null,
+    align: null,
+    transform: null,
+    color: null,
+    colorFilter: null,
+    child: null,
+  );
+
   // ----------------
 
-  final Floater?            width;
-  final Floater?            height;
+  final BoxConstraints?     constraints;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
   final BoxContainerAlign?  align;
@@ -161,8 +120,7 @@ class BoxContainer extends StatelessWidget {
   @override
   build(context) {
     return Container(
-      width: this.width,
-      height: this.height,
+      constraints: this.constraints,
       margin: this.margin,
       padding: this.padding,
       alignment: this.align,
@@ -190,7 +148,7 @@ class StackContainer extends StatelessWidget {
   const StackContainer.of(
     Iterable<Widget>  children, {
     Key?              key = null,
-    StackContainerFit fit = StackContainerFit.loose,
+    StackContainerFit fit = .loose,
   }) : this._(
     key: key,
     fit: fit,
@@ -202,7 +160,7 @@ class StackContainer extends StatelessWidget {
     Integer           index,
     Iterable<Widget>  children, {
     Key?              key = null,
-    StackContainerFit fit = StackContainerFit.loose,
+    StackContainerFit fit = .loose,
   }) : this._(
     key: key,
     fit: fit,
@@ -304,11 +262,11 @@ class FlexContainer extends StatelessWidget {
     Iterable<Widget>        children, {
     Key?                    key = null,
     Boolean                 mainStretch = true,
-    FlexContainerCrossAlign crossAlign = FlexContainerCrossAlign.center,
+    FlexContainerCrossAlign crossAlign = .center,
     TextBaseline?           textBaseline = null,
   }) : this._(
     key: key,
-    direction: FlexContainerDirection.horizontal,
+    direction: .horizontal,
     mainStretch: mainStretch,
     crossAlign: crossAlign,
     textBaseline: textBaseline,
@@ -319,11 +277,11 @@ class FlexContainer extends StatelessWidget {
     Iterable<Widget>        children, {
     Key?                    key = null,
     Boolean                 mainStretch = true,
-    FlexContainerCrossAlign crossAlign = FlexContainerCrossAlign.center,
+    FlexContainerCrossAlign crossAlign = .center,
     TextBaseline?           textBaseline = null,
   }) : this._(
     key: key,
-    direction: FlexContainerDirection.vertical,
+    direction: .vertical,
     mainStretch: mainStretch,
     crossAlign: crossAlign,
     textBaseline: textBaseline,
@@ -344,9 +302,9 @@ class FlexContainer extends StatelessWidget {
   build(context) {
     return Flex(
       direction: this.direction,
-      mainAxisSize: !this.mainStretch ? MainAxisSize.min : MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: this.textBaseline != null ? FlexContainerCrossAlign.baseline : this.crossAlign,
+      mainAxisSize: !this.mainStretch ? .min : .max,
+      mainAxisAlignment: .start,
+      crossAxisAlignment: this.textBaseline != null ? .baseline : this.crossAlign,
       textBaseline: this.textBaseline,
       children: this.children.toList(),
     );
@@ -533,14 +491,14 @@ class ScrollableArea extends StatelessWidget {
     }
     if (this.horizontal != null && this.vertical == null) {
       return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: .horizontal,
         controller: this.horizontal,
         child: this.child,
       );
     }
     if (this.horizontal == null && this.vertical != null) {
       return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+        scrollDirection: .vertical,
         controller: this.vertical,
         child: this.child,
       );
@@ -617,7 +575,7 @@ class ListContainer extends StatelessWidget {
   build(context) {
     return ListView.builder(
       shrinkWrap: this.shrink,
-      physics: this.shrink ? NeverScrollableScrollPhysics() : null,
+      physics: !this.shrink ? null : NeverScrollableScrollPhysics(),
       padding: this.padding,
       controller: this.controller,
       itemCount: this.itemCount,

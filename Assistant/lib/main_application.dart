@@ -33,7 +33,7 @@ class MainApplication {
               FlexContainer.horizontal([
                 StyledText.custom(
                   ExceptionHelper.generateMessage(exception, stack),
-                  overflow: TextOverflow.clip,
+                  overflow: .clip,
                 ).withSelectableArea(
                 ).withFlexExpanded(),
               ]),
@@ -122,7 +122,7 @@ class MainApplication {
     if (option.check('-launch')) {
       optionLaunch = (
         option.nextString(),
-        option.nextString().selfLet((it) => ModuleType.values.byName(it)),
+        option.nextString().selfLet((it) => .values.byName(it)),
         option.nextStringList(),
       );
     }

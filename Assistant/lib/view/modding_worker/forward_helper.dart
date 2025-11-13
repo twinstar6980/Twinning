@@ -17,8 +17,8 @@ class ForwardHelper {
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     await setting.state.handleLaunch!(
-      ModuleHelper.query(ModuleType.modding_worker).name,
-      ModuleType.modding_worker,
+      ModuleHelper.query(.modding_worker).name,
+      .modding_worker,
       ['-additional_argument', ...argument],
     );
     return;

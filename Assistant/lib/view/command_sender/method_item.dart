@@ -26,12 +26,12 @@ class MethodItem extends StatelessWidget {
     return FlexContainer.vertical([
       StyledListTile.standardCustom(
         dense: true,
-        padding: EdgeInsets.fromLTRB(40, 0, 24, 0),
+        padding: .fromLTRB(40, 0, 24, 0),
         leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
         content: StyledText.inherit(tooltip: true, this.configuration.name),
         trailing: VisibilityArea.of(
           enabled: this.configuration.batch != null,
-          child: Icon(IconSet.layers, color: StyledColorExtension.value(context, StyledColor.primary)).withStyledTooltip(message: 'Batch'),
+          child: Icon(IconSet.layers, color: StyledColorExtension.value(context, .primary)).withStyledTooltip(message: 'Batch'),
         ),
         onPressed: (context) async {
           this.onSelect(this.configuration.identifier);
@@ -65,7 +65,7 @@ class MethodGroupItem extends StatelessWidget {
   build(context) {
     return FlexContainer.vertical([
       StyledListTile.standardCustom(
-        padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+        padding: .fromLTRB(24, 0, 24, 0),
         leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
         content: StyledText.inherit(tooltip: true, this.configuration.name),
         trailing: FlexContainer.horizontal(mainStretch: false, [

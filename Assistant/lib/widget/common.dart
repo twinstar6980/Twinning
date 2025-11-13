@@ -43,19 +43,9 @@ class IconSetExtension {
   static IconData queryOutlined(
     String name,
   ) {
-    return lib.SymbolsGet.get(name, lib.SymbolStyle.outlined);
+    return lib.SymbolsGet.get(name, .outlined);
   }
 
-}
-
-// #endregion
-
-// #region theme
-
-enum StyledThemeMode {
-  system,
-  light,
-  dark,
 }
 
 // #endregion

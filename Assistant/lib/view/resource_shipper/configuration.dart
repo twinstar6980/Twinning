@@ -71,7 +71,7 @@ class ConfigurationHelper {
         icon: (jsonItem['icon'] as String),
         filter: (jsonItem['filter'] as Map<dynamic, dynamic>?)?.selfLet((jsonFilter) => FilterConfiguration(
           name: (jsonFilter['name'] as String),
-          type: (jsonFilter['type'] as String).selfLet((it) => FilterType.values.byName(it)),
+          type: (jsonFilter['type'] as String).selfLet((it) => .values.byName(it)),
         )),
         batch: (jsonItem['batch'] as Boolean),
         method: (jsonItem['method'] as String?),

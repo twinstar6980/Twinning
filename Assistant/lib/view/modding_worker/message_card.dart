@@ -26,33 +26,33 @@ class MessageCard extends StatelessWidget {
   @override
   build(context) {
     var cardColor = this.type.color(context);
-    var textStyle = TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it));
+    var textStyle = getSpecialFontTextStyle(context);
     return StyledCard.elevated(
-      color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), StyledColorExtension.value(context, StyledColor.surfaceContainerLow)),
+      color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), StyledColorExtension.value(context, .surfaceContainerLow)),
       content: BoxContainer.of(
-        padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-        child: FlexContainer.horizontal(crossAlign: FlexContainerCrossAlign.start, [
+        padding: .fromLTRB(12, 8, 12, 8),
+        child: FlexContainer.horizontal(crossAlign: .start, [
           FlexContainer.horizontal([
             Icon(
               IconSet.circle,
               size: 12,
               fill: 0.6,
-              color: Color.alphaBlend(cardColor.withValues(alpha: 0.50), StyledColorExtension.value(context, StyledColor.onSurface)),
+              color: Color.alphaBlend(cardColor.withValues(alpha: 0.50), StyledColorExtension.value(context, .onSurface)),
             ),
             StyledText.custom(
               '',
-              variant: StyledTextVariant.titleSmall,
-              overflow: TextOverflow.clip,
+              typography: .titleSmall,
+              overflow: .clip,
               style: textStyle,
             ),
           ]),
           Gap.horizontal(8),
-          FlexContainer.vertical(crossAlign: FlexContainerCrossAlign.stretch, [
+          FlexContainer.vertical(crossAlign: .stretch, [
             StyledText.custom(
               this.title,
-              variant: StyledTextVariant.titleSmall,
-                color: StyledColor.onSurface,
-              overflow: TextOverflow.clip,
+              typography: .titleSmall,
+              color: .onSurface,
+              overflow: .clip,
               style: textStyle,
             ).withSelectableArea(
             ),
@@ -60,9 +60,9 @@ class MessageCard extends StatelessWidget {
               Gap.vertical(4),
               StyledText.custom(
                 item,
-                variant: StyledTextVariant.bodySmall,
-                color: StyledColor.onSurfaceVariant,
-                overflow: TextOverflow.clip,
+                typography: .bodySmall,
+                color: .onSurfaceVariant,
+                overflow: .clip,
                 style: textStyle,
               ).withSelectableArea(
               ),

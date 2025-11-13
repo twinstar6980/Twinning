@@ -39,8 +39,8 @@ class LauncherPanel extends StatelessWidget {
                 title: 'Command',
                 contentBuilder: (context, setStateForPanel) => [
                   StyledInput.outlined(
-                    type: StyledInputType.multiline,
-                    format: [],
+                    type: .multiline,
+                    format: null,
                     hint: null,
                     prefix: null,
                     suffix: null,
@@ -123,7 +123,7 @@ class LauncherPanel extends StatelessWidget {
             onPressed: (context) async {
               setting.data.moduleLauncher.pinned.add(ModuleLauncherConfiguration(
                 title: 'Untitled',
-                type: ModuleType.modding_worker,
+                type: .modding_worker,
                 option: [],
               ));
               await setting.save();

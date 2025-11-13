@@ -36,7 +36,7 @@ class OptionItem extends StatelessWidget {
         StyledListTile.standardCustom(
           enabled: enabled,
           dense: true,
-          padding: EdgeInsets.fromLTRB(40, 0, 16, 0),
+          padding: .fromLTRB(40, 0, 16, 0),
           leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
           content: StyledText.custom(tooltip: enabled, this.configuration.name),
           trailing: FlexContainer.horizontal(mainStretch: false, [
@@ -50,7 +50,7 @@ class OptionItem extends StatelessWidget {
               ]),
               onPressed: (context) async {
                 var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
-                  position: StyledMenuPosition.under,
+                  position: .under,
                   children: this.configuration.preset.map((preset) => preset == null ? null : StyledMenuItem.standard(
                     value: preset,
                     content: StyledText.inherit(preset.name),
@@ -103,7 +103,7 @@ class OptionGroupItem extends StatelessWidget {
       enabled: this.match.any((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)),
       child: FlexContainer.vertical([
         StyledListTile.standardCustom(
-          padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+          padding: .fromLTRB(24, 0, 24, 0),
           leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
           content: StyledText.inherit(tooltip: true, this.configuration.name),
           trailing: FlexContainer.horizontal(mainStretch: false, [

@@ -30,17 +30,14 @@ class LauncherConfigurationPanel extends StatelessWidget {
           icon: IconSet.text_fields,
           label: 'Title',
           comment: [
-            StyledText.custom(
-              this.data.title,
-              align: TextAlign.right,
-            ).withFlexExpanded(),
+            StyledText.inherit(this.data.title).withFlexExpanded(),
           ],
           onPressed: null,
           panelBuilder: (context, setStateForPanel) => [
             StyledListTile.standardTight(
               content: StyledInput.outlined(
-                type: StyledInputType.text,
-                format: [],
+                type: .text,
+                format: null,
                 hint: null,
                 prefix: null,
                 suffix: null,
@@ -59,10 +56,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
           icon: IconSet.label,
           label: 'Type',
           comment: [
-            StyledText.custom(
-              ModuleHelper.query(this.data.type).name,
-              align: TextAlign.right,
-            ).withFlexExpanded(),
+            StyledText.inherit(ModuleHelper.query(this.data.type).name).withFlexExpanded(),
           ],
           onPressed: null,
           panelBuilder: (context, setStateForPanel) => [
@@ -84,17 +78,14 @@ class LauncherConfigurationPanel extends StatelessWidget {
           icon: IconSet.format_list_bulleted,
           label: 'Option',
           comment: [
-            StyledText.custom(
-              '${this.data.option.length}',
-              align: TextAlign.right,
-            ).withFlexExpanded(),
+            StyledText.inherit('${this.data.option.length}').withFlexExpanded(),
           ],
           onPressed: null,
           panelBuilder: (context, setStateForPanel) => [
             StyledListTile.standardTight(
               content: StyledInput.outlined(
-                type: StyledInputType.multiline,
-                format: [],
+                type: .multiline,
+                format: null,
                 hint: null,
                 prefix: null,
                 suffix: null,

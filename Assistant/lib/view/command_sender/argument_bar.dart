@@ -7,7 +7,6 @@ import '/view/command_sender/configuration.dart';
 import '/view/command_sender/value_expression.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' as material;
 
 // ----------------
 
@@ -36,21 +35,21 @@ class _BasicArgumentBar extends StatelessWidget {
   build(context) {
     return FlexContainer.vertical([
       if (!this.expanded && this.value != null)
-        FlexContainer.horizontal(textBaseline: material.Theme.of(context).textTheme.labelLarge!.textBaseline!, [
+        FlexContainer.horizontal(textBaseline: StyledTypographyExtension.value(context, .labelLarge).textBaseline!, [
           Gap.horizontal(8),
           StyledText.custom(
             this.name,
-            variant: StyledTextVariant.labelLarge,
-            color: !this.batch ? StyledColor.primary : StyledColor.tertiary,
-            overflow: TextOverflow.clip,
-            align: TextAlign.start,
+            typography: .labelLarge,
+            color: !this.batch ? .primary : .tertiary,
+            overflow: .clip,
+            align: .start,
           ).withFlexExpanded(),
           Gap.horizontal(8),
           StyledText.custom(
             ValueExpressionHelper.makeString(this.value!),
-            variant: StyledTextVariant.bodyMedium,
-            overflow: TextOverflow.clip,
-            align: TextAlign.end,
+            typography: .bodyMedium,
+            overflow: .clip,
+            align: .end,
           ).withSelectableArea(
           ).withFlexExpanded(),
           Gap.horizontal(8),
@@ -60,9 +59,9 @@ class _BasicArgumentBar extends StatelessWidget {
           Gap.horizontal(8),
           StyledText.custom(
             this.name,
-            variant: StyledTextVariant.labelLarge,
             tooltip: true,
-            color: !this.batch ? StyledColor.primary : StyledColor.tertiary,
+            typography: .labelLarge,
+            color: !this.batch ? .primary : .tertiary,
           ).withFlexExpanded(),
           Gap.horizontal(8),
         ]),
@@ -103,8 +102,8 @@ class _BooleanArgumentBar extends StatelessWidget {
         batch: this.batch,
         expanded: this.expanded,
         content: StyledInput.underlined(
-          type: StyledInputType.text,
-          format: [],
+          type: .text,
+          format: null,
           hint: 'Boolean',
           prefix: null,
           suffix: [
@@ -177,8 +176,8 @@ class _IntegerArgumentBar extends StatelessWidget {
         batch: this.batch,
         expanded: this.expanded,
         content: StyledInput.underlined(
-          type: StyledInputType.numberWithOptions(signed: true, decimal: false),
-          format: [],
+          type: .numberWithOptions(signed: true, decimal: false),
+          format: null,
           hint: 'Integer',
           prefix: null,
           suffix: null,
@@ -230,8 +229,8 @@ class _FloaterArgumentBar extends StatelessWidget {
         batch: this.batch,
         expanded: this.expanded,
         content: StyledInput.underlined(
-          type: StyledInputType.numberWithOptions(signed: true, decimal: true),
-          format: [],
+          type: .numberWithOptions(signed: true, decimal: true),
+          format: null,
           hint: 'Floater',
           prefix: null,
           suffix: null,
@@ -283,8 +282,8 @@ class _SizeArgumentBar extends StatelessWidget {
         batch: this.batch,
         expanded: this.expanded,
         content: StyledInput.underlined(
-          type: StyledInputType.numberWithOptions(signed: false, decimal: true),
-          format: [],
+          type: .numberWithOptions(signed: false, decimal: true),
+          format: null,
           hint: 'Size',
           prefix: null,
           suffix: [
@@ -293,14 +292,13 @@ class _SizeArgumentBar extends StatelessWidget {
               icon: this.value.value == null
                 ? Icon(IconSet.expand_circle_down)
                 : BoxContainer.of(
-                  width: 24,
-                  height: 24,
-                  align: BoxContainerAlign.center,
+                  constraints: .tightFor(width: 24, height: 24),
+                  align: .center,
                   child: StyledText.inherit(['B', 'K', 'M', 'G'][this.value.value!.exponent]),
                 ),
               onPressed: (context) async {
                 var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
-                  position: StyledMenuPosition.under,
+                  position: .under,
                   children: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
                     value: index,
                     content: StyledText.inherit(value),
@@ -361,8 +359,8 @@ class _StringArgumentBar extends StatelessWidget {
         batch: this.batch,
         expanded: this.expanded,
         content: StyledInput.underlined(
-          type: StyledInputType.text,
-          format: [],
+          type: .text,
+          format: null,
           hint: 'String',
           prefix: null,
           suffix: null,
@@ -416,8 +414,8 @@ class _PathArgumentBar extends StatelessWidget {
             await refreshState(setState);
           },
           child: StyledInput.underlined(
-            type: StyledInputType.text,
-            format: [],
+            type: .text,
+            format: null,
             hint: 'Path',
             prefix: null,
             suffix: [
@@ -541,37 +539,37 @@ class ArgumentBar extends StatelessWidget {
   build(context) {
     if (this.option == null) {
       return switch (this.type) {
-        ArgumentType.boolean => _BooleanArgumentBar(
+        .boolean => _BooleanArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,
           expanded: this.expanded,
         ),
-        ArgumentType.integer => _IntegerArgumentBar(
+        .integer => _IntegerArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,
           expanded: this.expanded,
         ),
-        ArgumentType.floater => _FloaterArgumentBar(
+        .floater => _FloaterArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,
           expanded: this.expanded,
         ),
-        ArgumentType.size => _SizeArgumentBar(
+        .size => _SizeArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,
           expanded: this.expanded,
         ),
-        ArgumentType.string => _StringArgumentBar(
+        .string => _StringArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,
           expanded: this.expanded,
         ),
-        ArgumentType.path => _PathArgumentBar(
+        .path => _PathArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,

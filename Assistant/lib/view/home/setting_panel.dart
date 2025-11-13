@@ -112,10 +112,10 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.text,
-              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+              type: .text,
+              format: .new(r'[0-9a-fA-F]'),
               hint: null,
-              prefix: IconSet.light_mode,
+              prefix: Icon(IconSet.light_mode),
               suffix: [
                 Icon(
                   IconSet.circle,
@@ -134,10 +134,10 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.text,
-              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9a-fA-F]'))],
+              type: .text,
+              format: .new(r'[0-9a-fA-F]'),
               hint: null,
-              prefix: IconSet.dark_mode,
+              prefix: Icon(IconSet.dark_mode),
               suffix: [
                 Icon(
                   IconSet.circle,
@@ -178,8 +178,8 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.multiline,
-              format: [],
+              type: .multiline,
+              format: null,
               hint: null,
               prefix: null,
               suffix: [
@@ -239,10 +239,10 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.number,
-              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              type: .number,
+              format: .new(r'[0-9]'),
               hint: null,
-              prefix: IconSet.swap_horiz,
+              prefix: Icon(IconSet.swap_horiz),
               suffix: null,
               value: setting.data.windowPositionX.toString(),
               onChanged: (context, value) async {
@@ -255,10 +255,10 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.number,
-              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              type: .number,
+              format: .new(r'[0-9]'),
               hint: null,
-              prefix: IconSet.swap_vert,
+              prefix: Icon(IconSet.swap_vert),
               suffix: null,
               value: setting.data.windowPositionY.toString(),
               onChanged: (context, value) async {
@@ -294,10 +294,10 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.number,
-              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              type: .number,
+              format: .new(r'[0-9]'),
               hint: null,
-              prefix: IconSet.width,
+              prefix: Icon(IconSet.width),
               suffix: null,
               value: setting.data.windowSizeWidth.toString(),
               onChanged: (context, value) async {
@@ -310,10 +310,10 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.number,
-              format: [StyledInputFilteringFormatter.allow(RegExp(r'[0-9]'))],
+              type: .number,
+              format: .new(r'[0-9]'),
               hint: null,
-              prefix: IconSet.height,
+              prefix: Icon(IconSet.height),
               suffix: null,
               value: setting.data.windowSizeHeight.toString(),
               onChanged: (context, value) async {
@@ -354,8 +354,8 @@ class _SettingPanelState extends State<SettingPanel> {
         panelBuilder: (context, setStateForPanel) => [
           StyledListTile.standardTight(
             content: StyledInput.outlined(
-              type: StyledInputType.text,
-              format: [],
+              type: .text,
+              format: null,
               hint: null,
               prefix: null,
               suffix: [

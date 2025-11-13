@@ -25,15 +25,15 @@ enum ModuleType {
 
 class ModuleInformation {
   ModuleType                                   type;
-  IconData                                     icon;
   String                                       name;
+  IconData                                     icon;
   Widget Function(List<String>)                mainPage;
   Widget Function(BuildContext)                settingPanel;
   Future<List<String>?> Function(List<String>) generateForwardOption;
   ModuleInformation({
     required this.type,
-    required this.icon,
     required this.name,
+    required this.icon,
     required this.mainPage,
     required this.settingPanel,
     required this.generateForwardOption,
@@ -76,9 +76,9 @@ class ModuleHelper {
 
   static final List<ModuleInformation> _information = [
     ModuleInformation(
-      type: ModuleType.modding_worker,
-      icon: IconSet.rule_settings,
+      type: .modding_worker,
       name: 'Modding Worker',
+      icon: IconSet.rule_settings,
       mainPage: (option) => modding_worker.MainPage(
         key: GlobalKey(),
         option: option,
@@ -90,9 +90,9 @@ class ModuleHelper {
       generateForwardOption: (resource) async => ['-additional_argument', ...resource],
     ),
     ModuleInformation(
-      type: ModuleType.command_sender,
-      icon: IconSet.send,
+      type: .command_sender,
       name: 'Command Sender',
+      icon: IconSet.send,
       mainPage: (option) => command_sender.MainPage(
         key: GlobalKey(),
         option: option,
@@ -104,9 +104,9 @@ class ModuleHelper {
       generateForwardOption: (resource) async => null,
     ),
     ModuleInformation(
-      type: ModuleType.resource_shipper,
-      icon: IconSet.share_windows,
+      type: .resource_shipper,
       name: 'Resource Shipper',
+      icon: IconSet.share_windows,
       mainPage: (option) => resource_shipper.MainPage(
         key: GlobalKey(),
         option: option,
@@ -118,9 +118,9 @@ class ModuleHelper {
       generateForwardOption: (resource) async => ['-resource', ...resource],
     ),
     ModuleInformation(
-      type: ModuleType.animation_viewer,
-      icon: IconSet.thread_unread,
+      type: .animation_viewer,
       name: 'Animation Viewer',
+      icon: IconSet.thread_unread,
       mainPage: (option) => animation_viewer.MainPage(
         key: GlobalKey(),
         option: option,

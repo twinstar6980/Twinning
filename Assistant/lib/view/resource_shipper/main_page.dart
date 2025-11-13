@@ -55,9 +55,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         if (item.filter != null) {
           for (var resource in this._resource) {
             singleEnabled &= switch (item.filter!.type) {
-              FilterType.any       => resource.$2 != null,
-              FilterType.file      => resource.$2 == false,
-              FilterType.directory => resource.$2 == true,
+              .any       => resource.$2 != null,
+              .file      => resource.$2 == false,
+              .directory => resource.$2 == true,
             };
             batchEnabled &= resource.$2 == true;
           }
@@ -254,7 +254,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       },
       content: FlexContainer.vertical([
         ListContainer.of(
-          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+          padding: .fromLTRB(0, 8, 0, 8),
           controller: this._optionListScrollController,
           itemCount: this._optionConfiguration.length,
           itemBuilder: (context, index) => OptionGroupItem(
@@ -306,8 +306,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                           title: 'Append New',
                           contentBuilder: (context, setStateForPanelInner) => [
                             StyledInput.outlined(
-                              type: StyledInputType.multiline,
-                              format: [],
+                              type: .multiline,
+                              format: null,
                               hint: null,
                               prefix: null,
                               suffix: null,
@@ -370,7 +370,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                   Gap.vertical(8),
                   ...this._resource.map((value) => StyledListTile.standardCustom(
                     key: ObjectKey(value),
-                    padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    padding: .fromLTRB(24, 0, 24, 0),
                     leading: Icon(switch (value.$2) {
                       null  => IconSet.hide_source,
                       false => IconSet.draft,

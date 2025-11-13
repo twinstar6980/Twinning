@@ -22,11 +22,10 @@ class BlankPage extends StatelessWidget {
     return ModulePageRegion(
       onDropFile: null,
       content: BoxContainer.of(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-        align: BoxContainerAlign.center,
-        child: Box.of(
-          width: 256,
-          height: 256,
+        padding: .fromLTRB(16, 16, 16, 16),
+        align: .center,
+        child: BoxContainer.of(
+          constraints: .tightFor(width: 256, height: 256),
           child: StyledFloatingButton.larger(
             tooltip: 'Launcher',
             icon: Icon(IconSet.widgets, size: 128),

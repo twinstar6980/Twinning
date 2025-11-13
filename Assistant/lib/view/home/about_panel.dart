@@ -20,16 +20,16 @@ class AboutPanel extends StatelessWidget {
       FlexContainer.horizontal([
         StyledText.custom(
           '${ApplicationInformation.name} - v${ApplicationInformation.version}',
-          overflow: TextOverflow.clip,
-          variant: StyledTextVariant.titleMedium,
+          typography: .titleMedium,
+          overflow: .clip,
         ).withFlexExpanded(),
       ]),
       Gap.vertical(8),
       FlexContainer.horizontal([
         StyledText.custom(
           '© ${ApplicationInformation.year} ${ApplicationInformation.developer}. All rights reserved.',
-          overflow: TextOverflow.clip,
-          variant: StyledTextVariant.bodyMedium,
+          typography: .bodyMedium,
+          overflow: .clip,
         ).withFlexExpanded(),
       ]),
     ]);

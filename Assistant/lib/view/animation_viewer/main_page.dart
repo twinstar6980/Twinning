@@ -543,30 +543,22 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       },
       content: FlexContainer.vertical([
         StyledCard.outlined(
-          margin: EdgeInsets.fromLTRB(16, 12, 16, 12),
+          margin: .fromLTRB(16, 12, 16, 12),
           content: FlexContainer.vertical([
             BoxContainer.of(
-              color: StyledColorExtension.value(context, StyledColor.surfaceContainer),
+              color: StyledColorExtension.value(context, .surfaceContainer),
               child: LayoutBuilder(
                 builder: (context, constraints) => BoxContainer.of(
-                  margin: EdgeInsets.symmetric(
+                  constraints: .tightFor(
+                    width: this._animation?.size.$1 ?? 0.0,
+                    height: this._animation?.size.$2 ?? 0.0,
+                  ),
+                  margin: .symmetric(
                     horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
                     vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                   ),
-                  color: !this._showBoundary ? null : StyledColorExtension.value(context, StyledColor.surfaceContainerHighest),
-                  child: !this._loaded
-                    ? Box.none()
-                    : Box.of(
-                      width: this._animation!.size.$1,
-                      height: this._animation!.size.$2,
-                      child: UnconstrainedBox(
-                        child: SizedOverflowBox(
-                          alignment: AlignmentDirectional.topStart,
-                          size: Size(this._animation!.size.$1, this._animation!.size.$2),
-                          child: this._animationVisual,
-                        ),
-                      ),
-                    ),
+                  color: !this._showBoundary ? null : StyledColorExtension.value(context, .surfaceContainerHighest),
+                  child: this._animationVisual,
                 ).withScrollableArea(
                   horizontal: this._stageHorizontalScrollSontroller,
                   vertical: this._stageVerticalScrollSontroller,
@@ -580,41 +572,34 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             StyledDivider.minimal(),
             Gap.vertical(8),
             FlexContainer.horizontal([
-              Gap.horizontal(12),
-              LayoutBuilder(
-                builder: (context, constraints) => IntrinsicHeight(
-                  child: OverflowBox(
-                    maxWidth: constraints.maxWidth + 16,
-                    child: StreamBuilder(
-                      stream: this._activeProgressIndexStream.stream,
-                      builder: (context, snapshot) => StyledSlider.standard(
-                        enabled: this._activated,
-                        tooltip: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
-                        minimum: 1.0,
-                        maximum: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
-                        value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
-                        onChanged: (context, value) async {
-                          await this._changeProgressIndex(value.round() - 1);
-                          this._activeProgressIndexStream.sink.add(null);
-                        },
-                        onChangeStart: (context, value) async {
-                          this._activeProgressChangingContinue = this._queryProgressState();
-                          if (this._activeProgressChangingContinue) {
-                            await this._changeProgressState(false);
-                          }
-                        },
-                        onChangeEnd: (context, value) async {
-                          if (this._activeProgressChangingContinue) {
-                            await this._changeProgressState(true);
-                          }
-                          this._activeProgressChangingContinue = false;
-                        },
-                      ),
-                    ),
-                  ),
+              Gap.horizontal(4),
+              StreamBuilder(
+                stream: this._activeProgressIndexStream.stream,
+                builder: (context, snapshot) => StyledSlider.standard(
+                  enabled: this._activated,
+                  tooltip: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
+                  minimum: 1.0,
+                  maximum: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
+                  value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
+                  onChanged: (context, value) async {
+                    await this._changeProgressIndex(value.round() - 1);
+                    this._activeProgressIndexStream.sink.add(null);
+                  },
+                  onChangeStart: (context, value) async {
+                    this._activeProgressChangingContinue = this._queryProgressState();
+                    if (this._activeProgressChangingContinue) {
+                      await this._changeProgressState(false);
+                    }
+                  },
+                  onChangeEnd: (context, value) async {
+                    if (this._activeProgressChangingContinue) {
+                      await this._changeProgressState(true);
+                    }
+                    this._activeProgressChangingContinue = false;
+                  },
                 ),
               ).withFlexExpanded(),
-              Gap.horizontal(12),
+              Gap.horizontal(4),
             ]),
             Gap.vertical(4),
             FlexContainer.horizontal([
@@ -622,12 +607,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               StyledButton.text(
                 enabled: this._activated,
                 tooltip: 'Frame Range',
-                iconAlign: StyledButtonIconAlign.start,
+                iconAlign: .start,
                 icon: Icon(IconSet.linear_scale),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
-                    align: TextAlign.start,
+                    align: .start,
                   ).withFlexExpanded(),
                 ]),
                 onPressed: (context) async {
@@ -636,17 +621,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     title: 'Frame Range',
                     contentBuilder: (context, setStateForPanel) => [
                       StyledInput.outlined(
-                        type: StyledInputType.numberWithOptions(signed: false, decimal: false),
-                        format: [],
+                        type: .numberWithOptions(signed: false, decimal: false),
+                        format: null,
                         hint: null,
-                        prefix: IconSet.line_start_circle,
+                        prefix: Icon(IconSet.line_start_circle),
                         suffix: [
                           StyledIconButton.standard(
                             tooltip: 'Preset',
                             icon: Icon(IconSet.more_vert),
                             onPressed: (context) async {
                               var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
-                                position: StyledMenuPosition.under,
+                                position: .under,
                                 children: [
                                   (1, 'whole'),
                                   null,
@@ -678,17 +663,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                       Gap.vertical(12),
                       StyledInput.outlined(
-                        type: StyledInputType.numberWithOptions(signed: false, decimal: false),
-                        format: [],
+                        type: .numberWithOptions(signed: false, decimal: false),
+                        format: null,
                         hint: null,
-                        prefix: IconSet.line_end_circle,
+                        prefix: Icon(IconSet.line_end_circle),
                         suffix: [
                           StyledIconButton.standard(
                             tooltip: 'Preset',
                             icon: Icon(IconSet.more_vert),
                             onPressed: (context) async {
                               var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
-                                position: StyledMenuPosition.under,
+                                position: .under,
                                 children: [
                                   (this._activeSprite!.frame.length, 'whole'),
                                   null,
@@ -761,12 +746,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               StyledButton.text(
                 enabled: this._activated,
                 tooltip: 'Frame Speed',
-                iconAlign: StyledButtonIconAlign.end,
+                iconAlign: .end,
                 icon: Icon(IconSet.speed),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
-                    align: TextAlign.end,
+                    align: .end,
                   ).withFlexExpanded(),
                 ]),
                 onPressed: (context) async {
@@ -776,17 +761,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     title: 'Frame Speed',
                     contentBuilder: (context, setStateForPanel) => [
                       StyledInput.outlined(
-                        type: StyledInputType.numberWithOptions(signed: false, decimal: true),
-                        format: [],
+                        type: .numberWithOptions(signed: false, decimal: true),
+                        format: null,
                         hint: null,
-                        prefix: IconSet.speed,
+                        prefix: Icon(IconSet.speed),
                         suffix: [
                           StyledIconButton.standard(
                             tooltip: 'Preset',
                             icon: Icon(IconSet.more_vert),
                             onPressed: (context) async {
                               var value = await StyledMenuExtension.show<Floater>(context, StyledMenu.standard(
-                                position: StyledMenuPosition.under,
+                                position: .under,
                                 children: [
                                   (normalSpeed / 2.0, 'Slow'),
                                   (normalSpeed, 'Normal'),
@@ -829,12 +814,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               StyledButton.text(
                 enabled: this._loaded,
                 tooltip: 'Image',
-                iconAlign: StyledButtonIconAlign.start,
+                iconAlign: .start,
                 icon: Icon(IconSet.imagesmode),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
-                    align: TextAlign.start,
+                    align: .start,
                   ).withFlexExpanded(),
                 ]),
                 onPressed: (context) async {
@@ -851,11 +836,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         ).withImpenetrableArea(
                         ),
                         content: StyledText.inherit(tooltip: true, VisualHelper.parseImageFileName(item.name)),
-                        trailing: FlexContainer.horizontal(mainStretch: false, [
-                          StyledText.custom(
-                            '${item.size?.$1 ?? 0} x ${item.size?.$2 ?? 0}',
-                          ),
-                        ]),
+                        trailing: StyledText.inherit('${item.size?.$1 ?? 0} x ${item.size?.$2 ?? 0}'),
                         onPressed: (context) async {
                           currentValue[index] = !currentValue[index];
                           await refreshState(setStateForPanel);
@@ -883,7 +864,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   ? Icon(IconSet.power_settings_new)
                   : StyledText.custom(
                     this._activeSprite!.name ?? '',
-                    align: TextAlign.center,
+                    align: .center,
                   ),
                 onPressed: (context) async {
                   if (this._activated) {
@@ -904,12 +885,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               StyledButton.text(
                 enabled: this._loaded,
                 tooltip: 'Sprite',
-                iconAlign: StyledButtonIconAlign.end,
+                iconAlign: .end,
                 icon: Icon(IconSet.thread_unread),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
-                    align: TextAlign.end,
+                    align: .end,
                   ).withFlexExpanded(),
                 ]),
                 onPressed: (context) async {
@@ -926,11 +907,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         ).withImpenetrableArea(
                         ),
                         content: StyledText.inherit(tooltip: true, item.name ?? ''),
-                        trailing: FlexContainer.horizontal(mainStretch: false, [
-                          StyledText.custom(
-                            '${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}',
-                          ),
-                        ]),
+                        trailing: StyledText.inherit('${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}'),
                         onPressed: (context) async {
                           currentValue[index] = !currentValue[index];
                           await refreshState(setStateForPanel);
@@ -965,10 +942,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               title: 'Source',
               contentBuilder: (context, setStateForPanel) => [
                 StyledInput.outlined(
-                  type: StyledInputType.none,
-                  format: [],
+                  type: .none,
+                  format: null,
                   hint: null,
-                  prefix: IconSet.attachment,
+                  prefix: Icon(IconSet.attachment),
                   suffix: null,
                   value: !this._loaded ? '' : this._animationFile!,
                   onChanged: (context, value) async {},

@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   ) async {
     this._messageList.add(
       BoxContainer.of(
-        margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
+        margin: .fromLTRB(0, 4, 0, 4),
         child: MessageCard(
           type: type,
           title: title,
@@ -138,10 +138,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       exception = (e, s);
     }
     if (exception == null) {
-      this._sendMessage(MessageType.success, 'SUCCEEDED', result!);
+      this._sendMessage(.success, 'SUCCEEDED', result!);
     }
     else {
-      this._sendMessage(MessageType.error, 'FAILED', [ExceptionHelper.generateMessage(exception.$1, exception.$2)]);
+      this._sendMessage(.error, 'FAILED', [ExceptionHelper.generateMessage(exception.$1, exception.$2)]);
     }
     this._sessionRunning = false;
     await refreshState(this.setState);
@@ -268,7 +268,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       onDropFile: null,
       content: FlexContainer.vertical([
         ListContainer.of(
-          padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
+          padding: .fromLTRB(12, 4, 12, 4),
           controller: this._messageListScrollController,
           itemCount:this._messageList.length,
           itemBuilder: (context, index) => this._messageList[index],
@@ -294,12 +294,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
             StyledBadge.standard(
               label: StyledText.custom(
                 '${this._additionalArgument.length}',
-                style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+                style: getSpecialFontTextStyle(context),
               ),
               child: StyledIconButton.filledTonal(
                 tooltip: 'Additional Argument',
-                icon: Box.of(
-                  width: 40,
+                icon: BoxContainer.of(
+                  constraints: .tightFor(width: 40),
                   child: Icon(IconSet.attach_file, fill: 1),
                 ),
                 onPressed: (context) async {
@@ -307,9 +307,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                     title: 'Additional Argument',
                     contentBuilder: (context, setStateForPanel) => [
                       StyledInput.outlined(
-                        style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-                        type: StyledInputType.multiline,
-                        format: [],
+                        style: getSpecialFontTextStyle(context),
+                        type: .multiline,
+                        format: null,
                         hint: null,
                         prefix: null,
                         suffix: null,
@@ -506,13 +506,12 @@ class _MainPageBridgeClient extends bridge.Client {
 
 }
 
-TextStyle withSpecialFontTextStyle(
-  BuildContext context,
-  TextStyle    style, {
+TextStyle getSpecialFontTextStyle(
+  BuildContext context, {
   Boolean      listen = true,
 }) {
   var setting = Provider.of<SettingProvider>(context, listen: listen);
-  return style.copyWith(
+  return TextStyle(inherit: true).copyWith(
     fontFamily: '',
     fontFamilyFallback: [...setting.state.moddingWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
   );

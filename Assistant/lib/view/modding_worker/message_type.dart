@@ -19,7 +19,7 @@ extension MessageTypeExtension on MessageType {
     BuildContext context,
   ) {
     return [
-      StyledColorExtension.value(context, StyledColor.onSurface),
+      StyledColorExtension.value(context, .onSurface),
       ColorSet.blue,
       ColorSet.yellow,
       ColorSet.red,

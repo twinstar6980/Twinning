@@ -91,23 +91,23 @@ class ConfigurationHelper {
     Object       json,
   ) {
     return switch (type) {
-      ArgumentType.boolean => BooleanExpression(
+      .boolean => BooleanExpression(
         json.as<Boolean>(),
       ),
-      ArgumentType.integer => IntegerExpression(
+      .integer => IntegerExpression(
         json.as<Integer>(),
       ),
-      ArgumentType.floater => FloaterExpression(
+      .floater => FloaterExpression(
         json.as<Floater>(),
       ),
-      ArgumentType.size => SizeExpression(
+      .size => SizeExpression(
         json.as<String>().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
         json.as<String>().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) { assertTest(it != -1); }),
       ),
-      ArgumentType.string => StringExpression(
+      .string => StringExpression(
         json.as<String>(),
       ),
-      ArgumentType.path => PathExpression(
+      .path => PathExpression(
         json.as<String>(),
       ),
     };
@@ -162,7 +162,7 @@ class ConfigurationHelper {
         argument: (jsonItem['argument'] as List<dynamic>).map((jsonArgument) => ArgumentConfiguration(
           identifier: (jsonArgument['identifier'] as String),
           name: (jsonArgument['name'] as String),
-          type: (jsonArgument['type'] as String).selfLet((it) => ArgumentType.values.byName(it)),
+          type: (jsonArgument['type'] as String).selfLet((it) => .values.byName(it)),
           option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),
         )).toList(),
         batch: (jsonItem['batch'] as List<dynamic>?)?.cast<String>(),

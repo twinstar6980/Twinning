@@ -35,8 +35,8 @@ class _MainPageState extends State<MainPage> {
   Future<Void> _insertTabItem(
     ModuleLauncherConfiguration configuration,
   ) async {
-    while (Navigator.canPop(context)) {
-      Navigator.pop(context);
+    while (Navigator.canPop(this.context)) {
+      Navigator.pop(this.context);
     }
     this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
     if (this._tabIndex != -1) {
@@ -98,7 +98,7 @@ class _MainPageState extends State<MainPage> {
       type: this._tabList[index].$2,
       option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
-    var setting = Provider.of<SettingProvider>(context, listen: false);
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
     setting.data.moduleLauncher.pinned.add(configuration);
     await setting.save();
     return;
@@ -233,7 +233,7 @@ class _MainPageState extends State<MainPage> {
                 icon: Icon(IconSet.steppers),
                 onPressed: (context) async {
                   var action = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-                    position: StyledMenuPosition.under,
+                    position: .under,
                     children: [
                       ('remove', 'Remove', IconSet.cancel),
                       ('rename', 'Rename', IconSet.draw),
@@ -257,8 +257,8 @@ class _MainPageState extends State<MainPage> {
                           title: 'Tab Rename',
                           contentBuilder: (context, setStateForPanel) => [
                             StyledInput.outlined(
-                              type: StyledInputType.multiline,
-                              format: [],
+                              type: .multiline,
+                              format: null,
                               hint: null,
                               prefix: null,
                               suffix: null,

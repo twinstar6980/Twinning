@@ -22,7 +22,7 @@ final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '125';
+  static const String version = '126';
 
   static const String name = 'Twinning Assistant';
 
@@ -62,7 +62,7 @@ class UnreachableException implements Exception {
   // #region string
 
   @override
-  String toString(
+  toString(
   ) {
     return 'UnreachableException';
   }
@@ -85,7 +85,7 @@ class UnimplementedException implements Exception {
   // #region string
 
   @override
-  String toString(
+  toString(
   ) {
     return 'UnimplementedException';
   }
@@ -108,7 +108,7 @@ class UnsupportedException implements Exception {
   // #region string
 
   @override
-  String toString(
+  toString(
   ) {
     return 'UnsupportedException';
   }
@@ -135,7 +135,7 @@ class AssertionException implements Exception {
   // #region string
 
   @override
-  String toString(
+  toString(
   ) {
     return 'AssertionException${this.expression == null ? '' : ': ${this.expression}'}';
   }

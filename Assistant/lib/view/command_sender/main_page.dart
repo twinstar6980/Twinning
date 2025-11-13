@@ -192,11 +192,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       onDropFile: null,
       content: FlexContainer.vertical([
         ListContainer.of(
-          padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+          padding: .fromLTRB(16, 6, 16, 6),
           controller: this._commandListScrollController,
           itemCount: this._command.length,
           itemBuilder: (context, index) => BoxContainer.of(
-            padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+            padding: .fromLTRB(0, 6, 0, 6),
             child: CommandPanel(
               key: ObjectKey(this._command[index]),
               groupConfiguration: this._command[index].$1,
@@ -228,7 +228,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                 contentBuilder: (context, setStateForPanel) => [
                   ListContainer.of(
                     shrink: true,
-                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    padding: .fromLTRB(0, 8, 0, 8),
                     itemCount: this._methodConfiguration.length,
                     itemBuilder: (context, index) => MethodGroupItem(
                       configuration: this._methodConfiguration[index],

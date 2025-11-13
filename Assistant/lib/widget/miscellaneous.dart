@@ -29,11 +29,11 @@ class SettingListLabel extends StatelessWidget {
   build(context) {
     return StyledListTile.standardCustom(
       dense: true,
-      padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+      padding: .fromLTRB(24, 0, 24, 0),
       content: StyledText.custom(
         this.label,
-        variant: StyledTextVariant.titleSmall,
-        color: StyledColor.primary,
+        typography: .titleSmall,
+        color: .primary,
       ),
       trailing: this.action,
     );
@@ -68,17 +68,19 @@ class SettingListItem extends StatelessWidget {
   build(context) {
     return StyledListTile.standardCustom(
       enabled: this.enabled,
-      padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+      padding: .fromLTRB(24, 0, 24, 0),
       leading: Icon(this.icon),
       content: DefaultTextStyle(
-        style: material.Theme.of(context).textTheme.bodyMedium!.copyWith(
-          color: this.enabled ? null : StyledColorExtension.value(context, StyledColor.disabled),
+        style: StyledTypographyExtension.value(context, .bodyMedium).copyWith(
+          color: this.enabled ? null : StyledColorExtension.value(context, .disabled),
         ),
+        textAlign: .end,
         child: FlexContainer.horizontal([
           StyledText.custom(
             this.label,
-            variant: StyledTextVariant.bodyLarge,
-            color: this.enabled ? null : StyledColor.disabled,
+            typography: .bodyLarge,
+            color: this.enabled ? null : .disabled,
+            align: .start,
           ).withFlexExpanded(),
           Gap.horizontal(16),
           ...this.comment,
@@ -122,11 +124,11 @@ class NavigationDrawerLabel extends StatelessWidget {
   @override
   build(context) {
     return BoxContainer.of(
-      padding: EdgeInsets.fromLTRB(28, 8, 28, 8),
+      padding: .fromLTRB(28, 8, 28, 8),
       child: StyledText.custom(
         this.label,
-        variant: StyledTextVariant.titleSmall,
-        color: StyledColor.primary,
+        typography: .titleSmall,
+        color: .primary,
       ),
     );
   }
@@ -157,13 +159,13 @@ class NavigationDrawerItem extends StatelessWidget {
   @override
   build(context) {
     return BoxContainer.of(
-      height: 56,
-      padding: EdgeInsets.symmetric(horizontal: 12),
+      constraints: .tightFor(height: 56),
+      padding: .symmetric(horizontal: 12),
       child: material.TextButton(
         style: material.ButtonStyle(
-          padding: WidgetStatePropertyAll(EdgeInsets.zero),
-          backgroundColor: WidgetStatePropertyAll(!this.selected ? null : StyledColorExtension.value(context, StyledColor.secondaryContainer)),
-          foregroundColor: WidgetStatePropertyAll(!this.selected ? StyledColorExtension.value(context, StyledColor.onSurface) : StyledColorExtension.value(context, StyledColor.surfaceTint)),
+          padding: .all(.zero),
+          backgroundColor: .all(!this.selected ? null : StyledColorExtension.value(context, .secondaryContainer)),
+          foregroundColor: .all(!this.selected ? StyledColorExtension.value(context, .onSurface) : StyledColorExtension.value(context, .surfaceTint)),
         ),
         child: FlexContainer.horizontal([
           Gap.horizontal(16),
@@ -171,8 +173,8 @@ class NavigationDrawerItem extends StatelessWidget {
           Gap.horizontal(12),
           StyledText.custom(
             this.label,
-            variant: StyledTextVariant.titleSmall,
-            color: !this.selected ? StyledColor.onSurface : StyledColor.surfaceTint,
+            typography: .titleSmall,
+            color: !this.selected ? .onSurface : .surfaceTint,
           ).withFlexExpanded(),
           Gap.horizontal(12),
           ...this.action,
@@ -234,8 +236,8 @@ Future<Void> showDialogForRevealStoragePath(
     title: title,
     contentBuilder: (context, setStateForPanel) => [
       StyledInput.outlined(
-        type: StyledInputType.none,
-        format: [],
+        type: .none,
+        format: null,
         hint: null,
         prefix: null,
         suffix: null,
@@ -284,13 +286,13 @@ class StorageDropRegion extends StatelessWidget {
     return !(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh)
       ? this.child
       : lib.DropRegion(
-        hitTestBehavior: HitTestBehavior.opaque,
+        hitTestBehavior: .opaque,
         formats: [lib.Formats.fileUri],
         onDropOver: (event) async {
           if (this.onDrop != null && event.session.items.every((item) => item.canProvide(lib.Formats.fileUri))) {
-            return lib.DropOperation.link;
+            return .link;
           }
-          return lib.DropOperation.none;
+          return .none;
         },
         onPerformDrop: (event) async {
           var result = <String>[];
@@ -356,7 +358,7 @@ Future<String?> pickStorageItem({
   }
   else {
     type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-      position: StyledMenuPosition.under,
+      position: .under,
       children: [
         if (allowLoadFile)
           ('load_file', 'Load File'),

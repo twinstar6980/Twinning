@@ -39,14 +39,14 @@ class CommandPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => StyledCard.outlined(
         content: BoxContainer.of(
-          padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+          padding: .fromLTRB(16, 8, 16, 16),
           child: FlexContainer.vertical([
             FlexContainer.horizontal([
               Gap.horizontal(8),
               StyledText.custom(
                 '${this.groupConfiguration.name} - ${this.itemConfiguration.name}',
                 tooltip: true,
-                variant: StyledTextVariant.titleMedium,
+                typography: .titleMedium,
               ).withFlexExpanded(),
               Gap.horizontal(8),
               StyledIconButton.standard(
@@ -71,7 +71,7 @@ class CommandPanel extends StatelessWidget {
             ]),
             StyledDivider.standard(),
             ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => BoxContainer.of(
-              margin: !this.expanded.value && this.argument[argumentIndex].value == null ? EdgeInsets.zero : EdgeInsets.fromLTRB(0, 8, 0, 8),
+              margin: !this.expanded.value && this.argument[argumentIndex].value == null ? .zero : .fromLTRB(0, 8, 0, 8),
               child: ArgumentBar(
                 name: argumentConfiguration.name,
                 type: argumentConfiguration.type,
@@ -87,7 +87,7 @@ class CommandPanel extends StatelessWidget {
               StyledDivider.standard(),
             Gap.vertical(8),
             FlexContainer.horizontal([
-              Box.none().withFlexExpanded(),
+              BoxContainer.none().withFlexExpanded(),
               Gap.horizontal(8),
               StyledIconButton.filledTonal(
                 tooltip: 'Preset',
@@ -100,7 +100,7 @@ class CommandPanel extends StatelessWidget {
                 ]),
                 onPressed: (context) async {
                   var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
-                    position: StyledMenuPosition.under,
+                    position: .under,
                     children: this.itemConfiguration.preset.map((preset) => preset == null ? null : StyledMenuItem.standard(
                       value: preset,
                       content: StyledText.inherit(preset.name),

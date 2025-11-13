@@ -51,25 +51,25 @@ class _BasicSubmissionBar extends StatelessWidget {
           visible: this.history != null,
           label: StyledText.custom(
             '${this.history == null ? 0 : this.history!.length}',
-            style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+            style: getSpecialFontTextStyle(context),
           ),
           child: StyledIconButton.filledTonal(
             enabled: this.history != null,
             tooltip: 'History',
-            icon: Box.of(
-              width: 40,
+            icon: BoxContainer.of(
+              constraints: .tightFor(width: 40),
               child: Icon(this.icon, fill: 1),
             ),
             onPressed: (context) async {
               var value = await StyledMenuExtension.show<ValueExpression>(context, StyledMenu.standard(
-                position: StyledMenuPosition.under,
+                position: .under,
                 children: (this.history ?? []).mapIndexed((index, value) => StyledMenuItem.standard(
                   enabled: value.$2,
                   value: value.$1,
                   content: StyledText.custom(
                     ValueExpressionHelper.makeString(value.$1),
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                    overflow: .clip,
+                    style: getSpecialFontTextStyle(context, listen: false),
                   ),
                 )),
               ));
@@ -108,8 +108,8 @@ class _IdleSubmissionBar extends StatelessWidget {
       icon: IconSet.more_horiz,
       content: StyledInput.underlined(
         enabled: false,
-        type: StyledInputType.none,
-        format: [],
+        type: .none,
+        format: null,
         hint: null,
         prefix: null,
         suffix: null,
@@ -150,9 +150,9 @@ class _PauseSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.pause,
         content: StyledInput.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-          type: StyledInputType.none,
-          format: [],
+          style: getSpecialFontTextStyle(context),
+          type: .none,
+          format: null,
           hint: 'Pause',
           prefix: null,
           suffix: null,
@@ -194,9 +194,9 @@ class _BooleanSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.check_box,
         content: StyledInput.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-          type: StyledInputType.text,
-          format: [],
+          style: getSpecialFontTextStyle(context),
+          type: .text,
+          format: null,
           hint: 'Boolean',
           prefix: null,
           suffix: [
@@ -270,9 +270,9 @@ class _IntegerSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.speed_1_2,
         content: StyledInput.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-          type: StyledInputType.numberWithOptions(signed: true, decimal: false),
-          format: [],
+          style: getSpecialFontTextStyle(context),
+          type: .numberWithOptions(signed: true, decimal: false),
+          format: null,
           hint: 'Integer',
           prefix: null,
           suffix: null,
@@ -325,9 +325,9 @@ class _FloaterSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.speed_1_2,
         content: StyledInput.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-          type: StyledInputType.numberWithOptions(signed: true, decimal: true),
-          format: [],
+          style: getSpecialFontTextStyle(context),
+          type: .numberWithOptions(signed: true, decimal: true),
+          format: null,
           hint: 'Floater',
           prefix: null,
           suffix: null,
@@ -380,9 +380,9 @@ class _SizeSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.memory,
         content: StyledInput.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-          type: StyledInputType.numberWithOptions(signed: false, decimal: true),
-          format: [],
+          style: getSpecialFontTextStyle(context),
+          type: .numberWithOptions(signed: false, decimal: true),
+          format: null,
           hint: 'Size',
           prefix: null,
           suffix: [
@@ -391,22 +391,21 @@ class _SizeSubmissionBar extends StatelessWidget {
               icon: this.value.value == null
                 ? Icon(IconSet.expand_circle_down)
                 : BoxContainer.of(
-                  width: 24,
-                  height: 24,
-                  align: BoxContainerAlign.center,
+                  constraints: .tightFor(width: 24, height: 24),
+                  align: .center,
                   child: StyledText.custom(
                     ['B', 'K', 'M', 'G'][this.value.value!.exponent],
-                    style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+                    style: getSpecialFontTextStyle(context),
                   ),
                 ),
               onPressed: (context) async {
                 var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
-                  position: StyledMenuPosition.under,
+                  position: .under,
                   children: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
                     value: index,
                     content: StyledText.custom(
                       value,
-                      style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                      style: getSpecialFontTextStyle(context, listen: false),
                     ),
                   )),
                 ));
@@ -466,9 +465,9 @@ class _StringSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.text_fields,
         content: StyledInput.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-          type: StyledInputType.text,
-          format: [],
+          style: getSpecialFontTextStyle(context),
+          type: .text,
+          format: null,
           hint: 'String',
           prefix: null,
           suffix: null,
@@ -523,9 +522,9 @@ class _PathSubmissionBar extends StatelessWidget {
             await refreshState(setState);
           },
           child: StyledInput.underlined(
-            style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
-            type: StyledInputType.text,
-            format: [],
+            style: getSpecialFontTextStyle(context),
+            type: .text,
+            format: null,
             hint: 'Path',
             prefix: null,
             suffix: [
@@ -534,7 +533,7 @@ class _PathSubmissionBar extends StatelessWidget {
                 icon: Icon(IconSet.adjust),
                 onPressed: (context) async {
                   var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-                    position: StyledMenuPosition.under,
+                    position: .under,
                     children: [
                       ('?generate', 'Generate'),
                       ('?move', 'Move'),
@@ -544,7 +543,7 @@ class _PathSubmissionBar extends StatelessWidget {
                       value: value.$1,
                       content: StyledText.custom(
                         value.$2,
-                        style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                        style: getSpecialFontTextStyle(context, listen: false),
                       ),
                     )),
                   ));
@@ -565,7 +564,7 @@ class _PathSubmissionBar extends StatelessWidget {
                     allowLoadDirectory: true,
                     allowSaveFile: true,
                     location: '@ModdingWorker.Generic',
-                    textStyle: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it, listen: false)),
+                    textStyle: getSpecialFontTextStyle(context, listen: false),
                   );
                   if (target != null) {
                     this.value.value = PathExpression(target);
@@ -623,7 +622,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.menu,
         content: StyledInputCombo.underlined(
-          style: TextStyle(inherit: true).selfLet((it) => withSpecialFontTextStyle(context, it)),
+          style: getSpecialFontTextStyle(context),
           hint: 'Enumeration',
           prefix: null,
           suffix: [
@@ -681,42 +680,42 @@ class SubmissionBar extends StatelessWidget {
     else {
       assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
       return switch (this.type!) {
-        SubmissionType.pause => _PauseSubmissionBar(
+        .pause => _PauseSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.boolean => _BooleanSubmissionBar(
+        .boolean => _BooleanSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.integer => _IntegerSubmissionBar(
+        .integer => _IntegerSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.floater => _FloaterSubmissionBar(
+        .floater => _FloaterSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.size => _SizeSubmissionBar(
+        .size => _SizeSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.string => _StringSubmissionBar(
+        .string => _StringSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.path => _PathSubmissionBar(
+        .path => _PathSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        SubmissionType.enumeration => _EnumerationSubmissionBar(
+        .enumeration => _EnumerationSubmissionBar(
           completer: this.completer!,
           option: this.option!,
           history: this.history!.cast(),

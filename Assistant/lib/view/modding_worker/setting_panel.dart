@@ -37,8 +37,8 @@ class SettingPanel extends StatelessWidget {
           panelBuilder: (context, setStateForPanel) => [
             StyledListTile.standardTight(
               content: StyledInput.outlined(
-                type: StyledInputType.text,
-                format: [],
+                type: .text,
+                format: null,
                 hint: null,
                 prefix: null,
                 suffix: [
@@ -81,8 +81,8 @@ class SettingPanel extends StatelessWidget {
           panelBuilder: (context, setStateForPanel) => [
             StyledListTile.standardTight(
               content: StyledInput.outlined(
-                type: StyledInputType.text,
-                format: [],
+                type: .text,
+                format: null,
                 hint: null,
                 prefix: null,
                 suffix: [
@@ -125,8 +125,8 @@ class SettingPanel extends StatelessWidget {
           panelBuilder: (context, setStateForPanel) => [
             StyledListTile.standardTight(
               content: StyledInput.outlined(
-                type: StyledInputType.multiline,
-                format: [],
+                type: .multiline,
+                format: null,
                 hint: null,
                 prefix: null,
                 suffix: [
@@ -193,8 +193,8 @@ class SettingPanel extends StatelessWidget {
           panelBuilder: (context, setStateForPanel) => [
             StyledListTile.standardTight(
               content: StyledInput.outlined(
-                type: StyledInputType.multiline,
-                format: [],
+                type: .multiline,
+                format: null,
                 hint: null,
                 prefix: null,
                 suffix: [

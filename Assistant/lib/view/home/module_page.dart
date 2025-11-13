@@ -28,8 +28,8 @@ class ModulePageRegion extends StatelessWidget {
       child: FlexContainer.vertical([
         MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            padding: EdgeInsets.zero,
-            viewPadding: EdgeInsets.zero,
+            padding: .zero,
+            viewPadding: .zero,
           ),
           child: this.content,
         ).withStyledMaterial(

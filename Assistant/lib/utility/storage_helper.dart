@@ -259,13 +259,13 @@ class StorageHelper {
     assertTest(await exist(target));
     var revealed = false;
     if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isLinux) {
-      revealed = await lib.launchUrl(Uri.file(target), mode: lib.LaunchMode.externalApplication);
+      revealed = await lib.launchUrl(Uri.file(target), mode: .externalApplication);
     }
     if (SystemChecker.isAndroid) {
       throw UnsupportedException();
     }
     if (SystemChecker.isIphone) {
-      revealed = await lib.launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: lib.LaunchMode.externalApplication);
+      revealed = await lib.launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: .externalApplication);
     }
     assertTest(revealed);
     return;
@@ -493,7 +493,7 @@ class StorageHelper {
           FlexContainer.horizontal([
             StyledText.custom(
               uri.toString(),
-              overflow: TextOverflow.clip,
+              overflow: .clip,
             ).withSelectableArea(
             ).withFlexExpanded(),
           ]),
