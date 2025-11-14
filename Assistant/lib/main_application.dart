@@ -56,7 +56,7 @@ class MainApplication {
     ModuleType   type,
     List<String> option,
   ) async {
-    await _setting.state.homeInsertTabItem!(ModuleLauncherConfiguration(
+    await _setting.state.homeInsertTabItem!(.new(
       title: title,
       type: type,
       option: option,
@@ -110,7 +110,7 @@ class MainApplication {
       var convertedCommand = <String>[];
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.applicationNavigatorKey.currentContext!, Uri.parse(commandItem), true) ?? commandItem;
+          commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true) ?? commandItem;
         }
         convertedCommand.add(commandItem);
       }

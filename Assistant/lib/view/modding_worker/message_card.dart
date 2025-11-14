@@ -28,7 +28,7 @@ class MessageCard extends StatelessWidget {
     var cardColor = this.type.color(context);
     var textStyle = getSpecialFontTextStyle(context);
     return StyledCard.elevated(
-      color: Color.alphaBlend(cardColor.withValues(alpha: 0.02), StyledColorExtension.value(context, .surfaceContainerLow)),
+      color: .alphaBlend(cardColor.withValues(alpha: 0.02), StyledColor.surfaceContainerLow.query(context)),
       content: BoxContainer.of(
         padding: .fromLTRB(12, 8, 12, 8),
         child: FlexContainer.horizontal(crossAlign: .start, [
@@ -37,7 +37,7 @@ class MessageCard extends StatelessWidget {
               IconSet.circle,
               size: 12,
               fill: 0.6,
-              color: Color.alphaBlend(cardColor.withValues(alpha: 0.50), StyledColorExtension.value(context, .onSurface)),
+              color: .alphaBlend(cardColor.withValues(alpha: 0.50), StyledColor.onSurface.query(context)),
             ),
             StyledText.custom(
               '',

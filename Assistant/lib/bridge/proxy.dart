@@ -183,11 +183,11 @@ class ExecutorProxy {
         var resultProxy = MessageProxy(null);
         proxy.value(callbackProxy, argumentProxy, resultProxy);
         MessageProxy.construct(result, resultProxy);
-        MessageProxy.construct(exception, MessageProxy([]));
+        MessageProxy.construct(exception, .new([]));
       }
       catch (e, s) {
-        MessageProxy.construct(exception, MessageProxy([ExceptionHelper.generateMessage(e, s)]));
-        MessageProxy.construct(result, MessageProxy([]));
+        MessageProxy.construct(exception, .new([ExceptionHelper.generateMessage(e, s)]));
+        MessageProxy.construct(result, .new([]));
       }
       return null as Void;
     });

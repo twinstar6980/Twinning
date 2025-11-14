@@ -18,7 +18,7 @@ class Wrapper<TValue> {
   Wrapper(
     TValue value,
   ) :
-    this._of(_WrapperData(value));
+    this._of(.new(value));
 
   // #endregion
 

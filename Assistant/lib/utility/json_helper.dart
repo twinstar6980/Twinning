@@ -9,9 +9,9 @@ class JsonHelper {
 
   // #region serialization
 
-  static final JsonEncoder _encoder = JsonEncoder.withIndent('\t');
+  static final JsonEncoder _encoder = .withIndent('\t');
 
-  static final JsonEncoder _encoderCompact = JsonEncoder();
+  static final JsonEncoder _encoderCompact = .new();
 
   // ----------------
 

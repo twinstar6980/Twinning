@@ -71,8 +71,8 @@ class SettingListItem extends StatelessWidget {
       padding: .fromLTRB(24, 0, 24, 0),
       leading: Icon(this.icon),
       content: DefaultTextStyle(
-        style: StyledTypographyExtension.value(context, .bodyMedium).copyWith(
-          color: this.enabled ? null : StyledColorExtension.value(context, .disabled),
+        style: StyledTypography.bodyMedium.query(context).copyWith(
+          color: this.enabled ? null : StyledColor.disabled.query(context),
         ),
         textAlign: .end,
         child: FlexContainer.horizontal([
@@ -162,10 +162,10 @@ class NavigationDrawerItem extends StatelessWidget {
       constraints: .tightFor(height: 56),
       padding: .symmetric(horizontal: 12),
       child: material.TextButton(
-        style: material.ButtonStyle(
+        style: .new(
           padding: .all(.zero),
-          backgroundColor: .all(!this.selected ? null : StyledColorExtension.value(context, .secondaryContainer)),
-          foregroundColor: .all(!this.selected ? StyledColorExtension.value(context, .onSurface) : StyledColorExtension.value(context, .surfaceTint)),
+          backgroundColor: .all((!this.selected ? null : StyledColor.secondaryContainer)?.query(context)),
+          foregroundColor: .all((!this.selected ? StyledColor.onSurface : StyledColor.surfaceTint).query(context)),
         ),
         child: FlexContainer.horizontal([
           Gap.horizontal(16),
@@ -319,7 +319,7 @@ class StorageDropRegion extends StatelessWidget {
               result.add(path);
             })!;
             while (progress.fraction.value != 1.0) {
-              await Future.delayed(Duration());
+              await Future.delayed(.zero);
             }
           }
           this.onDrop!(result);

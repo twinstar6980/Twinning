@@ -97,7 +97,7 @@
 /**/devtools_options.yaml                    text eol=lf
 
 # Environment - Visual Studio
-/**/*.sln                                    text eol=crlf
+/**/*.slnx                                   text eol=crlf
 /**/*.vcxproj                                text eol=crlf
 /**/*.vcxproj.filters                        text eol=crlf
 /**/*.csproj                                 text eol=crlf

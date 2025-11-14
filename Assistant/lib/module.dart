@@ -75,7 +75,7 @@ class ModuleLauncherSetting {
 class ModuleHelper {
 
   static final List<ModuleInformation> _information = [
-    ModuleInformation(
+    .new(
       type: .modding_worker,
       name: 'Modding Worker',
       icon: IconSet.rule_settings,
@@ -89,7 +89,7 @@ class ModuleHelper {
       ),
       generateForwardOption: (resource) async => ['-additional_argument', ...resource],
     ),
-    ModuleInformation(
+    .new(
       type: .command_sender,
       name: 'Command Sender',
       icon: IconSet.send,
@@ -103,7 +103,7 @@ class ModuleHelper {
       ),
       generateForwardOption: (resource) async => null,
     ),
-    ModuleInformation(
+    .new(
       type: .resource_shipper,
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
@@ -117,7 +117,7 @@ class ModuleHelper {
       ),
       generateForwardOption: (resource) async => ['-resource', ...resource],
     ),
-    ModuleInformation(
+    .new(
       type: .animation_viewer,
       name: 'Animation Viewer',
       icon: IconSet.thread_unread,

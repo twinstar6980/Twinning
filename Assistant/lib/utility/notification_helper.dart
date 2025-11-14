@@ -14,21 +14,22 @@ class NotificationHelper {
 
   static Future<Void> initialize(
   ) async {
-    _plugin = lib.FlutterLocalNotificationsPlugin();
+    assertTest(_plugin == null);
+    _plugin = .new();
     await _plugin!.initialize(
-      lib.InitializationSettings(
-        android: lib.AndroidInitializationSettings(
+      .new(
+        android: .new(
           '@mipmap/ic_launcher_foreground',
         ),
-        iOS: lib.DarwinInitializationSettings(
+        iOS: .new(
         ),
-        macOS: lib.DarwinInitializationSettings(
+        macOS: .new(
         ),
-        linux: lib.LinuxInitializationSettings(
+        linux: .new(
           defaultActionName: '',
           defaultIcon: lib.AssetsLinuxIcon('asset/logo.png'),
         ),
-        windows: lib.WindowsInitializationSettings(
+        windows: .new(
           appName: ApplicationInformation.name,
           appUserModelId: ApplicationInformation.identifier,
           guid: '3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A',
@@ -49,23 +50,17 @@ class NotificationHelper {
     String title,
     String description,
   ) async {
+    assertTest(_plugin != null);
     await _plugin!.show(
       DateTime.now().millisecondsSinceEpoch % 0x80000000,
       title,
       description,
-      lib.NotificationDetails(
-        android: lib.AndroidNotificationDetails(
-          '${ApplicationInformation.identifier}.notification_channel.main',
-          'Main',
-        ),
-        iOS: lib.DarwinNotificationDetails(
-        ),
-        macOS: lib.DarwinNotificationDetails(
-        ),
-        linux: lib.LinuxNotificationDetails(
-        ),
-        windows: lib.WindowsNotificationDetails(
-        ),
+      .new(
+        android: .new('${ApplicationInformation.identifier}.notification_channel.main', 'Main'),
+        iOS: .new(),
+        macOS: .new(),
+        linux: .new(),
+        windows: .new(),
       ),
     );
     return;

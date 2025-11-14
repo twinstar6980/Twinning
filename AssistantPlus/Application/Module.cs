@@ -23,8 +23,8 @@ namespace Twinning.AssistantPlus {
 	public record ModuleInformation {
 		public String                            Identifier            = default!;
 		public ModuleType                        Type                  = default!;
-		public String                            Icon                  = default!;
 		public String                            Name                  = default!;
+		public String                            Icon                  = default!;
 		public Type                              MainPage              = default!;
 		public Func<UIElement>                   SettingPanel          = default!;
 		public Func<List<String>, List<String>?> GenerateForwardOption = default!;
@@ -65,8 +65,8 @@ namespace Twinning.AssistantPlus {
 			new () {
 				Identifier = "modding_worker",
 				Type = ModuleType.ModdingWorker,
-				Icon = FluentIconGlyph.ProvisioningPackage,
 				Name = "Modding Worker",
+				Icon = FluentIconGlyph.ProvisioningPackage,
 				MainPage = typeof(View.ModdingWorker.MainPage),
 				SettingPanel = () => new View.ModdingWorker.SettingPanel() {
 					Data = App.Setting.Data.ModdingWorker,
@@ -76,8 +76,8 @@ namespace Twinning.AssistantPlus {
 			new () {
 				Identifier = "command_sender",
 				Type = ModuleType.CommandSender,
-				Icon = FluentIconGlyph.Send,
 				Name = "Command Sender",
+				Icon = FluentIconGlyph.Send,
 				MainPage = typeof(View.CommandSender.MainPage),
 				SettingPanel = () => new View.CommandSender.SettingPanel() {
 					Data = App.Setting.Data.CommandSender,
@@ -87,8 +87,8 @@ namespace Twinning.AssistantPlus {
 			new () {
 				Identifier = "resource_shipper",
 				Type = ModuleType.ResourceShipper,
-				Icon = FluentIconGlyph.Share,
 				Name = "Resource Shipper",
+				Icon = FluentIconGlyph.Share,
 				MainPage = typeof(View.ResourceShipper.MainPage),
 				SettingPanel = () => new View.ResourceShipper.SettingPanel() {
 					Data = App.Setting.Data.ResourceShipper,
@@ -98,8 +98,8 @@ namespace Twinning.AssistantPlus {
 			new () {
 				Identifier = "animation_viewer",
 				Type = ModuleType.AnimationViewer,
-				Icon = FluentIconGlyph.HomeGroup,
 				Name = "Animation Viewer",
+				Icon = FluentIconGlyph.HomeGroup,
 				MainPage = typeof(View.AnimationViewer.MainPage),
 				SettingPanel = () => new View.AnimationViewer.SettingPanel() {
 					Data = App.Setting.Data.AnimationViewer,
@@ -109,8 +109,8 @@ namespace Twinning.AssistantPlus {
 			new () {
 				Identifier = "reflection_descriptor",
 				Type = ModuleType.ReflectionDescriptor,
-				Icon = FluentIconGlyph.Library,
 				Name = "Reflection Descriptor",
+				Icon = FluentIconGlyph.Library,
 				MainPage = typeof(View.ReflectionDescriptor.MainPage),
 				SettingPanel = () => new View.ReflectionDescriptor.SettingPanel() {
 					Data = App.Setting.Data.ReflectionDescriptor,
@@ -120,8 +120,8 @@ namespace Twinning.AssistantPlus {
 			new () {
 				Identifier = "package_builder",
 				Type = ModuleType.PackageBuilder,
-				Icon = FluentIconGlyph.DialShape3,
 				Name = "Package Builder",
+				Icon = FluentIconGlyph.DialShape3,
 				MainPage = typeof(View.PackageBuilder.MainPage),
 				SettingPanel = () => new View.PackageBuilder.SettingPanel() {
 					Data = App.Setting.Data.PackageBuilder,

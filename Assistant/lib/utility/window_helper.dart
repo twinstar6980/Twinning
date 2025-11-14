@@ -1,5 +1,4 @@
 import '/common.dart';
-import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart' as lib;
 
 // ----------------
@@ -12,7 +11,7 @@ class WindowHelper {
     Floater x,
     Floater y,
   ) async {
-    await lib.windowManager.setPosition(Offset(x, y));
+    await lib.windowManager.setPosition(.new(x, y));
     return;
   }
 
@@ -20,7 +19,7 @@ class WindowHelper {
     Floater width,
     Floater height,
   ) async {
-    await lib.windowManager.setSize(Size(width, height));
+    await lib.windowManager.setSize(.new(width, height));
     return;
   }
 

@@ -101,18 +101,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     var activeSprite = null as model.Sprite?;
     if (!target.$1) {
       var originalTarget = VisualHelper.selectImage(this._animation!, target.$2);
-      activeSprite = model.Sprite(
+      activeSprite = .new(
         name: VisualHelper.parseImageFileName(originalTarget.name),
         frameRate: null,
         workArea: (0, 0),
         frame: [
-          model.Frame(
+          .new(
             label: null,
             stop: false,
             command: [],
             remove: [],
             append: [
-              model.LayerAppend(
+              .new(
                 index: 0,
                 name: null,
                 resource: target.$2,
@@ -123,9 +123,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               ),
             ],
             change: [
-              model.LayerChange(
+              .new(
                 index: 0,
-                transform: model.VariantTransform(value: model.TranslateTransform(x: 0.0, y: 0.0)),
+                transform: .new(value: model.TranslateTransform(x: 0.0, y: 0.0)),
                 color: null,
                 spriteFrameNumber: null,
                 sourceRectangle: null,
@@ -162,7 +162,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameLabel = null;
     this._activeFrameRange = null;
     this._activeFrameSpeed = null;
-    this._animationController.duration = Duration.zero;
+    this._animationController.duration = .zero;
     this._animationController.reset();
     this._animationVisual = null;
     await refreshState(this.setState);
@@ -212,7 +212,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       this._animationController.stop();
     }
     this._activeFrameSpeed = frameSpeed;
-    this._animationController.duration = Duration(milliseconds: (this._activeSprite!.frame.length * 1000 / this._activeFrameSpeed!).ceil());
+    this._animationController.duration = .new(milliseconds: (this._activeSprite!.frame.length * 1000 / this._activeFrameSpeed!).ceil());
     if (currentState) {
       this._animationController.forward();
     }
@@ -546,7 +546,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           margin: .fromLTRB(16, 12, 16, 12),
           content: FlexContainer.vertical([
             BoxContainer.of(
-              color: StyledColorExtension.value(context, .surfaceContainer),
+              color: StyledColor.surfaceContainer.query(context),
               child: LayoutBuilder(
                 builder: (context, constraints) => BoxContainer.of(
                   constraints: .tightFor(
@@ -557,7 +557,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
                     vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                   ),
-                  color: !this._showBoundary ? null : StyledColorExtension.value(context, .surfaceContainerHighest),
+                  color: !this._showBoundary ? null : StyledColor.surfaceContainerHighest.query(context),
                   child: this._animationVisual,
                 ).withScrollableArea(
                   horizontal: this._stageHorizontalScrollSontroller,

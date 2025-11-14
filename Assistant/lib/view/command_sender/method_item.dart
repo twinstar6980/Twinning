@@ -31,7 +31,7 @@ class MethodItem extends StatelessWidget {
         content: StyledText.inherit(tooltip: true, this.configuration.name),
         trailing: VisibilityArea.of(
           enabled: this.configuration.batch != null,
-          child: Icon(IconSet.layers, color: StyledColorExtension.value(context, .primary)).withStyledTooltip(message: 'Batch'),
+          child: Icon(IconSet.layers, color: StyledColor.primary.query(context)).withStyledTooltip(message: 'Batch'),
         ),
         onPressed: (context) async {
           this.onSelect(this.configuration.identifier);

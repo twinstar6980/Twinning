@@ -45,7 +45,7 @@ class Launcher {
         MessageProxy.construct(argument, argumentProxy);
         sendPort.send([state, argument, result, exception]);
         while (!state.value) {
-          sleep(Duration(milliseconds: 10));
+          sleep(.new(milliseconds: 10));
         }
         resultProxy.value = MessageProxy.parse(result).value;
         exceptionProxy.value = MessageProxy.parse(exception).value;
@@ -107,12 +107,12 @@ class Launcher {
           var callbackException = portMessage[3] as ffi.Pointer<Message>;
           try {
             var callbackResultProxy = await client.callback(MessageProxy.parse(callbackArgument).value);
-            MessageProxy.construct(callbackResult, MessageProxy(callbackResultProxy));
-            MessageProxy.construct(callbackException, MessageProxy([]));
+            MessageProxy.construct(callbackResult, .new(callbackResultProxy));
+            MessageProxy.construct(callbackException, .new([]));
           }
           catch (e, s) {
-            MessageProxy.construct(callbackException, MessageProxy([ExceptionHelper.generateMessage(e, s)]));
-            MessageProxy.construct(callbackResult, MessageProxy([]));
+            MessageProxy.construct(callbackException, .new([ExceptionHelper.generateMessage(e, s)]));
+            MessageProxy.construct(callbackResult, .new([]));
           }
           callbackState.value = true;
         }

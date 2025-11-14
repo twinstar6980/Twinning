@@ -8,7 +8,7 @@
 
 * 要求
 	
-	* [Visual Studio 2022 17.14](https://visualstudio.microsoft.com/downloads/)
+	* [Visual Studio 2026 18.0](https://visualstudio.microsoft.com/downloads/)
 
 ## 第三方库使用
 

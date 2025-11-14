@@ -35,7 +35,7 @@ class _BasicArgumentBar extends StatelessWidget {
   build(context) {
     return FlexContainer.vertical([
       if (!this.expanded && this.value != null)
-        FlexContainer.horizontal(textBaseline: StyledTypographyExtension.value(context, .labelLarge).textBaseline!, [
+        FlexContainer.horizontal(textBaseline: StyledTypography.labelLarge.query(context).textBaseline!, [
           Gap.horizontal(8),
           StyledText.custom(
             this.name,

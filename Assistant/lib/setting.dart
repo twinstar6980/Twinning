@@ -169,12 +169,12 @@ class SettingProvider with ChangeNotifier {
 
   static SettingData _createDefaultData(
   ) {
-    return SettingData(
+    return .new(
       version: ApplicationInformation.version,
       themeMode: .system,
       themeColorState: false,
-      themeColorLight: Color(0xFF6200EE),
-      themeColorDark: Color(0xFFBB86FC),
+      themeColorLight: .new(0xFF6200EE),
+      themeColorDark: .new(0xFFBB86FC),
       themeFontState: false,
       themeFontPath: [],
       windowPositionState: false,
@@ -187,29 +187,29 @@ class SettingProvider with ChangeNotifier {
       storagePickerHistoryLocation: {},
       forwarderDefaultTarget: .resource_shipper,
       forwarderImmediateJump: false,
-      moduleLauncher: ModuleLauncherSetting(
+      moduleLauncher: .new(
         module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
         pinned: [],
         recent: [],
       ),
-      moddingWorker: modding_worker.Setting(
+      moddingWorker: .new(
         kernel: '',
         script: '',
         argument: [],
         immediateLaunch: true,
         messageFont: [],
       ),
-      commandSender: command_sender.Setting(
+      commandSender: .new(
         methodConfiguration: '',
         parallelForward: false,
       ),
-      resourceShipper: resource_shipper.Setting(
+      resourceShipper: .new(
         optionConfiguration: '',
         parallelForward: false,
         enableFilter: true,
         enableBatch: false,
       ),
-      animationViewer: animation_viewer.Setting(
+      animationViewer: .new(
         immediateSelect: true,
         automaticPlay: true,
         repeatPlay: true,
@@ -221,12 +221,12 @@ class SettingProvider with ChangeNotifier {
 
   static SettingState _createDefaultState(
   ) {
-    return SettingState(
+    return .new(
       handleLaunch: null,
       handleForward: null,
       handleCommand: null,
       handleLink: null,
-      applicationNavigatorKey: GlobalKey<NavigatorState>(),
+      applicationNavigatorKey: .new(),
       themeFontFamliy: [],
       homeShowLauncherPanel: null,
       homeInsertTabItem: null,

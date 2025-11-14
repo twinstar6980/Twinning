@@ -125,7 +125,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ],
               value: setting.data.themeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
               onChanged: (context, value) async {
-                setting.data.themeColorLight = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                setting.data.themeColorLight = .new(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();
@@ -147,7 +147,7 @@ class _SettingPanelState extends State<SettingPanel> {
               ],
               value: setting.data.themeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
               onChanged: (context, value) async {
-                setting.data.themeColorDark = Color(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                setting.data.themeColorDark = .new(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();

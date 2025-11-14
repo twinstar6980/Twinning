@@ -138,12 +138,12 @@ class VisualHelper {
   static ColorFilter _makeColor(
     model.Color value,
   ) {
-    var result = ColorFilter.mode(Color.from(
+    var result = ColorFilter.mode(.from(
       alpha: value.alpha,
       red: value.red,
       green: value.green,
       blue: value.blue,
-    ), BlendMode.modulate);
+    ), .modulate);
     return result;
   }
 
@@ -164,7 +164,7 @@ class VisualHelper {
           image: textureData.$1,
           width: (image.size?.$1 ?? textureData.$2).toDouble(),
           height: (image.size?.$2 ?? textureData.$3).toDouble(),
-          fit: BoxFit.fill,
+          fit: .fill,
         ),
     );
   }
@@ -217,8 +217,8 @@ class VisualHelper {
         );
         layer.property = List.filled(sprite.frame.length, null);
         layer.property[frameIndex] = (
-          _makeMatrix(model.VariantTransform(value: model.TranslateTransform(x: 0.0, y: 0.0))),
-          _makeColor(model.Color(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),
+          _makeMatrix(.new(value: model.TranslateTransform(x: 0.0, y: 0.0))),
+          _makeColor(.new(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),
         );
         layer.isRemoved = false;
         layer.isChanged = true;
@@ -283,7 +283,7 @@ class VisualHelper {
       var file = '${directory}/${parseImageFileName(image.name)}.png';
       if (await StorageHelper.existFile(file)) {
         var data = MemoryImage(await StorageHelper.readFile(file));
-        var descriptor = await ImageDescriptor.encoded(await ImmutableBuffer.fromUint8List(data.bytes));
+        var descriptor = await ImageDescriptor.encoded(await .fromUint8List(data.bytes));
         result[image.name] = (data, descriptor.width, descriptor.height);
       }
     }

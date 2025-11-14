@@ -44,14 +44,13 @@ enum StyledColor {
   onSurfaceVariant,
 }
 
-extension StyledColorExtension<TType extends Widget> on TType {
+extension StyledColorExtension on StyledColor {
 
-  static Color value(
+  Color query(
     BuildContext context,
-    StyledColor  variant,
   ) {
     var theme = material.Theme.of(context);
-    return switch (variant) {
+    return switch (this) {
       .disabled                => theme.disabledColor,
       .primary                 => theme.colorScheme.primary,
       .primaryContainer        => theme.colorScheme.primaryContainer,
@@ -99,14 +98,13 @@ enum StyledTypography {
   labelSmall,
 }
 
-extension StyledTypographyExtension<TType extends Widget> on TType {
+extension StyledTypographyExtension on StyledTypography {
 
-  static TextStyle value(
-    BuildContext     context,
-    StyledTypography variant,
+  TextStyle query(
+    BuildContext context,
   ) {
     var theme = material.Theme.of(context);
-    return switch (variant) {
+    return switch (this) {
       .displayLarge   => theme.textTheme.displayLarge!,
       .displayMedium  => theme.textTheme.displayMedium!,
       .displaySmall   => theme.textTheme.displaySmall!,
@@ -163,7 +161,7 @@ class StyledMaterial extends StatelessWidget {
   build(context) {
     return switch (this.variant) {
       .standard => material.Material(
-        type: material.MaterialType.transparency,
+        type: .transparency,
         child: this.child,
       ),
     };
@@ -171,11 +169,11 @@ class StyledMaterial extends StatelessWidget {
 
 }
 
-extension StyledMaterialExtension<TType extends Widget> on TType {
+extension StyledMaterialWidgetExtension on Widget {
 
   StyledMaterial withStyledMaterial(
   ) {
-    return StyledMaterial.standard(
+    return .standard(
       child: this,
     );
   }
@@ -185,6 +183,26 @@ extension StyledMaterialExtension<TType extends Widget> on TType {
 // #endregion
 
 // #region message
+
+extension StyledSnackExtension on Widget {
+
+  static Future<Void> show(
+    BuildContext context,
+    String       content,
+  ) async {
+    material.ScaffoldMessenger.of(context).showSnackBar(material.SnackBar(
+      behavior: .floating,
+      content: StyledText.custom(
+        content,
+        overflow: .clip,
+      ),
+    ));
+    return;
+  }
+
+}
+
+// ----------------
 
 enum StyledTooltipVariant {
   standard,
@@ -230,12 +248,12 @@ class StyledTooltip extends StatelessWidget {
 
 }
 
-extension StyledTooltipExtension<TType extends Widget> on TType {
+extension StyledTooltipWidgetExtension on Widget {
 
   StyledTooltip withStyledTooltip({
     required String? message,
   }) {
-    return StyledTooltip.standard(
+    return .standard(
       message: message,
       child: this,
     );
@@ -402,34 +420,14 @@ class StyledProgress extends StatelessWidget {
   build(context) {
     return switch (this.variant) {
       .linear => material.LinearProgressIndicator(
-        color: !this.paused ? null : StyledColorExtension.value(context, .tertiary),
+        color: !this.paused ? null : StyledColor.tertiary.query(context),
         value: this.value ?? (!this.paused ? null : 1),
       ),
       .circular => material.CircularProgressIndicator(
-        color: !this.paused ? null : StyledColorExtension.value(context, .tertiary),
+        color: !this.paused ? null : StyledColor.tertiary.query(context),
         value: this.value ?? (!this.paused ? null : 1),
       ),
     };
-  }
-
-}
-
-// ----------------
-
-extension StyledSnackExtension<TType extends Widget> on TType {
-
-  static Future<Void> show(
-    BuildContext context,
-    String       content,
-  ) async {
-    material.ScaffoldMessenger.of(context).showSnackBar(material.SnackBar(
-      behavior: .floating,
-      content: StyledText.custom(
-        content,
-        overflow: .clip,
-      ),
-    ));
-    return;
   }
 
 }
@@ -518,8 +516,8 @@ class StyledText extends StatelessWidget {
       this.text,
       overflow: this.overflow,
       textAlign: this.align,
-      style: (this.typography == null ? TextStyle(inherit: true) : StyledTypographyExtension.value(context, this.typography!)).merge(this.style).copyWith(
-        color: this.color == null ? null : StyledColorExtension.value(context, this.color!),
+      style: (this.typography == null ? TextStyle(inherit: true) : this.typography!.query(context)).merge(this.style).copyWith(
+        color: this.color?.query(context),
       ),
     ).selfLet((it) => !this.tooltip ? it : it.withStyledTooltip(message: this.tooltipText ?? this.text));
   }
@@ -1551,18 +1549,18 @@ class _StyledInputComboState extends State<StyledInputCombo> {
   build(context) {
     return LayoutBuilder(
       builder: (context, constraints) => material.MenuAnchor(
-        style: material.MenuStyle(
-          minimumSize: .all(Size(constraints.maxWidth + 8, 0)),
-          maximumSize: .all(Size(constraints.maxWidth + 8, Floater.infinity)),
+        style: .new(
+          minimumSize: .all(.new(constraints.maxWidth + 8, 0)),
+          maximumSize: .all(.new(constraints.maxWidth + 8, Floater.infinity)),
         ),
         crossAxisUnconstrained: false,
-        alignmentOffset: Offset(-4, 0),
+        alignmentOffset: .new(-4, 0),
         menuChildren: [
           if (this.widget.option.isEmpty)
             Gap.vertical(16),
           ...this.widget.option.map((value) => material.MenuItemButton(
-            style: material.ButtonStyle(
-              backgroundColor: .all(value.$2 != this.widget.value ? null : StyledColorExtension.value(context, .onSurface).withValues(alpha: 0.12)),
+            style: .new(
+              backgroundColor: .all(value.$2 != this.widget.value ? null : StyledColor.onSurface.query(context).withValues(alpha: 0.12)),
             ),
             child: BoxContainer.of(
               constraints: .new(maxWidth: constraints.maxWidth - 16),
@@ -1574,7 +1572,7 @@ class _StyledInputComboState extends State<StyledInputCombo> {
                   .underlined => .zero,
                 },
                 content: DefaultTextStyle(
-                  style: StyledTypographyExtension.value(context, .bodyLarge),
+                  style: StyledTypography.bodyLarge.query(context),
                   child: StyledText.custom(
                     value.$2,
                     overflow: .clip,
@@ -1907,12 +1905,12 @@ class StyledScrollBar extends StatelessWidget {
 
 }
 
-extension StyledScrollBarExtension<TType extends Widget> on TType {
+extension StyledScrollBarWidgetExtension on Widget {
 
   StyledScrollBar withStyledScrollBar({
     required ScrollController controller,
   }) {
-    return StyledScrollBar.standard(
+    return .standard(
       controller: controller,
       child: this,
     );
@@ -2076,7 +2074,7 @@ class StyledNavigationDrawer extends StatelessWidget {
 
 }
 
-extension StyledNavigationDrawerExtension<TType extends Widget> on TType {
+extension StyledNavigationDrawerExtension on StyledNavigationDrawer {
 
   static Future<Void> show(
     BuildContext context,
@@ -2167,7 +2165,7 @@ class StyledMenu<TValue> {
 
 }
 
-extension StyledMenuExtension<TType extends Widget> on TType {
+extension StyledMenuExtension on StyledMenu<dynamic> {
 
   static Future<TResult?> show<TResult>(
     BuildContext        context,
@@ -2177,8 +2175,8 @@ extension StyledMenuExtension<TType extends Widget> on TType {
     var overlay = Overlay.of(context).context.findRenderObject()!.as<RenderBox>();
     var position = RelativeRect.fromRect(
       Rect.fromPoints(
-        button.localToGlobal(Offset(0, overlay.size.height), ancestor: overlay),
-        button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+        button.localToGlobal(.new(0, overlay.size.height), ancestor: overlay),
+        button.localToGlobal(button.size.bottomRight(.zero), ancestor: overlay),
       ),
       Offset.zero & overlay.size,
     );
@@ -2205,12 +2203,14 @@ extension StyledMenuExtension<TType extends Widget> on TType {
               dense: true,
               leading: item.leading,
               content: item.content,
-              trailing: DefaultTextStyle(
-                style: StyledTypographyExtension.value(context, .labelSmall).copyWith(
-                  color: StyledColorExtension.value(context, .onSurfaceVariant),
+              trailing: item.trailing == null
+                ? null
+                : DefaultTextStyle(
+                  style: StyledTypography.labelSmall.query(context).copyWith(
+                    color: StyledColor.onSurfaceVariant.query(context),
+                  ),
+                  child: item.trailing!,
                 ),
-                child: item.trailing ?? BoxContainer.none(),
-              ),
             ),
           ).as<material.PopupMenuEntry<TResult>>()).toList(),
     );
@@ -2322,7 +2322,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
 
 }
 
-extension StyledFullDialogExtension<TType extends Widget> on TType {
+extension StyledFullDialogExtension on StyledFullDialog {
 
   static Future<TResult?> show<TResult>(
     BuildContext     context,
@@ -2437,7 +2437,7 @@ class _StyledModalDialogState extends State<StyledModalDialog> {
 
 }
 
-extension StyledModalDialogExtension<TType extends Widget> on TType {
+extension StyledModalDialogExtension on StyledModalDialog {
 
   static Future<TResult?> show<TResult>(
     BuildContext      context,
@@ -2550,7 +2550,7 @@ class _StyledModalBottomSheetState extends State<StyledModalBottomSheet> {
 
 }
 
-extension StyledBottomSheetExtension<TType extends Widget> on TType {
+extension StyledBottomSheetExtension on StyledModalBottomSheet {
 
   static Future<TResult?> show<TResult>(
     BuildContext           context,
@@ -2610,7 +2610,7 @@ class StyledScaffold extends StatelessWidget {
     return switch (this.variant) {
       .standard => material.Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(material.kToolbarHeight),
+          preferredSize: .fromHeight(material.kToolbarHeight),
           child: this.title,
         ),
         drawer: this.drawer,
@@ -2687,23 +2687,23 @@ class StyledApplication extends StatelessWidget {
           // fix for dynamic color error on flutter 3.22+, see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
           if (SystemChecker.isAndroid) {
             if (lightColor != null) {
-              lightColor = material.ColorScheme.fromSeed(seedColor: lightColor.primary, brightness: .light);
+              lightColor = .fromSeed(seedColor: lightColor.primary, brightness: .light);
             }
             if (darkColor != null) {
-              darkColor = material.ColorScheme.fromSeed(seedColor: darkColor.primary, brightness: .dark);
+              darkColor = .fromSeed(seedColor: darkColor.primary, brightness: .dark);
             }
           }
           return material.MaterialApp(
             navigatorKey: this.navigatorKey,
-            theme: material.ThemeData(
+            theme: .new(
               materialTapTargetSize: .shrinkWrap,
               visualDensity: .standard,
               brightness: .light,
-              colorScheme: !this.themeColorState ? lightColor : material.ColorScheme.fromSeed(seedColor:this.themeColorLight, brightness: .light),
+              colorScheme: !this.themeColorState ? lightColor : .fromSeed(seedColor: this.themeColorLight, brightness: .light),
               fontFamily: '',
               fontFamilyFallback: [...this.themeFontFamily],
               tooltipTheme: material.TooltipTheme.of(context).copyWith(
-                waitDuration: Duration(milliseconds: 1000),
+                waitDuration: .new(milliseconds: 1000),
               ),
               progressIndicatorTheme: material.ProgressIndicatorThemeData(
                 year2023: false, // ignore: deprecated_member_use
@@ -2712,15 +2712,15 @@ class StyledApplication extends StatelessWidget {
                 year2023: false, // ignore: deprecated_member_use
               ),
             ),
-            darkTheme: material.ThemeData(
+            darkTheme: .new(
               materialTapTargetSize: .shrinkWrap,
               visualDensity: .standard,
               brightness: .dark,
-              colorScheme: !this.themeColorState ? darkColor : material.ColorScheme.fromSeed(seedColor: this.themeColorDark, brightness: .dark),
+              colorScheme: !this.themeColorState ? darkColor : .fromSeed(seedColor: this.themeColorDark, brightness: .dark),
               fontFamily: '',
               fontFamilyFallback: [...this.themeFontFamily],
               tooltipTheme: material.TooltipTheme.of(context).copyWith(
-                waitDuration: Duration(milliseconds: 1000),
+                waitDuration: .new(milliseconds: 1000),
               ),
               progressIndicatorTheme: material.ProgressIndicatorThemeData(
                 year2023: false, // ignore: deprecated_member_use
@@ -2729,7 +2729,7 @@ class StyledApplication extends StatelessWidget {
                 year2023: false, // ignore: deprecated_member_use
               ),
             ),
-            themeMode: material.ThemeMode.values[this.themeMode.index],
+            themeMode: .values[this.themeMode.index],
             scrollBehavior: material.MaterialScrollBehavior().copyWith(scrollbars: false),
             title: this.title,
             home: Builder(

@@ -94,7 +94,7 @@ class BoxContainer extends StatelessWidget {
     Key? key = null,
   }) : this._(
     key: key,
-    constraints: null,
+    constraints: const .tightFor(width: 0, height: 0),
     margin: null,
     padding: null,
     align: null,
@@ -227,13 +227,13 @@ class FlexExpanded extends StatelessWidget {
 
 }
 
-extension FlexExpandedExtension<TType extends Widget> on TType {
+extension FlexExpandedWidgetExtension on Widget {
 
   FlexExpanded withFlexExpanded({
     Integer? weight = null,
   }) {
     weight ??= 1;
-    return FlexExpanded.of(
+    return .of(
       this,
       weight: weight,
     );
@@ -351,13 +351,13 @@ class VisibilityArea extends StatelessWidget {
 
 }
 
-extension VisibilityAreaExtension<TType extends Widget> on TType {
+extension VisibilityAreaWidgetExtension on Widget {
 
   VisibilityArea withVisibilityArea({
     Boolean? enabled = null,
   }) {
     enabled ??= true;
-    return VisibilityArea.of(
+    return .of(
       enabled: enabled,
       child: this,
     );
@@ -398,11 +398,11 @@ class ImpenetrableArea extends StatelessWidget {
 
 }
 
-extension ImpenetrableAreaExtension<TType extends Widget> on TType {
+extension ImpenetrableAreaWidgetExtension on Widget {
 
   ImpenetrableArea withImpenetrableArea(
   ) {
-    return ImpenetrableArea.of(
+    return .of(
       child: this,
     );
   }
@@ -442,11 +442,11 @@ class SelectableArea extends StatelessWidget {
 
 }
 
-extension SelectableAreaExtension<TType extends Widget> on TType {
+extension SelectableAreaWidgetExtension on Widget {
 
   SelectableArea withSelectableArea(
   ) {
-    return SelectableArea.of(
+    return .of(
       child: this,
     );
   }
@@ -515,13 +515,13 @@ class ScrollableArea extends StatelessWidget {
 
 }
 
-extension ScrollAreaExtension<TType extends Widget> on TType {
+extension ScrollAreaWidgetExtension on Widget {
 
   ScrollableArea withScrollableArea({
     ScrollController? horizontal = null,
     ScrollController? vertical   = null,
   }) {
-    return ScrollableArea.of(
+    return .of(
       horizontal: horizontal,
       vertical: vertical,
       child: this,

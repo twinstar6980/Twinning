@@ -18,14 +18,14 @@ extension MessageTypeExtension on MessageType {
   Color color(
     BuildContext context,
   ) {
-    return [
-      StyledColorExtension.value(context, .onSurface),
-      ColorSet.blue,
-      ColorSet.yellow,
-      ColorSet.red,
-      ColorSet.green,
-      ColorSet.purple,
-    ][this.index];
+    return switch (this) {
+      .verbosity   => StyledColor.onSurface.query(context),
+      .information => ColorSet.blue,
+      .warning     => ColorSet.yellow,
+      .error       => ColorSet.red,
+      .success     => ColorSet.green,
+      .input       => ColorSet.purple,
+    };
   }
 
 }

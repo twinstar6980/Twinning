@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> {
     this._tabIndex = this._tabList.length - 1;
     await refreshState(this.setState);
     await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(.new(milliseconds: 10));
     return;
   }
 

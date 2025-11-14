@@ -3,7 +3,6 @@
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
-using Windows.ApplicationModel;
 using Windows.UI.StartScreen;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Media;
