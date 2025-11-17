@@ -113,7 +113,7 @@ class _BooleanArgumentBar extends StatelessWidget {
               icon: Icon(IconSet.do_not_disturb_on),
               iconOnSelected: Icon(IconSet.do_not_disturb_on, fill: 1),
               onPressed: (context) async {
-                this.value.value = this.value.value?.value == false ? null : BooleanExpression(false);
+                this.value.value = this.value.value?.value == false ? null : .new(false);
                 await refreshState(setState);
               },
             ),
@@ -124,7 +124,7 @@ class _BooleanArgumentBar extends StatelessWidget {
               icon: Icon(IconSet.check_circle),
               iconOnSelected: Icon(IconSet.check_circle, fill: 1),
               onPressed: (context) async {
-                this.value.value = this.value.value?.value == true ? null : BooleanExpression(true);
+                this.value.value = this.value.value?.value == true ? null : .new(true);
                 await refreshState(setState);
               },
             ),
@@ -136,7 +136,7 @@ class _BooleanArgumentBar extends StatelessWidget {
             }
             else {
               if (text == 'n' || text == 'y') {
-                this.value.value = BooleanExpression(text == 'y');
+                this.value.value = .new(text == 'y');
               }
             }
             await refreshState(setState);
@@ -189,7 +189,7 @@ class _IntegerArgumentBar extends StatelessWidget {
             else {
               var value = Integer.tryParse(text);
               if (value != null) {
-                this.value.value = IntegerExpression(value);
+                this.value.value = .new(value);
               }
             }
             await refreshState(setState);
@@ -242,7 +242,7 @@ class _FloaterArgumentBar extends StatelessWidget {
             else {
               var value = Floater.tryParse(text);
               if (value != null && value.isFinite) {
-                this.value.value = FloaterExpression(value);
+                this.value.value = .new(value);
               }
             }
             await refreshState(setState);
@@ -305,7 +305,7 @@ class _SizeArgumentBar extends StatelessWidget {
                   )),
                 ));
                 if (value != null) {
-                  this.value.value = SizeExpression(this.value.value?.count ?? 1.0, value);
+                  this.value.value = .new(this.value.value?.count ?? 1.0, value);
                   await refreshState(setState);
                 }
               },
@@ -319,7 +319,7 @@ class _SizeArgumentBar extends StatelessWidget {
             else {
               var count = Floater.tryParse(text);
               if (count != null && count.isFinite && count >= 0.0) {
-                this.value.value = SizeExpression(count, this.value.value?.exponent ?? 2);
+                this.value.value = .new(count, this.value.value?.exponent ?? 2);
               }
             }
             await refreshState(setState);
@@ -370,7 +370,7 @@ class _StringArgumentBar extends StatelessWidget {
               this.value.value = null;
             }
             else {
-              this.value.value = StringExpression(text);
+              this.value.value = .new(text);
             }
             await refreshState(setState);
           },
@@ -410,7 +410,7 @@ class _PathArgumentBar extends StatelessWidget {
         expanded: this.expanded,
         content: StorageDropRegion(
           onDrop: (item) async {
-            this.value.value = PathExpression(item.first);
+            this.value.value = .new(item.first);
             await refreshState(setState);
           },
           child: StyledInput.underlined(
@@ -431,7 +431,7 @@ class _PathArgumentBar extends StatelessWidget {
                     location: '@CommandSender.Generic',
                   );
                   if (target != null) {
-                    this.value.value = PathExpression(target);
+                    this.value.value = .new(target);
                     await refreshState(setState);
                   }
                 },
@@ -443,7 +443,7 @@ class _PathArgumentBar extends StatelessWidget {
                 this.value.value = null;
               }
               else {
-                this.value.value = PathExpression(StorageHelper.regularize(text));
+                this.value.value = .new(StorageHelper.regularize(text));
               }
               await refreshState(setState);
             },

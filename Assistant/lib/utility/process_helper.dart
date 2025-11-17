@@ -17,7 +17,7 @@ class ProcessHelper {
 
   static Map<String, String> listEnvironment(
   ) {
-    return Map.from(Platform.environment);
+    return {...Platform.environment};
   }
 
   // #endregion

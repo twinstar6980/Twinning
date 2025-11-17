@@ -121,7 +121,7 @@ class StorageHelper {
     }
     if (await existDirectory(source)) {
       await createDirectory(destination);
-      for (var item in await Directory(source).list(recursive: true).toList()) {
+      await for (var item in Directory(source).list(recursive: true)) {
         await copy(item.path, '${destination}/${name(item.path)}');
       }
     }
@@ -259,13 +259,13 @@ class StorageHelper {
     assertTest(await exist(target));
     var revealed = false;
     if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isLinux) {
-      revealed = await lib.launchUrl(Uri.file(target), mode: .externalApplication);
+      revealed = await lib.launchUrl(.file(target), mode: .externalApplication);
     }
     if (SystemChecker.isAndroid) {
       throw UnsupportedException();
     }
     if (SystemChecker.isIphone) {
-      revealed = await lib.launchUrl(Uri.file(target).replace(scheme: 'shareddocuments'), mode: .externalApplication);
+      revealed = await lib.launchUrl(.file(target).replace(scheme: 'shareddocuments'), mode: .externalApplication);
     }
     assertTest(revealed);
     return;

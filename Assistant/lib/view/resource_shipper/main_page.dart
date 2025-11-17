@@ -224,7 +224,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._resource = [];
     this._optionMatch = [];
     this._optionExpanded = [];
-    this._optionListScrollController = ScrollController();
+    this._optionListScrollController = .new();
     postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);

@@ -1329,8 +1329,8 @@ class _StyledInputState extends State<StyledInput> {
   @override
   initState() {
     super.initState();
-    this._focusNode = FocusNode();
-    this._valueController = TextEditingController();
+    this._focusNode = .new();
+    this._valueController = .new();
     this._valueController.text = this.widget.value;
     return;
   }
@@ -1524,8 +1524,8 @@ class _StyledInputComboState extends State<StyledInputCombo> {
   @override
   initState() {
     super.initState();
-    this._focusNode = FocusNode();
-    this._valueController = TextEditingController();
+    this._focusNode = .new();
+    this._valueController = .new();
     this._valueController.text = this.widget.value;
     return;
   }
@@ -2174,7 +2174,7 @@ extension StyledMenuExtension on StyledMenu<dynamic> {
     var button = context.findRenderObject()!.as<RenderBox>();
     var overlay = Overlay.of(context).context.findRenderObject()!.as<RenderBox>();
     var position = RelativeRect.fromRect(
-      Rect.fromPoints(
+      .fromPoints(
         button.localToGlobal(.new(0, overlay.size.height), ancestor: overlay),
         button.localToGlobal(button.size.bottomRight(.zero), ancestor: overlay),
       ),
@@ -2266,7 +2266,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
   @override
   initState() {
     super.initState();
-    this._scrollController = ScrollController();
+    this._scrollController = .new();
     return;
   }
 
@@ -2274,7 +2274,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
   didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
     this._scrollController.dispose();
-    this._scrollController = ScrollController();
+    this._scrollController = .new();
     return;
   }
 
@@ -2389,7 +2389,7 @@ class _StyledModalDialogState extends State<StyledModalDialog> {
   @override
   initState() {
     super.initState();
-    this._scrollController = ScrollController();
+    this._scrollController = .new();
     return;
   }
 
@@ -2397,7 +2397,7 @@ class _StyledModalDialogState extends State<StyledModalDialog> {
   didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
     this._scrollController.dispose();
-    this._scrollController = ScrollController();
+    this._scrollController = .new();
     return;
   }
 
@@ -2499,7 +2499,7 @@ class _StyledModalBottomSheetState extends State<StyledModalBottomSheet> {
   @override
   initState() {
     super.initState();
-    this._scrollController = ScrollController();
+    this._scrollController = .new();
     return;
   }
 
@@ -2507,7 +2507,7 @@ class _StyledModalBottomSheetState extends State<StyledModalBottomSheet> {
   didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
     this._scrollController.dispose();
-    this._scrollController = ScrollController();
+    this._scrollController = .new();
     return;
   }
 

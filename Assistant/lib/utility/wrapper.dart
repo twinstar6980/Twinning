@@ -31,7 +31,7 @@ class Wrapper<TValue> {
 
   Wrapper<TTarget> cast<TTarget>(
   ) {
-    return Wrapper<TTarget>._of(this._data);
+    return ._of(this._data);
   }
 
   // #endregion

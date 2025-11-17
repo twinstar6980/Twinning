@@ -110,7 +110,7 @@ class CommandPanel extends StatelessWidget {
                     for (var argument in preset.argument.entries) {
                       var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
                       assertTest(argumentIndex != -1);
-                      this.argument[argumentIndex] = Wrapper(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
+                      this.argument[argumentIndex] = .new(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
                     }
                     await refreshState(setState);
                   }

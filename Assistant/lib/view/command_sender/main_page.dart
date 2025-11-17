@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   ) async {
     var groupConfiguration = this._methodConfiguration.firstWhere((value) => method.startsWith('${value.identifier}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.identifier);
-    this._command.add((groupConfiguration, itemConfiguration, Wrapper(batch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument), Wrapper(expanded)));
+    this._command.add((groupConfiguration, itemConfiguration, .new(batch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument), .new(expanded)));
     await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
     return;
@@ -165,7 +165,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._parallelForward = setting.data.commandSender.parallelForward;
     this._methodExpanded = [];
     this._command = [];
-    this._commandListScrollController = ScrollController();
+    this._commandListScrollController = .new();
     postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);

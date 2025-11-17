@@ -66,6 +66,7 @@ class SettingListItem extends StatelessWidget {
 
   @override
   build(context) {
+    assertTest((this.onPressed == null) != (this.panelBuilder == null));
     return StyledListTile.standardCustom(
       enabled: this.enabled,
       padding: .fromLTRB(24, 0, 24, 0),
@@ -87,7 +88,6 @@ class SettingListItem extends StatelessWidget {
         ]),
       ),
       onPressed: (context) async {
-        assertTest((this.onPressed == null) != (this.panelBuilder == null));
         if (this.onPressed != null) {
           this.onPressed!(context);
         }

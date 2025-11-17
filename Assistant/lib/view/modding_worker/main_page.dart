@@ -43,12 +43,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
-  late List<String>                _additionalArgument;
-  late List<Widget>                _messageList;
-  late ScrollController            _messageListScrollController;
-  late SubmissionBar               _submissionBar;
-  late _MainPageBridgeClient       _sessionClient;
-  late Boolean                     _sessionRunning;
+  late List<String>          _additionalArgument;
+  late List<Widget>          _messageList;
+  late ScrollController      _messageListScrollController;
+  late SubmissionBar         _submissionBar;
+  late _MainPageBridgeClient _sessionClient;
+  late Boolean               _sessionRunning;
 
   Future<Void> _sendMessage(
     MessageType  type,
@@ -232,7 +232,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     super.initState();
     this._additionalArgument = [];
     this._messageList = [];
-    this._messageListScrollController = ScrollController();
+    this._messageListScrollController = .new();
     this._submissionBar = SubmissionBar(
       type: null,
       option: null,
@@ -240,7 +240,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       value: null,
       completer: null,
     );
-    this._sessionClient = _MainPageBridgeClient(this);
+    this._sessionClient = .new(this);
     this._sessionRunning = false;
     postTask(() async {
       await this.modulePageOpenView();

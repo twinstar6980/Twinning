@@ -546,12 +546,12 @@ class ListContainer extends StatelessWidget {
   });
 
   const ListContainer.of({
-    Key?                                                        key = null,
-    Boolean                                                     shrink = false,
-    EdgeInsetsGeometry?                                         padding = null,
-    ScrollController?                                           controller = null,
-    required Integer                                            itemCount,
-  required Widget Function(BuildContext context, Integer index) itemBuilder,
+    Key?                                                          key = null,
+    Boolean                                                       shrink = false,
+    EdgeInsetsGeometry?                                           padding = null,
+    ScrollController?                                             controller = null,
+    required Integer                                              itemCount,
+    required Widget Function(BuildContext context, Integer index) itemBuilder,
   }) : this._(
     key: key,
     shrink: shrink,

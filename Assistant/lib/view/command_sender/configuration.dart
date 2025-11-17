@@ -139,7 +139,7 @@ class ConfigurationHelper {
     for (var index = 0; index < configuration.length; index++) {
       var itemConfiguration = configuration[index];
       var itemJson = json[itemConfiguration.identifier];
-      value.add(Wrapper(itemJson == null ? null : ConfigurationHelper.parseArgumentValueJson(itemConfiguration.type, itemJson)));
+      value.add(.new(itemJson == null ? null : ConfigurationHelper.parseArgumentValueJson(itemConfiguration.type, itemJson)));
     }
     return value;
   }

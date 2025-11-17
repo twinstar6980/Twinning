@@ -72,8 +72,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._animationFile = animationFile;
     this._animation = animation;
     this._texture = texture;
-    this._imageFilter = List.filled(this._animation!.image.length, true);
-    this._spriteFilter = List.filled(this._animation!.sprite.length, true);
+    this._imageFilter = .filled(this._animation!.image.length, true);
+    this._spriteFilter = .filled(this._animation!.sprite.length, true);
     await refreshState(this.setState);
     return;
   }
@@ -483,13 +483,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeProgressIndexStream = StreamController();
     this._activeProgressStateStream = StreamController();
     this._activeProgressChangingContinue = false;
-    this._animationController = AnimationController(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
+    this._animationController = .new(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
     this._animationController.addListener(() async {
       this._activeProgressIndexStream.sink.add(null);
       return;
     });
     this._animationController.addStatusListener((status) async {
-      if (status == AnimationStatus.completed) {
+      if (status == .completed) {
         if (!this._repeatPlay) {
           this._activeProgressStateStream.sink.add(null);
         }
@@ -500,8 +500,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       return;
     });
     this._animationVisual = null;
-    this._stageHorizontalScrollSontroller = ScrollController();
-    this._stageVerticalScrollSontroller = ScrollController();
+    this._stageHorizontalScrollSontroller = .new();
+    this._stageVerticalScrollSontroller = .new();
     postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);

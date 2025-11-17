@@ -192,7 +192,7 @@ class VisualHelper {
       for (var action in frame.append) {
         assertTest(!layerList.containsKey(action.index));
         var skip = !action.sprite ? !imageFilter[action.resource] : !spriteFilter[action.resource];
-        var layer = layerList[action.index] = skip ? null : _VisualLayer();
+        var layer = layerList[action.index] = skip ? null : .new();
         if (layer == null) {
           continue;
         }
@@ -215,7 +215,7 @@ class VisualHelper {
             );
           },
         );
-        layer.property = List.filled(sprite.frame.length, null);
+        layer.property = .filled(sprite.frame.length, null);
         layer.property[frameIndex] = (
           _makeMatrix(.new(value: model.TranslateTransform(x: 0.0, y: 0.0))),
           _makeColor(.new(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),

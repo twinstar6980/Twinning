@@ -158,7 +158,7 @@ class MainApplication {
 
   // #region life
 
-  static final SettingProvider _setting = SettingProvider();
+  static final SettingProvider _setting = .new();
 
   // ----------------
 
@@ -183,7 +183,7 @@ class MainApplication {
       _setting.state.handleCommand = _handleCommand;
       _setting.state.handleLink = _handleLink;
       await NotificationHelper.initialize();
-      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      await SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
         await WindowHelper.ensureInitialized();
         if (_setting.data.windowSizeState) {
