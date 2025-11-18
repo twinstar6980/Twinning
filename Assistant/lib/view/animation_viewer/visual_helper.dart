@@ -160,11 +160,11 @@ class VisualHelper {
       transform: _makeMatrix(image.transform),
       child: textureData == null
         ? null
-        : Image(
-          image: textureData.$1,
+        : ImageContainer.of(
+          fit: .fill,
           width: (image.size?.$1 ?? textureData.$2).toDouble(),
           height: (image.size?.$2 ?? textureData.$3).toDouble(),
-          fit: .fill,
+          source: textureData.$1,
         ),
     );
   }
@@ -205,14 +205,13 @@ class VisualHelper {
           builder: (context, child) {
             var index = subController.value;
             var property = layer.property[index];
-            if (property == null) {
-              return BoxContainer.none();
-            }
-            return BoxContainer.of(
-              transform: property.$1,
-              colorFilter: property.$2,
-              child: subView,
-            );
+            return property == null
+              ? BoxContainer.none()
+              : BoxContainer.of(
+                transform: property.$1,
+                colorFilter: property.$2,
+                child: subView,
+              );
           },
         );
         layer.property = .filled(sprite.frame.length, null);

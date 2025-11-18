@@ -1571,7 +1571,7 @@ class _StyledInputComboState extends State<StyledInputCombo> {
                   .outlined   => .symmetric(horizontal: 8),
                   .underlined => .zero,
                 },
-                content: DefaultTextStyle(
+                content: TextStyleInheritedArea.of(
                   style: StyledTypography.bodyLarge.query(context),
                   child: StyledText.custom(
                     value.$2,
@@ -2205,7 +2205,7 @@ extension StyledMenuExtension on StyledMenu<dynamic> {
               content: item.content,
               trailing: item.trailing == null
                 ? null
-                : DefaultTextStyle(
+                : TextStyleInheritedArea.of(
                   style: StyledTypography.labelSmall.query(context).copyWith(
                     color: StyledColor.onSurfaceVariant.query(context),
                   ),

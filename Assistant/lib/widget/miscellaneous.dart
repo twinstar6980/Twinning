@@ -71,11 +71,11 @@ class SettingListItem extends StatelessWidget {
       enabled: this.enabled,
       padding: .fromLTRB(24, 0, 24, 0),
       leading: Icon(this.icon),
-      content: DefaultTextStyle(
+      content: TextStyleInheritedArea.of(
         style: StyledTypography.bodyMedium.query(context).copyWith(
           color: this.enabled ? null : StyledColor.disabled.query(context),
         ),
-        textAlign: .end,
+        align: .end,
         child: FlexContainer.horizontal([
           StyledText.custom(
             this.label,

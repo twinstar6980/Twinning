@@ -532,6 +532,87 @@ extension ScrollAreaWidgetExtension on Widget {
 
 // #endregion
 
+// #region inherit
+
+class MediaQueryInheritedArea extends StatelessWidget {
+
+  const MediaQueryInheritedArea._({
+    super.key,
+    required this.data,
+    required this.child,
+  });
+
+  const MediaQueryInheritedArea.of({
+    Key?                    key,
+    required MediaQueryData data,
+    required Widget         child,
+  }) : this._(
+    key: key,
+    data: data,
+    child: child,
+  );
+
+  // ----------------
+
+  final MediaQueryData data;
+  final Widget         child;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return MediaQuery(
+      data: this.data,
+      child: this.child,
+    );
+  }
+
+}
+
+// ----------------
+
+class TextStyleInheritedArea extends StatelessWidget {
+
+  const TextStyleInheritedArea._({
+    super.key,
+    required this.style,
+    required this.align,
+    required this.child,
+  });
+
+  const TextStyleInheritedArea.of({
+    Key?               key,
+    required TextStyle style,
+    TextAlign?         align = null,
+    required Widget    child,
+  }) : this._(
+    key: key,
+    style: style,
+    align: align,
+    child: child,
+  );
+
+  // ----------------
+
+  final TextStyle  style;
+  final TextAlign? align;
+  final Widget     child;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return DefaultTextStyle(
+      style: this.style,
+      textAlign: this.align,
+      child: this.child,
+    );
+  }
+
+}
+
+// #endregion
+
 // #region advanced
 
 class ListContainer extends StatelessWidget {
@@ -546,12 +627,12 @@ class ListContainer extends StatelessWidget {
   });
 
   const ListContainer.of({
-    Key?                                                          key = null,
-    Boolean                                                       shrink = false,
-    EdgeInsetsGeometry?                                           padding = null,
-    ScrollController?                                             controller = null,
-    required Integer                                              itemCount,
-    required Widget Function(BuildContext context, Integer index) itemBuilder,
+    Key?                                                           key = null,
+    Boolean                                                        shrink = false,
+    EdgeInsetsGeometry?                                            padding = null,
+    ScrollController?                                              controller = null,
+    required Integer                                               itemCount,
+    required Widget? Function(BuildContext context, Integer index) itemBuilder,
   }) : this._(
     key: key,
     shrink: shrink,
@@ -563,11 +644,11 @@ class ListContainer extends StatelessWidget {
 
   // ----------------
 
-  final Boolean                                              shrink;
-  final EdgeInsetsGeometry?                                  padding;
-  final ScrollController?                                    controller;
-  final Integer                                              itemCount;
-  final Widget Function(BuildContext context, Integer index) itemBuilder;
+  final Boolean                                               shrink;
+  final EdgeInsetsGeometry?                                   padding;
+  final ScrollController?                                     controller;
+  final Integer                                               itemCount;
+  final Widget? Function(BuildContext context, Integer index) itemBuilder;
 
   // ----------------
 
@@ -580,6 +661,53 @@ class ListContainer extends StatelessWidget {
       controller: this.controller,
       itemCount: this.itemCount,
       itemBuilder: this.itemBuilder,
+    );
+  }
+
+}
+
+// ----------------
+
+class ImageContainer extends StatelessWidget {
+
+  const ImageContainer._({
+    super.key,
+    required this.fit,
+    required this.width,
+    required this.height,
+    required this.source,
+  });
+
+  const ImageContainer.of({
+    Key?                   key = null,
+    BoxFit?                fit = null,
+    Floater?               width = null,
+    Floater?               height = null,
+    required ImageProvider source,
+  }) : this._(
+    key: key,
+    fit: fit,
+    width: width,
+    height: height,
+    source: source,
+  );
+
+  // ----------------
+
+  final BoxFit?       fit;
+  final Floater?      width;
+  final Floater?      height;
+  final ImageProvider source;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return Image(
+      fit: this.fit,
+      width: this.width,
+      height: this.height,
+      image: this.source,
     );
   }
 

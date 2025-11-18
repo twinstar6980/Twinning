@@ -26,7 +26,7 @@ class ModulePageRegion extends StatelessWidget {
     return StorageDropRegion(
       onDrop: this.onDropFile,
       child: FlexContainer.vertical([
-        MediaQuery(
+        MediaQueryInheritedArea.of(
           data: MediaQuery.of(context).copyWith(
             padding: .zero,
             viewPadding: .zero,
