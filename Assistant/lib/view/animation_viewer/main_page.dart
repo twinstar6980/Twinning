@@ -652,11 +652,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ],
                         value: ConvertHelper.makeIntegerToString(currentValue.$1 + 1, false),
-                        onChanged: (context, text) async {
-                          var value = Integer.tryParse(text);
-                          if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                            value -= 1;
-                            currentValue = (value, max(value, currentValue.$2));
+                        onChanged: (context, value) async {
+                          var parsedValue = Integer.tryParse(value);
+                          if (parsedValue != null && parsedValue >= 1 && parsedValue <= this._activeSprite!.frame.length) {
+                            parsedValue -= 1;
+                            currentValue = (parsedValue, max(parsedValue, currentValue.$2));
                           }
                           await refreshState(setStateForPanel);
                         },
@@ -694,11 +694,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ],
                         value: ConvertHelper.makeIntegerToString(currentValue.$2 + 1, false),
-                        onChanged: (context, text) async {
-                          var value = Integer.tryParse(text);
-                          if (value != null && value >= 1 && value <= this._activeSprite!.frame.length) {
-                            value -= 1;
-                            currentValue = (min(value, currentValue.$1), value);
+                        onChanged: (context, value) async {
+                          var parsedValue = Integer.tryParse(value);
+                          if (parsedValue != null && parsedValue >= 1 && parsedValue <= this._activeSprite!.frame.length) {
+                            parsedValue -= 1;
+                            currentValue = (min(parsedValue, currentValue.$1), parsedValue);
                           }
                           await refreshState(setStateForPanel);
                         },
@@ -790,10 +790,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           ),
                         ],
                         value: ConvertHelper.makeFloaterToString(currentValue, false),
-                        onChanged: (context, text) async {
-                          var value = Floater.tryParse(text);
-                          if (value != null && value.isFinite && value > 0.0) {
-                            currentValue = value;
+                        onChanged: (context, value) async {
+                          var parsedValue = Floater.tryParse(value);
+                          if (parsedValue != null && parsedValue.isFinite && parsedValue > 0.0) {
+                            currentValue = parsedValue;
                           }
                           await refreshState(setStateForPanel);
                         },
@@ -948,7 +948,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   prefix: Icon(IconSet.attachment),
                   suffix: null,
                   value: !this._loaded ? '' : this._animationFile!,
-                  onChanged: (context, value) async {},
+                  onChanged: (context, value) async {
+                  },
                 ),
                 Gap.vertical(12),
                 FlexContainer.horizontal([

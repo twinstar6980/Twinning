@@ -275,10 +275,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         ).withStyledScrollBar(
           controller: this._messageListScrollController,
         ).withFlexExpanded(),
-        StyledProgress.linear(
-          paused: !this._sessionRunning ? false : this._submissionBar.type != null,
-          value: !this._sessionRunning ? 1.0 : null,
-        ),
+        FlexContainer.horizontal([
+          StyledProgress.linear(
+            paused: !this._sessionRunning ? false : this._submissionBar.type != null,
+            value: !this._sessionRunning ? 1.0 : null,
+          ).withFlexExpanded(),
+        ]),
       ]),
       bottom: this._sessionRunning
         ? this._submissionBar

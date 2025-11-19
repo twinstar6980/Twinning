@@ -242,7 +242,8 @@ Future<Void> showDialogForRevealStoragePath(
         prefix: null,
         suffix: null,
         value: path,
-        onChanged: (context, value) async {},
+        onChanged: (context, value) async {
+        },
       ),
     ],
     actionBuilder: (context) => [

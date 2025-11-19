@@ -114,7 +114,8 @@ class _IdleSubmissionBar extends StatelessWidget {
         prefix: null,
         suffix: null,
         value: '',
-        onChanged: (context, value) async {},
+        onChanged: (context, value) async {
+        },
       ),
     );
   }
@@ -157,7 +158,8 @@ class _PauseSubmissionBar extends StatelessWidget {
           prefix: null,
           suffix: null,
           value: '',
-          onChanged: (context, value) async {},
+          onChanged: (context, value) async {
+          },
         ),
       ),
     );
@@ -223,13 +225,13 @@ class _BooleanSubmissionBar extends StatelessWidget {
             ),
           ],
           value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
-          onChanged: (context, text) async {
-            if (text.isEmpty) {
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              if (text == 'n' || text == 'y') {
-                this.value.value = .new(text == 'y');
+              if (value == 'n' || value == 'y') {
+                this.value.value = .new(value == 'y');
               }
             }
             await refreshState(setState);
@@ -277,14 +279,14 @@ class _IntegerSubmissionBar extends StatelessWidget {
           prefix: null,
           suffix: null,
           value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
-          onChanged: (context, text) async {
-            if (text.isEmpty) {
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              var value = Integer.tryParse(text);
-              if (value != null) {
-                this.value.value = .new(value);
+              var parsedValue = Integer.tryParse(value);
+              if (parsedValue != null) {
+                this.value.value = .new(parsedValue);
               }
             }
             await refreshState(setState);
@@ -332,14 +334,14 @@ class _FloaterSubmissionBar extends StatelessWidget {
           prefix: null,
           suffix: null,
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
-          onChanged: (context, text) async {
-            if (text.isEmpty) {
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              var value = Floater.tryParse(text);
-              if (value != null && value.isFinite) {
-                this.value.value = .new(value);
+              var parsedValue = Floater.tryParse(value);
+              if (parsedValue != null && parsedValue.isFinite) {
+                this.value.value = .new(parsedValue);
               }
             }
             await refreshState(setState);
@@ -417,14 +419,14 @@ class _SizeSubmissionBar extends StatelessWidget {
             ),
           ],
           value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
-          onChanged: (context, text) async {
-            if (text.isEmpty) {
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              var count = Floater.tryParse(text);
-              if (count != null && count.isFinite && count >= 0.0) {
-                this.value.value = .new(count, this.value.value?.exponent ?? 2);
+              var parsedCount = Floater.tryParse(value);
+              if (parsedCount != null && parsedCount.isFinite && parsedCount >= 0.0) {
+                this.value.value = .new(parsedCount, this.value.value?.exponent ?? 2);
               }
             }
             await refreshState(setState);
@@ -472,12 +474,12 @@ class _StringSubmissionBar extends StatelessWidget {
           prefix: null,
           suffix: null,
           value: this.value.value == null ? '' : this.value.value!.value,
-          onChanged: (context, text) async {
-            if (text.isEmpty) {
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              this.value.value = .new(text);
+              this.value.value = .new(value);
             }
             await refreshState(setState);
           },
@@ -574,12 +576,12 @@ class _PathSubmissionBar extends StatelessWidget {
               ),
             ],
             value: this.value.value == null ? '' : this.value.value!.content,
-            onChanged: (context, text) async {
-              if (text.isEmpty) {
+            onChanged: (context, value) async {
+              if (value.isEmpty) {
                 this.value.value = null;
               }
               else {
-                this.value.value = .new(StorageHelper.regularize(text));
+                this.value.value = .new(StorageHelper.regularize(value));
               }
               await refreshState(setState);
             },
