@@ -241,7 +241,7 @@ class SettingProvider with ChangeNotifier {
     SettingData data,
   ) {
     return {
-      'version': data.version.selfAlso((it) { assertTest(it == ApplicationInformation.version); }),
+      'version': data.version.selfAlso((it) => assertTest(it == ApplicationInformation.version)),
       'theme_mode': data.themeMode.name,
       'theme_color_state': data.themeColorState,
       'theme_color_light': data.themeColorLight.toARGB32(),
@@ -306,7 +306,7 @@ class SettingProvider with ChangeNotifier {
     dynamic json,
   ) {
     return SettingData(
-      version: (json['version'] as String).selfAlso((it) { assertTest(it == ApplicationInformation.version); }),
+      version: (json['version'] as String).selfAlso((it) => assertTest(it == ApplicationInformation.version)),
       themeMode: (json['theme_mode'] as String).selfLet((it) => .values.byName(it)),
       themeColorState: (json['theme_color_state'] as Boolean),
       themeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => Color(it)),

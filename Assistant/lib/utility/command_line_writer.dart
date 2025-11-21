@@ -25,7 +25,7 @@ class CommandLineWriter {
   }
 
   Boolean check(
-    String name, {
+    String  name, {
     Boolean state = true,
   }) {
     if (state) {

@@ -133,11 +133,11 @@ namespace Twinning.Script.ProcessHelper {
 		name: string,
 		allow_extension: boolean,
 	): string {
-		let path = search_program(name, allow_extension);
-		if (path === null) {
+		let result = search_program(name, allow_extension);
+		if (result === null) {
 			throw new Error(`could not find '${name}' program from 'PATH' environment`);
 		}
-		return path;
+		return result;
 	}
 
 	// #endregion

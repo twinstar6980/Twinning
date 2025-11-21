@@ -102,7 +102,7 @@ class ConfigurationHelper {
       ),
       .size => SizeExpression(
         json.as<String>().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
-        json.as<String>().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) { assertTest(it != -1); }),
+        json.as<String>().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) => assertTest(it != -1)),
       ),
       .string => StringExpression(
         json.as<String>(),

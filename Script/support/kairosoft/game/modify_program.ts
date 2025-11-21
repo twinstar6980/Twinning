@@ -56,44 +56,73 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	// #endregion
 
-	// #region modify
+	// #region il2cppdumper
 
-	function search_field_from_dump_data(
+	function run_il2cppdumper(
+		program_file: string,
+		metadata_file: string,
+	): Array<string> {
+		let dump_directory = HomePath.new_temporary(null, 'directory');
+		let il2cppdumper_result = ProcessHelper.run_process(
+			['dotnet'],
+			[
+				ProcessHelper.search_program_ensure('Il2CppDumper.dll', false),
+				program_file,
+				metadata_file,
+				dump_directory,
+			],
+			null,
+			null,
+		);
+		if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
+			throw new Error(`execute failed by Il2CppDumper`);
+		}
+		let dump_data = KernelX.Storage.read_file_s(`${dump_directory}/dump.cs`).split('\n');
+		KernelX.Storage.remove(dump_directory);
+		return dump_data;
+	}
+
+	// ----------------
+
+	function do_il2cppdumper_search_field_from_dump_data(
 		source: Array<string>,
 		class_name: string,
 		field_name: string,
-	): null | {
+	): Array<{
 		address: number;
 		access: string;
 		static: boolean;
 		type: string;
-	} {
-		let result: ReturnType<typeof search_field_from_dump_data> = null;
+	}> {
+		let result: ReturnType<typeof do_il2cppdumper_search_field_from_dump_data> = [];
+		let class_rule = /^(private|protected|public) class ([^ ]+)/;
+		let field_rule = /^\t(private|protected|public)( static)? (.+) (.+); \/\/ 0x(.+)$/;
 		for (let index = 0; index < source.length; index++) {
-			let class_match = /^(private|protected|public)? class ([^ ]+)?/.exec(source[index]);
-			if (class_match !== null && class_match[2] === class_name) {
-				for (; index < source.length; index++) {
-					if (source[index] === '}') {
-						break;
-					}
-					let field_match = /^\t(private|protected|public)?( static)? (.+) (.+); \/\/ 0x(.+)$/.exec(source[index]);
-					if (field_match !== null && field_match[4] === field_name) {
-						result = {
-							address: Number.parseInt(field_match[5], 16),
-							access: field_match[1],
-							static: field_match[2] == ' static',
-							type: field_match[3],
-						};
-						break;
-					}
-				}
-				break;
+			let class_match = class_rule.exec(source[index]);
+			if (class_match === null || class_match[2] !== class_name) {
+				continue;
 			}
+			for (; index < source.length; index++) {
+				if (source[index] === '}') {
+					break;
+				}
+				let field_match = field_rule.exec(source[index]);
+				if (field_match === null || field_match[4] !== field_name) {
+					continue;
+				}
+				result.push({
+					address: Number.parseInt(field_match[5], 16),
+					access: field_match[1],
+					static: field_match[2] !== undefined,
+					type: field_match[3],
+				});
+			}
+			break;
 		}
 		return result;
 	}
 
-	function search_method_from_dump_data(
+	function do_il2cppdumper_search_method_from_dump_data(
 		source: Array<string>,
 		class_name: string,
 		method_name: string,
@@ -104,46 +133,49 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		result: string;
 		parameter: string;
 	}> {
-		let result: Array<{
-			address: number;
-			access: string;
-			static: boolean;
-			result: string;
-			parameter: string;
-		}> = [];
+		let result: ReturnType<typeof do_il2cppdumper_search_method_from_dump_data> = [];
+		let class_rule = /^(private|protected|public) class ([^ ]+)/;
+		let method_rule = /^\t(private|protected|public)( static)? (.+) (.+)\((.*)\) \{ \}$/;
+		let comment_rule = /^\t\/\/ RVA: 0x(.+) Offset: 0x(.+) VA: 0x(.+)$/;
 		for (let index = 0; index < source.length; index++) {
-			let class_match = /^(private|protected|public)? class ([^ ]+)?/.exec(source[index]);
-			if (class_match !== null && class_match[2] === class_name) {
-				for (; index < source.length; index++) {
-					if (source[index] === '}') {
-						break;
-					}
-					let method_match = /^\t(private|protected|public)?( static)? (.+) (.+)\((.*)\) \{ \}$/.exec(source[index]);
-					if (method_match !== null && method_match[4] === method_name) {
-						let comment_match = /^\t\/\/ RVA: 0x(.+) Offset: 0x(.+) VA: 0x(.+)$/.exec(source[index - 1]);
-						assert_test(comment_match !== null);
-						result.push({
-							address: Number.parseInt(comment_match[2], 16),
-							access: method_match[1],
-							static: method_match[2] == ' static',
-							result: method_match[3],
-							parameter: method_match[5],
-						});
-					}
-				}
-				break;
+			let class_match = class_rule.exec(source[index]);
+			if (class_match === null || class_match[2] !== class_name) {
+				continue;
 			}
+			for (; index < source.length; index++) {
+				if (source[index] === '}') {
+					break;
+				}
+				let method_match = method_rule.exec(source[index]);
+				if (method_match === null || method_match[4] !== method_name) {
+					continue;
+				}
+				let comment_match = comment_rule.exec(source[index - 1]);
+				assert_test(comment_match !== null);
+				result.push({
+					address: Number.parseInt(comment_match[2], 16),
+					access: method_match[1],
+					static: method_match[2] !== undefined,
+					result: method_match[3],
+					parameter: method_match[5],
+				});
+			}
+			break;
 		}
 		return result;
 	}
 
-	// ----------------
+	// #endregion
+
+	// #region asm
 
 	const k_instruction_code_nop_intel32 = 0x90n;
 
 	const k_instruction_code_nop_arm32 = 0xE320F000n;
 
 	const k_instruction_code_nop_arm64 = 0xD503201Fn;
+
+	// ----------------
 
 	function find_call_instruction(
 		data: ByteStreamView,
@@ -153,9 +185,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		platform: Platform,
 	): boolean {
 		let state = false;
-		let end = Math.min(data.size(), data.p() + limit);
+		let dataEnd = Math.min(data.size(), data.p() + limit);
 		if (platform === 'windows_intel32') {
-			while (data.p() < end) {
+			while (data.p() < dataEnd) {
 				let instruction_code = data.u8();
 				// call #X = E8 XX XX XX XX
 				if (instruction_code !== 0xE8n) {
@@ -180,7 +212,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			}
 		}
 		if (platform === 'android_arm32') {
-			while (data.p() < end) {
+			while (data.p() < dataEnd) {
 				let instruction_code = data.u32();
 				// bl #X = EB XX XX XX
 				if ((instruction_code & 0xFF000000n) !== 0xEB000000n) {
@@ -203,7 +235,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			}
 		}
 		if (platform === 'android_arm64') {
-			while (data.p() < end) {
+			while (data.p() < dataEnd) {
 				let instruction_code = data.u32();
 				// bl #X = 97 XX XX XX
 				if ((instruction_code & 0xFF000000n) !== 0x97000000n) {
@@ -228,7 +260,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		return state;
 	}
 
-	// ----------------
+	// #endregion
+
+	// #region modify
 
 	function modify_program_flat(
 		platform: Platform,
@@ -238,25 +272,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		enable_debug_mode: boolean,
 	): void {
 		Console.information(`Phase: dump program information`, []);
-		let dump_data: Array<string> = [];
-		{
-			let il2cppdumper_program = ProcessHelper.search_program_ensure('Il2CppDumper.dll', false);
-			let il2cppdumper_result = ProcessHelper.run_process(
-				['dotnet'],
-				[
-					il2cppdumper_program,
-					program_file,
-					metadata_file,
-				],
-				null,
-				null,
-			);
-			Console.warning(`The output of Il2CppDumper:`, [il2cppdumper_result.output]);
-			if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
-				throw new Error(`execute failed by Il2CppDumper`);
-			}
-			dump_data = KernelX.Storage.read_file_s(`${StorageHelper.parent(il2cppdumper_program)}/dump.cs`).split('\n');
-		}
+		let dump_data = run_il2cppdumper(program_file, metadata_file);
 		Console.information(`Phase: parse symbol address`, []);
 		let symbol_address = {
 			CRC64: {
@@ -267,62 +283,67 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				Decode: [] as Array<number>,
 			},
 			RecordStore: {
-				ReadRecord: 0,
-				WriteRecord: 0,
+				ReadRecord: [] as Array<number>,
+				WriteRecord: [] as Array<number>,
 			},
 			MyConfig: {
-				_cctor: 0,
-				DEBUG: 0,
+				_cctor: [] as Array<number>,
+				DEBUG: [] as Array<number>,
 			},
 		};
 		{
-			let search_result = search_method_from_dump_data(dump_data, 'CRC64', 'GetValue');
-			assert_test(search_result.length === 1);
-			symbol_address.CRC64.GetValue = search_result.map((value) => (value.address));
-			Console.information(`The symbol 'CRC64.GetValue' at ${symbol_address.CRC64.GetValue.map((value) => (value.toString(16))).join(',')}`, []);
-		}
-		{
-			let search_result = search_method_from_dump_data(dump_data, 'Encrypter', 'Encode');
-			assert_test(search_result.length === 3);
-			symbol_address.Encrypter.Encode = search_result.map((value) => (value.address));
-			Console.information(`The symbol 'Encrypter.Encode' at ${symbol_address.Encrypter.Encode.map((value) => (value.toString(16))).join(',')}`, []);
-		}
-		{
-			let search_result = search_method_from_dump_data(dump_data, 'Encrypter', 'Decode');
-			assert_test(search_result.length === 3);
-			symbol_address.Encrypter.Decode = search_result.map((value) => (value.address));
-			Console.information(`The symbol 'Encrypter.Decode' at ${symbol_address.Encrypter.Decode.map((value) => (value.toString(16))).join(',')}`, []);
-		}
-		{
-			let search_result = search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.static && value.parameter === `int rcId`));
-			assert_test(search_result.length === 1);
-			symbol_address.RecordStore.ReadRecord = search_result[0].address;
-			Console.information(`The symbol 'RecordStore.ReadRecord' at ${symbol_address.RecordStore.ReadRecord.toString(16)}`, []);
-		}
-		{
-			let search_result = search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.static && value.parameter === `int rcId, byte[][] data`));
-			assert_test(search_result.length === 1);
-			symbol_address.RecordStore.WriteRecord = search_result[0].address;
-			Console.information(`The symbol 'RecordStore.WriteRecord' at ${symbol_address.RecordStore.WriteRecord.toString(16)}`, []);
-		}
-		{
-			let search_result = search_method_from_dump_data(dump_data, 'MyConfig', '.cctor');
-			assert_test(search_result.length === 1);
-			symbol_address.MyConfig._cctor = search_result[0].address;
-			Console.information(`The symbol 'MyConfig..cctor' at ${symbol_address.MyConfig._cctor.toString(16)}`, []);
-		}
-		{
-			let search_result = search_field_from_dump_data(dump_data, 'MyConfig', 'DEBUG');
-			assert_test(search_result !== null);
-			symbol_address.MyConfig.DEBUG = search_result.address;
-			Console.information(`The symbol 'MyConfig.DEBUG' at ${symbol_address.MyConfig.DEBUG.toString(16)}`, []);
+			let check_search_result = (
+				search_result: Array<{address: number;}>,
+				expect_count: number,
+				name: string,
+			): Array<number> => {
+				assert_test(search_result.length === expect_count);
+				let address_list = search_result.map((it) => it.address);
+				Console.information(`The symbol '${name}' at ${address_list.map((it) => (it.toString(16).padStart(8, '0'))).join(',')}`, []);
+				return address_list;
+			};
+			symbol_address.CRC64.GetValue = check_search_result(
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'CRC64', 'GetValue'),
+				1,
+				'CRC64.GetValue',
+			);
+			symbol_address.Encrypter.Encode = check_search_result(
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'Encrypter', 'Encode'),
+				3,
+				'Encrypter.Encode',
+			);
+			symbol_address.Encrypter.Decode = check_search_result(
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'Encrypter', 'Decode'),
+				3,
+				'Encrypter.Decode',
+			);
+			symbol_address.RecordStore.ReadRecord = check_search_result(
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.static && value.parameter === `int rcId`)),
+				1,
+				'RecordStore.ReadRecord',
+			);
+			symbol_address.RecordStore.WriteRecord = check_search_result(
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.static && value.parameter === `int rcId, byte[][] data`)),
+				1,
+				'RecordStore.WriteRecord',
+			);
+			symbol_address.MyConfig._cctor = check_search_result(
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'MyConfig', '.cctor'),
+				1,
+				'MyConfig..cctor',
+			);
+			symbol_address.MyConfig.DEBUG = check_search_result(
+				do_il2cppdumper_search_field_from_dump_data(dump_data, 'MyConfig', 'DEBUG'),
+				1,
+				'MyConfig.DEBUG',
+			);
 		}
 		Console.information(`Phase: load original program`, []);
 		let program_data = KernelX.Storage.read_file(program_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
 			Console.information(`Phase: modify method 'RecordStore.ReadRecord'`, []);
-			program_stream.p(symbol_address.RecordStore.ReadRecord);
+			program_stream.p(symbol_address.RecordStore.ReadRecord[0]);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.CRC64.GetValue, false, platform));
@@ -362,16 +383,16 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		}
 		if (disable_record_encryption) {
 			Console.information(`Phase: modify method 'RecordStore.WriteRecord'`, []);
-			program_stream.p(symbol_address.RecordStore.WriteRecord);
+			program_stream.p(symbol_address.RecordStore.WriteRecord[0]);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
 		}
 		if (enable_debug_mode) {
 			Console.information(`Phase: modify method 'MyConfig..cctor'`, []);
-			program_stream.p(symbol_address.MyConfig._cctor);
-			let search_limit = 512;
+			program_stream.p(symbol_address.MyConfig._cctor[0]);
+			let program_stream_end = program_stream.p() + 0x200;
 			if (platform === 'windows_intel32') {
-				while (program_stream.p() < symbol_address.MyConfig._cctor + search_limit) {
+				while (program_stream.p() < program_stream_end) {
 					// mov byte ptr [eax+X], 0 = C6 40 XX 00
 					let instruction_code: bigint;
 					instruction_code = program_stream.u8();
@@ -384,7 +405,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 						continue;
 					}
 					instruction_code = program_stream.u8();
-					if (instruction_code !== BigInt(symbol_address.MyConfig.DEBUG)) {
+					if (instruction_code !== BigInt(symbol_address.MyConfig.DEBUG[0])) {
 						program_stream.pr(-1);
 						continue;
 					}
@@ -395,45 +416,41 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 					}
 					program_stream.pr(-1);
 					program_stream.u8(0x01n);
-					Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG' was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
 					break;
 				}
-				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
 			}
 			if (platform === 'android_arm32') {
-				while (program_stream.p() < symbol_address.MyConfig._cctor + search_limit) {
+				while (program_stream.p() < program_stream_end) {
 					// strb rX, [rY, #Z] = 111001011100 YYYY XXXX ZZZZZZZZZZZZ
 					let instruction_code = program_stream.u32();
 					if ((instruction_code & 0b111111111111_0000_0000_000000000000n) !== 0b111001011100_0000_0000_000000000000n) {
 						continue;
 					}
-					if ((instruction_code & 0b000000000000_0000_0000_111111111111n) >> 0n !== BigInt(symbol_address.MyConfig.DEBUG) + 4n) {
+					if ((instruction_code & 0b000000000000_0000_0000_111111111111n) >> 0n !== BigInt(symbol_address.MyConfig.DEBUG[0]) + 4n) {
 						continue;
 					}
 					program_stream.pr(-4);
-					program_stream.u32(instruction_code & 0b111111111111_1111_0000_000000000000n | 14n << 12n | BigInt(symbol_address.MyConfig.DEBUG) << 0n);
-					Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					program_stream.u32(instruction_code & 0b111111111111_1111_0000_000000000000n | 14n << 12n | BigInt(symbol_address.MyConfig.DEBUG[0]) << 0n);
 					break;
 				}
-				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
 			}
 			if (platform === 'android_arm64') {
-				while (program_stream.p() < symbol_address.MyConfig._cctor + search_limit) {
+				while (program_stream.p() < program_stream_end) {
 					// strb wX, [xY, #Z] = 0011100100 ZZZZZZZZZZZZ YYYYY XXXXX
 					let instruction_code = program_stream.u32();
 					if ((instruction_code & 0b1111111111_000000000000_00000_00000n) !== 0b0011100100_000000000000_00000_00000n) {
 						continue;
 					}
-					if ((instruction_code & 0b0000000000_111111111111_00000_00000n) >> 10n !== BigInt(symbol_address.MyConfig.DEBUG) + 4n) {
+					if ((instruction_code & 0b0000000000_111111111111_00000_00000n) >> 10n !== BigInt(symbol_address.MyConfig.DEBUG[0]) + 4n) {
 						continue;
 					}
 					program_stream.pr(-4);
-					program_stream.u32(instruction_code & 0b1111111111_000000000000_11111_00000n | BigInt(symbol_address.MyConfig.DEBUG) << 10n | 30n << 0n);
-					Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16)}, but this modification may cause error`, []);
+					program_stream.u32(instruction_code & 0b1111111111_000000000000_11111_00000n | BigInt(symbol_address.MyConfig.DEBUG[0]) << 10n | 30n << 0n);
 					break;
 				}
-				assert_test(program_stream.p() !== symbol_address.MyConfig._cctor + search_limit);
 			}
+			assert_test(program_stream.p() !== program_stream_end);
+			Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16).padStart(8, '0')}, but this modification may cause error`, []);
 		}
 		Console.information(`Phase: save modified program`, []);
 		KernelX.Storage.write_file(program_file, program_data);
@@ -459,6 +476,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				enable_debug_mode,
 			);
 		}
+		Console.information(`Phase: done`, []);
 		return;
 	}
 
