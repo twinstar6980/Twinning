@@ -37,7 +37,7 @@ class OptionItem extends StatelessWidget {
           enabled: enabled,
           dense: true,
           padding: .fromLTRB(40, 0, 16, 0),
-          leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
+          leading: IconView.of(IconSetExtension.queryOutlined(this.configuration.icon)),
           content: StyledText.custom(tooltip: enabled, this.configuration.name),
           trailing: FlexContainer.horizontal(mainStretch: false, [
             StyledButton.text(
@@ -46,7 +46,7 @@ class OptionItem extends StatelessWidget {
                 Gap.horizontal(8),
                 StyledText.inherit('${this.configuration.preset.nonNulls.length}'),
                 Gap.horizontal(6),
-                Icon(IconSet.flash_on),
+                IconView.of(IconSet.flash_on),
               ]),
               onPressed: (context) async {
                 var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
@@ -104,14 +104,14 @@ class OptionGroupItem extends StatelessWidget {
       child: FlexContainer.vertical([
         StyledListTile.standardCustom(
           padding: .fromLTRB(24, 0, 24, 0),
-          leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
+          leading: IconView.of(IconSetExtension.queryOutlined(this.configuration.icon)),
           content: StyledText.inherit(tooltip: true, this.configuration.name),
           trailing: FlexContainer.horizontal(mainStretch: false, [
             StyledBadge.standard(
               label: StyledText.inherit('${this.match.where((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)).length}'),
             ),
             Gap.horizontal(6),
-            Icon(!this.expanded ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_left),
+            IconView.of(!this.expanded ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_left),
           ]),
           onPressed: (context) async {
             this.onToggle();

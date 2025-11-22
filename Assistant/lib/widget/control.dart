@@ -642,24 +642,36 @@ class StyledButton extends StatelessWidget {
   build(context) {
     return switch (this.variant) {
       .text => material.TextButton.icon(
+        style: .new(
+          padding: .all(this.icon == null ? .fromLTRB(12, 8, 12, 8) : this.iconAlign == .start ? .fromLTRB(12, 8, 16, 8) : .fromLTRB(16, 8, 12, 8)),
+        ),
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
       .filled => material.FilledButton.icon(
+        style: .new(
+          padding: .all(this.icon == null ? .fromLTRB(24, 0, 24, 0) : this.iconAlign == .start ? .fromLTRB(16, 0, 24, 0) : .fromLTRB(24, 0, 16, 0)),
+        ),
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
       .filledTonal => material.FilledButton.tonalIcon(
+        style: .new(
+          padding: .all(this.icon == null ? .fromLTRB(24, 0, 24, 0) : this.iconAlign == .start ? .fromLTRB(16, 0, 24, 0) : .fromLTRB(24, 0, 16, 0)),
+        ),
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
         onPressed: !this.enabled ? null : () => this.onPressed(context),
       ),
       .outlined => material.OutlinedButton.icon(
+        style: .new(
+          padding: .all(this.icon == null ? .fromLTRB(24, 0, 24, 0) : this.iconAlign == .start ? .fromLTRB(16, 0, 24, 0) : .fromLTRB(24, 0, 16, 0)),
+        ),
         iconAlignment: this.iconAlign,
         icon: this.icon,
         label: this.content,
@@ -2295,7 +2307,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
             leading: Builder(
               builder: (context) => StyledIconButton.standard(
                 tooltip: 'Back',
-                icon: Icon(IconSet.arrow_back),
+                icon: IconView.of(IconSet.arrow_back),
                 onPressed: (context) async {
                   Navigator.pop(context);
                 },

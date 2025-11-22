@@ -41,7 +41,7 @@ class _BasicSubmissionBar extends StatelessWidget {
         tooltip: 'Submit',
         icon: this.completer == null
           ? StyledProgress.circular()
-          : Icon(IconSet.send),
+          : IconView.of(IconSet.send),
         onPressed: (context) async {
           this.completer!.complete();
         },
@@ -58,7 +58,7 @@ class _BasicSubmissionBar extends StatelessWidget {
             tooltip: 'History',
             icon: BoxContainer.of(
               constraints: .tightFor(width: 40),
-              child: Icon(this.icon, fill: 1),
+              child: IconView.of(this.icon, fill: 1),
             ),
             onPressed: (context) async {
               var value = await StyledMenuExtension.show<ValueExpression>(context, StyledMenu.standard(
@@ -205,8 +205,8 @@ class _BooleanSubmissionBar extends StatelessWidget {
             StyledIconButton.standard(
               tooltip: 'No',
               selected: this.value.value == null ? false : this.value.value!.value == false,
-              icon: Icon(IconSet.do_not_disturb_on),
-              iconOnSelected: Icon(IconSet.do_not_disturb_on, fill: 1),
+              icon: IconView.of(IconSet.do_not_disturb_on),
+              iconOnSelected: IconView.of(IconSet.do_not_disturb_on, fill: 1),
               onPressed: (context) async {
                 this.value.value = this.value.value?.value == false ? null : .new(false);
                 await refreshState(setState);
@@ -216,8 +216,8 @@ class _BooleanSubmissionBar extends StatelessWidget {
             StyledIconButton.standard(
               tooltip: 'Yes',
               selected: this.value.value == null ? false : this.value.value!.value == true,
-              icon: Icon(IconSet.check_circle),
-              iconOnSelected: Icon(IconSet.check_circle, fill: 1),
+              icon: IconView.of(IconSet.check_circle),
+              iconOnSelected: IconView.of(IconSet.check_circle, fill: 1),
               onPressed: (context) async {
                 this.value.value = this.value.value?.value == true ? null : .new(true);
                 await refreshState(setState);
@@ -391,7 +391,7 @@ class _SizeSubmissionBar extends StatelessWidget {
             StyledIconButton.standard(
               tooltip: 'Exponent',
               icon: this.value.value == null
-                ? Icon(IconSet.expand_circle_down)
+                ? IconView.of(IconSet.expand_circle_down)
                 : BoxContainer.of(
                   constraints: .tightFor(width: 24, height: 24),
                   align: .center,
@@ -532,7 +532,7 @@ class _PathSubmissionBar extends StatelessWidget {
             suffix: [
               StyledIconButton.standard(
                 tooltip: 'Command',
-                icon: Icon(IconSet.adjust),
+                icon: IconView.of(IconSet.adjust),
                 onPressed: (context) async {
                   var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
                     position: .under,
@@ -558,7 +558,7 @@ class _PathSubmissionBar extends StatelessWidget {
               Gap.horizontal(4),
               StyledIconButton.standard(
                 tooltip: 'Pick',
-                icon: Icon(IconSet.open_in_new),
+                icon: IconView.of(IconSet.open_in_new),
                 onPressed: (context) async {
                   var target = await pickStorageItem(
                     context: context,
@@ -630,7 +630,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
           suffix: [
             StyledIconButton.standard(
               tooltip: 'Reset',
-              icon: Icon(IconSet.restart_alt),
+              icon: IconView.of(IconSet.restart_alt),
               onPressed: (context) async {
                 this.value.value = null;
                 await refreshState(setState);

@@ -278,7 +278,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           label: StyledText.inherit('${this._resource.length}'),
           child: StyledFloatingButton.standard(
             tooltip: 'Resource',
-            icon: Icon(IconSet.attach_file),
+            icon: IconView.of(IconSet.attach_file),
             onPressed: (context) async {
               await StyledBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
                 title: 'Resource',
@@ -287,7 +287,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                   FlexContainer.horizontal([
                     Gap.horizontal(16),
                     StyledButton.filled(
-                      icon: Icon(IconSet.tab_close),
+                      icon: IconView.of(IconSet.tab_close),
                       content: StyledText.inherit('Remove All'),
                       onPressed: (context) async {
                         if (await showDialogForConfirm(context)) {
@@ -298,7 +298,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                     ).withFlexExpanded(),
                     Gap.horizontal(12),
                     StyledButton.filled(
-                      icon: Icon(IconSet.note_stack_add),
+                      icon: IconView.of(IconSet.note_stack_add),
                       content: StyledText.inherit('Append New'),
                       onPressed: (context) async {
                         var item = <String>[];
@@ -341,7 +341,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                   FlexContainer.horizontal([
                     Gap.horizontal(16),
                     StyledButton.filledTonal(
-                      icon: Icon(IconSet.note_add),
+                      icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
                         var item = await StorageHelper.pickLoadFile(context, '@ResourceShipper.Resource');
@@ -353,7 +353,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                     ).withFlexExpanded(),
                     Gap.horizontal(12),
                     StyledButton.filledTonal(
-                      icon: Icon(IconSet.create_new_folder),
+                      icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
                         var item = await StorageHelper.pickLoadDirectory(context, '@ResourceShipper.Resource');
@@ -371,7 +371,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                   ...this._resource.map((value) => StyledListTile.standardCustom(
                     key: ObjectKey(value),
                     padding: .fromLTRB(24, 0, 24, 0),
-                    leading: Icon(switch (value.$2) {
+                    leading: IconView.of(switch (value.$2) {
                       null  => IconSet.hide_source,
                       false => IconSet.draft,
                       true  => IconSet.folder,
@@ -396,8 +396,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           StyledIconButton.filledTonal(
             tooltip: 'Parallel Forward',
             selected: this._parallelForward,
-            icon: Icon(IconSet.shuffle),
-            iconOnSelected: Icon(IconSet.shuffle, fill: 1),
+            icon: IconView.of(IconSet.shuffle),
+            iconOnSelected: IconView.of(IconSet.shuffle, fill: 1),
             onPressed: (context) async {
               this._parallelForward = !this._parallelForward;
               await refreshState(this.setState);
@@ -407,8 +407,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           StyledIconButton.filledTonal(
             tooltip: 'Enable Filter',
             selected: this._enableFilter,
-            icon: Icon(IconSet.filter_alt),
-            iconOnSelected: Icon(IconSet.filter_alt, fill: 1),
+            icon: IconView.of(IconSet.filter_alt),
+            iconOnSelected: IconView.of(IconSet.filter_alt, fill: 1),
             onPressed: (context) async {
               this._enableFilter = !this._enableFilter;
               await refreshState(this.setState);
@@ -418,8 +418,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           StyledIconButton.filledTonal(
             tooltip: 'Enable Batch',
             selected: this._enableBatch,
-            icon: Icon(IconSet.stacks),
-            iconOnSelected: Icon(IconSet.stacks, fill: 1),
+            icon: IconView.of(IconSet.stacks),
+            iconOnSelected: IconView.of(IconSet.stacks, fill: 1),
             onPressed: (context) async {
               this._enableBatch = !this._enableBatch;
               await refreshState(this.setState);

@@ -608,7 +608,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._activated,
                 tooltip: 'Frame Range',
                 iconAlign: .start,
-                icon: Icon(IconSet.linear_scale),
+                icon: IconView.of(IconSet.linear_scale),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._activated ? '[ 0 - 0 ]' : '[ ${this._activeFrameRange!.$1 + 1} - ${this._activeFrameRange!.$2 + 1} ]',
@@ -624,11 +624,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         type: .numberWithOptions(signed: false, decimal: false),
                         format: null,
                         hint: null,
-                        prefix: Icon(IconSet.line_start_circle),
+                        prefix: IconView.of(IconSet.line_start_circle),
                         suffix: [
                           StyledIconButton.standard(
                             tooltip: 'Preset',
-                            icon: Icon(IconSet.more_vert),
+                            icon: IconView.of(IconSet.more_vert),
                             onPressed: (context) async {
                               var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
                                 position: .under,
@@ -666,11 +666,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         type: .numberWithOptions(signed: false, decimal: false),
                         format: null,
                         hint: null,
-                        prefix: Icon(IconSet.line_end_circle),
+                        prefix: IconView.of(IconSet.line_end_circle),
                         suffix: [
                           StyledIconButton.standard(
                             tooltip: 'Preset',
-                            icon: Icon(IconSet.more_vert),
+                            icon: IconView.of(IconSet.more_vert),
                             onPressed: (context) async {
                               var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
                                 position: .under,
@@ -714,7 +714,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._activated,
                 tooltip: 'Previous',
                 selected: true,
-                icon: Icon(IconSet.arrow_back),
+                icon: IconView.of(IconSet.arrow_back),
                 onPressed: (context) async {
                   await this._changeProgressIndex(max(this._queryProgressIndex() - 1, 0));
                 },
@@ -726,7 +726,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   enabled: this._activated,
                   tooltip: !this._activated ? null : !this._queryProgressState() ? 'Resume' : 'Pause',
                   selected: true,
-                  icon: Icon(!this._activated ? IconSet.play_arrow : !this._queryProgressState() ? IconSet.play_arrow : IconSet.pause, fill: 1),
+                  icon: IconView.of(!this._activated ? IconSet.play_arrow : !this._queryProgressState() ? IconSet.play_arrow : IconSet.pause, fill: 1),
                   onPressed: (context) async {
                     await this._changeProgressState(!this._queryProgressState());
                   },
@@ -737,7 +737,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._activated,
                 tooltip: 'Next',
                 selected: true,
-                icon: Icon(IconSet.arrow_forward),
+                icon: IconView.of(IconSet.arrow_forward),
                 onPressed: (context) async {
                   await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeSprite!.frame.length - 1));
                 },
@@ -747,7 +747,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._activated,
                 tooltip: 'Frame Speed',
                 iconAlign: .end,
-                icon: Icon(IconSet.speed),
+                icon: IconView.of(IconSet.speed),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
@@ -764,11 +764,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                         type: .numberWithOptions(signed: false, decimal: true),
                         format: null,
                         hint: null,
-                        prefix: Icon(IconSet.speed),
+                        prefix: IconView.of(IconSet.speed),
                         suffix: [
                           StyledIconButton.standard(
                             tooltip: 'Preset',
-                            icon: Icon(IconSet.more_vert),
+                            icon: IconView.of(IconSet.more_vert),
                             onPressed: (context) async {
                               var value = await StyledMenuExtension.show<Floater>(context, StyledMenu.standard(
                                 position: .under,
@@ -815,7 +815,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._loaded,
                 tooltip: 'Image',
                 iconAlign: .start,
-                icon: Icon(IconSet.imagesmode),
+                icon: IconView.of(IconSet.imagesmode),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._loaded ? '0 - 0' : '${this._animation!.image.length} - ${this._imageFilter!.where((value) => value).length}',
@@ -861,7 +861,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._loaded,
                 tooltip: !this._loaded ? '' : !this._activated ? 'Activate' : 'Deactivate',
                 content: !this._activated
-                  ? Icon(IconSet.power_settings_new)
+                  ? IconView.of(IconSet.power_settings_new)
                   : StyledText.custom(
                     this._activeSprite!.name ?? '',
                     align: .center,
@@ -886,7 +886,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 enabled: this._loaded,
                 tooltip: 'Sprite',
                 iconAlign: .end,
-                icon: Icon(IconSet.thread_unread),
+                icon: IconView.of(IconSet.thread_unread),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
                     !this._loaded ? '0 - 0' : '${this._spriteFilter!.where((value) => value).length} - ${this._animation!.sprite.length}',
@@ -936,7 +936,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       bottom: StyledBottomBar.standard(
         primary: StyledFloatingButton.standard(
           tooltip: 'Source',
-          icon: Icon(IconSet.description),
+          icon: IconView.of(IconSet.description),
           onPressed: (context) async {
             await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
               title: 'Source',
@@ -945,7 +945,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   type: .none,
                   format: null,
                   hint: null,
-                  prefix: Icon(IconSet.attachment),
+                  prefix: IconView.of(IconSet.attachment),
                   suffix: null,
                   value: !this._loaded ? '' : this._animationFile!,
                   onChanged: (context, value) async {
@@ -955,7 +955,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 FlexContainer.horizontal([
                   StyledButton.outlined(
                     enabled: this._loaded,
-                    icon: Icon(IconSet.clear_all),
+                    icon: IconView.of(IconSet.clear_all),
                     content: StyledText.inherit('Clear'),
                     onPressed: (context) async {
                       if (this._activated) {
@@ -967,7 +967,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   ).withFlexExpanded(),
                   Gap.horizontal(8),
                   StyledButton.filled(
-                    icon: Icon(IconSet.open_in_new),
+                    icon: IconView.of(IconSet.open_in_new),
                     content: StyledText.inherit('Pick'),
                     onPressed: (context) async {
                       var animationFile = await StorageHelper.pickLoadFile(context, '@AnimationViewer.AnimationFile');
@@ -987,8 +987,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           StyledIconButton.filledTonal(
             tooltip: 'Immediate Select',
             selected: this._immediateSelect,
-            icon: Icon(IconSet.ads_click),
-            iconOnSelected: Icon(IconSet.ads_click, fill: 1),
+            icon: IconView.of(IconSet.ads_click),
+            iconOnSelected: IconView.of(IconSet.ads_click, fill: 1),
             onPressed: (context) async {
               this._immediateSelect = !this._immediateSelect;
               await refreshState(this.setState);
@@ -998,8 +998,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           StyledIconButton.filledTonal(
             tooltip: 'Automatic Play',
             selected: this._automaticPlay,
-            icon: Icon(IconSet.autoplay),
-            iconOnSelected: Icon(IconSet.autoplay, fill: 1),
+            icon: IconView.of(IconSet.autoplay),
+            iconOnSelected: IconView.of(IconSet.autoplay, fill: 1),
             onPressed: (context) async {
               this._automaticPlay = !this._automaticPlay;
               await refreshState(this.setState);
@@ -1009,8 +1009,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           StyledIconButton.filledTonal(
             tooltip: 'Repeat Play',
             selected: this._repeatPlay,
-            icon: Icon(IconSet.repeat),
-            iconOnSelected: Icon(IconSet.repeat, fill: 1),
+            icon: IconView.of(IconSet.repeat),
+            iconOnSelected: IconView.of(IconSet.repeat, fill: 1),
             onPressed: (context) async {
               this._repeatPlay = !this._repeatPlay;
               await refreshState(this.setState);
@@ -1020,8 +1020,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           StyledIconButton.filledTonal(
             tooltip: 'Keep Speed',
             selected: this._keepSpeed,
-            icon: Icon(IconSet.lock_reset),
-            iconOnSelected: Icon(IconSet.lock_reset, fill: 1),
+            icon: IconView.of(IconSet.lock_reset),
+            iconOnSelected: IconView.of(IconSet.lock_reset, fill: 1),
             onPressed: (context) async {
               this._keepSpeed = !this._keepSpeed;
               await refreshState(this.setState);
@@ -1031,8 +1031,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           StyledIconButton.filledTonal(
             tooltip: 'Show Boundary',
             selected: this._showBoundary,
-            icon: Icon(IconSet.frame_source),
-            iconOnSelected: Icon(IconSet.frame_source, fill: 1),
+            icon: IconView.of(IconSet.frame_source),
+            iconOnSelected: IconView.of(IconSet.frame_source, fill: 1),
             onPressed: (context) async {
               this._showBoundary = !this._showBoundary;
               await refreshState(this.setState);

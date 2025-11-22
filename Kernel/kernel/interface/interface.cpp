@@ -37,7 +37,6 @@ namespace Twinning::Kernel::Interface {
 		MessageProxy const &  argument_proxy,
 		MessageProxy &        result_proxy
 	) -> Void {
-		std::locale::global(std::locale::classic());
 		auto & argument = argument_proxy.value;
 		auto & result = result_proxy.value;
 		switch (argument[1_ix].hash().value) {

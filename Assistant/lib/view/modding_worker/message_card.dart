@@ -33,7 +33,7 @@ class MessageCard extends StatelessWidget {
         padding: .fromLTRB(12, 8, 12, 8),
         child: FlexContainer.horizontal(crossAlign: .start, [
           FlexContainer.horizontal([
-            Icon(
+            IconView.of(
               IconSet.circle,
               size: 12,
               fill: 0.6,

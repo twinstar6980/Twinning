@@ -28,7 +28,7 @@ class BlankPage extends StatelessWidget {
           constraints: .tightFor(width: 256, height: 256),
           child: StyledFloatingButton.larger(
             tooltip: 'Launcher',
-            icon: Icon(IconSet.widgets, size: 128),
+            icon: IconView.of(IconSet.widgets, size: 128),
             onPressed: (context) async {
               Provider.of<SettingProvider>(context, listen: false).state.homeShowLauncherPanel!();
             },

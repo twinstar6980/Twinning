@@ -299,7 +299,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			): Array<number> => {
 				assert_test(search_result.length === expect_count);
 				let address_list = search_result.map((it) => it.address);
-				Console.information(`The symbol '${name}' at ${address_list.map((it) => (it.toString(16).padStart(8, '0'))).join(',')}`, []);
+				Console.information(`Tip: the symbol '${name}' at ${address_list.map((it) => (it.toString(16).padStart(8, '0'))).join(',')}`, []);
 				return address_list;
 			};
 			symbol_address.CRC64.GetValue = check_search_result(
@@ -464,7 +464,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	): void {
 		Console.information(`Phase: detect platform`, []);
 		let platform_list = detect_platform(target_directory);
-		Console.information(`The platform is '${platform_list.join('|')}'`, []);
+		Console.information(`Tip: the platform is '${platform_list.join('|')}'`, []);
 		assert_test(platform_list.length !== 0);
 		for (let platform of platform_list) {
 			Console.information(`Phase: modify program of '${platform}'`, []);

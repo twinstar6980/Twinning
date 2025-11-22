@@ -10,15 +10,15 @@
 	
 	* [xmake 3.0](https://xmake.io/#/)
 	
-	* [LLVM 21.1 (LLVM-MinGW-ucrt 20251021)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
+	* [LLVM 21.1 (LLVM-MinGW-ucrt 20251118)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 	
 	* [LLVM 21.1](https://llvm.org/) for `Linux`
 	
-	* [LLVM 20.1 (SDK 26.0)](https://llvm.org/) for `Macintosh`
+	* [LLVM 20.1 (SDK 26.1)](https://llvm.org/) for `Macintosh`
 	
 	* [LLVM 21.0 (NDK 29.0)](https://developer.android.com/ndk/downloads) for `Android`
 	
-	* [LLVM 20.1 (SDK 26.0)](https://llvm.org/) for `Iphone`
+	* [LLVM 20.1 (SDK 26.1)](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
@@ -35,8 +35,8 @@
 | [avir 3.1](https://github.com/avaneev/avir)                              | 图像缩放            |
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                          | ETC1 压缩           |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)         | PVRTC4 压缩与解压   |
-| [libpng 1.6.50](https://github.com/pnggroup/libpng)                      | PNG 读写            |
-| [quickjs_ng 0.10.1](https://github.com/quickjs-ng/quickjs)               | JS 引擎             |
+| [libpng 1.6.51](https://github.com/pnggroup/libpng)                      | PNG 读写            |
+| [quickjs_ng 0.11.0](https://github.com/quickjs-ng/quickjs)               | JS 引擎             |
 
 ## 说明
 

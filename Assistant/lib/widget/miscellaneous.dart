@@ -70,7 +70,7 @@ class SettingListItem extends StatelessWidget {
     return StyledListTile.standardCustom(
       enabled: this.enabled,
       padding: .fromLTRB(24, 0, 24, 0),
-      leading: Icon(this.icon),
+      leading: IconView.of(this.icon),
       content: TextStyleInheritedArea.of(
         style: StyledTypography.bodyMedium.query(context).copyWith(
           color: this.enabled ? null : StyledColor.disabled.query(context),
@@ -169,7 +169,7 @@ class NavigationDrawerItem extends StatelessWidget {
         ),
         child: FlexContainer.horizontal([
           Gap.horizontal(16),
-          Icon(this.icon),
+          IconView.of(this.icon),
           Gap.horizontal(12),
           StyledText.custom(
             this.label,

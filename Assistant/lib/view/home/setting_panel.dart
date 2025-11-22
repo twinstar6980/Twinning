@@ -115,9 +115,9 @@ class _SettingPanelState extends State<SettingPanel> {
               type: .text,
               format: .new(r'[0-9a-fA-F]'),
               hint: null,
-              prefix: Icon(IconSet.light_mode),
+              prefix: IconView.of(IconSet.light_mode),
               suffix: [
-                Icon(
+                IconView.of(
                   IconSet.circle,
                   fill: 0.6,
                   color: setting.data.themeColorLight,
@@ -137,9 +137,9 @@ class _SettingPanelState extends State<SettingPanel> {
               type: .text,
               format: .new(r'[0-9a-fA-F]'),
               hint: null,
-              prefix: Icon(IconSet.dark_mode),
+              prefix: IconView.of(IconSet.dark_mode),
               suffix: [
-                Icon(
+                IconView.of(
                   IconSet.circle,
                   fill: 0.6,
                   color: setting.data.themeColorDark,
@@ -185,7 +185,7 @@ class _SettingPanelState extends State<SettingPanel> {
               suffix: [
                 StyledIconButton.standard(
                   tooltip: 'Pick',
-                  icon: Icon(IconSet.open_in_new),
+                  icon: IconView.of(IconSet.open_in_new),
                   onPressed: (context) async {
                     var target = await pickStorageItem(
                       context: context,
@@ -242,7 +242,7 @@ class _SettingPanelState extends State<SettingPanel> {
               type: .number,
               format: .new(r'[0-9]'),
               hint: null,
-              prefix: Icon(IconSet.swap_horiz),
+              prefix: IconView.of(IconSet.swap_horiz),
               suffix: null,
               value: setting.data.windowPositionX.toString(),
               onChanged: (context, value) async {
@@ -258,7 +258,7 @@ class _SettingPanelState extends State<SettingPanel> {
               type: .number,
               format: .new(r'[0-9]'),
               hint: null,
-              prefix: Icon(IconSet.swap_vert),
+              prefix: IconView.of(IconSet.swap_vert),
               suffix: null,
               value: setting.data.windowPositionY.toString(),
               onChanged: (context, value) async {
@@ -297,7 +297,7 @@ class _SettingPanelState extends State<SettingPanel> {
               type: .number,
               format: .new(r'[0-9]'),
               hint: null,
-              prefix: Icon(IconSet.width),
+              prefix: IconView.of(IconSet.width),
               suffix: null,
               value: setting.data.windowSizeWidth.toString(),
               onChanged: (context, value) async {
@@ -313,7 +313,7 @@ class _SettingPanelState extends State<SettingPanel> {
               type: .number,
               format: .new(r'[0-9]'),
               hint: null,
-              prefix: Icon(IconSet.height),
+              prefix: IconView.of(IconSet.height),
               suffix: null,
               value: setting.data.windowSizeHeight.toString(),
               onChanged: (context, value) async {
@@ -361,7 +361,7 @@ class _SettingPanelState extends State<SettingPanel> {
               suffix: [
                 StyledIconButton.standard(
                   tooltip: 'Pick',
-                  icon: Icon(IconSet.open_in_new),
+                  icon: IconView.of(IconSet.open_in_new),
                   onPressed: (context) async {
                     var target = await pickStorageItem(
                       context: context,

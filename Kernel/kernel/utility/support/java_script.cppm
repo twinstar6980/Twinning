@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::JavaScript {
 			That const & that
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
-			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_identifier<TValue>.value));
+			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), static_cast<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>.value));
 			auto thix_opaque = new That{that};
 			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque);
 			thix._rebind_value(thix_value);
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel::JavaScript {
 			That && that
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
-			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), static_cast<int>(Detail::g_native_class_identifier<TValue>.value));
+			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), static_cast<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>.value));
 			auto thix_opaque = new That{as_moveable(that)};
 			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque);
 			thix._rebind_value(thix_value);

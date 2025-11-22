@@ -1,5 +1,5 @@
 -- quickjs_ng
--- 0.10.1 3c9afc9943323ee9c7dbd123c0cd991448f4b6c2
+-- 0.11.0 6a9fe9af5ca0bf7c49ae697edef44864272317d1
 -- https://github.com/quickjs-ng/quickjs
 
 target('third.quickjs_ng', function()
@@ -8,7 +8,7 @@ target('third.quickjs_ng', function()
 	add_headerfiles(
 		'./builtin-array-fromasync.h',
 		'./cutils.h',
-		'./dirent_compat.h',
+		'./dtoa.h',
 		'./libregexp-opcode.h',
 		'./libregexp.h',
 		'./libunicode-table.h',
@@ -20,17 +20,16 @@ target('third.quickjs_ng', function()
 		'./quickjs-opcode.h',
 		'./quickjs.h',
 		'./unicode_gen_def.h',
-		'./xsum.h',
 		{ install = false }
 	)
 	add_files(
 		'./cutils.c',
+		'./dtoa.c',
 		'./libregexp.c',
 		'./libunicode.c',
 		'./quickjs-libc.c',
 		'./quickjs.c',
 		'./unicode_gen.c',
-		'./xsum.c',
 		{}
 	)
 	add_includedirs(

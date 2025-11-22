@@ -160,7 +160,7 @@ class VisualHelper {
       transform: _makeMatrix(image.transform),
       child: textureData == null
         ? null
-        : ImageContainer.of(
+        : ImageView.of(
           fit: .fill,
           width: (image.size?.$1 ?? textureData.$2).toDouble(),
           height: (image.size?.$2 ?? textureData.$3).toDouble(),

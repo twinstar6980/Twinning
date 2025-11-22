@@ -178,7 +178,7 @@ class _MainPageState extends State<MainPage> {
         title: this._tabList.isEmpty ? 'Home' : this._tabList[this._tabIndex].$1,
         leading: StyledIconButton.standard(
           tooltip: 'Navigation',
-          icon: Icon(IconSet.menu),
+          icon: IconView.of(IconSet.menu),
           onPressed: (context) async {
             await StyledNavigationDrawerExtension.show(context);
           },
@@ -230,7 +230,7 @@ class _MainPageState extends State<MainPage> {
             action: [
               StyledIconButton.standard(
                 tooltip: 'Action',
-                icon: Icon(IconSet.steppers),
+                icon: IconView.of(IconSet.steppers),
                 onPressed: (context) async {
                   var action = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
                     position: .under,
@@ -241,7 +241,7 @@ class _MainPageState extends State<MainPage> {
                       ('duplicate', 'Duplicate', IconSet.tab_duplicate),
                     ].map((value) => StyledMenuItem.standard(
                       value: value.$1,
-                      leading: Icon(value.$3),
+                      leading: IconView.of(value.$3),
                       content: StyledText.inherit(value.$2),
                     )),
                   ));

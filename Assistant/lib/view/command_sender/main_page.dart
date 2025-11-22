@@ -221,7 +221,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           label: StyledText.inherit('${this._methodConfiguration.fold<Integer>(0, (currentValue, item) => currentValue + item.item.length)}'),
           child: StyledFloatingButton.standard(
             tooltip: 'Method',
-            icon: Icon(IconSet.format_list_bulleted_add),
+            icon: IconView.of(IconSet.format_list_bulleted_add),
             onPressed: (context) async {
               await StyledBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
                 title: 'Method',
@@ -252,8 +252,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           StyledIconButton.filledTonal(
             tooltip: 'Parallel Forward',
             selected: this._parallelForward,
-            icon: Icon(IconSet.shuffle),
-            iconOnSelected: Icon(IconSet.shuffle, fill: 1),
+            icon: IconView.of(IconSet.shuffle),
+            iconOnSelected: IconView.of(IconSet.shuffle, fill: 1),
             onPressed: (context) async {
               this._parallelForward = !this._parallelForward;
               await refreshState(this.setState);
@@ -262,7 +262,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           Gap.horizontal(8),
           StyledIconButton.filledTonal(
             tooltip: 'Forward',
-            icon: Icon(IconSet.send, fill: 1),
+            icon: IconView.of(IconSet.send, fill: 1),
             onPressed: (context) async {
               await this._forwardCommand(this._command.mapIndexed((index, value) => index).toList());
             },

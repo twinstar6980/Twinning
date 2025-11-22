@@ -27,11 +27,11 @@ class MethodItem extends StatelessWidget {
       StyledListTile.standardCustom(
         dense: true,
         padding: .fromLTRB(40, 0, 24, 0),
-        leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
+        leading: IconView.of(IconSetExtension.queryOutlined(this.configuration.icon)),
         content: StyledText.inherit(tooltip: true, this.configuration.name),
         trailing: VisibilityArea.of(
           enabled: this.configuration.batch != null,
-          child: Icon(IconSet.layers, color: StyledColor.primary.query(context)).withStyledTooltip(message: 'Batch'),
+          child: IconView.of(IconSet.layers, color: StyledColor.primary.query(context)).withStyledTooltip(message: 'Batch'),
         ),
         onPressed: (context) async {
           this.onSelect(this.configuration.identifier);
@@ -66,14 +66,14 @@ class MethodGroupItem extends StatelessWidget {
     return FlexContainer.vertical([
       StyledListTile.standardCustom(
         padding: .fromLTRB(24, 0, 24, 0),
-        leading: Icon(IconSetExtension.queryOutlined(this.configuration.icon)),
+        leading: IconView.of(IconSetExtension.queryOutlined(this.configuration.icon)),
         content: StyledText.inherit(tooltip: true, this.configuration.name),
         trailing: FlexContainer.horizontal(mainStretch: false, [
           StyledBadge.standard(
             label: StyledText.inherit('${this.configuration.item.length}'),
           ),
           Gap.horizontal(6),
-          Icon(!this.expanded ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_left),
+          IconView.of(!this.expanded ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_left),
         ]),
         onPressed: (context) async {
           this.onToggle();

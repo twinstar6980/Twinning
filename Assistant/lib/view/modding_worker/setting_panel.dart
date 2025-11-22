@@ -44,7 +44,7 @@ class SettingPanel extends StatelessWidget {
                 suffix: [
                   StyledIconButton.standard(
                     tooltip: 'Pick',
-                    icon: Icon(IconSet.open_in_new),
+                    icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
                       var target = await pickStorageItem(
                         context: context,
@@ -88,7 +88,7 @@ class SettingPanel extends StatelessWidget {
                 suffix: [
                   StyledIconButton.standard(
                     tooltip: 'Pick',
-                    icon: Icon(IconSet.open_in_new),
+                    icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
                       var target = await pickStorageItem(
                         context: context,
@@ -132,7 +132,7 @@ class SettingPanel extends StatelessWidget {
                 suffix: [
                   StyledIconButton.standard(
                     tooltip: 'Pick',
-                    icon: Icon(IconSet.open_in_new),
+                    icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
                       var target = await pickStorageItem(
                         context: context,
@@ -200,7 +200,7 @@ class SettingPanel extends StatelessWidget {
                 suffix: [
                   StyledIconButton.standard(
                     tooltip: 'Pick',
-                    icon: Icon(IconSet.open_in_new),
+                    icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
                       var target = await pickStorageItem(
                         context: context,

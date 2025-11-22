@@ -287,7 +287,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         : StyledBottomBar.standard(
           primary: StyledFloatingButton.standard(
             tooltip: 'Launch',
-            icon: Icon(IconSet.play_circle),
+            icon: IconView.of(IconSet.play_circle),
             onPressed: (context) async {
               this._launchSession();
             },
@@ -302,7 +302,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                 tooltip: 'Additional Argument',
                 icon: BoxContainer.of(
                   constraints: .tightFor(width: 40),
-                  child: Icon(IconSet.attach_file, fill: 1),
+                  child: IconView.of(IconSet.attach_file, fill: 1),
                 ),
                 onPressed: (context) async {
                   await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(

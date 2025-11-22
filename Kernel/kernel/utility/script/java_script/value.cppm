@@ -629,7 +629,7 @@ export namespace Twinning::Kernel::JavaScript {
 		auto is_bigint (
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
-			return mbox<Boolean>(Third::quickjs_ng::$JS_IsBigInt(thiz._context(), thiz._value()));
+			return mbox<Boolean>(Third::quickjs_ng::$JS_IsBigInt(thiz._value()));
 		}
 
 		auto is_number (

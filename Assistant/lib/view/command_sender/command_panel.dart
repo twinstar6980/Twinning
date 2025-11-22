@@ -51,7 +51,7 @@ class CommandPanel extends StatelessWidget {
               Gap.horizontal(8),
               StyledIconButton.standard(
                 tooltip: !this.expanded.value ? 'Expand' : 'Collapse',
-                icon: Icon(!this.expanded.value ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_up),
+                icon: IconView.of(!this.expanded.value ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_up),
                 onPressed: (context) async {
                   this.expanded.value = !this.expanded.value;
                   await refreshState(setState);
@@ -60,7 +60,7 @@ class CommandPanel extends StatelessWidget {
               Gap.horizontal(4),
               StyledIconButton.standard(
                 tooltip: 'Remove',
-                icon: Icon(IconSet.remove),
+                icon: IconView.of(IconSet.remove),
                 onPressed: (context) async {
                   if (this.argument.every((value) => value.value == null) || await showDialogForConfirm(context)) {
                     this.onRemove();
@@ -96,7 +96,7 @@ class CommandPanel extends StatelessWidget {
                   Gap.horizontal(8),
                   StyledText.inherit('${this.itemConfiguration.preset.nonNulls.length}'),
                   Gap.horizontal(4),
-                  Icon(IconSet.flash_on),
+                  IconView.of(IconSet.flash_on),
                 ]),
                 onPressed: (context) async {
                   var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
@@ -121,8 +121,8 @@ class CommandPanel extends StatelessWidget {
                 enabled: this.itemConfiguration.batch != null,
                 tooltip: 'Batch',
                 selected: this.batch.value,
-                icon: Icon(IconSet.layers),
-                iconOnSelected: Icon(IconSet.layers, fill: 1),
+                icon: IconView.of(IconSet.layers),
+                iconOnSelected: IconView.of(IconSet.layers, fill: 1),
                 onPressed: (context) async {
                   this.batch.value = !this.batch.value;
                   await refreshState(setState);
@@ -130,7 +130,7 @@ class CommandPanel extends StatelessWidget {
               ),
               Gap.horizontal(8),
               StyledButton.filled(
-                icon: Icon(IconSet.send, fill: 1),
+                icon: IconView.of(IconSet.send, fill: 1),
                 content: StyledText.inherit('Forward'),
                 onPressed: (context) async {
                   this.onForward();

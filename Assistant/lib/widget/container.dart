@@ -668,9 +668,54 @@ class ListContainer extends StatelessWidget {
 
 // ----------------
 
-class ImageContainer extends StatelessWidget {
+class IconView extends StatelessWidget {
 
-  const ImageContainer._({
+  const IconView._({
+    super.key,
+    required this.icon,
+    required this.size,
+    required this.fill,
+    required this.color,
+  });
+
+  const IconView.of(
+    IconData icon, {
+    Key?     key = null,
+    Floater? size = null,
+    Floater? fill = null,
+    Color?   color = null,
+  }) : this._(
+    key: key,
+    icon: icon,
+    size: size,
+    fill: fill,
+    color: color,
+  );
+
+  // ----------------
+
+  final IconData icon;
+  final Floater? size;
+  final Floater? fill;
+  final Color?   color;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return Icon(
+      this.icon,
+      size: this.size,
+      fill: this.fill,
+      color: this.color,
+    );
+  }
+
+}
+
+class ImageView extends StatelessWidget {
+
+  const ImageView._({
     super.key,
     required this.fit,
     required this.width,
@@ -678,7 +723,7 @@ class ImageContainer extends StatelessWidget {
     required this.source,
   });
 
-  const ImageContainer.of({
+  const ImageView.of({
     Key?                   key = null,
     BoxFit?                fit = null,
     Floater?               width = null,

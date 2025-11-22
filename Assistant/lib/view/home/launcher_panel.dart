@@ -31,7 +31,7 @@ class LauncherPanel extends StatelessWidget {
         FlexContainer.horizontal([
           Gap.horizontal(16),
           StyledButton.filled(
-            icon: Icon(IconSet.keyboard_command_key),
+            icon: IconView.of(IconSet.keyboard_command_key),
             content: StyledText.inherit('Command'),
             onPressed: (context) async {
               var command = <String>[];
@@ -80,7 +80,7 @@ class LauncherPanel extends StatelessWidget {
           comment: [
             StyledIconButton.standard(
               tooltip: 'Setting',
-              icon: Icon(IconSet.settings),
+              icon: IconView.of(IconSet.settings),
               onPressed: (context) async {
                 await StyledFullDialogExtension.show<Void>(context, StyledFullDialog.standard(
                   title: 'Module Setting',
@@ -93,7 +93,7 @@ class LauncherPanel extends StatelessWidget {
             Gap.horizontal(4),
             StyledIconButton.standard(
               tooltip: 'Edit',
-              icon: Icon(IconSet.edit),
+              icon: IconView.of(IconSet.edit),
               onPressed: (context) async {
                 await StyledFullDialogExtension.show<Void>(context, StyledFullDialog.standard(
                   title: 'Launcher Configuration',
@@ -119,7 +119,7 @@ class LauncherPanel extends StatelessWidget {
           label: 'Pinned',
           action: StyledIconButton.standard(
             tooltip: 'Add',
-            icon: Icon(IconSet.add),
+            icon: IconView.of(IconSet.add),
             onPressed: (context) async {
               setting.data.moduleLauncher.pinned.add(ModuleLauncherConfiguration(
                 title: 'Untitled',
@@ -136,7 +136,7 @@ class LauncherPanel extends StatelessWidget {
           comment: [
             StyledIconButton.standard(
               tooltip: 'Remove',
-              icon: Icon(IconSet.remove),
+              icon: IconView.of(IconSet.remove),
               onPressed: (context) async {
                 if (await showDialogForConfirm(context)) {
                   setting.data.moduleLauncher.pinned.remove(item);
@@ -147,7 +147,7 @@ class LauncherPanel extends StatelessWidget {
             Gap.horizontal(4),
             StyledIconButton.standard(
               tooltip: 'Edit',
-              icon: Icon(IconSet.edit),
+              icon: IconView.of(IconSet.edit),
               onPressed: (context) async {
                 await StyledFullDialogExtension.show<Void>(context, StyledFullDialog.standard(
                   title: 'Launcher Configuration',
@@ -173,7 +173,7 @@ class LauncherPanel extends StatelessWidget {
           label: 'Recent',
           action: StyledIconButton.standard(
             tooltip: 'Clear',
-            icon: Icon(IconSet.clear),
+            icon: IconView.of(IconSet.clear),
             onPressed: (context) async {
               if (await showDialogForConfirm(context)) {
                 setting.data.moduleLauncher.recent.clear();
@@ -188,7 +188,7 @@ class LauncherPanel extends StatelessWidget {
           comment: [
             StyledIconButton.standard(
               tooltip: 'Pin',
-              icon: Icon(IconSet.push_pin),
+              icon: IconView.of(IconSet.push_pin),
               onPressed: (context) async {
                 setting.data.moduleLauncher.recent.remove(item);
                 setting.data.moduleLauncher.pinned.add(item);
@@ -198,7 +198,7 @@ class LauncherPanel extends StatelessWidget {
             Gap.horizontal(4),
             StyledIconButton.standard(
               tooltip: 'Remove',
-              icon: Icon(IconSet.remove),
+              icon: IconView.of(IconSet.remove),
               onPressed: (context) async {
                 setting.data.moduleLauncher.recent.remove(item);
                 await setting.save();
@@ -207,7 +207,7 @@ class LauncherPanel extends StatelessWidget {
             Gap.horizontal(4),
             StyledIconButton.standard(
               tooltip: 'Edit',
-              icon: Icon(IconSet.edit),
+              icon: IconView.of(IconSet.edit),
               onPressed: (context) async {
                 await StyledFullDialogExtension.show<Void>(context, StyledFullDialog.standard(
                   title: 'Launcher Configuration',
