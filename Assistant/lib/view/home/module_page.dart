@@ -23,19 +23,18 @@ class ModulePageRegion extends StatelessWidget {
 
   @override
   build(context) {
-    return StorageDropRegion(
+    return FlexContainer.vertical([
+      MediaQueryInheritedArea.of(
+        data: MediaQuery.of(context).copyWith(
+          padding: .zero,
+          viewPadding: .zero,
+        ),
+        child: this.content,
+      ).withStyledMaterial(
+      ).withFlexExpanded(),
+      this.bottom,
+    ]).withStorageDropRegion(
       onDrop: this.onDropFile,
-      child: FlexContainer.vertical([
-        MediaQueryInheritedArea.of(
-          data: MediaQuery.of(context).copyWith(
-            padding: .zero,
-            viewPadding: .zero,
-          ),
-          child: this.content,
-        ).withStyledMaterial(
-        ).withFlexExpanded(),
-        this.bottom,
-      ]),
     );
   }
 

@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/widget/export.dart';
@@ -49,7 +50,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await pickStorageItem(
                         context: context,
                         allowLoadFile: true,
-                        location: '@ModdingWorker.Kernel',
+                        location: '@${ModuleType.modding_worker.name}.kernel',
                       );
                       if (target != null) {
                         this.data.kernel = target;
@@ -93,7 +94,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await pickStorageItem(
                         context: context,
                         allowLoadFile: true,
-                        location: '@ModdingWorker.Script',
+                        location: '@${ModuleType.modding_worker.name}.script',
                       );
                       if (target != null) {
                         this.data.script = target;
@@ -139,7 +140,7 @@ class SettingPanel extends StatelessWidget {
                         allowLoadFile: true,
                         allowLoadDirectory: true,
                         allowSaveFile: true,
-                        location: '@ModdingWorker.Argument',
+                        location: '@${ModuleType.modding_worker.name}.argument',
                       );
                       if (target != null) {
                         this.data.argument = [...this.data.argument, target];
@@ -205,7 +206,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await pickStorageItem(
                         context: context,
                         allowLoadFile: true,
-                        location: '@ModdingWorker.MessageFont',
+                        location: '@${ModuleType.modding_worker.name}.message_font',
                       );
                       if (target != null) {
                         this.data.messageFont = [...this.data.messageFont, target];

@@ -48,6 +48,12 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		// ----------------
 
+		public Setting Setting => App.Setting.Data.ReflectionDescriptor;
+
+		public Configuration Configuration { get; set; } = default!;
+
+		// ----------------
+
 		public String? DescriptorFile { get; set; } = null;
 
 		public GameReflectionModel.DescriptorArchive? DescriptorArchive { get; set; } = null;
@@ -73,11 +79,14 @@ namespace Twinning.AssistantPlus.View.ReflectionDescriptor {
 
 		public void InitializeView (
 		) {
+			this.Configuration = new () {
+			};
 			return;
 		}
 
 		public async Task OpenView (
 		) {
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.ReflectionDescriptor).Identifier}.json");
 			return;
 		}
 

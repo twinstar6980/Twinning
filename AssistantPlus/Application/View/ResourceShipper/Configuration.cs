@@ -37,4 +37,8 @@ namespace Twinning.AssistantPlus.View.ResourceShipper {
 		public List<OptionConfiguration> Item = default!;
 	}
 
+	public record Configuration {
+		public List<OptionGroupConfiguration> Option = default!;
+	}
+
 }

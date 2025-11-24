@@ -1,19 +1,18 @@
 import '/common.dart';
-import '/setting.dart';
 import '/utility/wrapper.dart';
+import '/utility/json_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
-import '/utility/json_helper.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
-import '/view/command_sender/value_expression.dart';
+import '/view/command_sender/setting.dart';
 import '/view/command_sender/configuration.dart';
+import '/view/command_sender/value_expression.dart';
 import '/view/command_sender/method_item.dart';
 import '/view/command_sender/command_panel.dart';
 import '/view/modding_worker/forward_helper.dart' as modding_worker;
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -21,12 +20,16 @@ class MainPage extends StatefulWidget {
 
   const MainPage({
     super.key,
+    required this.setting,
+    required this.configuration,
     required this.option,
   });
 
   // ----------------
 
-  final List<String> option;
+  final Setting       setting;
+  final Configuration configuration;
+  final List<String>  option;
 
   // ----------------
 
@@ -37,7 +40,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
-  late List<MethodGroupConfiguration>                                                                                             _methodConfiguration;
   late Boolean                                                                                                                    _parallelForward;
   late List<Boolean>                                                                                                              _methodExpanded;
   late List<(MethodGroupConfiguration, MethodConfiguration, Wrapper<Boolean>, List<Wrapper<ValueExpression?>>, Wrapper<Boolean>)> _command;
@@ -49,7 +51,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     Map<String, Object> argument,
     Boolean             expanded,
   ) async {
-    var groupConfiguration = this._methodConfiguration.firstWhere((value) => method.startsWith('${value.identifier}.'));
+    var groupConfiguration = this.widget.configuration.method.firstWhere((value) => method.startsWith('${value.identifier}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.identifier);
     this._command.add((groupConfiguration, itemConfiguration, .new(batch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument), .new(expanded)));
     await refreshState(this.setState);
@@ -83,9 +85,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   modulePageOpenView() async {
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._methodConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.commandSender.methodConfiguration));
-    this._methodExpanded = this._methodConfiguration.map((value) => false).toList();
+    this._methodExpanded = this.widget.configuration.method.map((value) => false).toList();
     return;
   }
 
@@ -160,9 +160,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   @override
   initState() {
     super.initState();
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._methodConfiguration = [];
-    this._parallelForward = setting.data.commandSender.parallelForward;
+    this._parallelForward = this.widget.setting.parallelForward;
     this._methodExpanded = [];
     this._command = [];
     this._commandListScrollController = .new();
@@ -218,7 +216,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       ]),
       bottom: StyledBottomBar.standard(
         primary: StyledBadge.standard(
-          label: StyledText.inherit('${this._methodConfiguration.fold<Integer>(0, (currentValue, item) => currentValue + item.item.length)}'),
+          label: StyledText.inherit('${this.widget.configuration.method.fold<Integer>(0, (currentValue, item) => currentValue + item.item.length)}'),
           child: StyledFloatingButton.standard(
             tooltip: 'Method',
             icon: IconView.of(IconSet.format_list_bulleted_add),
@@ -229,9 +227,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                   ListContainer.of(
                     shrink: true,
                     padding: .fromLTRB(0, 8, 0, 8),
-                    itemCount: this._methodConfiguration.length,
+                    itemCount: this.widget.configuration.method.length,
                     itemBuilder: (context, index) => MethodGroupItem(
-                      configuration: this._methodConfiguration[index],
+                      configuration: this.widget.configuration.method[index],
                       onSelect: (method) async {
                         Navigator.pop(context);
                         await this._appendCommand(method, false, {}, true);

@@ -1,18 +1,19 @@
 import '/common.dart';
-import '/setting.dart';
+import '/module.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
+import '/view/animation_viewer/setting.dart';
+import '/view/animation_viewer/configuration.dart';
 import '/view/animation_viewer/model.dart' as model;
 import '/view/animation_viewer/visual_helper.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -20,12 +21,16 @@ class MainPage extends StatefulWidget {
 
   const MainPage({
     super.key,
+    required this.setting,
+    required this.configuration,
     required this.option,
   });
 
   // ----------------
 
-  final List<String> option;
+  final Setting       setting;
+  final Configuration configuration;
+  final List<String>  option;
 
   // ----------------
 
@@ -464,12 +469,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   initState() {
     super.initState();
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._immediateSelect = setting.data.animationViewer.immediateSelect;
-    this._automaticPlay = setting.data.animationViewer.automaticPlay;
-    this._repeatPlay = setting.data.animationViewer.repeatPlay;
-    this._keepSpeed = setting.data.animationViewer.keepSpeed;
-    this._showBoundary = setting.data.animationViewer.showBoundary;
+    this._immediateSelect = this.widget.setting.immediateSelect;
+    this._automaticPlay = this.widget.setting.automaticPlay;
+    this._repeatPlay = this.widget.setting.repeatPlay;
+    this._keepSpeed = this.widget.setting.keepSpeed;
+    this._showBoundary = this.widget.setting.showBoundary;
     this._animationFile = null;
     this._animation = null;
     this._texture = null;
@@ -970,7 +974,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     icon: IconView.of(IconSet.open_in_new),
                     content: StyledText.inherit('Pick'),
                     onPressed: (context) async {
-                      var animationFile = await StorageHelper.pickLoadFile(context, '@AnimationViewer.AnimationFile');
+                      var animationFile = await StorageHelper.pickLoadFile(context, '@${ModuleType.animation_viewer.name}.animation_file');
                       if (animationFile != null) {
                         Navigator.pop(context);
                         await this._applyLoad(animationFile, null, null, null, null, null, null, null);

@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/setting.dart';
+import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/exception_helper.dart';
 import '/utility/convert_helper.dart';
@@ -12,6 +13,8 @@ import '/bridge/client.dart' as bridge;
 import '/bridge/launcher.dart' as bridge;
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
+import '/view/modding_worker/setting.dart';
+import '/view/modding_worker/configuration.dart';
 import '/view/modding_worker/message_type.dart';
 import '/view/modding_worker/message_card.dart';
 import '/view/modding_worker/submission_type.dart';
@@ -27,12 +30,16 @@ class MainPage extends StatefulWidget {
 
   const MainPage({
     super.key,
+    required this.setting,
+    required this.configuration,
     required this.option,
   });
 
   // ----------------
 
-  final List<String> option;
+  final Setting       setting;
+  final Configuration configuration;
+  final List<String>  option;
 
   // ----------------
 
@@ -116,13 +123,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._messageList.clear();
     await refreshState(this.setState);
     try {
-      var setting = Provider.of<SettingProvider>(this.context, listen: false);
       var kernel = await StorageHelper.temporary();
       var library = bridge.Library();
       try {
-        await StorageHelper.copy(setting.data.moddingWorker.kernel, kernel);
+        await StorageHelper.copy(this.widget.setting.kernel, kernel);
         library.open(kernel);
-        result = await bridge.Launcher.launch(this._sessionClient, library, setting.data.moddingWorker.script, setting.data.moddingWorker.argument + this._additionalArgument);
+        result = await bridge.Launcher.launch(this._sessionClient, library, this.widget.setting.script, this.widget.setting.argument + this._additionalArgument);
       }
       catch (e, s) {
         exception = (e, s);
@@ -190,7 +196,6 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   modulePageApplyOption(optionView) async {
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var optionImmediateLaunch = null as Boolean?;
     var optionAdditionalArgument = null as List<String>?;
     var option = CommandLineReader(optionView);
@@ -198,7 +203,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       optionImmediateLaunch = option.nextBoolean();
     }
     else {
-      optionImmediateLaunch = setting.data.moddingWorker.immediateLaunch;
+      optionImmediateLaunch = this.widget.setting.immediateLaunch;
     }
     if (option.check('-additional_argument')) {
       optionAdditionalArgument = option.nextStringList();
@@ -492,7 +497,7 @@ class _MainPageBridgeClient extends bridge.Client {
       'save_file'      => 'save_file',
       _                => throw Exception(),
     };
-    target = await StorageHelper.pick(typeValue, this._controller.context, '@ModdingWorker.Generic', null) ?? '';
+    target = await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleType.resource_shipper.name}.generic', null) ?? '';
     return (target,);
   }
 

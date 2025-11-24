@@ -66,6 +66,13 @@ class MethodGroupConfiguration {
   });
 }
 
+class Configuration {
+  List<MethodGroupConfiguration> method;
+  Configuration({
+    required this.method,
+  });
+}
+
 // ----------------
 
 class ConfigurationHelper {
@@ -148,30 +155,32 @@ class ConfigurationHelper {
 
   // #region convert
 
-  static List<MethodGroupConfiguration> parseDataFromJson(
+  static Configuration parseDataFromJson(
     dynamic json,
   ) {
-    return (json as List<dynamic>).map((jsonGroup) => MethodGroupConfiguration(
-      identifier: (jsonGroup['identifier'] as String),
-      name: (jsonGroup['name'] as String),
-      icon: (jsonGroup['icon'] as String),
-      item: (jsonGroup['item'] as List<dynamic>).map((jsonItem) => MethodConfiguration(
-        identifier: (jsonItem['identifier'] as String),
-        name: (jsonItem['name'] as String),
-        icon: (jsonItem['icon'] as String),
-        argument: (jsonItem['argument'] as List<dynamic>).map((jsonArgument) => ArgumentConfiguration(
-          identifier: (jsonArgument['identifier'] as String),
-          name: (jsonArgument['name'] as String),
-          type: (jsonArgument['type'] as String).selfLet((it) => .values.byName(it)),
-          option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),
-        )).toList(),
-        batch: (jsonItem['batch'] as List<dynamic>?)?.cast<String>(),
-        preset: (jsonItem['preset'] as List<dynamic>).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
-          name: (jsonPreset['name'] as String),
-          argument: (jsonPreset['argument'] as Map<dynamic, dynamic>).cast<String, Object>(),
+    return Configuration(
+      method: (json['method'] as List<dynamic>).map((jsonGroup) => MethodGroupConfiguration(
+        identifier: (jsonGroup['identifier'] as String),
+        name: (jsonGroup['name'] as String),
+        icon: (jsonGroup['icon'] as String),
+        item: (jsonGroup['item'] as List<dynamic>).map((jsonItem) => MethodConfiguration(
+          identifier: (jsonItem['identifier'] as String),
+          name: (jsonItem['name'] as String),
+          icon: (jsonItem['icon'] as String),
+          argument: (jsonItem['argument'] as List<dynamic>).map((jsonArgument) => ArgumentConfiguration(
+            identifier: (jsonArgument['identifier'] as String),
+            name: (jsonArgument['name'] as String),
+            type: (jsonArgument['type'] as String).selfLet((it) => .values.byName(it)),
+            option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),
+          )).toList(),
+          batch: (jsonItem['batch'] as List<dynamic>?)?.cast<String>(),
+          preset: (jsonItem['preset'] as List<dynamic>).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
+            name: (jsonPreset['name'] as String),
+            argument: (jsonPreset['argument'] as Map<dynamic, dynamic>).cast<String, Object>(),
+          )).toList(),
         )).toList(),
       )).toList(),
-    )).toList();
+    );
   }
 
   // #endregion

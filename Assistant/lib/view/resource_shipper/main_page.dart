@@ -1,17 +1,16 @@
 import '/common.dart';
-import '/setting.dart';
+import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/utility/json_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
+import '/view/resource_shipper/setting.dart';
 import '/view/resource_shipper/configuration.dart';
 import '/view/resource_shipper/option_item.dart';
 import '/view/modding_worker/forward_helper.dart' as modding_worker;
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -19,12 +18,16 @@ class MainPage extends StatefulWidget {
 
   const MainPage({
     super.key,
+    required this.setting,
+    required this.configuration,
     required this.option,
   });
 
   // ----------------
 
-  final List<String> option;
+  final Setting       setting;
+  final Configuration configuration;
+  final List<String>  option;
 
   // ----------------
 
@@ -35,7 +38,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
-  late List<OptionGroupConfiguration>                   _optionConfiguration;
   late Boolean                                          _parallelForward;
   late Boolean                                          _enableFilter;
   late Boolean                                          _enableBatch;
@@ -47,7 +49,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   Future<Void> _refreshMatch(
   ) async {
     this._optionMatch.clear();
-    for (var group in this._optionConfiguration) {
+    for (var group in this.widget.configuration.option) {
       var groupMatch = <(Boolean, Boolean, Boolean, Boolean)>[];
       for (var item in group.item) {
         var singleEnabled = true;
@@ -126,9 +128,6 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   modulePageOpenView() async {
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._optionConfiguration = ConfigurationHelper.parseDataFromJson(await JsonHelper.deserializeFile(setting.data.resourceShipper.optionConfiguration));
-    this._optionExpanded = this._optionConfiguration.map((value) => true).toList();
     await this._refreshMatch();
     return;
   }
@@ -216,14 +215,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   @override
   initState() {
     super.initState();
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    this._optionConfiguration = [];
-    this._parallelForward = setting.data.resourceShipper.parallelForward;
-    this._enableFilter = setting.data.resourceShipper.enableFilter;
-    this._enableBatch = setting.data.resourceShipper.enableBatch;
+    this._parallelForward = this.widget.setting.parallelForward;
+    this._enableFilter = this.widget.setting.enableFilter;
+    this._enableBatch = this.widget.setting.enableBatch;
     this._resource = [];
-    this._optionMatch = [];
-    this._optionExpanded = [];
+    this._optionMatch = this.widget.configuration.option.map((value) => value.item.map((valueItem) => (false, false, false, false)).toList()).toList();
+    this._optionExpanded = this.widget.configuration.option.map((value) => true).toList();
     this._optionListScrollController = .new();
     postTask(() async {
       await this.modulePageOpenView();
@@ -256,9 +253,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         ListContainer.of(
           padding: .fromLTRB(0, 8, 0, 8),
           controller: this._optionListScrollController,
-          itemCount: this._optionConfiguration.length,
+          itemCount: this.widget.configuration.option.length,
           itemBuilder: (context, index) => OptionGroupItem(
-            configuration: this._optionConfiguration[index],
+            configuration: this.widget.configuration.option[index],
             match: this._optionMatch[index],
             enableFilter: this._enableFilter,
             enableBatch: this._enableBatch,
@@ -344,7 +341,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
-                        var item = await StorageHelper.pickLoadFile(context, '@ResourceShipper.Resource');
+                        var item = await StorageHelper.pickLoadFile(context, '@${ModuleType.resource_shipper.name}.resource');
                         if (item != null) {
                           await this._appendResource([item]);
                           await refreshState(setStateForPanel);
@@ -356,7 +353,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
-                        var item = await StorageHelper.pickLoadDirectory(context, '@ResourceShipper.Resource');
+                        var item = await StorageHelper.pickLoadDirectory(context, '@${ModuleType.resource_shipper.name}.resource');
                         if (item != null) {
                           await this._appendResource([item]);
                           await refreshState(setStateForPanel);

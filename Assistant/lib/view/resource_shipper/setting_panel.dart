@@ -1,5 +1,4 @@
 import '/common.dart';
-import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/resource_shipper/setting.dart';
 import 'package:flutter/widgets.dart';
@@ -26,50 +25,6 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => FlexContainer.vertical([
         Gap.vertical(8),
-        SettingListItem(
-          icon: IconSet.description,
-          label: 'Option Configuration',
-          comment: [
-            StyledText.inherit(!StorageHelper.existFileSync(this.data.optionConfiguration) ? 'Invalid' : 'Available'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              content: StyledInput.outlined(
-                type: .text,
-                format: null,
-                hint: null,
-                prefix: null,
-                suffix: [
-                  StyledIconButton.standard(
-                    tooltip: 'Pick',
-                    icon: IconView.of(IconSet.open_in_new),
-                    onPressed: (context) async {
-                      var target = await pickStorageItem(
-                        context: context,
-                        allowLoadFile: true,
-                        location: '@ResourceShipper.OptionConfiguration',
-                      );
-                      if (target != null) {
-                        this.data.optionConfiguration = target;
-                        await refreshState(setStateForPanel);
-                        await refreshState(setState);
-                        this.onUpdate();
-                      }
-                    },
-                  ),
-                ],
-                value: this.data.optionConfiguration,
-                onChanged: (context, value) async {
-                  this.data.optionConfiguration = StorageHelper.regularize(value);
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-            ),
-          ],
-        ),
         SettingListItem(
           icon: IconSet.shuffle,
           label: 'Parallel Forward',

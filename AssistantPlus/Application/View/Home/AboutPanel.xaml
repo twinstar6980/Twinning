@@ -479,6 +479,49 @@
 				Width="32"
 				Height="22"
 				FontSize="{StaticResource SmallIconSize}"
+				Glyph="{StaticResource FluentIconGlyph.PrintAllPages}"
+				/>
+			<SplitButton
+				ToolTipService.ToolTip="Module Configuration Directory"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Left"
+				Click="{x:Bind Controller.uSettingModuleConfigurationDirectory_Click}"
+				Content="Pick"
+				>
+				<SplitButton.Flyout>
+					<Flyout>
+						<Flyout.FlyoutPresenterStyle>
+							<Style TargetType="FlyoutPresenter" BasedOn="{StaticResource NormalFlyoutPresenterStyle}">
+								<Setter Property="MinWidth" Value="239" />
+								<Setter Property="MaxWidth" Value="239" />
+							</Style>
+						</Flyout.FlyoutPresenterStyle>
+						<TextBlock
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Style="{StaticResource BodyTextBlockStyle}"
+							TextWrapping="Wrap"
+							Text="{x:Bind Controller.uSettingModuleConfigurationDirectoryText_Text}"
+							/>
+					</Flyout>
+				</SplitButton.Flyout>
+			</SplitButton>
+		</my:Stack>
+		<my:Divider />
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="4"
+			>
+			<FontIcon
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Width="32"
+				Height="22"
+				FontSize="{StaticResource SmallIconSize}"
 				Glyph="{StaticResource FluentIconGlyph.DialShape3}"
 				/>
 			<SplitButton

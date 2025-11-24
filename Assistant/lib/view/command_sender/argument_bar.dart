@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
@@ -34,7 +35,7 @@ class _BasicArgumentBar extends StatelessWidget {
   @override
   build(context) {
     return FlexContainer.vertical([
-      if (!this.expanded && this.value != null)
+      if (!this.expanded && this.value != null) ...[
         FlexContainer.horizontal(textBaseline: StyledTypography.labelLarge.query(context).textBaseline!, [
           Gap.horizontal(8),
           StyledText.custom(
@@ -54,7 +55,8 @@ class _BasicArgumentBar extends StatelessWidget {
           ).withFlexExpanded(),
           Gap.horizontal(8),
         ]),
-      if (this.expanded)
+      ],
+      if (this.expanded) ...[
         FlexContainer.horizontal([
           Gap.horizontal(8),
           StyledText.custom(
@@ -65,8 +67,8 @@ class _BasicArgumentBar extends StatelessWidget {
           ).withFlexExpanded(),
           Gap.horizontal(8),
         ]),
-      if (this.expanded)
         this.content,
+      ],
     ]);
   }
 
@@ -408,46 +410,45 @@ class _PathArgumentBar extends StatelessWidget {
         value: this.value.value,
         batch: this.batch,
         expanded: this.expanded,
-        content: StorageDropRegion(
+        content: StyledInput.underlined(
+          type: .text,
+          format: null,
+          hint: 'Path',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Pick',
+              icon: IconView.of(IconSet.open_in_new),
+              onPressed: (context) async {
+                var target = await pickStorageItem(
+                  context: context,
+                  allowLoadFile: true,
+                  allowLoadDirectory: true,
+                  allowSaveFile: true,
+                  location: '@${ModuleType.command_sender.name}.generic',
+                );
+                if (target != null) {
+                  this.value.value = .new(target);
+                  await refreshState(setState);
+                }
+              },
+            ),
+          ],
+          value: this.value.value == null ? '' : this.value.value!.content,
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              this.value.value = .new(StorageHelper.regularize(value));
+            }
+            await refreshState(setState);
+          },
+        ).withStorageDropRegion(
           onDrop: (item) async {
             this.value.value = .new(item.first);
             await refreshState(setState);
           },
-          child: StyledInput.underlined(
-            type: .text,
-            format: null,
-            hint: 'Path',
-            prefix: null,
-            suffix: [
-              StyledIconButton.standard(
-                tooltip: 'Pick',
-                icon: IconView.of(IconSet.open_in_new),
-                onPressed: (context) async {
-                  var target = await pickStorageItem(
-                    context: context,
-                    allowLoadFile: true,
-                    allowLoadDirectory: true,
-                    allowSaveFile: true,
-                    location: '@CommandSender.Generic',
-                  );
-                  if (target != null) {
-                    this.value.value = .new(target);
-                    await refreshState(setState);
-                  }
-                },
-              ),
-            ],
-            value: this.value.value == null ? '' : this.value.value!.content,
-            onChanged: (context, value) async {
-              if (value.isEmpty) {
-                this.value.value = null;
-              }
-              else {
-                this.value.value = .new(StorageHelper.regularize(value));
-              }
-              await refreshState(setState);
-            },
-          ),
         ),
       ),
     );
@@ -498,9 +499,10 @@ class _EnumerationArgumentBar extends StatelessWidget {
             ),
           ],
           option: this.option.map((value) => (value, ValueExpressionHelper.makeString(value))).toList(),
-          value: this.value.value == null ? '' : ValueExpressionHelper.makeString(this.value.value!),
+          value: value.value,
           onChanged: (context, value) async {
-            this.value.value = value as ValueExpression;
+            value as ValueExpression;
+            this.value.value = value;
             await refreshState(setState);
           },
         ),

@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
+import '/utility/json_helper.dart';
 import '/widget/export.dart';
 import '/view/home/blank_page.dart';
 import '/view/home/launcher_panel.dart';
@@ -38,7 +39,18 @@ class _MainPageState extends State<MainPage> {
     while (Navigator.canPop(this.context)) {
       Navigator.pop(this.context);
     }
-    this._tabList.add((configuration.title, configuration.type, ModuleHelper.query(configuration.type).mainPage(configuration.option)));
+    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    var moduleSetting = ModuleHelper.query(configuration.type).querySetting(context);
+    var moduleConfiguration = ModuleHelper.query(configuration.type).parseConfiguration((await JsonHelper.deserializeFile('${setting.data.moduleConfigurationDirectory}/${configuration.type.name}.json'))!);
+    this._tabList.add((
+      configuration.title,
+      configuration.type,
+      ModuleHelper.query(configuration.type).mainPage(
+        moduleSetting,
+        moduleConfiguration,
+        configuration.option,
+      ),
+    ));
     if (this._tabIndex != -1) {
       await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
     }
@@ -220,8 +232,9 @@ class _MainPageState extends State<MainPage> {
             },
           ),
           NavigationDrawerDivider(),
-          if (this._tabList.isEmpty)
+          if (this._tabList.isEmpty) ...[
             Gap.vertical(16),
+          ],
           ...this._tabList.mapIndexed((index, item) => NavigationDrawerItem(
             key: ObjectKey(item), // fix button ripple effect error when remove item
             selected: index == this._tabIndex,

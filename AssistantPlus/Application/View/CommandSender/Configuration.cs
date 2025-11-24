@@ -43,4 +43,8 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 		public List<MethodConfiguration> Item       = default!;
 	}
 
+	public record Configuration {
+		public List<MethodGroupConfiguration> Method = default!;
+	}
+
 }

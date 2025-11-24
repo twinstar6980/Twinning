@@ -49,7 +49,9 @@ namespace Twinning.AssistantPlus.View.ResourceShipper {
 
 		// ----------------
 
-		public List<OptionGroupConfiguration> OptionConfiguration { get; set; } = default!;
+		public Setting Setting => App.Setting.Data.ResourceShipper;
+
+		public Configuration Configuration { get; set; } = default!;
 
 		// ----------------
 
@@ -67,18 +69,20 @@ namespace Twinning.AssistantPlus.View.ResourceShipper {
 
 		public void InitializeView (
 		) {
-			this.OptionConfiguration = [];
-			this.ParallelForward = App.Setting.Data.ResourceShipper.ParallelForward;
-			this.EnableFilter = App.Setting.Data.ResourceShipper.EnableFilter;
-			this.EnableBatch = App.Setting.Data.ResourceShipper.EnableBatch;
+			this.Configuration = new () {
+				Option = [],
+			};
+			this.ParallelForward = this.Setting.ParallelForward;
+			this.EnableFilter = this.Setting.EnableFilter;
+			this.EnableBatch = this.Setting.EnableBatch;
 			this.uOptionList_ItemsSource = [];
 			return;
 		}
 
 		public async Task OpenView (
 		) {
-			this.OptionConfiguration = JsonHelper.DeserializeText<List<OptionGroupConfiguration>>(await StorageHelper.ReadFileText(App.Setting.Data.ResourceShipper.OptionConfiguration));
-			this.uOptionList_ItemsSource = this.OptionConfiguration.Select((group) => (new MainPageOptionGroupItemController() {
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.ResourceShipper).Identifier}.json");
+			this.uOptionList_ItemsSource = this.Configuration.Option.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,
 				Configuration = group,
 				Children = group.Item.Select((item) => (new MainPageOptionItemItemController() {

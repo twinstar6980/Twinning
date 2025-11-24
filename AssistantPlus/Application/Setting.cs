@@ -26,6 +26,7 @@ namespace Twinning.AssistantPlus {
 		public Dictionary<String, String>        StoragePickerHistoryLocation = default!;
 		public ModuleType                        ForwarderDefaultTarget       = default!;
 		public Boolean                           ForwarderImmediateJump       = default!;
+		public String                            ModuleConfigurationDirectory = default!;
 		public ModuleLauncherSetting             ModuleLauncher               = default!;
 		public View.ModdingWorker.Setting        ModdingWorker                = default!;
 		public View.CommandSender.Setting        CommandSender                = default!;
@@ -205,6 +206,7 @@ namespace Twinning.AssistantPlus {
 				StoragePickerHistoryLocation = [],
 				ForwarderDefaultTarget = ModuleType.ResourceShipper,
 				ForwarderImmediateJump = false,
+				ModuleConfigurationDirectory = "",
 				ModuleLauncher = new () {
 					Module = Enum.GetValues<ModuleType>().Select((value) => (new ModuleLauncherConfiguration() {
 						Title = ModuleHelper.Query(value).Name,
@@ -224,11 +226,9 @@ namespace Twinning.AssistantPlus {
 					MessageFont = "",
 				},
 				CommandSender = new () {
-					MethodConfiguration = "",
 					ParallelForward = false,
 				},
 				ResourceShipper = new () {
-					OptionConfiguration = "",
 					ParallelForward = false,
 					EnableFilter = true,
 					EnableBatch = false,

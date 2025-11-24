@@ -54,6 +54,12 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		// ----------------
 
+		public Setting Setting => App.Setting.Data.AnimationViewer;
+
+		public Configuration Configuration { get; set; } = default!;
+
+		// ----------------
+
 		public Floater StageScale { get; set; } = 1.0;
 
 		public Floater StagePositionX { get; set; } = 0.0;
@@ -124,13 +130,15 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public void InitializeView (
 		) {
-			this.ImmediateSelect = App.Setting.Data.AnimationViewer.ImmediateSelect;
-			this.AutomaticPlay = App.Setting.Data.AnimationViewer.AutomaticPlay;
-			this.RepeatPlay = App.Setting.Data.AnimationViewer.RepeatPlay;
-			this.KeepSpeed = App.Setting.Data.AnimationViewer.KeepSpeed;
-			this.ShowBoundary = App.Setting.Data.AnimationViewer.ShowBoundary;
-			this.ImageFilterRule = App.Setting.Data.AnimationViewer.ImageFilterRule;
-			this.SpriteFilterRule = App.Setting.Data.AnimationViewer.SpriteFilterRule;
+			this.Configuration = new () {
+			};
+			this.ImmediateSelect = this.Setting.ImmediateSelect;
+			this.AutomaticPlay = this.Setting.AutomaticPlay;
+			this.RepeatPlay = this.Setting.RepeatPlay;
+			this.KeepSpeed = this.Setting.KeepSpeed;
+			this.ShowBoundary = this.Setting.ShowBoundary;
+			this.ImageFilterRule = this.Setting.ImageFilterRule;
+			this.SpriteFilterRule = this.Setting.SpriteFilterRule;
 			this.View.uSprite.HoldEnd = true;
 			this.View.uSprite.RepeatPlay = true;
 			this.View.uSprite.ShowBoundary = this.ShowBoundary;
@@ -141,6 +149,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 
 		public async Task OpenView (
 		) {
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.AnimationViewer).Identifier}.json");
 			return;
 		}
 
@@ -761,7 +770,7 @@ namespace Twinning.AssistantPlus.View.AnimationViewer {
 			await this.Load(animationFile);
 			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
-				imageFilter == null ? null : this.Animation.Image.Select((value, index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
+				imageFilter == null ? null : this.Animation.Image.Select((value,   index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
 				spriteFilter == null ? null : this.Animation.Sprite.Select((value, index) => (Boolean?)!spriteFilter.Contains(index)).ToList()
 			);
 			if (imageFilter == null && spriteFilter == null) {

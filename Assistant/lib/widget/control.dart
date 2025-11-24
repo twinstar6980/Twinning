@@ -2,6 +2,7 @@ import '/common.dart';
 import '/utility/system_overlay_helper.dart';
 import '/widget/common.dart';
 import '/widget/container.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' as material;
@@ -986,11 +987,11 @@ class StyledCheck extends StatelessWidget {
   });
 
   const StyledCheck.standard({
-    Key?                                                         key = null,
-    Boolean                                                      enabled = true,
-    String?                                                      tooltip = null,
-    required Boolean                                             value,
-    required Void Function(BuildContext context, Boolean? value) onChanged,
+    Key?                                                        key = null,
+    Boolean                                                     enabled = true,
+    String?                                                     tooltip = null,
+    required Boolean                                            value,
+    required Void Function(BuildContext context, Boolean value) onChanged,
   }) : this._(
     key: key,
     variant: .standard,
@@ -1002,11 +1003,11 @@ class StyledCheck extends StatelessWidget {
 
   // ----------------
 
-  final StyledCheckVariant                                  variant;
-  final Boolean                                             enabled;
-  final String?                                             tooltip;
-  final Boolean                                             value;
-  final Void Function(BuildContext context, Boolean? value) onChanged;
+  final StyledCheckVariant                                 variant;
+  final Boolean                                            enabled;
+  final String?                                            tooltip;
+  final Boolean                                            value;
+  final Void Function(BuildContext context, Boolean value) onChanged;
 
   // ----------------
 
@@ -1015,7 +1016,7 @@ class StyledCheck extends StatelessWidget {
     return switch (this.variant) {
       .standard => material.Checkbox(
         value: this.value,
-        onChanged: !this.enabled ? null : (value) => this.onChanged(context, value),
+        onChanged: !this.enabled ? null : (value) => this.onChanged(context, value!),
       ),
     }.selfLet((it) => !this.enabled || this.tooltip == null ? it : it.withStyledTooltip(message: this.tooltip!));
   }
@@ -1446,7 +1447,7 @@ class StyledInputCombo extends StatefulWidget {
     required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
     required List<(Object, String)>                             option,
-    required String                                             value,
+    required Object?                                            value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
     key: key,
@@ -1469,7 +1470,7 @@ class StyledInputCombo extends StatefulWidget {
     required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
     required List<(Object, String)>                             option,
-    required String                                             value,
+    required Object?                                            value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
     key: key,
@@ -1492,7 +1493,7 @@ class StyledInputCombo extends StatefulWidget {
     required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
     required List<(Object, String)>                             option,
-    required String                                             value,
+    required Object?                                            value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
     key: key,
@@ -1516,7 +1517,7 @@ class StyledInputCombo extends StatefulWidget {
   final Widget?                                            prefix;
   final List<Widget>?                                      suffix;
   final List<(Object, String)>                             option;
-  final String                                             value;
+  final Object?                                            value;
   final Void Function(BuildContext context, Object? value) onChanged;
 
   // ----------------
@@ -1538,14 +1539,14 @@ class _StyledInputComboState extends State<StyledInputCombo> {
     super.initState();
     this._focusNode = .new();
     this._valueController = .new();
-    this._valueController.text = this.widget.value;
+    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.$1 == this.widget.value)?.$2 ?? '';
     return;
   }
 
   @override
   didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
-    this._valueController.text = this.widget.value;
+    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.$1 == this.widget.value)?.$2 ?? '';
     return;
   }
 
@@ -1568,8 +1569,9 @@ class _StyledInputComboState extends State<StyledInputCombo> {
         crossAxisUnconstrained: false,
         alignmentOffset: .new(-4, 0),
         menuChildren: [
-          if (this.widget.option.isEmpty)
+          if (this.widget.option.isEmpty) ...[
             Gap.vertical(16),
+          ],
           ...this.widget.option.map((value) => material.MenuItemButton(
             style: .new(
               backgroundColor: .all(value.$2 != this.widget.value ? null : StyledColor.onSurface.query(context).withValues(alpha: 0.12)),
@@ -2034,11 +2036,65 @@ class StyledBottomBar extends StatelessWidget {
       .standard => material.BottomAppBar(
         child: FlexContainer.horizontal([
           FlexContainer.horizontal(this.secondary).withFlexExpanded(),
-          if (this.primary != null)
+          if (this.primary != null) ...[
             Gap.horizontal(16),
-          if (this.primary != null)
             this.primary!,
+          ],
         ]),
+      ),
+    };
+  }
+
+}
+
+// ----------------
+
+enum StyledNavigationBarVariant {
+  standard,
+}
+
+class StyledNavigationBar extends StatelessWidget {
+
+  const StyledNavigationBar._({
+    super.key,
+    required this.variant,
+    required this.destination,
+    required this.value,
+    required this.onChanged,
+  });
+
+  const StyledNavigationBar.standard({
+    Key?                                                        key = null,
+    required Iterable<(String, IconData)>                       children,
+    required Integer                                            value,
+    required Void Function(BuildContext context, Integer value) onChanged,
+  }) : this._(
+    key: key,
+    variant: .standard,
+    destination: children,
+    value: value,
+    onChanged: onChanged,
+  );
+
+  // ----------------
+
+  final StyledNavigationBarVariant                         variant;
+  final Iterable<(String, IconData)>                       destination;
+  final Integer                                            value;
+  final Void Function(BuildContext context, Integer value) onChanged;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return switch (this.variant) {
+      .standard => material.NavigationBar(
+        destinations: this.destination.map((value) => material.NavigationDestination(
+          icon: IconView.of(value.$2),
+          label: value.$1,
+        )).toList(),
+        selectedIndex: this.value,
+        onDestinationSelected: (value) => this.onChanged(context, value),
       ),
     };
   }

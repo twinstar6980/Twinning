@@ -332,6 +332,19 @@ class StorageDropRegion extends StatelessWidget {
 
 }
 
+extension StorageDropRegionWidgetExtension on Widget {
+
+  StorageDropRegion withStorageDropRegion( {
+    Void Function(List<String> item)? onDrop,
+  }) {
+    return .new(
+      onDrop: onDrop,
+      child: this,
+    );
+  }
+
+}
+
 // ----------------
 
 Future<String?> pickStorageItem({
@@ -361,12 +374,15 @@ Future<String?> pickStorageItem({
     type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
       position: .under,
       children: [
-        if (allowLoadFile)
+        if (allowLoadFile) ...[
           ('load_file', 'Load File'),
-        if (allowLoadDirectory)
+        ],
+        if (allowLoadDirectory) ...[
           ('load_directory', 'Load Directory'),
-        if (allowSaveFile)
+        ],
+        if (allowSaveFile) ...[
           ('save_file', 'Save File'),
+        ],
       ].map((value) => StyledMenuItem.standard(
         value: value.$1,
         content: StyledText.custom(

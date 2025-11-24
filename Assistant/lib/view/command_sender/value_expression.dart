@@ -6,6 +6,10 @@ import '/utility/convert_helper.dart';
 class ValueExpression {
   ValueExpression(
   );
+  @override
+  get hashCode => super.hashCode; // ignore: unnecessary_overrides
+  @override
+  operator ==(other) => other is ValueExpression;
 }
 
 // ----------------
@@ -15,6 +19,10 @@ class BooleanExpression extends ValueExpression {
   BooleanExpression(
     this.value,
   );
+  @override
+  get hashCode => super.hashCode ^ this.value.hashCode;
+  @override
+  operator ==(other) => other is BooleanExpression && this.value == other.value;
 }
 
 class IntegerExpression extends ValueExpression {
@@ -22,6 +30,10 @@ class IntegerExpression extends ValueExpression {
   IntegerExpression(
     this.value,
   );
+  @override
+  get hashCode => super.hashCode ^ this.value.hashCode;
+  @override
+  operator ==(other) => other is IntegerExpression && this.value == other.value;
 }
 
 class FloaterExpression extends ValueExpression {
@@ -29,6 +41,10 @@ class FloaterExpression extends ValueExpression {
   FloaterExpression(
     this.value,
   );
+  @override
+  get hashCode => super.hashCode ^ this.value.hashCode;
+  @override
+  operator ==(other) => other is FloaterExpression && this.value == other.value;
 }
 
 class SizeExpression extends ValueExpression {
@@ -38,6 +54,10 @@ class SizeExpression extends ValueExpression {
     this.count,
     this.exponent,
   );
+  @override
+  get hashCode => super.hashCode ^ this.count.hashCode ^ this.exponent.hashCode;
+  @override
+  operator ==(other) => other is SizeExpression && this.count == other.count && this.exponent == other.exponent;
 }
 
 class StringExpression extends ValueExpression {
@@ -45,6 +65,10 @@ class StringExpression extends ValueExpression {
   StringExpression(
     this.value,
   );
+  @override
+  get hashCode => super.hashCode ^ this.value.hashCode;
+  @override
+  operator ==(other) => other is StringExpression && this.value == other.value;
 }
 
 class PathExpression extends ValueExpression {
@@ -52,6 +76,10 @@ class PathExpression extends ValueExpression {
   PathExpression(
     this.content,
   );
+  @override
+  get hashCode => super.hashCode ^ this.content.hashCode;
+  @override
+  operator ==(other) => other is PathExpression && this.content == other.content;
 }
 
 // ----------------

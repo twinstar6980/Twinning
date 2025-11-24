@@ -81,10 +81,12 @@ class CommandPanel extends StatelessWidget {
                 expanded: this.expanded.value,
               ),
             )),
-            if (!this.expanded.value && this.argument.where((value) => value.value != null).isEmpty)
+            if (!this.expanded.value && this.argument.where((value) => value.value != null).isEmpty) ...[
               Gap.vertical(16),
-            if (!this.expanded.value)
+            ],
+            if (!this.expanded.value) ...[
               StyledDivider.standard(),
+            ],
             Gap.vertical(8),
             FlexContainer.horizontal([
               BoxContainer.none().withFlexExpanded(),

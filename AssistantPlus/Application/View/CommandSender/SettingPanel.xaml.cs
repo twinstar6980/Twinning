@@ -38,7 +38,6 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			typeof(Setting),
 			typeof(SettingPanel),
 			new (new Setting() {
-				MethodConfiguration = "",
 				ParallelForward = false,
 			})
 		);
@@ -69,45 +68,8 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 		public async Task UpdateView (
 		) {
 			this.NotifyPropertyChanged([
-				nameof(this.uMethodConfigurationText_Text),
+				nameof(this.uParallelForwardToggle_IsChecked),
 			]);
-			return;
-		}
-
-		#endregion
-
-		#region method configuration
-
-		public async void uMethodConfigurationText_LostFocus (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<TextBox>();
-			this.Data.MethodConfiguration = StorageHelper.Regularize(senders.Text);
-			this.NotifyPropertyChanged([
-				nameof(this.uMethodConfigurationText_Text),
-			]);
-			return;
-		}
-
-		public String uMethodConfigurationText_Text {
-			get {
-				return this.Data.MethodConfiguration;
-			}
-		}
-
-		public async void uMethodConfigurationPick_Click (
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<Button>();
-			var value = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(CommandSender)}.MethodConfiguration");
-			if (value != null) {
-				this.Data.MethodConfiguration = value;
-				this.NotifyPropertyChanged([
-					nameof(this.uMethodConfigurationText_Text),
-				]);
-			}
 			return;
 		}
 

@@ -63,6 +63,12 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 		// ----------------
 
+		public Setting Setting => App.Setting.Data.ModdingWorker;
+
+		public Configuration Configuration { get; set; } = default!;
+
+		// ----------------
+
 		public Boolean AutomaticScroll { get; set; } = default!;
 
 		public List<String> AdditionalArgument { get; set; } = [];
@@ -81,13 +87,16 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 
 		public void InitializeView (
 		) {
-			this.AutomaticScroll = App.Setting.Data.ModdingWorker.AutomaticScroll;
+			this.Configuration = new () {
+			};
+			this.AutomaticScroll = this.Setting.AutomaticScroll;
 			this.SessionClient = new (this);
 			return;
 		}
 
 		public async Task OpenView (
 		) {
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.ModdingWorker).Identifier}.json");
 			return;
 		}
 
@@ -129,7 +138,7 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 				optionImmediateLaunch = option.NextBoolean();
 			}
 			else {
-				optionImmediateLaunch = App.Setting.Data.ModdingWorker.ImmediateLaunch;
+				optionImmediateLaunch = this.Setting.ImmediateLaunch;
 			}
 			if (option.Check("-additional_argument")) {
 				optionAdditionalArgument = option.NextStringList();
@@ -254,9 +263,9 @@ namespace Twinning.AssistantPlus.View.ModdingWorker {
 				var kernel = StorageHelper.Temporary();
 				var library = new Bridge.Library();
 				try {
-					StorageHelper.Copy(App.Setting.Data.ModdingWorker.Kernel, kernel);
+					StorageHelper.Copy(this.Setting.Kernel, kernel);
 					library.Open(kernel);
-					result = await Task.Run(() => (Bridge.Launcher.Launch(this.SessionClient, library, App.Setting.Data.ModdingWorker.Script, [..App.Setting.Data.ModdingWorker.Argument, ..this.AdditionalArgument])));
+					result = await Task.Run(() => (Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script, [..this.Setting.Argument, ..this.AdditionalArgument])));
 				}
 				catch (Exception e) {
 					exception = e;

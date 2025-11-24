@@ -51,6 +51,12 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		// ----------------
 
+		public Setting Setting => App.Setting.Data.PackageBuilder;
+
+		public Configuration Configuration { get; set; } = default!;
+
+		// ----------------
+
 		public String? ProjectDirectory { get; set; } = null;
 
 		public ProjectSetting? ProjectSetting { get; set; } = null;
@@ -71,6 +77,8 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public void InitializeView (
 		) {
+			this.Configuration = new () {
+			};
 			this.View.uWorkerPage.Tag = new List<String>([
 				"-immediate_launch",
 				"false",
@@ -80,6 +88,7 @@ namespace Twinning.AssistantPlus.View.PackageBuilder {
 
 		public async Task OpenView (
 		) {
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PackageBuilder).Identifier}.json");
 			return;
 		}
 

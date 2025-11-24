@@ -190,7 +190,7 @@ class _SettingPanelState extends State<SettingPanel> {
                     var target = await pickStorageItem(
                       context: context,
                       allowLoadFile: true,
-                      location: '@Application.ThemeFont',
+                      location: '@application.theme_font',
                     );
                     if (target != null) {
                       setting.data.themeFontPath = [...setting.data.themeFontPath, target];
@@ -366,7 +366,7 @@ class _SettingPanelState extends State<SettingPanel> {
                     var target = await pickStorageItem(
                       context: context,
                       allowLoadDirectory: true,
-                      location: '@Application.StoragePickerFallbackDirectory',
+                      location: '@application.storage_picker_fallback_directory',
                     );
                     if (target != null) {
                       setting.data.storagePickerFallbackDirectory = target;
@@ -460,6 +460,54 @@ class _SettingPanelState extends State<SettingPanel> {
         ],
       ),
       SettingListLabel(
+        label: 'Module',
+        action: null,
+      ),
+      SettingListItem(
+        icon: IconSet.description,
+        label: 'Module Configuration Directory',
+        comment: [
+          StyledText.inherit(!StorageHelper.existDirectorySync(setting.data.moduleConfigurationDirectory) ? 'Invalid' : 'Available'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            content: StyledInput.outlined(
+              type: .text,
+              format: null,
+              hint: null,
+              prefix: null,
+              suffix: [
+                StyledIconButton.standard(
+                  tooltip: 'Pick',
+                  icon: IconView.of(IconSet.open_in_new),
+                  onPressed: (context) async {
+                    var target = await pickStorageItem(
+                      context: context,
+                      allowLoadDirectory: true,
+                      location: '@application.module_configuration_directory',
+                    );
+                    if (target != null) {
+                      setting.data.moduleConfigurationDirectory = target;
+                      await refreshState(setStateForPanel);
+                      await refreshState(this.setState);
+                      await setting.save();
+                    }
+                  },
+                ),
+              ],
+              value: setting.data.moduleConfigurationDirectory,
+              onChanged: (context, value) async {
+                setting.data.moduleConfigurationDirectory = StorageHelper.regularize(value);
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+                await setting.save();
+              },
+            ),
+          ),
+        ],
+      ),
+      SettingListLabel(
         label: 'Other',
         action: null,
       ),
@@ -502,7 +550,7 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Import'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var file = await StorageHelper.pickLoadFile(context, '@Application.SettingFile');
+              var file = await StorageHelper.pickLoadFile(context, '@application.setting_file');
               if (file != null) {
                 await setting.load(file: file);
                 await setting.save();
@@ -514,7 +562,7 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Export'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var file = await StorageHelper.pickSaveFile(context, '@Application.SettingFile', 'setting.json');
+              var file = await StorageHelper.pickSaveFile(context, '@application.setting_file', 'setting.json');
               if (file != null) {
                 await setting.save(file: file, apply: false);
                 await StyledSnackExtension.show(setting.state.applicationNavigatorKey.currentContext!, 'Done!');

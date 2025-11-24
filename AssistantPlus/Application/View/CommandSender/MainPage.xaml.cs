@@ -48,7 +48,9 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 
 		// ----------------
 
-		public List<MethodGroupConfiguration> MethodConfiguration { get; set; } = default!;
+		public Setting Setting => App.Setting.Data.CommandSender;
+
+		public Configuration Configuration { get; set; } = default!;
 
 		// ----------------
 
@@ -62,16 +64,18 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 
 		public void InitializeView (
 		) {
-			this.MethodConfiguration = [];
-			this.ParallelForward = App.Setting.Data.CommandSender.ParallelForward;
+			this.Configuration = new () {
+				Method = [],
+			};
+			this.ParallelForward = this.Setting.ParallelForward;
 			this.uMethodList_ItemsSource = [];
 			return;
 		}
 
 		public async Task OpenView (
 		) {
-			this.MethodConfiguration = JsonHelper.DeserializeText<List<MethodGroupConfiguration>>(await StorageHelper.ReadFileText(App.Setting.Data.CommandSender.MethodConfiguration));
-			this.uMethodList_ItemsSource = this.MethodConfiguration.Select((group) => (new MainPageMethodGroupItemController() {
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CommandSender).Identifier}.json");
+			this.uMethodList_ItemsSource = this.Configuration.Method.Select((group) => (new MainPageMethodGroupItemController() {
 				Host = this,
 				Configuration = group,
 				Children = group.Item.Select((item) => (new MainPageMethodItemItemController() {
@@ -161,7 +165,7 @@ namespace Twinning.AssistantPlus.View.CommandSender {
 			Boolean                    batch,
 			Dictionary<String, Object> argument
 		) {
-			var groupConfiguration = this.MethodConfiguration.First((value) => (method.StartsWith($"{value.Identifier}.")));
+			var groupConfiguration = this.Configuration.Method.First((value) => (method.StartsWith($"{value.Identifier}.")));
 			var itemConfiguration = groupConfiguration.Item.First((value) => (value.Identifier == method));
 			this.Command.Add(new (groupConfiguration, itemConfiguration, new (batch), ConfigurationHelper.ParseArgumentValueListJson(itemConfiguration.Argument, argument)));
 			this.uCommandList_ItemsSource.Add(new () {

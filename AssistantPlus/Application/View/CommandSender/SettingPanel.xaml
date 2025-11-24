@@ -21,36 +21,6 @@
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Icon="{StaticResource FluentIconGlyph.KnowledgeArticle}"
-			Title="Method Configuration"
-			>
-			<my:SettingItem.Action>
-				<my:Stack
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					Orientation="Horizontal"
-					Spacing="8"
-					>
-					<TextBox
-						my:Stack.Weight="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						LostFocus="{x:Bind Controller.uMethodConfigurationText_LostFocus}"
-						Text="{x:Bind Controller.uMethodConfigurationText_Text}"
-						/>
-					<Button
-						ToolTipService.ToolTip="Pick"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Top"
-						Click="{x:Bind Controller.uMethodConfigurationPick_Click}"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-						/>
-				</my:Stack>
-			</my:SettingItem.Action>
-		</my:SettingItem>
-		<my:SettingItem
-			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Shuffle}"
 			Title="Parallel Forward"
 			>

@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
@@ -518,74 +519,73 @@ class _PathSubmissionBar extends StatelessWidget {
           await refreshState(setState);
         },
         icon: IconSet.link,
-        content: StorageDropRegion(
+        content: StyledInput.underlined(
+          style: getSpecialFontTextStyle(context),
+          type: .text,
+          format: null,
+          hint: 'Path',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Command',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
+                  position: .under,
+                  children: [
+                    ('?generate', 'Generate'),
+                    ('?move', 'Move'),
+                    ('?delete', 'Delete'),
+                    ('?overwrite', 'Overwrite'),
+                  ].mapIndexed((index, value) => StyledMenuItem.standard(
+                    value: value.$1,
+                    content: StyledText.custom(
+                      value.$2,
+                      style: getSpecialFontTextStyle(context, listen: false),
+                    ),
+                  )),
+                ));
+                if (value != null) {
+                  this.value.value = .new(value);
+                  await refreshState(setState);
+                }
+              },
+            ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Pick',
+              icon: IconView.of(IconSet.open_in_new),
+              onPressed: (context) async {
+                var target = await pickStorageItem(
+                  context: context,
+                  allowLoadFile: true,
+                  allowLoadDirectory: true,
+                  allowSaveFile: true,
+                  location: '@${ModuleType.modding_worker.name}.generic',
+                  textStyle: getSpecialFontTextStyle(context, listen: false),
+                );
+                if (target != null) {
+                  this.value.value = .new(target);
+                  await refreshState(setState);
+                }
+              },
+            ),
+          ],
+          value: this.value.value == null ? '' : this.value.value!.content,
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              this.value.value = .new(StorageHelper.regularize(value));
+            }
+            await refreshState(setState);
+          },
+        ).withStorageDropRegion(
           onDrop: (item) async {
             this.value.value = .new(item.first);
             await refreshState(setState);
           },
-          child: StyledInput.underlined(
-            style: getSpecialFontTextStyle(context),
-            type: .text,
-            format: null,
-            hint: 'Path',
-            prefix: null,
-            suffix: [
-              StyledIconButton.standard(
-                tooltip: 'Command',
-                icon: IconView.of(IconSet.adjust),
-                onPressed: (context) async {
-                  var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-                    position: .under,
-                    children: [
-                      ('?generate', 'Generate'),
-                      ('?move', 'Move'),
-                      ('?delete', 'Delete'),
-                      ('?overwrite', 'Overwrite'),
-                    ].mapIndexed((index, value) => StyledMenuItem.standard(
-                      value: value.$1,
-                      content: StyledText.custom(
-                        value.$2,
-                        style: getSpecialFontTextStyle(context, listen: false),
-                      ),
-                    )),
-                  ));
-                  if (value != null) {
-                    this.value.value = .new(value);
-                    await refreshState(setState);
-                  }
-                },
-              ),
-              Gap.horizontal(4),
-              StyledIconButton.standard(
-                tooltip: 'Pick',
-                icon: IconView.of(IconSet.open_in_new),
-                onPressed: (context) async {
-                  var target = await pickStorageItem(
-                    context: context,
-                    allowLoadFile: true,
-                    allowLoadDirectory: true,
-                    allowSaveFile: true,
-                    location: '@ModdingWorker.Generic',
-                    textStyle: getSpecialFontTextStyle(context, listen: false),
-                  );
-                  if (target != null) {
-                    this.value.value = .new(target);
-                    await refreshState(setState);
-                  }
-                },
-              ),
-            ],
-            value: this.value.value == null ? '' : this.value.value!.content,
-            onChanged: (context, value) async {
-              if (value.isEmpty) {
-                this.value.value = null;
-              }
-              else {
-                this.value.value = .new(StorageHelper.regularize(value));
-              }
-              await refreshState(setState);
-            },
-          ),
         ),
       ),
     );
@@ -638,9 +638,10 @@ class _EnumerationSubmissionBar extends StatelessWidget {
             ),
           ],
           option: this.option.map((value) => (value, value)).toList(),
-          value: this.value.value == null ? '' : this.value.value!.item,
+          value: this.value.value == null ? null : this.value.value!.item, // ignore: prefer_null_aware_operators
           onChanged: (context, value) async {
-            this.value.value = .new(value as String);
+            value as String;
+            this.value.value = .new(value);
             await refreshState(setState);
           },
         ),

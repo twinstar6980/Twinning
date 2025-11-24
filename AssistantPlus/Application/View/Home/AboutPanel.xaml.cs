@@ -440,6 +440,30 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
+		// ----------------
+
+		public async void uSettingModuleConfigurationDirectory_Click (
+			SplitButton               sender,
+			SplitButtonClickEventArgs args
+		) {
+			var senders = sender.As<SplitButton>();
+			var target = await StorageHelper.PickLoadDirectory(App.MainWindow, "@Application.ModuleConfigurationDirectory");
+			if (target != null) {
+				App.Setting.Data.ModuleConfigurationDirectory = target;
+				this.NotifyPropertyChanged([
+					nameof(this.uSettingModuleConfigurationDirectoryText_Text),
+				]);
+				await App.Setting.Save();
+			}
+			return;
+		}
+
+		public String uSettingModuleConfigurationDirectoryText_Text {
+			get {
+				return App.Setting.Data.ModuleConfigurationDirectory;
+			}
+		}
+
 		#endregion
 
 		#region storage
