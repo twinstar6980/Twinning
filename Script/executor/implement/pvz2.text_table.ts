@@ -18,7 +18,7 @@ namespace Twinning.Script.Executor.Implement.PvZ2.TextTable {
 					}),
 					typical_argument_string({
 						identifier: 'destination_version',
-						option: Support.PvZ2.TextTable.Convert.VersionE,
+						option: Support.Pvz2.TextTable.Convert.VersionE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implement.PvZ2.TextTable {
 				],
 				batch: null,
 				worker: ({ source_file, destination_version, destination_file }, temporary: {}) => {
-					Support.PvZ2.TextTable.Convert.convert_fs(source_file, destination_file, 'automatic', destination_version as any);
+					Support.Pvz2.TextTable.Convert.convert_fs(source_file, destination_file, 'automatic', destination_version as any);
 					return;
 				},
 			}),

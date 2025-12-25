@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.UTexture {
+namespace Twinning.Script.Executor.Implement.Popcap.UTexture {
 
 	// #region interface
 
@@ -31,7 +31,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.UTexture {
 					}),
 					typical_argument_string({
 						identifier: 'format',
-						option: KernelX.Tool.PopCap.UTexture.FormatE,
+						option: KernelX.Tool.Popcap.UTexture.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -56,7 +56,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.UTexture {
 					}),
 				],
 				worker: ({ image_file, data_file, version_compress_texture_data, format }, temporary: {}) => {
-					KernelX.Tool.PopCap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
+					KernelX.Tool.Popcap.UTexture.encode_fs(data_file, image_file, format as any, { compress_texture_data: version_compress_texture_data });
 					return;
 				},
 			}),
@@ -104,7 +104,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.UTexture {
 					}),
 				],
 				worker: ({ data_file, image_file, version_compress_texture_data }, temporary: {}) => {
-					KernelX.Tool.PopCap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
+					KernelX.Tool.Popcap.UTexture.decode_fs(data_file, image_file, { compress_texture_data: version_compress_texture_data });
 					return;
 				},
 			}),

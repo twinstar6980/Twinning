@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
+namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 
 	// #region utility
 
@@ -6,7 +6,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 		project_directory: string,
 		package_directory: string,
 		package_name: string,
-		package_version: typeof Kernel.Tool.PopCap.ResourceStreamBundle.Version.Value,
+		package_version: typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value,
 		conversion_setting: ConversionSetting,
 	): void {
 		check_version_file(project_directory);
@@ -21,22 +21,22 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 			return null;
 		};
 		Console.information(`Loading setting ...`, []);
-		let project_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = KernelX.Json.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
 		let part_directory = StorageHelper.generate_suffix_path(make_scope_child_path(project_directory, package_name), '~');
 		let part_setting: PartSetting = {
 			variable: [],
 		};
-		KernelX.JSON.write_fs_js(make_scope_setting_path(part_directory), part_setting);
+		KernelX.Json.write_fs_js(make_scope_setting_path(part_directory), part_setting);
 		package_name = StorageHelper.name(part_directory);
 		let package_resource_directory = `${package_directory}/resource`;
-		let package_definition = KernelX.JSON.read_fs_js(`${package_directory}/definition.json`) as Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
+		let package_definition = KernelX.Json.read_fs_js(`${package_directory}/definition.json`) as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
 		let package_manifest_official: null | ResourceManifest.Package = null;
 		let package_setting: PackageSetting = {
 			name: package_name,
 			part: [package_name],
 			version: {
 				number: package_version.number,
-				extended_texture_information_for_pvz2_cn: package_version.extended_texture_information_for_pvz2_cn,
+				extended_texture_information_for_pvz2cn: package_version.extended_texture_information_for_pvz2cn,
 			},
 			compression: {
 				general: true,
@@ -88,8 +88,8 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 				package_setting.manifest.type = 'external_rton_with_string_path';
 				let resource_data = KernelX.Storage.read_file(`${package_resource_directory}/${resource_path}`);
 				let resource_data_stream = Kernel.ByteStreamView.watch(resource_data.view());
-				let resource_definition = Kernel.JSON.Value.default<Kernel.Tool.PopCap.ReflectionObjectNotation.JS_ValidValue>();
-				Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }));
+				let resource_definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
+				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }));
 				package_manifest_official = resource_definition.value as any;
 				break;
 			}
@@ -106,7 +106,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 			};
 			let group_definition = find_item_ignore_case(package_definition.group, 'identifier', group_manifest.identifier);
 			assert_test(group_definition !== null);
-			KernelX.JSON.write_fs_js(make_scope_setting_path(group_directory), group_setting);
+			KernelX.Json.write_fs_js(make_scope_setting_path(group_directory), group_setting);
 			for (let subgroup_manifest of group_manifest.subgroup) {
 				let subgroup_definition = find_item_ignore_case(group_definition.subgroup, 'identifier', subgroup_manifest.identifier);
 				assert_test(subgroup_definition !== null);
@@ -150,7 +150,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 					if (resource_manifest.additional.type === 'texture') {
 						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', resource_manifest.additional.value.path + '.ptx');
 						assert_test(resource_definition !== null && resource_definition.additional.type === 'texture');
-						if (package_version.extended_texture_information_for_pvz2_cn >= 2n && resource_definition.additional.value.scale !== 100n) {
+						if (package_version.extended_texture_information_for_pvz2cn >= 2n && resource_definition.additional.value.scale !== 100n) {
 							Console.warning(`texture scale is not supported in package project, expected 100 but scale is ${resource_definition.additional.value.scale}`, [resource_definition.path]);
 						}
 						resource_setting = {
@@ -160,7 +160,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 								path: resource_manifest.additional.value.path,
 								format: resource_definition.additional.value.format,
 								pitch: resource_definition.additional.value.pitch,
-								additional_byte_count: package_version.extended_texture_information_for_pvz2_cn < 1n ? 0n : resource_definition.additional.value.additional_byte_count,
+								additional_byte_count: package_version.extended_texture_information_for_pvz2cn < 1n ? 0n : resource_definition.additional.value.additional_byte_count,
 								size: resource_definition.additional.value.size,
 								sprite: resource_manifest.additional.value.sprite,
 							},
@@ -169,13 +169,13 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Parse {
 						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.ptx'));
 					}
 					assert_test(resource_setting !== null);
-					KernelX.JSON.write_fs_js(make_scope_setting_path(resource_directory), resource_setting);
+					KernelX.Json.write_fs_js(make_scope_setting_path(resource_directory), resource_setting);
 				}
 			}
 		}
 		project_setting.package.push(package_setting);
 		Console.information(`Saving setting ...`, []);
-		KernelX.JSON.write_fs_js(make_scope_setting_path(project_directory), project_setting);
+		KernelX.Json.write_fs_js(make_scope_setting_path(project_directory), project_setting);
 		return;
 	}
 

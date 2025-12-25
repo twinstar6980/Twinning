@@ -94,7 +94,7 @@ namespace Twinning.AssistantPlus {
 							await this.HandleCommand(argument[1..].ToList());
 						}
 						else {
-							await App.MainWindow.ShowLauncherPanel();
+							await App.MainWindow.ShowLauncher();
 						}
 					});
 				}).SelfLet(ExceptionHelper.WrapTask);
@@ -135,7 +135,7 @@ namespace Twinning.AssistantPlus {
 			Boolean                     forNewWindow
 		) {
 			if (!forNewWindow) {
-				await App.MainWindow.InsertTabItem(launcher);
+				await App.MainWindow.InsertPage(launcher);
 			}
 			else {
 				await ProcessHelper.RunProcess(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), null, false);
@@ -206,7 +206,7 @@ namespace Twinning.AssistantPlus {
 			ModuleType   type,
 			List<String> option
 		) {
-			await App.MainWindow.InsertTabItem(new () {
+			await App.MainWindow.InsertPage(new () {
 				Title = title,
 				Type = type,
 				Option = option,

@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
+namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 
 	// #region utility
 
@@ -42,8 +42,8 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 					let destination_subgroup: RegularResourceManifest.Subgroup = {
 						identifier: source_group.id,
 						category: {
-							resolution: CheckHelper.not_or(JSONGenericGetter.integer(source_subgroup.res, 0n), 0n, null),
-							locale: CheckHelper.not_or(JSONGenericGetter.string(source_subgroup.loc, ''), '', null),
+							resolution: CheckHelper.not_or(JsonGenericGetter.integer(source_subgroup.res, 0n), 0n, null),
+							locale: CheckHelper.not_or(JsonGenericGetter.string(source_subgroup.loc, ''), '', null),
 						},
 						resource: [],
 					};
@@ -69,8 +69,8 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 										value: {
 											path: destination_resource_path,
 											size: [
-												JSONGenericGetter.integer(source_resource.width),
-												JSONGenericGetter.integer(source_resource.height),
+												JsonGenericGetter.integer(source_resource.width),
+												JsonGenericGetter.integer(source_resource.height),
 											],
 											sprite: [],
 										},
@@ -89,20 +89,20 @@ namespace Twinning.Script.Support.PvZ2.RegularResourceManifest.Convert {
 									identifier: source_resource.id,
 									path: destination_resource_path,
 									position: [
-										JSONGenericGetter.integer(source_resource.ax),
-										JSONGenericGetter.integer(source_resource.ay),
+										JsonGenericGetter.integer(source_resource.ax),
+										JsonGenericGetter.integer(source_resource.ay),
 									],
 									size: [
-										JSONGenericGetter.integer(source_resource.aw),
-										JSONGenericGetter.integer(source_resource.ah),
+										JsonGenericGetter.integer(source_resource.aw),
+										JsonGenericGetter.integer(source_resource.ah),
 									],
 									offset: [
-										JSONGenericGetter.integer(source_resource.x, 0n),
-										JSONGenericGetter.integer(source_resource.y, 0n),
+										JsonGenericGetter.integer(source_resource.x, 0n),
+										JsonGenericGetter.integer(source_resource.y, 0n),
 									],
 									separate: [
-										JSONGenericGetter.integer(source_resource.rows, 1n),
-										JSONGenericGetter.integer(source_resource.cols, 1n),
+										JsonGenericGetter.integer(source_resource.rows, 1n),
+										JsonGenericGetter.integer(source_resource.cols, 1n),
 									],
 								});
 							}

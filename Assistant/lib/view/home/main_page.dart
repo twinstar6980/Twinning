@@ -30,10 +30,10 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  late List<(String, ModuleType, Widget)> _tabList;
-  late Integer                            _tabIndex;
+  late List<(String, ModuleType, Widget)> _pageList;
+  late Integer                            _pageIndex;
 
-  Future<Void> _insertTabItem(
+  Future<Void> _insertPage(
     ModuleLauncherConfiguration configuration,
   ) async {
     while (Navigator.canPop(this.context)) {
@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var moduleSetting = ModuleHelper.query(configuration.type).querySetting(context);
     var moduleConfiguration = ModuleHelper.query(configuration.type).parseConfiguration((await JsonHelper.deserializeFile('${setting.data.moduleConfigurationDirectory}/${configuration.type.name}.json'))!);
-    this._tabList.add((
+    this._pageList.add((
       configuration.title,
       configuration.type,
       ModuleHelper.query(configuration.type).mainPage(
@@ -51,64 +51,64 @@ class _MainPageState extends State<MainPage> {
         configuration.option,
       ),
     ));
-    if (this._tabIndex != -1) {
-      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
+    if (this._pageIndex != -1) {
+      await this._pageList[this._pageIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
     }
-    this._tabIndex = this._tabList.length - 1;
+    this._pageIndex = this._pageList.length - 1;
     await refreshState(this.setState);
-    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
+    await this._pageList[this._pageIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
     await Future.delayed(.new(milliseconds: 10));
     return;
   }
 
-  Future<Void> _removeTabItem(
+  Future<Void> _removePage(
     Integer index,
   ) async {
-    assertTest(0 <= index && index < this._tabList.length);
-    if (!await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCloseView()) {
+    assertTest(0 <= index && index < this._pageList.length);
+    if (!await this._pageList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCloseView()) {
       return;
     }
-    if (this._tabIndex == index) {
-      await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
+    if (this._pageIndex == index) {
+      await this._pageList[this._pageIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
     }
-    this._tabList.removeAt(index);
-    if (this._tabIndex > index) {
-      this._tabIndex--;
+    this._pageList.removeAt(index);
+    if (this._pageIndex > index) {
+      this._pageIndex--;
     }
-    else if (this._tabIndex == index) {
-      if (this._tabIndex == this._tabList.length) {
-        this._tabIndex--;
+    else if (this._pageIndex == index) {
+      if (this._pageIndex == this._pageList.length) {
+        this._pageIndex--;
       }
-      if (this._tabIndex != -1) {
-        await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
+      if (this._pageIndex != -1) {
+        await this._pageList[this._pageIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
       }
     }
     await refreshState(this.setState);
     return;
   }
 
-  Future<Void> _renameTabItem(
+  Future<Void> _renamePage(
     Integer index,
     String  title,
   ) async {
-    assertTest(0 <= index && index < this._tabList.length);
-    this._tabList[index] = (
+    assertTest(0 <= index && index < this._pageList.length);
+    this._pageList[index] = (
       title,
-      this._tabList[index].$2,
-      this._tabList[index].$3,
+      this._pageList[index].$2,
+      this._pageList[index].$3,
     );
     await refreshState(this.setState);
     return;
   }
 
-  Future<Void> _keepTabItem(
+  Future<Void> _keepPage(
     Integer index,
   ) async {
-    assertTest(0 <= index && index < this._tabList.length);
+    assertTest(0 <= index && index < this._pageList.length);
     var configuration = ModuleLauncherConfiguration(
-      title: this._tabList[index].$1,
-      type: this._tabList[index].$2,
-      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
+      title: this._pageList[index].$1,
+      type: this._pageList[index].$2,
+      option: await this._pageList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     setting.data.moduleLauncher.pinned.add(configuration);
@@ -116,31 +116,31 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
-  Future<Void> _duplicateTabItem(
+  Future<Void> _duplicatePage(
     Integer index,
   ) async {
-    assertTest(0 <= index && index < this._tabList.length);
+    assertTest(0 <= index && index < this._pageList.length);
     var configuration = ModuleLauncherConfiguration(
-      title: this._tabList[index].$1,
-      type: this._tabList[index].$2,
-      option: await this._tabList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
+      title: this._pageList[index].$1,
+      type: this._pageList[index].$2,
+      option: await this._pageList[index].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
-    await this._insertTabItem(configuration);
+    await this._insertPage(configuration);
     return;
   }
 
-  Future<Void> _toggleTabItem(
+  Future<Void> _togglePage(
     Integer index,
   ) async {
-    assertTest(0 <= index && index < this._tabList.length);
-    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
-    this._tabIndex = index;
+    assertTest(0 <= index && index < this._pageList.length);
+    await this._pageList[this._pageIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
+    this._pageIndex = index;
     await refreshState(this.setState);
-    await this._tabList[this._tabIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
+    await this._pageList[this._pageIndex].$3.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
     return;
   }
 
-  Future<Void> _showLauncherPanel(
+  Future<Void> _showLauncher(
   ) async {
     await StyledBottomSheetExtension.show<Void>(this.context, StyledModalBottomSheet.standard(
       title: 'Launcher',
@@ -148,7 +148,7 @@ class _MainPageState extends State<MainPage> {
         LauncherPanel(
           onLaunch: (configuration) async {
             Navigator.pop(context);
-            await this._insertTabItem(configuration);
+            await this._insertPage(configuration);
           },
         ),
       ],
@@ -161,12 +161,12 @@ class _MainPageState extends State<MainPage> {
   @override
   initState() {
     super.initState();
-    this._tabList = [];
-    this._tabIndex = -1;
+    this._pageList = [];
+    this._pageIndex = -1;
     {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
-      setting.state.homeShowLauncherPanel = this._showLauncherPanel;
-      setting.state.homeInsertTabItem = this._insertTabItem;
+      setting.state.homeShowLauncher = this._showLauncher;
+      setting.state.homeInsertPage = this._insertPage;
     }
     return;
   }
@@ -187,7 +187,7 @@ class _MainPageState extends State<MainPage> {
   build(context) {
     return StyledScaffold.standard(
       title: StyledTitleBar.standard(
-        title: this._tabList.isEmpty ? 'Home' : this._tabList[this._tabIndex].$1,
+        title: this._pageList.isEmpty ? 'Home' : this._pageList[this._pageIndex].$1,
         leading: StyledIconButton.standard(
           tooltip: 'Navigation',
           icon: IconView.of(IconSet.menu),
@@ -196,12 +196,12 @@ class _MainPageState extends State<MainPage> {
           },
         ),
       ),
-      body: StackContainer.at(this._tabIndex + 1, [
+      body: StackContainer.at(this._pageIndex + 1, [
         BlankPage(),
-        ...this._tabList.mapIndexed((index, value) => value.$3),
+        ...this._pageList.mapIndexed((index, value) => value.$3),
       ]),
       drawer: StyledNavigationDrawer.standard(
-        children: [
+        content: [
           Gap.vertical(16),
           NavigationDrawerLabel(
             label: 'Assistant',
@@ -228,16 +228,16 @@ class _MainPageState extends State<MainPage> {
             action: [],
             onPressed: (context) async {
               Navigator.pop(context);
-              await this._showLauncherPanel();
+              await this._showLauncher();
             },
           ),
           NavigationDrawerDivider(),
-          if (this._tabList.isEmpty) ...[
+          if (this._pageList.isEmpty) ...[
             Gap.vertical(16),
           ],
-          ...this._tabList.mapIndexed((index, item) => NavigationDrawerItem(
+          ...this._pageList.mapIndexed((index, item) => NavigationDrawerItem(
             key: ObjectKey(item), // fix button ripple effect error when remove item
-            selected: index == this._tabIndex,
+            selected: index == this._pageIndex,
             icon: ModuleHelper.query(item.$2).icon,
             label: item.$1,
             action: [
@@ -247,7 +247,7 @@ class _MainPageState extends State<MainPage> {
                 onPressed: (context) async {
                   var action = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
                     position: .under,
-                    children: [
+                    content: [
                       ('remove', 'Remove', IconSet.cancel),
                       ('rename', 'Rename', IconSet.draw),
                       ('keep', 'Keep', IconSet.pinboard),
@@ -261,13 +261,13 @@ class _MainPageState extends State<MainPage> {
                   if (action != null) {
                     switch (action) {
                       case 'remove': {
-                        await this._removeTabItem(index);
+                        await this._removePage(index);
                         break;
                       }
                       case 'rename': {
                         var title = item.$1;
                         var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-                          title: 'Tab Rename',
+                          title: 'Rename',
                           contentBuilder: (context, setStateForPanel) => [
                             StyledInput.outlined(
                               type: .multiline,
@@ -294,16 +294,16 @@ class _MainPageState extends State<MainPage> {
                           ],
                         )) ?? false;
                         if (canContinue) {
-                          await this._renameTabItem(index, title);
+                          await this._renamePage(index, title);
                         }
                         break;
                       }
                       case 'keep': {
-                        await this._keepTabItem(index);
+                        await this._keepPage(index);
                         break;
                       }
                       case 'duplicate': {
-                        await this._duplicateTabItem(index);
+                        await this._duplicatePage(index);
                         break;
                       }
                       default: throw UnreachableException();
@@ -314,7 +314,7 @@ class _MainPageState extends State<MainPage> {
             ],
             onPressed: (context) async {
               Navigator.pop(context);
-              await this._toggleTabItem(index);
+              await this._togglePage(index);
             },
           )),
           Gap.vertical(16),

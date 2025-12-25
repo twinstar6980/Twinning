@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.trail.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::Trail {
+export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),

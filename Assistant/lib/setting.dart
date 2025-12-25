@@ -4,42 +4,42 @@ import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
 import '/widget/export.dart';
-import '/view/modding_worker/setting.dart' as modding_worker;
-import '/view/modding_worker/submission_type.dart' as modding_worker;
-import '/view/modding_worker/value_expression.dart' as modding_worker;
-import '/view/command_sender/setting.dart' as command_sender;
-import '/view/resource_shipper/setting.dart' as resource_shipper;
-import '/view/animation_viewer/setting.dart' as animation_viewer;
+import '/view/core_modding_worker/setting.dart' as core_modding_worker;
+import '/view/core_modding_worker/submission_type.dart' as core_modding_worker;
+import '/view/core_modding_worker/value_expression.dart' as core_modding_worker;
+import '/view/core_command_sender/setting.dart' as core_command_sender;
+import '/view/core_resource_shipper/setting.dart' as core_resource_shipper;
+import '/view/popcap_animation_viewer/setting.dart' as popcap_animation_viewer;
 import '/view/kairosoft_game_manager/setting.dart' as kairosoft_game_manager;
 import 'package:flutter/widgets.dart';
 
 // ----------------
 
 class SettingData {
-  String                         version;
-  StyledThemeMode                themeMode;
-  Boolean                        themeColorState;
-  Color                          themeColorLight;
-  Color                          themeColorDark;
-  Boolean                        themeFontState;
-  List<String>                   themeFontPath;
-  Boolean                        windowPositionState;
-  Integer                        windowPositionX;
-  Integer                        windowPositionY;
-  Boolean                        windowSizeState;
-  Integer                        windowSizeWidth;
-  Integer                        windowSizeHeight;
-  String                         storagePickerFallbackDirectory;
-  Map<String, String>            storagePickerHistoryLocation;
-  ModuleType                     forwarderDefaultTarget;
-  Boolean                        forwarderImmediateJump;
-  String                         moduleConfigurationDirectory;
-  ModuleLauncherSetting          moduleLauncher;
-  modding_worker.Setting         moddingWorker;
-  command_sender.Setting         commandSender;
-  resource_shipper.Setting       resourceShipper;
-  animation_viewer.Setting       animationViewer;
-  kairosoft_game_manager.Setting kairosoftGameManager;
+  String                          version;
+  StyledThemeMode                 themeMode;
+  Boolean                         themeColorState;
+  Color                           themeColorLight;
+  Color                           themeColorDark;
+  Boolean                         themeFontState;
+  List<String>                    themeFontPath;
+  Boolean                         windowPositionState;
+  Integer                         windowPositionX;
+  Integer                         windowPositionY;
+  Boolean                         windowSizeState;
+  Integer                         windowSizeWidth;
+  Integer                         windowSizeHeight;
+  String                          storagePickerFallbackDirectory;
+  Map<String, String>             storagePickerHistoryLocation;
+  ModuleType                      forwarderDefaultTarget;
+  Boolean                         forwarderImmediateJump;
+  String                          moduleConfigurationDirectory;
+  ModuleLauncherSetting           moduleLauncher;
+  core_modding_worker.Setting     coreModdingWorker;
+  core_command_sender.Setting     coreCommandSender;
+  core_resource_shipper.Setting   coreResourceShipper;
+  popcap_animation_viewer.Setting popcapAnimationViewer;
+  kairosoft_game_manager.Setting  kairosoftGameManager;
   SettingData({
     required this.version,
     required this.themeMode,
@@ -60,10 +60,10 @@ class SettingData {
     required this.forwarderImmediateJump,
     required this.moduleConfigurationDirectory,
     required this.moduleLauncher,
-    required this.moddingWorker,
-    required this.commandSender,
-    required this.resourceShipper,
-    required this.animationViewer,
+    required this.coreModdingWorker,
+    required this.coreCommandSender,
+    required this.coreResourceShipper,
+    required this.popcapAnimationViewer,
     required this.kairosoftGameManager,
   });
 }
@@ -75,10 +75,10 @@ class SettingState {
   Future<Void> Function(Uri)?                              handleLink;
   GlobalKey<NavigatorState>                                applicationNavigatorKey;
   List<String>                                             themeFontFamliy;
-  Future<Void> Function()?                                 homeShowLauncherPanel;
-  Future<Void> Function(ModuleLauncherConfiguration)?      homeInsertTabItem;
-  List<String>                                             moddingWorkerMessageFontFamily;
-  List<List<modding_worker.ValueExpression>>               moddingWorkerSubmissionHistory;
+  Future<Void> Function()?                                 homeShowLauncher;
+  Future<Void> Function(ModuleLauncherConfiguration)?      homeInsertPage;
+  List<String>                                             coreModdingWorkerMessageFontFamily;
+  List<List<core_modding_worker.ValueExpression>>          coreModdingWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
     required this.handleForward,
@@ -86,10 +86,10 @@ class SettingState {
     required this.handleLink,
     required this.applicationNavigatorKey,
     required this.themeFontFamliy,
-    required this.homeShowLauncherPanel,
-    required this.homeInsertTabItem,
-    required this.moddingWorkerMessageFontFamily,
-    required this.moddingWorkerSubmissionHistory,
+    required this.homeShowLauncher,
+    required this.homeInsertPage,
+    required this.coreModdingWorkerMessageFontFamily,
+    required this.coreModdingWorkerSubmissionHistory,
   });
 }
 
@@ -127,11 +127,11 @@ class SettingProvider with ChangeNotifier {
         this.state.themeFontFamliy.add(family);
       }
     }
-    this.state.moddingWorkerMessageFontFamily.clear();
-    for (var index = 0; index < this.data.moddingWorker.messageFont.length; index++) {
-      var family = await FontHelper.loadFile(this.data.moddingWorker.messageFont[index]);
-      if (family != null && !this.state.moddingWorkerMessageFontFamily.contains(family)) {
-        this.state.moddingWorkerMessageFontFamily.add(family);
+    this.state.coreModdingWorkerMessageFontFamily.clear();
+    for (var index = 0; index < this.data.coreModdingWorker.messageFont.length; index++) {
+      var family = await FontHelper.loadFile(this.data.coreModdingWorker.messageFont[index]);
+      if (family != null && !this.state.coreModdingWorkerMessageFontFamily.contains(family)) {
+        this.state.coreModdingWorkerMessageFontFamily.add(family);
       }
     }
     this.notifyListeners();
@@ -190,7 +190,7 @@ class SettingProvider with ChangeNotifier {
       windowSizeHeight: 0,
       storagePickerFallbackDirectory: '',
       storagePickerHistoryLocation: {},
-      forwarderDefaultTarget: .resource_shipper,
+      forwarderDefaultTarget: .core_resource_shipper,
       forwarderImmediateJump: false,
       moduleConfigurationDirectory: '',
       moduleLauncher: .new(
@@ -198,22 +198,22 @@ class SettingProvider with ChangeNotifier {
         pinned: [],
         recent: [],
       ),
-      moddingWorker: .new(
+      coreModdingWorker: .new(
         kernel: '',
         script: '',
         argument: [],
         immediateLaunch: true,
         messageFont: [],
       ),
-      commandSender: .new(
+      coreCommandSender: .new(
         parallelForward: false,
       ),
-      resourceShipper: .new(
+      coreResourceShipper: .new(
         parallelForward: false,
         enableFilter: true,
         enableBatch: false,
       ),
-      animationViewer: .new(
+      popcapAnimationViewer: .new(
         immediateSelect: true,
         automaticPlay: true,
         repeatPlay: true,
@@ -234,10 +234,10 @@ class SettingProvider with ChangeNotifier {
       handleLink: null,
       applicationNavigatorKey: .new(),
       themeFontFamliy: [],
-      homeShowLauncherPanel: null,
-      homeInsertTabItem: null,
-      moddingWorkerMessageFontFamily: [],
-      moddingWorkerSubmissionHistory: modding_worker.SubmissionType.values.map((value) => <modding_worker.ValueExpression>[]).toList(),
+      homeShowLauncher: null,
+      homeInsertPage: null,
+      coreModdingWorkerMessageFontFamily: [],
+      coreModdingWorkerSubmissionHistory: core_modding_worker.SubmissionType.values.map((value) => <core_modding_worker.ValueExpression>[]).toList(),
     );
   }
 
@@ -282,27 +282,27 @@ class SettingProvider with ChangeNotifier {
           'option': dataItem.option,
         }).toList(),
       },
-      'modding_worker': {
-        'kernel': data.moddingWorker.kernel,
-        'script': data.moddingWorker.script,
-        'argument': data.moddingWorker.argument,
-        'immediate_launch': data.moddingWorker.immediateLaunch,
-        'message_font': data.moddingWorker.messageFont,
+      'core_modding_worker': {
+        'kernel': data.coreModdingWorker.kernel,
+        'script': data.coreModdingWorker.script,
+        'argument': data.coreModdingWorker.argument,
+        'immediate_launch': data.coreModdingWorker.immediateLaunch,
+        'message_font': data.coreModdingWorker.messageFont,
       },
-      'command_sender': {
-        'parallel_forward': data.commandSender.parallelForward,
+      'core_command_sender': {
+        'parallel_forward': data.coreCommandSender.parallelForward,
       },
-      'resource_shipper': {
-        'parallel_forward': data.resourceShipper.parallelForward,
-        'enable_filter': data.resourceShipper.enableFilter,
-        'enable_batch': data.resourceShipper.enableBatch,
+      'core_resource_shipper': {
+        'parallel_forward': data.coreResourceShipper.parallelForward,
+        'enable_filter': data.coreResourceShipper.enableFilter,
+        'enable_batch': data.coreResourceShipper.enableBatch,
       },
-      'animation_viewer': {
-        'immediate_select': data.animationViewer.immediateSelect,
-        'automatic_play': data.animationViewer.automaticPlay,
-        'repeat_play': data.animationViewer.repeatPlay,
-        'keep_speed': data.animationViewer.keepSpeed,
-        'show_boundary': data.animationViewer.showBoundary,
+      'popcap_animation_viewer': {
+        'immediate_select': data.popcapAnimationViewer.immediateSelect,
+        'automatic_play': data.popcapAnimationViewer.automaticPlay,
+        'repeat_play': data.popcapAnimationViewer.repeatPlay,
+        'keep_speed': data.popcapAnimationViewer.keepSpeed,
+        'show_boundary': data.popcapAnimationViewer.showBoundary,
       },
       'kairosoft_game_manager': {
       },
@@ -348,22 +348,22 @@ class SettingProvider with ChangeNotifier {
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
       )),
-      moddingWorker: (json['modding_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => modding_worker.Setting(
+      coreModdingWorker: (json['core_modding_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_modding_worker.Setting(
         kernel: (jsonPart['kernel'] as String),
         script: (jsonPart['script'] as String),
         argument: (jsonPart['argument'] as List<dynamic>).cast<String>(),
         immediateLaunch: (jsonPart['immediate_launch'] as Boolean),
         messageFont: (jsonPart['message_font'] as List<dynamic>).cast<String>(),
       )),
-      commandSender: (json['command_sender'] as Map<dynamic, dynamic>).selfLet((jsonPart) => command_sender.Setting(
+      coreCommandSender: (json['core_command_sender'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_command_sender.Setting(
         parallelForward: (jsonPart['parallel_forward'] as Boolean),
       )),
-      resourceShipper: (json['resource_shipper'] as Map<dynamic, dynamic>).selfLet((jsonPart) => resource_shipper.Setting(
+      coreResourceShipper: (json['core_resource_shipper'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_resource_shipper.Setting(
         parallelForward: (jsonPart['parallel_forward'] as Boolean),
         enableFilter: (jsonPart['enable_filter'] as Boolean),
         enableBatch: (jsonPart['enable_batch'] as Boolean),
       )),
-      animationViewer: (json['animation_viewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => animation_viewer.Setting(
+      popcapAnimationViewer: (json['popcap_animation_viewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_animation_viewer.Setting(
         immediateSelect: (jsonPart['immediate_select'] as Boolean),
         automaticPlay: (jsonPart['automatic_play'] as Boolean),
         repeatPlay: (jsonPart['repeat_play'] as Boolean),

@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.render_effect.definition;
 import twinning.kernel.tool.popcap.render_effect.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::RenderEffect {
+export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Decode :

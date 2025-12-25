@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PopCap.ResourceStreamBundle {
+namespace Twinning.Script.Support.Popcap.ResourceStreamBundle {
 
 	// #region layout mode
 

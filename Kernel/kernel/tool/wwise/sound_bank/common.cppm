@@ -2026,7 +2026,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <>
-		struct EnumerationAttribute<typename Definition::BusHDRSettingDynamicReleaseMode> {
+		struct EnumerationAttribute<typename Definition::BusHdrSettingDynamicReleaseMode> {
 			inline static constexpr auto size = Size{[] {
 				if constexpr (check_version(version, {88})) {
 					return 1_sz;
@@ -2049,7 +2049,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <>
-		struct EnumerationAttribute<typename Definition::SoundMIDISettingEventPlayOn> {
+		struct EnumerationAttribute<typename Definition::SoundMidiSettingEventPlayOn> {
 			inline static constexpr auto size = Size{[] {
 				if constexpr (check_version(version, {112})) {
 					return 2_sz;
@@ -2072,7 +2072,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <>
-		struct EnumerationAttribute<typename Definition::MusicMIDISettingClipTempoSource> {
+		struct EnumerationAttribute<typename Definition::MusicMidiSettingClipTempoSource> {
 			inline static constexpr auto size = Size{[] {
 				if constexpr (check_version(version, {112})) {
 					return 1_sz;

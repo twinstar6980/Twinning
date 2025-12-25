@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 101
+ * @version 102
  */
 declare namespace Twinning.Kernel {
 
@@ -641,8 +641,8 @@ declare namespace Twinning.Kernel {
 
 	// ----------------
 
-	/** JSON */
-	namespace JSON {
+	/** Json */
+	namespace Json {
 
 		/** 值 */
 		type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | { [key: string]: JS_Value; };
@@ -654,7 +654,7 @@ declare namespace Twinning.Kernel {
 		 */
 		class Value<Constraint extends JS_Value = JS_Value> {
 
-			private _JSON_Value: Constraint;
+			private _Json_Value: Constraint;
 
 			// ----------------
 
@@ -674,8 +674,8 @@ declare namespace Twinning.Kernel {
 
 	}
 
-	/** XML */
-	namespace XML {
+	/** Xml */
+	namespace Xml {
 
 		/** 结点类型 */
 		type JS_Type = 'element' | 'text' | 'comment';
@@ -728,7 +728,7 @@ declare namespace Twinning.Kernel {
 		/** 结点 */
 		class Node {
 
-			private _XML_Node;
+			private _Xml_Node;
 
 			// ----------------
 
@@ -1295,13 +1295,13 @@ declare namespace Twinning.Kernel {
 			/** 散列 */
 			namespace Hash {
 
-				/** FNV */
-				namespace FNV {
+				/** Fnv */
+				namespace Fnv {
 
 					/** 模式 */
 					class Mode {
 
-						private _Tool_Data_Hash_FNV_Mode;
+						private _Tool_Data_Hash_Fnv_Mode;
 
 						// ----------------
 
@@ -1324,7 +1324,7 @@ declare namespace Twinning.Kernel {
 					/** 位数 */
 					class BitCount {
 
-						private _Tool_Data_Hash_FNV_BitCount;
+						private _Tool_Data_Hash_Fnv_BitCount;
 
 						// ----------------
 
@@ -1365,8 +1365,8 @@ declare namespace Twinning.Kernel {
 
 				}
 
-				/** MD5 */
-				namespace MD5 {
+				/** Md5 */
+				namespace Md5 {
 
 					/** 散列 */
 					namespace Hash {
@@ -1450,8 +1450,8 @@ declare namespace Twinning.Kernel {
 			/** 加密 */
 			namespace Encryption {
 
-				/** EXOR */
-				namespace EXOR {
+				/** Exor */
+				namespace Exor {
 
 					/** 加密 */
 					namespace Encrypt {
@@ -1666,8 +1666,8 @@ declare namespace Twinning.Kernel {
 
 				}
 
-				/** BZip2 */
-				namespace BZip2 {
+				/** Bzip2 */
+				namespace Bzip2 {
 
 					/** 压缩 */
 					namespace Compress {
@@ -1749,8 +1749,8 @@ declare namespace Twinning.Kernel {
 			/** 差异 */
 			namespace Differentiation {
 
-				/** VCDiff */
-				namespace VCDiff {
+				/** Vcdiff */
+				namespace Vcdiff {
 
 					/** 编码 */
 					namespace Encode {
@@ -1797,8 +1797,8 @@ declare namespace Twinning.Kernel {
 			/** 序列化 */
 			namespace Serialization {
 
-				/** JSON */
-				namespace JSON {
+				/** Json */
+				namespace Json {
 
 					/** 写 */
 					namespace Write {
@@ -1814,7 +1814,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: OutputCharacterStreamView,
-							value: Kernel.JSON.Value,
+							value: Kernel.Json.Value,
 							disable_array_trailing_comma: Boolean,
 							disable_array_line_breaking: Boolean,
 							disable_object_trailing_comma: Boolean,
@@ -1834,7 +1834,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: InputCharacterStreamView,
-							value: Kernel.JSON.Value,
+							value: Kernel.Json.Value,
 							buffer: OutputCharacterStreamView,
 						): Void;
 
@@ -1842,8 +1842,8 @@ declare namespace Twinning.Kernel {
 
 				}
 
-				/** XML */
-				namespace XML {
+				/** Xml */
+				namespace Xml {
 
 					/** 写 */
 					namespace Write {
@@ -1855,7 +1855,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: String,
-							value: Kernel.XML.Node,
+							value: Kernel.Xml.Node,
 						): Void;
 
 					}
@@ -1870,7 +1870,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: String,
-							value: Kernel.XML.Node,
+							value: Kernel.Xml.Node,
 						): Void;
 
 					}
@@ -1986,13 +1986,13 @@ declare namespace Twinning.Kernel {
 			/** 压缩 */
 			namespace Compression {
 
-				/** ETC */
-				namespace ETC {
+				/** Etc */
+				namespace Etc {
 
 					/** 格式 */
 					class Format {
 
-						private _Tool_Texture_Compression_ETC_Format;
+						private _Tool_Texture_Compression_Etc_Format;
 
 						// ----------------
 
@@ -2048,13 +2048,13 @@ declare namespace Twinning.Kernel {
 
 				}
 
-				/** PVRTC */
-				namespace PVRTC {
+				/** Pvrtc */
+				namespace Pvrtc {
 
 					/** 格式 */
 					class Format {
 
-						private _Tool_Texture_Compression_PVRTC_Format;
+						private _Tool_Texture_Compression_Pvrtc_Format;
 
 						// ----------------
 
@@ -2115,8 +2115,8 @@ declare namespace Twinning.Kernel {
 			/** 文件 */
 			namespace File {
 
-				/** PNG */
-				namespace PNG {
+				/** Png */
+				namespace Png {
 
 					/** 写 */
 					namespace Write {
@@ -2223,11 +2223,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<JS_N.SoundBank>, version: Version): SoundBank;
+						static json(it: Json.Value<JS_N.SoundBank>, version: Version): SoundBank;
 
-						get_json(version: Version): JSON.Value<JS_N.SoundBank>;
+						get_json(version: Version): Json.Value<JS_N.SoundBank>;
 
-						set_json(it: JSON.Value<JS_N.SoundBank>, version: Version): Void;
+						set_json(it: Json.Value<JS_N.SoundBank>, version: Version): Void;
 
 					}
 
@@ -2278,13 +2278,13 @@ declare namespace Twinning.Kernel {
 		/** Marmalade */
 		namespace Marmalade {
 
-			/** DZip */
-			namespace DZip {
+			/** Dzip */
+			namespace Dzip {
 
 				/** 版本 */
 				class Version {
 
-					private _Tool_Marmalade_DZip_Version;
+					private _Tool_Marmalade_Dzip_Version;
 
 					// ----------------
 
@@ -2336,7 +2336,7 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						private _Tool_Marmalade_DZip_Definition_Package;
+						private _Tool_Marmalade_Dzip_Definition_Package;
 
 						// ----------------
 
@@ -2346,11 +2346,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): JSON.Value<JS_N.Package>;
+						get_json(version: Version): Json.Value<JS_N.Package>;
 
-						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -2398,16 +2398,16 @@ declare namespace Twinning.Kernel {
 
 		}
 
-		/** PopCap */
-		namespace PopCap {
+		/** Popcap */
+		namespace Popcap {
 
-			/** ZLib */
-			namespace ZLib {
+			/** Zlib */
+			namespace Zlib {
 
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ZLib_Version;
+					private _Tool_Popcap_Zlib_Version;
 
 					// ----------------
 
@@ -2509,7 +2509,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_CryptData_Version;
+					private _Tool_Popcap_CryptData_Version;
 
 					// ----------------
 
@@ -2605,13 +2605,13 @@ declare namespace Twinning.Kernel {
 			/** ReflectionObjectNotation */
 			namespace ReflectionObjectNotation {
 
-				/** ReflectionObjectNotation所能存储的JSON值类型 */
+				/** ReflectionObjectNotation所能存储的Json值类型 */
 				type JS_ValidValue = boolean | number | bigint | string | JS_ValidValue[] | { [key: string]: JS_ValidValue; };
 
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ReflectionObjectNotation_Version;
+					private _Tool_Popcap_ReflectionObjectNotation_Version;
 
 					// ----------------
 
@@ -2647,7 +2647,7 @@ declare namespace Twinning.Kernel {
 					 */
 					function process(
 						data: OutputByteStreamView,
-						definition: JSON.Value<JS_ValidValue>,
+						definition: Json.Value<JS_ValidValue>,
 						enable_string_index: Boolean,
 						enable_reference: Boolean,
 						version: Version,
@@ -2666,7 +2666,7 @@ declare namespace Twinning.Kernel {
 					 */
 					function process(
 						data: InputByteStreamView,
-						definition: JSON.Value<JS_ValidValue>,
+						definition: Json.Value<JS_ValidValue>,
 						version: Version,
 					): Void;
 
@@ -2680,7 +2680,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_UTexture_Version;
+					private _Tool_Popcap_UTexture_Version;
 
 					// ----------------
 
@@ -2772,7 +2772,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_SexyTexture_Version;
+					private _Tool_Popcap_SexyTexture_Version;
 
 					// ----------------
 
@@ -2868,7 +2868,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_Animation_Version;
+					private _Tool_Popcap_Animation_Version;
 
 					// ----------------
 
@@ -3055,7 +3055,7 @@ declare namespace Twinning.Kernel {
 					/** 动画 */
 					class Animation {
 
-						private _Tool_PopCap_Animation_Definition_Animation;
+						private _Tool_Popcap_Animation_Definition_Animation;
 
 						// ----------------
 
@@ -3065,11 +3065,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<JS_N.Animation>, version: Version): Animation;
+						static json(it: Json.Value<JS_N.Animation>, version: Version): Animation;
 
-						get_json(version: Version): JSON.Value<JS_N.Animation>;
+						get_json(version: Version): Json.Value<JS_N.Animation>;
 
-						set_json(it: JSON.Value<JS_N.Animation>, version: Version): Void;
+						set_json(it: Json.Value<JS_N.Animation>, version: Version): Void;
 
 					}
 
@@ -3117,7 +3117,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ReAnimation_Version;
+					private _Tool_Popcap_ReAnimation_Version;
 
 					// ----------------
 
@@ -3170,7 +3170,7 @@ declare namespace Twinning.Kernel {
 					/** 动画 */
 					class Animation {
 
-						private _Tool_PopCap_ReAnimation_Definition_Animation;
+						private _Tool_Popcap_ReAnimation_Definition_Animation;
 
 						// ----------------
 
@@ -3180,11 +3180,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<undefined>, version: Version): Animation;
+						static json(it: Json.Value<undefined>, version: Version): Animation;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): Json.Value<undefined>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3232,7 +3232,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_Particle_Version;
+					private _Tool_Popcap_Particle_Version;
 
 					// ----------------
 
@@ -3265,7 +3265,7 @@ declare namespace Twinning.Kernel {
 					/** 粒子 */
 					class Particle {
 
-						private _Tool_PopCap_Particle_Definition_Particle;
+						private _Tool_Popcap_Particle_Definition_Particle;
 
 						// ----------------
 
@@ -3275,11 +3275,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<undefined>, version: Version): Particle;
+						static json(it: Json.Value<undefined>, version: Version): Particle;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): Json.Value<undefined>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3327,7 +3327,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_Trail_Version;
+					private _Tool_Popcap_Trail_Version;
 
 					// ----------------
 
@@ -3360,7 +3360,7 @@ declare namespace Twinning.Kernel {
 					/** 拖尾 */
 					class Trail {
 
-						private _Tool_PopCap_Trail_Definition_Trail;
+						private _Tool_Popcap_Trail_Definition_Trail;
 
 						// ----------------
 
@@ -3370,11 +3370,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<undefined>, version: Version): Trail;
+						static json(it: Json.Value<undefined>, version: Version): Trail;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): Json.Value<undefined>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3422,7 +3422,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_RenderEffect_Version;
+					private _Tool_Popcap_RenderEffect_Version;
 
 					// ----------------
 
@@ -3455,7 +3455,7 @@ declare namespace Twinning.Kernel {
 					/** 效果 */
 					class Effect {
 
-						private _Tool_PopCap_RenderEffect_Definition_Effect;
+						private _Tool_Popcap_RenderEffect_Definition_Effect;
 
 						// ----------------
 
@@ -3465,11 +3465,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<undefined>, version: Version): Effect;
+						static json(it: Json.Value<undefined>, version: Version): Effect;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): Json.Value<undefined>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3517,7 +3517,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ParticleEffect_Version;
+					private _Tool_Popcap_ParticleEffect_Version;
 
 					// ----------------
 
@@ -3549,7 +3549,7 @@ declare namespace Twinning.Kernel {
 					/** 效果 */
 					class Effect {
 
-						private _Tool_PopCap_ParticleEffect_Definition_Effect;
+						private _Tool_Popcap_ParticleEffect_Definition_Effect;
 
 						// ----------------
 
@@ -3559,11 +3559,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<undefined>, version: Version): Effect;
+						static json(it: Json.Value<undefined>, version: Version): Effect;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): Json.Value<undefined>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3611,7 +3611,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_CharacterFontWidget2_Version;
+					private _Tool_Popcap_CharacterFontWidget2_Version;
 
 					// ----------------
 
@@ -3642,7 +3642,7 @@ declare namespace Twinning.Kernel {
 					/** 字体部件 */
 					class FontWidget {
 
-						private _Tool_PopCap_CharacterFontWidget2_Definition_FontWidget;
+						private _Tool_Popcap_CharacterFontWidget2_Definition_FontWidget;
 
 						// ----------------
 
@@ -3652,11 +3652,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<undefined>, version: Version): FontWidget;
+						static json(it: Json.Value<undefined>, version: Version): FontWidget;
 
-						get_json(version: Version): JSON.Value<undefined>;
+						get_json(version: Version): Json.Value<undefined>;
 
-						set_json(it: JSON.Value<undefined>, version: Version): Void;
+						set_json(it: Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3704,7 +3704,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_Package_Version;
+					private _Tool_Popcap_Package_Version;
 
 					// ----------------
 
@@ -3751,7 +3751,7 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						private _Tool_PopCap_Definition_Package;
+						private _Tool_Popcap_Definition_Package;
 
 						// ----------------
 
@@ -3761,11 +3761,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): JSON.Value<JS_N.Package>;
+						get_json(version: Version): Json.Value<JS_N.Package>;
 
-						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -3817,7 +3817,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ResourceStreamGroup_Version;
+					private _Tool_Popcap_ResourceStreamGroup_Version;
 
 					// ----------------
 
@@ -3901,7 +3901,7 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						private _Tool_PopCap_ResourceStreamGroup_Definition_Package;
+						private _Tool_Popcap_ResourceStreamGroup_Definition_Package;
 
 						// ----------------
 
@@ -3911,11 +3911,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): JSON.Value<JS_N.Package>;
+						get_json(version: Version): Json.Value<JS_N.Package>;
 
-						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -3967,7 +3967,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ResourceStreamBundle_Version;
+					private _Tool_Popcap_ResourceStreamBundle_Version;
 
 					// ----------------
 
@@ -3979,7 +3979,7 @@ declare namespace Twinning.Kernel {
 
 					static Value: {
 						number: 1n | 3n | 4n;
-						extended_texture_information_for_pvz2_cn: 0n | 1n | 2n | 3n;
+						extended_texture_information_for_pvz2cn: 0n | 1n | 2n | 3n;
 					};
 
 					static value(it: typeof Version.Value): Version;
@@ -4014,9 +4014,9 @@ declare namespace Twinning.Kernel {
 							format: bigint;
 							/** 行字节数 */
 							pitch: bigint;
-							/** 附加字节数。当 version.extended_texture_information_for_pvz2_cn >= 1 时存在 */
+							/** 附加字节数。当 version.extended_texture_information_for_pvz2cn >= 1 时存在 */
 							additional_byte_count?: bigint;
-							/** 缩放。当 version.extended_texture_information_for_pvz2_cn >= 2 时存在 */
+							/** 缩放。当 version.extended_texture_information_for_pvz2cn >= 2 时存在 */
 							scale?: bigint;
 						};
 
@@ -4086,7 +4086,7 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						private _Tool_PopCap_ResourceStreamBundle_Definition_Package;
+						private _Tool_Popcap_ResourceStreamBundle_Definition_Package;
 
 						// ----------------
 
@@ -4096,11 +4096,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): JSON.Value<JS_N.Package>;
+						get_json(version: Version): Json.Value<JS_N.Package>;
 
-						set_json(it: JSON.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -4115,7 +4115,7 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class PackageOptional {
 
-						private _Tool_PopCap_ResourceStreamBundle_Manifest_PackageOptional;
+						private _Tool_Popcap_ResourceStreamBundle_Manifest_PackageOptional;
 
 						// ----------------
 
@@ -4125,11 +4125,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: JSON.Value<null>, version: Version): PackageOptional;
+						static json(it: Json.Value<null>, version: Version): PackageOptional;
 
-						get_json(version: Version): JSON.Value<null>;
+						get_json(version: Version): Json.Value<null>;
 
-						set_json(it: JSON.Value<null>, version: Version): Void;
+						set_json(it: Json.Value<null>, version: Version): Void;
 
 					}
 
@@ -4191,7 +4191,7 @@ declare namespace Twinning.Kernel {
 				/** 版本 */
 				class Version {
 
-					private _Tool_PopCap_ResourceStreamBundlePatch_Version;
+					private _Tool_Popcap_ResourceStreamBundlePatch_Version;
 
 					// ----------------
 
@@ -4302,7 +4302,7 @@ declare namespace Twinning.Kernel {
 			}
 
 			/** PvZ-2中国版中的alpha调色板纹理 */
-			namespace PvZ2CNAlphaPaletteTexture {
+			namespace Pvz2cnAlphaPaletteTexture {
 
 				/** 编码 */
 				namespace Encode {
@@ -4341,7 +4341,7 @@ declare namespace Twinning.Kernel {
 			}
 
 			/** PvZ-2中国版中的加密数据 */
-			namespace PvZ2CNCryptData {
+			namespace Pvz2cnCryptData {
 
 				/** 加密 */
 				namespace Encrypt {

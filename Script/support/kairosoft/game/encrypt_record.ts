@@ -8,7 +8,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.EncryptRecord {
 	): void {
 		for (let item_name of KernelX.Storage.list_directory(target_directory, 1n, true, false).filter((value) => (/^\d{4,4}(_backup)?$/.test(value)))) {
 			let item_file = `${target_directory}/${item_name}`;
-			KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(item_file, item_file, key);
+			KernelX.Tool.Data.Encryption.Exor.encrypt_fs(item_file, item_file, key);
 		}
 		return;
 	}

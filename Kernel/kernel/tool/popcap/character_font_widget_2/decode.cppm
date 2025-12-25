@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.character_font_widget_2.definition;
 import twinning.kernel.tool.popcap.character_font_widget_2.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
+export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 	template <auto version> requires (check_version(version))
 	struct Decode :

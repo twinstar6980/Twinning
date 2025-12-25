@@ -19,7 +19,7 @@ namespace Twinning.Script.Executor.Implement.Common.Utility {
 				],
 				batch: null,
 				worker: ({ data }, temporary: {}) => {
-					update_setting(KernelX.JSON.read_s_js(data) as Partial<Setting>, MainScript.g_setting);
+					update_setting(KernelX.Json.read_s_js(data) as Partial<Setting>, MainScript.g_setting);
 					return;
 				},
 			}),

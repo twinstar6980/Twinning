@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.particle.definition;
 import twinning.kernel.tool.popcap.particle.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::Particle {
+export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Encode :

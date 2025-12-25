@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.package.version;
 import twinning.kernel.tool.popcap.package.definition;
 import twinning.kernel.tool.popcap.package.structure;
 
-export namespace Twinning::Kernel::Tool::PopCap::Package {
+export namespace Twinning::Kernel::Tool::Popcap::Package {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

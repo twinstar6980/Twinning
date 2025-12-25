@@ -1,24 +1,24 @@
-namespace Twinning.Script.Support.PvZ2.ResourceConvert {
+namespace Twinning.Script.Support.Pvz2.ResourceConvert {
 
 	// #region utility
 
-	export type PTXFormatMap = Array<{
+	export type PtxFormatMap = Array<{
 		index: bigint;
-		format: Support.PopCap.Texture.Encoding.Format;
+		format: Support.Popcap.Texture.Encoding.Format;
 	}>;
 
 	export type Option = {
 		recase_path: boolean,
 		rton: null | {
 			directory: string;
-			version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+			version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 			crypt: null | {
 				key: string;
 			};
 		},
 		ptx: null | {
 			directory: string;
-			format: PTXFormatMap;
+			format: PtxFormatMap;
 			atlas: null | {
 				resize: boolean;
 			};
@@ -27,7 +27,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		},
 		pam: null | {
 			directory: string;
-			version: typeof Kernel.Tool.PopCap.Animation.Version.Value,
+			version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 			json: null | {
 			};
 			flash: null | {
@@ -46,7 +46,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 
 	export function convert(
 		resource_directory: string,
-		package_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
+		package_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_manifest: RegularResourceManifest.Package,
 		option: Option,
 	): void {
@@ -74,9 +74,9 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			return null;
 		};
 		let iterate_resource = (show_group_progress: boolean) => (worker: (
-			group: [string, RegularResourceManifest.Group, Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group],
-			subgroup: [string, RegularResourceManifest.Subgroup, Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup],
-			resource: [string, RegularResourceManifest.Resource, Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource],
+			group: [string, RegularResourceManifest.Group, Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Group],
+			subgroup: [string, RegularResourceManifest.Subgroup, Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Subgroup],
+			resource: [string, RegularResourceManifest.Resource, Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Resource],
 		) => void): void => {
 			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_definition.group).length);
 			for (let package_group of package_definition.group) {
@@ -153,7 +153,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			if (option.rton !== null && path.endsWith('.rton')) {
 				Console.verbosity(`  ${path}`, []);
 				try {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(
+					KernelX.Tool.Popcap.ReflectionObjectNotation.decode_cipher_fs(
 						`${resource_directory}/${path}`,
 						`${option.rton.directory}/${path.slice(0, -4)}json`,
 						option.rton.version,
@@ -183,13 +183,13 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
-					Support.PopCap.Texture.Encoding.decode(data_stream, image_view, format);
+					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, format);
 					if (option.ptx.atlas !== null) {
 						let atlas_view = image_view;
 						if (option.ptx.atlas.resize) {
 							atlas_view = atlas_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(size));
 						}
-						KernelX.Image.File.PNG.write_fs(`${option.ptx.directory}/${path}.png`, atlas_view);
+						KernelX.Image.File.Png.write_fs(`${option.ptx.directory}/${path}.png`, atlas_view);
 					}
 					if (option.ptx.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({
@@ -211,19 +211,19 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 				try {
 					let data = KernelX.Storage.read_file(`${resource_directory}/${path}`);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					let version_c = Kernel.Tool.PopCap.Animation.Version.value(option.pam.version);
-					let definition = Kernel.Tool.PopCap.Animation.Definition.Animation.default();
-					Kernel.Tool.PopCap.Animation.Decode.process(data_stream, definition, version_c);
+					let version_c = Kernel.Tool.Popcap.Animation.Version.value(option.pam.version);
+					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.default();
+					Kernel.Tool.Popcap.Animation.Decode.process(data_stream, definition, version_c);
 					let definition_json = definition.get_json(version_c);
 					let definition_js = definition_json.value;
 					if (option.pam.json !== null) {
-						KernelX.JSON.write_fs(`${option.pam.directory}/${path}.json`, definition_json);
+						KernelX.Json.write_fs(`${option.pam.directory}/${path}.json`, definition_json);
 					}
 					if (option.pam.flash !== null) {
-						let flash_package = Support.PopCap.Animation.Convert.Flash.From.from(definition_js, option.pam.version);
-						Support.PopCap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${path}.xfl`, flash_package);
-						Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${path}.xfl`, definition_js, null);
-						Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${path}.xfl`);
+						let flash_package = Support.Popcap.Animation.Convert.Flash.From.from(definition_js, option.pam.version);
+						Support.Popcap.Animation.Convert.Flash.save_flash_package(`${option.pam.directory}/${path}.xfl`, flash_package);
+						Support.Popcap.Animation.Convert.Flash.SourceManager.create_fsh(`${option.pam.directory}/${path}.xfl`, definition_js, null);
+						Support.Popcap.Animation.Convert.Flash.create_xfl_content_file(`${option.pam.directory}/${path}.xfl`);
 					}
 				}
 				catch (e) {
@@ -266,7 +266,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 		resource_manifest_file: string,
 		option: Option,
 	): void {
-		let package_definition = KernelX.JSON.read_fs_js(package_definition_file) as Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
+		let package_definition = KernelX.Json.read_fs_js(package_definition_file) as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
 		Console.information(los('support.pvz2.resource_convert:extract_resource_manifest'), []);
 		let resource_manifest: ResourceManifest.Package;
 		{
@@ -300,11 +300,11 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			if (resource_path.toLowerCase().endsWith('rton')) {
 				let data = KernelX.Storage.read_file(`${resource_directory}/${resource_path}`);
 				let stream = Kernel.ByteStreamView.watch(data.view());
-				let result = Kernel.JSON.Value.default<ResourceManifest.Package>();
-				Kernel.Tool.PopCap.ReflectionObjectNotation.Decode.process(
+				let result = Kernel.Json.Value.default<ResourceManifest.Package>();
+				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(
 					stream,
 					result as any,
-					Kernel.Tool.PopCap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }),
+					Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }),
 				);
 				resource_manifest = result.value;
 			}
@@ -319,7 +319,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceConvert {
 			resource_manifest = resource_manifest!;
 		}
 		let regular_resource_manifest = RegularResourceManifest.Convert.from_official(resource_manifest);
-		KernelX.JSON.write_fs(resource_manifest_file, Kernel.JSON.Value.value(regular_resource_manifest));
+		KernelX.Json.write_fs(resource_manifest_file, Kernel.Json.Value.value(regular_resource_manifest));
 		convert(
 			resource_directory,
 			package_definition,

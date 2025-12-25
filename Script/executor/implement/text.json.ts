@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.Text.JSON {
+namespace Twinning.Script.Executor.Implement.Text.Json {
 
 	// #region interface
 
@@ -26,25 +26,25 @@ namespace Twinning.Script.Executor.Implement.Text.JSON {
 					typical_argument_boolean({
 						identifier: 'disable_array_trailing_comma',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_trailing_comma),
+						automatic: (argument: {}) => (KernelX.Json.g_format.disable_array_trailing_comma),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_array_line_breaking',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_array_line_breaking),
+						automatic: (argument: {}) => (KernelX.Json.g_format.disable_array_line_breaking),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_object_trailing_comma',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_trailing_comma),
+						automatic: (argument: {}) => (KernelX.Json.g_format.disable_object_trailing_comma),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_object_line_breaking',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.JSON.g_format.disable_object_line_breaking),
+						automatic: (argument: {}) => (KernelX.Json.g_format.disable_object_line_breaking),
 						condition: null,
 					}),
 				],
@@ -67,8 +67,8 @@ namespace Twinning.Script.Executor.Implement.Text.JSON {
 					}),
 				],
 				worker: ({ source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking }, temporary: {}) => {
-					let data = KernelX.JSON.read_fs(source_file);
-					KernelX.JSON.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
+					let data = KernelX.Json.read_fs(source_file);
+					KernelX.Json.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 					return;
 				},
 			}),

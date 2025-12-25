@@ -2,18 +2,18 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/storage_helper.dart';
 import 'widget/export.dart';
-import '/view/modding_worker/main_page.dart' as modding_worker;
-import '/view/modding_worker/setting_panel.dart' as modding_worker;
-import '/view/modding_worker/configuration.dart' as modding_worker;
-import '/view/command_sender/main_page.dart' as command_sender;
-import '/view/command_sender/setting_panel.dart' as command_sender;
-import '/view/command_sender/configuration.dart' as command_sender;
-import '/view/resource_shipper/main_page.dart' as resource_shipper;
-import '/view/resource_shipper/setting_panel.dart' as resource_shipper;
-import '/view/resource_shipper/configuration.dart' as resource_shipper;
-import '/view/animation_viewer/main_page.dart' as animation_viewer;
-import '/view/animation_viewer/setting_panel.dart' as animation_viewer;
-import '/view/animation_viewer/configuration.dart' as animation_viewer;
+import '/view/core_modding_worker/main_page.dart' as core_modding_worker;
+import '/view/core_modding_worker/setting_panel.dart' as core_modding_worker;
+import '/view/core_modding_worker/configuration.dart' as core_modding_worker;
+import '/view/core_command_sender/main_page.dart' as core_command_sender;
+import '/view/core_command_sender/setting_panel.dart' as core_command_sender;
+import '/view/core_command_sender/configuration.dart' as core_command_sender;
+import '/view/core_resource_shipper/main_page.dart' as core_resource_shipper;
+import '/view/core_resource_shipper/setting_panel.dart' as core_resource_shipper;
+import '/view/core_resource_shipper/configuration.dart' as core_resource_shipper;
+import '/view/popcap_animation_viewer/main_page.dart' as popcap_animation_viewer;
+import '/view/popcap_animation_viewer/setting_panel.dart' as popcap_animation_viewer;
+import '/view/popcap_animation_viewer/configuration.dart' as popcap_animation_viewer;
 import '/view/kairosoft_game_manager/main_page.dart' as kairosoft_game_manager;
 import '/view/kairosoft_game_manager/setting_panel.dart' as kairosoft_game_manager;
 import '/view/kairosoft_game_manager/configuration.dart' as kairosoft_game_manager;
@@ -24,10 +24,10 @@ import 'package:provider/provider.dart';
 // ----------------
 
 enum ModuleType {
-  modding_worker, // ignore: constant_identifier_names
-  command_sender, // ignore: constant_identifier_names
-  resource_shipper, // ignore: constant_identifier_names
-  animation_viewer, // ignore: constant_identifier_names
+  core_modding_worker, // ignore: constant_identifier_names
+  core_command_sender, // ignore: constant_identifier_names
+  core_resource_shipper, // ignore: constant_identifier_names
+  popcap_animation_viewer, // ignore: constant_identifier_names
   kairosoft_game_manager, // ignore: constant_identifier_names
 }
 
@@ -88,75 +88,75 @@ class ModuleHelper {
 
   static final List<ModuleInformation> _information = [
     .new(
-      type: .modding_worker,
+      type: .core_modding_worker,
       name: 'Modding Worker',
       icon: IconSet.rule_settings,
-      mainPage: (setting, configuration, option) => modding_worker.MainPage(
+      mainPage: (setting, configuration, option) => core_modding_worker.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => modding_worker.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.moddingWorker,
+      settingPanel: (context) => core_modding_worker.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.coreModdingWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.moddingWorker,
-      parseConfiguration: (json) => modding_worker.ConfigurationHelper.parseDataFromJson(json),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreModdingWorker,
+      parseConfiguration: (json) => core_modding_worker.ConfigurationHelper.parseDataFromJson(json),
       generateForwardOption: (resource) async => ['-additional_argument', ...resource],
     ),
     .new(
-      type: .command_sender,
+      type: .core_command_sender,
       name: 'Command Sender',
       icon: IconSet.send,
-      mainPage: (setting, configuration, option) => command_sender.MainPage(
+      mainPage: (setting, configuration, option) => core_command_sender.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => command_sender.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.commandSender,
+      settingPanel: (context) => core_command_sender.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.coreCommandSender,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.commandSender,
-      parseConfiguration: (json) => command_sender.ConfigurationHelper.parseDataFromJson(json),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreCommandSender,
+      parseConfiguration: (json) => core_command_sender.ConfigurationHelper.parseDataFromJson(json),
       generateForwardOption: (resource) async => null,
     ),
     .new(
-      type: .resource_shipper,
+      type: .core_resource_shipper,
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
-      mainPage: (setting, configuration, option) => resource_shipper.MainPage(
+      mainPage: (setting, configuration, option) => core_resource_shipper.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => resource_shipper.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.resourceShipper,
+      settingPanel: (context) => core_resource_shipper.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.coreResourceShipper,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.resourceShipper,
-      parseConfiguration: (json) => resource_shipper.ConfigurationHelper.parseDataFromJson(json),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreResourceShipper,
+      parseConfiguration: (json) => core_resource_shipper.ConfigurationHelper.parseDataFromJson(json),
       generateForwardOption: (resource) async => ['-resource', ...resource],
     ),
     .new(
-      type: .animation_viewer,
-      name: 'Animation Viewer',
+      type: .popcap_animation_viewer,
+      name: 'PopCap Animation Viewer',
       icon: IconSet.thread_unread,
-      mainPage: (setting, configuration, option) => animation_viewer.MainPage(
+      mainPage: (setting, configuration, option) => popcap_animation_viewer.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => animation_viewer.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.animationViewer,
+      settingPanel: (context) => popcap_animation_viewer.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.popcapAnimationViewer,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.animationViewer,
-      parseConfiguration: (json) => animation_viewer.ConfigurationHelper.parseDataFromJson(json),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.popcapAnimationViewer,
+      parseConfiguration: (json) => popcap_animation_viewer.ConfigurationHelper.parseDataFromJson(json),
       generateForwardOption: (resource) async => resource.length != 1 || !RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(resource.first) || !await StorageHelper.existFile(resource.first) ? null : ['-animation_file', resource.first],
     ),
     .new(

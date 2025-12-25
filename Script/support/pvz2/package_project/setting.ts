@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.PackageProject {
+namespace Twinning.Script.Support.Pvz2.PackageProject {
 
 	// #region type
 
@@ -10,17 +10,17 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 	export type ConversionSetting = {
 		rton: Array<{
 			name: string;
-			version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value;
+			version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value;
 			key: null | string;
 		}>;
 		ptx: Array<{
 			name: string;
-			format: Support.PopCap.Texture.Encoding.Format;
+			format: Support.Popcap.Texture.Encoding.Format;
 			index: bigint;
 		}>;
 		pam: Array<{
 			name: string;
-			version: typeof Kernel.Tool.PopCap.Animation.Version.Value;
+			version: typeof Kernel.Tool.Popcap.Animation.Version.Value;
 		}>;
 		wem: Array<{
 			name: string;
@@ -79,11 +79,11 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		conversion: string;
 	};
 
-	export type SpecialRTONResourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialRtonResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialPTXResourcePropertySpriteProperty = {
+	export type SpecialPtxResourcePropertySpriteProperty = {
 		source: string;
 		identifier: string;
 		path: string;
@@ -91,29 +91,29 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		separate: [bigint, bigint];
 	};
 
-	export type SpecialPTXResourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialPtxResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 		resolution: bigint;
-		sprite: Array<SpecialPTXResourcePropertySpriteProperty>;
+		sprite: Array<SpecialPtxResourcePropertySpriteProperty>;
 	};
 
-	export type SpecialPAMResourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialPamResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialPOPFXPesourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialPopfxPesourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialWEMResourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialWemResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type SpecialBNKResourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialBnkResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
-	export type ResourceProperty = DummyResourceProperty | GeneralResourceProperty | TextureResourceProperty | SpecialRTONResourceProperty | SpecialPTXResourceProperty | SpecialPAMResourceProperty | SpecialPOPFXPesourceProperty | SpecialWEMResourceProperty | SpecialBNKResourceProperty;
+	export type ResourceProperty = DummyResourceProperty | GeneralResourceProperty | TextureResourceProperty | SpecialRtonResourceProperty | SpecialPtxResourceProperty | SpecialPamResourceProperty | SpecialPopfxPesourceProperty | SpecialWemResourceProperty | SpecialBnkResourceProperty;
 
 	// ----------------
 
@@ -150,7 +150,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 		part: Array<string>;
 		version: {
 			number: 1n | 3n | 4n;
-			extended_texture_information_for_pvz2_cn: 0n | 1n | 2n | 3n;
+			extended_texture_information_for_pvz2cn: 0n | 1n | 2n | 3n;
 		};
 		compression: {
 			general: boolean;

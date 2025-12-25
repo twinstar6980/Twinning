@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
+namespace Twinning.Script.Executor.Implement.Popcap.CryptData {
 
 	// #region interface
 
@@ -57,7 +57,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 					}),
 				],
 				worker: ({ plain_file, cipher_file, limit, key }, temporary: {}) => {
-					KernelX.Tool.PopCap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
+					KernelX.Tool.Popcap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
 					return;
 				},
 			}),
@@ -113,7 +113,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CryptData {
 					}),
 				],
 				worker: ({ cipher_file, plain_file, limit, key }, temporary: {}) => {
-					KernelX.Tool.PopCap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
+					KernelX.Tool.Popcap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
 					return;
 				},
 			}),

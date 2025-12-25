@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Encode {
+namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation.Encode {
 
 	// #region utility
 
@@ -112,7 +112,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.En
 		definition_file: string,
 		data_buffer: Kernel.ByteListView,
 	): void {
-		let definition = KernelX.JSON.read_fs_js(definition_file) as ResourceManifest.Package;
+		let definition = KernelX.Json.read_fs_js(definition_file) as ResourceManifest.Package;
 		let data_stream = new ByteStreamView(data_buffer.value);
 		process(data_stream, definition);
 		KernelX.Storage.write_file(data_file, data_buffer.sub(Kernel.Size.value(0n), Kernel.Size.value(BigInt(data_stream.p()))));

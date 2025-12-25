@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
+namespace Twinning.Script.Executor.Implement.Popcap.ParticleEffect {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ParticleEffect.VersionNumberE,
+						option: KernelX.Tool.Popcap.ParticleEffect.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -60,7 +60,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ParticleEffect.encode_fs(data_file, definition_file, { number: version_number as any }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -84,7 +84,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ParticleEffect.VersionNumberE,
+						option: KernelX.Tool.Popcap.ParticleEffect.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -109,7 +109,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ParticleEffect {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number }, temporary: {}) => {
-					KernelX.Tool.PopCap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
+					KernelX.Tool.Popcap.ParticleEffect.decode_fs(data_file, definition_file, { number: version_number as any });
 					return;
 				},
 			}),

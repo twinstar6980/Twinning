@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.animation.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::Animation {
+export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 	M_record_of_map(
 		M_wrap(Version),

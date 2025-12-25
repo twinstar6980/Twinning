@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.Text.XML {
+namespace Twinning.Script.Executor.Implement.Text.Xml {
 
 	// #region interface
 
@@ -43,8 +43,8 @@ namespace Twinning.Script.Executor.Implement.Text.XML {
 					}),
 				],
 				worker: ({ source_file, destination_file }, temporary: {}) => {
-					let data = KernelX.XML.read_fs(source_file);
-					KernelX.XML.write_fs(destination_file, data);
+					let data = KernelX.Xml.read_fs(source_file);
+					KernelX.Xml.write_fs(destination_file, data);
 					return;
 				},
 			}),

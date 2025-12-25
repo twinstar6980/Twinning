@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.RegularResourceManifest {
+namespace Twinning.Script.Support.Pvz2.RegularResourceManifest {
 
 	// #region type
 

@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.particle_effect.definition;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.particle_effect.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
+export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Definition {

@@ -6,7 +6,7 @@ export module twinning.kernel.tool.data.serialization.json.write;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.serialization.json.common;
 
-export namespace Twinning::Kernel::Tool::Data::Serialization::JSON {
+export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 	struct Write :
 		Common {

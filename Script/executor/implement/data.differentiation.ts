@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implement.Data.Differentiation {
 				],
 				batch: null,
 				worker: ({ after_file, patch_file, before_file, buffer_size }, temporary: {}) => {
-					KernelX.Tool.Data.Differentiation.VCDiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
+					KernelX.Tool.Data.Differentiation.Vcdiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
 					return;
 				},
 			}),
@@ -79,7 +79,7 @@ namespace Twinning.Script.Executor.Implement.Data.Differentiation {
 				],
 				batch: null,
 				worker: ({ patch_file, after_file, before_file, buffer_size }, temporary: {}) => {
-					KernelX.Tool.Data.Differentiation.VCDiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
+					KernelX.Tool.Data.Differentiation.Vcdiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
 					return;
 				},
 			}),

@@ -11,35 +11,35 @@ using Colors = Microsoft.UI.Colors;
 namespace Twinning.AssistantPlus {
 
 	public record SettingData {
-		public String                            Version                      = default!;
-		public CustomThemeBackdrop               ThemeBackdrop                = default!;
-		public CustomThemeMode                   ThemeMode                    = default!;
-		public Boolean                           ThemeColorState              = default!;
-		public Integer                           ThemeColorLight              = default!;
-		public Integer                           ThemeColorDark               = default!;
-		public Boolean                           WindowPositionState          = default!;
-		public Integer                           WindowPositionX              = default!;
-		public Integer                           WindowPositionY              = default!;
-		public Boolean                           WindowSizeState              = default!;
-		public Integer                           WindowSizeWidth              = default!;
-		public Integer                           WindowSizeHeight             = default!;
-		public Dictionary<String, String>        StoragePickerHistoryLocation = default!;
-		public ModuleType                        ForwarderDefaultTarget       = default!;
-		public Boolean                           ForwarderImmediateJump       = default!;
-		public String                            ModuleConfigurationDirectory = default!;
-		public ModuleLauncherSetting             ModuleLauncher               = default!;
-		public View.ModdingWorker.Setting        ModdingWorker                = default!;
-		public View.CommandSender.Setting        CommandSender                = default!;
-		public View.ResourceShipper.Setting      ResourceShipper              = default!;
-		public View.AnimationViewer.Setting      AnimationViewer              = default!;
-		public View.ReflectionDescriptor.Setting ReflectionDescriptor         = default!;
-		public View.PackageBuilder.Setting       PackageBuilder               = default!;
+		public String                                  Version                      = default!;
+		public CustomThemeBackdrop                     ThemeBackdrop                = default!;
+		public CustomThemeMode                         ThemeMode                    = default!;
+		public Boolean                                 ThemeColorState              = default!;
+		public Integer                                 ThemeColorLight              = default!;
+		public Integer                                 ThemeColorDark               = default!;
+		public Boolean                                 WindowPositionState          = default!;
+		public Integer                                 WindowPositionX              = default!;
+		public Integer                                 WindowPositionY              = default!;
+		public Boolean                                 WindowSizeState              = default!;
+		public Integer                                 WindowSizeWidth              = default!;
+		public Integer                                 WindowSizeHeight             = default!;
+		public Dictionary<String, String>              StoragePickerHistoryLocation = default!;
+		public ModuleType                              ForwarderDefaultTarget       = default!;
+		public Boolean                                 ForwarderImmediateJump       = default!;
+		public String                                  ModuleConfigurationDirectory = default!;
+		public ModuleLauncherSetting                   ModuleLauncher               = default!;
+		public View.CoreModdingWorker.Setting          CoreModdingWorker                = default!;
+		public View.CoreCommandSender.Setting          CoreCommandSender                = default!;
+		public View.CoreResourceShipper.Setting        CoreResourceShipper              = default!;
+		public View.PopcapAnimationViewer.Setting      PopcapAnimationViewer              = default!;
+		public View.PopcapReflectionDescriptor.Setting PopcapReflectionDescriptor         = default!;
+		public View.PopcapPackageBuilder.Setting       PopcapPackageBuilder               = default!;
 	}
 
 	public record SettingState {
-		public CustomThemeBackdrop?                           ThemeBackdrop                  = default!;
-		public CustomThemeMode?                               ThemeMode                      = default!;
-		public List<List<View.ModdingWorker.ValueExpression>> ModdingWorkerSubmissionHistory = default!;
+		public CustomThemeBackdrop?                               ThemeBackdrop                  = default!;
+		public CustomThemeMode?                                   ThemeMode                      = default!;
+		public List<List<View.CoreModdingWorker.ValueExpression>> CoreModdingWorkerSubmissionHistory = default!;
 	}
 
 	public class SettingProvider {
@@ -144,9 +144,9 @@ namespace Twinning.AssistantPlus {
 				list.AddRange(App.Setting.Data.ModuleLauncher.Recent.Select((it) => generateItem(ModuleLauncherCategory.Recent, it)));
 				await JumpListHelper.Apply(list);
 			}
-			// ModdingWorker.MessageFont
+			// CoreModdingWorker.MessageFont
 			{
-				App.Instance.Resources["ModdingWorker.MessageFont"] = this.Data.ModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.ModdingWorker.MessageFont);
+				App.Instance.Resources["CoreModdingWorker.MessageFont"] = this.Data.CoreModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreModdingWorker.MessageFont);
 			}
 			return;
 		}
@@ -204,7 +204,7 @@ namespace Twinning.AssistantPlus {
 				WindowSizeWidth = 0,
 				WindowSizeHeight = 0,
 				StoragePickerHistoryLocation = [],
-				ForwarderDefaultTarget = ModuleType.ResourceShipper,
+				ForwarderDefaultTarget = ModuleType.CoreResourceShipper,
 				ForwarderImmediateJump = false,
 				ModuleConfigurationDirectory = "",
 				ModuleLauncher = new () {
@@ -217,7 +217,7 @@ namespace Twinning.AssistantPlus {
 					Pinned = [],
 					Recent = [],
 				},
-				ModdingWorker = new () {
+				CoreModdingWorker = new () {
 					Kernel = "",
 					Script = "",
 					Argument = [],
@@ -225,15 +225,15 @@ namespace Twinning.AssistantPlus {
 					ImmediateLaunch = true,
 					MessageFont = "",
 				},
-				CommandSender = new () {
+				CoreCommandSender = new () {
 					ParallelForward = false,
 				},
-				ResourceShipper = new () {
+				CoreResourceShipper = new () {
 					ParallelForward = false,
 					EnableFilter = true,
 					EnableBatch = false,
 				},
-				AnimationViewer = new () {
+				PopcapAnimationViewer = new () {
 					ImmediateSelect = true,
 					AutomaticPlay = true,
 					RepeatPlay = true,
@@ -242,9 +242,9 @@ namespace Twinning.AssistantPlus {
 					ImageFilterRule = "",
 					SpriteFilterRule = "",
 				},
-				ReflectionDescriptor = new () {
+				PopcapReflectionDescriptor = new () {
 				},
-				PackageBuilder = new () {
+				PopcapPackageBuilder = new () {
 				},
 			};
 		}
@@ -254,7 +254,7 @@ namespace Twinning.AssistantPlus {
 			return new () {
 				ThemeBackdrop = null,
 				ThemeMode = null,
-				ModdingWorkerSubmissionHistory = Enum.GetValues<View.ModdingWorker.SubmissionType>().Select((value) => (new List<View.ModdingWorker.ValueExpression>())).ToList(),
+				CoreModdingWorkerSubmissionHistory = Enum.GetValues<View.CoreModdingWorker.SubmissionType>().Select((value) => (new List<View.CoreModdingWorker.ValueExpression>())).ToList(),
 			};
 		}
 

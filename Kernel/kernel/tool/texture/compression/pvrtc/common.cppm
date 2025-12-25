@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.texture.compression.pvrtc.common;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC {
+export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 	M_enumeration(
 		M_wrap(Format),

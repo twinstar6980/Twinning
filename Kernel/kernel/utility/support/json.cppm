@@ -24,7 +24,7 @@ import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.support.string;
 
-export namespace Twinning::Kernel::JSON {
+export namespace Twinning::Kernel::Json {
 
 	#pragma region basic
 

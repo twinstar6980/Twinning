@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.package.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::Package {
+export namespace Twinning::Kernel::Tool::Popcap::Package {
 
 	M_record_of_map(
 		M_wrap(Version),

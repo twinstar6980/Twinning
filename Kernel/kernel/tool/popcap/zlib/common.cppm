@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.zlib.common;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.zlib.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::ZLib {
+export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

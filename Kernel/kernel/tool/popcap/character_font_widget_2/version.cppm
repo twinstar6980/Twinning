@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.character_font_widget_2.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::CharacterFontWidget2 {
+export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 	M_record_of_map(
 		M_wrap(Version),

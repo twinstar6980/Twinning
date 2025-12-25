@@ -1220,11 +1220,11 @@ export namespace Twinning::Kernel::JavaScript {
 	// ----------------
 
 	template <>
-	struct ValueAdapter<JSON::Value> {
+	struct ValueAdapter<Json::Value> {
 
 		using This = Value;
 
-		using That = JSON::Value;
+		using That = Json::Value;
 
 		// ----------------
 
@@ -1232,7 +1232,7 @@ export namespace Twinning::Kernel::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			using namespace JSON;
+			using namespace Json;
 			switch (that.type().value) {
 				case ValueType::Constant::null().value: {
 					thix.from(that.get_null());
@@ -1267,7 +1267,7 @@ export namespace Twinning::Kernel::JavaScript {
 			This & thix,
 			That & that
 		) -> Void {
-			using namespace JSON;
+			using namespace Json;
 			if (thix.is_null()) {
 				thix.to(that.set_null());
 			}
@@ -1295,11 +1295,11 @@ export namespace Twinning::Kernel::JavaScript {
 	};
 
 	template <>
-	struct ValueAdapter<XML::Node> {
+	struct ValueAdapter<Xml::Node> {
 
 		using This = Value;
 
-		using That = XML::Node;
+		using That = Xml::Node;
 
 		// ----------------
 
@@ -1307,7 +1307,7 @@ export namespace Twinning::Kernel::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			using namespace XML;
+			using namespace Xml;
 			thix.set_object_of_object();
 			auto type = that.type();
 			thix.set_object_property("type"_sv, thix.new_value(type));
@@ -1344,7 +1344,7 @@ export namespace Twinning::Kernel::JavaScript {
 			This & thix,
 			That & that
 		) -> Void {
-			using namespace XML;
+			using namespace Xml;
 			assert_test(thix.is_object_of_object());
 			auto type = NodeType{};
 			thix.get_object_property("type"_sv).to(type);

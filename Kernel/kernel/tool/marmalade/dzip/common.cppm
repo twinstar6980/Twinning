@@ -8,7 +8,7 @@ import twinning.kernel.tool.marmalade.dzip.version;
 import twinning.kernel.tool.marmalade.dzip.definition;
 import twinning.kernel.tool.marmalade.dzip.structure;
 
-export namespace Twinning::Kernel::Tool::Marmalade::DZip {
+export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

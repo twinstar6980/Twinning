@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
+namespace Twinning.Script.Support.Marmalade.Dzip.PackAutomatic {
 
 	// #region utility
 
@@ -6,9 +6,9 @@ namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 		resource_directory: string,
 		version_number: [0n][number],
 	): [Kernel.ByteArray, Kernel.Size] {
-		let version_c = Kernel.Tool.Marmalade.DZip.Version.value({ number: version_number });
+		let version_c = Kernel.Tool.Marmalade.Dzip.Version.value({ number: version_number });
 		let resource_list = KernelX.Storage.list_directory(resource_directory, null, true, false);
-		let definition_js: Kernel.Tool.Marmalade.DZip.Definition.JS_N.Package = {
+		let definition_js: Kernel.Tool.Marmalade.Dzip.Definition.JS_N.Package = {
 			resource: [],
 		};
 		let data_size_bound = 0;
@@ -29,8 +29,8 @@ namespace Twinning.Script.Support.Marmalade.DZip.PackAutomatic {
 		]);
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(data_size_bound)));
 		let stream = Kernel.ByteStreamView.watch(data.view());
-		let definition = Kernel.Tool.Marmalade.DZip.Definition.Package.json(Kernel.JSON.Value.value(definition_js), version_c);
-		Kernel.Tool.Marmalade.DZip.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
+		let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.json(Kernel.Json.Value.value(definition_js), version_c);
+		Kernel.Tool.Marmalade.Dzip.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
 		Console.success(los('support.marmalade.dzip.pack_automatic:finish'), [
 		]);
 		return [data, stream.position()];

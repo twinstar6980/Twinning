@@ -8,8 +8,8 @@ namespace Twinning.Script.Executable.CompareLanguageFile {
 		let original_file = Console.path('file', 'input', null, null);
 		Console.information(los('executable.compare_language_file:please_input_translation_file'), []);
 		let translation_file = Console.path('file', 'input', null, null);
-		let original_map = KernelX.JSON.read_fs_js(original_file) as Language.StringMap;
-		let translation_map = KernelX.JSON.read_fs_js(translation_file) as Language.StringMap;
+		let original_map = KernelX.Json.read_fs_js(original_file) as Language.StringMap;
+		let translation_map = KernelX.Json.read_fs_js(translation_file) as Language.StringMap;
 		let original_key = Object.keys(original_map);
 		let translation_key = Object.keys(translation_map);
 		let missing_key = original_key.filter((key) => (!translation_key.includes(key)));

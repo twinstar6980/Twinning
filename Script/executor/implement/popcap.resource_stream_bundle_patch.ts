@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundlePatch {
+namespace Twinning.Script.Executor.Implement.Popcap.ResourceStreamBundlePatch {
 
 	// #region interface
 
@@ -32,7 +32,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundlePatch {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundlePatch.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -53,7 +53,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundlePatch {
 				],
 				batch: null,
 				worker: ({ after_file, patch_file, before_file, version_number, use_raw_packet, buffer_size }, temporary: {}) => {
-					KernelX.Tool.PopCap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
+					KernelX.Tool.Popcap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					return;
 				},
 			}),
@@ -84,7 +84,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundlePatch {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ResourceStreamBundlePatch.VersionNumberE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundlePatch.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -105,7 +105,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundlePatch {
 				],
 				batch: null,
 				worker: ({ patch_file, after_file, before_file, version_number, use_raw_packet, buffer_size }, temporary: {}) => {
-					KernelX.Tool.PopCap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
+					KernelX.Tool.Popcap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
 					return;
 				},
 			}),

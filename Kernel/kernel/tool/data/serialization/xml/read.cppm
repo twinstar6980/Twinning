@@ -9,7 +9,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.data.serialization.xml.common;
 import twinning.kernel.third.tinyxml2;
 
-export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
+export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 	struct Read :
 		Common {

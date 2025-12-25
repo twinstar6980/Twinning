@@ -10,12 +10,12 @@ namespace Twinning.AssistantPlus {
 	#region type
 
 	public enum ModuleType {
-		ModdingWorker,
-		CommandSender,
-		ResourceShipper,
-		AnimationViewer,
-		ReflectionDescriptor,
-		PackageBuilder,
+		CoreModdingWorker,
+		CoreCommandSender,
+		CoreResourceShipper,
+		PopcapAnimationViewer,
+		PopcapReflectionDescriptor,
+		PopcapPackageBuilder,
 	}
 
 	// ----------------
@@ -63,68 +63,68 @@ namespace Twinning.AssistantPlus {
 
 		private static readonly List<ModuleInformation> Information = [
 			new () {
-				Identifier = "modding_worker",
-				Type = ModuleType.ModdingWorker,
+				Identifier = "core_modding_worker",
+				Type = ModuleType.CoreModdingWorker,
 				Name = "Modding Worker",
 				Icon = FluentIconGlyph.ProvisioningPackage,
-				MainPage = typeof(View.ModdingWorker.MainPage),
-				SettingPanel = () => new View.ModdingWorker.SettingPanel() {
-					Data = App.Setting.Data.ModdingWorker,
+				MainPage = typeof(View.CoreModdingWorker.MainPage),
+				SettingPanel = () => new View.CoreModdingWorker.SettingPanel() {
+					Data = App.Setting.Data.CoreModdingWorker,
 				},
 				GenerateForwardOption = (resource) => ["-additional_argument", ..resource],
 			},
 			new () {
-				Identifier = "command_sender",
-				Type = ModuleType.CommandSender,
+				Identifier = "core_command_sender",
+				Type = ModuleType.CoreCommandSender,
 				Name = "Command Sender",
 				Icon = FluentIconGlyph.Send,
-				MainPage = typeof(View.CommandSender.MainPage),
-				SettingPanel = () => new View.CommandSender.SettingPanel() {
-					Data = App.Setting.Data.CommandSender,
+				MainPage = typeof(View.CoreCommandSender.MainPage),
+				SettingPanel = () => new View.CoreCommandSender.SettingPanel() {
+					Data = App.Setting.Data.CoreCommandSender,
 				},
 				GenerateForwardOption = (resource) => null,
 			},
 			new () {
-				Identifier = "resource_shipper",
-				Type = ModuleType.ResourceShipper,
+				Identifier = "core_resource_shipper",
+				Type = ModuleType.CoreResourceShipper,
 				Name = "Resource Shipper",
 				Icon = FluentIconGlyph.Share,
-				MainPage = typeof(View.ResourceShipper.MainPage),
-				SettingPanel = () => new View.ResourceShipper.SettingPanel() {
-					Data = App.Setting.Data.ResourceShipper,
+				MainPage = typeof(View.CoreResourceShipper.MainPage),
+				SettingPanel = () => new View.CoreResourceShipper.SettingPanel() {
+					Data = App.Setting.Data.CoreResourceShipper,
 				},
 				GenerateForwardOption = (resource) => ["-resource", ..resource],
 			},
 			new () {
-				Identifier = "animation_viewer",
-				Type = ModuleType.AnimationViewer,
-				Name = "Animation Viewer",
+				Identifier = "popcap_animation_viewer",
+				Type = ModuleType.PopcapAnimationViewer,
+				Name = "PopCap Animation Viewer",
 				Icon = FluentIconGlyph.HomeGroup,
-				MainPage = typeof(View.AnimationViewer.MainPage),
-				SettingPanel = () => new View.AnimationViewer.SettingPanel() {
-					Data = App.Setting.Data.AnimationViewer,
+				MainPage = typeof(View.PopcapAnimationViewer.MainPage),
+				SettingPanel = () => new View.PopcapAnimationViewer.SettingPanel() {
+					Data = App.Setting.Data.PopcapAnimationViewer,
 				},
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-animation_file", resource[0]],
 			},
 			new () {
-				Identifier = "reflection_descriptor",
-				Type = ModuleType.ReflectionDescriptor,
-				Name = "Reflection Descriptor",
+				Identifier = "popcap_reflection_descriptor",
+				Type = ModuleType.PopcapReflectionDescriptor,
+				Name = "PopCap Reflection Descriptor",
 				Icon = FluentIconGlyph.Library,
-				MainPage = typeof(View.ReflectionDescriptor.MainPage),
-				SettingPanel = () => new View.ReflectionDescriptor.SettingPanel() {
-					Data = App.Setting.Data.ReflectionDescriptor,
+				MainPage = typeof(View.PopcapReflectionDescriptor.MainPage),
+				SettingPanel = () => new View.PopcapReflectionDescriptor.SettingPanel() {
+					Data = App.Setting.Data.PopcapReflectionDescriptor,
 				},
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-descriptor_file", resource[0]],
 			},
 			new () {
-				Identifier = "package_builder",
-				Type = ModuleType.PackageBuilder,
-				Name = "Package Builder",
+				Identifier = "popcap_package_builder",
+				Type = ModuleType.PopcapPackageBuilder,
+				Name = "PopCap Package Builder",
 				Icon = FluentIconGlyph.DialShape3,
-				MainPage = typeof(View.PackageBuilder.MainPage),
-				SettingPanel = () => new View.PackageBuilder.SettingPanel() {
-					Data = App.Setting.Data.PackageBuilder,
+				MainPage = typeof(View.PopcapPackageBuilder.MainPage),
+				SettingPanel = () => new View.PopcapPackageBuilder.SettingPanel() {
+					Data = App.Setting.Data.PopcapPackageBuilder,
 				},
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistDirectory(resource[0]) ? null : ["-project_directory", resource[0]],
 			},

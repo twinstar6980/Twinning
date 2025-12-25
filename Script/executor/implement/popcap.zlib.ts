@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.zlib {
+namespace Twinning.Script.Executor.Implement.Popcap.zlib {
 
 	// #region interface
 
@@ -49,7 +49,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 					}),
 				],
 				worker: ({ raw_file, ripe_file, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.PopCap.ZLib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
+					KernelX.Tool.Popcap.Zlib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
 					return;
 				},
 			}),
@@ -97,7 +97,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.zlib {
 					}),
 				],
 				worker: ({ ripe_file, raw_file, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.PopCap.ZLib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
+					KernelX.Tool.Popcap.Zlib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
 					return;
 				},
 			}),

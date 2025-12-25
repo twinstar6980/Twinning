@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.resource_stream_group.version;
 import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup::Structure {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup::Structure {
 
 	#pragma region magic marker
 
@@ -168,20 +168,20 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamGroup::Structure::ResourceInformation<t_version>> {
+	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamGroup::Structure::ResourceInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
 
 		using ThisOutput = OutputByteStreamView;
 
-		using That = Tool::PopCap::ResourceStreamGroup::Structure::ResourceInformation<t_version>;
+		using That = Tool::Popcap::ResourceStreamGroup::Structure::ResourceInformation<t_version>;
 
 		// ----------------
 
 		inline static auto size (
 			That const & that
 		) -> Size {
-			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
+			using namespace Tool::Popcap::ResourceStreamGroup::Structure;
 			auto size = k_none_size;
 			size += bs_size(up_cast<ResourceBasicInformation<t_version>>(that));
 			if (that.type == ResourceTypeFlag<t_version>::general) {
@@ -200,7 +200,7 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
+			using namespace Tool::Popcap::ResourceStreamGroup::Structure;
 			thix.write(up_cast<ResourceBasicInformation<t_version>>(that));
 			if (that.type == ResourceTypeFlag<t_version>::general) {
 				thix.write(that.additional.template get<GeneralResourceAdditionalInformation<t_version>>());
@@ -218,7 +218,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamGroup::Structure;
+			using namespace Tool::Popcap::ResourceStreamGroup::Structure;
 			thix.read(up_cast<ResourceBasicInformation<t_version>>(that));
 			if (that.type == ResourceTypeFlag<t_version>::general) {
 				thix.read(that.additional.template set<GeneralResourceAdditionalInformation<t_version>>());

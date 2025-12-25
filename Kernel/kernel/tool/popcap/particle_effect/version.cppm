@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.particle_effect.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
+export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 	M_record_of_map(
 		M_wrap(Version),

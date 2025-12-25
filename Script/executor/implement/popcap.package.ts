@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.Package {
+namespace Twinning.Script.Executor.Implement.Popcap.Package {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Package.VersionNumberE,
+						option: KernelX.Tool.Popcap.Package.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -68,7 +68,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.PopCap.Package.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, temporary.buffer.view());
+					KernelX.Tool.Popcap.Package.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -92,7 +92,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Package.VersionNumberE,
+						option: KernelX.Tool.Popcap.Package.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -125,7 +125,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				worker: ({ data_file, bundle_directory, version_number, version_compress_resource_data }, temporary: {}) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.PopCap.Package.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
+					KernelX.Tool.Popcap.Package.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any, compress_resource_data: version_compress_resource_data });
 					return;
 				},
 			}),
@@ -149,7 +149,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Package.VersionNumberE,
+						option: KernelX.Tool.Popcap.Package.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -163,7 +163,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 				],
 				batch: null,
 				worker: ({ resource_directory, data_file, version_number, version_compress_resource_data }, temporary: {}) => {
-					let [data, data_size] = Support.PopCap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
+					let [data, data_size] = Support.Popcap.Package.PackAutomatic.pack(resource_directory, version_number as any, version_compress_resource_data);
 					KernelX.Storage.write_file(data_file, data.view().sub(Kernel.Size.value(0n), data_size));
 					return;
 				},
@@ -213,7 +213,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Package {
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }, temporary: {}) => {
-					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, [key]);
+					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(plain_file, cipher_file, [key]);
 					return;
 				},
 			}),

@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.PackageProject {
+namespace Twinning.Script.Support.Pvz2.PackageProject {
 
 	// #region common
 
@@ -117,7 +117,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject {
 
 	export type ResourceState = Array<{
 		category: RegularResourceManifest.SubgroupCategory;
-		definition: null | Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource;
+		definition: null | Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Resource;
 		manifest: RegularResourceManifest.Resource;
 	}>;
 

@@ -15,7 +15,7 @@ import twinning.kernel.tool.data.compression.bzip2.uncompress;
 import twinning.kernel.tool.data.compression.lzma.common;
 import twinning.kernel.tool.data.compression.lzma.uncompress;
 
-export namespace Twinning::Kernel::Tool::Marmalade::DZip {
+export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Unpack :
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "bzip2"_s;
 						auto chunk_stream = OutputByteStreamView{chunk_data};
-						Data::Compression::BZip2::Uncompress::process(data, chunk_stream, k_false);
+						Data::Compression::Bzip2::Uncompress::process(data, chunk_stream, k_false);
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {

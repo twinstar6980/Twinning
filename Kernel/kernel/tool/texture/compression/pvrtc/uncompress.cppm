@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.pvrtc.common;
 import twinning.kernel.third.PVRTCCompressor;
 
-export namespace Twinning::Kernel::Tool::Texture::Compression::PVRTC {
+export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 	struct Uncompress :
 		Common {

@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
+namespace Twinning.Script.Executor.Implement.Popcap.ResourceStreamBundle {
 
 	// #region interface
 
@@ -25,21 +25,21 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ResourceStreamBundle.VersionNumberE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						identifier: 'version_extended_texture_information_for_pvz2_cn',
-						option: KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE,
+						identifier: 'version_extended_texture_information_for_pvz2cn',
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
 						condition: (argument: { version_number: bigint; }) => ([4n].includes(argument.version_number) ? null : 0n),
 					}),
 					typical_argument_string({
 						identifier: 'layout_mode',
-						option: Support.PopCap.ResourceStreamBundle.LayoutModeE,
+						option: Support.Popcap.ResourceStreamBundle.LayoutModeE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -82,17 +82,17 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb\.bundle)?$/i, '.rsb')),
 					}),
 				],
-				worker: ({ bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, input_packet, output_new_packet, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
+				worker: ({ bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, input_packet, output_new_packet, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					let relative_path = Support.PopCap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
+					let relative_path = Support.Popcap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					KernelX.Tool.PopCap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2cn: version_extended_texture_information_for_pvz2cn as any }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -116,21 +116,21 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ResourceStreamBundle.VersionNumberE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						identifier: 'version_extended_texture_information_for_pvz2_cn',
-						option: KernelX.Tool.PopCap.ResourceStreamBundle.VersionaExtendedTextureInformationForPVZ2CNE,
+						identifier: 'version_extended_texture_information_for_pvz2cn',
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
 						condition: (argument: { version_number: bigint; }) => ([4n].includes(argument.version_number) ? null : 0n),
 					}),
 					typical_argument_string({
 						identifier: 'layout_mode',
-						option: Support.PopCap.ResourceStreamBundle.LayoutModeE,
+						option: Support.Popcap.ResourceStreamBundle.LayoutModeE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -166,13 +166,13 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb)?$/i, '.rsb.bundle')),
 					}),
 				],
-				worker: ({ data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2_cn, layout_mode, output_resource, output_packet }, temporary: {}) => {
-					let relative_path = Support.PopCap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
+				worker: ({ data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, output_resource, output_packet }, temporary: {}) => {
+					let relative_path = Support.Popcap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					KernelX.Tool.PopCap.ResourceStreamBundle.unpack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2_cn: version_extended_texture_information_for_pvz2_cn as any });
+					KernelX.Tool.Popcap.ResourceStreamBundle.unpack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2cn: version_extended_texture_information_for_pvz2cn as any });
 					return;
 				},
 			}),
@@ -217,7 +217,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					Support.PopCap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
+					Support.Popcap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
 					return;
 				},
 			}),
@@ -246,7 +246,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 					}),
 					typical_argument_integer({
 						identifier: 'option_rton_version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
+						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_rton: boolean; }) => (argument.option_rton ? null : 0n),
@@ -309,7 +309,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 					}),
 					typical_argument_integer({
 						identifier: 'option_pam_version_number',
-						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						option: KernelX.Tool.Popcap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : 0n),
@@ -378,7 +378,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 					option_wem,
 				}) => {
 					let convert_directory = `${bundle_directory}/convert`;
-					let option: Support.PvZ2.ResourceConvert.Option = {
+					let option: Support.Pvz2.ResourceConvert.Option = {
 						recase_path: option_recase_path,
 						rton: !option_rton ? null : {
 							directory: convert_directory,
@@ -419,7 +419,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamBundle {
 							directory: convert_directory,
 						},
 					};
-					Support.PvZ2.ResourceConvert.convert_fs(
+					Support.Pvz2.ResourceConvert.convert_fs(
 						`${bundle_directory}/resource`,
 						`${bundle_directory}/definition.json`,
 						`${bundle_directory}/resource_manifest.json`,

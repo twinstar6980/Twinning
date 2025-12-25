@@ -15,8 +15,8 @@ namespace Twinning.Script {
 		language: string;
 		executor_typical_method_disable_name_filter: boolean;
 		executor_typical_method_configuration: Record<string, Record<string, Executor.TypicalMethodConfiguration>>;
-		executor_pvz2_resource_convert_ptx_format_map_list: Record<string, Support.PvZ2.ResourceConvert.PTXFormatMap>;
-		executor_pvz2_package_project_conversion_setting: Support.PvZ2.PackageProject.ConversionSetting;
+		executor_pvz2_resource_convert_ptx_format_map_list: Record<string, Support.Pvz2.ResourceConvert.PtxFormatMap>;
+		executor_pvz2_package_project_conversion_setting: Support.Pvz2.PackageProject.ConversionSetting;
 		command_notification_time_limit: null | bigint;
 	};
 
@@ -34,16 +34,16 @@ namespace Twinning.Script {
 				KernelX.g_common_buffer.allocate(Kernel.Size.value(ConvertHelper.parse_size_from_string(value)));
 			},
 			json_format_disable_array_trailing_comma: (value) => {
-				KernelX.JSON.g_format.disable_array_trailing_comma = value;
+				KernelX.Json.g_format.disable_array_trailing_comma = value;
 			},
 			json_format_disable_array_line_breaking: (value) => {
-				KernelX.JSON.g_format.disable_array_line_breaking = value;
+				KernelX.Json.g_format.disable_array_line_breaking = value;
 			},
 			json_format_disable_object_trailing_comma: (value) => {
-				KernelX.JSON.g_format.disable_object_trailing_comma = value;
+				KernelX.Json.g_format.disable_object_trailing_comma = value;
 			},
 			json_format_disable_object_line_breaking: (value) => {
-				KernelX.JSON.g_format.disable_object_line_breaking = value;
+				KernelX.Json.g_format.disable_object_line_breaking = value;
 			},
 			thread_limit: (value) => {
 				MainScript.g_thread_manager.resize(Number(value), null);
@@ -55,7 +55,7 @@ namespace Twinning.Script {
 				Console.g_basic_disable_virtual_terminal_sequence = value;
 			},
 			language: (value) => {
-				Language.imbue(KernelX.JSON.read_fs_js(HomePath.of(`~/script/configuration/language/${value}.json`)) as Language.StringMap);
+				Language.imbue(KernelX.Json.read_fs_js(HomePath.of(`~/script/configuration/language/${value}.json`)) as Language.StringMap);
 			},
 			executor_typical_method_disable_name_filter: (value) => {
 				Executor.g_typical_method_disable_name_filter = value;

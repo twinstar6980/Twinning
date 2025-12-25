@@ -6,7 +6,7 @@ export module twinning.kernel.tool.data.encryption.exor.encrypt;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.encryption.exor.common;
 
-export namespace Twinning::Kernel::Tool::Data::Encryption::EXOR {
+export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 
 	struct Encrypt :
 		Common {

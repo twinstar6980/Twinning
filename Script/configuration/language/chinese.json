@@ -519,7 +519,7 @@
 	"executor.implement:popcap.resource_stream_bundle.pack:bundle_directory": "捆绑目录",
 	"executor.implement:popcap.resource_stream_bundle.pack:data_file": "数据文件",
 	"executor.implement:popcap.resource_stream_bundle.pack:version_number": "版本编号",
-	"executor.implement:popcap.resource_stream_bundle.pack:version_extended_texture_information_for_pvz2_cn": "用于PvZ-2中国版的纹理信息扩展版本",
+	"executor.implement:popcap.resource_stream_bundle.pack:version_extended_texture_information_for_pvz2cn": "用于PvZ-2中国版的纹理信息扩展版本",
 	"executor.implement:popcap.resource_stream_bundle.pack:layout_mode": "布局模式",
 	"executor.implement:popcap.resource_stream_bundle.pack:input_packet": "使用已有子包",
 	"executor.implement:popcap.resource_stream_bundle.pack:output_new_packet": "导出新打包的子包",
@@ -529,7 +529,7 @@
 	"executor.implement:popcap.resource_stream_bundle.unpack:data_file": "数据文件",
 	"executor.implement:popcap.resource_stream_bundle.unpack:bundle_directory": "捆绑目录",
 	"executor.implement:popcap.resource_stream_bundle.unpack:version_number": "版本编号",
-	"executor.implement:popcap.resource_stream_bundle.unpack:version_extended_texture_information_for_pvz2_cn": "用于PvZ-2中国版的纹理信息扩展版本",
+	"executor.implement:popcap.resource_stream_bundle.unpack:version_extended_texture_information_for_pvz2cn": "用于PvZ-2中国版的纹理信息扩展版本",
 	"executor.implement:popcap.resource_stream_bundle.unpack:layout_mode": "布局模式",
 	"executor.implement:popcap.resource_stream_bundle.unpack:output_resource": "导出资源",
 	"executor.implement:popcap.resource_stream_bundle.unpack:output_packet": "导出子包",
@@ -629,7 +629,7 @@
 	"executor.implement:pvz2.package_project.parse:package_directory": "包目录",
 	"executor.implement:pvz2.package_project.parse:package_name": "包名称",
 	"executor.implement:pvz2.package_project.parse:package_version_number": "包版本编号",
-	"executor.implement:pvz2.package_project.parse:package_version_extended_texture_information_for_pvz2_cn": "包用于PvZ-2中国版的纹理信息扩展版本",
+	"executor.implement:pvz2.package_project.parse:package_version_extended_texture_information_for_pvz2cn": "包用于PvZ-2中国版的纹理信息扩展版本",
 	// executor/implement/pvz2.remote_project
 	"executor.implement:pvz2.remote_project.execute": "PvZ-2 Remote-Project 执行",
 	"executor.implement:pvz2.remote_project.execute:project_directory": "项目目录",
@@ -655,13 +655,13 @@
 	"executable.compare_language_file:please_input_translation_file": "请输入译文文件",
 	// executable/compute_wwise_short_identifier
 	"executable.compute_wwise_short_identifier:please_input_string": "请输入 Wwise 标识符字符串，输入为空则结束",
-	// executable/extract_rsb_from_pvz2_cn_apk_directory
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_input_directory": "请提供需要提取的 APK 解压所得的目录",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:provide_output_directory": "请提供输出目录",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:input_directory": "输入目录：{}",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:output_directory": "输出目录：{}",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_start": "提取开始",
-	"executable.extract_rsb_from_pvz2_cn_apk_directory:extract_finish": "提取完毕",
+	// executable/extract_rsb_from_pvz2cn_apk_directory
+	"executable.extract_rsb_from_pvz2cn_apk_directory:provide_input_directory": "请提供需要提取的 APK 解压所得的目录",
+	"executable.extract_rsb_from_pvz2cn_apk_directory:provide_output_directory": "请提供输出目录",
+	"executable.extract_rsb_from_pvz2cn_apk_directory:input_directory": "输入目录：{}",
+	"executable.extract_rsb_from_pvz2cn_apk_directory:output_directory": "输出目录：{}",
+	"executable.extract_rsb_from_pvz2cn_apk_directory:extract_start": "提取开始",
+	"executable.extract_rsb_from_pvz2cn_apk_directory:extract_finish": "提取完毕",
 	// runner/runner
 	"runner:input_command": "请依次输入命令参数",
 	"runner:input_finish_if_empty": "输入为空则结束输入",

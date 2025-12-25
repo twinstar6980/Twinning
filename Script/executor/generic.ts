@@ -41,7 +41,7 @@ namespace Twinning.Script.Executor {
 				command.method = command_reader.next_string();
 			}
 			if (command_reader.check('-argument')) {
-				let argument = KernelX.JSON.read_s_js(command_reader.next_string());
+				let argument = KernelX.Json.read_s_js(command_reader.next_string());
 				if (!CheckHelper.is_object_of_object(argument)) {
 					throw new Error(`argument must be a object`);
 				}

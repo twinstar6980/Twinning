@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.resource_stream_group.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
 	M_record_of_map(
 		M_wrap(Version),

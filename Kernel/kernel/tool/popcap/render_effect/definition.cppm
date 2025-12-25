@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.render_effect.definition;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.render_effect.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::RenderEffect {
+export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Definition {

@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.crypt_data.common;
 import twinning.kernel.tool.data.encryption.exor.common;
 import twinning.kernel.tool.data.encryption.exor.encrypt;
 
-export namespace Twinning::Kernel::Tool::PopCap::CryptData {
+export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 	template <auto version> requires (check_version(version))
 	struct Encrypt :
@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::PopCap::CryptData {
 				auto header = Header{};
 				header.plain_size = cbox<IntegerU64>(plain.reserve());
 				cipher.write(header);
-				Data::Encryption::EXOR::Encrypt::process(as_left(InputByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
+				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
 			}
 			cipher.write(plain.forward_view(plain.reserve()));
 			return;

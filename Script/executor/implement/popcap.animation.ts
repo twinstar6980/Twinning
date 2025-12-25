@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.Animation {
+namespace Twinning.Script.Executor.Implement.Popcap.Animation {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						option: KernelX.Tool.Popcap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -60,7 +60,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.Animation.encode_fs(data_file, definition_file, { number: version_number as any }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -84,7 +84,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						option: KernelX.Tool.Popcap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -109,7 +109,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number }, temporary: {}) => {
-					KernelX.Tool.PopCap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
+					KernelX.Tool.Popcap.Animation.decode_fs(data_file, definition_file, { number: version_number as any });
 					return;
 				},
 			}),
@@ -133,7 +133,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						option: KernelX.Tool.Popcap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -158,10 +158,10 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 				],
 				worker: ({ raw_file, ripe_directory, version_number }, temporary: {}) => {
-					let raw = KernelX.JSON.read_fs_js(raw_file) as Kernel.Tool.PopCap.Animation.Definition.JS_N.Animation;
-					Support.PopCap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory, { number: version_number as any });
-					Support.PopCap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw, null);
-					Support.PopCap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
+					let raw = KernelX.Json.read_fs_js(raw_file) as Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation;
+					Support.Popcap.Animation.Convert.Flash.From.from_fsh(raw, ripe_directory, { number: version_number as any });
+					Support.Popcap.Animation.Convert.Flash.SourceManager.create_fsh(ripe_directory, raw, null);
+					Support.Popcap.Animation.Convert.Flash.create_xfl_content_file(ripe_directory);
 					return;
 				},
 			}),
@@ -185,7 +185,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.Animation.VersionNumberE,
+						option: KernelX.Tool.Popcap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -210,7 +210,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 				],
 				worker: ({ ripe_directory, raw_file, version_number }, temporary: {}) => {
-					Support.PopCap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory, { number: version_number as any });
+					Support.Popcap.Animation.Convert.Flash.To.to_fs(raw_file, ripe_directory, { number: version_number as any });
 					return;
 				},
 			}),
@@ -244,7 +244,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Animation {
 					}),
 				],
 				worker: ({ target_directory, resolution }, temporary: {}) => {
-					Support.PopCap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
+					Support.Popcap.Animation.Convert.Flash.SourceManager.resize_fs(target_directory, resolution);
 					return;
 				},
 			}),

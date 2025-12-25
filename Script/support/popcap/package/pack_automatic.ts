@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
+namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 
 	// #region utility
 
@@ -7,9 +7,9 @@ namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 		version_number: [0n][number],
 		version_compress_resource_data: boolean,
 	): [Kernel.ByteArray, Kernel.Size] {
-		let version_c = Kernel.Tool.PopCap.Package.Version.value({ number: version_number, compress_resource_data: version_compress_resource_data });
+		let version_c = Kernel.Tool.Popcap.Package.Version.value({ number: version_number, compress_resource_data: version_compress_resource_data });
 		let resource_list = KernelX.Storage.list_directory(resource_directory, null, true, false);
-		let definition_js: Kernel.Tool.PopCap.Package.Definition.JS_N.Package = {
+		let definition_js: Kernel.Tool.Popcap.Package.Definition.JS_N.Package = {
 			resource: [],
 		};
 		let data_size_bound = 0;
@@ -29,8 +29,8 @@ namespace Twinning.Script.Support.PopCap.Package.PackAutomatic {
 		]);
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(data_size_bound)));
 		let stream = Kernel.ByteStreamView.watch(data.view());
-		let definition = Kernel.Tool.PopCap.Package.Definition.Package.json(Kernel.JSON.Value.value(definition_js), version_c);
-		Kernel.Tool.PopCap.Package.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
+		let definition = Kernel.Tool.Popcap.Package.Definition.Package.json(Kernel.Json.Value.value(definition_js), version_c);
+		Kernel.Tool.Popcap.Package.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
 		Console.success(los('support.popcap.package.pack_automatic:finish'), [
 		]);
 		return [data, stream.position()];

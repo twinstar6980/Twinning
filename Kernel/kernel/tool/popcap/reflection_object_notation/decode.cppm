@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.reflection_object_notation.version;
 import twinning.kernel.tool.popcap.reflection_object_notation.common;
 import twinning.kernel.tool.common.protocol_buffer_variable_length_integer;
 
-export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
+export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Decode :
@@ -48,7 +48,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		inline static auto process_value (
 			InputByteStreamView &      data,
-			JSON::Value &              value,
+			Json::Value &              value,
 			List<ConstantStringView> & native_string_index,
 			List<ConstantStringView> & unicode_string_index,
 			TypeIdentifier const &     type_identifier
@@ -278,14 +278,14 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 				}
 				case TypeIdentifier::Value::object_begin: {
 					auto & object = value.set_object();
-					auto   member_list = std::list<JSON::Object::Element>{};
+					auto   member_list = std::list<Json::Object::Element>{};
 					while (k_true) {
 						auto key_type_identifier = data.read_of<TypeIdentifier>();
 						if (key_type_identifier.value == TypeIdentifier::Value::object_end) {
 							break;
 						}
 						member_list.emplace_back();
-						auto member_key = JSON::Value{};
+						auto member_key = Json::Value{};
 						process_value(data, member_key, native_string_index, unicode_string_index, key_type_identifier);
 						member_list.back().key = as_moveable(member_key.get_string());
 						auto value_type_identifier = data.read_of<TypeIdentifier>();
@@ -311,7 +311,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		inline static auto process_whole (
 			InputByteStreamView & data,
-			JSON::Value &         definition
+			Json::Value &         definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			data.read_constant(cbox<VersionNumber>(version.number));
@@ -344,7 +344,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
 
 		inline static auto process (
 			InputByteStreamView & data_,
-			JSON::Value &         definition
+			Json::Value &         definition
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

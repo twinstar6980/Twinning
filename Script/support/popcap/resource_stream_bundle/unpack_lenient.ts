@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
+namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 
 	// #region utility
 
@@ -67,7 +67,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	function process_package(
 		package_data: ByteListView,
-		package_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
+		package_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_directory: string,
 	): void {
 		package_definition.group = [];
@@ -124,7 +124,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 				Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_group_identifier'), []);
 				group_identifier = `<unknown>:${group_index}`;
 			}
-			let group_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Group = {
+			let group_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Group = {
 				identifier: '',
 				composite: true,
 				subgroup: [],
@@ -172,7 +172,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 						Console.warning(los('support.popcap.resource_stream_bundle.unpack_lenient:unknown_subgroup_identifier'), []);
 						subgroup_identifier = `<unknown>:${simple_subgroup_information.index}`;
 					}
-					let subgroup_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Subgroup = {
+					let subgroup_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Subgroup = {
 						identifier: subgroup_identifier,
 						category: {
 							resolution: null,
@@ -236,7 +236,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 					);
 					for (let packet_resource_path in packet_resource_information_list) {
 						let packet_resource_information = packet_resource_information_list[packet_resource_path];
-						let resource_definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Resource = {
+						let resource_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Resource = {
 							path: StorageHelper.regularize(packet_resource_path),
 							additional: undefined!,
 						};
@@ -291,7 +291,7 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 
 	export function process(
 		data: ByteListView,
-		definition: Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package,
+		definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package,
 		resource_directory: string,
 	): void {
 		return process_package(data, definition, resource_directory);
@@ -306,10 +306,10 @@ namespace Twinning.Script.Support.PopCap.ResourceStreamBundle.UnpackLenient {
 		resource_directory: string,
 	): void {
 		let data = KernelX.Storage.read_file(data_file);
-		let definition = {} as Kernel.Tool.PopCap.ResourceStreamBundle.Definition.JS_N.Package;
+		let definition = {} as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
 		process(new ByteListView(data.view().value), definition, resource_directory);
-		KernelX.JSON.write_fs_js(definition_file, definition);
-		KernelX.JSON.write_fs_js(manifest_file, null);
+		KernelX.Json.write_fs_js(definition_file, definition);
+		KernelX.Json.write_fs_js(manifest_file, null);
 		return;
 	}
 

@@ -1,0 +1,162 @@
+<Page
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:Twinning.AssistantPlus"
+	xmlns:localViewCoreModdingWorker="using:Twinning.AssistantPlus.View.CoreModdingWorker"
+	xmlns:my="using:Twinning.AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="Twinning.AssistantPlus.View.CoreModdingWorker.MainPage"
+	AllowDrop="True"
+	DragOver="{x:Bind Controller.uPage_DragOver}"
+	Drop="{x:Bind Controller.uPage_Drop}"
+	>
+	<my:Stack
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		MinWidth="480"
+		Padding="4"
+		Orientation="Horizontal"
+		Spacing="4"
+		>
+		<my:Stack
+			x:Name="uSessionPanel"
+			x:FieldModifier="public"
+			my:Stack.Weight="1"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			MinWidth="472"
+			Padding="0,-4,0,0"
+			Orientation="Vertical"
+			Spacing="0"
+			>
+			<my:HeaderBar
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Icon="{StaticResource FluentIconGlyph.ChatBubbles}"
+				Title="Session"
+				>
+				<my:HeaderBar.Action>
+					<my:Stack
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Orientation="Horizontal"
+						Spacing="8"
+						>
+						<Button
+							ToolTipService.ToolTip="Additional Argument"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							Click="{x:Bind Controller.uAdditionalArgument_Click}"
+							>
+							<my:Stack
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								Orientation="Horizontal"
+								Spacing="8"
+								>
+								<TextBlock
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									Style="{StaticResource BodyTextBlockStyle}"
+									TextWrapping="NoWrap"
+									Text="{x:Bind Controller.uAdditionalArgumentCount_Text}"
+									/>
+								<FontIcon
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									FontSize="{StaticResource MediumIconSize}"
+									Glyph="{StaticResource FluentIconGlyph.Attach}"
+									/>
+							</my:Stack>
+						</Button>
+						<ToggleButton
+							ToolTipService.ToolTip="Automatic Scroll"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uAutomaticScroll_IsChecked}"
+							Click="{x:Bind Controller.uAutomaticScroll_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ScrollUpDown}}"
+							/>
+					</my:Stack>
+				</my:HeaderBar.Action>
+			</my:HeaderBar>
+			<my:Divider />
+			<ScrollViewer
+				x:Name="uMessageListScrollViewer"
+				x:FieldModifier="public"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalScrollMode="Disabled"
+				HorizontalScrollBarVisibility="Disabled"
+				VerticalScrollMode="Enabled"
+				VerticalScrollBarVisibility="Visible"
+				>
+				<ItemsRepeater
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Margin="16,12"
+					ItemsSource="{x:Bind Controller.uMessageList_ItemsSource}"
+					>
+					<ItemsRepeater.Layout>
+						<StackLayout Orientation="Vertical" Spacing="12" />
+					</ItemsRepeater.Layout>
+					<ItemsRepeater.ItemTemplate>
+						<DataTemplate x:DataType="localViewCoreModdingWorker:MainPageMessageItemController">
+							<localViewCoreModdingWorker:MessageCard
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								Type="{x:Bind uRoot_Type}"
+								Title="{x:Bind uRoot_Title}"
+								Description="{x:Bind uRoot_Message}"
+								Stamp="{x:Bind uRoot_Stamp}"
+								/>
+						</DataTemplate>
+					</ItemsRepeater.ItemTemplate>
+				</ItemsRepeater>
+			</ScrollViewer>
+			<my:DividerProgress
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				ProgressValue="0"
+				ProgressIndeterminate="{x:Bind Controller.uProgress_ProgressIndeterminate}"
+				ProgressPaused="{x:Bind Controller.uProgress_ProgressPaused}"
+				ProgressError="False"
+				/>
+			<my:Box
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="16,8,16,4"
+				>
+				<localViewCoreModdingWorker:SubmissionBar
+					x:Name="uSubmissionBar"
+					x:FieldModifier="public"
+					my:Stack.Weight="1"
+					Visibility="{x:Bind Controller.uSubmissionBar_Visibility}"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Height="32"
+					Type="{x:Bind Controller.uSubmissionBar_Type}"
+					Option="{x:Bind Controller.uSubmissionBar_Option}"
+					History="{x:Bind Controller.uSubmissionBar_History}"
+					Value="{x:Bind Controller.uSubmissionBar_Value}"
+					ValueSubmitted="{x:Bind Controller.uSubmissionBar_ValueSubmitted}"
+					Stamp="{x:Bind Controller.uSubmissionBar_Stamp}"
+					/>
+				<Button
+					my:Stack.Weight="1"
+					Visibility="{x:Bind Controller.uLaunch_Visibility}"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Click="{x:Bind Controller.uLaunch_Click}"
+					Content="Launch"
+					/>
+			</my:Box>
+		</my:Stack>
+	</my:Stack>
+</Page>

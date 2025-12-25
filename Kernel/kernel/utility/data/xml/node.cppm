@@ -12,7 +12,7 @@ import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.map.map;
 import twinning.kernel.utility.string.string;
 
-export namespace Twinning::Kernel::XML {
+export namespace Twinning::Kernel::Xml {
 
 	#pragma region declaration
 

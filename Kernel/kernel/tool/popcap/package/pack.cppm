@@ -11,7 +11,7 @@ import twinning.kernel.tool.popcap.package.common;
 import twinning.kernel.tool.data.compression.deflate.common;
 import twinning.kernel.tool.data.compression.deflate.compress;
 
-export namespace Twinning::Kernel::Tool::PopCap::Package {
+export namespace Twinning::Kernel::Tool::Popcap::Package {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Pack :

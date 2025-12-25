@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.etc.common;
 import twinning.kernel.third.etcpak;
 
-export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
+export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
 	struct Compress :
 		Common {

@@ -13,7 +13,7 @@ import twinning.kernel.tool.data.differentiation.vcdiff.common;
 import twinning.kernel.tool.data.differentiation.vcdiff.encode;
 import twinning.kernel.tool.data.differentiation.vcdiff.decode;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Encode :
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			StaticByteArray<16_sz> &     hash
 		) -> Void {
 			auto hash_test = ByteArray{};
-			Data::Hash::MD5::Hash::process(data, hash_test);
+			Data::Hash::Md5::Hash::process(data, hash_test);
 			Range::assign_from(hash.view(), hash_test.as_view());
 			return;
 		}
@@ -64,7 +64,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 			auto before_stream = InputByteStreamView{before};
 			auto after_stream = InputByteStreamView{after};
 			auto patch_begin_position = patch.position();
-			Data::Differentiation::VCDiff::Encode::process(before_stream, after_stream, patch, k_true);
+			Data::Differentiation::Vcdiff::Encode::process(before_stream, after_stream, patch, k_true);
 			patch_size = patch.position() - patch_begin_position;
 			return;
 		}

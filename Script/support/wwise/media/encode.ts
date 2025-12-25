@@ -330,11 +330,11 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			Console.warning(`failed to create wwise project, retry ...`, [wwise_wproj_file]);
 		}
 		let wwise_wsources_file = `${wwise_project_directory}/Sample.wsources`;
-		KernelX.XML.write_fs_js(wwise_wsources_file, XML.create_element_node('ExternalSourcesList', {
+		KernelX.Xml.write_fs_js(wwise_wsources_file, Xml.create_element_node('ExternalSourcesList', {
 			SchemaVersion: '1',
 			Root: cast_wwise_internal_path(wwise_project_directory),
 		}, [
-			XML.create_element_node('Source', {
+			Xml.create_element_node('Source', {
 				Path: 'Sample.wav',
 				Destination: 'Sample.wem',
 				Conversion: `_${format}`,

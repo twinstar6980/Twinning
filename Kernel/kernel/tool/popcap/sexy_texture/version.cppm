@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.sexy_texture.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
+export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 	M_record_of_map(
 		M_wrap(Version),

@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.animation.definition;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.animation.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::Animation {
+export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Definition {

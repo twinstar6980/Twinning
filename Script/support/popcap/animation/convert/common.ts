@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PopCap.Animation.Convert {
+namespace Twinning.Script.Support.Popcap.Animation.Convert {
 
 	// #region image
 
@@ -58,7 +58,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 
 	export function convert_transform_from_standard_to_rotate(
 		data: Transform,
-	): Kernel.Tool.PopCap.Animation.Definition.JS_N.RotateTranslateTransform {
+	): Kernel.Tool.Popcap.Animation.Definition.JS_N.RotateTranslateTransform {
 		assert_test(data[0] === data[3] && data[1] === -data[2]);
 		let cos = data[0];
 		let sin = data[1];
@@ -68,7 +68,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 	}
 
 	export function convert_transform_from_rotate_to_standard(
-		data: Kernel.Tool.PopCap.Animation.Definition.JS_N.RotateTranslateTransform,
+		data: Kernel.Tool.Popcap.Animation.Definition.JS_N.RotateTranslateTransform,
 	): Transform {
 		let cos = Math.cos(data[0]);
 		let sin = Math.sin(data[0]);
@@ -86,7 +86,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 
 	export function convert_transform_from_standard_to_variant(
 		data: Transform,
-	): Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform {
+	): Kernel.Tool.Popcap.Animation.Definition.JS_N.VariantTransform {
 		if (data[0] === data[3] && data[1] === -data[2]) {
 			if (data[0] === 1.0 && data[1] === 0.0) {
 				return [data[4], data[5]];
@@ -102,7 +102,7 @@ namespace Twinning.Script.Support.PopCap.Animation.Convert {
 	}
 
 	export function convert_transform_from_variant_to_standard(
-		transform: Kernel.Tool.PopCap.Animation.Definition.JS_N.VariantTransform,
+		transform: Kernel.Tool.Popcap.Animation.Definition.JS_N.VariantTransform,
 	): Transform {
 		let result: Transform;
 		if (transform.length === 2) {

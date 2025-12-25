@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.render_effect.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::RenderEffect {
+export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 	M_record_of_map(
 		M_wrap(Version),

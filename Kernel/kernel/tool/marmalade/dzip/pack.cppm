@@ -15,7 +15,7 @@ import twinning.kernel.tool.data.compression.bzip2.compress;
 import twinning.kernel.tool.data.compression.lzma.common;
 import twinning.kernel.tool.data.compression.lzma.compress;
 
-export namespace Twinning::Kernel::Tool::Marmalade::DZip {
+export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Pack :
@@ -178,7 +178,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::DZip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<version>::bzip2)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::BZip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 0_sz);
+						Data::Compression::Bzip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 0_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}

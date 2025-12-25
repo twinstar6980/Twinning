@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.PackageProject.Diagnose {
+namespace Twinning.Script.Support.Pvz2.PackageProject.Diagnose {
 
 	// #region utility
 

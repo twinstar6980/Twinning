@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.Texture {
+namespace Twinning.Script.Executor.Implement.Popcap.Texture {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Texture {
 					}),
 					typical_argument_string({
 						identifier: 'format',
-						option: Support.PopCap.Texture.Encoding.FormatE,
+						option: Support.Popcap.Texture.Encoding.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Texture {
 				],
 				batch: null,
 				worker: ({ image_file, data_file, format }, temporary: {}) => {
-					Support.PopCap.Texture.Encoding.encode_fs(image_file, data_file, format as any);
+					Support.Popcap.Texture.Encoding.encode_fs(image_file, data_file, format as any);
 					return;
 				},
 			}),
@@ -57,7 +57,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Texture {
 					}),
 					typical_argument_string({
 						identifier: 'format',
-						option: Support.PopCap.Texture.Encoding.FormatE,
+						option: Support.Popcap.Texture.Encoding.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -79,7 +79,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Texture {
 				],
 				batch: null,
 				worker: ({ data_file, image_file, format, image_width, image_height }, temporary: {}) => {
-					Support.PopCap.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], format as any);
+					Support.Popcap.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], format as any);
 					return;
 				},
 			}),

@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PopCap.Texture.Encoding {
+namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 
 	// #region common
 
@@ -107,7 +107,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 			case 'rgb_etc1_a_palette': {
 				assert_test(option.rgb_etc1_a_palette !== null);
 				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1');
-				data_size += KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+				data_size += KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
 				break;
 			}
 		}
@@ -193,7 +193,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 			case 'rgb_etc1_a_palette': {
 				assert_test(option.rgb_etc1_a_palette !== null);
 				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgb_etc1');
-				KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
+				KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
 				break;
 			}
 		}
@@ -239,7 +239,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 			}
 			case 'rgb_etc1_a_palette': {
 				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1');
-				KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.decode_with_palette(data, image);
+				KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.decode_with_palette(data, image);
 				break;
 			}
 		}
@@ -255,17 +255,17 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 	): void {
 		let image_data = KernelX.Storage.read_file(image_file);
 		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
-		let image_size = KernelX.Image.File.PNG.size(image_stream.view());
+		let image_size = KernelX.Image.File.Png.size(image_stream.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
-		KernelX.Image.File.PNG.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		KernelX.Image.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		let option: EncodeOption = {
 			rgb_etc1_a_palette: null,
 		};
 		if (format === 'rgb_etc1_a_palette') {
 			option.rgb_etc1_a_palette = {
-				palette: KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.evaluate_palette(image_view),
+				palette: KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.evaluate_palette(image_view),
 			};
 		}
 		let data_size = compute_data_size(padded_image_size, format, option);
@@ -288,7 +288,7 @@ namespace Twinning.Script.Support.PopCap.Texture.Encoding {
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
 		decode(stream, image_view, format);
-		KernelX.Image.File.PNG.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		KernelX.Image.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		return;
 	}
 

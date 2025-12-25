@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Decode {
+namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation.Decode {
 
 	// #region utility
 
@@ -39,7 +39,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 		data: ByteStreamView,
 	): string {
 		let length = data.u32();
-		return PopCap.ReflectionObjectNotation.DecodeLenient.read_utf8_string_by_size(data, length);
+		return Popcap.ReflectionObjectNotation.DecodeLenient.read_utf8_string_by_size(data, length);
 	}
 
 	// ----------------
@@ -178,7 +178,7 @@ namespace Twinning.Script.Support.PvZ2.ResourceManifest.NewTypeObjectNotation.De
 	): void {
 		let data = KernelX.Storage.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value));
-		KernelX.JSON.write_fs_js(definition_file, definition);
+		KernelX.Json.write_fs_js(definition_file, definition);
 		return;
 	}
 

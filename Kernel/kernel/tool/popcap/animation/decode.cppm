@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.animation.definition;
 import twinning.kernel.tool.popcap.animation.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::Animation {
+export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Decode :

@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.particle_effect.definition;
 import twinning.kernel.tool.popcap.particle_effect.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::ParticleEffect {
+export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Encode :

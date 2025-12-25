@@ -50,7 +50,7 @@ namespace Twinning.Script.Executor.Implement.Data.Encryption {
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }, temporary: {}) => {
-					KernelX.Tool.Data.Encryption.EXOR.encrypt_fs(plain_file, cipher_file, ConvertHelper.make_string_to_byte_array(key));
+					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(plain_file, cipher_file, ConvertHelper.make_string_to_byte_array(key));
 					return;
 				},
 			}),

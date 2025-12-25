@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.re_animation.version;
 import twinning.kernel.tool.popcap.re_animation.definition;
 
-export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
+export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Common {

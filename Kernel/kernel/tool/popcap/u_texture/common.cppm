@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.u_texture.common;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.u_texture.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::UTexture {
+export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

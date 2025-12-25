@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.resource_stream_bundle.version;
 import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Definition {

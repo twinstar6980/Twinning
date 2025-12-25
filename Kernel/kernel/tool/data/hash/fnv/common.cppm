@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.hash.fnv.common;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::Data::Hash::FNV {
+export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 
 	M_enumeration(
 		M_wrap(Mode),

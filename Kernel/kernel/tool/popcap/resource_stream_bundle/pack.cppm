@@ -17,7 +17,7 @@ import twinning.kernel.tool.popcap.resource_stream_group.common;
 import twinning.kernel.tool.popcap.resource_stream_group.pack;
 import twinning.kernel.tool.popcap.resource_stream_group.unpack;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Pack :

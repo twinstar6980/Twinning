@@ -15,7 +15,7 @@ import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.miscellaneous.number_variant;
 import twinning.kernel.utility.data.json.value_adapter;
 
-export namespace Twinning::Kernel::JSON {
+export namespace Twinning::Kernel::Json {
 
 	#pragma region declaration
 

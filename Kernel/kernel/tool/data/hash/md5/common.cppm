@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.hash.md5.common;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::Data::Hash::MD5 {
+export namespace Twinning::Kernel::Tool::Data::Hash::Md5 {
 
 	struct Common {
 

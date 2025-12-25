@@ -43,23 +43,23 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task ShowLauncherPanel (
+		public async Task ShowLauncher (
 		) {
-			await this.Controller.ShowLauncherPanel();
+			await this.Controller.ShowLauncher();
 			return;
 		}
 
-		public async Task InsertTabItem (
+		public async Task InsertPage (
 			ModuleLauncherConfiguration configuration
 		) {
-			await this.Controller.InsertTabItem(configuration);
+			await this.Controller.InsertPage(configuration);
 			return;
 		}
 
-		public async Task RemoveTabItem (
+		public async Task RemovePage (
 			Page content
 		) {
-			await this.Controller.RemoveTabItem(content);
+			await this.Controller.RemovePage(content);
 			return;
 		}
 
@@ -105,11 +105,11 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task InsertTabItem (
+		public async Task InsertPage (
 			ModuleLauncherConfiguration configuration
 		) {
 			if (this.View.uLauncherFlyout.IsOpen) {
-				await this.HideLauncherPanel();
+				await this.HideLauncher();
 			}
 			var model = ModuleHelper.Query(configuration.Type);
 			var frame = new Frame() {
@@ -131,7 +131,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task RemoveTabItem (
+		public async Task RemovePage (
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -144,7 +144,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			else {
 				this.uTab_TabItemsSource.Remove(item);
 				if (this.uTab_TabItemsSource.Count == 0) {
-					await this.ShowLauncherPanel();
+					await this.ShowLauncher();
 					await Task.Delay(400);
 					this.NotifyPropertyChanged([
 						nameof(this.uBlank_Visibility),
@@ -154,7 +154,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task RenameTabItem (
+		public async Task RenamePage (
 			Page   content,
 			String title
 		) {
@@ -166,7 +166,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task KeepTabItem (
+		public async Task KeepPage (
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -181,7 +181,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task DuplicateTabItem (
+		public async Task DuplicatePage (
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -191,13 +191,13 @@ namespace Twinning.AssistantPlus.View.Home {
 				Option = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CollectOption(),
 				Command = [],
 			};
-			await this.InsertTabItem(configuration);
+			await this.InsertPage(configuration);
 			return;
 		}
 
 		// ----------------
 
-		public async Task ShowLauncherPanel (
+		public async Task ShowLauncher (
 		) {
 			AssertTest(!this.View.uLauncherFlyout.IsOpen);
 			this.NotifyPropertyChanged([
@@ -207,7 +207,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task HideLauncherPanel (
+		public async Task HideLauncher (
 		) {
 			AssertTest(this.View.uLauncherFlyout.IsOpen);
 			this.View.uLauncherFlyout.Hide();
@@ -225,7 +225,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			TabViewTabCloseRequestedEventArgs args
 		) {
 			var senders = sender.As<TabView>();
-			await this.RemoveTabItem(args.Item.As<MainWindowTabItemController>().Frame.Content.As<Page>());
+			await this.RemovePage(args.Item.As<MainWindowTabItemController>().Frame.Content.As<Page>());
 			return;
 		}
 
@@ -234,7 +234,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			Object  args
 		) {
 			var senders = sender.As<TabView>();
-			await this.ShowLauncherPanel();
+			await this.ShowLauncher();
 			return;
 		}
 
@@ -265,12 +265,12 @@ namespace Twinning.AssistantPlus.View.Home {
 					this.View.Close();
 				}
 				else {
-					await this.RemoveTabItem(this.View.uTab.SelectedItem.As<MainWindowTabItemController>().Frame.Content.As<Page>());
+					await this.RemovePage(this.View.uTab.SelectedItem.As<MainWindowTabItemController>().Frame.Content.As<Page>());
 				}
 			}
 			if (senders.Modifiers == VirtualKeyModifiers.Control && senders.Key == VirtualKey.T) {
 				args.Handled = true;
-				await this.ShowLauncherPanel();
+				await this.ShowLauncher();
 			}
 			return;
 		}
@@ -281,12 +281,12 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public async void uLauncher_PanelEnter (
 		) {
-			await this.ShowLauncherPanel();
+			await this.ShowLauncher();
 		}
 
 		public async void uLauncher_PanelExit (
 		) {
-			await this.HideLauncherPanel();
+			await this.HideLauncher();
 		}
 
 		public UniqueStamp uLauncher_Stamp {
@@ -312,7 +312,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await this.ShowLauncherPanel();
+			await this.ShowLauncher();
 			return;
 		}
 
@@ -379,16 +379,16 @@ namespace Twinning.AssistantPlus.View.Home {
 						};
 					}), new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
 					if (canContinue) {
-						await this.Host.RenameTabItem(this.Frame.Content.As<Page>(), title);
+						await this.Host.RenamePage(this.Frame.Content.As<Page>(), title);
 					}
 					break;
 				}
 				case "Keep": {
-					await this.Host.KeepTabItem(this.Frame.Content.As<Page>());
+					await this.Host.KeepPage(this.Frame.Content.As<Page>());
 					break;
 				}
 				case "Duplicate": {
-					await this.Host.DuplicateTabItem(this.Frame.Content.As<Page>());
+					await this.Host.DuplicatePage(this.Frame.Content.As<Page>());
 					break;
 				}
 				default: throw new UnreachableException();

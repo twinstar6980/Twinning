@@ -6,17 +6,17 @@ export module twinning.kernel.tool.data.serialization.xml.common;
 import twinning.kernel.utility;
 import twinning.kernel.third.tinyxml2;
 
-export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
+export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
-	using Kernel::XML::NodeType;
+	using Kernel::Xml::NodeType;
 
-	using Kernel::XML::Node;
+	using Kernel::Xml::Node;
 
 	// ----------------
 
 	struct Common {
 
-		class TinyXML2Printer :
+		class TinyXml2Printer :
 			public Third::tinyxml2::XMLPrinter {
 
 		public:
@@ -32,17 +32,17 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 		};
 
 		template <class T, int INITIAL_SIZE>
-		struct TinyXML2DynArrayImitator {
+		struct TinyXml2DynArrayImitator {
 			T *         _mem;
 			T           _pool[INITIAL_SIZE];
 			std::size_t _allocated;
 			std::size_t _size;
 		};
 
-		struct TinyXML2PrinterImitator {
-			virtual                                    ~TinyXML2PrinterImitator () = 0;
+		struct TinyXml2PrinterImitator {
+			virtual                                    ~TinyXml2PrinterImitator () = 0;
 			bool                                       _elementJustOpened;
-			TinyXML2DynArrayImitator<char const *, 10> _stack;
+			TinyXml2DynArrayImitator<char const *, 10> _stack;
 			bool                                       _firstElement;
 			std::FILE *                                _fp;
 			int                                        _depth;
@@ -51,16 +51,16 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 			bool                                       _compactMode;
 			bool                                       _entityFlag[64];
 			bool                                       _restrictedEntityFlag[64];
-			TinyXML2DynArrayImitator<char, 20>         _buffer;
+			TinyXml2DynArrayImitator<char, 20>         _buffer;
 		};
 
 		// NOTE: EXPLAIN: maybe failed if api changed
-		static_assert(sizeof(TinyXML2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));
+		static_assert(sizeof(TinyXml2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));
 
 		inline static auto move_printer_buffer_if_can (
 			Third::tinyxml2::XMLPrinter & printer
 		) -> String {
-			auto & printer_imitator = self_cast<TinyXML2PrinterImitator>(printer);
+			auto & printer_imitator = self_cast<TinyXml2PrinterImitator>(printer);
 			auto   buffer_data = cast_pointer<Character>(make_pointer(printer_imitator._buffer._mem));
 			auto   buffer_size = mbox<Size>(printer_imitator._buffer._size);
 			auto   buffer_capacity = mbox<Size>(printer_imitator._buffer._allocated);

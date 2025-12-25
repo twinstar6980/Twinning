@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.u_texture.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::UTexture {
+export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 	M_record_of_map(
 		M_wrap(Version),

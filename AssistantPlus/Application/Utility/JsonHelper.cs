@@ -267,7 +267,7 @@ namespace Twinning.AssistantPlus.Utility {
 					new FloaterJsonConverter<FloaterS32>(),
 					new FloaterJsonConverter<FloaterS64>(),
 					new TupleJsonConverterFactory(),
-					new GameReflectionHelper.CompositeTypeJsonConverter(),
+					new PopcapReflectionHelper.CompositeTypeJsonConverter(),
 				},
 			};
 		}

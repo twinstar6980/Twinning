@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
+namespace Twinning.Script.Executor.Implement.Popcap.CharacterFontWidget2 {
 
 	// #region interface
 
@@ -53,7 +53,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, temporary.buffer.view());
+					KernelX.Tool.Popcap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -95,7 +95,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.CharacterFontWidget2 {
 					}),
 				],
 				worker: ({ data_file, definition_file }, temporary: {}) => {
-					KernelX.Tool.PopCap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
+					KernelX.Tool.Popcap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
 					return;
 				},
 			}),

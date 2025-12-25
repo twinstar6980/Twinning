@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.trail.definition;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.trail.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::Trail {
+export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Definition {

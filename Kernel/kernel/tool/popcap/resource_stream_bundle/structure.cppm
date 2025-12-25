@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.resource_stream_bundle.version;
 import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Structure {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Structure {
 
 	#pragma region magic marker
 
@@ -505,20 +505,20 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>> {
+	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
 
 		using ThisOutput = OutputByteStreamView;
 
-		using That = Tool::PopCap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>;
+		using That = Tool::Popcap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>;
 
 		// ----------------
 
 		inline static auto size (
 			That const & that
 		) -> Size {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = k_none_size;
 			size += bs_size(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
@@ -532,7 +532,7 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.write(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
 				thix.write(that.image_property_information.get());
@@ -545,7 +545,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
 				assert_test(cbox<Size>(that.image_property_information_offset) == thix.position());
@@ -565,20 +565,20 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>> {
+	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
 
 		using ThisOutput = OutputByteStreamView;
 
-		using That = Tool::PopCap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>;
+		using That = Tool::Popcap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>;
 
 		// ----------------
 
 		inline static auto size (
 			That const & that
 		) -> Size {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = k_none_size;
 			size += bs_size(up_cast<ResourceBasicManifestInformation<t_version>>(that));
 			return size;
@@ -588,7 +588,7 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.write(up_cast<ResourceBasicManifestInformation<t_version>>(that));
 			return;
 		}
@@ -597,7 +597,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<ResourceBasicManifestInformation<t_version>>(that));
 			return;
 		}
@@ -608,20 +608,20 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>> {
+	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
 
 		using ThisOutput = OutputByteStreamView;
 
-		using That = Tool::PopCap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>;
+		using That = Tool::Popcap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>;
 
 		// ----------------
 
 		inline static auto size (
 			That const & that
 		) -> Size {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = k_none_size;
 			size += bs_size(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
 			size += bs_size(that.resource_information);
@@ -632,7 +632,7 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.write(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
 			thix.write(that.resource_information);
 			return;
@@ -642,7 +642,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
 			thix.read(that.resource_information, cbox<Size>(that.resource_count));
 			return;
@@ -654,20 +654,20 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::PopCap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>> {
+	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
 
 		using ThisOutput = OutputByteStreamView;
 
-		using That = Tool::PopCap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>;
+		using That = Tool::Popcap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>;
 
 		// ----------------
 
 		inline static auto size (
 			That const & that
 		) -> Size {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = k_none_size;
 			size += bs_size(up_cast<GroupBasicManifestInformation<t_version>>(that));
 			size += bs_size(that.subgroup_information);
@@ -678,7 +678,7 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.write(up_cast<GroupBasicManifestInformation<t_version>>(that));
 			thix.write(that.subgroup_information);
 			return;
@@ -688,7 +688,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			using namespace Tool::PopCap::ResourceStreamBundle::Structure;
+			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<GroupBasicManifestInformation<t_version>>(that));
 			thix.read(that.subgroup_information, cbox<Size>(that.subgroup_count));
 			return;

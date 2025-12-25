@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.file.png.common;
 import twinning.kernel.third.libpng;
 
-export namespace Twinning::Kernel::Tool::Texture::File::PNG {
+export namespace Twinning::Kernel::Tool::Texture::File::Png {
 
 	struct Read :
 		Common {

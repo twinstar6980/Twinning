@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.trail.version;
 import twinning.kernel.tool.popcap.trail.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::Trail {
+export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Encode :

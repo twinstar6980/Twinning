@@ -7,7 +7,7 @@ module;
 export module twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 	#pragma region padding unit
 
@@ -275,12 +275,12 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle::Shared {
 
 // NOTE: USING
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 	using namespace ResourceStreamBundle::Shared;
 }
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundle {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 	using namespace ResourceStreamBundle::Shared;
 }
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 	using namespace ResourceStreamBundle::Shared;
 }

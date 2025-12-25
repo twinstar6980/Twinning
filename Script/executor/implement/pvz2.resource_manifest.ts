@@ -36,7 +36,7 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Encode.process_fs(data_file, definition_file, temporary.buffer.view());
+					Support.Pvz2.ResourceManifest.NewTypeObjectNotation.Encode.process_fs(data_file, definition_file, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -61,7 +61,7 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 				],
 				batch: null,
 				worker: ({ data_file, definition_file }, temporary: {}) => {
-					Support.PvZ2.ResourceManifest.NewTypeObjectNotation.Decode.process_fs(data_file, definition_file);
+					Support.Pvz2.ResourceManifest.NewTypeObjectNotation.Decode.process_fs(data_file, definition_file);
 					return;
 				},
 			}),
@@ -86,9 +86,9 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 				],
 				batch: null,
 				worker: ({ raw_file, ripe_file }, temporary: {}) => {
-					let raw = KernelX.JSON.read_fs_js(raw_file) as Support.PvZ2.ResourceManifest.Package;
-					let ripe = Support.PvZ2.RegularResourceManifest.Convert.from_official(raw);
-					KernelX.JSON.write_fs_js(ripe_file, ripe);
+					let raw = KernelX.Json.read_fs_js(raw_file) as Support.Pvz2.ResourceManifest.Package;
+					let ripe = Support.Pvz2.RegularResourceManifest.Convert.from_official(raw);
+					KernelX.Json.write_fs_js(ripe_file, ripe);
 					return;
 				},
 			}),
@@ -119,9 +119,9 @@ namespace Twinning.Script.Executor.Implement.PvZ2.ResourceManifest {
 				],
 				batch: null,
 				worker: ({ ripe_file, raw_file, use_array_style_path }, temporary: {}) => {
-					let ripe = KernelX.JSON.read_fs_js(ripe_file) as Support.PvZ2.RegularResourceManifest.Package;
-					let raw = Support.PvZ2.RegularResourceManifest.Convert.to_official(ripe, use_array_style_path);
-					KernelX.JSON.write_fs_js(raw_file, raw);
+					let ripe = KernelX.Json.read_fs_js(ripe_file) as Support.Pvz2.RegularResourceManifest.Package;
+					let raw = Support.Pvz2.RegularResourceManifest.Convert.to_official(ripe, use_array_style_path);
+					KernelX.Json.write_fs_js(raw_file, raw);
 					return;
 				},
 			}),

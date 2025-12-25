@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.texture.compression.etc.common;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::Texture::Compression::ETC {
+export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
 	M_enumeration(
 		M_wrap(Format),

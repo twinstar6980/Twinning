@@ -337,7 +337,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto load_common_property (
 			CommonPropertyMap<AudioCommonPropertyType> & map,
-			typename Definition::BusHDRSetting const &   value
+			typename Definition::BusHdrSetting const &   value
 		) -> Void {
 			using CPTC = typename AudioCommonPropertyType::Constant;
 			if constexpr (check_version(version, {88})) {
@@ -363,7 +363,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto load_common_property (
 			CommonPropertyMap<AudioCommonPropertyType> & map,
-			typename Definition::AudioHDRSetting const & value
+			typename Definition::AudioHdrSetting const & value
 		) -> Void {
 			using CPTC = typename AudioCommonPropertyType::Constant;
 			if constexpr (check_version(version, {88})) {
@@ -374,7 +374,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto load_common_property (
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
-			typename Definition::SoundMIDISetting const & value
+			typename Definition::SoundMidiSetting const & value
 		) -> Void {
 			using CPTC = typename AudioCommonPropertyType::Constant;
 			if constexpr (check_version(version, {112})) {
@@ -409,7 +409,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto load_common_property (
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
-			typename Definition::MusicMIDISetting const & value
+			typename Definition::MusicMidiSetting const & value
 		) -> Void {
 			using CPTC = typename AudioCommonPropertyType::Constant;
 			if constexpr (check_version(version, {112})) {
@@ -837,7 +837,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		inline static auto exchange_section_sub (
 			OutputByteStreamView &                                   data,
 			typename Definition::AudioVoiceVolumeGainSetting const & voice_volume_gain_value,
-			typename Definition::AudioHDRSetting const &             hdr_value,
+			typename Definition::AudioHdrSetting const &             hdr_value,
 			Boolean const &                                          voice_volume_loudness_normalization_override,
 			Boolean const &                                          hdr_envelope_tracking_override
 		) -> Void {
@@ -1288,7 +1288,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto exchange_section_sub (
 			OutputByteStreamView &                        data,
-			typename Definition::MusicMIDISetting const & midi_value,
+			typename Definition::MusicMidiSetting const & midi_value,
 			Boolean const &                               midi_target_override,
 			Boolean const &                               midi_clip_tempo_override
 		) -> Void {
@@ -1305,7 +1305,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto exchange_section_sub (
 			OutputByteStreamView &                                    data,
-			typename Definition::SoundMIDISetting const &             midi_value,
+			typename Definition::SoundMidiSetting const &             midi_value,
 			typename Definition::AudioPlaybackPrioritySetting const & playback_priority_value,
 			Boolean const &                                           midi_event_override,
 			Boolean const &                                           midi_note_tracking_override,
@@ -1663,7 +1663,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		inline static auto exchange_section_sub (
 			OutputByteStreamView &                     data,
-			typename Definition::BusHDRSetting const & hdr_value
+			typename Definition::BusHdrSetting const & hdr_value
 		) -> Void {
 			if constexpr (check_version(version, {88, 112})) {
 				exchange_bit_multi<IntegerU8>(

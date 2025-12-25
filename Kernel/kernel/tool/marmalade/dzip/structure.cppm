@@ -6,7 +6,7 @@ export module twinning.kernel.tool.marmalade.dzip.structure;
 import twinning.kernel.utility;
 import twinning.kernel.tool.marmalade.dzip.version;
 
-export namespace Twinning::Kernel::Tool::Marmalade::DZip::Structure {
+export namespace Twinning::Kernel::Tool::Marmalade::Dzip::Structure {
 
 	#pragma region magic marker
 
@@ -176,20 +176,20 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Marmalade::DZip::Structure::ResourceInformation<t_version>> {
+	struct ByteStreamAdapter<Tool::Marmalade::Dzip::Structure::ResourceInformation<t_version>> {
 
 		using ThisInput = InputByteStreamView;
 
 		using ThisOutput = OutputByteStreamView;
 
-		using That = Tool::Marmalade::DZip::Structure::ResourceInformation<t_version>;
+		using That = Tool::Marmalade::Dzip::Structure::ResourceInformation<t_version>;
 
 		// ----------------
 
 		inline static auto size (
 			That const & that
 		) -> Size {
-			using namespace Tool::Marmalade::DZip::Structure;
+			using namespace Tool::Marmalade::Dzip::Structure;
 			auto size = k_none_size;
 			size += bs_size(that.directory_index);
 			size += bs_size(that.chunk_index);
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			using namespace Tool::Marmalade::DZip::Structure;
+			using namespace Tool::Marmalade::Dzip::Structure;
 			thix.write(that.directory_index);
 			thix.write(that.chunk_index);
 			thix.write(~0_iu16); // TODO
@@ -212,7 +212,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			using namespace Tool::Marmalade::DZip::Structure;
+			using namespace Tool::Marmalade::Dzip::Structure;
 			thix.read(that.directory_index);
 			that.chunk_index.reset();
 			while (k_true) {

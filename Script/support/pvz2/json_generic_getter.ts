@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.JSONGenericGetter {
+namespace Twinning.Script.Support.Pvz2.JsonGenericGetter {
 
 	// #region utility
 

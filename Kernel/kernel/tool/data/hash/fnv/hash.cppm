@@ -6,7 +6,7 @@ export module twinning.kernel.tool.data.hash.fnv.hash;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.hash.fnv.common;
 
-export namespace Twinning::Kernel::Tool::Data::Hash::FNV {
+export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 
 	struct Hash :
 		Common {

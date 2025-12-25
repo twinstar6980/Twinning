@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.SexyTexture {
+namespace Twinning.Script.Executor.Implement.Popcap.SexyTexture {
 
 	// #region interface
 
@@ -25,14 +25,14 @@ namespace Twinning.Script.Executor.Implement.PopCap.SexyTexture {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.SexyTexture.VersionNumberE,
+						option: KernelX.Tool.Popcap.SexyTexture.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
 						identifier: 'format',
-						option: KernelX.Tool.PopCap.SexyTexture.FormatE,
+						option: KernelX.Tool.Popcap.SexyTexture.FormatE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -63,7 +63,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.SexyTexture {
 					}),
 				],
 				worker: ({ image_file, data_file, version_number, format, compress_texture_data }, temporary: {}) => {
-					KernelX.Tool.PopCap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
+					KernelX.Tool.Popcap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
 					return;
 				},
 			}),
@@ -87,7 +87,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.SexyTexture {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.SexyTexture.VersionNumberE,
+						option: KernelX.Tool.Popcap.SexyTexture.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -112,7 +112,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.SexyTexture {
 					}),
 				],
 				worker: ({ data_file, image_file, version_number }, temporary: {}) => {
-					KernelX.Tool.PopCap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
+					KernelX.Tool.Popcap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
 					return;
 				},
 			}),

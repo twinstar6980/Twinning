@@ -1,4 +1,7 @@
 import '/common.dart';
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui';
 import 'package:decimal/decimal.dart' as lib;
 
 // ----------------
@@ -76,6 +79,38 @@ class ConvertHelper {
       value.removeLast();
     }
     return value;
+  }
+
+  // #endregion
+
+  // #region image
+
+  static Future<Image> parseImageFromData(
+    Uint8List data, {
+    Integer?  width = null,
+    Integer?  height = null,
+    Boolean   isRawRgba = false,
+    Boolean   isRawBgra = false,
+    Boolean   isPng = false,
+  }) async {
+    assertTest(isRawRgba || isRawBgra || isPng);
+    var value = null as Image?;
+    if (isPng) {
+      var codec = await instantiateImageCodec(data);
+      var frame = await codec.getNextFrame();
+      value = frame.image;
+    }
+    if (isRawRgba) {
+      var completer = Completer<Image>();
+      decodeImageFromPixels(data, width!, height!, .rgba8888, (image) => completer.complete(image));
+      value = await completer.future;
+    }
+    if (isRawBgra) {
+      var completer = Completer<Image>();
+      decodeImageFromPixels(data, width!, height!, .bgra8888, (image) => completer.complete(image));
+      value = await completer.future;
+    }
+    return value!;
   }
 
   // #endregion

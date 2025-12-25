@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.resource_stream_group.version;
 import twinning.kernel.tool.popcap.resource_stream_group.definition;
 import twinning.kernel.tool.popcap.resource_stream_group.structure;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

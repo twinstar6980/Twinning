@@ -9,7 +9,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.data.serialization.xml.common;
 import twinning.kernel.third.tinyxml2;
 
-export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
+export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 	struct Write :
 		Common {
@@ -61,7 +61,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::XML {
 		) -> Void {
 			auto raw_document = Third::tinyxml2::XMLDocument{};
 			raw_document.InsertEndChild(convert_node(raw_document, value));
-			auto printer = TinyXML2Printer{};
+			auto printer = TinyXml2Printer{};
 			raw_document.Print(&printer);
 			data = move_printer_buffer_if_can(printer);
 			return;

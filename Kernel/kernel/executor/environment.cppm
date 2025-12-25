@@ -120,12 +120,12 @@ import twinning.kernel.tool.popcap.resource_stream_bundle_patch.decode;
 import twinning.kernel.tool.miscellaneous.xbox_tiled_texture.common;
 import twinning.kernel.tool.miscellaneous.xbox_tiled_texture.encode;
 import twinning.kernel.tool.miscellaneous.xbox_tiled_texture.decode;
-import twinning.kernel.tool.miscellaneous.pvz2_cn_alpha_palette_texture.common;
-import twinning.kernel.tool.miscellaneous.pvz2_cn_alpha_palette_texture.encode;
-import twinning.kernel.tool.miscellaneous.pvz2_cn_alpha_palette_texture.decode;
-import twinning.kernel.tool.miscellaneous.pvz2_cn_crypt_data.common;
-import twinning.kernel.tool.miscellaneous.pvz2_cn_crypt_data.encrypt;
-import twinning.kernel.tool.miscellaneous.pvz2_cn_crypt_data.decrypt;
+import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.common;
+import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.encode;
+import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.decode;
+import twinning.kernel.tool.miscellaneous.pvz2cn_crypt_data.common;
+import twinning.kernel.tool.miscellaneous.pvz2cn_crypt_data.encrypt;
+import twinning.kernel.tool.miscellaneous.pvz2cn_crypt_data.decrypt;
 
 export namespace Twinning::Kernel::Executor::Environment {
 
@@ -245,11 +245,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 	inline auto define_variant_class_version_method (
 		JavaScript::NativeClassBuilder<Class> & builder
 	) -> JavaScript::NativeClassBuilder<Class> & {
-		// NOTE: EXPLAIN: static json(json: JSON.Value, version: Version): T;
+		// NOTE: EXPLAIN: static json(json: Json.Value, version: Version): T;
 		constexpr auto & json_constructor = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
-				JSON::Value const & json,
+				Json::Value const & json,
 				Version const &     version
 			) -> Class {
 					auto it = Class{};
@@ -263,14 +263,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 				}
 			>
 		>;
-		// NOTE: EXPLAIN: get_json(version: Version): JSON.Value;
+		// NOTE: EXPLAIN: get_json(version: Version): Json.Value;
 		constexpr auto & json_getter = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
 				Class &         thix,
 				Version const & version
-			) -> JSON::Value {
-					auto json = JSON::Value{};
+			) -> Json::Value {
+					auto json = Json::Value{};
 					Generalization::match<VersionPackage>(
 						version,
 						[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
@@ -281,13 +281,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 				}
 			>
 		>;
-		// NOTE: EXPLAIN: set_json(version: Version, value: JSON.Value);
+		// NOTE: EXPLAIN: set_json(version: Version, value: Json.Value);
 		constexpr auto & json_setter = JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[] (
 				Class &             thix,
 				Version const &     version,
-				JSON::Value const & json
+				Json::Value const & json
 			) -> Void {
 					Generalization::match<VersionPackage>(
 						version,
@@ -441,15 +441,15 @@ export namespace Twinning::Kernel::Executor::Environment {
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::set_position>>("set_position"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::view>>("view"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::stream_view>>("stream_view"_s);
-		// JSON
+		// Json
 		{
-			auto s_JSON = s_Kernel.add_space("JSON"_s);
-			define_generic_class<JSON::Value>(s_JSON, "Value"_s);
+			auto s_Json = s_Kernel.add_space("Json"_s);
+			define_generic_class<Json::Value>(s_Json, "Value"_s);
 		}
-		// XML
+		// Xml
 		{
-			auto s_XML = s_Kernel.add_space("XML"_s);
-			define_generic_class<XML::Node>(s_XML, "Node"_s);
+			auto s_Xml = s_Kernel.add_space("Xml"_s);
+			define_generic_class<Xml::Node>(s_Xml, "Node"_s);
 		}
 		// Image
 		{
@@ -525,16 +525,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Hash = s_Data.add_space("Hash"_s);
 					{
-						auto s_FNV = s_Hash.add_space("FNV"_s);
-						define_generic_class<Tool::Data::Hash::FNV::Mode>(s_FNV, "Mode"_s);
-						define_generic_class<Tool::Data::Hash::FNV::BitCount>(s_FNV, "BitCount"_s);
-						s_FNV.add_space("Hash"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hash::FNV::Hash::process>>("process"_s);
+						auto s_Fnv = s_Hash.add_space("Fnv"_s);
+						define_generic_class<Tool::Data::Hash::Fnv::Mode>(s_Fnv, "Mode"_s);
+						define_generic_class<Tool::Data::Hash::Fnv::BitCount>(s_Fnv, "BitCount"_s);
+						s_Fnv.add_space("Hash"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hash::Fnv::Hash::process>>("process"_s);
 					}
 					{
-						auto s_MD5 = s_Hash.add_space("MD5"_s);
-						s_MD5.add_space("Hash"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hash::MD5::Hash::process>>("process"_s);
+						auto s_Md5 = s_Hash.add_space("Md5"_s);
+						s_Md5.add_space("Hash"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hash::Md5::Hash::process>>("process"_s);
 					}
 				}
 				{
@@ -552,9 +552,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Encryption = s_Data.add_space("Encryption"_s);
 					{
-						auto s_EXOR = s_Encryption.add_space("EXOR"_s);
-						s_EXOR.add_space("Encrypt"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encryption::EXOR::Encrypt::process>>("process"_s);
+						auto s_Exor = s_Encryption.add_space("Exor"_s);
+						s_Exor.add_space("Encrypt"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encryption::Exor::Encrypt::process>>("process"_s);
 					}
 					{
 						auto s_Rijndael = s_Encryption.add_space("Rijndael"_s);
@@ -578,11 +578,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Uncompress::process>>("process"_s);
 					}
 					{
-						auto s_BZip2 = s_Compression.add_space("BZip2"_s);
-						s_BZip2.add_space("Compress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::BZip2::Compress::process>>("process"_s);
-						s_BZip2.add_space("Uncompress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::BZip2::Uncompress::process>>("process"_s);
+						auto s_Bzip2 = s_Compression.add_space("Bzip2"_s);
+						s_Bzip2.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Bzip2::Compress::process>>("process"_s);
+						s_Bzip2.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Bzip2::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_Lzma = s_Compression.add_space("Lzma"_s);
@@ -595,28 +595,28 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Differentiation = s_Data.add_space("Differentiation"_s);
 					{
-						auto s_VCDiff = s_Differentiation.add_space("VCDiff"_s);
-						s_VCDiff.add_space("Encode"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Differentiation::VCDiff::Encode::process>>("process"_s);
-						s_VCDiff.add_space("Decode"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Differentiation::VCDiff::Decode::process>>("process"_s);
+						auto s_Vcdiff = s_Differentiation.add_space("Vcdiff"_s);
+						s_Vcdiff.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Differentiation::Vcdiff::Encode::process>>("process"_s);
+						s_Vcdiff.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Differentiation::Vcdiff::Decode::process>>("process"_s);
 					}
 				}
 				{
 					auto s_Serialization = s_Data.add_space("Serialization"_s);
 					{
-						auto s_JSON = s_Serialization.add_space("JSON"_s);
-						s_JSON.add_space("Write"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::JSON::Write::process>>("process"_s);
-						s_JSON.add_space("Read"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::JSON::Read::process>>("process"_s);
+						auto s_Json = s_Serialization.add_space("Json"_s);
+						s_Json.add_space("Write"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Json::Write::process>>("process"_s);
+						s_Json.add_space("Read"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Json::Read::process>>("process"_s);
 					}
 					{
-						auto s_XML = s_Serialization.add_space("XML"_s);
-						s_XML.add_space("Write"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::XML::Write::process>>("process"_s);
-						s_XML.add_space("Read"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::XML::Read::process>>("process"_s);
+						auto s_Xml = s_Serialization.add_space("Xml"_s);
+						s_Xml.add_space("Write"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Xml::Write::process>>("process"_s);
+						s_Xml.add_space("Read"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Xml::Read::process>>("process"_s);
 					}
 				}
 			}
@@ -641,31 +641,31 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Compression = s_Texture.add_space("Compression"_s);
 					{
-						auto s_ETC = s_Compression.add_space("ETC"_s);
-						define_generic_class<Tool::Texture::Compression::ETC::Format>(s_ETC, "Format"_s);
-						s_ETC.add_space("Compress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::ETC::Compress::process>>("process"_s);
-						s_ETC.add_space("Uncompress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::ETC::Uncompress::process>>("process"_s);
+						auto s_Etc = s_Compression.add_space("Etc"_s);
+						define_generic_class<Tool::Texture::Compression::Etc::Format>(s_Etc, "Format"_s);
+						s_Etc.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Compress::process>>("process"_s);
+						s_Etc.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Uncompress::process>>("process"_s);
 					}
 					{
-						auto s_PVRTC = s_Compression.add_space("PVRTC"_s);
-						define_generic_class<Tool::Texture::Compression::PVRTC::Format>(s_PVRTC, "Format"_s);
-						s_PVRTC.add_space("Compress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::PVRTC::Compress::process>>("process"_s);
-						s_PVRTC.add_space("Uncompress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::PVRTC::Uncompress::process>>("process"_s);
+						auto s_Pvrtc = s_Compression.add_space("Pvrtc"_s);
+						define_generic_class<Tool::Texture::Compression::Pvrtc::Format>(s_Pvrtc, "Format"_s);
+						s_Pvrtc.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Pvrtc::Compress::process>>("process"_s);
+						s_Pvrtc.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Pvrtc::Uncompress::process>>("process"_s);
 					}
 				}
 				{
 					auto s_File = s_Texture.add_space("File"_s);
 					{
-						auto s_PNG = s_File.add_space("PNG"_s);
-						s_PNG.add_space("Write"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::PNG::Write::process>>("process"_s);
-						s_PNG.add_space("Read"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::PNG::Read::process>>("process"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::PNG::Read::estimate>>("estimate"_s);
+						auto s_Png = s_File.add_space("Png"_s);
+						s_Png.add_space("Write"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::Png::Write::process>>("process"_s);
+						s_Png.add_space("Read"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::Png::Read::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::Png::Read::estimate>>("estimate"_s);
 					}
 				}
 			}
@@ -737,20 +737,20 @@ export namespace Twinning::Kernel::Executor::Environment {
 			{
 				auto s_Marmalade = s_Tool.add_space("Marmalade"_s);
 				{
-					using Tool::Marmalade::DZip::Version;
-					using Tool::Marmalade::DZip::VersionPackage;
-					using Tool::Marmalade::DZip::Definition;
+					using Tool::Marmalade::Dzip::Version;
+					using Tool::Marmalade::Dzip::VersionPackage;
+					using Tool::Marmalade::Dzip::Definition;
 					using PackageDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Package
 					>;
-					auto s_DZip = s_Marmalade.add_space("DZip"_s);
-					define_generic_class<Version>(s_DZip, "Version"_s);
+					auto s_Dzip = s_Marmalade.add_space("Dzip"_s);
+					define_generic_class<Version>(s_Dzip, "Version"_s);
 					{
-						auto s_Definition = s_DZip.add_space("Definition"_s);
+						auto s_Definition = s_Dzip.add_space("Definition"_s);
 						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
-					s_DZip.add_space("Pack"_s)
+					s_Dzip.add_space("Pack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OutputByteStreamView &    data,
@@ -761,12 +761,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Marmalade::DZip::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Marmalade::Dzip::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
 							}
 						>>>("process"_s);
-					s_DZip.add_space("Unpack"_s)
+					s_Dzip.add_space("Unpack"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							InputByteStreamView &  data,
@@ -777,22 +777,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::Marmalade::DZip::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Marmalade::Dzip::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 			}
-			// PopCap
+			// Popcap
 			{
-				auto s_PopCap = s_Tool.add_space("PopCap"_s);
+				auto s_Popcap = s_Tool.add_space("Popcap"_s);
 				{
-					using Tool::PopCap::ZLib::Version;
-					using Tool::PopCap::ZLib::VersionPackage;
-					auto s_ZLib = s_PopCap.add_space("ZLib"_s);
-					define_generic_class<Version>(s_ZLib, "Version"_s);
-					s_ZLib.add_space("Compress"_s)
+					using Tool::Popcap::Zlib::Version;
+					using Tool::Popcap::Zlib::VersionPackage;
+					auto s_Zlib = s_Popcap.add_space("Zlib"_s);
+					define_generic_class<Version>(s_Zlib, "Version"_s);
+					s_Zlib.add_space("Compress"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							InputByteStreamView &                              raw,
@@ -806,7 +806,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Compress<version>::process(raw, ripe, level, window_bits, memory_level, strategy);
+										Tool::Popcap::Zlib::Compress<version>::process(raw, ripe, level, window_bits, memory_level, strategy);
 									}
 								);
 							}
@@ -822,12 +822,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Compress<version>::estimate(raw_size, ripe_size_bound, window_bits, memory_level);
+										Tool::Popcap::Zlib::Compress<version>::estimate(raw_size, ripe_size_bound, window_bits, memory_level);
 									}
 								);
 							}
 						>>>("estimate"_s);
-					s_ZLib.add_space("Uncompress"_s)
+					s_Zlib.add_space("Uncompress"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							InputByteStreamView &  ripe,
@@ -838,7 +838,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Uncompress<version>::process(ripe, raw, window_bits);
+										Tool::Popcap::Zlib::Uncompress<version>::process(ripe, raw, window_bits);
 									}
 								);
 							}
@@ -852,16 +852,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ZLib::Uncompress<version>::estimate(ripe, raw_size);
+										Tool::Popcap::Zlib::Uncompress<version>::estimate(ripe, raw_size);
 									}
 								);
 							}
 						>>>("estimate"_s);
 				}
 				{
-					using Tool::PopCap::CryptData::Version;
-					using Tool::PopCap::CryptData::VersionPackage;
-					auto s_CryptData = s_PopCap.add_space("CryptData"_s);
+					using Tool::Popcap::CryptData::Version;
+					using Tool::Popcap::CryptData::VersionPackage;
+					auto s_CryptData = s_Popcap.add_space("CryptData"_s);
 					define_generic_class<Version>(s_CryptData, "Version"_s);
 					s_CryptData.add_space("Encrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
@@ -875,7 +875,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Encrypt<version>::process(plain, cipher, limit, key);
+										Tool::Popcap::CryptData::Encrypt<version>::process(plain, cipher, limit, key);
 									}
 								);
 							}
@@ -890,7 +890,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Encrypt<version>::estimate(plain_size, cipher_size, limit);
+										Tool::Popcap::CryptData::Encrypt<version>::estimate(plain_size, cipher_size, limit);
 									}
 								);
 							}
@@ -907,7 +907,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Decrypt<version>::process(cipher, plain, limit, key);
+										Tool::Popcap::CryptData::Decrypt<version>::process(cipher, plain, limit, key);
 									}
 								);
 							}
@@ -922,22 +922,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CryptData::Decrypt<version>::estimate(cipher, plain_size, limit);
+										Tool::Popcap::CryptData::Decrypt<version>::estimate(cipher, plain_size, limit);
 									}
 								);
 							}
 						>>>("estimate"_s);
 				}
 				{
-					using Tool::PopCap::ReflectionObjectNotation::Version;
-					using Tool::PopCap::ReflectionObjectNotation::VersionPackage;
-					auto s_ReflectionObjectNotation = s_PopCap.add_space("ReflectionObjectNotation"_s);
+					using Tool::Popcap::ReflectionObjectNotation::Version;
+					using Tool::Popcap::ReflectionObjectNotation::VersionPackage;
+					auto s_ReflectionObjectNotation = s_Popcap.add_space("ReflectionObjectNotation"_s);
 					define_generic_class<Version>(s_ReflectionObjectNotation, "Version"_s);
 					s_ReflectionObjectNotation.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							OutputByteStreamView & data,
-							JSON::Value const &    definition,
+							Json::Value const &    definition,
 							Boolean const &        enable_string_index,
 							Boolean const &        enable_reference,
 							Version const &        version
@@ -945,7 +945,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReflectionObjectNotation::Encode<version>::process(data, definition, enable_string_index, enable_reference);
+										Tool::Popcap::ReflectionObjectNotation::Encode<version>::process(data, definition, enable_string_index, enable_reference);
 									}
 								);
 							}
@@ -954,22 +954,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[] (
 							InputByteStreamView & data,
-							JSON::Value &         definition,
+							Json::Value &         definition,
 							Version const &       version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReflectionObjectNotation::Decode<version>::process(data, definition);
+										Tool::Popcap::ReflectionObjectNotation::Decode<version>::process(data, definition);
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::UTexture::Version;
-					using Tool::PopCap::UTexture::VersionPackage;
-					auto s_UTexture = s_PopCap.add_space("UTexture"_s);
+					using Tool::Popcap::UTexture::Version;
+					using Tool::Popcap::UTexture::VersionPackage;
+					auto s_UTexture = s_Popcap.add_space("UTexture"_s);
 					define_generic_class<Version>(s_UTexture, "Version"_s);
 					s_UTexture.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
@@ -982,7 +982,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Encode<version>::process(data, image, format);
+										Tool::Popcap::UTexture::Encode<version>::process(data, image, format);
 									}
 								);
 							}
@@ -997,7 +997,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Encode<version>::estimate(data_size_bound, image_size, format);
+										Tool::Popcap::UTexture::Encode<version>::estimate(data_size_bound, image_size, format);
 									}
 								);
 							}
@@ -1012,7 +1012,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Decode<version>::process(data, image);
+										Tool::Popcap::UTexture::Decode<version>::process(data, image);
 									}
 								);
 							}
@@ -1026,16 +1026,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::UTexture::Decode<version>::estimate(data, image_size);
+										Tool::Popcap::UTexture::Decode<version>::estimate(data, image_size);
 									}
 								);
 							}
 						>>>("estimate"_s);
 				}
 				{
-					using Tool::PopCap::SexyTexture::Version;
-					using Tool::PopCap::SexyTexture::VersionPackage;
-					auto s_SexyTexture = s_PopCap.add_space("SexyTexture"_s);
+					using Tool::Popcap::SexyTexture::Version;
+					using Tool::Popcap::SexyTexture::VersionPackage;
+					auto s_SexyTexture = s_Popcap.add_space("SexyTexture"_s);
 					define_generic_class<Version>(s_SexyTexture, "Version"_s);
 					s_SexyTexture.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
@@ -1049,7 +1049,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Encode<version>::process(data, image, format, compress_texture_data);
+										Tool::Popcap::SexyTexture::Encode<version>::process(data, image, format, compress_texture_data);
 									}
 								);
 							}
@@ -1065,7 +1065,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Encode<version>::estimate(data_size_bound, image_size, format, compress_texture_data);
+										Tool::Popcap::SexyTexture::Encode<version>::estimate(data_size_bound, image_size, format, compress_texture_data);
 									}
 								);
 							}
@@ -1080,7 +1080,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Decode<version>::process(data, image);
+										Tool::Popcap::SexyTexture::Decode<version>::process(data, image);
 									}
 								);
 							}
@@ -1094,16 +1094,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::SexyTexture::Decode<version>::estimate(data, image_size);
+										Tool::Popcap::SexyTexture::Decode<version>::estimate(data, image_size);
 									}
 								);
 							}
 						>>>("estimate"_s);
 				}
 				{
-					using Tool::PopCap::Animation::Version;
-					using Tool::PopCap::Animation::VersionPackage;
-					using Tool::PopCap::Animation::Definition;
+					using Tool::Popcap::Animation::Version;
+					using Tool::Popcap::Animation::VersionPackage;
+					using Tool::Popcap::Animation::Definition;
 					using AnimationDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Animation,
 						typename Definition<VersionPackage::element<2_ixz>>::Animation,
@@ -1112,7 +1112,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						typename Definition<VersionPackage::element<5_ixz>>::Animation,
 						typename Definition<VersionPackage::element<6_ixz>>::Animation
 					>;
-					auto s_Animation = s_PopCap.add_space("Animation"_s);
+					auto s_Animation = s_Popcap.add_space("Animation"_s);
 					define_generic_class<Version>(s_Animation, "Version"_s);
 					{
 						auto s_Definition = s_Animation.add_space("Definition"_s);
@@ -1129,7 +1129,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Animation::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Animation::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1144,23 +1144,23 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Animation::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Animation::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::ReAnimation::Version;
-					using Tool::PopCap::ReAnimation::VersionPackage;
-					using Tool::PopCap::ReAnimation::Definition;
+					using Tool::Popcap::ReAnimation::Version;
+					using Tool::Popcap::ReAnimation::VersionPackage;
+					using Tool::Popcap::ReAnimation::Definition;
 					using AnimationDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Animation,
 						typename Definition<VersionPackage::element<2_ixz>>::Animation,
 						typename Definition<VersionPackage::element<3_ixz>>::Animation,
 						typename Definition<VersionPackage::element<4_ixz>>::Animation
 					>;
-					auto s_ReAnimation = s_PopCap.add_space("ReAnimation"_s);
+					auto s_ReAnimation = s_Popcap.add_space("ReAnimation"_s);
 					define_generic_class<Version>(s_ReAnimation, "Version"_s);
 					{
 						auto s_Definition = s_ReAnimation.add_space("Definition"_s);
@@ -1177,7 +1177,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReAnimation::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ReAnimation::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1192,23 +1192,23 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ReAnimation::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ReAnimation::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::Particle::Version;
-					using Tool::PopCap::Particle::VersionPackage;
-					using Tool::PopCap::Particle::Definition;
+					using Tool::Popcap::Particle::Version;
+					using Tool::Popcap::Particle::VersionPackage;
+					using Tool::Popcap::Particle::Definition;
 					using ParticleDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Particle,
 						typename Definition<VersionPackage::element<2_ixz>>::Particle,
 						typename Definition<VersionPackage::element<3_ixz>>::Particle,
 						typename Definition<VersionPackage::element<4_ixz>>::Particle
 					>;
-					auto s_Particle = s_PopCap.add_space("Particle"_s);
+					auto s_Particle = s_Popcap.add_space("Particle"_s);
 					define_generic_class<Version>(s_Particle, "Version"_s);
 					{
 						auto s_Definition = s_Particle.add_space("Definition"_s);
@@ -1225,7 +1225,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Particle::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Particle::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1240,23 +1240,23 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Particle::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Particle::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::Trail::Version;
-					using Tool::PopCap::Trail::VersionPackage;
-					using Tool::PopCap::Trail::Definition;
+					using Tool::Popcap::Trail::Version;
+					using Tool::Popcap::Trail::VersionPackage;
+					using Tool::Popcap::Trail::Definition;
 					using TrailDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Trail,
 						typename Definition<VersionPackage::element<2_ixz>>::Trail,
 						typename Definition<VersionPackage::element<3_ixz>>::Trail,
 						typename Definition<VersionPackage::element<4_ixz>>::Trail
 					>;
-					auto s_Trail = s_PopCap.add_space("Trail"_s);
+					auto s_Trail = s_Popcap.add_space("Trail"_s);
 					define_generic_class<Version>(s_Trail, "Version"_s);
 					{
 						auto s_Definition = s_Trail.add_space("Definition"_s);
@@ -1273,7 +1273,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Trail::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Trail::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1288,22 +1288,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Trail::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Trail::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::RenderEffect::Version;
-					using Tool::PopCap::RenderEffect::VersionPackage;
-					using Tool::PopCap::RenderEffect::Definition;
+					using Tool::Popcap::RenderEffect::Version;
+					using Tool::Popcap::RenderEffect::VersionPackage;
+					using Tool::Popcap::RenderEffect::Definition;
 					using EffectDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Effect,
 						typename Definition<VersionPackage::element<2_ixz>>::Effect,
 						typename Definition<VersionPackage::element<3_ixz>>::Effect
 					>;
-					auto s_RenderEffect = s_PopCap.add_space("RenderEffect"_s);
+					auto s_RenderEffect = s_Popcap.add_space("RenderEffect"_s);
 					define_generic_class<Version>(s_RenderEffect, "Version"_s);
 					{
 						auto s_Definition = s_RenderEffect.add_space("Definition"_s);
@@ -1320,7 +1320,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::RenderEffect::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::RenderEffect::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1335,20 +1335,20 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::RenderEffect::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::RenderEffect::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::ParticleEffect::Version;
-					using Tool::PopCap::ParticleEffect::VersionPackage;
-					using Tool::PopCap::ParticleEffect::Definition;
+					using Tool::Popcap::ParticleEffect::Version;
+					using Tool::Popcap::ParticleEffect::VersionPackage;
+					using Tool::Popcap::ParticleEffect::Definition;
 					using EffectDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Effect
 					>;
-					auto s_ParticleEffect = s_PopCap.add_space("ParticleEffect"_s);
+					auto s_ParticleEffect = s_Popcap.add_space("ParticleEffect"_s);
 					define_generic_class<Version>(s_ParticleEffect, "Version"_s);
 					{
 						auto s_Definition = s_ParticleEffect.add_space("Definition"_s);
@@ -1365,7 +1365,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ParticleEffect::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ParticleEffect::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1380,20 +1380,20 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ParticleEffect::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ParticleEffect::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::CharacterFontWidget2::Version;
-					using Tool::PopCap::CharacterFontWidget2::VersionPackage;
-					using Tool::PopCap::CharacterFontWidget2::Definition;
+					using Tool::Popcap::CharacterFontWidget2::Version;
+					using Tool::Popcap::CharacterFontWidget2::VersionPackage;
+					using Tool::Popcap::CharacterFontWidget2::Definition;
 					using FontWidgetDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::FontWidget
 					>;
-					auto s_CharacterFontWidget2 = s_PopCap.add_space("CharacterFontWidget2"_s);
+					auto s_CharacterFontWidget2 = s_Popcap.add_space("CharacterFontWidget2"_s);
 					define_generic_class<Version>(s_CharacterFontWidget2, "Version"_s);
 					{
 						auto s_Definition = s_CharacterFontWidget2.add_space("Definition"_s);
@@ -1410,7 +1410,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CharacterFontWidget2::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::CharacterFontWidget2::Encode<version>::process(data, definition.template get_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
@@ -1425,21 +1425,21 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::CharacterFontWidget2::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::CharacterFontWidget2::Decode<version>::process(data, definition.template set_of_index<mbox<Size>(index)>());
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::Package::Version;
-					using Tool::PopCap::Package::VersionPackage;
-					using Tool::PopCap::Package::Definition;
+					using Tool::Popcap::Package::Version;
+					using Tool::Popcap::Package::VersionPackage;
+					using Tool::Popcap::Package::Definition;
 					using PackageDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Package,
 						typename Definition<VersionPackage::element<2_ixz>>::Package
 					>;
-					auto s_Package = s_PopCap.add_space("Package"_s);
+					auto s_Package = s_Popcap.add_space("Package"_s);
 					define_generic_class<Version>(s_Package, "Version"_s);
 					{
 						auto s_Definition = s_Package.add_space("Definition"_s);
@@ -1457,7 +1457,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Package::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::Package::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1473,22 +1473,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::Package::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::Package::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::ResourceStreamGroup::Version;
-					using Tool::PopCap::ResourceStreamGroup::VersionPackage;
-					using Tool::PopCap::ResourceStreamGroup::Definition;
+					using Tool::Popcap::ResourceStreamGroup::Version;
+					using Tool::Popcap::ResourceStreamGroup::VersionPackage;
+					using Tool::Popcap::ResourceStreamGroup::Definition;
 					using PackageDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Package,
 						typename Definition<VersionPackage::element<2_ixz>>::Package,
 						typename Definition<VersionPackage::element<3_ixz>>::Package
 					>;
-					auto s_ResourceStreamGroup = s_PopCap.add_space("ResourceStreamGroup"_s);
+					auto s_ResourceStreamGroup = s_Popcap.add_space("ResourceStreamGroup"_s);
 					define_generic_class<Version>(s_ResourceStreamGroup, "Version"_s);
 					{
 						auto s_Definition = s_ResourceStreamGroup.add_space("Definition"_s);
@@ -1506,7 +1506,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamGroup::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::ResourceStreamGroup::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1522,17 +1522,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamGroup::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::ResourceStreamGroup::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::ResourceStreamBundle::Version;
-					using Tool::PopCap::ResourceStreamBundle::VersionPackage;
-					using Tool::PopCap::ResourceStreamBundle::Definition;
-					using Tool::PopCap::ResourceStreamBundle::Manifest;
+					using Tool::Popcap::ResourceStreamBundle::Version;
+					using Tool::Popcap::ResourceStreamBundle::VersionPackage;
+					using Tool::Popcap::ResourceStreamBundle::Definition;
+					using Tool::Popcap::ResourceStreamBundle::Manifest;
 					using PackageDefinition = Variant<
 						typename Definition<VersionPackage::element<1_ixz>>::Package,
 						typename Definition<VersionPackage::element<2_ixz>>::Package,
@@ -1549,7 +1549,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						Optional<typename Manifest<VersionPackage::element<5_ixz>>::Package>,
 						Optional<typename Manifest<VersionPackage::element<6_ixz>>::Package>
 					>;
-					auto s_ResourceStreamBundle = s_PopCap.add_space("ResourceStreamBundle"_s);
+					auto s_ResourceStreamBundle = s_Popcap.add_space("ResourceStreamBundle"_s);
 					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);
 					{
 						auto s_Definition = s_ResourceStreamBundle.add_space("Definition"_s);
@@ -1575,7 +1575,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundle::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), manifest.template get_of_index<mbox<Size>(index)>(), resource_directory, packet_file, new_packet_file);
+										Tool::Popcap::ResourceStreamBundle::Pack<version>::process(data, definition.template get_of_index<mbox<Size>(index)>(), manifest.template get_of_index<mbox<Size>(index)>(), resource_directory, packet_file, new_packet_file);
 									}
 								);
 							}
@@ -1593,16 +1593,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundle::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), manifest.template set_of_index<mbox<Size>(index)>(), resource_directory, packet_file);
+										Tool::Popcap::ResourceStreamBundle::Unpack<version>::process(data, definition.template set_of_index<mbox<Size>(index)>(), manifest.template set_of_index<mbox<Size>(index)>(), resource_directory, packet_file);
 									}
 								);
 							}
 						>>>("process"_s);
 				}
 				{
-					using Tool::PopCap::ResourceStreamBundlePatch::Version;
-					using Tool::PopCap::ResourceStreamBundlePatch::VersionPackage;
-					auto s_ResourceStreamBundlePatch = s_PopCap.add_space("ResourceStreamBundlePatch"_s);
+					using Tool::Popcap::ResourceStreamBundlePatch::Version;
+					using Tool::Popcap::ResourceStreamBundlePatch::VersionPackage;
+					auto s_ResourceStreamBundlePatch = s_Popcap.add_space("ResourceStreamBundlePatch"_s);
 					define_generic_class<Version>(s_ResourceStreamBundlePatch, "Version"_s);
 					s_ResourceStreamBundlePatch.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
@@ -1616,7 +1616,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundlePatch::Encode<version>::process(before, after, patch, use_raw_packet);
+										Tool::Popcap::ResourceStreamBundlePatch::Encode<version>::process(before, after, patch, use_raw_packet);
 									}
 								);
 							}
@@ -1633,7 +1633,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&] <auto index, auto version> (ValuePackage<index>, ValuePackage<version>) {
-										Tool::PopCap::ResourceStreamBundlePatch::Decode<version>::process(before, after, patch, use_raw_packet);
+										Tool::Popcap::ResourceStreamBundlePatch::Decode<version>::process(before, after, patch, use_raw_packet);
 									}
 								);
 							}
@@ -1651,20 +1651,20 @@ export namespace Twinning::Kernel::Executor::Environment {
 						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::XboxTiledTexture::Decode::process>>("process"_s);
 				}
 				{
-					auto s_PvZ2CNAlphaPaletteTexture = s_Miscellaneous.add_space("PvZ2CNAlphaPaletteTexture"_s);
-					s_PvZ2CNAlphaPaletteTexture.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Encode::process>>("process"_s);
-					s_PvZ2CNAlphaPaletteTexture.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNAlphaPaletteTexture::Decode::process>>("process"_s);
+					auto s_Pvz2cnAlphaPaletteTexture = s_Miscellaneous.add_space("Pvz2cnAlphaPaletteTexture"_s);
+					s_Pvz2cnAlphaPaletteTexture.add_space("Encode"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnAlphaPaletteTexture::Encode::process>>("process"_s);
+					s_Pvz2cnAlphaPaletteTexture.add_space("Decode"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnAlphaPaletteTexture::Decode::process>>("process"_s);
 				}
 				{
-					auto s_PvZ2CNCryptData = s_Miscellaneous.add_space("PvZ2CNCryptData"_s);
-					s_PvZ2CNCryptData.add_space("Encrypt"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::process>>("process"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Encrypt::estimate>>("estimate"_s);
-					s_PvZ2CNCryptData.add_space("Decrypt"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::process>>("process"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::PvZ2CNCryptData::Decrypt::estimate>>("estimate"_s);
+					auto s_Pvz2cnCryptData = s_Miscellaneous.add_space("Pvz2cnCryptData"_s);
+					s_Pvz2cnCryptData.add_space("Encrypt"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Encrypt::process>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Encrypt::estimate>>("estimate"_s);
+					s_Pvz2cnCryptData.add_space("Decrypt"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Decrypt::process>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Decrypt::estimate>>("estimate"_s);
 				}
 			}
 		}

@@ -11,7 +11,7 @@ import twinning.kernel.tool.data.compression.deflate.uncompress;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.decode;
 
-export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
+export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Decode :

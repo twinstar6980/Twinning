@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
+namespace Twinning.Script.Executor.Implement.Popcap.ReflectionObjectNotation {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
+						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -66,7 +66,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ReflectionObjectNotation.encode_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -90,7 +90,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
+						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -121,7 +121,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8 }, temporary: {}) => {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
+					KernelX.Tool.Popcap.ReflectionObjectNotation.decode_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return;
 				},
 			}),
@@ -170,7 +170,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 				],
 				worker: ({ plain_file, cipher_file, key }, temporary: {}) => {
-					KernelX.Tool.Miscellaneous.PvZ2CNCryptData.encrypt_fs(plain_file, cipher_file, key);
+					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.encrypt_fs(plain_file, cipher_file, key);
 					return;
 				},
 			}),
@@ -219,7 +219,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 				],
 				worker: ({ cipher_file, plain_file, key }, temporary: {}) => {
-					KernelX.Tool.Miscellaneous.PvZ2CNCryptData.decrypt_fs(cipher_file, plain_file, key);
+					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.decrypt_fs(cipher_file, plain_file, key);
 					return;
 				},
 			}),
@@ -243,7 +243,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
+						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -291,7 +291,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, temporary.buffer.view());
+					KernelX.Tool.Popcap.ReflectionObjectNotation.encode_cipher_fs(data_file, definition_file, true, true, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -315,7 +315,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
+						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -353,7 +353,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8, key }, temporary: {}) => {
-					KernelX.Tool.PopCap.ReflectionObjectNotation.decode_cipher_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
+					KernelX.Tool.Popcap.ReflectionObjectNotation.decode_cipher_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 }, key);
 					return;
 				},
 			}),
@@ -377,7 +377,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ReflectionObjectNotation.VersionNumberE,
+						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -408,7 +408,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReflectionObjectNotation {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_native_string_encoding_use_utf8 }, temporary: {}) => {
-					Support.PopCap.ReflectionObjectNotation.DecodeLenient.process_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
+					Support.Popcap.ReflectionObjectNotation.DecodeLenient.process_fs(data_file, definition_file, { number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8 });
 					return;
 				},
 			}),

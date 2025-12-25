@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient {
+namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient {
 
 	// #region common
 
@@ -124,9 +124,9 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 		native_string_index: Array<string>,
 		unicode_string_index: Array<string>,
 		type_identifier: bigint,
-		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-	): Kernel.JSON.JS_Value {
-		let value: Kernel.JSON.JS_Value;
+		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
+	): Kernel.Json.JS_Value {
+		let value: Kernel.Json.JS_Value;
 		switch (type_identifier) {
 			case 0x00n: {
 				value = false;
@@ -390,8 +390,8 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	function process_whole(
 		data: ByteStreamView,
-		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-	): Kernel.JSON.JS_Value {
+		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
+	): Kernel.Json.JS_Value {
 		if (data.u32() !== 0x4E4F5452n) {
 			Console.warning(`data@${data.p().toString(16)}h: invalid magic`, []);
 		}
@@ -409,8 +409,8 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 
 	export function process(
 		data: ByteStreamView,
-		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
-	): Kernel.JSON.JS_Value {
+		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
+	): Kernel.Json.JS_Value {
 		return process_whole(data, version);
 	}
 
@@ -419,11 +419,11 @@ namespace Twinning.Script.Support.PopCap.ReflectionObjectNotation.DecodeLenient 
 	export function process_fs(
 		data_file: string,
 		definition_file: string,
-		version: typeof Kernel.Tool.PopCap.ReflectionObjectNotation.Version.Value,
+		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 	): void {
 		let data = KernelX.Storage.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value), version);
-		KernelX.JSON.write_fs_js(definition_file, definition);
+		KernelX.Json.write_fs_js(definition_file, definition);
 		return;
 	}
 

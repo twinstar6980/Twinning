@@ -23,7 +23,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: string,
 	): void {
 		for (let sprite_definition of definition.sprite) {
-			KernelX.Image.File.PNG.read_fs(`${sprite_directory}/${sprite_definition.name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
+			KernelX.Image.File.Png.read_fs(`${sprite_directory}/${sprite_definition.name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
 		}
 		return;
 	}
@@ -34,7 +34,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: string,
 	): void {
 		for (let sprite_definition of definition.sprite) {
-			KernelX.Image.File.PNG.write_fs(`${sprite_directory}/${sprite_definition.name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
+			KernelX.Image.File.Png.write_fs(`${sprite_directory}/${sprite_definition.name}.png`, atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
 		}
 		return;
 	}
@@ -47,7 +47,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 	): [AtlasDefinition, Kernel.Image.Image] {
 		let sprite_file_list = KernelX.Storage.list_directory(sprite_directory, null, true, false).filter((value) => (/.+(\.png)/i.test(value))).map((value) => (value.slice(0, -4)));
 		let sprite_box = ConvertHelper.record_from_array(sprite_file_list, (index, value) => {
-			let size = KernelX.Image.File.PNG.size_fs(`${sprite_directory}/${value}.png`);
+			let size = KernelX.Image.File.Png.size_fs(`${sprite_directory}/${value}.png`);
 			return [value, { w: Number(size[0]), h: Number(size[1]) }];
 		});
 		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'exponent_of_2' ? PackAutomatic.expander_exponent_of_2_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
@@ -66,7 +66,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 			};
 			definition.sprite.push(sprite_definition);
 			let sprite = atlas_view.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size));
-			KernelX.Image.File.PNG.read_fs(`${sprite_directory}/${sprite_file}.png`, sprite);
+			KernelX.Image.File.Png.read_fs(`${sprite_directory}/${sprite_file}.png`, sprite);
 		}
 		return [definition, atlas];
 	}
@@ -80,11 +80,11 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		atlas_file: string,
 		sprite_directory: string,
 	): void {
-		let definition = KernelX.JSON.read_fs_js(definition_file) as AtlasDefinition;
+		let definition = KernelX.Json.read_fs_js(definition_file) as AtlasDefinition;
 		let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(definition.size));
 		let atlas_view = atlas.view();
 		pack_fsh(definition, atlas_view, sprite_directory);
-		KernelX.Image.File.PNG.write_fs(atlas_file, atlas_view);
+		KernelX.Image.File.Png.write_fs(atlas_file, atlas_view);
 		return;
 	}
 
@@ -93,8 +93,8 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		atlas_file: string,
 		sprite_directory: string,
 	): void {
-		let definition = KernelX.JSON.read_fs_js(definition_file) as AtlasDefinition;
-		let atlas = KernelX.Image.File.PNG.read_fs_of(atlas_file);
+		let definition = KernelX.Json.read_fs_js(definition_file) as AtlasDefinition;
+		let atlas = KernelX.Image.File.Png.read_fs_of(atlas_file);
 		let atlas_view = atlas.view();
 		unpack_fsh(definition, atlas_view, sprite_directory);
 		return;
@@ -109,8 +109,8 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		expand_value: number | 'exponent_of_2',
 	): void {
 		let [definition, atlas] = pack_automatic_fsh(sprite_directory, expand_value);
-		KernelX.JSON.write_fs_js(definition_file, definition);
-		KernelX.Image.File.PNG.write_fs(atlas_file, atlas.view());
+		KernelX.Json.write_fs_js(definition_file, definition);
+		KernelX.Image.File.Png.write_fs(atlas_file, atlas.view());
 		return;
 	}
 

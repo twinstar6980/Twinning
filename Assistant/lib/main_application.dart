@@ -56,7 +56,7 @@ class MainApplication {
     ModuleType   type,
     List<String> option,
   ) async {
-    await _setting.state.homeInsertTabItem!(.new(
+    await _setting.state.homeInsertPage!(.new(
       title: title,
       type: type,
       option: option,
@@ -210,7 +210,7 @@ class MainApplication {
             await _handleCommand(argument.slice(1));
           }
           else {
-            await _setting.state.homeShowLauncherPanel!();
+            await _setting.state.homeShowLauncher!();
           }
         });
       }

@@ -1021,7 +1021,7 @@
 					"bundle_directory": "?input",
 					"data_file": "?automatic",
 					"version_number": "?input",
-					"version_extended_texture_information_for_pvz2_cn": "?input",
+					"version_extended_texture_information_for_pvz2cn": "?input",
 					"layout_mode": "?input",
 					"input_packet": "?input",
 					"output_new_packet": "?input",
@@ -1038,7 +1038,7 @@
 					"data_file": "?input",
 					"bundle_directory": "?automatic",
 					"version_number": "?input",
-					"version_extended_texture_information_for_pvz2_cn": "?input",
+					"version_extended_texture_information_for_pvz2cn": "?input",
 					"layout_mode": "?input",
 					"output_resource": "?input",
 					"output_packet": "?input",
@@ -1206,7 +1206,7 @@
 					"package_directory": "?input",
 					"package_name": "?automatic",
 					"package_version_number": "?input",
-					"package_version_extended_texture_information_for_pvz2_cn": "?input",
+					"package_version_extended_texture_information_for_pvz2cn": "?input",
 				},
 				"batch": null,
 			},
@@ -1318,7 +1318,7 @@
 				"format": "rgb_etc1_a_8",
 			},
 		],
-		"android_pvz2_cn": [
+		"android_pvz2cn": [
 			{
 				"index": 0,
 				"format": "rgba_8888_o",

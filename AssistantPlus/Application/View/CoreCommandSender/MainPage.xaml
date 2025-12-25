@@ -1,0 +1,311 @@
+<Page
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:community="using:CommunityToolkit.WinUI"
+	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
+	xmlns:local="using:Twinning.AssistantPlus"
+	xmlns:localViewCoreCommandSender="using:Twinning.AssistantPlus.View.CoreCommandSender"
+	xmlns:my="using:Twinning.AssistantPlus.Control"
+	mc:Ignorable="d"
+	x:DefaultBindMode="OneWay"
+	x:Class="Twinning.AssistantPlus.View.CoreCommandSender.MainPage"
+	AllowDrop="True"
+	DragOver="{x:Bind Controller.uPage_DragOver}"
+	Drop="{x:Bind Controller.uPage_Drop}"
+	>
+	<my:Stack
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		MinWidth="920"
+		Padding="4"
+		Orientation="Horizontal"
+		Spacing="4"
+		>
+		<my:Stack
+			x:Name="uMethodPanel"
+			x:FieldModifier="public"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			MinWidth="312"
+			Width="{x:Bind uMethodPanel.MinWidth, Mode=OneTime}"
+			Padding="0,-4,0,0"
+			Orientation="Vertical"
+			Spacing="0"
+			>
+			<my:HeaderBar
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Icon="{StaticResource FluentIconGlyph.Bookmarks}"
+				Title="Method"
+				>
+				<my:HeaderBar.Action>
+					<my:Stack
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Orientation="Horizontal"
+						Spacing="8"
+						/>
+				</my:HeaderBar.Action>
+			</my:HeaderBar>
+			<my:Divider />
+			<TreeView
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				SelectionMode="None"
+				CanDragItems="False"
+				CanReorderItems="False"
+				ItemsSource="{x:Bind Controller.uMethodList_ItemsSource}"
+				ItemInvoked="{x:Bind Controller.uMethodList_ItemInvoked}"
+				>
+				<TreeView.ItemTemplateSelector>
+					<localViewCoreCommandSender:MainPageMethodItemTemplateSelector>
+						<localViewCoreCommandSender:MainPageMethodItemTemplateSelector.GroupTemplate>
+							<DataTemplate x:DataType="localViewCoreCommandSender:MainPageMethodGroupItemController">
+								<TreeViewItem
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									HasUnrealizedChildren="True"
+									IsExpanded="True"
+									ItemsSource="{x:Bind uRoot_ItemsSource}"
+									>
+									<my:Stack
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Height="32"
+										Padding="0,0,12,0"
+										Orientation="Horizontal"
+										Spacing="12"
+										>
+										<FontIcon
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											FontSize="{StaticResource SmallIconSize}"
+											Glyph="{x:Bind uIcon_Glyph}"
+											/>
+										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
+											my:Stack.Weight="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Style="{StaticResource BodyTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uName_Text}"
+											/>
+										<InfoBadge
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Width="20"
+											Style="{StaticResource AttentionValueInfoBadgeStyle}"
+											Value="{x:Bind uCount_Value}"
+											/>
+									</my:Stack>
+								</TreeViewItem>
+							</DataTemplate>
+						</localViewCoreCommandSender:MainPageMethodItemTemplateSelector.GroupTemplate>
+						<localViewCoreCommandSender:MainPageMethodItemTemplateSelector.ItemTemplate>
+							<DataTemplate x:DataType="localViewCoreCommandSender:MainPageMethodItemItemController">
+								<TreeViewItem>
+									<my:Stack
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Height="32"
+										Padding="0,0,12,0"
+										Orientation="Horizontal"
+										Spacing="12"
+										>
+										<FontIcon
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											FontSize="{StaticResource SmallIconSize}"
+											Glyph="{x:Bind uIcon_Glyph}"
+											/>
+										<TextBlock
+											ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
+											my:Stack.Weight="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Style="{StaticResource BodyTextBlockStyle}"
+											TextWrapping="NoWrap"
+											Text="{x:Bind uName_Text}"
+											/>
+										<FontIcon
+											ToolTipService.ToolTip="{x:Bind uBatch_ToolTip}"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											Opacity="{x:Bind uBatch_Opacity}"
+											FontSize="{StaticResource MediumIconSize}"
+											Glyph="{StaticResource FluentIconGlyph.MapLayers}"
+											/>
+									</my:Stack>
+								</TreeViewItem>
+							</DataTemplate>
+						</localViewCoreCommandSender:MainPageMethodItemTemplateSelector.ItemTemplate>
+					</localViewCoreCommandSender:MainPageMethodItemTemplateSelector>
+				</TreeView.ItemTemplateSelector>
+			</TreeView>
+		</my:Stack>
+		<my:DividerSizer
+			SizerOrientation="Vertical"
+			SizerInverted="False"
+			SizerValue="{x:Bind uMethodPanel.Width, Mode=TwoWay}"
+			SizerMinimum="{x:Bind uMethodPanel.MinWidth, Mode=OneTime}"
+			/>
+		<my:Stack
+			x:Name="uCommandPanel"
+			x:FieldModifier="public"
+			my:Stack.Weight="1"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			MinWidth="591"
+			Padding="0,-4,0,0"
+			Orientation="Vertical"
+			Spacing="0"
+			>
+			<my:HeaderBar
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Icon="{StaticResource FluentIconGlyph.GroupList}"
+				Title="Command"
+				>
+				<my:HeaderBar.Action>
+					<my:Stack
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Orientation="Horizontal"
+						Spacing="8"
+						>
+						<Button
+							ToolTipService.ToolTip="Forward"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							Click="{x:Bind Controller.uCommandForward_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
+							/>
+						<ToggleButton
+							ToolTipService.ToolTip="Parallel Forward"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center"
+							IsChecked="{x:Bind Controller.uParallelForward_IsChecked}"
+							Click="{x:Bind Controller.uParallelForward_Click}"
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Shuffle}}"
+							/>
+					</my:Stack>
+				</my:HeaderBar.Action>
+			</my:HeaderBar>
+			<my:Divider />
+			<ScrollViewer
+				x:Name="uCommandScrollViewer"
+				x:FieldModifier="public"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="16,0"
+				HorizontalScrollMode="Disabled"
+				HorizontalScrollBarVisibility="Disabled"
+				VerticalScrollMode="Enabled"
+				VerticalScrollBarVisibility="Visible"
+				>
+				<ItemsRepeater
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Margin="0,8"
+					ItemsSource="{x:Bind Controller.uCommandList_ItemsSource}"
+					>
+					<ItemsRepeater.Layout>
+						<StackLayout Orientation="Vertical" Spacing="16" />
+					</ItemsRepeater.Layout>
+					<ItemsRepeater.ItemTemplate>
+						<DataTemplate x:DataType="localViewCoreCommandSender:MainPageCommandItemController">
+							<my:Stack
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								Orientation="Vertical"
+								Spacing="8"
+								>
+								<my:Stack
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									Orientation="Horizontal"
+									Spacing="8"
+									>
+									<TextBlock
+										ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
+										my:Stack.Weight="1"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										Margin="8,0,0,0"
+										Style="{StaticResource SubtitleTextBlockStyle}"
+										TextWrapping="NoWrap"
+										Text="{x:Bind uTitle_Text}"
+										/>
+									<Button
+										ToolTipService.ToolTip="Preset"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										Flyout="{x:Bind uPreset_Flyout}"
+										>
+										<my:Stack
+											Orientation="Horizontal"
+											Spacing="8"
+											>
+											<TextBlock
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												MinWidth="16"
+												Style="{StaticResource BodyTextBlockStyle}"
+												TextWrapping="NoWrap"
+												TextAlignment="Right"
+												Text="{x:Bind uPresetCount_Text}"
+												/>
+											<FontIcon
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												FontSize="{StaticResource MediumIconSize}"
+												Glyph="{StaticResource FluentIconGlyph.LightningBolt}"
+												/>
+										</my:Stack>
+									</Button>
+									<ToggleButton
+										ToolTipService.ToolTip="Batch"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										IsEnabled="{x:Bind uBatch_IsEnabled}"
+										IsChecked="{x:Bind uBatch_IsChecked}"
+										Click="{x:Bind uBatch_Click}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.MapLayers}}"
+										/>
+									<Button
+										ToolTipService.ToolTip="Forward"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										Click="{x:Bind uForward_Click}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}"
+										/>
+									<Button
+										ToolTipService.ToolTip="Remove"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										Click="{x:Bind uRemove_Click}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
+										/>
+								</my:Stack>
+								<my:Divider />
+								<localViewCoreCommandSender:ArgumentPanel
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									Configuration="{x:Bind uArgumentPanel_Configuration}"
+									Value="{x:Bind uArgumentPanel_Value}"
+									Batch="{x:Bind uArgumentPanel_Batch}"
+									Stamp="{x:Bind uArgumentPanel_Stamp}"
+									/>
+							</my:Stack>
+						</DataTemplate>
+					</ItemsRepeater.ItemTemplate>
+				</ItemsRepeater>
+			</ScrollViewer>
+		</my:Stack>
+	</my:Stack>
+</Page>

@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
+namespace Twinning.Script.Executor.Implement.Popcap.ReAnimation {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 					}),
 					typical_argument_string({
 						identifier: 'version_platform',
-						option: KernelX.Tool.PopCap.ReAnimation.VersionPlatformE,
+						option: KernelX.Tool.Popcap.ReAnimation.VersionPlatformE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -66,7 +66,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.ReAnimation.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ReAnimation.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -90,7 +90,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 					}),
 					typical_argument_string({
 						identifier: 'version_platform',
-						option: KernelX.Tool.PopCap.ReAnimation.VersionPlatformE,
+						option: KernelX.Tool.Popcap.ReAnimation.VersionPlatformE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -121,7 +121,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ReAnimation {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_platform, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.PopCap.ReAnimation.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
+					KernelX.Tool.Popcap.ReAnimation.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 					return;
 				},
 			}),

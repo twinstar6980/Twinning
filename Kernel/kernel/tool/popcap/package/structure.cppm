@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.package.structure;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.package.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::Package::Structure {
+export namespace Twinning::Kernel::Tool::Popcap::Package::Structure {
 
 	#pragma region magic marker
 

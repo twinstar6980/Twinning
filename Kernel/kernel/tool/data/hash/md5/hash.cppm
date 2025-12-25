@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.data.hash.md5.common;
 import twinning.kernel.third.cpp_md5_lib;
 
-export namespace Twinning::Kernel::Tool::Data::Hash::MD5 {
+export namespace Twinning::Kernel::Tool::Data::Hash::Md5 {
 
 	struct Hash :
 		Common {

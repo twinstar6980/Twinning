@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.zlib.common;
 import twinning.kernel.tool.data.compression.deflate.common;
 import twinning.kernel.tool.data.compression.deflate.uncompress;
 
-export namespace Twinning::Kernel::Tool::PopCap::ZLib {
+export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Uncompress :

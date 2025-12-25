@@ -8,14 +8,14 @@ class ModulePageRegion extends StatelessWidget {
 
   const ModulePageRegion({
     super.key,
-    required this.onDropFile,
+    required this.onStorageDrop,
     required this.content,
     required this.bottom,
   });
 
   // ----------------
 
-  final Void Function(List<String> item)? onDropFile;
+  final Void Function(List<String> item)? onStorageDrop;
   final Widget                            content;
   final Widget                            bottom;
 
@@ -34,7 +34,7 @@ class ModulePageRegion extends StatelessWidget {
       ).withFlexExpanded(),
       this.bottom,
     ]).withStorageDropRegion(
-      onDrop: this.onDropFile,
+      onDrop: this.onStorageDrop,
     );
   }
 

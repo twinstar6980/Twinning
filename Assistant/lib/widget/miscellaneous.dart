@@ -373,7 +373,7 @@ Future<String?> pickStorageItem({
   else {
     type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
       position: .under,
-      children: [
+      content: [
         if (allowLoadFile) ...[
           ('load_file', 'Load File'),
         ],

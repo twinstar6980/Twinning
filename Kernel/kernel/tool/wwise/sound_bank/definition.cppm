@@ -1477,13 +1477,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		#pragma region bus hdr setting
 
 		template <typename = None>
-		struct BusHDRSettingDynamicReleaseMode_;
+		struct BusHdrSettingDynamicReleaseMode_;
 
-		using BusHDRSettingDynamicReleaseMode = BusHDRSettingDynamicReleaseMode_<>;
+		using BusHdrSettingDynamicReleaseMode = BusHdrSettingDynamicReleaseMode_<>;
 
 		template <typename _> requires (check_version(version, {88}))
 		M_enumeration(
-			M_wrap(BusHDRSettingDynamicReleaseMode_<_>),
+			M_wrap(BusHdrSettingDynamicReleaseMode_<_>),
 			M_wrap(
 				linear,
 				exponential,
@@ -1493,13 +1493,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct BusHDRSettingWindowTopOutputGameParameter_;
+		struct BusHdrSettingWindowTopOutputGameParameter_;
 
-		using BusHDRSettingWindowTopOutputGameParameter = BusHDRSettingWindowTopOutputGameParameter_<>;
+		using BusHdrSettingWindowTopOutputGameParameter = BusHdrSettingWindowTopOutputGameParameter_<>;
 
 		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
-			M_wrap(BusHDRSettingWindowTopOutputGameParameter_<_>),
+			M_wrap(BusHdrSettingWindowTopOutputGameParameter_<_>),
 			M_wrap(
 				(Identifier) identifier,
 				(Floater) minimum,
@@ -1510,36 +1510,36 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct BusHDRSettingDynamic_;
+		struct BusHdrSettingDynamic_;
 
-		using BusHDRSettingDynamic = BusHDRSettingDynamic_<>;
+		using BusHdrSettingDynamic = BusHdrSettingDynamic_<>;
 
 		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
-			M_wrap(BusHDRSettingDynamic_<_>),
+			M_wrap(BusHdrSettingDynamic_<_>),
 			M_wrap(
 				(Floater) threshold,
 				(Floater) ratio,
 				(Floater) release_time,
-				(BusHDRSettingDynamicReleaseMode) release_mode,
+				(BusHdrSettingDynamicReleaseMode) release_mode,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct BusHDRSetting_;
+		struct BusHdrSetting_;
 
-		using BusHDRSetting = BusHDRSetting_<>;
+		using BusHdrSetting = BusHdrSetting_<>;
 
 		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
-			M_wrap(BusHDRSetting_<_>),
+			M_wrap(BusHdrSetting_<_>),
 			M_wrap(
 				(Boolean) enable,
 				(Boolean) u1,
-				(BusHDRSettingDynamic) dynamic,
-				(BusHDRSettingWindowTopOutputGameParameter) window_top_output_game_parameter,
+				(BusHdrSettingDynamic) dynamic,
+				(BusHdrSettingWindowTopOutputGameParameter) window_top_output_game_parameter,
 			),
 		);
 
@@ -1548,13 +1548,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		#pragma region audio hdr setting
 
 		template <typename = None>
-		struct AudioHDRSettingEnvelopeTracking_;
+		struct AudioHdrSettingEnvelopeTracking_;
 
-		using AudioHDRSettingEnvelopeTracking = AudioHDRSettingEnvelopeTracking_<>;
+		using AudioHdrSettingEnvelopeTracking = AudioHdrSettingEnvelopeTracking_<>;
 
 		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
-			M_wrap(AudioHDRSettingEnvelopeTracking_<_>),
+			M_wrap(AudioHdrSettingEnvelopeTracking_<_>),
 			M_wrap(
 				(Boolean) enable,
 				(Floater) active_range,
@@ -1564,15 +1564,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct AudioHDRSetting_;
+		struct AudioHdrSetting_;
 
-		using AudioHDRSetting = AudioHDRSetting_<>;
+		using AudioHdrSetting = AudioHdrSetting_<>;
 
 		template <typename _> requires (check_version(version, {88}))
 		M_record_of_map(
-			M_wrap(AudioHDRSetting_<_>),
+			M_wrap(AudioHdrSetting_<_>),
 			M_wrap(
-				(AudioHDRSettingEnvelopeTracking) envelope_tracking,
+				(AudioHdrSettingEnvelopeTracking) envelope_tracking,
 			),
 		);
 
@@ -1581,13 +1581,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		#pragma region sound midi setting
 
 		template <typename = None>
-		struct SoundMIDISettingEventPlayOn_;
+		struct SoundMidiSettingEventPlayOn_;
 
-		using SoundMIDISettingEventPlayOn = SoundMIDISettingEventPlayOn_<>;
+		using SoundMidiSettingEventPlayOn = SoundMidiSettingEventPlayOn_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
-			M_wrap(SoundMIDISettingEventPlayOn_<_>),
+			M_wrap(SoundMidiSettingEventPlayOn_<_>),
 			M_wrap(
 				note_on,
 				note_off,
@@ -1597,15 +1597,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct SoundMIDISettingEvent_;
+		struct SoundMidiSettingEvent_;
 
-		using SoundMIDISettingEvent = SoundMIDISettingEvent_<>;
+		using SoundMidiSettingEvent = SoundMidiSettingEvent_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMIDISettingEvent_<_>),
+			M_wrap(SoundMidiSettingEvent_<_>),
 			M_wrap(
-				(SoundMIDISettingEventPlayOn) play_on,
+				(SoundMidiSettingEventPlayOn) play_on,
 				(Boolean) break_on_note_off,
 			),
 		);
@@ -1613,13 +1613,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct SoundMIDISettingNoteTracking_;
+		struct SoundMidiSettingNoteTracking_;
 
-		using SoundMIDISettingNoteTracking = SoundMIDISettingNoteTracking_<>;
+		using SoundMidiSettingNoteTracking = SoundMidiSettingNoteTracking_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMIDISettingNoteTracking_<_>),
+			M_wrap(SoundMidiSettingNoteTracking_<_>),
 			M_wrap(
 				(Boolean) enable,
 				(Integer) root_note,
@@ -1629,13 +1629,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct SoundMIDISettingTransformation_;
+		struct SoundMidiSettingTransformation_;
 
-		using SoundMIDISettingTransformation = SoundMIDISettingTransformation_<>;
+		using SoundMidiSettingTransformation = SoundMidiSettingTransformation_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMIDISettingTransformation_<_>),
+			M_wrap(SoundMidiSettingTransformation_<_>),
 			M_wrap(
 				(RegularValue<Integer>) transposition,
 				(RegularValue<Integer>) velocity_offset,
@@ -1645,13 +1645,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct SoundMIDISettingFilter_;
+		struct SoundMidiSettingFilter_;
 
-		using SoundMIDISettingFilter = SoundMIDISettingFilter_<>;
+		using SoundMidiSettingFilter = SoundMidiSettingFilter_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMIDISettingFilter_<_>),
+			M_wrap(SoundMidiSettingFilter_<_>),
 			M_wrap(
 				(Integer) key_range_minimum,
 				(Integer) key_range_maximum,
@@ -1664,18 +1664,18 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct SoundMIDISetting_;
+		struct SoundMidiSetting_;
 
-		using SoundMIDISetting = SoundMIDISetting_<>;
+		using SoundMidiSetting = SoundMidiSetting_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMIDISetting_<_>),
+			M_wrap(SoundMidiSetting_<_>),
 			M_wrap(
-				(SoundMIDISettingEvent) event,
-				(SoundMIDISettingNoteTracking) note_tracking,
-				(SoundMIDISettingTransformation) transformation,
-				(SoundMIDISettingFilter) filter,
+				(SoundMidiSettingEvent) event,
+				(SoundMidiSettingNoteTracking) note_tracking,
+				(SoundMidiSettingTransformation) transformation,
+				(SoundMidiSettingFilter) filter,
 			),
 		);
 
@@ -1684,13 +1684,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		#pragma region music midi setting
 
 		template <typename = None>
-		struct MusicMIDISettingTarget_;
+		struct MusicMidiSettingTarget_;
 
-		using MusicMIDISettingTarget = MusicMIDISettingTarget_<>;
+		using MusicMidiSettingTarget = MusicMidiSettingTarget_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(MusicMIDISettingTarget_<_>),
+			M_wrap(MusicMidiSettingTarget_<_>),
 			M_wrap(
 				(Identifier) identifier,
 			),
@@ -1699,13 +1699,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct MusicMIDISettingClipTempoSource_;
+		struct MusicMidiSettingClipTempoSource_;
 
-		using MusicMIDISettingClipTempoSource = MusicMIDISettingClipTempoSource_<>;
+		using MusicMidiSettingClipTempoSource = MusicMidiSettingClipTempoSource_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_enumeration(
-			M_wrap(MusicMIDISettingClipTempoSource_<_>),
+			M_wrap(MusicMidiSettingClipTempoSource_<_>),
 			M_wrap(
 				hierarchy,
 				file,
@@ -1715,31 +1715,31 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		template <typename = None>
-		struct MusicMIDISettingClipTempo_;
+		struct MusicMidiSettingClipTempo_;
 
-		using MusicMIDISettingClipTempo = MusicMIDISettingClipTempo_<>;
+		using MusicMidiSettingClipTempo = MusicMidiSettingClipTempo_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(MusicMIDISettingClipTempo_<_>),
+			M_wrap(MusicMidiSettingClipTempo_<_>),
 			M_wrap(
-				(MusicMIDISettingClipTempoSource) source,
+				(MusicMidiSettingClipTempoSource) source,
 			),
 		);
 
 		// ----------------
 
 		template <typename = None>
-		struct MusicMIDISetting_;
+		struct MusicMidiSetting_;
 
-		using MusicMIDISetting = MusicMIDISetting_<>;
+		using MusicMidiSetting = MusicMidiSetting_<>;
 
 		template <typename _> requires (check_version(version, {112}))
 		M_record_of_map(
-			M_wrap(MusicMIDISetting_<_>),
+			M_wrap(MusicMidiSetting_<_>),
 			M_wrap(
-				(MusicMIDISettingTarget) target,
-				(MusicMIDISettingClipTempo) clip_tempo,
+				(MusicMidiSettingTarget) target,
+				(MusicMidiSettingClipTempo) clip_tempo,
 			),
 		);
 
@@ -3747,7 +3747,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_positioning,
 				(Boolean) override_playback_limit,
@@ -3770,7 +3770,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_positioning,
 				(Boolean) override_playback_limit,
@@ -3795,7 +3795,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_playback_limit,
 			),
@@ -3821,7 +3821,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_playback_limit,
 			),
@@ -3848,7 +3848,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_playback_limit,
 			),
@@ -3892,7 +3892,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_positioning,
 				(Boolean) override_playback_limit,
@@ -3915,7 +3915,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_positioning,
 				(Boolean) override_playback_limit,
@@ -3940,7 +3940,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_playback_limit,
 			),
@@ -3966,7 +3966,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_playback_limit,
 			),
@@ -3993,7 +3993,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(BusAutomaticDuckingSetting) automatic_ducking,
-				(BusHDRSetting) hdr,
+				(BusHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(Boolean) override_playback_limit,
 			),
@@ -4077,7 +4077,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4110,8 +4110,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4148,8 +4148,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4185,8 +4185,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4224,8 +4224,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4264,8 +4264,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4403,7 +4403,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4436,8 +4436,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4474,8 +4474,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4511,8 +4511,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4550,8 +4550,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4590,8 +4590,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4729,7 +4729,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4762,8 +4762,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4800,8 +4800,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4837,8 +4837,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4876,8 +4876,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -4916,8 +4916,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5057,7 +5057,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5090,8 +5090,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5128,8 +5128,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5165,8 +5165,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5204,8 +5204,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5244,8 +5244,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5331,7 +5331,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5364,8 +5364,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5402,8 +5402,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5439,8 +5439,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5478,8 +5478,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5518,8 +5518,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(SoundMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(SoundMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5763,7 +5763,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5797,8 +5797,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5836,8 +5836,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5874,8 +5874,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5914,8 +5914,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -5955,8 +5955,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(AudioPositioningSetting) positioning,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6090,7 +6090,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6126,8 +6126,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6167,8 +6167,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6207,8 +6207,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6249,8 +6249,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6292,8 +6292,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6420,7 +6420,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6457,8 +6457,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6499,8 +6499,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6540,8 +6540,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6583,8 +6583,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6627,8 +6627,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6751,7 +6751,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
+				(AudioHdrSetting) hdr,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6788,8 +6788,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6830,8 +6830,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6871,8 +6871,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6914,8 +6914,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,
@@ -6958,8 +6958,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				(StateSetting) state,
 				(MusicTransitionSetting) transition,
 				(MusicStingerSetting) stinger,
-				(AudioHDRSetting) hdr,
-				(MusicMIDISetting) midi,
+				(AudioHdrSetting) hdr,
+				(MusicMidiSetting) midi,
 				(AudioPlaybackLimitSetting) playback_limit,
 				(AudioVirtualVoiceSetting) virtual_voice,
 				(AudioPlaybackPrioritySetting) playback_priority,

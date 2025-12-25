@@ -12,7 +12,7 @@ import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 import twinning.kernel.tool.data.compression.deflate.common;
 import twinning.kernel.tool.data.compression.deflate.uncompress;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamGroup {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Unpack :

@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.sexy_texture.common;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.sexy_texture.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::SexyTexture {
+export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {

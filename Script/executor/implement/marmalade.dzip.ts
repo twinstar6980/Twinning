@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
+namespace Twinning.Script.Executor.Implement.Marmalade.Dzip {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.Marmalade.DZip.VersionNumberE,
+						option: KernelX.Tool.Marmalade.Dzip.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -62,7 +62,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.Marmalade.DZip.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, temporary.buffer.view());
+					KernelX.Tool.Marmalade.Dzip.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -86,7 +86,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.Marmalade.DZip.VersionNumberE,
+						option: KernelX.Tool.Marmalade.Dzip.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -113,7 +113,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 				worker: ({ data_file, bundle_directory, version_number }, temporary: {}) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.Marmalade.DZip.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
+					KernelX.Tool.Marmalade.Dzip.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return;
 				},
 			}),
@@ -137,7 +137,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.Marmalade.DZip.VersionNumberE,
+						option: KernelX.Tool.Marmalade.Dzip.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -145,7 +145,7 @@ namespace Twinning.Script.Executor.Implement.Marmalade.DZip {
 				],
 				batch: null,
 				worker: ({ resource_directory, data_file, version_number }, temporary: {}) => {
-					let [data, data_size] = Support.Marmalade.DZip.PackAutomatic.pack(resource_directory, version_number as any);
+					let [data, data_size] = Support.Marmalade.Dzip.PackAutomatic.pack(resource_directory, version_number as any);
 					KernelX.Storage.write_file(data_file, data.view().sub(Kernel.Size.value(0n), data_size));
 					return;
 				},

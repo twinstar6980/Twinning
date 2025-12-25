@@ -325,7 +325,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 					}),
 				],
 				worker: ({ raw_file, ripe_file }, temporary: {}) => {
-					KernelX.Tool.Data.Compression.BZip2.compress_fs(raw_file, ripe_file, 9n);
+					KernelX.Tool.Data.Compression.Bzip2.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
 			}),
@@ -377,7 +377,7 @@ namespace Twinning.Script.Executor.Implement.Data.Compression {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.Data.Compression.BZip2.uncompress_fs(ripe_file, raw_file, temporary.buffer.view());
+					KernelX.Tool.Data.Compression.Bzip2.uncompress_fs(ripe_file, raw_file, temporary.buffer.view());
 					return;
 				},
 			}),

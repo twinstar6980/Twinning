@@ -1,4 +1,5 @@
 import '/common.dart';
+import 'dart:ui' as lib;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart' as lib;
@@ -13,6 +14,7 @@ class Gap extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
+    required this.weight,
   });
 
   const Gap.horizontal(
@@ -22,6 +24,7 @@ class Gap extends StatelessWidget {
     key: key,
     width: size,
     height: 0.0,
+    weight: null,
   );
 
   const Gap.vertical(
@@ -31,12 +34,24 @@ class Gap extends StatelessWidget {
     key: key,
     width: 0.0,
     height: size,
+    weight: null,
+  );
+
+  const Gap.expanded({
+    Key?    key = null,
+    Integer weight = 1,
+  }) : this._(
+    key: key,
+    width: 0.0,
+    height: 0.0,
+    weight: weight,
   );
 
   // ----------------
 
-  final Floater width;
-  final Floater height;
+  final Floater  width;
+  final Floater  height;
+  final Integer? weight;
 
   // ----------------
 
@@ -45,7 +60,10 @@ class Gap extends StatelessWidget {
     return SizedBox(
       width: this.width,
       height: this.height,
-    );
+    ).selfLet((it) => this.weight == null ? it : Expanded(
+      flex: this.weight!,
+      child: it,
+    ));
   }
 
 }
@@ -65,19 +83,23 @@ class BoxContainer extends StatelessWidget {
     required this.transform,
     required this.color,
     required this.colorFilter,
+    required this.opacity,
+    required this.borderRadius,
     required this.child,
   });
 
   const BoxContainer.of({
-    Key?                key = null,
-    BoxConstraints?     constraints = null,
-    EdgeInsetsGeometry? margin = null,
-    EdgeInsetsGeometry? padding = null,
-    BoxContainerAlign?  align = null,
-    Matrix4?            transform = null,
-    Color?              color = null,
-    ColorFilter?        colorFilter = null,
-    required Widget?    child,
+    Key?                  key = null,
+    BoxConstraints?       constraints = null,
+    EdgeInsetsGeometry?   margin = null,
+    EdgeInsetsGeometry?   padding = null,
+    BoxContainerAlign?    align = null,
+    Matrix4?              transform = null,
+    Color?                color = null,
+    ColorFilter?          colorFilter = null,
+    Floater?              opacity = null,
+    BorderRadiusGeometry? borderRadius = null,
+    required Widget?      child,
   }) : this._(
     key: key,
     constraints: constraints,
@@ -87,6 +109,8 @@ class BoxContainer extends StatelessWidget {
     transform: transform,
     color: color,
     colorFilter: colorFilter,
+    opacity: opacity,
+    borderRadius: borderRadius,
     child: child,
   );
 
@@ -101,19 +125,23 @@ class BoxContainer extends StatelessWidget {
     transform: null,
     color: null,
     colorFilter: null,
+    opacity: null,
+    borderRadius: null,
     child: null,
   );
 
   // ----------------
 
-  final BoxConstraints?     constraints;
-  final EdgeInsetsGeometry? margin;
-  final EdgeInsetsGeometry? padding;
-  final BoxContainerAlign?  align;
-  final Matrix4?            transform;
-  final Color?              color;
-  final ColorFilter?        colorFilter;
-  final Widget?             child;
+  final BoxConstraints?       constraints;
+  final EdgeInsetsGeometry?   margin;
+  final EdgeInsetsGeometry?   padding;
+  final BoxContainerAlign?    align;
+  final Matrix4?              transform;
+  final Color?                color;
+  final ColorFilter?          colorFilter;
+  final Floater?              opacity;
+  final BorderRadiusGeometry? borderRadius;
+  final Widget?               child;
 
   // ----------------
 
@@ -127,7 +155,16 @@ class BoxContainer extends StatelessWidget {
       transform: this.transform,
       color: this.color,
       child: this.child,
-    ).selfLet((it) => this.colorFilter == null ? it : ColorFiltered(colorFilter: this.colorFilter!, child: it));
+    ).selfLet((it) => this.colorFilter == null ? it : ColorFiltered(
+      colorFilter: this.colorFilter!,
+      child: it,
+    )).selfLet((it) => this.opacity == null ? it : Opacity(
+      opacity: this.opacity!,
+      child: it,
+    )).selfLet((it) => this.borderRadius == null ? it : ClipRRect(
+      borderRadius: this.borderRadius!,
+      child: it,
+    ));
   }
 
 }
@@ -724,11 +761,11 @@ class ImageView extends StatelessWidget {
   });
 
   const ImageView.of({
-    Key?                   key = null,
-    BoxFit?                fit = null,
-    Floater?               width = null,
-    Floater?               height = null,
-    required ImageProvider source,
+    Key?               key = null,
+    BoxFit?            fit = null,
+    Floater?           width = null,
+    Floater?           height = null,
+    required lib.Image source,
   }) : this._(
     key: key,
     fit: fit,
@@ -739,16 +776,16 @@ class ImageView extends StatelessWidget {
 
   // ----------------
 
-  final BoxFit?       fit;
-  final Floater?      width;
-  final Floater?      height;
-  final ImageProvider source;
+  final BoxFit?   fit;
+  final Floater?  width;
+  final Floater?  height;
+  final lib.Image source;
 
   // ----------------
 
   @override
   build(context) {
-    return Image(
+    return RawImage(
       fit: this.fit,
       width: this.width,
       height: this.height,

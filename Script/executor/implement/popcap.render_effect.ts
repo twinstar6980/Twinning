@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.RenderEffect {
+namespace Twinning.Script.Executor.Implement.Popcap.RenderEffect {
 
 	// #region interface
 
@@ -25,14 +25,14 @@ namespace Twinning.Script.Executor.Implement.PopCap.RenderEffect {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.RenderEffect.VersionNumberE,
+						option: KernelX.Tool.Popcap.RenderEffect.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						identifier: 'version_variant',
-						option: KernelX.Tool.PopCap.RenderEffect.VersionVariantE,
+						option: KernelX.Tool.Popcap.RenderEffect.VersionVariantE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -67,7 +67,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.RenderEffect {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.RenderEffect.encode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.RenderEffect.encode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -91,14 +91,14 @@ namespace Twinning.Script.Executor.Implement.PopCap.RenderEffect {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.RenderEffect.VersionNumberE,
+						option: KernelX.Tool.Popcap.RenderEffect.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						identifier: 'version_variant',
-						option: KernelX.Tool.PopCap.RenderEffect.VersionVariantE,
+						option: KernelX.Tool.Popcap.RenderEffect.VersionVariantE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -123,7 +123,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.RenderEffect {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_number, version_variant }, temporary: {}) => {
-					KernelX.Tool.PopCap.RenderEffect.decode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any });
+					KernelX.Tool.Popcap.RenderEffect.decode_fs(data_file, definition_file, { number: version_number as any, variant: version_variant as any });
 					return;
 				},
 			}),

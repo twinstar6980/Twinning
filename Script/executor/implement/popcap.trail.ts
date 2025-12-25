@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.Trail {
+namespace Twinning.Script.Executor.Implement.Popcap.Trail {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Trail {
 					}),
 					typical_argument_string({
 						identifier: 'version_platform',
-						option: KernelX.Tool.PopCap.Trail.VersionPlatformE,
+						option: KernelX.Tool.Popcap.Trail.VersionPlatformE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -66,7 +66,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Trail {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.PopCap.Trail.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, temporary.buffer.view());
+					KernelX.Tool.Popcap.Trail.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -90,7 +90,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Trail {
 					}),
 					typical_argument_string({
 						identifier: 'version_platform',
-						option: KernelX.Tool.PopCap.Trail.VersionPlatformE,
+						option: KernelX.Tool.Popcap.Trail.VersionPlatformE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -121,7 +121,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.Trail {
 					}),
 				],
 				worker: ({ data_file, definition_file, version_platform, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.PopCap.Trail.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
+					KernelX.Tool.Popcap.Trail.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
 					return;
 				},
 			}),

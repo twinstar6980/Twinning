@@ -14,7 +14,7 @@ import twinning.kernel.tool.data.compression.deflate.common;
 import twinning.kernel.tool.data.compression.deflate.compress;
 import twinning.kernel.tool.data.compression.deflate.uncompress;
 
-export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
+export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 	template <auto version> requires (check_version(version, {}))
 	struct Common {
@@ -54,7 +54,7 @@ export namespace Twinning::Kernel::Tool::PopCap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		inline static constexpr auto package_version = ResourceStreamBundle::Version{.number = 4_i, .extended_texture_information_for_pvz2_cn = 0_i};
+		inline static constexpr auto package_version = ResourceStreamBundle::Version{.number = 4_i, .extended_texture_information_for_pvz2cn = 0_i};
 
 		inline static auto read_package_information_structure (
 			InputByteStreamView &                                           data,

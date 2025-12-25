@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.particle.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::Particle {
+export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),

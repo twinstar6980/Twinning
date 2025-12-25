@@ -19,8 +19,8 @@ class FunctionPanel extends StatelessWidget {
 
   // ----------------
 
-  final Map<String, Object> data;
-  final Void Function()     onUpdate;
+  final FunctionPanelData data;
+  final Void Function()   onUpdate;
 
   // ----------------
 
@@ -34,14 +34,14 @@ class FunctionPanel extends StatelessWidget {
           FlexContainer.horizontal([
             Gap.horizontal(16),
             StyledButton.filledTonal(
-              icon: IconView.of(switch (this.data['type']!.as<GameFunctionType>()) {
+              icon: IconView.of(switch (this.data.type) {
                 .modifyProgram => IconSet.build,
                 .encryptRecord => IconSet.lock_open,
                 .importRecord => IconSet.archive,
                 .exportRecord => IconSet.unarchive,
               }),
               content: FlexContainer.horizontal([
-                StyledText.inherit(switch (this.data['type']!.as<GameFunctionType>()) {
+                StyledText.inherit(switch (this.data.type) {
                   .modifyProgram => 'Modify Program',
                   .encryptRecord => 'Encrypt Record',
                   .importRecord => 'Import Record',
@@ -65,7 +65,7 @@ class FunctionPanel extends StatelessWidget {
                   actionBuilder: null,
                 ));
                 if (type != null) {
-                  this.data['type'] = type;
+                  this.data.type = type;
                   await refreshState(setState);
                 }
               },
@@ -75,12 +75,12 @@ class FunctionPanel extends StatelessWidget {
               icon: IconView.of(IconSet.motion_play),
               content: StyledText.inherit('Run'),
               onPressed: (context) async {
-                switch (this.data['type']!.as<GameFunctionType>()) {
+                switch (this.data.type) {
                   case .modifyProgram: {
                     GameProgramHelper.modifyBundle(
-                      this.data['program.target']!.as(),
-                      this.data['program.disable_record_encryption']!.as(),
-                      this.data['program.enable_debug_mode']!.as(),
+                      this.data.programTarget,
+                      this.data.programDisableRecordEncryption,
+                      this.data.programEnableDebugMode,
                       null,
                       (s) => print(s),
                     );
@@ -88,24 +88,24 @@ class FunctionPanel extends StatelessWidget {
                   }
                   case .encryptRecord: {
                     GameRecordHelper.encrypt(
-                      this.data['record.target_directory']!.as(),
-                      this.data['record.key']!.as(),
+                      this.data.recordTargetDirectory,
+                      this.data.recordKey,
                     );
                     break;
                   }
                   case .importRecord: {
                     GameRecordHelper.import(
-                      this.data['record.target_directory']!.as(),
-                      this.data['record.archive_file']!.as(),
-                      this.data['record.key']!.as(),
+                      this.data.recordTargetDirectory,
+                      this.data.recordArchiveFile,
+                      this.data.recordKey,
                     );
                     break;
                   }
                   case .exportRecord: {
                     GameRecordHelper.export(
-                      this.data['record.target_directory']!.as(),
-                      this.data['record.archive_file']!.as(),
-                      this.data['record.key']!.as(),
+                      this.data.recordTargetDirectory,
+                      this.data.recordArchiveFile,
+                      this.data.recordKey,
                     );
                     break;
                   }
@@ -120,7 +120,7 @@ class FunctionPanel extends StatelessWidget {
           FlexContainer.horizontal([
             Gap.horizontal(16),
             FlexContainer.vertical([
-              if (this.data['type']?.as<GameFunctionType>() == .modifyProgram) ...[
+              if (this.data.type == .modifyProgram) ...[
                 StyledInput.underlined(
                   type: .text,
                   format: null,
@@ -135,29 +135,29 @@ class FunctionPanel extends StatelessWidget {
                           context: context,
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          location: '@${ModuleType.resource_shipper.name}.function.program.target',
+                          location: '@${ModuleType.core_resource_shipper.name}.function.program.target',
                         );
                         if (target != null) {
-                          this.data['program.target'] = target;
+                          this.data.programTarget = target;
                           await refreshState(setState);
                         }
                       },
                     ),
                   ],
-                  value: this.data['program.target']?.as() ?? '',
+                  value: this.data.programTarget,
                   onChanged: (context, value) async {
-                    this.data['program.target'] = StorageHelper.regularize(value);
+                    this.data.programTarget = StorageHelper.regularize(value);
                     await refreshState(setState);
                   },
                 ).withStorageDropRegion(
                   onDrop: (item) async {
-                    this.data['program.target'] = item.first;
+                    this.data.programTarget = item.first;
                     await refreshState(setState);
                   },
                 ),
                 Gap.vertical(8),
               ],
-              if (this.data['type']?.as<GameFunctionType>() == .modifyProgram) ...[
+              if (this.data.type == .modifyProgram) ...[
                 StyledInput.underlined(
                   type: .text,
                   format: null,
@@ -166,37 +166,37 @@ class FunctionPanel extends StatelessWidget {
                   suffix: [
                     StyledIconButton.standard(
                       tooltip: 'No',
-                      selected: this.data['program.disable_record_encryption']! == false,
+                      selected: this.data.programDisableRecordEncryption == false,
                       icon: IconView.of(IconSet.do_not_disturb_on),
                       iconOnSelected: IconView.of(IconSet.do_not_disturb_on, fill: 1),
                       onPressed: (context) async {
-                        this.data['program.disable_record_encryption'] = false;
+                        this.data.programDisableRecordEncryption = false;
                         await refreshState(setState);
                       },
                     ),
                     Gap.horizontal(4),
                     StyledIconButton.standard(
                       tooltip: 'Yes',
-                      selected: this.data['program.disable_record_encryption']! == true,
+                      selected: this.data.programDisableRecordEncryption == true,
                       icon: IconView.of(IconSet.check_circle),
                       iconOnSelected: IconView.of(IconSet.check_circle, fill: 1),
                       onPressed: (context) async {
-                        this.data['program.disable_record_encryption'] = true;
+                        this.data.programDisableRecordEncryption = true;
                         await refreshState(setState);
                       },
                     ),
                   ],
-                  value: ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.data['program.disable_record_encryption']!.as()),
+                  value: ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.data.programDisableRecordEncryption),
                   onChanged: (context, value) async {
                     if (value == 'n' || value == 'y') {
-                      this.data['program.disable_record_encryption'] = value == 'y';
+                      this.data.programDisableRecordEncryption = value == 'y';
                     }
                     await refreshState(setState);
                   },
                 ),
                 Gap.vertical(8),
               ],
-              if (this.data['type']?.as<GameFunctionType>() == .modifyProgram) ...[
+              if (this.data.type == .modifyProgram) ...[
                 StyledInput.underlined(
                   type: .text,
                   format: null,
@@ -205,37 +205,37 @@ class FunctionPanel extends StatelessWidget {
                   suffix: [
                     StyledIconButton.standard(
                       tooltip: 'No',
-                      selected: this.data['program.enable_debug_mode']! == false,
+                      selected: this.data.programEnableDebugMode == false,
                       icon: IconView.of(IconSet.do_not_disturb_on),
                       iconOnSelected: IconView.of(IconSet.do_not_disturb_on, fill: 1),
                       onPressed: (context) async {
-                        this.data['program.enable_debug_mode'] = false;
+                        this.data.programEnableDebugMode = false;
                         await refreshState(setState);
                       },
                     ),
                     Gap.horizontal(4),
                     StyledIconButton.standard(
                       tooltip: 'Yes',
-                      selected: this.data['program.enable_debug_mode']! == true,
+                      selected: this.data.programEnableDebugMode == true,
                       icon: IconView.of(IconSet.check_circle),
                       iconOnSelected: IconView.of(IconSet.check_circle, fill: 1),
                       onPressed: (context) async {
-                        this.data['program.enable_debug_mode'] = true;
+                        this.data.programEnableDebugMode = true;
                         await refreshState(setState);
                       },
                     ),
                   ],
-                  value: ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.data['program.enable_debug_mode']!.as()),
+                  value: ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.data.programEnableDebugMode),
                   onChanged: (context, value) async {
                     if (value == 'n' || value == 'y') {
-                      this.data['program.enable_debug_mode'] = value == 'y';
+                      this.data.programEnableDebugMode = value == 'y';
                     }
                     await refreshState(setState);
                   },
                 ),
                 Gap.vertical(8),
               ],
-              if (this.data['type']?.as<GameFunctionType>() == .exportRecord) ...[
+              if (this.data.type == .exportRecord) ...[
                 StyledInput.underlined(
                   type: .text,
                   format: null,
@@ -250,29 +250,29 @@ class FunctionPanel extends StatelessWidget {
                           context: context,
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          location: '@${ModuleType.resource_shipper.name}.function.record.target_directory',
+                          location: '@${ModuleType.core_resource_shipper.name}.function.record.target_directory',
                         );
                         if (target != null) {
-                          this.data['record.target_directory'] = target;
+                          this.data.recordTargetDirectory = target;
                           await refreshState(setState);
                         }
                       },
                     ),
                   ],
-                  value: this.data['record.target_directory']?.as() ?? '',
+                  value: this.data.recordTargetDirectory,
                   onChanged: (context, value) async {
-                    this.data['record.target_directory'] = StorageHelper.regularize(value);
+                    this.data.recordTargetDirectory = StorageHelper.regularize(value);
                     await refreshState(setState);
                   },
                 ).withStorageDropRegion(
                   onDrop: (item) async {
-                    this.data['record.target_directory'] = item.first;
+                    this.data.recordTargetDirectory = item.first;
                     await refreshState(setState);
                   },
                 ),
                 Gap.vertical(8),
               ],
-              if (this.data['type']?.as<GameFunctionType>() == .exportRecord) ...[
+              if (this.data.type == .exportRecord) ...[
                 StyledInput.underlined(
                   type: .text,
                   format: null,
@@ -287,36 +287,36 @@ class FunctionPanel extends StatelessWidget {
                           context: context,
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          location: '@${ModuleType.resource_shipper.name}.function.record.archive_file',
+                          location: '@${ModuleType.core_resource_shipper.name}.function.record.archive_file',
                         );
                         if (target != null) {
-                          this.data['record.archive_file'] = target;
+                          this.data.recordArchiveFile = target;
                           await refreshState(setState);
                         }
                       },
                     ),
                   ],
-                  value: this.data['record.archive_file']?.as() ?? '',
+                  value: this.data.recordArchiveFile,
                   onChanged: (context, value) async {
-                    this.data['record.archive_file'] = StorageHelper.regularize(value);
+                    this.data.recordArchiveFile = StorageHelper.regularize(value);
                     await refreshState(setState);
                   },
                 ).withStorageDropRegion(
                   onDrop: (item) async {
-                    this.data['record.archive_file'] = item.first;
+                    this.data.recordArchiveFile = item.first;
                     await refreshState(setState);
                   },
                 ),
                 Gap.vertical(8),
               ],
-              if (this.data['type']?.as<GameFunctionType>() == .exportRecord) ...[
+              if (this.data.type == .exportRecord) ...[
                 StyledInput.underlined(
                   type: .text,
                   format: null,
                   hint: 'Key',
                   prefix: IconView.of(IconSet.key),
                   suffix: null,
-                  value: this.data['record.key']?.as<Uint8List>().selfLet((it) => it.map((value) => value.toRadixString(16).padLeft(2, '0')).join(' ')) ?? '',
+                  value: this.data.recordKey.selfLet((it) => it.map((value) => value.toRadixString(16).padLeft(2, '0')).join(' ')) ?? '',
                   onChanged: (context, value) async {
                     // this.data['record.key'] = StorageHelper.regularize(value);
                     await refreshState(setState);
@@ -336,8 +336,27 @@ class FunctionPanel extends StatelessWidget {
           ]).withFlexExpanded(),
           Gap.vertical(8),
         ]),
-      ).withFlexExpanded(),
+      ),
     );
   }
 
+}
+
+class FunctionPanelData {
+  GameFunctionType type;
+  String           programTarget;
+  Boolean          programDisableRecordEncryption;
+  Boolean          programEnableDebugMode;
+  String           recordTargetDirectory;
+  String           recordArchiveFile;
+  Uint8List        recordKey;
+  FunctionPanelData({
+    required this.type,
+    required this.programTarget,
+    required this.programDisableRecordEncryption,
+    required this.programEnableDebugMode,
+    required this.recordTargetDirectory,
+    required this.recordArchiveFile,
+    required this.recordKey,
+  });
 }

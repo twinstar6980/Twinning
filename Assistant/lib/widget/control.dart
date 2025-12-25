@@ -1670,6 +1670,7 @@ class StyledCard extends StatelessWidget {
     super.key,
     required this.variant,
     required this.margin,
+    required this.padding,
     required this.color,
     required this.content,
   });
@@ -1677,12 +1678,14 @@ class StyledCard extends StatelessWidget {
   const StyledCard.elevated({
     Key?               key = null,
     EdgeInsetsGeometry margin = .zero,
+    EdgeInsetsGeometry padding = .zero,
     Color?             color = null,
     required Widget    content,
   }) : this._(
     key: key,
     variant: .elevated,
     margin: margin,
+    padding: padding,
     color: color,
     content: content,
   );
@@ -1690,12 +1693,14 @@ class StyledCard extends StatelessWidget {
   const StyledCard.filled({
     Key?               key = null,
     EdgeInsetsGeometry margin = .zero,
+    EdgeInsetsGeometry padding = .zero,
     Color?             color = null,
     required Widget    content,
   }) : this._(
     key: key,
     variant: .filled,
     margin: margin,
+    padding: padding,
     color: color,
     content: content,
   );
@@ -1703,12 +1708,14 @@ class StyledCard extends StatelessWidget {
   const StyledCard.outlined({
     Key?               key = null,
     EdgeInsetsGeometry margin = .zero,
+    EdgeInsetsGeometry padding = .zero,
     Color?             color = null,
     required Widget    content,
   }) : this._(
     key: key,
     variant: .outlined,
     margin: margin,
+    padding: padding,
     color: color,
     content: content,
   );
@@ -1717,6 +1724,7 @@ class StyledCard extends StatelessWidget {
 
   final StyledCardVariant  variant;
   final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
   final Color?             color;
   final Widget             content;
 
@@ -1729,19 +1737,28 @@ class StyledCard extends StatelessWidget {
         clipBehavior: .antiAliasWithSaveLayer,
         margin: this.margin,
         color: this.color,
-        child: this.content,
+        child: BoxContainer.of(
+          padding: this.padding,
+          child: this.content,
+        ),
       ),
       .filled => material.Card.filled(
         clipBehavior: .antiAliasWithSaveLayer,
         margin: this.margin,
         color: this.color,
-        child: this.content,
+        child: BoxContainer.of(
+          padding: this.padding,
+          child: this.content,
+        ),
       ),
       .outlined => material.Card.outlined(
         clipBehavior: .antiAliasWithSaveLayer,
         margin: this.margin,
         color: this.color,
-        child: this.content,
+        child: BoxContainer.of(
+          padding: this.padding,
+          child: this.content,
+        ),
       ),
     };
   }
@@ -2065,13 +2082,13 @@ class StyledNavigationBar extends StatelessWidget {
 
   const StyledNavigationBar.standard({
     Key?                                                        key = null,
-    required Iterable<(String, IconData)>                       children,
+    required Iterable<(String, IconData)>                       destination,
     required Integer                                            value,
     required Void Function(BuildContext context, Integer value) onChanged,
   }) : this._(
     key: key,
     variant: .standard,
-    destination: children,
+    destination: destination,
     value: value,
     onChanged: onChanged,
   );
@@ -2092,6 +2109,7 @@ class StyledNavigationBar extends StatelessWidget {
         destinations: this.destination.map((value) => material.NavigationDestination(
           icon: IconView.of(value.$2),
           label: value.$1,
+          tooltip: '',
         )).toList(),
         selectedIndex: this.value,
         onDestinationSelected: (value) => this.onChanged(context, value),
@@ -2112,22 +2130,22 @@ class StyledNavigationDrawer extends StatelessWidget {
   const StyledNavigationDrawer._({
     super.key,
     required this.variant,
-    required this.children,
+    required this.content,
   });
 
   const StyledNavigationDrawer.standard({
     Key?                      key = null,
-    required Iterable<Widget> children,
+    required Iterable<Widget> content,
   }) : this._(
     key: key,
     variant: .standard,
-    children: children,
+    content: content,
   );
 
   // ----------------
 
   final StyledNavigationDrawerVariant variant;
-  final Iterable<Widget>              children;
+  final Iterable<Widget>              content;
 
   // ----------------
 
@@ -2135,7 +2153,7 @@ class StyledNavigationDrawer extends StatelessWidget {
   build(context) {
     return switch (this.variant) {
       .standard => material.NavigationDrawer(
-        children: this.children.toList(),
+        children: this.content.toList(),
       ),
     };
   }
@@ -2213,23 +2231,23 @@ class StyledMenu<TValue> {
   const StyledMenu._({
     required this.variant,
     required this.position,
-    required this.children,
+    required this.content,
   });
 
   const StyledMenu.standard({
     required StyledMenuPosition                position,
-    required Iterable<StyledMenuItem<TValue>?> children,
+    required Iterable<StyledMenuItem<TValue>?> content,
   }) : this._(
     variant: .standard,
     position: position,
-    children: children,
+    content: content,
   );
 
   // ----------------
 
   final StyledMenuVariant                 variant;
   final StyledMenuPosition                position;
-  final Iterable<StyledMenuItem<TValue>?> children;
+  final Iterable<StyledMenuItem<TValue>?> content;
 
 }
 
@@ -2251,7 +2269,7 @@ extension StyledMenuExtension on StyledMenu<dynamic> {
     return await material.showMenu(
       context: context,
       position: position,
-      items: menu.children.length == 0
+      items: menu.content.length == 0
         ? [
           material.PopupMenuItem(
             height: 16,
@@ -2260,7 +2278,7 @@ extension StyledMenuExtension on StyledMenu<dynamic> {
             child: null,
           ),
         ]
-        : menu.children.map((item) => item == null
+        : menu.content.map((item) => item == null
           ? material.PopupMenuDivider()
           : material.PopupMenuItem(
             enabled: item.enabled,

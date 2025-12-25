@@ -6,7 +6,7 @@ export module twinning.kernel.tool.popcap.crypt_data.common;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.crypt_data.version;
 
-export namespace Twinning::Kernel::Tool::PopCap::CryptData {
+export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 	template <auto version> requires (check_version(version))
 	struct Common {

@@ -22,7 +22,7 @@ def main(platform: str) -> None:
             '--mode=release',
             '--plat=windows',
             '--arch=x64',
-            '--toolchain=mingw',
+            '--toolchain=mingw[clang]',
             '--runtimes=c++_shared',
         ])
         execute_command(module_directory, [

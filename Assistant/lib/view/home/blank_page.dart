@@ -20,7 +20,7 @@ class BlankPage extends StatelessWidget {
   @override
   build(context) {
     return ModulePageRegion(
-      onDropFile: null,
+      onStorageDrop: null,
       content: BoxContainer.of(
         padding: .fromLTRB(16, 16, 16, 16),
         align: .center,
@@ -30,7 +30,7 @@ class BlankPage extends StatelessWidget {
             tooltip: 'Launcher',
             icon: IconView.of(IconSet.widgets, size: 128),
             onPressed: (context) async {
-              Provider.of<SettingProvider>(context, listen: false).state.homeShowLauncherPanel!();
+              Provider.of<SettingProvider>(context, listen: false).state.homeShowLauncher!();
             },
           ),
         ),

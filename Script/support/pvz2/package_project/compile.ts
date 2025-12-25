@@ -1,4 +1,4 @@
-namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
+namespace Twinning.Script.Support.Pvz2.PackageProject.Compile {
 
 	// #region utility
 
@@ -15,7 +15,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 	): void {
 		Console.information(`Compiling ...`, [`${package_setting.name}/${part_name}/${group_name}/${resource_name}`]);
 		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
-		let resource_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(resource_directory)) as ResourceSetting;
+		let resource_setting = KernelX.Json.read_fs_js(make_scope_setting_path(resource_directory)) as ResourceSetting;
 		if (resource_setting.category.resolution !== null && !package_setting.category.resolution.includes(resource_setting.category.resolution)) {
 			return;
 		}
@@ -132,8 +132,8 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 									size: resource_property.size,
 									format: resource_property.format,
 									pitch: resource_property.pitch,
-									...(package_setting.version.extended_texture_information_for_pvz2_cn < 1n ? {} : { additional_byte_count: resource_property.additional_byte_count }),
-									...(package_setting.version.extended_texture_information_for_pvz2_cn < 2n ? {} : { scale: 100n }),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 1n ? {} : { additional_byte_count: resource_property.additional_byte_count }),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 2n ? {} : { scale: 100n }),
 								},
 							},
 						},
@@ -153,7 +153,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				break;
 			}
 			case 'special_rton': {
-				let resource_property = resource_setting.property as SpecialRTONResourceProperty;
+				let resource_property = resource_setting.property as SpecialRtonResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'rton', resource_property.conversion);
 				{
@@ -161,7 +161,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.rton';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
-					KernelX.Tool.PopCap.ReflectionObjectNotation.encode_cipher_fs(package_resource_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
+					KernelX.Tool.Popcap.ReflectionObjectNotation.encode_cipher_fs(package_resource_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
 					resource_state.push({
 						category: resource_setting.category,
 						definition: {
@@ -187,13 +187,13 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				break;
 			}
 			case 'special_ptx': {
-				let resource_property = resource_setting.property as SpecialPTXResourceProperty;
+				let resource_property = resource_setting.property as SpecialPtxResourceProperty;
 				let source_directory = make_scope_child_path(resource_directory, 'source.sprite');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'ptx', resource_property.conversion);
 				let source_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
 				for (let sprite_resource_property of resource_property.sprite) {
 					let source_file = make_scope_child_path(source_directory, sprite_resource_property.source + '.png');
-					let source = KernelX.Image.File.PNG.read_fs_of(source_file);
+					let source = KernelX.Image.File.Png.read_fs_of(source_file);
 					let source_view = source.view();
 					source_list[sprite_resource_property.source] = [source, source_view];
 				}
@@ -228,7 +228,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 					}
 					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, { w: Number(value[1].size().value[0]), h: Number(value[1].size().value[1]) }]));
 					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
-					let atlas_size = PopCap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
+					let atlas_size = Popcap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));
 					let atlas_view = atlas.view();
 					for (let sprite_resource_property of resource_property.sprite) {
@@ -245,20 +245,20 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 						let sprite_view = atlas_view.sub(Kernel.Image.ImagePosition.value(sprite_resource_manifest.position), Kernel.Image.ImageSize.value(sprite_resource_manifest.size));
 						sprite_view.draw(sprite_list[sprite_resource_property.source][1]);
 					}
-					let texture_encode_option: PopCap.Texture.Encoding.EncodeOption = {
+					let texture_encode_option: Popcap.Texture.Encoding.EncodeOption = {
 						rgb_etc1_a_palette: null,
 					};
 					if (conversion_setting.format === 'rgb_etc1_a_palette') {
 						texture_encode_option.rgb_etc1_a_palette = {
-							palette: KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.evaluate_palette(atlas_view),
+							palette: KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.evaluate_palette(atlas_view),
 						};
 					}
-					let resource_data_size = Support.PopCap.Texture.Encoding.compute_data_size(atlas_size, conversion_setting.format, texture_encode_option);
+					let resource_data_size = Support.Popcap.Texture.Encoding.compute_data_size(atlas_size, conversion_setting.format, texture_encode_option);
 					if (buffer.size().value < resource_data_size) {
 						buffer.allocate(Kernel.Size.value(resource_data_size));
 					}
 					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
-					Support.PopCap.Texture.Encoding.encode(atlas_view, resource_data, conversion_setting.format, texture_encode_option);
+					Support.Popcap.Texture.Encoding.encode(atlas_view, resource_data, conversion_setting.format, texture_encode_option);
 					KernelX.Storage.write_file(package_resource_file, resource_data.stream_view());
 					resource_state.push({
 						category: resource_category,
@@ -269,9 +269,9 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 								value: {
 									size: atlas_size,
 									format: conversion_setting.index,
-									pitch: atlas_size[0] * PopCap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) / 8n,
-									...(package_setting.version.extended_texture_information_for_pvz2_cn < 1n ? {} : { additional_byte_count: conversion_setting.format !== 'rgb_etc1_a_palette' ? 0n : KernelX.Tool.Miscellaneous.PvZ2CNAlphaPaletteTexture.compute_data_size_with_palette(atlas_size, texture_encode_option.rgb_etc1_a_palette!.palette.length) }),
-									...(package_setting.version.extended_texture_information_for_pvz2_cn < 2n ? {} : { scale: 100n }),
+									pitch: atlas_size[0] * Popcap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) / 8n,
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 1n ? {} : { additional_byte_count: conversion_setting.format !== 'rgb_etc1_a_palette' ? 0n : KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.compute_data_size_with_palette(atlas_size, texture_encode_option.rgb_etc1_a_palette!.palette.length) }),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 2n ? {} : { scale: 100n }),
 								},
 							},
 						},
@@ -291,7 +291,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				break;
 			}
 			case 'special_pam': {
-				let resource_property = resource_setting.property as SpecialWEMResourceProperty;
+				let resource_property = resource_setting.property as SpecialWemResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'pam', resource_property.conversion);
 				{
@@ -299,7 +299,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.pam';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					KernelX.Storage.remove_if(package_resource_file);
-					KernelX.Tool.PopCap.Animation.encode_fs(package_resource_file, source_file, conversion_setting.version, buffer.view());
+					KernelX.Tool.Popcap.Animation.encode_fs(package_resource_file, source_file, conversion_setting.version, buffer.view());
 					resource_state.push({
 						category: resource_setting.category,
 						definition: {
@@ -325,7 +325,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				break;
 			}
 			case 'special_wem': {
-				let resource_property = resource_setting.property as SpecialWEMResourceProperty;
+				let resource_property = resource_setting.property as SpecialWemResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.wav');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'wem', resource_property.conversion);
 				{
@@ -377,7 +377,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		buffer: Kernel.ByteArray,
 	): void {
 		let group_directory = make_scope_root_path(project_directory, part_name, group_name);
-		let group_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(group_directory)) as GroupSetting;
+		let group_setting = KernelX.Json.read_fs_js(make_scope_setting_path(group_directory)) as GroupSetting;
 		variable_list = merge_variable_list(variable_list, group_setting.variable);
 		group_state.identifier = parse_variable_string(group_name, variable_list);
 		for (let resource_name of list_scope_child_name(group_directory, resource_scope)) {
@@ -396,7 +396,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 		buffer: Kernel.ByteArray,
 	): void {
 		let part_directory = make_scope_root_path(project_directory, part_name);
-		let part_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(part_directory)) as PartSetting;
+		let part_setting = KernelX.Json.read_fs_js(make_scope_setting_path(part_directory)) as PartSetting;
 		variable_list = merge_variable_list(variable_list, part_setting.variable);
 		for (let group_name of list_scope_child_name(part_directory, group_scope)) {
 			compile_group(project_directory, part_name, group_name, group_scope.slice(1) as any, package_setting, variable_list, query_state_of_group(part_state, group_name), buffer);
@@ -432,7 +432,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 	): void {
 		check_version_file(project_directory);
 		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
-		let project_setting = KernelX.JSON.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = KernelX.Json.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
 		if (target_scope === null) {
 			target_scope = [[]];
 		}
@@ -444,7 +444,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 			let package_state_file = make_build_package_state_path(project_directory, package_setting.name);
 			let package_state: PackageState;
 			try {
-				package_state = KernelX.JSON.read_fs_js(package_state_file) as PackageState;
+				package_state = KernelX.Json.read_fs_js(package_state_file) as PackageState;
 			}
 			catch (e) {
 				package_state = {
@@ -455,7 +455,7 @@ namespace Twinning.Script.Support.PvZ2.PackageProject.Compile {
 				compile_project(project_directory, scope, package_setting, [], package_state, buffer);
 			}
 			Console.information(`Saving state ...`, []);
-			KernelX.JSON.write_fs_js(package_state_file, package_state, true, true, true, true);
+			KernelX.Json.write_fs_js(package_state_file, package_state, true, true, true, true);
 		}
 		return;
 	}

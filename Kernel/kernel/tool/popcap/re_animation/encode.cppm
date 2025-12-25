@@ -9,7 +9,7 @@ import twinning.kernel.tool.popcap.re_animation.definition;
 import twinning.kernel.tool.popcap.re_animation.common;
 import twinning.kernel.tool.common.byte_stream;
 
-export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
+export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 	template <auto version> requires (check_version(version, {}, {}))
 	struct Encode :

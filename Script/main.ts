@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '154';
+	export const k_version = '155';
 
 	// ----------------
 
@@ -196,7 +196,7 @@ namespace Twinning.Script {
 			`executable/script_console`,
 			`executable/compare_language_file`,
 			`executable/compute_wwise_short_identifier`,
-			`executable/extract_rsb_from_pvz2_cn_apk_directory`,
+			`executable/extract_rsb_from_pvz2cn_apk_directory`,
 			`runner/runner`,
 			`setting`,
 		];
@@ -244,7 +244,7 @@ namespace Twinning.Script {
 			g_thread_manager = new ThreadManager();
 			HomePath.initialize(home_path);
 			// load setting
-			let setting_data = KernelX.JSON.read_fs_js(HomePath.of(`~/script/configuration/setting.json`));
+			let setting_data = KernelX.Json.read_fs_js(HomePath.of(`~/script/configuration/setting.json`));
 			if (!CheckHelper.is_object_of_object(setting_data)) {
 				throw new Error(`setting data invalid`);
 			}

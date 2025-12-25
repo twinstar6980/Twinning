@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.data.differentiation.vcdiff.common;
 import twinning.kernel.third.open_vcdiff;
 
-export namespace Twinning::Kernel::Tool::Data::Differentiation::VCDiff {
+export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 
 	struct Decode :
 		Common {

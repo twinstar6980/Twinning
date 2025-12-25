@@ -1,12 +1,18 @@
 import '/common.dart';
+import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
+import '/utility/vdf_helper.dart';
 import '/utility/byte_stream_view.dart';
 import '/utility/external_tool_helper.dart';
+import 'dart:ui';
 import 'dart:math';
+import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ffi' as lib;
+import 'package:ffi/ffi.dart' as lib;
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
 import 'package:archive/archive_io.dart' as lib;
+import 'package:win32/win32.dart' as lib;
 
 // ----------------
 
@@ -37,14 +43,26 @@ enum GamePackageType {
 }
 
 class GameInformation {
-  late String           path;
-  late String?          identifier;
-  late String?          version;
-  late String           name;
-  late Image?           icon;
-  late String?          key;
-  late GameProgramState program;
-  late GameRecordState  record;
+  String           path;
+  String?          library;
+  String?          identifier;
+  String?          version;
+  String           name;
+  Image?           icon;
+  String?          key;
+  GameProgramState program;
+  GameRecordState  record;
+  GameInformation({
+    this.path = '',
+    this.library = null,
+    this.identifier = null,
+    this.version = null,
+    this.name = '',
+    this.icon = null,
+    this.key = null,
+    this.program = .none,
+    this.record = .none,
+  });
 }
 
 enum GameFunctionType {
@@ -539,12 +557,12 @@ class GameRecordHelper {
       var itemData = await StorageHelper.readFile(itemFile); // TODO 8
       if (itemData.length == 8) {
         if (itemData.buffer.asUint32List().first == 0x00000000) {
-          state = GameRecordState.decrypted;
+          state = .decrypted;
         }
         else if (key != null) {
           encryptData(itemData, key);
           if (itemData.buffer.asUint32List().first == 0x00000000) {
-            state = GameRecordState.original;
+            state = .original;
           }
         }
       }
@@ -596,7 +614,7 @@ class GameRecordHelper {
   // #region archive
 
   static Future<Void> export(
-    String     recordDirectory,
+    String     targetDirectory,
     String     archiveFile,
     Uint8List? key,
   ) async {
@@ -605,8 +623,8 @@ class GameRecordHelper {
     // TODO
     await StorageHelper.writeFileText('${archiveDirectory}/configuration', '');
     await StorageHelper.createDirectory('${archiveDirectory}/data');
-    for (var dataFile in await listFile(recordDirectory)) {
-      await encryptFile('${recordDirectory}/${dataFile}', '${recordDirectory}/data/${dataFile}', key);
+    for (var dataFile in await listFile(targetDirectory)) {
+      await encryptFile('${targetDirectory}/${dataFile}', '${targetDirectory}/data/${dataFile}', key);
     }
     if (await StorageHelper.exist(archiveFile)) {
       await StorageHelper.remove(archiveFile);
@@ -619,7 +637,7 @@ class GameRecordHelper {
   }
 
   static Future<Void> import(
-    String     recordDirectory,
+    String     targetDirectory,
     String     archiveFile,
     Uint8List? key,
   ) async {
@@ -628,14 +646,14 @@ class GameRecordHelper {
     var archiveData = await StorageHelper.readFile(archiveFile);
     var archive = lib.ZipDecoder().decodeBytes(archiveData);
     await lib.extractArchiveToDisk(archive, archiveDirectory);
-    if (await StorageHelper.exist(recordDirectory)) {
-      await StorageHelper.remove(recordDirectory);
+    if (await StorageHelper.exist(targetDirectory)) {
+      await StorageHelper.remove(targetDirectory);
     }
     // TODO
     var configuration = StorageHelper.readFileText('${archiveDirectory}/configuration');
-    await StorageHelper.createDirectory(recordDirectory);
+    await StorageHelper.createDirectory(targetDirectory);
     for (var dataFile in await listFile('${archiveDirectory}/data')) {
-      await encryptFile('${archiveDirectory}/data/${dataFile}', '${recordDirectory}/${dataFile}', key);
+      await encryptFile('${archiveDirectory}/data/${dataFile}', '${targetDirectory}/${dataFile}', key);
     }
     await StorageHelper.remove(archiveDirectory);
     return;
@@ -645,33 +663,184 @@ class GameRecordHelper {
 
 }
 
-enum GameDirectoryType {
-  windowsCustom,
-  windowsSteam,
-  androidGoogle,
-}
-
 class GameRepositoryHelper {
+
+  // #region common
+
+  static Future<Image?> extractProgramIcon(
+    String programFile,
+  ) async {
+    var result = null as Image?;
+    var hIconPath = programFile.toNativeUtf16();
+    var hIconIndex = lib.calloc.call<lib.Uint16>();
+    var hIcon = lib.ExtractAssociatedIcon(lib.NULL, hIconPath, hIconIndex);
+    lib.calloc.free(hIconPath);
+    lib.calloc.free(hIconIndex);
+    var hIconInfo = lib.calloc.call<lib.ICONINFO>();
+    if (lib.GetIconInfo(hIcon, hIconInfo) == lib.TRUE) {
+      var hBitmap = lib.calloc.call<lib.BITMAP>();
+      if (lib.GetObject(hIconInfo.ref.hbmColor, lib.sizeOf<lib.BITMAP>(), hBitmap) != 0) {
+        var hBitmapInfo = lib.calloc.call<lib.BITMAPINFO>();
+        hBitmapInfo.ref.bmiHeader.biSize = lib.sizeOf<lib.BITMAPINFOHEADER>();
+        hBitmapInfo.ref.bmiHeader.biWidth = hBitmap.ref.bmWidth;
+        hBitmapInfo.ref.bmiHeader.biHeight = -hBitmap.ref.bmHeight;
+        hBitmapInfo.ref.bmiHeader.biPlanes = 1;
+        hBitmapInfo.ref.bmiHeader.biBitCount = 32;
+        hBitmapInfo.ref.bmiHeader.biCompression = lib.BI_RGB;
+        var hDeviceContext = lib.GetDC(lib.NULL);
+        if (hDeviceContext != lib.NULL) {
+          var hDataSize = hBitmap.ref.bmWidth * hBitmap.ref.bmHeight * 4;
+          var hData = lib.calloc.call<lib.Uint8>(hDataSize);
+          if (lib.GetDIBits(hDeviceContext, hIconInfo.ref.hbmColor, 0, hBitmap.ref.bmHeight, hData, hBitmapInfo, lib.DIB_RGB_COLORS) != 0) {
+            result = await ConvertHelper.parseImageFromData(hData.asTypedList(hDataSize), width: hBitmap.ref.bmWidth, height: hBitmap.ref.bmHeight, isRawBgra: true);
+          }
+          lib.calloc.free(hData);
+        }
+        assertTest(lib.ReleaseDC(lib.NULL, hDeviceContext) != 0);
+        lib.calloc.free(hBitmapInfo);
+        assertTest(lib.DeleteObject(hIconInfo.ref.hbmColor) != 0);
+        assertTest(lib.DeleteObject(hIconInfo.ref.hbmMask) != 0);
+      }
+      lib.calloc.free(hBitmap);
+    }
+    lib.calloc.free(hIconInfo);
+    return result;
+  }
 
   static Future<(GameProgramState, GameRecordState)> checkGameState(
     String  gameDirectory,
     String? version,
-    String? user,
+    String  user,
   ) async {
     var programState = GameProgramState.none;
     var recordState = GameRecordState.none;
+    if (await StorageHelper.existFile('${gameDirectory}/KairoGames.exe')) {
+      programState = !await StorageHelper.existFile('${gameDirectory}/KairoGames.exe.${version ?? '0'}.bak')
+        ? .original
+        : .modified;
+    }
+    if (await StorageHelper.existDirectory('${gameDirectory}/saves/${user}')) {
+      recordState = await GameRecordHelper.detectState('${gameDirectory}/saves/${user}', makeKeyFromSteamUser(user));
+    }
     return (programState, recordState);
   }
 
-  static Future<GameInformation> loadGame(
+  // #endregion
+
+  // #region custom
+
+  static Future<GameInformation?> loadCustomGame(
     String gameDirectory,
-    GameDirectoryType type,
   ) async {
-    var information = GameInformation();
-    if (type == .windowsSteam) {
-      
+    if (!await StorageHelper.existFile('${gameDirectory}/KairoGames.exe')) {
+      return null;
     }
+    var information = GameInformation();
+    information.path = gameDirectory;
+    information.library = null;
+    information.identifier = null;
+    information.version = null;
+    information.name = StorageHelper.name(gameDirectory);
+    information.icon = await extractProgramIcon('${gameDirectory}/KairoGames.exe');
+    information.key = '0';
+    if (!await StorageHelper.existDirectory('${gameDirectory}/saves')) {
+      information.key = (await StorageHelper.listDirectory('${gameDirectory}/saves', 1, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it)) ?? '0';
+    }
+    var gameState = await checkGameState(gameDirectory, information.version, information.key!);
+    information.program = gameState.$1;
+    information.record = gameState.$2;
     return information;
   }
+
+  static Future<Boolean> checkCustomRepository(
+    String repositoryDirectory,
+  ) async {
+    return await StorageHelper.existDirectory('${repositoryDirectory}');
+  }
+
+  static Future<List<GameInformation>> loadCustomRepository(
+    String repositoryDirectory,
+  ) async {
+    var libraryList = await StorageHelper.listDirectory(repositoryDirectory, 1, false, true);
+    var result = <GameInformation>[];
+    for (var library in libraryList) {
+      var libraryDirectory = '${repositoryDirectory}/${library}';
+      var gameConfiguration = await loadCustomGame(libraryDirectory);
+      if (gameConfiguration != null) {
+        result.add(gameConfiguration);
+      }
+    }
+    return result;
+  }
+
+  // #endregion
+
+  // #region steam
+
+  static Uint8List makeKeyFromSteamUser(
+    String user,
+  ) {
+    var keyValue = Integer.parse(user);
+    var key = Uint64List.fromList([keyValue]).buffer.asUint8List();
+    return key;
+  }
+
+  static Future<GameInformation?> loadSteamGame(
+    String libraryDirectory,
+    String gameIdentifier,
+  ) async {
+    var gameManifestFile = '${libraryDirectory}/steamapps/appmanifest_${gameIdentifier}.acf';
+    if (!await StorageHelper.existFile(gameManifestFile)) {
+      return null;
+    }
+    var gameManifest = await VdfHelper.deserializeFile(gameManifestFile);
+    assertTest(gameManifest.length == 1);
+    assertTest(gameManifest.entries.first.key == 'AppState');
+    assertTest(gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['appid']!.as<Integer>().toString() == gameIdentifier);
+    var gameDirectory = '${libraryDirectory}/steamapps/common/${gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['installdir']!.as<String>()}';
+    if (!await StorageHelper.existFile('${gameDirectory}/KairoGames.exe')) {
+      return null;
+    }
+    var information = GameInformation();
+    information.path = gameDirectory;
+    information.library = libraryDirectory;
+    information.identifier = gameIdentifier;
+    information.version = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['buildid']!.as<Integer>().toString();
+    information.name = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['name']!.as<String>();
+    information.icon = await extractProgramIcon('${gameDirectory}/KairoGames.exe');
+    information.key = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
+    var gameState = await checkGameState(gameDirectory, information.version, information.key!);
+    information.program = gameState.$1;
+    information.record = gameState.$2;
+    return information;
+  }
+
+  static Future<Boolean> checkSteamRepository(
+    String repositoryDirectory,
+  ) async {
+    return await StorageHelper.existFile('${repositoryDirectory}/steam.exe');
+  }
+
+  static Future<List<GameInformation>> loadSteamRepository(
+    String repositoryDirectory,
+  ) async {
+    var libraryList = await VdfHelper.deserializeFile('${repositoryDirectory}/steamapps/libraryfolders.vdf');
+    assertTest(libraryList.length == 1);
+    assertTest(libraryList.entries.first.key == 'libraryfolders');
+    var result = <GameInformation>[];
+    for (var library in libraryList['libraryfolders']!.as<Map<Object?, Object?>>().entries) {
+      var libraryDirectory = library.value!.as<Map<Object?, Object?>>()['path']!.as<String>().replaceAll('\\\\', '/');
+      for (var game in library.value!.as<Map<Object?, Object?>>()['apps']!.as<Map<Object?, Object?>>().entries) {
+        var gameIdentifier = game.key!.as<String>();
+        var gameConfiguration = await loadSteamGame(libraryDirectory, gameIdentifier);
+        if (gameConfiguration != null) {
+          result.add(gameConfiguration);
+        }
+      }
+    }
+    return result;
+  }
+
+  // #endregion
 
 }

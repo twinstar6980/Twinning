@@ -1,4 +1,4 @@
-namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamGroup {
+namespace Twinning.Script.Executor.Implement.Popcap.ResourceStreamGroup {
 
 	// #region interface
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamGroup {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ResourceStreamGroup.VersionNumberE,
+						option: KernelX.Tool.Popcap.ResourceStreamGroup.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -62,7 +62,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamGroup {
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.PopCap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -86,7 +86,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamGroup {
 					}),
 					typical_argument_integer({
 						identifier: 'version_number',
-						option: KernelX.Tool.PopCap.ResourceStreamGroup.VersionNumberE,
+						option: KernelX.Tool.Popcap.ResourceStreamGroup.VersionNumberE,
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -113,7 +113,7 @@ namespace Twinning.Script.Executor.Implement.PopCap.ResourceStreamGroup {
 				worker: ({ data_file, bundle_directory, version_number }, temporary: {}) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.PopCap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
+					KernelX.Tool.Popcap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
 					return;
 				},
 			}),

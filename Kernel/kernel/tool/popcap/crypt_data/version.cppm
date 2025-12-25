@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.crypt_data.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::CryptData {
+export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 	M_record_of_map(
 		M_wrap(Version),

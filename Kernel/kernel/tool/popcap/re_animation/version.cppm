@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.re_animation.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::ReAnimation {
+export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 	M_enumeration(
 		M_wrap(VersionPlatform),

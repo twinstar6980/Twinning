@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.popcap.reflection_object_notation.version;
 import twinning.kernel.utility;
 
-export namespace Twinning::Kernel::Tool::PopCap::ReflectionObjectNotation {
+export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 	M_record_of_map(
 		M_wrap(Version),
