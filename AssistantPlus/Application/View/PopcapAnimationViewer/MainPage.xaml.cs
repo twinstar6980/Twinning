@@ -473,11 +473,11 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		// ----------------
 
 		public async Task Activate (
-			Tuple<Boolean, Size>            target,
+			Tuple<Boolean, Size>              target,
 			PopcapAnimationHelper.FrameRange? frameRange,
-			Floater?                        frameSpeed,
-			Boolean?                        progressState,
-			TimeSpan?                       initialTime
+			Floater?                          frameSpeed,
+			Boolean?                          progressState,
+			TimeSpan?                         initialTime
 		) {
 			AssertTest(this.Loaded && !this.Activated);
 			var activeSprite = default(PopcapAnimationModel.Sprite);
@@ -753,13 +753,13 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		// ----------------
 
 		public async Task ApplyLoad (
-			String                          animationFile,
-			List<Integer>?                  imageFilter,
-			List<Integer>?                  spriteFilter,
-			Tuple<Boolean, Size>?           activeTarget,
+			String                            animationFile,
+			List<Integer>?                    imageFilter,
+			List<Integer>?                    spriteFilter,
+			Tuple<Boolean, Size>?             activeTarget,
 			PopcapAnimationHelper.FrameRange? activeFrameRange,
-			Floater?                        activeFrameSpeed,
-			Boolean?                        activeProgressState
+			Floater?                          activeFrameSpeed,
+			Boolean?                          activeProgressState
 		) {
 			if (this.Loaded) {
 				if (this.Activated) {

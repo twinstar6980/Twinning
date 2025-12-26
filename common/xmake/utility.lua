@@ -195,7 +195,7 @@ function apply_compiler_option_warning_regular(target)
 		'-Wno-exit-time-destructors',
 		{ private = true }
 	)
-	if m.system:is('windows', 'linux') then
+	if m.system:is('windows', 'linux', 'macintosh', 'iphone') then
 		target:add(
 			'cxflags',
 			'-Wno-nrvo',

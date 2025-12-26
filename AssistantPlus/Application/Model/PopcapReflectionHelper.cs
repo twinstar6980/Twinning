@@ -22,9 +22,9 @@ namespace Twinning.AssistantPlus {
 			}
 
 			public override void Write (
-				Utf8JsonWriter                    writer,
+				Utf8JsonWriter                      writer,
 				PopcapReflectionModel.CompositeType value,
-				JsonSerializerOptions             options
+				JsonSerializerOptions               options
 			) {
 				throw new NotImplementedException();
 			}
@@ -126,7 +126,7 @@ namespace Twinning.AssistantPlus {
 				PopcapReflectionModel.PrimitiveType.List        => $"{ripe.Primitive} • {PopcapReflectionHelper.MakeTypeName(ripe.Element.AsNotNull())}",
 				PopcapReflectionModel.PrimitiveType.Map         => $"{ripe.Primitive} • {PopcapReflectionHelper.MakeTypeName(ripe.Element.AsNotNull())}",
 				PopcapReflectionModel.PrimitiveType.Object      => $"{ripe.Primitive} • {ripe.Class.AsNotNull()}",
-				_                                             => throw new UnreachableException(),
+				_                                               => throw new UnreachableException(),
 			};
 		}
 
@@ -167,7 +167,7 @@ namespace Twinning.AssistantPlus {
 		public static JsonNode MakeDataValue (
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.CompositeType type,
-			Object                            ripe
+			Object                              ripe
 		) {
 			var raw = default(JsonNode);
 			switch (type.Primitive) {
@@ -252,7 +252,7 @@ namespace Twinning.AssistantPlus {
 		public static Object ParseDataValue (
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.CompositeType type,
-			JsonNode                          raw
+			JsonNode                            raw
 		) {
 			var ripe = default(Object);
 			switch (type.Primitive) {
@@ -349,7 +349,7 @@ namespace Twinning.AssistantPlus {
 		public static Object GenerateDataValueDefault (
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.CompositeType type,
-			Boolean                           withElement
+			Boolean                             withElement
 		) {
 			var value = default(Object);
 			switch (type.Primitive) {

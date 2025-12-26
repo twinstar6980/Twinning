@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor {
 
 	// ----------------
 
-	export type TypicalMethodImplementeModule = {
+	export type TypicalMethodImplementation = {
 		activate: () => void;
 	};
 

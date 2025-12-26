@@ -69,11 +69,11 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		// ----------------
 
 		public void Load (
-			PopcapAnimationModel.Animation     animation,
+			PopcapAnimationModel.Animation   animation,
 			Dictionary<String, BitmapSource> texture,
 			List<Boolean>                    imageFilter,
 			List<Boolean>                    spriteFilter,
-			PopcapAnimationModel.Sprite        activeSprite
+			PopcapAnimationModel.Sprite      activeSprite
 		) {
 			AssertTest(!this.Loaded);
 			var visual = PopcapAnimationHelper.VisualizeSprite(animation, texture, activeSprite, imageFilter, spriteFilter);

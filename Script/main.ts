@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '155';
+	export const k_version = '156';
 
 	// ----------------
 
@@ -157,42 +157,42 @@ namespace Twinning.Script {
 			`support/kairosoft/game/encrypt_record`,
 			`executor/generic`,
 			`executor/typical`,
-			`executor/implement/common.utility`,
-			`executor/implement/data.hash`,
-			`executor/implement/data.encoding`,
-			`executor/implement/data.encryption`,
-			`executor/implement/data.compression`,
-			`executor/implement/data.differentiation`,
-			`executor/implement/text.json`,
-			`executor/implement/text.xml`,
-			`executor/implement/texture.transformation`,
-			`executor/implement/texture.encoding`,
-			`executor/implement/texture.atlas`,
-			`executor/implement/wwise.media`,
-			`executor/implement/wwise.sound_bank`,
-			`executor/implement/marmalade.dzip`,
-			`executor/implement/popcap.zlib`,
-			`executor/implement/popcap.crypt_data`,
-			`executor/implement/popcap.reflection_object_notation`,
-			`executor/implement/popcap.texture`,
-			`executor/implement/popcap.u_texture`,
-			`executor/implement/popcap.sexy_texture`,
-			`executor/implement/popcap.animation`,
-			`executor/implement/popcap.re_animation`,
-			`executor/implement/popcap.particle`,
-			`executor/implement/popcap.trail`,
-			`executor/implement/popcap.particle_effect`,
-			`executor/implement/popcap.render_effect`,
-			`executor/implement/popcap.character_font_widget_2`,
-			`executor/implement/popcap.package`,
-			`executor/implement/popcap.resource_stream_group`,
-			`executor/implement/popcap.resource_stream_bundle`,
-			`executor/implement/popcap.resource_stream_bundle_patch`,
-			`executor/implement/pvz2.text_table`,
-			`executor/implement/pvz2.resource_manifest`,
-			`executor/implement/pvz2.package_project`,
-			`executor/implement/pvz2.remote_project`,
-			`executor/implement/kairosoft.game`,
+			`executor/implementation/common.utility`,
+			`executor/implementation/data.hash`,
+			`executor/implementation/data.encoding`,
+			`executor/implementation/data.encryption`,
+			`executor/implementation/data.compression`,
+			`executor/implementation/data.differentiation`,
+			`executor/implementation/text.json`,
+			`executor/implementation/text.xml`,
+			`executor/implementation/texture.transformation`,
+			`executor/implementation/texture.encoding`,
+			`executor/implementation/texture.atlas`,
+			`executor/implementation/wwise.media`,
+			`executor/implementation/wwise.sound_bank`,
+			`executor/implementation/marmalade.dzip`,
+			`executor/implementation/popcap.zlib`,
+			`executor/implementation/popcap.crypt_data`,
+			`executor/implementation/popcap.reflection_object_notation`,
+			`executor/implementation/popcap.texture`,
+			`executor/implementation/popcap.u_texture`,
+			`executor/implementation/popcap.sexy_texture`,
+			`executor/implementation/popcap.animation`,
+			`executor/implementation/popcap.re_animation`,
+			`executor/implementation/popcap.particle`,
+			`executor/implementation/popcap.trail`,
+			`executor/implementation/popcap.particle_effect`,
+			`executor/implementation/popcap.render_effect`,
+			`executor/implementation/popcap.character_font_widget_2`,
+			`executor/implementation/popcap.package`,
+			`executor/implementation/popcap.resource_stream_group`,
+			`executor/implementation/popcap.resource_stream_bundle`,
+			`executor/implementation/popcap.resource_stream_bundle_patch`,
+			`executor/implementation/pvz2.text_table`,
+			`executor/implementation/pvz2.resource_manifest`,
+			`executor/implementation/pvz2.package_project`,
+			`executor/implementation/pvz2.remote_project`,
+			`executor/implementation/kairosoft.game`,
 			`executable/script_console`,
 			`executable/compare_language_file`,
 			`executable/compute_wwise_short_identifier`,
@@ -251,9 +251,9 @@ namespace Twinning.Script {
 			g_setting = setting_data as Setting;
 			update_setting(g_setting, g_setting);
 			// activate executor
-			let executor_implement = Executor.Implement as Record<string, Record<string, Executor.TypicalMethodImplementeModule>>;
-			for (let major_name of Object.keys(executor_implement)) {
-				let major_module = executor_implement[major_name];
+			let executor_implementation = Executor.Implementation as Record<string, Record<string, Executor.TypicalMethodImplementation>>;
+			for (let major_name of Object.keys(executor_implementation)) {
+				let major_module = executor_implementation[major_name];
 				for (let minor_name of Object.keys(major_module)) {
 					let minor_module = major_module[minor_name];
 					minor_module.activate();

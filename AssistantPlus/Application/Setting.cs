@@ -28,17 +28,17 @@ namespace Twinning.AssistantPlus {
 		public Boolean                                 ForwarderImmediateJump       = default!;
 		public String                                  ModuleConfigurationDirectory = default!;
 		public ModuleLauncherSetting                   ModuleLauncher               = default!;
-		public View.CoreModdingWorker.Setting          CoreModdingWorker                = default!;
-		public View.CoreCommandSender.Setting          CoreCommandSender                = default!;
-		public View.CoreResourceShipper.Setting        CoreResourceShipper              = default!;
-		public View.PopcapAnimationViewer.Setting      PopcapAnimationViewer              = default!;
-		public View.PopcapReflectionDescriptor.Setting PopcapReflectionDescriptor         = default!;
-		public View.PopcapPackageBuilder.Setting       PopcapPackageBuilder               = default!;
+		public View.CoreModdingWorker.Setting          CoreModdingWorker            = default!;
+		public View.CoreCommandSender.Setting          CoreCommandSender            = default!;
+		public View.CoreResourceShipper.Setting        CoreResourceShipper          = default!;
+		public View.PopcapAnimationViewer.Setting      PopcapAnimationViewer        = default!;
+		public View.PopcapReflectionDescriptor.Setting PopcapReflectionDescriptor   = default!;
+		public View.PopcapPackageBuilder.Setting       PopcapPackageBuilder         = default!;
 	}
 
 	public record SettingState {
-		public CustomThemeBackdrop?                               ThemeBackdrop                  = default!;
-		public CustomThemeMode?                                   ThemeMode                      = default!;
+		public CustomThemeBackdrop?                               ThemeBackdrop                      = default!;
+		public CustomThemeMode?                                   ThemeMode                          = default!;
 		public List<List<View.CoreModdingWorker.ValueExpression>> CoreModdingWorkerSubmissionHistory = default!;
 	}
 

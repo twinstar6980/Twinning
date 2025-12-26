@@ -68,7 +68,7 @@ namespace Twinning.AssistantPlus {
 
 		public static PopcapAnimationModel.Image SelectImage (
 			PopcapAnimationModel.Animation animation,
-			Size                         index
+			Size                           index
 		) {
 			var result = default(PopcapAnimationModel.Image);
 			if (0 <= index && index < animation.Image.Count) {
@@ -82,7 +82,7 @@ namespace Twinning.AssistantPlus {
 
 		public static PopcapAnimationModel.Sprite SelectSprite (
 			PopcapAnimationModel.Animation animation,
-			Size                         index
+			Size                           index
 		) {
 			var result = default(PopcapAnimationModel.Sprite);
 			if (0 <= index && index < animation.Sprite.Count) {
@@ -172,9 +172,9 @@ namespace Twinning.AssistantPlus {
 		// ----------------
 
 		public static ImageVisual VisualizeImage (
-			PopcapAnimationModel.Animation     animation,
+			PopcapAnimationModel.Animation   animation,
 			Dictionary<String, BitmapSource> texture,
-			PopcapAnimationModel.Image         image
+			PopcapAnimationModel.Image       image
 		) {
 			var visual = new ImageVisual() {
 				Canvas = new () { },
@@ -196,9 +196,9 @@ namespace Twinning.AssistantPlus {
 		}
 
 		public static SpriteVisual VisualizeSprite (
-			PopcapAnimationModel.Animation     animation,
+			PopcapAnimationModel.Animation   animation,
 			Dictionary<String, BitmapSource> texture,
-			PopcapAnimationModel.Sprite        sprite,
+			PopcapAnimationModel.Sprite      sprite,
 			List<Boolean>                    imageFilter,
 			List<Boolean>                    spriteFilter
 		) {
@@ -335,7 +335,7 @@ namespace Twinning.AssistantPlus {
 		}
 
 		public static async Task<Dictionary<String, BitmapSource>> LoadTexture (
-			String                       directory,
+			String                         directory,
 			PopcapAnimationModel.Animation animation
 		) {
 			var result = new Dictionary<String, BitmapSource>(animation.Image.Count);

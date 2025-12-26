@@ -75,8 +75,8 @@ def main(platform: str) -> None:
             '--arch=arm64',
             '--toolchain=xcode',
             '--target_minver=11.5',
-            '--cc=clang-20',
-            '--cxx=clang-20',
+            '--cc=clang',
+            '--cxx=clang',
         ])
         execute_command(module_directory, [
             'xmake',
@@ -122,8 +122,8 @@ def main(platform: str) -> None:
             '--arch=arm64',
             '--toolchain=xcode',
             '--target_minver=15.6',
-            '--cc=clang-20',
-            '--cxx=clang-20',
+            '--cc=clang',
+            '--cxx=clang',
         ])
         execute_command(module_directory, [
             'xmake',
