@@ -2,6 +2,8 @@
 
 个人工具箱。
 
+> 具体参见 [工具介绍](./documentation/introduction.md) 。
+
 ## 模块组成
 
 * `Kernel`
