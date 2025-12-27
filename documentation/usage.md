@@ -106,7 +106,7 @@
 
 应用提供以下功能模块：
 
-* `Modding Worker`
+* `Task Worker`
 	
 	该模块模拟了 `Shell` 的控制台 UI 。
 	
@@ -114,13 +114,13 @@
 
 * `Command Sender`
 	
-	该模块配合 `Modding Worker` 使用，能够直观地编辑想要使用的功能与参数。
+	该模块配合 `Task Worker` 使用，能够直观地编辑想要使用的功能与参数。
 	
 	> 功能由模块设置中的 `Configuration` 文件定义。
 
 * `Resource Shipper`
 	
-	该模块配合 `Modding Worker` 使用，能够方便地转发文件并选择想要使用的功能与参数。
+	该模块配合 `Task Worker` 使用，能够方便地转发文件并选择想要使用的功能与参数。
 	
 	> 选项由模块设置中的 `Configuration` 文件定义。
 

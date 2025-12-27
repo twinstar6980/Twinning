@@ -39,7 +39,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			typeof(LauncherConfigurationPanel),
 			new (new ModuleLauncherConfiguration() {
 				Title = "",
-				Type = ModuleType.CoreModdingWorker,
+				Type = ModuleType.CoreTaskWorker,
 				Option = [],
 				Command = [],
 			})

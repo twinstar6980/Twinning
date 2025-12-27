@@ -123,7 +123,7 @@ class LauncherPanel extends StatelessWidget {
             onPressed: (context) async {
               setting.data.moduleLauncher.pinned.add(ModuleLauncherConfiguration(
                 title: 'Untitled',
-                type: .core_modding_worker,
+                type: .core_task_worker,
                 option: [],
               ));
               await setting.save();

@@ -194,11 +194,11 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			var actualCommand = new List<List<String>>();
 			foreach (var itemIndex in index) {
 				var item = this.Command[itemIndex];
-				var method = CoreModdingWorker.ForwardHelper.MakeMethodMaybeBatch(item.Item2.Identifier, item.Item3.Value);
+				var method = CoreTaskWorker.ForwardHelper.MakeMethodMaybeBatch(item.Item2.Identifier, item.Item3.Value);
 				var argument = ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, item.Item4);
-				actualCommand.Add(CoreModdingWorker.ForwardHelper.MakeArgumentForCommand(null, method, argument));
+				actualCommand.Add(CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(null, method, argument));
 			}
-			await CoreModdingWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
+			await CoreTaskWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
 			return;
 		}
 

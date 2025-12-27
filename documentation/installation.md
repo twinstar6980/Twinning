@@ -130,11 +130,11 @@
 	
 	* `Module Configuration Directory` = `<home>/assistant` 。
 	
-	* `Modding Worker` - `Kernel` = `<home>/kernel` 。
+	* `Task Worker` - `Kernel` = `<home>/kernel` 。
 	
-	* `Modding Worker` - `Script` = `<home>/script/main.js` 。
+	* `Task Worker` - `Script` = `<home>/script/main.js` 。
 	
-	* `Modding Worker` - `Argument` = `<home>` 。
+	* `Task Worker` - `Argument` = `<home>` 。
 	
 	> 上述设置中的 `<home>` 需要替换为主目录的绝对路径。
 
@@ -152,11 +152,11 @@
 	
 	* `Module Configuration Directory` = `<home>/assistant_plus` 。
 	
-	* `Modding Worker` - `Kernel` = `<home>/kernel` 。
+	* `Task Worker` - `Kernel` = `<home>/kernel` 。
 	
-	* `Modding Worker` - `Script` = `<home>/script/main.js` 。
+	* `Task Worker` - `Script` = `<home>/script/main.js` 。
 	
-	* `Modding Worker` - `Argument` = `<home>` 。
+	* `Task Worker` - `Argument` = `<home>` 。
 	
 	> 上述设置中的 `<home>` 需要替换为主目录的绝对路径。
 

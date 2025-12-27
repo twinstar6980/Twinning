@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus {
 	#region type
 
 	public enum ModuleType {
-		CoreModdingWorker,
+		CoreTaskWorker,
 		CoreCommandSender,
 		CoreResourceShipper,
 		PopcapAnimationViewer,
@@ -28,6 +28,7 @@ namespace Twinning.AssistantPlus {
 		public Type                              MainPage              = default!;
 		public Func<UIElement>                   SettingPanel          = default!;
 		public Func<List<String>, List<String>?> GenerateForwardOption = default!;
+		public Tuple<Integer, Integer>           StandardSize          = default!;
 	}
 
 	#endregion
@@ -63,15 +64,16 @@ namespace Twinning.AssistantPlus {
 
 		private static readonly List<ModuleInformation> Information = [
 			new () {
-				Identifier = "core_modding_worker",
-				Type = ModuleType.CoreModdingWorker,
-				Name = "Modding Worker",
+				Identifier = "core_task_worker",
+				Type = ModuleType.CoreTaskWorker,
+				Name = "Task Worker",
 				Icon = FluentIconGlyph.ProvisioningPackage,
-				MainPage = typeof(View.CoreModdingWorker.MainPage),
-				SettingPanel = () => new View.CoreModdingWorker.SettingPanel() {
-					Data = App.Setting.Data.CoreModdingWorker,
+				MainPage = typeof(View.CoreTaskWorker.MainPage),
+				SettingPanel = () => new View.CoreTaskWorker.SettingPanel() {
+					Data = App.Setting.Data.CoreTaskWorker,
 				},
 				GenerateForwardOption = (resource) => ["-additional_argument", ..resource],
+				StandardSize = new (480, 840),
 			},
 			new () {
 				Identifier = "core_command_sender",
@@ -83,6 +85,7 @@ namespace Twinning.AssistantPlus {
 					Data = App.Setting.Data.CoreCommandSender,
 				},
 				GenerateForwardOption = (resource) => null,
+				StandardSize = new (920, 840),
 			},
 			new () {
 				Identifier = "core_resource_shipper",
@@ -94,6 +97,7 @@ namespace Twinning.AssistantPlus {
 					Data = App.Setting.Data.CoreResourceShipper,
 				},
 				GenerateForwardOption = (resource) => ["-resource", ..resource],
+				StandardSize = new (480, 840),
 			},
 			new () {
 				Identifier = "popcap_animation_viewer",
@@ -105,6 +109,7 @@ namespace Twinning.AssistantPlus {
 					Data = App.Setting.Data.PopcapAnimationViewer,
 				},
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-animation_file", resource[0]],
+				StandardSize = new (1600, 840),
 			},
 			new () {
 				Identifier = "popcap_reflection_descriptor",
@@ -116,6 +121,7 @@ namespace Twinning.AssistantPlus {
 					Data = App.Setting.Data.PopcapReflectionDescriptor,
 				},
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-descriptor_file", resource[0]],
+				StandardSize = new (920, 840),
 			},
 			new () {
 				Identifier = "popcap_package_builder",
@@ -127,6 +133,7 @@ namespace Twinning.AssistantPlus {
 					Data = App.Setting.Data.PopcapPackageBuilder,
 				},
 				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistDirectory(resource[0]) ? null : ["-project_directory", resource[0]],
+				StandardSize = new (1440, 840),
 			},
 		];
 

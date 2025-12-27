@@ -28,7 +28,7 @@ namespace Twinning.AssistantPlus {
 		public Boolean                                 ForwarderImmediateJump       = default!;
 		public String                                  ModuleConfigurationDirectory = default!;
 		public ModuleLauncherSetting                   ModuleLauncher               = default!;
-		public View.CoreModdingWorker.Setting          CoreModdingWorker            = default!;
+		public View.CoreTaskWorker.Setting             CoreTaskWorker               = default!;
 		public View.CoreCommandSender.Setting          CoreCommandSender            = default!;
 		public View.CoreResourceShipper.Setting        CoreResourceShipper          = default!;
 		public View.PopcapAnimationViewer.Setting      PopcapAnimationViewer        = default!;
@@ -37,9 +37,9 @@ namespace Twinning.AssistantPlus {
 	}
 
 	public record SettingState {
-		public CustomThemeBackdrop?                               ThemeBackdrop                      = default!;
-		public CustomThemeMode?                                   ThemeMode                          = default!;
-		public List<List<View.CoreModdingWorker.ValueExpression>> CoreModdingWorkerSubmissionHistory = default!;
+		public CustomThemeBackdrop?                            ThemeBackdrop                   = default!;
+		public CustomThemeMode?                                ThemeMode                       = default!;
+		public List<List<View.CoreTaskWorker.ValueExpression>> CoreTaskWorkerSubmissionHistory = default!;
 	}
 
 	public class SettingProvider {
@@ -144,9 +144,9 @@ namespace Twinning.AssistantPlus {
 				list.AddRange(App.Setting.Data.ModuleLauncher.Recent.Select((it) => generateItem(ModuleLauncherCategory.Recent, it)));
 				await JumpListHelper.Apply(list);
 			}
-			// CoreModdingWorker.MessageFont
+			// CoreTaskWorker.MessageFont
 			{
-				App.Instance.Resources["CoreModdingWorker.MessageFont"] = this.Data.CoreModdingWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreModdingWorker.MessageFont);
+				App.Instance.Resources["CoreTaskWorker.MessageFont"] = this.Data.CoreTaskWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreTaskWorker.MessageFont);
 			}
 			return;
 		}
@@ -200,24 +200,28 @@ namespace Twinning.AssistantPlus {
 				WindowPositionState = false,
 				WindowPositionX = 0,
 				WindowPositionY = 0,
-				WindowSizeState = false,
-				WindowSizeWidth = 0,
-				WindowSizeHeight = 0,
+				WindowSizeState = true,
+				WindowSizeWidth = 480,
+				WindowSizeHeight = 840,
 				StoragePickerHistoryLocation = [],
 				ForwarderDefaultTarget = ModuleType.CoreResourceShipper,
 				ForwarderImmediateJump = false,
 				ModuleConfigurationDirectory = "",
 				ModuleLauncher = new () {
-					Module = Enum.GetValues<ModuleType>().Select((value) => (new ModuleLauncherConfiguration() {
-						Title = ModuleHelper.Query(value).Name,
-						Type = value,
+					Module = Enum.GetValues<ModuleType>().Select(ModuleHelper.Query).Select((value) => (new ModuleLauncherConfiguration() {
+						Title = value.Name,
+						Type = value.Type,
 						Option = [],
-						Command = [],
+						Command = [
+							"-window_size",
+							$"{value.StandardSize.Item1}",
+							$"{value.StandardSize.Item2}",
+						],
 					})).ToList(),
 					Pinned = [],
 					Recent = [],
 				},
-				CoreModdingWorker = new () {
+				CoreTaskWorker = new () {
 					Kernel = "",
 					Script = "",
 					Argument = [],
@@ -254,7 +258,7 @@ namespace Twinning.AssistantPlus {
 			return new () {
 				ThemeBackdrop = null,
 				ThemeMode = null,
-				CoreModdingWorkerSubmissionHistory = Enum.GetValues<View.CoreModdingWorker.SubmissionType>().Select((value) => (new List<View.CoreModdingWorker.ValueExpression>())).ToList(),
+				CoreTaskWorkerSubmissionHistory = Enum.GetValues<View.CoreTaskWorker.SubmissionType>().Select((value) => (new List<View.CoreTaskWorker.ValueExpression>())).ToList(),
 			};
 		}
 

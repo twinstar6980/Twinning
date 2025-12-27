@@ -180,7 +180,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
 				return;
 			}
-			await this.WorkerExecuteCommand(CoreModdingWorker.ForwardHelper.MakeArgumentForCommand(
+			await this.WorkerExecuteCommand(CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.transpile",
 				mode == null
@@ -210,7 +210,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			List<String>? targetScope
 		) {
 			AssertTest(this.IsLoaded);
-			await this.WorkerExecuteCommand(CoreModdingWorker.ForwardHelper.MakeArgumentForCommand(
+			await this.WorkerExecuteCommand(CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.compile",
 				new ([
@@ -226,7 +226,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			Boolean remakeManifest
 		) {
 			AssertTest(this.IsLoaded);
-			await this.WorkerExecuteCommand(CoreModdingWorker.ForwardHelper.MakeArgumentForCommand(
+			await this.WorkerExecuteCommand(CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(
 				null,
 				"pvz2.package_project.link",
 				new ([

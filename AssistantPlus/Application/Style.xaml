@@ -333,6 +333,6 @@
 	<!-- TabView -->
 	<SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="Transparent" />
 	<SolidColorBrush x:Key="TabViewBorderBrush" Color="{ThemeResource DividerStrokeColorDefault}" />
-	<!-- View.CoreModdingWorker -->
-	<FontFamily x:Key="CoreModdingWorker.MessageFont">XamlAutoFontFamily</FontFamily>
+	<!-- View.CoreTaskWorker -->
+	<FontFamily x:Key="CoreTaskWorker.MessageFont">XamlAutoFontFamily</FontFamily>
 </ResourceDictionary>

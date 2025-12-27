@@ -144,7 +144,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			var senders = sender.As<Button>();
 			App.Setting.Data.ModuleLauncher.Pinned.Add(new () {
 				Title = "Untitled",
-				Type = ModuleType.CoreModdingWorker,
+				Type = ModuleType.CoreTaskWorker,
 				Option = [],
 				Command = [],
 			});

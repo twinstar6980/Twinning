@@ -8,18 +8,18 @@ class WindowHelper {
   // #region utility
 
   static Future<Void> setPosition(
-    Floater x,
-    Floater y,
+    Integer x,
+    Integer y,
   ) async {
-    await lib.windowManager.setPosition(.new(x, y));
+    await lib.windowManager.setPosition(.new(x.toDouble(), y.toDouble()));
     return;
   }
 
   static Future<Void> setSize(
-    Floater width,
-    Floater height,
+    Integer width,
+    Integer height,
   ) async {
-    await lib.windowManager.setSize(.new(width, height));
+    await lib.windowManager.setSize(.new(width.toDouble(), height.toDouble()));
     return;
   }
 

@@ -187,10 +187,10 @@ class MainApplication {
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
         await WindowHelper.ensureInitialized();
         if (_setting.data.windowSizeState) {
-          await WindowHelper.setSize(_setting.data.windowSizeWidth.toDouble(), _setting.data.windowSizeHeight.toDouble());
+          await WindowHelper.setSize(_setting.data.windowSizeWidth, _setting.data.windowSizeHeight);
         }
         if (_setting.data.windowPositionState) {
-          await WindowHelper.setPosition(_setting.data.windowPositionX.toDouble(), _setting.data.windowPositionY.toDouble());
+          await WindowHelper.setPosition(_setting.data.windowPositionX, _setting.data.windowPositionY);
         }
         else {
           await WindowHelper.setAtCenter();

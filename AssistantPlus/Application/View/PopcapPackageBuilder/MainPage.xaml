@@ -7,7 +7,7 @@
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Twinning.AssistantPlus"
 	xmlns:localViewPopcapPackageBuilder="using:Twinning.AssistantPlus.View.PopcapPackageBuilder"
-	xmlns:localViewCoreModdingWorker="using:Twinning.AssistantPlus.View.CoreModdingWorker"
+	xmlns:localViewCoreTaskWorker="using:Twinning.AssistantPlus.View.CoreTaskWorker"
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
@@ -72,7 +72,7 @@
 											<Setter Property="MaxWidth" Value="488" />
 										</Style>
 									</Flyout.FlyoutPresenterStyle>
-									<localViewCoreModdingWorker:MainPage
+									<localViewCoreTaskWorker:MainPage
 										x:Name="uWorkerPage"
 										x:FieldModifier="public"
 										HorizontalAlignment="Stretch"

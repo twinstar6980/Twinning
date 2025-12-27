@@ -2,9 +2,9 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/storage_helper.dart';
 import 'widget/export.dart';
-import '/view/core_modding_worker/main_page.dart' as core_modding_worker;
-import '/view/core_modding_worker/setting_panel.dart' as core_modding_worker;
-import '/view/core_modding_worker/configuration.dart' as core_modding_worker;
+import '/view/core_task_worker/main_page.dart' as core_task_worker;
+import '/view/core_task_worker/setting_panel.dart' as core_task_worker;
+import '/view/core_task_worker/configuration.dart' as core_task_worker;
 import '/view/core_command_sender/main_page.dart' as core_command_sender;
 import '/view/core_command_sender/setting_panel.dart' as core_command_sender;
 import '/view/core_command_sender/configuration.dart' as core_command_sender;
@@ -24,7 +24,7 @@ import 'package:provider/provider.dart';
 // ----------------
 
 enum ModuleType {
-  core_modding_worker, // ignore: constant_identifier_names
+  core_task_worker, // ignore: constant_identifier_names
   core_command_sender, // ignore: constant_identifier_names
   core_resource_shipper, // ignore: constant_identifier_names
   popcap_animation_viewer, // ignore: constant_identifier_names
@@ -88,21 +88,21 @@ class ModuleHelper {
 
   static final List<ModuleInformation> _information = [
     .new(
-      type: .core_modding_worker,
-      name: 'Modding Worker',
+      type: .core_task_worker,
+      name: 'Task Worker',
       icon: IconSet.rule_settings,
-      mainPage: (setting, configuration, option) => core_modding_worker.MainPage(
+      mainPage: (setting, configuration, option) => core_task_worker.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => core_modding_worker.SettingPanel(
-        data: Provider.of<SettingProvider>(context, listen: false).data.coreModdingWorker,
+      settingPanel: (context) => core_task_worker.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.coreTaskWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
-      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreModdingWorker,
-      parseConfiguration: (json) => core_modding_worker.ConfigurationHelper.parseDataFromJson(json),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreTaskWorker,
+      parseConfiguration: (json) => core_task_worker.ConfigurationHelper.parseDataFromJson(json),
       generateForwardOption: (resource) async => ['-additional_argument', ...resource],
     ),
     .new(

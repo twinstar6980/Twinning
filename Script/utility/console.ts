@@ -792,14 +792,14 @@ namespace Twinning.Script.Console {
 			if (value === '') {
 				return [null];
 			}
-			let index = option.findIndex((e) => (e[1] === value));
+			let index = option.findIndex((item) => (item[1] === value));
 			if (index === -1) {
 				return los('console:option_invalid');
 			}
 			return [option[index][0]];
 		};
 		let checker_proxy = (value: Value): null | string => {
-			let index = option.findIndex((e) => (e[0] === value));
+			let index = option.findIndex((item) => (item[0] === value));
 			if (index === -1) {
 				return los('console:option_invalid');
 			}
@@ -831,7 +831,7 @@ namespace Twinning.Script.Console {
 					if (value === '') {
 						return '';
 					}
-					let index = option.findIndex((e) => (e[1] === value));
+					let index = option.findIndex((item) => (item[1] === value));
 					if (index === -1) {
 						return los('console:option_invalid');
 					}

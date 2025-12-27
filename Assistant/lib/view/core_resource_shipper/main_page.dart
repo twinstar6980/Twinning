@@ -9,7 +9,7 @@ import '/view/home/module_page.dart';
 import '/view/core_resource_shipper/setting.dart';
 import '/view/core_resource_shipper/configuration.dart';
 import '/view/core_resource_shipper/option_item.dart';
-import '/view/core_modding_worker/forward_helper.dart' as core_modding_worker;
+import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
 import 'package:flutter/widgets.dart';
 
 // ----------------
@@ -118,9 +118,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     Map<String, Object>? argument,
   ) async {
     var actualInput = this._resource.isNotEmpty ? this._resource.map((value) => value.$1).toList() : <String?>[null];
-    var actualMethod = method == null ? null : core_modding_worker.ForwardHelper.makeMethodMaybeBatch(method, this._enableBatch);
-    var actualCommand = actualInput.map((value) => core_modding_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
-    await core_modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
+    var actualMethod = method == null ? null : core_task_worker.ForwardHelper.makeMethodMaybeBatch(method, this._enableBatch);
+    var actualCommand = actualInput.map((value) => core_task_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
+    await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
     return;
   }
 

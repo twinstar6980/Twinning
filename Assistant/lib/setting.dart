@@ -4,9 +4,9 @@ import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
 import '/widget/export.dart';
-import '/view/core_modding_worker/setting.dart' as core_modding_worker;
-import '/view/core_modding_worker/submission_type.dart' as core_modding_worker;
-import '/view/core_modding_worker/value_expression.dart' as core_modding_worker;
+import '/view/core_task_worker/setting.dart' as core_task_worker;
+import '/view/core_task_worker/submission_type.dart' as core_task_worker;
+import '/view/core_task_worker/value_expression.dart' as core_task_worker;
 import '/view/core_command_sender/setting.dart' as core_command_sender;
 import '/view/core_resource_shipper/setting.dart' as core_resource_shipper;
 import '/view/popcap_animation_viewer/setting.dart' as popcap_animation_viewer;
@@ -35,7 +35,7 @@ class SettingData {
   Boolean                         forwarderImmediateJump;
   String                          moduleConfigurationDirectory;
   ModuleLauncherSetting           moduleLauncher;
-  core_modding_worker.Setting     coreModdingWorker;
+  core_task_worker.Setting        coreTaskWorker;
   core_command_sender.Setting     coreCommandSender;
   core_resource_shipper.Setting   coreResourceShipper;
   popcap_animation_viewer.Setting popcapAnimationViewer;
@@ -60,7 +60,7 @@ class SettingData {
     required this.forwarderImmediateJump,
     required this.moduleConfigurationDirectory,
     required this.moduleLauncher,
-    required this.coreModdingWorker,
+    required this.coreTaskWorker,
     required this.coreCommandSender,
     required this.coreResourceShipper,
     required this.popcapAnimationViewer,
@@ -77,8 +77,8 @@ class SettingState {
   List<String>                                             themeFontFamliy;
   Future<Void> Function()?                                 homeShowLauncher;
   Future<Void> Function(ModuleLauncherConfiguration)?      homeInsertPage;
-  List<String>                                             coreModdingWorkerMessageFontFamily;
-  List<List<core_modding_worker.ValueExpression>>          coreModdingWorkerSubmissionHistory;
+  List<String>                                             coreTaskWorkerMessageFontFamily;
+  List<List<core_task_worker.ValueExpression>>             coreTaskWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
     required this.handleForward,
@@ -88,8 +88,8 @@ class SettingState {
     required this.themeFontFamliy,
     required this.homeShowLauncher,
     required this.homeInsertPage,
-    required this.coreModdingWorkerMessageFontFamily,
-    required this.coreModdingWorkerSubmissionHistory,
+    required this.coreTaskWorkerMessageFontFamily,
+    required this.coreTaskWorkerSubmissionHistory,
   });
 }
 
@@ -127,11 +127,11 @@ class SettingProvider with ChangeNotifier {
         this.state.themeFontFamliy.add(family);
       }
     }
-    this.state.coreModdingWorkerMessageFontFamily.clear();
-    for (var index = 0; index < this.data.coreModdingWorker.messageFont.length; index++) {
-      var family = await FontHelper.loadFile(this.data.coreModdingWorker.messageFont[index]);
-      if (family != null && !this.state.coreModdingWorkerMessageFontFamily.contains(family)) {
-        this.state.coreModdingWorkerMessageFontFamily.add(family);
+    this.state.coreTaskWorkerMessageFontFamily.clear();
+    for (var index = 0; index < this.data.coreTaskWorker.messageFont.length; index++) {
+      var family = await FontHelper.loadFile(this.data.coreTaskWorker.messageFont[index]);
+      if (family != null && !this.state.coreTaskWorkerMessageFontFamily.contains(family)) {
+        this.state.coreTaskWorkerMessageFontFamily.add(family);
       }
     }
     this.notifyListeners();
@@ -185,20 +185,24 @@ class SettingProvider with ChangeNotifier {
       windowPositionState: false,
       windowPositionX: 0,
       windowPositionY: 0,
-      windowSizeState: false,
-      windowSizeWidth: 0,
-      windowSizeHeight: 0,
+      windowSizeState: true,
+      windowSizeWidth: 480,
+      windowSizeHeight: 840,
       storagePickerFallbackDirectory: '',
       storagePickerHistoryLocation: {},
       forwarderDefaultTarget: .core_resource_shipper,
       forwarderImmediateJump: false,
       moduleConfigurationDirectory: '',
       moduleLauncher: .new(
-        module: ModuleType.values.map((e) => ModuleLauncherConfiguration(title: ModuleHelper.query(e).name, type: e, option: [])).toList(),
+        module: ModuleType.values.map(ModuleHelper.query).map((it) => ModuleLauncherConfiguration(
+          title: it.name,
+          type: it.type,
+          option: [],
+        )).toList(),
         pinned: [],
         recent: [],
       ),
-      coreModdingWorker: .new(
+      coreTaskWorker: .new(
         kernel: '',
         script: '',
         argument: [],
@@ -236,8 +240,8 @@ class SettingProvider with ChangeNotifier {
       themeFontFamliy: [],
       homeShowLauncher: null,
       homeInsertPage: null,
-      coreModdingWorkerMessageFontFamily: [],
-      coreModdingWorkerSubmissionHistory: core_modding_worker.SubmissionType.values.map((value) => <core_modding_worker.ValueExpression>[]).toList(),
+      coreTaskWorkerMessageFontFamily: [],
+      coreTaskWorkerSubmissionHistory: core_task_worker.SubmissionType.values.map((value) => <core_task_worker.ValueExpression>[]).toList(),
     );
   }
 
@@ -282,12 +286,12 @@ class SettingProvider with ChangeNotifier {
           'option': dataItem.option,
         }).toList(),
       },
-      'core_modding_worker': {
-        'kernel': data.coreModdingWorker.kernel,
-        'script': data.coreModdingWorker.script,
-        'argument': data.coreModdingWorker.argument,
-        'immediate_launch': data.coreModdingWorker.immediateLaunch,
-        'message_font': data.coreModdingWorker.messageFont,
+      'core_task_worker': {
+        'kernel': data.coreTaskWorker.kernel,
+        'script': data.coreTaskWorker.script,
+        'argument': data.coreTaskWorker.argument,
+        'immediate_launch': data.coreTaskWorker.immediateLaunch,
+        'message_font': data.coreTaskWorker.messageFont,
       },
       'core_command_sender': {
         'parallel_forward': data.coreCommandSender.parallelForward,
@@ -348,7 +352,7 @@ class SettingProvider with ChangeNotifier {
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
       )),
-      coreModdingWorker: (json['core_modding_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_modding_worker.Setting(
+      coreTaskWorker: (json['core_task_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_task_worker.Setting(
         kernel: (jsonPart['kernel'] as String),
         script: (jsonPart['script'] as String),
         argument: (jsonPart['argument'] as List<dynamic>).cast<String>(),

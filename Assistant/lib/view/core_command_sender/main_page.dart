@@ -10,7 +10,7 @@ import '/view/core_command_sender/configuration.dart';
 import '/view/core_command_sender/value_expression.dart';
 import '/view/core_command_sender/method_item.dart';
 import '/view/core_command_sender/command_panel.dart';
-import '/view/core_modding_worker/forward_helper.dart' as core_modding_worker;
+import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 
@@ -73,11 +73,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     var actualCommand = <List<String>>[];
     for (var itemIndex in index) {
       var item = this._command[itemIndex];
-      var method = core_modding_worker.ForwardHelper.makeMethodMaybeBatch(item.$2.identifier, item.$3.value);
+      var method = core_task_worker.ForwardHelper.makeMethodMaybeBatch(item.$2.identifier, item.$3.value);
       var argument = ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, item.$4);
-      actualCommand.add(core_modding_worker.ForwardHelper.makeArgumentForCommand(null, method, argument));
+      actualCommand.add(core_task_worker.ForwardHelper.makeArgumentForCommand(null, method, argument));
     }
-    await core_modding_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
+    await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
     return;
   }
 
