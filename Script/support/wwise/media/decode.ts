@@ -40,7 +40,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		assert_test(regex_result !== null);
 		let encoding = regex_result[1];
 		let format: null | Format = null;
-		if (encoding === 'Little Endian 16-bit PCM') {
+		if (encoding === '16-bit Little Endian PCM') {
 			format = 'pcm';
 		}
 		if (encoding === 'Platinum 4-bit ADPCM') {

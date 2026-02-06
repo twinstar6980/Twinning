@@ -17,7 +17,7 @@ class NotificationHelper {
     assertTest(_plugin == null);
     _plugin = .new();
     await _plugin!.initialize(
-      .new(
+      settings: .new(
         android: .new(
           '@mipmap/ic_launcher_foreground',
         ),
@@ -52,10 +52,10 @@ class NotificationHelper {
   ) async {
     assertTest(_plugin != null);
     await _plugin!.show(
-      DateTime.now().millisecondsSinceEpoch % 0x80000000,
-      title,
-      description,
-      .new(
+      id: DateTime.now().millisecondsSinceEpoch % 0x80000000,
+      title: title,
+      body: description,
+      notificationDetails: .new(
         android: .new('${ApplicationInformation.identifier}.notification_channel.main', 'Main'),
         iOS: .new(),
         macOS: .new(),

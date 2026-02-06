@@ -124,7 +124,7 @@ class GameCard extends StatelessWidget {
           Gap.expanded(),
         ]),
         onPressed: (context) async {
-          var action = await StyledModalDialogExtension.show(context, StyledModalDialog.standard(
+          var action = await StyledModalDialogExtension.show<String>(context, StyledModalDialog.standard(
             title: 'Action',
             contentBuilder: (context, setState) => [
               ...[

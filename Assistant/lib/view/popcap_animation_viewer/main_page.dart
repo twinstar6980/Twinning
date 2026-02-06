@@ -57,8 +57,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late List<(String, Integer, Integer)>?           _activeFrameLabel;
   late (Integer, Integer)?                         _activeFrameRange;
   late Floater?                                    _activeFrameSpeed;
-  late StreamController                            _activeProgressIndexStream;
-  late StreamController                            _activeProgressStateStream;
+  late StreamController<Null>                      _activeProgressIndexStream;
+  late StreamController<Null>                      _activeProgressStateStream;
   late Boolean                                     _activeProgressChangingContinue;
   late AnimationController                         _animationController;
   late Widget?                                     _animationVisual;
@@ -485,8 +485,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameLabel = null;
     this._activeFrameRange = null;
     this._activeFrameSpeed = null;
-    this._activeProgressIndexStream = StreamController();
-    this._activeProgressStateStream = StreamController();
+    this._activeProgressIndexStream = .new();
+    this._activeProgressStateStream = .new();
     this._activeProgressChangingContinue = false;
     this._animationController = .new(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
     this._animationController.addListener(() async {

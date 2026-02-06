@@ -96,8 +96,8 @@ class Launcher {
         portMessage = await streamQueue.next as List<dynamic>?;
         if (portMessage == null) {
           portMessage = await streamQueue.next as List<dynamic>;
-          result = portMessage[0];
-          exception = portMessage[1];
+          result = portMessage[0] as List<String>?;
+          exception = portMessage[1] as (Object, StackTrace)?;
           break;
         }
         else {

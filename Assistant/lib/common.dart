@@ -22,13 +22,13 @@ final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '135';
+  static const String version = '136';
 
   static const String name = 'Twinning Assistant';
 
   static const String developer = 'TwinStar';
 
-  static const String year = '2023-2025';
+  static const String year = '2023-2026';
 
 }
 

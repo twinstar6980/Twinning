@@ -184,7 +184,7 @@
 	
 	> 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
 
-* [vgmstream-cli](https://vgmstream.org/)
+* [vgmstream-cli](https://vgmstream.org/) `>=r2055`
 	
 	用于 **WEM 音频解码** 。
 	
@@ -202,7 +202,7 @@
 	
 	> 该程序仅支持 `Windows` 、`Macintosh` 系统。
 
-* [QuickTime](https://support.apple.com/kb/DL837) `>7.6`
+* [QuickTime](https://support.apple.com/kb/DL837) `>=7.6`
 	
 	用于 **WEM 音频编码** 。
 	
