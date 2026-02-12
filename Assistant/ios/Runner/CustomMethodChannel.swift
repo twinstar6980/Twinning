@@ -22,14 +22,12 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   // MARK: - register
 
-  public func register_application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
+  public func register_didInitializeImplicitFlutterEngine(
+    _ engineBridge: FlutterImplicitEngineBridge
   ) -> Void {
-    let rootView = self.host.window?.rootViewController as! FlutterViewController
     FlutterMethodChannel(
       name: "\(Bundle.main.bundleIdentifier!).CustomMethodChannel",
-      binaryMessenger: rootView.binaryMessenger,
+      binaryMessenger: engineBridge.applicationRegistrar.messenger(),
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
         await self?.handle(call: call, result: result)
@@ -84,7 +82,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     guard type == "load_file" || type == "load_directory" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
-    let rootView = self.host.window?.rootViewController as! FlutterViewController
+    let rootView = try! self.getCurrentSceneWindow().rootViewController as! FlutterViewController
     var pickerView: UIDocumentPickerViewController!
     if type == "load_file" {
       pickerView = UIDocumentPickerViewController(forOpeningContentTypes: [.item])
@@ -138,6 +136,17 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       path.removeLast()
     }
     return path
+  }
+
+  private func getCurrentSceneWindow(
+  ) throws -> UIWindow {
+    guard let currentScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else {
+      throw NSError(domain: "invalid scene.", code: 0)
+    }
+    guard let currentWindow = currentScene.windows.first(where: { $0.isKeyWindow }) else {
+      throw NSError(domain: "invalid window.", code: 0)
+    }
+    return currentWindow
   }
 
 }

@@ -1,12 +1,12 @@
 name: assistant
-version: 136.0.0+136
+version: 137.0.0+137
 publish_to: 'none'
 environment:
-  sdk: ^3.10.8
+  sdk: ^3.11.0
 dependencies:
   flutter:
     sdk: flutter
-  ffi: 2.1.5
+  ffi: 2.2.0
   win32: 5.15.0
   path: 1.9.1
   async: 2.13.0
@@ -24,9 +24,9 @@ dependencies:
   dynamic_color: 1.8.1
   window_manager: 0.5.1
   url_launcher: 6.3.2
-  app_links: 6.4.1
+  app_links: 7.0.0
   file_selector: 1.1.0
-  flutter_local_notifications: 20.0.0
+  flutter_local_notifications: 20.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
