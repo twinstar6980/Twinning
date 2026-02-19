@@ -40,7 +40,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin implements ModulePageState {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin implements ModulePageState {
 
   late Boolean                                     _immediateSelect;
   late Boolean                                     _automaticPlay;
@@ -60,7 +60,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   late StreamController<Null>                      _activeProgressIndexStream;
   late StreamController<Null>                      _activeProgressStateStream;
   late Boolean                                     _activeProgressChangingContinue;
-  late AnimationController                         _animationController;
+  late AnimationController?                        _animationController;
+  late Animation<Floater>?                         _animationDriver;
   late Widget?                                     _animationVisual;
   late ScrollController                            _stageHorizontalScrollSontroller;
   late ScrollController                            _stageVerticalScrollSontroller;
@@ -151,7 +152,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
     this._activeFrameRange = (0, 0);
     this._activeFrameSpeed = 0.0;
-    this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
+    this._animationController = .new(lowerBound: 0.0, upperBound: this._activeSprite!.frame.length.toDouble() - VisualHelper.animationBoundEpsilon, vsync: this);
+    this._animationController!.addListener(() async {
+      this._activeProgressIndexStream.sink.add(null);
+      return;
+    });
+    this._animationDriver = this._animationController!.drive(Tween(begin: 0.0, end: 1.0 / this._activeSprite!.frame.length));
+    this._animationVisual = VisualHelper.visualizeSprite(this._animationDriver!, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length - 1));
     await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frameRate ?? this._animation!.frameRate.toDouble());
     await this._changeProgressIndex(progressIndex ?? 0);
@@ -168,8 +175,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeFrameLabel = null;
     this._activeFrameRange = null;
     this._activeFrameSpeed = null;
-    this._animationController.duration = .zero;
-    this._animationController.reset();
+    this._animationController!.dispose();
+    this._animationController = null;
+    this._animationDriver = null;
     this._animationVisual = null;
     await refreshState(this.setState);
     return;
@@ -189,7 +197,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       this._spriteFilter = spriteFilter;
     }
     if (this._activated) {
-      this._animationVisual = VisualHelper.visualizeSprite(this._animationController, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
+      this._animationVisual = VisualHelper.visualizeSprite(this._animationDriver!, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     }
     await refreshState(this.setState);
     return;
@@ -202,8 +210,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(0 <= frameRange.$1 && frameRange.$1 < this._activeSprite!.frame.length);
     assertTest(0 <= frameRange.$2 && frameRange.$2 < this._activeSprite!.frame.length);
     assertTest(frameRange.$1 <= frameRange.$2);
+    var currentState = this._queryProgressState();
+    if (currentState) {
+      await this._changeProgressState(false);
+    }
     this._activeFrameRange = frameRange;
-    // TODO: unimplemented
+    if (this._activeFrameRange!.$1 > this._animationController!.value || this._animationController!.value >= this._activeFrameRange!.$2 + 1) {
+      this._animationController!.value = this._activeFrameRange!.$1.toDouble();
+    }
+    if (currentState) {
+      await this._changeProgressState(true);
+    }
     await refreshState(this.setState);
     return;
   }
@@ -215,12 +232,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(frameSpeed > 0.0);
     var currentState = this._queryProgressState();
     if (currentState) {
-      this._animationController.stop();
+      await this._changeProgressState(false);
     }
     this._activeFrameSpeed = frameSpeed;
-    this._animationController.duration = .new(milliseconds: (this._activeSprite!.frame.length * 1000 / this._activeFrameSpeed!).ceil());
+    this._animationController!.duration = .new(milliseconds: (this._activeSprite!.frame.length * 1000 / this._activeFrameSpeed!).ceil());
     if (currentState) {
-      this._animationController.forward();
+      await this._changeProgressState(true);
     }
     await refreshState(this.setState);
     return;
@@ -229,7 +246,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   Integer _queryProgressIndex(
   ) {
     assertTest(this._loaded && this._activated);
-    return (this._animationController.value * this._activeSprite!.frame.length).floor();
+    return this._animationController!.value.floor();
   }
 
   Future<Void> _changeProgressIndex(
@@ -239,11 +256,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     assertTest(index < this._activeSprite!.frame.length);
     var currentState = this._queryProgressState();
     if (currentState) {
-      this._animationController.stop();
+      await this._changeProgressState(false);
     }
-    this._animationController.value = index / this._activeSprite!.frame.length;
+    this._animationController!.value = index.toDouble();
     if (currentState) {
-      this._animationController.forward();
+      await this._changeProgressState(true);
     }
     return;
   }
@@ -251,7 +268,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   Boolean _queryProgressState(
   ) {
     assertTest(this._loaded && this._activated);
-    return this._animationController.isAnimating;
+    return this._animationController!.isAnimating;
   }
 
   Future<Void> _changeProgressState(
@@ -259,13 +276,19 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   ) async {
     assertTest(this._loaded && this._activated);
     if (!state) {
-      this._animationController.stop();
+      this._animationController!.stop();
     }
     else {
-      if (this._animationController.isCompleted) {
-        this._animationController.reset();
-      }
-      this._animationController.forward();
+      this._animationController!.animateTo(this._activeFrameRange!.$2.toDouble() + 1.0 - VisualHelper.animationBoundEpsilon).then((_) async {
+        if (!this._repeatPlay) {
+          this._activeProgressStateStream.sink.add(null);
+        }
+        else {
+          await this._changeProgressIndex(this._activeFrameRange!.$1);
+          await this._changeProgressState(true);
+        }
+        return;
+      });
     }
     this._activeProgressStateStream.sink.add(null);
     return;
@@ -488,22 +511,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     this._activeProgressIndexStream = .new();
     this._activeProgressStateStream = .new();
     this._activeProgressChangingContinue = false;
-    this._animationController = .new(lowerBound: 0.0, upperBound: 1.0 - 1.0e-9, vsync: this);
-    this._animationController.addListener(() async {
-      this._activeProgressIndexStream.sink.add(null);
-      return;
-    });
-    this._animationController.addStatusListener((status) async {
-      if (status == .completed) {
-        if (!this._repeatPlay) {
-          this._activeProgressStateStream.sink.add(null);
-        }
-        else {
-          this._changeProgressState(true);
-        }
-      }
-      return;
-    });
+    this._animationController = null;
+    this._animationDriver = null;
     this._animationVisual = null;
     this._stageHorizontalScrollSontroller = .new();
     this._stageVerticalScrollSontroller = .new();
@@ -524,7 +533,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   dispose() {
     this._activeProgressIndexStream.close();
     this._activeProgressStateStream.close();
-    this._animationController.dispose();
+    this._animationController?.dispose();
     this._stageHorizontalScrollSontroller.dispose();
     this._stageVerticalScrollSontroller.dispose();
     super.dispose();
@@ -583,11 +592,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 builder: (context, snapshot) => StyledSlider.standard(
                   enabled: this._activated,
                   tooltip: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
-                  minimum: 1.0,
-                  maximum: !this._activated ? 1.0 : (this._activeSprite!.frame.length + 1.0e-9),
-                  value: !this._activated ? 1.0 : (this._queryProgressIndex() + 1),
+                  minimum: !this._activated ? 0.0 : this._activeFrameRange!.$1.toDouble(),
+                  maximum: !this._activated ? 0.0 : this._activeFrameRange!.$2.toDouble() + 1.0e-9,
+                  value: !this._activated ? 0.0 : this._queryProgressIndex().toDouble(),
                   onChanged: (context, value) async {
-                    await this._changeProgressIndex(value.round() - 1);
+                    await this._changeProgressIndex(value.round());
                     this._activeProgressIndexStream.sink.add(null);
                   },
                   onChangeStart: (context, value) async {
@@ -721,7 +730,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 selected: true,
                 icon: IconView.of(IconSet.arrow_back),
                 onPressed: (context) async {
-                  await this._changeProgressIndex(max(this._queryProgressIndex() - 1, 0));
+                  await this._changeProgressIndex(max(this._queryProgressIndex() - 1, this._activeFrameRange!.$1));
                 },
               ),
               Gap.horizontal(8),
@@ -733,6 +742,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   selected: true,
                   icon: IconView.of(!this._activated ? IconSet.play_arrow : !this._queryProgressState() ? IconSet.play_arrow : IconSet.pause, fill: 1),
                   onPressed: (context) async {
+                    if (this._animationController!.isCompleted) {
+                      await this._changeProgressIndex(this._activeFrameRange!.$1);
+                    }
                     await this._changeProgressState(!this._queryProgressState());
                   },
                 ),
@@ -744,7 +756,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 selected: true,
                 icon: IconView.of(IconSet.arrow_forward),
                 onPressed: (context) async {
-                  await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeSprite!.frame.length - 1));
+                  await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeFrameRange!.$2));
                 },
               ),
               Gap.horizontal(12),

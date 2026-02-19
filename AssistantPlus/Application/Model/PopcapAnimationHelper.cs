@@ -13,6 +13,10 @@ namespace Twinning.AssistantPlus {
 
 		#region utility
 
+		public const Floater AnimationBoundEpsilon = 1.0e-3;
+
+		// ----------------
+
 		public static String ParseImageFileName (
 			String value
 		) {
@@ -100,10 +104,6 @@ namespace Twinning.AssistantPlus {
 		#endregion
 
 		#region visualize
-
-		public const Floater BasicOffset = 0.001;
-
-		// ----------------
 
 		public record ImageVisual {
 			public Canvas Canvas = default!;

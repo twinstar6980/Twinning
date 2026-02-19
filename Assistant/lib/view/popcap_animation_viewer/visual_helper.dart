@@ -100,6 +100,10 @@ class VisualHelper {
 
   // #region visualize
 
+  static const Floater animationBoundEpsilon = 1.0e-9;
+
+  // ----------------
+
   static Matrix4 _makeMatrix(
     model.VariantTransform variant,
   ) {
@@ -151,7 +155,7 @@ class VisualHelper {
   // ----------------
 
   static Widget visualizeImage(
-    AnimationController                        animationController,
+    Animation<Floater>                         driver,
     model.Animation                            animation,
     Map<String, (lib.Image, Integer, Integer)> texture,
     model.Image                                image,
@@ -171,7 +175,7 @@ class VisualHelper {
   }
 
   static Widget visualizeSprite(
-    AnimationController                        animationController,
+    Animation<Floater>                         driver,
     model.Animation                            animation,
     Map<String, (lib.Image, Integer, Integer)> texture,
     model.Sprite                               sprite,
@@ -198,13 +202,13 @@ class VisualHelper {
           continue;
         }
         var subView = !action.sprite
-          ? visualizeImage(animationController, animation, texture, selectImage(animation, action.resource))
-          : visualizeSprite(animationController, animation, texture, selectSprite(animation, action.resource), imageFilter, spriteFilter);
-        var subController = animationController.drive(StepTween(begin: 0, end: sprite.frame.length));
+          ? visualizeImage(driver, animation, texture, selectImage(animation, action.resource))
+          : visualizeSprite(driver, animation, texture, selectSprite(animation, action.resource), imageFilter, spriteFilter);
+        var subDriver = driver.drive(StepTween(begin: 0, end: sprite.frame.length));
         layer.view = AnimatedBuilder(
-          animation: subController,
+          animation: subDriver,
           builder: (context, child) {
-            var index = subController.value;
+            var index = subDriver.value;
             var property = layer.property[index];
             return property == null
               ? BoxContainer.none()

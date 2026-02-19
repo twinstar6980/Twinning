@@ -408,6 +408,8 @@
 
 - [26-02-18](#26-02-18)
 
+- [26-02-19](#26-02-19)
+
 - [已知问题](#已知问题)
 
 ## 23-02-04
@@ -3708,6 +3710,18 @@
 
 	* `Macintosh` 构建应用包时不会生成 `amd64` 架构的可执行文件，以减小应用包体积。
 
+## 26-02-19
+
+* `Assistant` 139
+
+	* `PopCap Animation Viewer` 实现选择帧范围的功能。
+
+	* `PopCap Animation Viewer` 修复手动调整当前进度时可能出现小幅度偏移的 BUG 。
+
+* `Assistant Plus` 121
+
+	* 优化代码。
+
 ## 已知问题
 
 * `Kernel`
@@ -3716,7 +3730,7 @@
 
 	* **`BUG` `Windows`** 由于 `libc++` 疑似存在的 BUG ，在通过 `std::filesystem` 中的某些函数进行操作时，若传递的路径中包含非 `ASCII` 字符，且路径指向的目标不存在，将抛出 `length_error` 而非 `filesystem_error` ，因而无法通过报错信息得知错误原因。
 
-	* **`BUG` `Macintosh`** 由于 `LLVM-21` 工具链随附的 `libc++` 与系统 `libc++` 库存在兼容性问题，进行编译时需要通过 [Issue](https://github.com/Homebrew/homebrew-core/issues/235411#issuecomment-3314586517) 中指示的步骤修改头文件。
+	* **`BUG` `Macintosh`** 由于 `LLVM-21` 工具链随附的 `libc++` 与系统 `libc++` 库存在兼容性问题，进行编译时需要通过 [issue 235411](https://github.com/Homebrew/homebrew-core/issues/235411#issuecomment-3314586517) 中指示的步骤修改头文件。
 
 * `Assistant`
 
@@ -3746,7 +3760,7 @@
 
 	* **`OK` `Task Worker`** 在消息列表中，每个文本控件都有各自独立的选择域，无法跨多个文本控件选择文本。
 
-	* **`TODO` `PopCap Animation Viewer`** 目前无法选择帧范围，应在未来进行补全。
+	* **`TODO` `PopCap Animation Viewer`** 目前无法缩放视图，应在未来进行补全。
 
 * `Assistant Plus`
 
