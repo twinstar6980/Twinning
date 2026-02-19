@@ -410,6 +410,8 @@
 
 - [26-02-19](#26-02-19)
 
+- [26-02-19](#26-02-19)
+
 - [已知问题](#已知问题)
 
 ## 23-02-04
@@ -3721,6 +3723,22 @@
 * `Assistant Plus` 121
 
 	* 优化代码。
+
+## 26-02-19
+
+* `Assistant` 140
+
+	* `PopCap Animation Viewer` 支持逆序播放。
+
+	* `PopCap Animation Viewer` 修复当通过参数指定帧范围时，可能出现报错的 BUG 。
+
+	* `PopCap Animation Viewer` 默认关闭保持帧率与显示边界的选项。
+
+* `Assistant Plus` 122
+
+	* 优化代码。
+
+	* `PopCap Animation Viewer` 默认关闭保持帧率与显示边界的选项。
 
 ## 已知问题
 

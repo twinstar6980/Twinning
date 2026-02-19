@@ -92,7 +92,29 @@ class SettingPanel extends StatelessWidget {
           ],
         ),
         SettingListItem(
-          icon: IconSet.lock_reset,
+          icon: IconSet.settings_backup_restore,
+          label: 'Reverse Play',
+          comment: [
+            StyledText.inherit(!this.data.reversePlay ? 'Disabled' : 'Enabled'),
+          ],
+          onPressed: null,
+          panelBuilder: (context, setStateForPanel) => [
+            StyledListTile.standardTight(
+              leading: StyledSwitch.standard(
+                value: this.data.reversePlay,
+                onChanged: (context, value) async {
+                  this.data.reversePlay = value;
+                  await refreshState(setStateForPanel);
+                  await refreshState(setState);
+                  this.onUpdate();
+                },
+              ),
+              content: StyledText.inherit('Enable'),
+            ),
+          ],
+        ),
+        SettingListItem(
+          icon: IconSet.lock_clock,
           label: 'Keep Speed',
           comment: [
             StyledText.inherit(!this.data.keepSpeed ? 'Disabled' : 'Enabled'),

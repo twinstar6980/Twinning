@@ -81,6 +81,7 @@ class BoxContainer extends StatelessWidget {
     required this.padding,
     required this.align,
     required this.transform,
+    required this.transformAlign,
     required this.color,
     required this.colorFilter,
     required this.opacity,
@@ -95,6 +96,7 @@ class BoxContainer extends StatelessWidget {
     EdgeInsetsGeometry?   padding = null,
     BoxContainerAlign?    align = null,
     Matrix4?              transform = null,
+    AlignmentGeometry?    transformAlign = null,
     Color?                color = null,
     ColorFilter?          colorFilter = null,
     Floater?              opacity = null,
@@ -107,6 +109,7 @@ class BoxContainer extends StatelessWidget {
     padding: padding,
     align: align,
     transform: transform,
+    transformAlign: transformAlign,
     color: color,
     colorFilter: colorFilter,
     opacity: opacity,
@@ -123,6 +126,7 @@ class BoxContainer extends StatelessWidget {
     padding: null,
     align: null,
     transform: null,
+    transformAlign: null,
     color: null,
     colorFilter: null,
     opacity: null,
@@ -137,6 +141,7 @@ class BoxContainer extends StatelessWidget {
   final EdgeInsetsGeometry?   padding;
   final BoxContainerAlign?    align;
   final Matrix4?              transform;
+  final AlignmentGeometry?    transformAlign;
   final Color?                color;
   final ColorFilter?          colorFilter;
   final Floater?              opacity;
@@ -153,6 +158,7 @@ class BoxContainer extends StatelessWidget {
       padding: this.padding,
       alignment: this.align,
       transform: this.transform,
+      transformAlignment: this.transformAlign,
       color: this.color,
       child: this.child,
     ).selfLet((it) => this.colorFilter == null ? it : ColorFiltered(

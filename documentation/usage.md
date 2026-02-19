@@ -129,14 +129,26 @@
 	该模块能够查看 PopCap Animation (PAM) 动画文件。
 	
 	> 将解码 `*.pam` 文件所得的 `*.pam.json` 文件与动画中引用到的纹理分解图 `*.png` 放置在同一目录内，并在页面中导入 `*.pam.json` 文件即可查看动画。
+	
+	> 在 *`Plus`* 版本中，不支持逆序播放，但额外实现了视图缩放、组件的快速过滤与名称正则过滤功能。
 
-* `PopCap Reflection Descriptor` *`<Plus-Only>`*
+* `PopCap Reflection Descriptor`
 	
 	该模块能够查看 RTON 对象结构定义文件。
+	
+	> 仅在 *`Plus`* 版本中实现该模块。
 
-* `PopCap Package Builder` *`<Plus-Only>`*
+* `PopCap Package Builder`
 	
 	该模块能够可视化地管理 `PvZ-2 Package Project` 项目。
+	
+	> 仅在 *`Plus`* 版本中实现该模块。
+
+* `Kairosoft Game Manager`
+	
+	该模块能够方便地查看与修改系统中安装的开罗游戏。
+	
+	> 尚未实现，目前不可用。
 
 ## 转发文件
 

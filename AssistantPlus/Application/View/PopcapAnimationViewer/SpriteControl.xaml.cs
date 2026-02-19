@@ -20,17 +20,17 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#endregion
 
-		#region time offset
+		#region time epsilon
 
-		public TimeSpan BoundEpsilonValue {
+		public TimeSpan TimeEpsilonValue {
 			get {
-				return TimeSpan.FromSeconds(PopcapAnimationHelper.AnimationBoundEpsilon);
+				return TimeSpan.FromSeconds(PopcapAnimationHelper.AnimationTimeEpsilon);
 			}
 		}
 
-		public TimeSpan BoundEpsilon {
+		public TimeSpan TimeEpsilon {
 			get {
-				return TimeSpan.FromSeconds(PopcapAnimationHelper.AnimationBoundEpsilon / this.FrameSpeed);
+				return TimeSpan.FromSeconds(PopcapAnimationHelper.AnimationTimeEpsilon / this.FrameSpeed);
 			}
 		}
 
@@ -135,7 +135,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 							if (this.mState == StateType.Idle) {
 								this.Storyboard.Stop();
 								this.Storyboard.Begin();
-								this.Storyboard.Seek(this.BoundEpsilon);
+								this.Storyboard.Seek(this.TimeEpsilon);
 							}
 							else {
 								this.Storyboard.Resume();
@@ -146,7 +146,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 							if (this.mState == StateType.Idle) {
 								this.Storyboard.Stop();
 								this.Storyboard.Begin();
-								this.Storyboard.Seek(this.BoundEpsilon);
+								this.Storyboard.Seek(this.TimeEpsilon);
 							}
 							this.Storyboard.Pause();
 							break;
@@ -173,7 +173,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			set {
 				AssertTest(this.Loaded);
 				this.Storyboard.BeginTime = -TimeSpan.FromSeconds(value.Begin) / this.FrameSpeed;
-				this.Storyboard.Duration = new (TimeSpan.FromSeconds(value.End + 1) - this.BoundEpsilonValue);
+				this.Storyboard.Duration = new (TimeSpan.FromSeconds(value.End + 1) - this.TimeEpsilonValue);
 				this.mFrameRange = value;
 				return;
 			}
@@ -190,7 +190,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			set {
 				AssertTest(this.Loaded);
 				AssertTest(this.State != StateType.Idle);
-				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + value) / this.FrameSpeed + this.BoundEpsilon);
+				this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + value) / this.FrameSpeed + this.TimeEpsilon);
 				return;
 			}
 		}
@@ -243,7 +243,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					this.Storyboard.SpeedRatio = value;
 					this.Storyboard.BeginTime = -TimeSpan.FromSeconds(this.FrameRange.Begin) / value;
 					if (this.State != StateType.Idle) {
-						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + timeBeforeChange.AsNotNull()) / value + this.BoundEpsilonValue / value);
+						this.Storyboard.Seek((-TimeSpan.FromSeconds(this.FrameRange.Begin) + timeBeforeChange.AsNotNull()) / value + this.TimeEpsilonValue / value);
 					}
 				}
 				this.mFrameSpeed = value;

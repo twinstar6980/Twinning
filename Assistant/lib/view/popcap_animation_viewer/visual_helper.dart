@@ -100,7 +100,7 @@ class VisualHelper {
 
   // #region visualize
 
-  static const Floater animationBoundEpsilon = 1.0e-9;
+  static const Floater animationTimeEpsilon = 1.0e-9;
 
   // ----------------
 

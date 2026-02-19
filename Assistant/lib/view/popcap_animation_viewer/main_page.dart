@@ -45,6 +45,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   late Boolean                                     _immediateSelect;
   late Boolean                                     _automaticPlay;
   late Boolean                                     _repeatPlay;
+  late Boolean                                     _reversePlay;
   late Boolean                                     _keepSpeed;
   late Boolean                                     _showBoundary;
   late String?                                     _animationFile;
@@ -152,7 +153,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     this._activeFrameLabel = VisualHelper.parseSpriteFrameLabel(this._activeSprite!);
     this._activeFrameRange = (0, 0);
     this._activeFrameSpeed = 0.0;
-    this._animationController = .new(lowerBound: 0.0, upperBound: this._activeSprite!.frame.length.toDouble() - VisualHelper.animationBoundEpsilon, vsync: this);
+    this._animationController = .new(lowerBound: 0.0, upperBound: this._activeSprite!.frame.length.toDouble() - VisualHelper.animationTimeEpsilon, vsync: this);
     this._animationController!.addListener(() async {
       this._activeProgressIndexStream.sink.add(null);
       return;
@@ -161,7 +162,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     this._animationVisual = VisualHelper.visualizeSprite(this._animationDriver!, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
     await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length - 1));
     await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frameRate ?? this._animation!.frameRate.toDouble());
-    await this._changeProgressIndex(progressIndex ?? 0);
+    await this._changeProgressIndex(progressIndex ?? (!this._reversePlay ? this._activeFrameRange!.$1 : this._activeFrameRange!.$2));
     await this._changeProgressState(progressState ?? this._automaticPlay);
     await refreshState(this.setState);
     return;
@@ -215,8 +216,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       await this._changeProgressState(false);
     }
     this._activeFrameRange = frameRange;
-    if (this._activeFrameRange!.$1 > this._animationController!.value || this._animationController!.value >= this._activeFrameRange!.$2 + 1) {
-      this._animationController!.value = this._activeFrameRange!.$1.toDouble();
+    if (this._activeFrameRange!.$1 >= this._animationController!.value || this._animationController!.value >= this._activeFrameRange!.$2 + 1) {
+      this._animationController!.value = !this._reversePlay ? this._activeFrameRange!.$1.toDouble() : this._activeFrameRange!.$2.toDouble() + 1.0 - VisualHelper.animationTimeEpsilon;
     }
     if (currentState) {
       await this._changeProgressState(true);
@@ -258,7 +259,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     if (currentState) {
       await this._changeProgressState(false);
     }
-    this._animationController!.value = index.toDouble();
+    this._animationController!.value = index.toDouble() + (!this._reversePlay ? 0.0 : 1.0 - VisualHelper.animationTimeEpsilon);
     if (currentState) {
       await this._changeProgressState(true);
     }
@@ -279,16 +280,30 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       this._animationController!.stop();
     }
     else {
-      this._animationController!.animateTo(this._activeFrameRange!.$2.toDouble() + 1.0 - VisualHelper.animationBoundEpsilon).then((_) async {
-        if (!this._repeatPlay) {
-          this._activeProgressStateStream.sink.add(null);
-        }
-        else {
-          await this._changeProgressIndex(this._activeFrameRange!.$1);
-          await this._changeProgressState(true);
-        }
-        return;
-      });
+      if (!this._reversePlay) {
+        this._animationController!.animateTo(this._activeFrameRange!.$2.toDouble() + 1.0 - VisualHelper.animationTimeEpsilon).then((_) async {
+          if (!this._repeatPlay) {
+            this._activeProgressStateStream.sink.add(null);
+          }
+          else {
+            await this._changeProgressIndex(this._activeFrameRange!.$1);
+            await this._changeProgressState(true);
+          }
+          return;
+        });
+      }
+      else {
+        this._animationController!.animateBack(this._activeFrameRange!.$1.toDouble()).then((_) async {
+          if (!this._repeatPlay) {
+            this._activeProgressStateStream.sink.add(null);
+          }
+          else {
+            await this._changeProgressIndex(this._activeFrameRange!.$2);
+            await this._changeProgressState(true);
+          }
+          return;
+        });
+      }
     }
     this._activeProgressStateStream.sink.add(null);
     return;
@@ -351,6 +366,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     var optionImmediateSelect = null as Boolean?;
     var optionAutomaticPlay = null as Boolean?;
     var optionRepeatPlay = null as Boolean?;
+    var optionReversePlay = null as Boolean?;
     var optionKeepSpeed = null as Boolean?;
     var optionShowBoundary = null as Boolean?;
     var optionAnimationFile = null as String?;
@@ -370,6 +386,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     }
     if (option.check('-repeat_play')) {
       optionRepeatPlay = option.nextBoolean();
+    }
+    if (option.check('-reverse_play')) {
+      optionReversePlay = option.nextBoolean();
     }
     if (option.check('-keep_speed')) {
       optionKeepSpeed = option.nextBoolean();
@@ -416,6 +435,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     if (optionAutomaticPlay != null) {
       this._automaticPlay = optionAutomaticPlay;
     }
+    if (optionReversePlay != null) {
+      this._reversePlay = optionReversePlay;
+    }
     if (optionRepeatPlay != null) {
       this._repeatPlay = optionRepeatPlay;
     }
@@ -452,6 +474,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     }
     if (option.check('-repeat_play')) {
       option.nextBoolean(this._repeatPlay);
+    }
+    if (option.check('-reverse_play')) {
+      option.nextBoolean(this._reversePlay);
     }
     if (option.check('-keep_speed')) {
       option.nextBoolean(this._keepSpeed);
@@ -496,6 +521,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     this._immediateSelect = this.widget.setting.immediateSelect;
     this._automaticPlay = this.widget.setting.automaticPlay;
     this._repeatPlay = this.widget.setting.repeatPlay;
+    this._reversePlay = this.widget.setting.reversePlay;
     this._keepSpeed = this.widget.setting.keepSpeed;
     this._showBoundary = this.widget.setting.showBoundary;
     this._animationFile = null;
@@ -587,30 +613,34 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
             Gap.vertical(8),
             FlexContainer.horizontal([
               Gap.horizontal(4),
-              StreamBuilder(
-                stream: this._activeProgressIndexStream.stream,
-                builder: (context, snapshot) => StyledSlider.standard(
-                  enabled: this._activated,
-                  tooltip: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
-                  minimum: !this._activated ? 0.0 : this._activeFrameRange!.$1.toDouble(),
-                  maximum: !this._activated ? 0.0 : this._activeFrameRange!.$2.toDouble() + 1.0e-9,
-                  value: !this._activated ? 0.0 : this._queryProgressIndex().toDouble(),
-                  onChanged: (context, value) async {
-                    await this._changeProgressIndex(value.round());
-                    this._activeProgressIndexStream.sink.add(null);
-                  },
-                  onChangeStart: (context, value) async {
-                    this._activeProgressChangingContinue = this._queryProgressState();
-                    if (this._activeProgressChangingContinue) {
-                      await this._changeProgressState(false);
-                    }
-                  },
-                  onChangeEnd: (context, value) async {
-                    if (this._activeProgressChangingContinue) {
-                      await this._changeProgressState(true);
-                    }
-                    this._activeProgressChangingContinue = false;
-                  },
+              BoxContainer.of(
+                transform: .diagonal3Values(!this._reversePlay ? 1.0 : -1.0, 1.0, 1.0),
+                transformAlign: .center,
+                child: StreamBuilder(
+                  stream: this._activeProgressIndexStream.stream,
+                  builder: (context, snapshot) => StyledSlider.standard(
+                    enabled: this._activated,
+                    tooltip: !this._activated ? '' : '${this._queryProgressIndex() + 1}',
+                    minimum: !this._activated ? 0.0 : !this._reversePlay ? (this._activeFrameRange!.$1.toDouble()) : -(this._activeFrameRange!.$2.toDouble() + 1.0e-9),
+                    maximum: !this._activated ? 0.0 : !this._reversePlay ? (this._activeFrameRange!.$2.toDouble() + 1.0e-9) : -(this._activeFrameRange!.$1.toDouble()),
+                    value: !this._activated ? 0.0 : !this._reversePlay ? (this._queryProgressIndex().toDouble()) : -(this._queryProgressIndex().toDouble()),
+                    onChanged: (context, value) async {
+                      await this._changeProgressIndex(!this._reversePlay ? value.round() : -value.round());
+                      this._activeProgressIndexStream.sink.add(null);
+                    },
+                    onChangeStart: (context, value) async {
+                      this._activeProgressChangingContinue = this._queryProgressState();
+                      if (this._activeProgressChangingContinue) {
+                        await this._changeProgressState(false);
+                      }
+                    },
+                    onChangeEnd: (context, value) async {
+                      if (this._activeProgressChangingContinue) {
+                        await this._changeProgressState(true);
+                      }
+                      this._activeProgressChangingContinue = false;
+                    },
+                  ),
                 ),
               ).withFlexExpanded(),
               Gap.horizontal(4),
@@ -740,10 +770,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                   enabled: this._activated,
                   tooltip: !this._activated ? null : !this._queryProgressState() ? 'Resume' : 'Pause',
                   selected: true,
-                  icon: IconView.of(!this._activated ? IconSet.play_arrow : !this._queryProgressState() ? IconSet.play_arrow : IconSet.pause, fill: 1),
+                  icon: IconView.of(!this._activated || !this._queryProgressState() ? !this._reversePlay ? IconSet.play_arrow : IconSet.arrow_back_2 : IconSet.pause, fill: 1),
                   onPressed: (context) async {
-                    if (this._animationController!.isCompleted) {
-                      await this._changeProgressIndex(this._activeFrameRange!.$1);
+                    if (!this._animationController!.status.isAnimating) {
+                      await this._changeProgressIndex(!this._reversePlay ? this._activeFrameRange!.$1 : this._activeFrameRange!.$2);
                     }
                     await this._changeProgressState(!this._queryProgressState());
                   },
@@ -1035,10 +1065,25 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
           ),
           Gap.horizontal(8),
           StyledIconButton.filledTonal(
+            tooltip: 'Reverse Play',
+            selected: this._reversePlay,
+            icon: IconView.of(IconSet.settings_backup_restore),
+            iconOnSelected: IconView.of(IconSet.settings_backup_restore, fill: 1),
+            onPressed: (context) async {
+              this._reversePlay = !this._reversePlay;
+              await refreshState(this.setState);
+              if (this._activated && this._queryProgressState()) {
+                await this._changeProgressState(false);
+                await this._changeProgressState(true);
+              }
+            },
+          ),
+          Gap.horizontal(8),
+          StyledIconButton.filledTonal(
             tooltip: 'Keep Speed',
             selected: this._keepSpeed,
-            icon: IconView.of(IconSet.lock_reset),
-            iconOnSelected: IconView.of(IconSet.lock_reset, fill: 1),
+            icon: IconView.of(IconSet.lock_clock),
+            iconOnSelected: IconView.of(IconSet.lock_clock, fill: 1),
             onPressed: (context) async {
               this._keepSpeed = !this._keepSpeed;
               await refreshState(this.setState);

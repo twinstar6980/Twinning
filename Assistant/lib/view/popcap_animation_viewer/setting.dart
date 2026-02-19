@@ -6,12 +6,14 @@ class Setting {
   Boolean immediateSelect;
   Boolean automaticPlay;
   Boolean repeatPlay;
+  Boolean reversePlay;
   Boolean keepSpeed;
   Boolean showBoundary;
   Setting({
     required this.immediateSelect,
     required this.automaticPlay,
     required this.repeatPlay,
+    required this.reversePlay,
     required this.keepSpeed,
     required this.showBoundary,
   });

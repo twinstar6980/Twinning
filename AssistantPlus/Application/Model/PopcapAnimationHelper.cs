@@ -13,7 +13,7 @@ namespace Twinning.AssistantPlus {
 
 		#region utility
 
-		public const Floater AnimationBoundEpsilon = 1.0e-3;
+		public const Floater AnimationTimeEpsilon = 1.0e-3;
 
 		// ----------------
 
