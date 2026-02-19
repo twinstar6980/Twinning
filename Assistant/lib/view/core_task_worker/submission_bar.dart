@@ -561,7 +561,7 @@ class _PathSubmissionBar extends StatelessWidget {
                   allowLoadFile: true,
                   allowLoadDirectory: true,
                   allowSaveFile: true,
-                  location: '@${ModuleType.core_task_worker.name}.generic',
+                  location: '@${ModuleHelper.query(.core_task_worker).identifier}.generic',
                   textStyle: getSpecialFontTextStyle(context, listen: false),
                 );
                 if (target != null) {

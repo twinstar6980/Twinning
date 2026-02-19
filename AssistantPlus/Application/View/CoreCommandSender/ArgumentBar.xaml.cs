@@ -615,7 +615,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
-			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{nameof(CoreCommandSender)}.Generic", null);
+			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.generic", null);
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
 				this.NotifyPropertyChanged([

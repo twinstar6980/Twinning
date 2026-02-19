@@ -21,8 +21,8 @@ namespace Twinning.AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
-		public String                            Identifier            = default!;
 		public ModuleType                        Type                  = default!;
+		public String                            Identifier            = default!;
 		public String                            Name                  = default!;
 		public String                            Icon                  = default!;
 		public Type                              MainPage              = default!;
@@ -64,8 +64,8 @@ namespace Twinning.AssistantPlus {
 
 		private static readonly List<ModuleInformation> Information = [
 			new () {
-				Identifier = "core_task_worker",
 				Type = ModuleType.CoreTaskWorker,
+				Identifier = "core_task_worker",
 				Name = "Task Worker",
 				Icon = FluentIconGlyph.ProvisioningPackage,
 				MainPage = typeof(View.CoreTaskWorker.MainPage),
@@ -76,8 +76,8 @@ namespace Twinning.AssistantPlus {
 				StandardSize = new (480, 840),
 			},
 			new () {
-				Identifier = "core_command_sender",
 				Type = ModuleType.CoreCommandSender,
+				Identifier = "core_command_sender",
 				Name = "Command Sender",
 				Icon = FluentIconGlyph.Send,
 				MainPage = typeof(View.CoreCommandSender.MainPage),
@@ -88,8 +88,8 @@ namespace Twinning.AssistantPlus {
 				StandardSize = new (920, 840),
 			},
 			new () {
-				Identifier = "core_resource_shipper",
 				Type = ModuleType.CoreResourceShipper,
+				Identifier = "core_resource_shipper",
 				Name = "Resource Shipper",
 				Icon = FluentIconGlyph.Share,
 				MainPage = typeof(View.CoreResourceShipper.MainPage),
@@ -100,8 +100,8 @@ namespace Twinning.AssistantPlus {
 				StandardSize = new (480, 840),
 			},
 			new () {
-				Identifier = "popcap_animation_viewer",
 				Type = ModuleType.PopcapAnimationViewer,
+				Identifier = "popcap_animation_viewer",
 				Name = "PopCap Animation Viewer",
 				Icon = FluentIconGlyph.HomeGroup,
 				MainPage = typeof(View.PopcapAnimationViewer.MainPage),
@@ -112,8 +112,8 @@ namespace Twinning.AssistantPlus {
 				StandardSize = new (1600, 840),
 			},
 			new () {
-				Identifier = "popcap_reflection_descriptor",
 				Type = ModuleType.PopcapReflectionDescriptor,
+				Identifier = "popcap_reflection_descriptor",
 				Name = "PopCap Reflection Descriptor",
 				Icon = FluentIconGlyph.Library,
 				MainPage = typeof(View.PopcapReflectionDescriptor.MainPage),
@@ -124,8 +124,8 @@ namespace Twinning.AssistantPlus {
 				StandardSize = new (920, 840),
 			},
 			new () {
-				Identifier = "popcap_package_builder",
 				Type = ModuleType.PopcapPackageBuilder,
+				Identifier = "popcap_package_builder",
 				Name = "PopCap Package Builder",
 				Icon = FluentIconGlyph.DialShape3,
 				MainPage = typeof(View.PopcapPackageBuilder.MainPage),
@@ -141,12 +141,6 @@ namespace Twinning.AssistantPlus {
 			ModuleType type
 		) {
 			return ModuleHelper.Information[type.CastPrimitive<Size>()];
-		}
-
-		public static ModuleInformation QueryByIdentifier (
-			String identifier
-		) {
-			return ModuleHelper.Information.First((it) => it.Identifier == identifier);
 		}
 
 		// ----------------

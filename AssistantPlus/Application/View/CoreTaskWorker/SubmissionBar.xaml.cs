@@ -704,7 +704,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{nameof(CoreTaskWorker)}.Generic", null);
+			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null);
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
 				this.NotifyPropertyChanged([

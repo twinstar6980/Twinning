@@ -50,7 +50,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await pickStorageItem(
                         context: context,
                         allowLoadFile: true,
-                        location: '@${ModuleType.core_task_worker.name}.kernel',
+                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.kernel',
                       );
                       if (target != null) {
                         this.data.kernel = target;
@@ -94,7 +94,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await pickStorageItem(
                         context: context,
                         allowLoadFile: true,
-                        location: '@${ModuleType.core_task_worker.name}.script',
+                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.script',
                       );
                       if (target != null) {
                         this.data.script = target;
@@ -140,7 +140,7 @@ class SettingPanel extends StatelessWidget {
                         allowLoadFile: true,
                         allowLoadDirectory: true,
                         allowSaveFile: true,
-                        location: '@${ModuleType.core_task_worker.name}.argument',
+                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.argument',
                       );
                       if (target != null) {
                         this.data.argument = [...this.data.argument, target];
@@ -206,7 +206,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await pickStorageItem(
                         context: context,
                         allowLoadFile: true,
-                        location: '@${ModuleType.core_task_worker.name}.message_font',
+                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.message_font',
                       );
                       if (target != null) {
                         this.data.messageFont = [...this.data.messageFont, target];

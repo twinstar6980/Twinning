@@ -111,7 +111,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var value = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(CoreTaskWorker)}.Kernel");
+			var value = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.kernel");
 			if (value != null) {
 				this.Data.Kernel = value;
 				this.NotifyPropertyChanged([
@@ -148,7 +148,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var value = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(CoreTaskWorker)}.Script");
+			var value = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.script");
 			if (value != null) {
 				this.Data.Script = value;
 				this.NotifyPropertyChanged([
@@ -185,7 +185,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{nameof(CoreTaskWorker)}.Argument", null);
+			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.argument", null);
 			if (value != null) {
 				this.Data.Argument = [..this.Data.Argument, value];
 				this.NotifyPropertyChanged([

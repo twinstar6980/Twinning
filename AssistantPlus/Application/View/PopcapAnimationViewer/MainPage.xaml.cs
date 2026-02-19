@@ -983,7 +983,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					if (isPlaying) {
 						this.View.uSprite.State = SpriteControl.StateType.Paused;
 					}
-					var animationFile = await StorageHelper.PickLoadFile(App.MainWindow, $"@{nameof(PopcapAnimationViewer)}.AnimationFile");
+					var animationFile = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.animation_file");
 					if (animationFile != null) {
 						await this.ApplyLoad(animationFile, null, null, null, null, null, null);
 					}

@@ -49,6 +49,24 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#endregion
 
+		#region enumeration
+
+		public static String MakeEnumerationToStringOfSnakeCase<TType>(
+			TType value
+		)
+			where TType : struct, Enum {
+			return ConvertHelper.ChangeStringFromCamelCaseToSnakeCase(Enum.GetName(value).AsNotNull());
+		}
+
+		public static TType ParseEnumerationFromStringOfSnakeCase<TType>(
+			String text
+		)
+			where TType : struct, Enum {
+			return Enum.GetValues<TType>().First((it) => ConvertHelper.MakeEnumerationToStringOfSnakeCase(it) == text);
+		}
+
+		#endregion
+
 		#region boolean
 
 		public static String MakeBooleanToString (
@@ -123,10 +141,27 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region string
 
-		public static String InsertSpaceBetweenStringWord (
-			String value
+		public static List<String> SplitStringOfCamelCase(
+			String source
 		) {
-			return Regex.Replace(value, @"([A-Z])", " $1", RegexOptions.Compiled).TrimStart();
+			return new Regex(@"([A-Z][a-z]*)|([a-z]+)|([0-9]+)", RegexOptions.Compiled)
+				.Matches(source)
+				.Select((it) => it.Value)
+				.ToList();
+		}
+
+		// ----------------
+
+		public static String ChangeStringFromCamelCaseToSnakeCase(
+			String source
+		) {
+			return String.Join('_', ConvertHelper.SplitStringOfCamelCase(source)).ToLower();
+		}
+
+		public static String ChangeStringFromCamelCaseThenInsertSpace(
+			String source
+		) {
+			return String.Join(' ', ConvertHelper.SplitStringOfCamelCase(source));
 		}
 
 		#endregion

@@ -81,7 +81,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public List<String> uSettingThemeBackdrop_ItemsSource {
 			get {
-				return Enum.GetNames<CustomThemeBackdrop>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
+				return Enum.GetNames<CustomThemeBackdrop>().Select(ConvertHelper.ChangeStringFromCamelCaseThenInsertSpace).ToList();
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public List<String> uSettingThemeMode_ItemsSource {
 			get {
-				return Enum.GetNames<CustomThemeMode>().Select(ConvertHelper.InsertSpaceBetweenStringWord).ToList();
+				return Enum.GetNames<CustomThemeMode>().Select(ConvertHelper.ChangeStringFromCamelCaseThenInsertSpace).ToList();
 			}
 		}
 
@@ -447,7 +447,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			var target = await StorageHelper.PickLoadDirectory(App.MainWindow, "@Application.ModuleConfigurationDirectory");
+			var target = await StorageHelper.PickLoadDirectory(App.MainWindow, "@application.module_configuration_directory");
 			if (target != null) {
 				App.Setting.Data.ModuleConfigurationDirectory = target;
 				this.NotifyPropertyChanged([
@@ -512,7 +512,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					break;
 				}
 				case "Import": {
-					var file = await StorageHelper.PickLoadFile(App.MainWindow, $"@Application.SettingFile");
+					var file = await StorageHelper.PickLoadFile(App.MainWindow, $"@application.setting_file");
 					if (file != null) {
 						await App.Setting.Load(file);
 						await App.Setting.Save();
@@ -521,7 +521,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					break;
 				}
 				case "Export": {
-					var file = await StorageHelper.PickSaveFile(App.MainWindow, $"@Application.SettingFile", "setting.json");
+					var file = await StorageHelper.PickSaveFile(App.MainWindow, $"@application.setting_file", "setting.json");
 					if (file != null) {
 						await App.Setting.Save(file, false);
 						changed = true;

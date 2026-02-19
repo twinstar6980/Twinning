@@ -497,7 +497,7 @@ class _MainPageBridgeClient extends bridge.Client {
       'save_file'      => 'save_file',
       _                => throw Exception(),
     };
-    target = await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleType.core_resource_shipper.name}.generic', null) ?? '';
+    target = await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.generic', null) ?? '';
     return (target,);
   }
 

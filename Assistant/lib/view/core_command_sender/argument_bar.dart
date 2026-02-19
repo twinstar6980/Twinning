@@ -425,7 +425,7 @@ class _PathArgumentBar extends StatelessWidget {
                   allowLoadFile: true,
                   allowLoadDirectory: true,
                   allowSaveFile: true,
-                  location: '@${ModuleType.core_command_sender.name}.generic',
+                  location: '@${ModuleHelper.query(.core_command_sender).identifier}.generic',
                 );
                 if (target != null) {
                   this.value.value = .new(target);

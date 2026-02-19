@@ -1184,7 +1184,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var projectDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{nameof(PopcapPackageBuilder)}.ProjectDirectory");
+			var projectDirectory = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.project_directory");
 			if (projectDirectory != null) {
 				await this.ApplyLoad(projectDirectory);
 			}

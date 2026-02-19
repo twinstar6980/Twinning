@@ -170,7 +170,7 @@ class ConfigurationHelper {
           argument: (jsonItem['argument'] as List<dynamic>).map((jsonArgument) => ArgumentConfiguration(
             identifier: (jsonArgument['identifier'] as String),
             name: (jsonArgument['name'] as String),
-            type: (jsonArgument['type'] as String).selfLet((it) => .values.byName(it)),
+            type: (jsonArgument['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ArgumentType.values)),
             option: (jsonArgument['option'] as List<dynamic>?)?.cast<Object>(),
           )).toList(),
           batch: (jsonItem['batch'] as List<dynamic>?)?.cast<String>(),

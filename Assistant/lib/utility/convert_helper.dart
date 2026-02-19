@@ -8,6 +8,23 @@ import 'package:decimal/decimal.dart' as lib;
 
 class ConvertHelper {
 
+  // #region enumeration
+
+  static String makeEnumerationToStringOfSnakeCase<TType extends Enum>(
+    TType value,
+  ) {
+    return changeStringFromCamelCaseToSnakeCase(value.name);
+  }
+
+  static TType parseEnumerationFromStringOfSnakeCase<TType extends Enum>(
+    String      text,
+    List<TType> list,
+  ) {
+    return list.firstWhere((it) => makeEnumerationToStringOfSnakeCase(it) == text);
+  }
+
+  // #endregion
+
   // #region boolean
 
   static String makeBooleanToString(
@@ -59,6 +76,27 @@ class ConvertHelper {
       > 0.0 => '${!showPositiveSign ? '' : '+'}${valueDecimal}',
       _     => throw Exception(),
     } + (!valueDecimal.isInteger ? '' : '.0');
+  }
+
+  // #endregion
+
+  // #region string
+
+  static List<String> splitStringOfCamelCase(
+    String source,
+  ) {
+    return RegExp(r'([A-Z][a-z]*)|([a-z]+)|([0-9]+)')
+      .allMatches(source)
+      .map((it) => it.group(0)!)
+      .toList();
+  }
+
+  // ----------------
+
+  static String changeStringFromCamelCaseToSnakeCase(
+    String source,
+  ) {
+    return splitStringOfCamelCase(source).join('_').toLowerCase();
   }
 
   // #endregion

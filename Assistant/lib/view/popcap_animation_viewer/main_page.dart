@@ -1017,7 +1017,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     icon: IconView.of(IconSet.open_in_new),
                     content: StyledText.inherit('Pick'),
                     onPressed: (context) async {
-                      var animationFile = await StorageHelper.pickLoadFile(context, '@${ModuleType.popcap_animation_viewer.name}.animation_file');
+                      var animationFile = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.popcap_animation_viewer).identifier}.animation_file');
                       if (animationFile != null) {
                         Navigator.pop(context);
                         await this._applyLoad(animationFile, null, null, null, null, null, null, null);

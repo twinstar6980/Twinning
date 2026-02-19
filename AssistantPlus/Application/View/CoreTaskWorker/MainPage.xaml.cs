@@ -667,7 +667,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				"save_file"      => "SaveFile",
 				_                => throw new (),
 			};
-			target = await StorageHelper.Pick(typeValue, App.MainWindow, $"@{nameof(CoreTaskWorker)}.Generic", null) ?? "";
+			target = await StorageHelper.Pick(typeValue, App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null) ?? "";
 			return new (target);
 		}
 

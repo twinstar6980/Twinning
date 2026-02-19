@@ -341,7 +341,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
-                        var item = await StorageHelper.pickLoadFile(context, '@${ModuleType.core_resource_shipper.name}.resource');
+                        var item = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
                         if (item != null) {
                           await this._appendResource([item]);
                           await refreshState(setStateForPanel);
@@ -353,7 +353,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
-                        var item = await StorageHelper.pickLoadDirectory(context, '@${ModuleType.core_resource_shipper.name}.resource');
+                        var item = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
                         if (item != null) {
                           await this._appendResource([item]);
                           await refreshState(setStateForPanel);

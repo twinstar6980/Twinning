@@ -33,6 +33,7 @@ enum ModuleType {
 
 class ModuleInformation {
   ModuleType                                    type;
+  String                                        identifier;
   String                                        name;
   IconData                                      icon;
   Widget Function(Object, Object, List<String>) mainPage;
@@ -42,6 +43,7 @@ class ModuleInformation {
   Future<List<String>?> Function(List<String>)  generateForwardOption;
   ModuleInformation({
     required this.type,
+    required this.identifier,
     required this.name,
     required this.icon,
     required this.mainPage,
@@ -89,6 +91,7 @@ class ModuleHelper {
   static final List<ModuleInformation> _information = [
     .new(
       type: .core_task_worker,
+      identifier: 'core_task_worker',
       name: 'Task Worker',
       icon: IconSet.rule_settings,
       mainPage: (setting, configuration, option) => core_task_worker.MainPage(
@@ -107,6 +110,7 @@ class ModuleHelper {
     ),
     .new(
       type: .core_command_sender,
+      identifier: 'core_command_sender',
       name: 'Command Sender',
       icon: IconSet.send,
       mainPage: (setting, configuration, option) => core_command_sender.MainPage(
@@ -125,6 +129,7 @@ class ModuleHelper {
     ),
     .new(
       type: .core_resource_shipper,
+      identifier: 'core_resource_shipper',
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
       mainPage: (setting, configuration, option) => core_resource_shipper.MainPage(
@@ -143,6 +148,7 @@ class ModuleHelper {
     ),
     .new(
       type: .popcap_animation_viewer,
+      identifier: 'popcap_animation_viewer',
       name: 'PopCap Animation Viewer',
       icon: IconSet.thread_unread,
       mainPage: (setting, configuration, option) => popcap_animation_viewer.MainPage(
@@ -161,6 +167,7 @@ class ModuleHelper {
     ),
     .new(
       type: .kairosoft_game_manager,
+      identifier: 'kairosoft_game_manager',
       name: 'Kairosoft Game Manager',
       icon: IconSet.history_edu,
       mainPage: (setting, configuration, option) => kairosoft_game_manager.MainPage(
@@ -200,7 +207,7 @@ class ModuleHelper {
     return [
       '-launch',
       launcher.title,
-      launcher.type.name,
+      ModuleHelper.query(launcher.type).identifier,
       ...launcher.option,
     ];
   }

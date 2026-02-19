@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/module.dart';
+import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/font_helper.dart';
@@ -253,7 +254,7 @@ class SettingProvider with ChangeNotifier {
   ) {
     return {
       'version': data.version.selfAlso((it) => assertTest(it == ApplicationInformation.version)),
-      'theme_mode': data.themeMode.name,
+      'theme_mode': data.themeMode.selfLet((it) => ConvertHelper.makeEnumerationToStringOfSnakeCase(it)),
       'theme_color_state': data.themeColorState,
       'theme_color_light': data.themeColorLight.toARGB32(),
       'theme_color_dark': data.themeColorDark.toARGB32(),
@@ -267,23 +268,23 @@ class SettingProvider with ChangeNotifier {
       'window_size_height': data.windowSizeHeight,
       'storage_picker_fallback_directory': data.storagePickerFallbackDirectory,
       'storage_picker_history_location': data.storagePickerHistoryLocation,
-      'forwarder_default_target': data.forwarderDefaultTarget.name,
+      'forwarder_default_target': data.forwarderDefaultTarget.selfLet((it) => ModuleHelper.query(it).identifier),
       'forwarder_immediate_jump': data.forwarderImmediateJump,
       'module_configuration_directory': data.moduleConfigurationDirectory,
       'module_launcher': {
         'module': data.moduleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
-          'type': dataItem.type.name,
+          'type': dataItem.type.selfLet((it) => ModuleHelper.query(it).identifier),
           'option': dataItem.option,
         }).toList(),
         'pinned': data.moduleLauncher.pinned.map((dataItem) => {
           'title': dataItem.title,
-          'type': dataItem.type.name,
+          'type': dataItem.type.selfLet((it) => ModuleHelper.query(it).identifier),
           'option': dataItem.option,
         }).toList(),
         'recent': data.moduleLauncher.recent.map((dataItem) => {
           'title': dataItem.title,
-          'type': dataItem.type.name,
+          'type': dataItem.type.selfLet((it) => ModuleHelper.query(it).identifier),
           'option': dataItem.option,
         }).toList(),
       },
@@ -320,7 +321,7 @@ class SettingProvider with ChangeNotifier {
   ) {
     return SettingData(
       version: (json['version'] as String).selfAlso((it) => assertTest(it == ApplicationInformation.version)),
-      themeMode: (json['theme_mode'] as String).selfLet((it) => .values.byName(it)),
+      themeMode: (json['theme_mode'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, StyledThemeMode.values)),
       themeColorState: (json['theme_color_state'] as Boolean),
       themeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => .new(it)),
       themeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => .new(it)),
@@ -334,23 +335,23 @@ class SettingProvider with ChangeNotifier {
       windowSizeHeight: (json['window_size_height'] as Integer),
       storagePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
       storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>(),
-      forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => .values.byName(it)),
+      forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
       forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
       moduleConfigurationDirectory: (json['module_configuration_directory'] as String),
       moduleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => .values.byName(it)),
+          type: (jsonItem['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
         pinned: (jsonPart['pinned'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => .values.byName(it)),
+          type: (jsonItem['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
         recent: (jsonPart['recent'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => .values.byName(it)),
+          type: (jsonItem['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
           option: (jsonItem['option'] as List<dynamic>).cast<String>(),
         )).toList(),
       )),

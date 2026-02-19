@@ -265,7 +265,7 @@ namespace Twinning.AssistantPlus {
 			if (option.Check("-launch")) {
 				optionLaunch = new (
 					option.NextString(),
-					option.NextString().SelfLet((it) => (ModuleHelper.QueryByIdentifier(it).Type)),
+					option.NextString().SelfLet((it) => (ConvertHelper.ParseEnumerationFromStringOfSnakeCase<ModuleType>(it))),
 					option.NextStringList()
 				);
 			}

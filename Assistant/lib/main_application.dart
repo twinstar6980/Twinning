@@ -3,6 +3,7 @@ import '/module.dart';
 import '/setting.dart';
 import '/application.dart';
 import '/utility/exception_helper.dart';
+import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
@@ -122,7 +123,7 @@ class MainApplication {
     if (option.check('-launch')) {
       optionLaunch = (
         option.nextString(),
-        option.nextString().selfLet((it) => .values.byName(it)),
+        option.nextString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
         option.nextStringList(),
       );
     }
