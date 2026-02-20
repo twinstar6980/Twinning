@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/utility/system_overlay_helper.dart';
+import '/utility/system_ui_helper.dart';
 import '/widget/common.dart';
 import '/widget/container.dart';
 import 'package:collection/collection.dart';
@@ -185,7 +185,7 @@ extension StyledMaterialWidgetExtension on Widget {
 
 // #region message
 
-extension StyledSnackExtension on Widget {
+extension StyledSnackExtension on Object {
 
   static Future<Void> show(
     BuildContext context,
@@ -1990,7 +1990,7 @@ class StyledTitleBar extends StatelessWidget {
   build(context) {
     return switch (this.variant) {
       .standard => material.AppBar(
-        systemOverlayStyle: SystemOverlayHelper.query(material.Theme.of(context).colorScheme.brightness),
+        systemOverlayStyle: SystemUiHelper.queryOverlayStyle(material.Theme.of(context).colorScheme.brightness),
         centerTitle: false,
         elevation: 3,
         scrolledUnderElevation: 3,
@@ -2382,9 +2382,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
               builder: (context) => StyledIconButton.standard(
                 tooltip: 'Back',
                 icon: IconView.of(IconSet.arrow_back),
-                onPressed: (context) async {
-                  Navigator.pop(context);
-                },
+                onPressed: (context) => Navigator.pop(context),
               ),
             ),
           ),
@@ -2820,7 +2818,7 @@ class StyledApplication extends StatelessWidget {
             title: this.title,
             home: Builder(
               builder: (context) {
-                SystemOverlayHelper.apply(material.Theme.of(context).colorScheme.brightness);
+                SystemUiHelper.applyOverlayStyle(material.Theme.of(context).colorScheme.brightness);
                 return this.home;
               },
             ),

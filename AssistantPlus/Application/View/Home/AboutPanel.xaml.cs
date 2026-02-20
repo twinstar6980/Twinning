@@ -512,18 +512,18 @@ namespace Twinning.AssistantPlus.View.Home {
 					break;
 				}
 				case "Import": {
-					var file = await StorageHelper.PickLoadFile(App.MainWindow, $"@application.setting_file");
-					if (file != null) {
-						await App.Setting.Load(file);
+					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@application.setting_file");
+					if (target != null) {
+						await App.Setting.Load(target);
 						await App.Setting.Save();
 						changed = true;
 					}
 					break;
 				}
 				case "Export": {
-					var file = await StorageHelper.PickSaveFile(App.MainWindow, $"@application.setting_file", "setting.json");
-					if (file != null) {
-						await App.Setting.Save(file, false);
+					var target = await StorageHelper.PickSaveFile(App.MainWindow, $"@application.setting_file", "setting.json");
+					if (target != null) {
+						await App.Setting.Save(target, false);
 						changed = true;
 					}
 					break;
@@ -575,6 +575,17 @@ namespace Twinning.AssistantPlus.View.Home {
 				StorageHelper.Remove(App.CacheDirectory);
 			}
 			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			return;
+		}
+
+		// ----------------
+
+		public async void uOnboarding_Click(
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			await App.MainWindow.ShowOnboarding();
 			return;
 		}
 

@@ -66,10 +66,10 @@
 									Text="Rename"
 									/>
 								<MenuFlyoutItem
-									Tag="Keep"
+									Tag="Memorize"
 									Click="{x:Bind uCommand_Click}"
 									Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Pin}}"
-									Text="Keep"
+									Text="Memorize"
 									/>
 								<MenuFlyoutItem
 									Tag="Duplicate"
@@ -139,16 +139,22 @@
 				<communityBehaviors:StackedNotificationsBehavior x:Name="uNotificationsBehavior" x:FieldModifier="public" />
 			</interactivity:Interaction.Behaviors>
 		</InfoBar>
-		<FlyoutBase.AttachedFlyout>
-			<Flyout x:Name="uLauncherFlyout" x:FieldModifier="public" Placement="Full" FlyoutPresenterStyle="{StaticResource VerticalScrollFlyoutPresenterStyle}">
-				<localViewHome:LauncherPanel
+		<my:Box
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Visibility="Collapsed"
+			>
+			<FlyoutBase.AttachedFlyout>
+				<Flyout x:Name="uLauncherFlyout" x:FieldModifier="public" Placement="Full" FlyoutPresenterStyle="{StaticResource VerticalScrollFlyoutPresenterStyle}">
+					<localViewHome:LauncherPanel
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					PanelEnter="{x:Bind Controller.uLauncher_PanelEnter}"
 					PanelExit="{x:Bind Controller.uLauncher_PanelExit}"
 					Stamp="{x:Bind Controller.uLauncher_Stamp}"
 					/>
-			</Flyout>
-		</FlyoutBase.AttachedFlyout>
+				</Flyout>
+			</FlyoutBase.AttachedFlyout>
+		</my:Box>
 	</my:Box>
 </Window>

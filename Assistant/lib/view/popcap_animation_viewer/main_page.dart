@@ -889,12 +889,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                           await refreshState(setStateForPanel);
                         },
                         onLongPressed: (context) async {
+                          Navigator.pop(context);
                           var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
                           if (this._activated) {
                             await this._deactivate();
                           }
                           await this._activate((false, index), null, newFrameSpeed, null, null);
-                          Navigator.pop(context);
                         },
                       )),
                     ],
@@ -960,12 +960,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                           await refreshState(setStateForPanel);
                         },
                         onLongPressed: (context) async {
+                          Navigator.pop(context);
                           var newFrameSpeed = !this._keepSpeed ? null : this._activeFrameSpeed;
                           if (this._activated) {
                             await this._deactivate();
                           }
                           await this._activate((true, index), null, newFrameSpeed, null, null);
-                          Navigator.pop(context);
                         },
                       )),
                     ],
@@ -1017,10 +1017,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     icon: IconView.of(IconSet.open_in_new),
                     content: StyledText.inherit('Pick'),
                     onPressed: (context) async {
-                      var animationFile = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.popcap_animation_viewer).identifier}.animation_file');
-                      if (animationFile != null) {
+                      var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.popcap_animation_viewer).identifier}.animation_file');
+                      if (target != null) {
                         Navigator.pop(context);
-                        await this._applyLoad(animationFile, null, null, null, null, null, null, null);
+                        await this._applyLoad(target, null, null, null, null, null, null, null);
                       }
                     },
                   ).withFlexExpanded(),

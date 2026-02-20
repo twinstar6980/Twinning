@@ -76,6 +76,7 @@ class SettingState {
   Future<Void> Function(Uri)?                              handleLink;
   GlobalKey<NavigatorState>                                applicationNavigatorKey;
   List<String>                                             themeFontFamliy;
+  Future<Void> Function()?                                 homeShowOnboarding;
   Future<Void> Function()?                                 homeShowLauncher;
   Future<Void> Function(ModuleLauncherConfiguration)?      homeInsertPage;
   List<String>                                             coreTaskWorkerMessageFontFamily;
@@ -87,6 +88,7 @@ class SettingState {
     required this.handleLink,
     required this.applicationNavigatorKey,
     required this.themeFontFamliy,
+    required this.homeShowOnboarding,
     required this.homeShowLauncher,
     required this.homeInsertPage,
     required this.coreTaskWorkerMessageFontFamily,
@@ -240,6 +242,7 @@ class SettingProvider with ChangeNotifier {
       handleLink: null,
       applicationNavigatorKey: .new(),
       themeFontFamliy: [],
+      homeShowOnboarding: null,
       homeShowLauncher: null,
       homeInsertPage: null,
       coreTaskWorkerMessageFontFamily: [],
@@ -381,6 +384,19 @@ class SettingProvider with ChangeNotifier {
       kairosoftGameManager: (json['kairosoft_game_manager'] as Map<dynamic, dynamic>).selfLet((jsonPart) => kairosoft_game_manager.Setting(
       )),
     );
+  }
+
+  // ----------------
+
+  Future<Void> quickSetup(
+    String homeDirectory,
+  ) async {
+    this.data.moduleConfigurationDirectory = '${homeDirectory}/assistant';
+    this.data.storagePickerFallbackDirectory = '${homeDirectory}/workspace';
+    this.data.coreTaskWorker.kernel = '${homeDirectory}/kernel';
+    this.data.coreTaskWorker.script = '${homeDirectory}/script/main.js';
+    this.data.coreTaskWorker.argument = ['${homeDirectory}'];
+    return;
   }
 
   // #endregion

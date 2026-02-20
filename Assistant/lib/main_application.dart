@@ -9,11 +9,12 @@ import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
 import '/utility/notification_helper.dart';
 import '/utility/custom_link_helper.dart';
+import '/utility/system_ui_helper.dart';
+import 'dart:async';
 import 'widget/export.dart';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/services.dart';
 
 // ----------------
 
@@ -168,15 +169,17 @@ class MainApplication {
   ) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      ExceptionHelper.initialize((exception, stack) async {
+      ExceptionHelper.initialize();
+      ExceptionHelper.listen((exception, stack) async {
         _handleException(exception, stack);
         return;
       });
+      var needShowOnboarding = false;
       try {
         await _setting.load();
       }
       catch (e) {
-        await _setting.reset();
+        needShowOnboarding = true;
       }
       await _setting.save();
       _setting.state.handleLaunch = _handleLaunch;
@@ -184,7 +187,8 @@ class MainApplication {
       _setting.state.handleCommand = _handleCommand;
       _setting.state.handleLink = _handleLink;
       await NotificationHelper.initialize();
-      await SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
+      await CustomLinkHelper.initialize();
+      await SystemUiHelper.applyMode(.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
         await WindowHelper.ensureInitialized();
         if (_setting.data.windowSizeState) {
@@ -199,22 +203,29 @@ class MainApplication {
         await WindowHelper.waitUntilReadyToShow();
         await WindowHelper.show();
       }
-      CustomLinkHelper.listen((link) async {
-        postTask(() async {
-          await _handleLink(link);
+      postTask(() async {
+        if (needShowOnboarding) {
+          await _setting.state.homeShowOnboarding!();
+        }
+        await NotificationHelper.listen(() async {
+          if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
+            await WindowHelper.show();
+          }
+          return;
         });
-        return;
-      });
-      if (await CustomLinkHelper.getFirst() == null) {
-        postTask(() async {
+        await CustomLinkHelper.listen((link) async {
+          await _handleLink(link);
+          return;
+        });
+        if (await CustomLinkHelper.getFirst() == null) {
           if (argument.length >= 1 && argument[0] == 'application') {
             await _handleCommand(argument.slice(1));
           }
           else {
             await _setting.state.homeShowLauncher!();
           }
-        });
-      }
+        }
+      });
     }
     catch (e, s) {
       _handleException(e, s);

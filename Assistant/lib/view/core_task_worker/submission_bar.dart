@@ -556,7 +556,7 @@ class _PathSubmissionBar extends StatelessWidget {
               tooltip: 'Pick',
               icon: IconView.of(IconSet.open_in_new),
               onPressed: (context) async {
-                var target = await pickStorageItem(
+                var target = await StorageDropRegionExtension.pick(
                   context: context,
                   allowLoadFile: true,
                   allowLoadDirectory: true,

@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
+import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/widget/export.dart';
 import '/view/home/blank_page.dart';
@@ -101,7 +102,7 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
-  Future<Void> _keepPage(
+  Future<Void> _memorizePage(
     Integer index,
   ) async {
     assertTest(0 <= index && index < this._pageList.length);
@@ -156,6 +157,43 @@ class _MainPageState extends State<MainPage> {
     return;
   }
 
+  Future<Void> _showOnboarding(
+  ) async {
+    await StyledModalDialogExtension.show<String>(this.context, StyledModalDialog.standard(
+      title: 'Onboarding',
+      contentBuilder: (context, setStateForPanel) => [
+        StyledListTile.standard(
+          content: StyledText.inherit('Import Setting'),
+          onPressed: (context) async {
+            var target = await StorageHelper.pickLoadFile(context, '@application.setting_file');
+            if (target != null) {
+              var setting = Provider.of<SettingProvider>(context);
+              await setting.load(file: target);
+              await setting.save();
+              await StyledSnackExtension.show(context, 'Done!');
+              Navigator.pop(context);
+            }
+          }
+        ),
+        StyledListTile.standard(
+          content: StyledText.inherit('Quick Setup'),
+          onPressed: (context) async {
+            var target = await StorageHelper.pickLoadDirectory(context, '@application.home_directory');
+            if (target != null) {
+              var setting = Provider.of<SettingProvider>(context, listen: false);
+              await setting.quickSetup(target);
+              await setting.save();
+              await StyledSnackExtension.show(context, 'Done!');
+              Navigator.pop(context);
+            }
+          }
+        ),
+      ],
+      actionBuilder: null,
+    ));
+    return;
+  }
+
   // ----------------
 
   @override
@@ -165,6 +203,7 @@ class _MainPageState extends State<MainPage> {
     this._pageIndex = -1;
     {
       var setting = Provider.of<SettingProvider>(this.context, listen: false);
+      setting.state.homeShowOnboarding = this._showOnboarding;
       setting.state.homeShowLauncher = this._showLauncher;
       setting.state.homeInsertPage = this._insertPage;
     }
@@ -248,10 +287,10 @@ class _MainPageState extends State<MainPage> {
                   var action = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
                     position: .under,
                     content: [
-                      ('remove', 'Remove', IconSet.cancel),
-                      ('rename', 'Rename', IconSet.draw),
-                      ('keep', 'Keep', IconSet.pinboard),
-                      ('duplicate', 'Duplicate', IconSet.tab_duplicate),
+                      ('remove', 'Remove', IconSet.tab_close_right),
+                      ('rename', 'Rename', IconSet.label),
+                      ('memorize', 'Memorize', IconSet.bookmark_add),
+                      ('duplicate', 'Duplicate', IconSet.copy_all),
                     ].map((value) => StyledMenuItem.standard(
                       value: value.$1,
                       leading: IconView.of(value.$3),
@@ -298,8 +337,8 @@ class _MainPageState extends State<MainPage> {
                         }
                         break;
                       }
-                      case 'keep': {
-                        await this._keepPage(index);
+                      case 'memorize': {
+                        await this._memorizePage(index);
                         break;
                       }
                       case 'duplicate': {

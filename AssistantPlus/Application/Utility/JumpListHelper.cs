@@ -10,12 +10,26 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region utility
 
+		private static Boolean Initialized { get; set; } = false;
+
+		// ----------------
+
+		public static void Initialize (
+		) {
+			AssertTest(!JumpListHelper.Initialized);
+			JumpListHelper.Initialized = true;
+			return;
+		}
+
+		// ----------------
+
 		public static async Task Apply (
 			List<JumpListItem> itemList
 		) {
 			#if DEBUG
 			return;
 			#endif
+			AssertTest(JumpListHelper.Initialized);
 			if (!JumpList.IsSupported()) {
 				return;
 			}

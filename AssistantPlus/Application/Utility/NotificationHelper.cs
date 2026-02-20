@@ -11,14 +11,21 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region utility
 
+		private static Boolean Initialized { get; set; } = false;
+
+		private static Action? Handler { get; set; } = null;
+
+		// ----------------
+
 		public static void Initialize (
-			Action handler
 		) {
+			AssertTest(!NotificationHelper.Initialized);
 			if (!AppNotificationManager.IsSupported()) {
+				NotificationHelper.Initialized = true;
 				return;
 			}
 			AppNotificationManager.Default.NotificationInvoked += async (_, _) => {
-				handler();
+				NotificationHelper.Handler?.Invoke();
 				return;
 			};
 			{
@@ -28,13 +35,25 @@ namespace Twinning.AssistantPlus.Utility {
 				AppNotificationManager.Default.Unregister();
 				return;
 			};
+			NotificationHelper.Initialized = true;
 			return;
 		}
+
+		public static void Listen (
+			Action? handler
+		) {
+			AssertTest(NotificationHelper.Initialized);
+			NotificationHelper.Handler = handler;
+			return;
+		}
+
+		// ----------------
 
 		public static void Push (
 			String title,
 			String description
 		) {
+			AssertTest(NotificationHelper.Initialized);
 			if (!AppNotificationManager.IsSupported()) {
 				return;
 			}

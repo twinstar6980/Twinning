@@ -1,5 +1,4 @@
 import '/common.dart';
-import '/utility/window_helper.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart' as lib;
 
 // ----------------
@@ -8,13 +7,17 @@ class NotificationHelper {
 
   // #region utility
 
+  static Boolean _initialized = false;
+
   static lib.FlutterLocalNotificationsPlugin? _plugin = null;
+
+  static Void Function()? _handler = null;
 
   // ----------------
 
   static Future<Void> initialize(
   ) async {
-    assertTest(_plugin == null);
+    assertTest(!_initialized);
     _plugin = .new();
     await _plugin!.initialize(
       settings: .new(
@@ -36,21 +39,30 @@ class NotificationHelper {
           iconPath: 'asset/logo.png',
         ),
       ),
-      onDidReceiveNotificationResponse: (details) async {
-        if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-          await WindowHelper.show();
-        }
+      onDidReceiveNotificationResponse: (details) {
+        _handler?.call();
         return;
       },
     );
+    _initialized = true;
     return;
   }
+
+  static Future<Void> listen(
+    Void Function()? handler,
+  ) async {
+    assertTest(_initialized);
+    _handler = handler;
+    return;
+  }
+
+  // ----------------
 
   static Future<Void> push(
     String title,
     String description,
   ) async {
-    assertTest(_plugin != null);
+    assertTest(_initialized);
     await _plugin!.show(
       id: DateTime.now().millisecondsSinceEpoch % 0x80000000,
       title: title,

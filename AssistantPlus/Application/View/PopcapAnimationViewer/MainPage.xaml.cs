@@ -983,9 +983,9 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					if (isPlaying) {
 						this.View.uSprite.State = SpriteControl.StateType.Paused;
 					}
-					var animationFile = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.animation_file");
-					if (animationFile != null) {
-						await this.ApplyLoad(animationFile, null, null, null, null, null, null);
+					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.animation_file");
+					if (target != null) {
+						await this.ApplyLoad(target, null, null, null, null, null, null);
 					}
 					else {
 						if (isPlaying) {

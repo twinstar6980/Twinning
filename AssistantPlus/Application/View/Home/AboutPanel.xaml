@@ -699,5 +699,29 @@
 				Content="Clear"
 				/>
 		</my:Stack>
+		<my:Stack
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Horizontal"
+			Spacing="4"
+			>
+			<FontIcon
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Width="32"
+				Height="22"
+				FontSize="{StaticResource SmallIconSize}"
+				Glyph="{StaticResource FluentIconGlyph.Flag}"
+				/>
+			<Button
+				ToolTipService.ToolTip="Onboarding Panel"
+				my:Stack.Weight="1"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				HorizontalContentAlignment="Left"
+				Click="{x:Bind Controller.uOnboarding_Click}"
+				Content="Show"
+				/>
+		</my:Stack>
 	</my:Stack>
 </local:CustomControl>

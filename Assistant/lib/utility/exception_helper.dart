@@ -8,19 +8,34 @@ class ExceptionHelper {
 
   // #region utility
 
+  static Boolean _initialized = false;
+
+  static Void Function(Object, StackTrace?)? _handler = null;
+
+  // ----------------
+
   static Void initialize(
-    Void Function(Object, StackTrace?) handler,
   ) {
-      WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
-        handler(error, stack);
-        return true;
-      };
-      FlutterError.onError = (details) {
-        FlutterError.presentError(details);
-        handler(details.exception, details.stack);
-        return;
-      };
+    assertTest(!_initialized);
+    WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
+      _handler?.call(error, stack);
+      return true;
+    };
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      _handler?.call(details.exception, details.stack);
       return;
+    };
+    _initialized = true;
+    return;
+  }
+
+  static Void listen(
+    Void Function(Object, StackTrace?)? handler,
+  ) {
+    assertTest(_initialized);
+    _handler = handler;
+    return;
   }
 
   // ----------------

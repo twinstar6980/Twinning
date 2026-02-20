@@ -61,7 +61,7 @@ class CommandPanel extends StatelessWidget {
               tooltip: 'Remove',
               icon: IconView.of(IconSet.remove),
               onPressed: (context) async {
-                if (this.argument.every((value) => value.value == null) || await showDialogForConfirm(context)) {
+                if (this.argument.every((value) => value.value == null) || await MoreModalDialogExtension.showForConfirm(context)) {
                   this.onRemove();
                 }
               },

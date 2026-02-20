@@ -49,6 +49,12 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
+		public async Task ShowOnboarding(
+		) {
+			await this.Controller.ShowOnboarding();
+			return;
+		}
+
 		public async Task InsertPage (
 			ModuleLauncherConfiguration configuration
 		) {
@@ -166,7 +172,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task KeepPage (
+		public async Task MemorizePage (
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -211,6 +217,22 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			AssertTest(this.View.uLauncherFlyout.IsOpen);
 			this.View.uLauncherFlyout.Hide();
+			return;
+		}
+
+		// ----------------
+
+		public async Task ShowOnboarding(
+		) {
+			var hideDialogWrapper = new Wrapper<Action>();
+			await ControlHelper.ShowDialogAsAutomatic(this.View.Content.As<FrameworkElement>(), "Onboarding", new OnboardingPanel() {
+				Stamp = UniqueStamp.Create(),
+			}.SelfAlso((it) => {
+				it.PanelExit += async () => {
+					hideDialogWrapper.Value!();
+					return;
+				};
+			}), null, hideDialogWrapper);
 			return;
 		}
 
@@ -383,8 +405,8 @@ namespace Twinning.AssistantPlus.View.Home {
 					}
 					break;
 				}
-				case "Keep": {
-					await this.Host.KeepPage(this.Frame.Content.As<Page>());
+				case "Memorize": {
+					await this.Host.MemorizePage(this.Frame.Content.As<Page>());
 					break;
 				}
 				case "Duplicate": {

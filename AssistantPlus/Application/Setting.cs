@@ -167,8 +167,7 @@ namespace Twinning.AssistantPlus {
 			String? file = null
 		) {
 			file ??= this.File;
-			this.Data = await JsonHelper.DeserializeFile<SettingData>(file);
-			AssertTest(this.Data.Version == ApplicationInformation.Version);
+			this.Data = (await JsonHelper.DeserializeFile<SettingData>(file)).SelfAlso((it) => AssertTest(it.Version == ApplicationInformation.Version));
 			return;
 		}
 
@@ -260,6 +259,18 @@ namespace Twinning.AssistantPlus {
 				ThemeMode = null,
 				CoreTaskWorkerSubmissionHistory = Enum.GetValues<View.CoreTaskWorker.SubmissionType>().Select((value) => (new List<View.CoreTaskWorker.ValueExpression>())).ToList(),
 			};
+		}
+
+		// ----------------
+
+		public async Task QuickSetup(
+			String homeDirectory
+		) {
+			this.Data.ModuleConfigurationDirectory = $"{homeDirectory}/assistant_plus";
+			this.Data.CoreTaskWorker.Kernel = $"{homeDirectory}/kernel";
+			this.Data.CoreTaskWorker.Script = $"{homeDirectory}/script/main.js";
+			this.Data.CoreTaskWorker.Argument = [$"{homeDirectory}"];
+			return;
 		}
 
 		#endregion

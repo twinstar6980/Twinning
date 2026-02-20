@@ -53,7 +53,8 @@ namespace Twinning.AssistantPlus {
 			LaunchActivatedEventArgs args
 		) {
 			try {
-				ExceptionHelper.Initialize(this, async (exception) => {
+				ExceptionHelper.Initialize(this);
+				ExceptionHelper.Listen(async (exception) => {
 					_ = this.HandleException(exception, App.MainWindow);
 					return;
 				});
@@ -62,19 +63,16 @@ namespace Twinning.AssistantPlus {
 				App.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{ApplicationInformation.Identifier}");
 				App.CacheDirectory = $"{App.SharedDirectory}/cache";
 				var argument = Environment.GetCommandLineArgs()[1..];
+				var needShowOnboarding = false;
 				try {
 					await App.Setting.Load();
 				}
 				catch (Exception) {
-					await App.Setting.Reset();
+					needShowOnboarding = true;
 				}
 				await App.Setting.Save();
-				NotificationHelper.Initialize(async () => {
-					if (App.MainWindowIsInitialized) {
-						WindowHelper.SetAsForeground(App.MainWindow);
-					}
-					return;
-				});
+				NotificationHelper.Initialize();
+				JumpListHelper.Initialize();
 				App.MainWindow = new ();
 				if (App.Setting.Data.WindowSizeState) {
 					WindowHelper.SetSize(App.MainWindow, App.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), App.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
@@ -87,6 +85,13 @@ namespace Twinning.AssistantPlus {
 				}
 				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
 					await ControlHelper.PostTask(App.MainWindow.Content.As<FrameworkElement>(), async () => {
+						if (needShowOnboarding) {
+							await App.MainWindow.ShowOnboarding();
+						}
+						NotificationHelper.Listen(async () => {
+							WindowHelper.SetAsForeground(App.MainWindow);
+							return;
+						});
 						if (argument.Length == 1 && argument[0].StartsWith($"{ApplicationInformation.Identifier}:")) {
 							await this.HandleLink(new (argument[0]));
 						}

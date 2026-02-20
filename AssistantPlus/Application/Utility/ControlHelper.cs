@@ -67,7 +67,8 @@ namespace Twinning.AssistantPlus.Utility {
 			FrameworkElement                  root,
 			String                            title,
 			Object?                           content,
-			Tuple<String?, String?, String?>? action
+			Tuple<String?, String?, String?>? action,
+			Wrapper<Action>?                  hideWrapper = null
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
@@ -104,6 +105,10 @@ namespace Twinning.AssistantPlus.Utility {
 							? ContentDialogButton.Secondary
 							: ContentDialogButton.Close,
 			};
+			hideWrapper?.Value = async () => {
+				dialog.Hide();
+				return;
+			};
 			return await ControlHelper.PushDialog(dialog);
 		}
 
@@ -112,7 +117,8 @@ namespace Twinning.AssistantPlus.Utility {
 			String                            title,
 			Object?                           content,
 			Tuple<String?, String?, String?>? action,
-			Tuple<Size, Size>?                size = null
+			Tuple<Size, Size>?                size = null,
+			Wrapper<Action>?                  hideWrapper = null
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
@@ -155,6 +161,10 @@ namespace Twinning.AssistantPlus.Utility {
 					new ("ContentDialogMaxHeight", size?.Item2 ?? 640.0),
 				],
 			};
+			hideWrapper?.Value = async () => {
+				dialog.Hide();
+				return;
+			};
 			return await ControlHelper.PushDialog(dialog);
 		}
 
@@ -163,21 +173,20 @@ namespace Twinning.AssistantPlus.Utility {
 		public static async Task<Func<Task>> ShowDialogForWait (
 			FrameworkElement root
 		) {
-			var dialog = new ContentDialog() {
-				XamlRoot = root.XamlRoot,
-				RequestedTheme = root.XamlRoot.Content.As<FrameworkElement>().RequestedTheme,
-				Title = "Waiting ...",
-				Content = new ProgressBar() {
+			var hideWrapper = new Wrapper<Action>();
+			var task = ControlHelper.ShowDialogAsAutomatic(
+				root,
+				"Waiting ...",
+				new ProgressBar() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Center,
 					IsIndeterminate = true,
 				},
-				CloseButtonText = "Hide",
-				DefaultButton = ContentDialogButton.None,
-			};
-			var task = ControlHelper.PushDialog(dialog);
+				new("Hide", null, null),
+				hideWrapper
+			).SelfLet(ExceptionHelper.WrapTask);
 			return async () => {
-				dialog.Hide();
+				hideWrapper.Value!();
 				await task;
 				return;
 			};
@@ -188,7 +197,12 @@ namespace Twinning.AssistantPlus.Utility {
 			String?          title,
 			Object?          content
 		) {
-			return await ControlHelper.ShowDialogAsAutomatic(root, title ?? "Confirm ?", content, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
+			return await ControlHelper.ShowDialogAsAutomatic(
+				root,
+				title ?? "Confirm ?",
+				content,
+				new ("Cancel", "Continue", null)
+			) == ContentDialogResult.Primary;
 		}
 
 		#endregion

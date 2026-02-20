@@ -287,7 +287,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.tab_close),
                       content: StyledText.inherit('Remove All'),
                       onPressed: (context) async {
-                        if (await showDialogForConfirm(context)) {
+                        if (await MoreModalDialogExtension.showForConfirm(context)) {
                           await this._removeResource(this._resource.map((value) => value.$1).toList());
                           await refreshState(setStateForPanel);
                         }
@@ -341,9 +341,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
-                        var item = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
-                        if (item != null) {
-                          await this._appendResource([item]);
+                        var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
+                        if (target != null) {
+                          await this._appendResource([target]);
                           await refreshState(setStateForPanel);
                         }
                       },
@@ -353,9 +353,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
-                        var item = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
-                        if (item != null) {
-                          await this._appendResource([item]);
+                        var target = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
+                        if (target != null) {
+                          await this._appendResource([target]);
                           await refreshState(setStateForPanel);
                         }
                       },

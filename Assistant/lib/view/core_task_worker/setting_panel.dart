@@ -47,7 +47,7 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await pickStorageItem(
+                      var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
                         location: '@${ModuleHelper.query(.core_task_worker).identifier}.kernel',
@@ -91,7 +91,7 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await pickStorageItem(
+                      var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
                         location: '@${ModuleHelper.query(.core_task_worker).identifier}.script',
@@ -135,7 +135,7 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await pickStorageItem(
+                      var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
                         allowLoadDirectory: true,
@@ -203,7 +203,7 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await pickStorageItem(
+                      var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
                         location: '@${ModuleHelper.query(.core_task_worker).identifier}.message_font',

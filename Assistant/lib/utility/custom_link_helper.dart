@@ -7,10 +7,25 @@ class CustomLinkHelper {
 
   // #region utility
 
+  static Boolean _initialized = false;
+
+  static lib.AppLinks? _plugin = null;
+
+  // ----------------
+
+  static Future<Void> initialize(
+  ) async {
+    assertTest(!_initialized);
+    _plugin = lib.AppLinks();
+    _initialized = true;
+    return;
+  }
+
   static Future<Void> listen(
     Void Function(Uri) handler,
   ) async {
-    lib.AppLinks().uriLinkStream.listen((link) {
+    assertTest(_initialized);
+    _plugin!.uriLinkStream.listen((link) {
       handler(link);
       return;
     });
@@ -21,12 +36,14 @@ class CustomLinkHelper {
 
   static Future<Uri?> getFirst(
   ) async {
-    return await lib.AppLinks().getInitialLink();
+    assertTest(_initialized);
+    return await _plugin!.getInitialLink();
   }
 
   static Future<Uri?> getLast(
   ) async {
-    return await lib.AppLinks().getLatestLink();
+    assertTest(_initialized);
+    return await _plugin!.getLatestLink();
   }
 
   // #endregion

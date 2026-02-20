@@ -433,16 +433,16 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 					break;
 				}
 				case "PickFile": {
-					var item = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
-					if (item != null) {
-						await this.AppendResource([item]);
+					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
+					if (target != null) {
+						await this.AppendResource([target]);
 					}
 					break;
 				}
 				case "PickDirectory": {
-					var item = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
-					if (item != null) {
-						await this.AppendResource([item]);
+					var target = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
+					if (target != null) {
+						await this.AppendResource([target]);
 					}
 					break;
 				}

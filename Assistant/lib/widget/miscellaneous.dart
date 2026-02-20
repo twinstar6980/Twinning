@@ -208,59 +208,63 @@ class NavigationDrawerDivider extends StatelessWidget {
 
 // #region dialog
 
-Future<Boolean> showDialogForConfirm(
-  BuildContext context,
-) async {
-  return await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-    title: 'Confirm ?',
-    contentBuilder: (context, setStateForPanel) => [],
-    actionBuilder: (context) => [
-      StyledButton.text(
-        content: StyledText.inherit('Cancel'),
-        onPressed: (context) => Navigator.pop(context, false),
-      ),
-      StyledButton.text(
-        content: StyledText.inherit('Continue'),
-        onPressed: (context) => Navigator.pop(context, true),
-      ),
-    ],
-  )) ?? false;
-}
+extension MoreModalDialogExtension on StyledModalDialog {
 
-Future<Void> showDialogForRevealStoragePath(
-  BuildContext context,
-  String       title,
-  String       path,
-) async {
-  var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-    title: title,
-    contentBuilder: (context, setStateForPanel) => [
-      StyledInput.outlined(
-        type: .none,
-        format: null,
-        hint: null,
-        prefix: null,
-        suffix: null,
-        value: path,
-        onChanged: (context, value) async {
-        },
-      ),
-    ],
-    actionBuilder: (context) => [
-      StyledButton.text(
-        content: StyledText.inherit('Cancel'),
-        onPressed: (context) => Navigator.pop(context, false),
-      ),
-      StyledButton.text(
-        content: StyledText.inherit('Reveal'),
-        onPressed: (context) => Navigator.pop(context, true),
-      ),
-    ],
-  )) ?? false;
-  if (canContinue) {
-    await StorageHelper.reveal(path);
+  static Future<Boolean> showForConfirm(
+    BuildContext context,
+  ) async {
+    return await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
+      title: 'Confirm ?',
+      contentBuilder: (context, setStateForPanel) => [],
+      actionBuilder: (context) => [
+        StyledButton.text(
+          content: StyledText.inherit('Cancel'),
+          onPressed: (context) => Navigator.pop(context, false),
+        ),
+        StyledButton.text(
+          content: StyledText.inherit('Continue'),
+          onPressed: (context) => Navigator.pop(context, true),
+        ),
+      ],
+    )) ?? false;
   }
-  return;
+
+  static Future<Void> showForRevealStoragePath(
+    BuildContext context,
+    String       title,
+    String       path,
+  ) async {
+    var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
+      title: title,
+      contentBuilder: (context, setStateForPanel) => [
+        StyledInput.outlined(
+          type: .none,
+          format: null,
+          hint: null,
+          prefix: null,
+          suffix: null,
+          value: path,
+          onChanged: (context, value) async {
+          },
+        ),
+      ],
+      actionBuilder: (context) => [
+        StyledButton.text(
+          content: StyledText.inherit('Cancel'),
+          onPressed: (context) => Navigator.pop(context, false),
+        ),
+        StyledButton.text(
+          content: StyledText.inherit('Reveal'),
+          onPressed: (context) => Navigator.pop(context, true),
+        ),
+      ],
+    )) ?? false;
+    if (canContinue) {
+      await StorageHelper.reveal(path);
+    }
+    return;
+  }
+
 }
 
 // #endregion
@@ -345,54 +349,55 @@ extension StorageDropRegionWidgetExtension on Widget {
 
 }
 
-// ----------------
+extension StorageDropRegionExtension on StorageDropRegion {
 
-Future<String?> pickStorageItem({
-  required BuildContext context,
-  Boolean               allowLoadFile = false,
-  Boolean               allowLoadDirectory = false,
-  Boolean               allowSaveFile = false,
-  required String       location,
-  TextStyle?            textStyle = null, // TODO: remove?
-}
-) async {
-  var type = null as String?;
-  var allowedTypeCount = [allowLoadFile, allowLoadDirectory, allowSaveFile].where((value) => value).length;
-  assertTest(allowedTypeCount != 0);
-  if (allowedTypeCount == 1) {
-    if (allowLoadFile) {
-      type = 'load_file';
+  static Future<String?> pick({
+    required BuildContext context,
+    Boolean               allowLoadFile = false,
+    Boolean               allowLoadDirectory = false,
+    Boolean               allowSaveFile = false,
+    required String       location,
+    TextStyle?            textStyle = null, // TODO: remove?
+  }) async {
+    var type = null as String?;
+    var allowedTypeCount = [allowLoadFile, allowLoadDirectory, allowSaveFile].where((value) => value).length;
+    assertTest(allowedTypeCount != 0);
+    if (allowedTypeCount == 1) {
+      if (allowLoadFile) {
+        type = 'load_file';
+      }
+      if (allowLoadDirectory) {
+        type = 'load_directory';
+      }
+      if (allowSaveFile) {
+        type = 'save_file';
+      }
     }
-    if (allowLoadDirectory) {
-      type = 'load_directory';
+    else {
+      type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
+        position: .under,
+        content: [
+          if (allowLoadFile) ...[
+            ('load_file', 'Load File'),
+          ],
+          if (allowLoadDirectory) ...[
+            ('load_directory', 'Load Directory'),
+          ],
+          if (allowSaveFile) ...[
+            ('save_file', 'Save File'),
+          ],
+        ].map((value) => StyledMenuItem.standard(
+          value: value.$1,
+          content: StyledText.custom(
+            value.$2,
+            style: textStyle,
+          ),
+        )),
+      ));
     }
-    if (allowSaveFile) {
-      type = 'save_file';
-    }
+    return type == null ? null : await StorageHelper.pick(type, context, location, null);
   }
-  else {
-    type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-      position: .under,
-      content: [
-        if (allowLoadFile) ...[
-          ('load_file', 'Load File'),
-        ],
-        if (allowLoadDirectory) ...[
-          ('load_directory', 'Load Directory'),
-        ],
-        if (allowSaveFile) ...[
-          ('save_file', 'Save File'),
-        ],
-      ].map((value) => StyledMenuItem.standard(
-        value: value.$1,
-        content: StyledText.custom(
-          value.$2,
-          style: textStyle,
-        ),
-      )),
-    ));
-  }
-  return type == null ? null : await StorageHelper.pick(type, context, location, null);
+
 }
 
 // #endregion
