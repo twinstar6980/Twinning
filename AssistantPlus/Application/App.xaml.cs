@@ -70,7 +70,7 @@ namespace Twinning.AssistantPlus {
 				catch (Exception) {
 					needShowOnboarding = true;
 				}
-				await App.Setting.Save();
+				await App.Setting.Save(apply: false);
 				NotificationHelper.Initialize();
 				JumpListHelper.Initialize();
 				App.MainWindow = new ();

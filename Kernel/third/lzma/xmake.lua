@@ -1,5 +1,5 @@
 -- lzma
--- 25.01 5e96a8279489832924056b1fa82f29d5837c9469
+-- 26.00 839151eaaad24771892afaae6bac690e31e58384
 -- https://github.com/ip7z/7zip
 
 target('third.lzma', function()

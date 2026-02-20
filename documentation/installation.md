@@ -102,17 +102,17 @@
 	
 	> 如果不需要 `Assistant` 模块，可以跳过该步骤。
 	
-	打开 `Assistant` 应用，点击页面中各个模块列表项右侧的齿轮图标可以打开模块设置对话框，编辑以下设置项：
+	打开应用，将会弹出配置引导对话框，点击 `Quick Setup` ，在弹出的文件选择对话框中选中主目录 `<home>` 即可。
+	
+	> 配置引导对话框只会在初次运行或应用更新的情况下才会主动显示，可用在设置页面中点击 `Onboarding` 来调出该页面。
+	
+	除此以外，还可以进行以下可选配置：
 	
 	* `Storage Permission` 点击以授予应用存储空间读写权限。
 		
 		> 该项仅适用于 `Android` 。
 	
-	* `Storage Fallback Directory` = `<home>/workspace` 。
-		
-		> 该项仅适用于 `Android` 。
-	
-	* `Forwarder Extension` 点击以启用转发器扩展（可选）。
+	* `Forwarder Extension` 点击以启用转发器扩展。
 		
 		> 对于 `Windows` ，应用默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
 		
@@ -127,38 +127,22 @@
 	* `Forwarder Default Target` 转发器扩展的默认转发目标模块。
 	
 	* `Forwarder Immediate Jump` 转发器扩展是否立即转发至默认目标模块，而非等待用户选择。
-	
-	* `Module Configuration Directory` = `<home>/assistant` 。
-	
-	* `Task Worker` - `Kernel` = `<home>/kernel` 。
-	
-	* `Task Worker` - `Script` = `<home>/script/main.js` 。
-	
-	* `Task Worker` - `Argument` = `<home>` 。
-	
-	> 上述设置中的 `<home>` 需要替换为主目录的绝对路径。
 
 6. 配置 `Assistant Plus` 设置项。
 	
 	> 如果不需要 `Assistant Plus` 模块，可以跳过该步骤。
 	
-	打开 `Assistant Plus` 应用，点击页面中各个模块列表项右侧的齿轮图标可以打开模块设置对话框，编辑以下设置项：
+	打开应用，将会弹出配置引导对话框，点击 `Quick Setup` ，在弹出的文件选择对话框中选中主目录 `<home>` 即可。
 	
-	* `Forwarder Extension` 点击以启用转发器扩展（可选）。
+	> 配置引导对话框只会在初次运行或应用更新的情况下才会主动显示，可用在设置页面中点击 `Onboarding` 来调出该页面。
+	
+	除此以外，还可以进行以下可选配置：
+	
+	* `Forwarder Extension` 点击以启用转发器扩展。
 	
 	* `Forwarder Default Target` 转发器扩展的默认转发目标模块。
 	
 	* `Forwarder Immediate Jump` 转发器扩展是否立即转发至默认目标模块，而非等待用户选择。
-	
-	* `Module Configuration Directory` = `<home>/assistant_plus` 。
-	
-	* `Task Worker` - `Kernel` = `<home>/kernel` 。
-	
-	* `Task Worker` - `Script` = `<home>/script/main.js` 。
-	
-	* `Task Worker` - `Argument` = `<home>` 。
-	
-	> 上述设置中的 `<home>` 需要替换为主目录的绝对路径。
 
 7. 设置脚本交互语言。
 	

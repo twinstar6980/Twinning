@@ -1,5 +1,5 @@
 -- quickjs_ng
--- 0.11.0 6a9fe9af5ca0bf7c49ae697edef44864272317d1
+-- 0.12.1 58bdcf0ce35594df30bf5cfbba3be8b454799cc0
 -- https://github.com/quickjs-ng/quickjs
 
 target('third.quickjs_ng', function()
@@ -7,6 +7,8 @@ target('third.quickjs_ng', function()
 	set_kind('static')
 	add_headerfiles(
 		'./builtin-array-fromasync.h',
+		'./builtin-iterator-zip.h',
+		'./builtin-iterator-zip-keyed.h',
 		'./cutils.h',
 		'./dtoa.h',
 		'./libregexp-opcode.h',
@@ -23,7 +25,6 @@ target('third.quickjs_ng', function()
 		{ install = false }
 	)
 	add_files(
-		'./cutils.c',
 		'./dtoa.c',
 		'./libregexp.c',
 		'./libunicode.c',

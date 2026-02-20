@@ -28,15 +28,15 @@
 | [tinyxml2 11.0.0](https://github.com/leethomason/tinyxml2)               | XML 读写            |
 | [cpp_md5_lib ?](https://github.com/tiankonguse/cpp-md5-lib)              | MD5 哈希计算        |
 | [Rijndael ?](#)                                                          | Rijndael 加密与解密 |
-| [zlib 1.3.1](https://github.com/madler/zlib)                             | ZLib 压缩与解压     |
+| [zlib 1.3.2](https://github.com/madler/zlib)                             | ZLib 压缩与解压     |
 | [bzip2 1.0.8](https://sourceware.org/bzip2/)                             | BZip2 压缩与解压    |
-| [lzma 25.01](https://github.com/ip7z/7zip)                               | Lzma 压缩与解压     |
+| [lzma 26.00](https://github.com/ip7z/7zip)                               | Lzma 压缩与解压     |
 | [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)               | VCDiff 差异分析     |
 | [avir 3.1](https://github.com/avaneev/avir)                              | 图像缩放            |
 | [etcpak 2.0](https://github.com/wolfpld/etcpak)                          | ETC1 压缩           |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)         | PVRTC4 压缩与解压   |
-| [libpng 1.6.53](https://github.com/pnggroup/libpng)                      | PNG 读写            |
-| [quickjs_ng 0.11.0](https://github.com/quickjs-ng/quickjs)               | JS 引擎             |
+| [libpng 1.6.55](https://github.com/pnggroup/libpng)                      | PNG 读写            |
+| [quickjs_ng 0.12.1](https://github.com/quickjs-ng/quickjs)               | JS 引擎             |
 
 ## 说明
 
