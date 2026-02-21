@@ -818,9 +818,16 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var animationFile = StorageHelper.GetLongPath(item[0].Path);
-				if (!StorageHelper.ExistFile(animationFile)) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+				var itemPath = StorageHelper.GetLongPath(item[0].Path);
+				var animationFile = null as String;
+				if (StorageHelper.ExistFile(itemPath)) {
+					animationFile = PopcapAnimationHelper.CheckAnimationFilePath(itemPath);
+				}
+				if (StorageHelper.ExistDirectory(itemPath)) {
+					animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(itemPath);
+				}
+				if (animationFile == null) {
+					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");
 					return;
 				}
 				await this.ApplyLoad(animationFile, null, null, null, null, null, null);
@@ -978,28 +985,50 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
 			switch (senders.Tag.As<String>()) {
-				case "Load": {
-					var isPlaying = this.Activated && this.View.uSprite.State == SpriteControl.StateType.Playing;
-					if (isPlaying) {
-						this.View.uSprite.State = SpriteControl.StateType.Paused;
-					}
-					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.animation_file");
-					if (target != null) {
-						await this.ApplyLoad(target, null, null, null, null, null, null);
-					}
-					else {
-						if (isPlaying) {
-							this.View.uSprite.State = SpriteControl.StateType.Playing;
-						}
-					}
-					break;
-				}
 				case "Clear": {
 					AssertTest(this.Loaded);
 					if (this.Activated) {
 						await this.Deactivate();
 					}
 					await this.Unload();
+					break;
+				}
+				case "LoadFile": {
+					var isPlaying = this.Activated && this.View.uSprite.State == SpriteControl.StateType.Playing;
+					if (isPlaying) {
+						this.View.uSprite.State = SpriteControl.StateType.Paused;
+					}
+					var isReloaded = false;
+					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
+					if (target != null) {
+						await this.ApplyLoad(target, null, null, null, null, null, null);
+						isReloaded = true;
+					}
+					if (isPlaying && !isReloaded) {
+						this.View.uSprite.State = SpriteControl.StateType.Playing;
+					}
+					break;
+				}
+				case "LoadDirectory": {
+					var isPlaying = this.Activated && this.View.uSprite.State == SpriteControl.StateType.Playing;
+					if (isPlaying) {
+						this.View.uSprite.State = SpriteControl.StateType.Paused;
+					}
+					var isReloaded = false;
+					var target = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
+					if (target != null) {
+						target = PopcapAnimationHelper.CheckAnimationDirectoryPath(target);
+						if (target == null) {
+							await App.MainWindow.PushNotification(InfoBarSeverity.Error, "The source directory must contain unique animation file.", "");
+						}
+						else {
+							await this.ApplyLoad(target, null, null, null, null, null, null);
+							isReloaded = true;
+						}
+					}
+					if (isPlaying && !isReloaded) {
+						this.View.uSprite.State = SpriteControl.StateType.Playing;
+					}
 					break;
 				}
 				default: throw new UnreachableException();

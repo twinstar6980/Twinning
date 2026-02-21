@@ -96,6 +96,24 @@ class VisualHelper {
     return result;
   }
 
+  // ----------------
+
+  static Future<String?> checkAnimationFilePath(
+    String path,
+  ) async {
+    var nameRule = RegExp(r'(\.pam\.json)$', caseSensitive: false);
+    return !nameRule.hasMatch(path) ? null : path;
+  }
+
+  static Future<String?> checkAnimationDirectoryPath(
+    String path,
+  ) async {
+    var nameRule = RegExp(r'(\.pam\.json)$', caseSensitive: false);
+    var animationFile = await StorageHelper.listDirectory(path, 1, true, false);
+    animationFile = animationFile.where((it) => nameRule.hasMatch(it)).toList();
+    return animationFile.length != 1 ? null : '${path}/${animationFile.first}';
+  }
+
   // #endregion
 
   // #region visualize

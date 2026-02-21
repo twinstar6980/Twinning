@@ -14,6 +14,7 @@ import '/view/core_resource_shipper/configuration.dart' as core_resource_shipper
 import '/view/popcap_animation_viewer/main_page.dart' as popcap_animation_viewer;
 import '/view/popcap_animation_viewer/setting_panel.dart' as popcap_animation_viewer;
 import '/view/popcap_animation_viewer/configuration.dart' as popcap_animation_viewer;
+import '/view/popcap_animation_viewer/visual_helper.dart' as popcap_animation_viewer;
 import '/view/kairosoft_game_manager/main_page.dart' as kairosoft_game_manager;
 import '/view/kairosoft_game_manager/setting_panel.dart' as kairosoft_game_manager;
 import '/view/kairosoft_game_manager/configuration.dart' as kairosoft_game_manager;
@@ -106,7 +107,9 @@ class ModuleHelper {
       ),
       querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreTaskWorker,
       parseConfiguration: (json) => core_task_worker.ConfigurationHelper.parseDataFromJson(json),
-      generateForwardOption: (resource) async => ['-additional_argument', ...resource],
+      generateForwardOption: (resource) async {
+        return ['-additional_argument', ...resource];
+      },
     ),
     .new(
       type: .core_command_sender,
@@ -125,7 +128,9 @@ class ModuleHelper {
       ),
       querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreCommandSender,
       parseConfiguration: (json) => core_command_sender.ConfigurationHelper.parseDataFromJson(json),
-      generateForwardOption: (resource) async => null,
+      generateForwardOption: (resource) async {
+        return null;
+      },
     ),
     .new(
       type: .core_resource_shipper,
@@ -144,7 +149,14 @@ class ModuleHelper {
       ),
       querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreResourceShipper,
       parseConfiguration: (json) => core_resource_shipper.ConfigurationHelper.parseDataFromJson(json),
-      generateForwardOption: (resource) async => ['-resource', ...resource],
+      generateForwardOption: (resource) async {
+        for (var resourceItem in resource) {
+          if (!await StorageHelper.exist(resourceItem)) {
+            return null;
+          }
+        }
+        return ['-resource', ...resource];
+      },
     ),
     .new(
       type: .popcap_animation_viewer,
@@ -163,7 +175,22 @@ class ModuleHelper {
       ),
       querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.popcapAnimationViewer,
       parseConfiguration: (json) => popcap_animation_viewer.ConfigurationHelper.parseDataFromJson(json),
-      generateForwardOption: (resource) async => resource.length != 1 || !RegExp(r'(\.pam\.json)$', caseSensitive: false).hasMatch(resource.first) || !await StorageHelper.existFile(resource.first) ? null : ['-animation_file', resource.first],
+      generateForwardOption: (resource) async {
+        if (resource.length != 1) {
+          return null;
+        }
+        var animationFile = null as String?;
+        if (await StorageHelper.existFile(resource.first)) {
+          animationFile = await popcap_animation_viewer.VisualHelper.checkAnimationFilePath(resource.first);
+        }
+        if (await StorageHelper.existDirectory(resource.first)) {
+          animationFile = await popcap_animation_viewer.VisualHelper.checkAnimationDirectoryPath(resource.first);
+        }
+        if (animationFile == null) {
+          return null;
+        }
+        return ['-animation_file', animationFile];
+      },
     ),
     .new(
       type: .kairosoft_game_manager,
@@ -182,7 +209,9 @@ class ModuleHelper {
       ),
       querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.kairosoftGameManager,
       parseConfiguration: (json) => kairosoft_game_manager.ConfigurationHelper.parseDataFromJson(json),
-      generateForwardOption: (resource) async => null,
+      generateForwardOption: (resource) async {
+        return null;
+      },
     ),
   ];
 

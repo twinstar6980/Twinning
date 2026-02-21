@@ -420,6 +420,8 @@
 
 - [26-02-21](#26-02-21)
 
+- [26-02-22](#26-02-22)
+
 - [已知问题](#已知问题)
 
 ## 23-02-04
@@ -3789,6 +3791,16 @@
 	* 优化 UI 。
 
 	* `PopCap Animation Viewer` 修复 `Sprite` 嵌套时可能存在显示异常的 BUG 。
+
+## 26-02-22
+
+* `Assistant` 144
+
+	* `PopCap Animation Viewer` 支持直接选取动画目录而不必选中动画文件。
+
+* `Assistant Plus` 126
+
+	* `PopCap Animation Viewer` 支持直接选取动画目录而不必选中动画文件。
 
 ## 已知问题
 

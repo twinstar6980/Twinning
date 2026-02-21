@@ -72,7 +72,9 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.CoreTaskWorker.SettingPanel() {
 					Data = App.Setting.Data.CoreTaskWorker,
 				},
-				GenerateForwardOption = (resource) => ["-additional_argument", ..resource],
+				GenerateForwardOption = (resource) => {
+					return ["-additional_argument", ..resource];
+				},
 				StandardSize = new (480, 840),
 			},
 			new () {
@@ -84,7 +86,9 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.CoreCommandSender.SettingPanel() {
 					Data = App.Setting.Data.CoreCommandSender,
 				},
-				GenerateForwardOption = (resource) => null,
+				GenerateForwardOption = (resource) => {
+					return null;
+				},
 				StandardSize = new (920, 840),
 			},
 			new () {
@@ -96,7 +100,14 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.CoreResourceShipper.SettingPanel() {
 					Data = App.Setting.Data.CoreResourceShipper,
 				},
-				GenerateForwardOption = (resource) => ["-resource", ..resource],
+				GenerateForwardOption = (resource) => {
+					foreach (var resourceItem in resource) {
+						if (!StorageHelper.Exist(resourceItem)) {
+							return null;
+						}
+					}
+					return ["-resource", ..resource];
+				},
 				StandardSize = new (480, 840),
 			},
 			new () {
@@ -108,7 +119,22 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.PopcapAnimationViewer.SettingPanel() {
 					Data = App.Setting.Data.PopcapAnimationViewer,
 				},
-				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-animation_file", resource[0]],
+				GenerateForwardOption = (resource) => {
+					if (resource.Count != 1) {
+						return null;
+					}
+					var animationFile = null as String;
+					if (StorageHelper.ExistFile(resource[0])) {
+						animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);
+					}
+					if (StorageHelper.ExistDirectory(resource[0])) {
+						animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);
+					}
+					if (animationFile == null) {
+						return null;
+					}
+					return ["-animation_file", animationFile];
+				},
 				StandardSize = new (1600, 840),
 			},
 			new () {
@@ -120,7 +146,18 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.PopcapReflectionDescriptor.SettingPanel() {
 					Data = App.Setting.Data.PopcapReflectionDescriptor,
 				},
-				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistFile(resource[0]) ? null : ["-descriptor_file", resource[0]],
+				GenerateForwardOption = (resource) => {
+					if (resource.Count != 1) {
+						return null;
+					}
+					if (!StorageHelper.ExistFile(resource[0])) {
+						return null;
+					}
+					if (!new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0])) {
+						return null;
+					}
+					return ["-descriptor_file", resource[0]];
+				},
 				StandardSize = new (920, 840),
 			},
 			new () {
@@ -132,7 +169,18 @@ namespace Twinning.AssistantPlus {
 				SettingPanel = () => new View.PopcapPackageBuilder.SettingPanel() {
 					Data = App.Setting.Data.PopcapPackageBuilder,
 				},
-				GenerateForwardOption = (resource) => resource.Count != 1 || !new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0]) || !StorageHelper.ExistDirectory(resource[0]) ? null : ["-project_directory", resource[0]],
+				GenerateForwardOption = (resource) => {
+					if (resource.Count != 1) {
+						return null;
+					}
+					if (!StorageHelper.ExistDirectory(resource[0])) {
+						return null;
+					}
+					if (!new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0])) {
+						return null;
+					}
+					return ["-project_directory", resource[0]];
+				},
 				StandardSize = new (1440, 840),
 			},
 		];

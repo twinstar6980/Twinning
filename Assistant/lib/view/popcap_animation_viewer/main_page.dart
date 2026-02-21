@@ -574,11 +574,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
           await StyledSnackExtension.show(context, 'Source is multiply.');
           return;
         }
-        if (!await StorageHelper.existFile(item.first)) {
-          await StyledSnackExtension.show(context, 'Source is not a file.');
+        var animationFile = null as String?;
+        if (await StorageHelper.existFile(item.first)) {
+          animationFile = await VisualHelper.checkAnimationFilePath(item.first);
+        }
+        if (await StorageHelper.existDirectory(item.first)) {
+          animationFile = await VisualHelper.checkAnimationDirectoryPath(item.first);
+        }
+        if (animationFile == null) {
+          await StyledSnackExtension.show(context, 'Source is invalid.');
           return;
         }
-        await this._applyLoad(item.first, null, null, null, null, null, null, null);
+        await this._applyLoad(animationFile, null, null, null, null, null, null, null);
         return;
       },
       content: FlexContainer.vertical([
@@ -1012,15 +1019,35 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                       await refreshState(setStateForPanel);
                     },
                   ).withFlexExpanded(),
-                  Gap.horizontal(8),
-                  StyledButton.filled(
-                    icon: IconView.of(IconSet.open_in_new),
-                    content: StyledText.inherit('Pick'),
+                ]),
+                Gap.vertical(12),
+                FlexContainer.horizontal([
+                  StyledButton.filledTonal(
+                    icon: IconView.of(IconSet.file_open),
+                    content: StyledText.inherit('Load File'),
                     onPressed: (context) async {
-                      var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.popcap_animation_viewer).identifier}.animation_file');
+                      var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.popcap_animation_viewer).identifier}.source');
                       if (target != null) {
                         Navigator.pop(context);
                         await this._applyLoad(target, null, null, null, null, null, null, null);
+                      }
+                    },
+                  ).withFlexExpanded(),
+                  Gap.horizontal(8),
+                  StyledButton.filled(
+                    icon: IconView.of(IconSet.folder_open),
+                    content: StyledText.inherit('Load Directory'),
+                    onPressed: (context) async {
+                      var target = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.popcap_animation_viewer).identifier}.source');
+                      if (target != null) {
+                        Navigator.pop(context);
+                        target = await VisualHelper.checkAnimationDirectoryPath(target);
+                        if (target == null) {
+                          await StyledSnackExtension.show(context, 'The source directory must contain unique animation file.');
+                        }
+                        else {
+                          await this._applyLoad(target, null, null, null, null, null, null, null);
+                        }
                       }
                     },
                   ).withFlexExpanded(),

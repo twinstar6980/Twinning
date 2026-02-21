@@ -332,7 +332,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         enabled: SystemChecker.isAndroid,
-        icon: IconSet.key,
+        icon: IconSet.storage,
         label: 'Storage Permission',
         comment: [
           StyledText.inherit(!this._storagePermissionState ? 'Denied' : 'Granted'),

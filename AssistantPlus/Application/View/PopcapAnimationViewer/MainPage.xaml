@@ -167,17 +167,23 @@
 							<DropDownButton.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutItem
-										Tag="Load"
-										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
-										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenFolderHorizontal}}"
-										Text="Load"
-										/>
-									<MenuFlyoutItem
 										Tag="Clear"
 										IsEnabled="{x:Bind Controller.uAnimationFileMenuClear_IsEnabled}"
 										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Clear}}"
 										Text="Clear"
+										/>
+									<MenuFlyoutItem
+										Tag="LoadFile"
+										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenFile}}"
+										Text="Load File"
+										/>
+									<MenuFlyoutItem
+										Tag="LoadDirectory"
+										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
+										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenFolderHorizontal}}"
+										Text="Load Directory"
 										/>
 								</MenuFlyout>
 							</DropDownButton.Flyout>

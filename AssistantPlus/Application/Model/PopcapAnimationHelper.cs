@@ -101,6 +101,24 @@ namespace Twinning.AssistantPlus {
 			return result;
 		}
 
+		// ----------------
+
+		public static String? CheckAnimationFilePath (
+			String path
+		) {
+			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
+			return !nameRule.IsMatch(path) ? null : path;
+		}
+
+		public static String? CheckAnimationDirectoryPath (
+			String path
+		) {
+			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
+			var animationFile = StorageHelper.ListDirectory(path, 1, true, false);
+			animationFile = animationFile.Where((it) => nameRule.IsMatch(it)).ToList();
+			return animationFile.Count != 1 ? null : $"{path}/{animationFile[0]}";
+		}
+
 		#endregion
 
 		#region visualize
