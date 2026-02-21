@@ -5,6 +5,7 @@ using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
 using Windows.System;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 
@@ -325,6 +326,33 @@ namespace Twinning.AssistantPlus.View.Home {
 			get {
 				return this.uTab_TabItemsSource.Count == 0;
 			}
+		}
+
+		// ----------------
+
+		public async void uBlank_DragOver (
+			Object        sender,
+			DragEventArgs args
+		) {
+			var senders = sender.As<Control.Box>();
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.AcceptedOperation = DataPackageOperation.Link;
+			}
+			return;
+		}
+
+		public async void uBlank_Drop (
+			Object        sender,
+			DragEventArgs args
+		) {
+			var senders = sender.As<Control.Box>();
+			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
+				args.Handled = true;
+				var item = await args.DataView.GetStorageItemsAsync();
+				var itemPath = item.Select((it) => StorageHelper.GetLongPath(it.Path)).ToList();
+				await App.Instance.HandleForward(itemPath);
+			}
+			return;
 		}
 
 		// ----------------

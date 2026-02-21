@@ -125,7 +125,7 @@ namespace Twinning.AssistantPlus {
 					}
 					var animationFile = null as String;
 					if (StorageHelper.ExistFile(resource[0])) {
-						animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);
+						animationFile = PopcapAnimationHelper.CheckAnimationFilePath(resource[0]);
 					}
 					if (StorageHelper.ExistDirectory(resource[0])) {
 						animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);

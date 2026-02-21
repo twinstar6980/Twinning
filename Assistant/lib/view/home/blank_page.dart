@@ -20,7 +20,11 @@ class BlankPage extends StatelessWidget {
   @override
   build(context) {
     return ModulePageRegion(
-      onStorageDrop: null,
+      onStorageDrop: (item) async {
+        var setting = Provider.of<SettingProvider>(context, listen: false);
+        await setting.state.handleForward!(item);
+        return;
+      },
       content: BoxContainer.of(
         padding: .fromLTRB(16, 16, 16, 16),
         align: .center,

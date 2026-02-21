@@ -119,6 +119,9 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Padding="16,56,16,16"
+			AllowDrop="True"
+			DragOver="{x:Bind Controller.uBlank_DragOver}"
+			Drop="{x:Bind Controller.uBlank_Drop}"
 			>
 			<Button
 				ToolTipService.ToolTip="Launcher"
