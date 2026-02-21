@@ -158,8 +158,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       this._activeProgressIndexStream.sink.add(null);
       return;
     });
-    this._animationDriver = this._animationController!.drive(Tween(begin: 0.0, end: 1.0 / this._activeSprite!.frame.length));
-    this._animationVisual = VisualHelper.visualizeSprite(this._animationDriver!, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
+    this._animationDriver = VisualHelper.makeAnimationDriver(this._animationController!, this._activeSprite!.frame.length, this._activeSprite!.frame.length, 0);
+    this._animationVisual = VisualHelper.visualizeSprite(this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!, this._animationDriver!);
     await this._changeFrameRange(frameRange ?? (0, this._activeSprite!.frame.length - 1));
     await this._changeFrameSpeed(frameSpeed ?? this._activeSprite!.frameRate ?? this._animation!.frameRate.toDouble());
     await this._changeProgressIndex(progressIndex ?? (!this._reversePlay ? this._activeFrameRange!.$1 : this._activeFrameRange!.$2));
@@ -198,7 +198,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       this._spriteFilter = spriteFilter;
     }
     if (this._activated) {
-      this._animationVisual = VisualHelper.visualizeSprite(this._animationDriver!, this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!);
+      this._animationVisual = VisualHelper.visualizeSprite(this._animation!, this._texture!, this._activeSprite!, this._imageFilter!, this._spriteFilter!, this._animationDriver!);
     }
     await refreshState(this.setState);
     return;
@@ -247,7 +247,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   Integer _queryProgressIndex(
   ) {
     assertTest(this._loaded && this._activated);
-    return this._animationController!.value.floor();
+    return this._animationController!.value.truncate();
   }
 
   Future<Void> _changeProgressIndex(

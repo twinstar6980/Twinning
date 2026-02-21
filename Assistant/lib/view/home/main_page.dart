@@ -1,11 +1,11 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
-import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/widget/export.dart';
 import '/view/home/blank_page.dart';
 import '/view/home/launcher_panel.dart';
+import '/view/home/onboarding_panel.dart';
 import '/view/home/setting_panel.dart';
 import '/view/home/module_page.dart';
 import 'package:collection/collection.dart';
@@ -162,31 +162,10 @@ class _MainPageState extends State<MainPage> {
     await StyledModalDialogExtension.show<String>(this.context, StyledModalDialog.standard(
       title: 'Onboarding',
       contentBuilder: (context, setStateForPanel) => [
-        StyledListTile.standard(
-          content: StyledText.inherit('Import Setting'),
-          onPressed: (context) async {
-            var target = await StorageHelper.pickLoadFile(context, '@application.setting_file');
-            if (target != null) {
-              var setting = Provider.of<SettingProvider>(context);
-              await setting.load(file: target);
-              await setting.save();
-              await StyledSnackExtension.show(context, 'Done!');
-              Navigator.pop(context);
-            }
-          }
-        ),
-        StyledListTile.standard(
-          content: StyledText.inherit('Quick Setup'),
-          onPressed: (context) async {
-            var target = await StorageHelper.pickLoadDirectory(context, '@application.home_directory');
-            if (target != null) {
-              var setting = Provider.of<SettingProvider>(context, listen: false);
-              await setting.quickSetup(target);
-              await setting.save();
-              await StyledSnackExtension.show(context, 'Done!');
-              Navigator.pop(context);
-            }
-          }
+        OnboardingPanel(
+          onDone: () async {
+            Navigator.pop(context);
+          },
         ),
       ],
       actionBuilder: null,

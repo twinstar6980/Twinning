@@ -536,6 +536,7 @@ class _SettingPanelState extends State<SettingPanel> {
         onPressed: null,
         panelBuilder: (context, setStateForPanel) => [
           StyledListTile.standard(
+            leading: IconView.of(IconSet.refresh),
             content: StyledText.inherit('Reload'),
             onPressed: (context) async {
               Navigator.pop(context);
@@ -545,6 +546,7 @@ class _SettingPanelState extends State<SettingPanel> {
             },
           ),
           StyledListTile.standard(
+            leading: IconView.of(IconSet.reset_wrench),
             content: StyledText.inherit('Reset'),
             onPressed: (context) async {
               if (await MoreModalDialogExtension.showForConfirm(context)) {
@@ -556,6 +558,7 @@ class _SettingPanelState extends State<SettingPanel> {
             },
           ),
           StyledListTile.standard(
+            leading: IconView.of(IconSet.download),
             content: StyledText.inherit('Import'),
             onPressed: (context) async {
               var target = await StorageHelper.pickLoadFile(context, '@application.setting_file');
@@ -568,6 +571,7 @@ class _SettingPanelState extends State<SettingPanel> {
             },
           ),
           StyledListTile.standard(
+            leading: IconView.of(IconSet.upload),
             content: StyledText.inherit('Export'),
             onPressed: (context) async {
               var target = await StorageHelper.pickSaveFile(context, '@application.setting_file', 'setting.json');
@@ -587,6 +591,7 @@ class _SettingPanelState extends State<SettingPanel> {
         onPressed: null,
         panelBuilder: (context, setStateForPanel) => [
           StyledListTile.standard(
+            leading: IconView.of(IconSet.folder_open),
             content: StyledText.inherit('Reveal'),
             onPressed: (context) async {
               Navigator.pop(context);
@@ -602,6 +607,7 @@ class _SettingPanelState extends State<SettingPanel> {
         onPressed: null,
         panelBuilder: (context, setStateForPanel) => [
           StyledListTile.standard(
+            leading: IconView.of(IconSet.delete_sweep),
             content: StyledText.inherit('Clear'),
             onPressed: (context) async {
               Navigator.pop(context);

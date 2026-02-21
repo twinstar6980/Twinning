@@ -102,6 +102,19 @@ class VisualHelper {
 
   static const Floater animationTimeEpsilon = 1.0e-9;
 
+  static Animation<Floater> makeAnimationDriver(
+    Animation<Floater> parent,
+    Integer            countOfParent,
+    Integer            countOfSelf,
+    Integer            indexOfFirst,
+  ) {
+    return parent.drive(_FrameLoopTween(
+      countOfParent: countOfParent,
+      countOfSelf: countOfSelf,
+      indexOfFirst: indexOfFirst,
+    ));
+  }
+
   // ----------------
 
   static Matrix4 _makeMatrix(
@@ -155,7 +168,6 @@ class VisualHelper {
   // ----------------
 
   static Widget visualizeImage(
-    Animation<Floater>                         driver,
     model.Animation                            animation,
     Map<String, (lib.Image, Integer, Integer)> texture,
     model.Image                                image,
@@ -175,12 +187,12 @@ class VisualHelper {
   }
 
   static Widget visualizeSprite(
-    Animation<Floater>                         driver,
     model.Animation                            animation,
     Map<String, (lib.Image, Integer, Integer)> texture,
     model.Sprite                               sprite,
     List<Boolean>                              imageFilter,
     List<Boolean>                              spriteFilter,
+    Animation<Floater>                         driver,
   ) {
     var layerList = SplayTreeMap<Integer, _VisualLayer?>();
     var frameIndex = 0;
@@ -202,13 +214,28 @@ class VisualHelper {
           continue;
         }
         var subView = !action.sprite
-          ? visualizeImage(driver, animation, texture, selectImage(animation, action.resource))
-          : visualizeSprite(driver, animation, texture, selectSprite(animation, action.resource), imageFilter, spriteFilter);
-        var subDriver = driver.drive(StepTween(begin: 0, end: sprite.frame.length));
+          ? visualizeImage(
+            animation,
+            texture,
+            selectImage(animation, action.resource),
+          )
+          : visualizeSprite(
+            animation,
+            texture,
+            selectSprite(animation, action.resource),
+            imageFilter,
+            spriteFilter,
+            makeAnimationDriver(
+              driver,
+              sprite.frame.length,
+              selectSprite(animation, action.resource).frame.length,
+              frameIndex,
+            ),
+          );
         layer.view = AnimatedBuilder(
-          animation: subDriver,
+          animation: driver,
           builder: (context, child) {
-            var index = subDriver.value;
+            var index = driver.value.truncate();
             var property = layer.property[index];
             return property == null
               ? BoxContainer.none()
@@ -305,4 +332,35 @@ class _VisualLayer {
   late List<(Matrix4, ColorFilter)?> property;
   late Boolean                       isRemoved;
   late Boolean                       isChanged;
+}
+
+class _FrameLoopTween extends Animatable<Floater> {
+
+  // #region constructor
+
+  final Integer countOfParent;
+
+  final Integer countOfSelf;
+
+  final Integer indexOfFirst;
+
+  // ----------------
+
+  _FrameLoopTween({
+    required this.countOfParent,
+    required this.countOfSelf,
+    required this.indexOfFirst,
+  });
+
+  // #endregion
+
+  // #region implement Animatable
+
+  @override
+  transform(t) {
+    return ((t.truncate() - this.indexOfFirst) % this.countOfSelf).toDouble();
+  }
+
+  // #endregion
+
 }
