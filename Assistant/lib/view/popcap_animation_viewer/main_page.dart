@@ -1020,7 +1020,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     },
                   ).withFlexExpanded(),
                 ]),
-                Gap.vertical(12),
+                Gap.vertical(8),
                 FlexContainer.horizontal([
                   StyledButton.filledTonal(
                     icon: IconView.of(IconSet.file_open),

@@ -38,9 +38,13 @@
 
 如果使用的外壳模块为 `Assistant` ，则访问权限根据运行系统的不同而不同：
 
-* `Windows` `Linux` `Macintosh`
+* `Windows` `Linux`
 	
 	取决于启动程序的用户所具备的权限。
+
+* `Macintosh`
+	
+	应用能访问绝大部分文件，部分受保护的文件需要用户在系统设置中授予 ⌈ 完全磁盘访问权限 ⌋ 才可访问。
 
 * `Android`
 	
