@@ -131,7 +131,7 @@ class ConvertHelper {
     Boolean   isRawBgra = false,
     Boolean   isPng = false,
   }) async {
-    assertTest(isRawRgba || isRawBgra || isPng);
+    assertTest([isRawRgba, isRawBgra, isPng].where((it) => it).length == 1);
     var value = null as Image?;
     if (isPng) {
       var codec = await instantiateImageCodec(data);

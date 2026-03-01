@@ -10,15 +10,15 @@ class ExceptionHelper {
 
   static Boolean _initialized = false;
 
-  static Void Function(Object, StackTrace?)? _handler = null;
+  static Void Function(Object exception, StackTrace? stack)? _handler = null;
 
   // ----------------
 
   static Void initialize(
   ) {
     assertTest(!_initialized);
-    WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
-      _handler?.call(error, stack);
+    WidgetsBinding.instance.platformDispatcher.onError = (exception, stack) {
+      _handler?.call(exception, stack);
       return true;
     };
     FlutterError.onError = (details) {
@@ -31,7 +31,7 @@ class ExceptionHelper {
   }
 
   static Void listen(
-    Void Function(Object, StackTrace?)? handler,
+    Void Function(Object exception, StackTrace? stack)? handler,
   ) {
     assertTest(_initialized);
     _handler = handler;

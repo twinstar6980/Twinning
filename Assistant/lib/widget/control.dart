@@ -1446,7 +1446,7 @@ class StyledInputCombo extends StatefulWidget {
     required String?                                            hint,
     required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
-    required List<(Object, String)>                             option,
+    required List<({Object value, String name})>                option,
     required Object?                                            value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
@@ -1469,7 +1469,7 @@ class StyledInputCombo extends StatefulWidget {
     required String?                                            hint,
     required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
-    required List<(Object, String)>                             option,
+    required List<({Object value, String name})>                option,
     required Object?                                            value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
@@ -1492,7 +1492,7 @@ class StyledInputCombo extends StatefulWidget {
     required String?                                            hint,
     required Widget?                                            prefix,
     required List<Widget>?                                      suffix,
-    required List<(Object, String)>                             option,
+    required List<({Object value, String name})>                option,
     required Object?                                            value,
     required Void Function(BuildContext context, Object? value) onChanged,
   }) : this._(
@@ -1516,7 +1516,7 @@ class StyledInputCombo extends StatefulWidget {
   final String?                                            hint;
   final Widget?                                            prefix;
   final List<Widget>?                                      suffix;
-  final List<(Object, String)>                             option;
+  final List<({Object value, String name})>                option;
   final Object?                                            value;
   final Void Function(BuildContext context, Object? value) onChanged;
 
@@ -1539,14 +1539,14 @@ class _StyledInputComboState extends State<StyledInputCombo> {
     super.initState();
     this._focusNode = .new();
     this._valueController = .new();
-    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.$1 == this.widget.value)?.$2 ?? '';
+    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.value == this.widget.value)?.name ?? '';
     return;
   }
 
   @override
   didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
-    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.$1 == this.widget.value)?.$2 ?? '';
+    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.value == this.widget.value)?.name ?? '';
     return;
   }
 
@@ -1574,7 +1574,7 @@ class _StyledInputComboState extends State<StyledInputCombo> {
           ],
           ...this.widget.option.map((value) => material.MenuItemButton(
             style: .new(
-              backgroundColor: .all(value.$2 != this.widget.value ? null : StyledColor.onSurface.query(context).withValues(alpha: 0.12)),
+              backgroundColor: .all(value.value != this.widget.value ? null : StyledColor.onSurface.query(context).withValues(alpha: 0.12)),
             ),
             child: BoxContainer.of(
               constraints: .new(maxWidth: constraints.maxWidth - 16),
@@ -1588,7 +1588,7 @@ class _StyledInputComboState extends State<StyledInputCombo> {
                 content: TextStyleInheritedArea.of(
                   style: StyledTypography.bodyLarge.query(context),
                   child: StyledText.custom(
-                    value.$2,
+                    value.name,
                     overflow: .clip,
                     style: this.widget.style,
                   ),
@@ -1596,7 +1596,7 @@ class _StyledInputComboState extends State<StyledInputCombo> {
               ),
             ),
             onPressed: () async {
-              this.widget.onChanged(context, value.$1);
+              this.widget.onChanged(context, value.value);
               this._focusNode.unfocus();
             },
           )),
@@ -1964,25 +1964,29 @@ class StyledTitleBar extends StatelessWidget {
     required this.variant,
     required this.title,
     required this.leading,
+    required this.trailing,
   });
 
   const StyledTitleBar.standard({
-    Key?            key = null,
-    Boolean         enabled = true,
-    required String title,
-    required Widget leading,
+    Key?             key = null,
+    Boolean          enabled = true,
+    required String  title,
+    required Widget? leading,
+    required Widget? trailing
   }) : this._(
     key: key,
     variant: .standard,
     title: title,
     leading: leading,
+    trailing: trailing,
   );
 
   // ----------------
 
   final StyledTitleBarVariant variant;
   final String                title;
-  final Widget                leading;
+  final Widget?               leading;
+  final Widget?               trailing;
 
   // ----------------
 
@@ -1999,12 +2003,18 @@ class StyledTitleBar extends StatelessWidget {
         titleSpacing: 0,
         title: FlexContainer.horizontal([
           Gap.horizontal(8),
-          this.leading,
-          Gap.horizontal(12),
+          if (this.leading != null) ...[
+            this.leading!,
+            Gap.horizontal(12),
+          ],
           StyledText.custom(
             this.title,
             typography: .titleLarge,
           ).withFlexExpanded(),
+          if (this.trailing != null) ...[
+            Gap.horizontal(12),
+            this.trailing!,
+          ],
           Gap.horizontal(8),
         ]),
       ),
@@ -2082,7 +2092,7 @@ class StyledNavigationBar extends StatelessWidget {
 
   const StyledNavigationBar.standard({
     Key?                                                        key = null,
-    required Iterable<(String, IconData)>                       destination,
+    required Iterable<({String name, IconData icon})>           destination,
     required Integer                                            value,
     required Void Function(BuildContext context, Integer value) onChanged,
   }) : this._(
@@ -2096,7 +2106,7 @@ class StyledNavigationBar extends StatelessWidget {
   // ----------------
 
   final StyledNavigationBarVariant                         variant;
-  final Iterable<(String, IconData)>                       destination;
+  final Iterable<({String name, IconData icon})>           destination;
   final Integer                                            value;
   final Void Function(BuildContext context, Integer value) onChanged;
 
@@ -2107,8 +2117,8 @@ class StyledNavigationBar extends StatelessWidget {
     return switch (this.variant) {
       .standard => material.NavigationBar(
         destinations: this.destination.map((value) => material.NavigationDestination(
-          icon: IconView.of(value.$2),
-          label: value.$1,
+          icon: IconView.of(value.icon),
+          label: value.name,
           tooltip: '',
         )).toList(),
         selectedIndex: this.value,
@@ -2320,9 +2330,9 @@ class StyledFullDialog extends StatefulWidget {
   });
 
   const StyledFullDialog.standard({
-    Key?                                                                                              key = null,
-    required String                                                                                   title,
-    required Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder,
+    Key?                                                                                                     key = null,
+    required String                                                                                          title,
+    required Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState) contentBuilder,
   }) : this._(
     key: key,
     variant: .standard,
@@ -2332,9 +2342,9 @@ class StyledFullDialog extends StatefulWidget {
 
   // ----------------
 
-  final StyledFullDialogVariant                                                                  variant;
-  final String                                                                                   title;
-  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder;
+  final StyledFullDialogVariant                                                                         variant;
+  final String                                                                                          title;
+  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState) contentBuilder;
 
   // ----------------
 
@@ -2385,6 +2395,7 @@ class _StyledFullDialogState extends State<StyledFullDialog> {
                 onPressed: (context) => Navigator.pop(context),
               ),
             ),
+            trailing: null,
           ),
           body: FlexContainer.vertical([
             StatefulBuilder(
@@ -2438,10 +2449,10 @@ class StyledModalDialog extends StatefulWidget {
   });
 
   const StyledModalDialog.standard({
-    Key?                                                                                              key = null,
-    required String                                                                                   title,
-    required Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder,
-    required Iterable<Widget> Function(BuildContext context)?                                         actionBuilder,
+    Key?                                                                                                     key = null,
+    required String                                                                                          title,
+    required Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState) contentBuilder,
+    required Iterable<Widget> Function(BuildContext context)?                                                actionBuilder,
   }) : this._(
     key: key,
     variant: .standard,
@@ -2452,10 +2463,10 @@ class StyledModalDialog extends StatefulWidget {
 
   // ----------------
 
-  final StyledModalDialogVariant                                                                 variant;
-  final String                                                                                   title;
-  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder;
-  final Iterable<Widget> Function(BuildContext context)?                                         actionBuilder;
+  final StyledModalDialogVariant                                                                        variant;
+  final String                                                                                          title;
+  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState) contentBuilder;
+  final Iterable<Widget> Function(BuildContext context)?                                                actionBuilder;
 
   // ----------------
 
@@ -2551,9 +2562,9 @@ class StyledModalBottomSheet extends StatefulWidget {
   });
 
   const StyledModalBottomSheet.standard({
-    Key?                                                                                              key = null,
-    required String                                                                                   title,
-    required Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder,
+    Key?                                                                                                     key = null,
+    required String                                                                                          title,
+    required Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState) contentBuilder,
   }) : this._(
     key: key,
     variant: .standard,
@@ -2563,9 +2574,9 @@ class StyledModalBottomSheet extends StatefulWidget {
 
   // ----------------
 
-  final StyledModalBottomSheetVariant                                                            variant;
-  final String                                                                                   title;
-  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState) contentBuilder;
+  final StyledModalBottomSheetVariant                                                                   variant;
+  final String                                                                                          title;
+  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState) contentBuilder;
 
   // ----------------
 

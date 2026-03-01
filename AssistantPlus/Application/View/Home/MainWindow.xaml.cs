@@ -50,7 +50,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task ShowOnboarding(
+		public async Task ShowOnboarding (
 		) {
 			await this.Controller.ShowOnboarding();
 			return;
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task ShowOnboarding(
+		public async Task ShowOnboarding (
 		) {
 			var hideDialogWrapper = new Wrapper<Action>();
 			await ControlHelper.ShowDialogAsAutomatic(this.View.Content.As<FrameworkElement>(), "Onboarding", new OnboardingPanel() {

@@ -10,7 +10,7 @@
 
 - [更新历史](./history.md)
 
-- [安装流程](./installation.md)
+- [安装步骤](./installation.md)
 
 - [使用方法](./usage.md)
 

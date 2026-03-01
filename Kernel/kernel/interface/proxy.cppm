@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Interface {
 
 	public:
 
-		std::function<Void  (ExecutorProxy const &, MessageProxy const &, MessageProxy &)> value;
+		std::function<Void  (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> value;
 
 	public:
 
@@ -178,7 +178,7 @@ export namespace Twinning::Kernel::Interface {
 		// ----------------
 
 		explicit ExecutorProxy (
-			std::function<Void  (ExecutorProxy const &, MessageProxy const &, MessageProxy &)> const & value
+			std::function<Void  (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> const & value
 		) :
 			value{value} {
 			return;

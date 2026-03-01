@@ -27,7 +27,7 @@ class ForwarderExtensionHelper {
         ],
         null,
       );
-      result = pluginkitResult.$1 == 0 && pluginkitResult.$2.startsWith('+');
+      result = pluginkitResult.code == 0 && pluginkitResult.output.startsWith('+');
     }
     if (SystemChecker.isAndroid) {
       result = true;
@@ -66,7 +66,7 @@ class ForwarderExtensionHelper {
         ],
         null,
       );
-      assertTest(pluginkitResult.$1 == 0);
+      assertTest(pluginkitResult.code == 0);
     }
     if (SystemChecker.isAndroid) {
       throw UnsupportedException();

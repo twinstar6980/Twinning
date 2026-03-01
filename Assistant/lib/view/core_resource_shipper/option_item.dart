@@ -19,19 +19,19 @@ class OptionItem extends StatelessWidget {
 
   // ----------------
 
-  final OptionConfiguration                                          configuration;
-  final (Boolean, Boolean, Boolean, Boolean)                         match;
-  final Boolean                                                      enableFilter;
-  final Boolean                                                      enableBatch;
-  final Void Function(String? method, Map<String, Object>? argument) onSelect;
+  final OptionConfiguration                                                                            configuration;
+  final ({Boolean singleEnabled, Boolean singleFiltered, Boolean batchEnabled, Boolean batchFiltered}) match;
+  final Boolean                                                                                        enableFilter;
+  final Boolean                                                                                        enableBatch;
+  final Void Function(String? method, Map<String, Object>? argument)                                   onSelect;
 
   // ----------------
 
   @override
   build(context) {
-    var enabled = !this.enableBatch ? this.match.$1 : this.match.$3;
+    var enabled = !this.enableBatch ? this.match.singleEnabled : this.match.batchEnabled;
     return VisibilityArea.of(
-      enabled: !this.enableFilter || (!this.enableBatch ? this.match.$1 && this.match.$2 : this.match.$3 && this.match.$4),
+      enabled: !this.enableFilter || (!this.enableBatch ? this.match.singleEnabled && this.match.singleFiltered : this.match.batchEnabled && this.match.batchFiltered),
       child: FlexContainer.vertical([
         StyledListTile.standardCustom(
           enabled: enabled,
@@ -87,20 +87,20 @@ class OptionGroupItem extends StatelessWidget {
 
   // ----------------
 
-  final OptionGroupConfiguration                                     configuration;
-  final List<(Boolean, Boolean, Boolean, Boolean)>                   match;
-  final Boolean                                                      enableFilter;
-  final Boolean                                                      enableBatch;
-  final Void Function(String? method, Map<String, Object>? argument) onSelect;
-  final Boolean                                                      expanded;
-  final Void Function()                                              onToggle;
+  final OptionGroupConfiguration                                                                             configuration;
+  final List<({Boolean singleEnabled, Boolean singleFiltered, Boolean batchEnabled, Boolean batchFiltered})> match;
+  final Boolean                                                                                              enableFilter;
+  final Boolean                                                                                              enableBatch;
+  final Void Function(String? method, Map<String, Object>? argument)                                         onSelect;
+  final Boolean                                                                                              expanded;
+  final Void Function()                                                                                      onToggle;
 
   // ----------------
 
   @override
   build(context) {
     return VisibilityArea.of(
-      enabled: this.match.any((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)),
+      enabled: this.match.any((match) => !this.enableFilter || (!this.enableBatch ? match.singleEnabled && match.singleFiltered : match.batchEnabled && match.batchFiltered)),
       child: FlexContainer.vertical([
         StyledListTile.standardCustom(
           padding: .fromLTRB(24, 0, 24, 0),
@@ -108,7 +108,7 @@ class OptionGroupItem extends StatelessWidget {
           content: StyledText.inherit(tooltip: true, this.configuration.name),
           trailing: FlexContainer.horizontal(mainStretch: false, [
             StyledBadge.standard(
-              label: StyledText.inherit('${this.match.where((match) => !this.enableFilter || (!this.enableBatch ? match.$1 && match.$2 : match.$3 && match.$4)).length}'),
+              label: StyledText.inherit('${this.match.where((match) => !this.enableFilter || (!this.enableBatch ? match.singleEnabled && match.singleFiltered : match.batchEnabled && match.batchFiltered)).length}'),
             ),
             Gap.horizontal(6),
             IconView.of(!this.expanded ? IconSet.keyboard_arrow_down : IconSet.keyboard_arrow_left),

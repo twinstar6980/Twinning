@@ -17,8 +17,8 @@ class ForwardHelper {
   ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     await setting.state.handleLaunch!(
-      ModuleHelper.query(.core_task_worker).name,
-      .core_task_worker,
+      ModuleHelper.query(.coreTaskWorker).name,
+      .coreTaskWorker,
       ['-additional_argument', ...argument],
     );
     return;

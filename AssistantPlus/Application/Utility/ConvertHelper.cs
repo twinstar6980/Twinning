@@ -51,14 +51,14 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region enumeration
 
-		public static String MakeEnumerationToStringOfSnakeCase<TType>(
+		public static String MakeEnumerationToStringOfSnakeCase<TType> (
 			TType value
 		)
 			where TType : struct, Enum {
 			return ConvertHelper.ChangeStringFromCamelCaseToSnakeCase(Enum.GetName(value).AsNotNull());
 		}
 
-		public static TType ParseEnumerationFromStringOfSnakeCase<TType>(
+		public static TType ParseEnumerationFromStringOfSnakeCase<TType> (
 			String text
 		)
 			where TType : struct, Enum {
@@ -141,7 +141,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region string
 
-		public static List<String> SplitStringOfCamelCase(
+		public static List<String> SplitStringOfCamelCase (
 			String source
 		) {
 			return new Regex(@"([A-Z][a-z]*)|([a-z]+)|([0-9]+)", RegexOptions.Compiled)
@@ -152,13 +152,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static String ChangeStringFromCamelCaseToSnakeCase(
+		public static String ChangeStringFromCamelCaseToSnakeCase (
 			String source
 		) {
 			return String.Join('_', ConvertHelper.SplitStringOfCamelCase(source)).ToLower();
 		}
 
-		public static String ChangeStringFromCamelCaseThenInsertSpace(
+		public static String ChangeStringFromCamelCaseThenInsertSpace (
 			String source
 		) {
 			return String.Join(' ', ConvertHelper.SplitStringOfCamelCase(source));

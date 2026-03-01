@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Interface {
 
 	struct Executor {
 
-		std::add_pointer_t<void  (Executor *, Executor *, Message *, Message *, Message *)> invoke{nullptr};
+		std::add_pointer_t<void  (Executor * self, Executor * callback, Message * argument, Message * result, Message * exception)> invoke{nullptr};
 
-		std::add_pointer_t<void  (Executor *, Executor *, Message *, Message *, Message *)> clear{nullptr};
+		std::add_pointer_t<void  (Executor * self, Executor * callback, Message * argument, Message * result, Message * exception)> clear{nullptr};
 
 	};
 

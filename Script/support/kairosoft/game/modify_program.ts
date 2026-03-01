@@ -90,8 +90,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		field_name: string,
 	): Array<{
 		address: number;
-		access: string;
-		static: boolean;
+		modifier: string;
+		statically: boolean;
 		type: string;
 	}> {
 		let result: ReturnType<typeof do_il2cppdumper_search_field_from_dump_data> = [];
@@ -112,8 +112,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				}
 				result.push({
 					address: Number.parseInt(field_match[5], 16),
-					access: field_match[1],
-					static: field_match[2] !== undefined,
+					modifier: field_match[1],
+					statically: field_match[2] !== undefined,
 					type: field_match[3],
 				});
 			}
@@ -128,8 +128,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		method_name: string,
 	): Array<{
 		address: number;
-		access: string;
-		static: boolean;
+		modifier: string;
+		statically: boolean;
 		result: string;
 		parameter: string;
 	}> {
@@ -154,8 +154,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				assert_test(comment_match !== null);
 				result.push({
 					address: Number.parseInt(comment_match[2], 16),
-					access: method_match[1],
-					static: method_match[2] !== undefined,
+					modifier: method_match[1],
+					statically: method_match[2] !== undefined,
 					result: method_match[3],
 					parameter: method_match[5],
 				});
@@ -318,12 +318,12 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				'Encrypter.Decode',
 			);
 			symbol_address.RecordStore.ReadRecord = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.static && value.parameter === `int rcId`)),
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.statically && value.parameter === `int rcId`)),
 				1,
 				'RecordStore.ReadRecord',
 			);
 			symbol_address.RecordStore.WriteRecord = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.static && value.parameter === `int rcId, byte[][] data`)),
+				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.statically && value.parameter === `int rcId, byte[][] data`)),
 				1,
 				'RecordStore.WriteRecord',
 			);

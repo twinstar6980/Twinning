@@ -38,30 +38,30 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
-  late Boolean                                          _parallelForward;
-  late Boolean                                          _enableFilter;
-  late Boolean                                          _enableBatch;
-  late List<(String, Boolean?)>                         _resource;
-  late List<List<(Boolean, Boolean, Boolean, Boolean)>> _optionMatch;
-  late List<Boolean>                                    _optionExpanded;
-  late ScrollController                                 _optionListScrollController;
+  late Boolean                                                                                                    _parallelForward;
+  late Boolean                                                                                                    _enableFilter;
+  late Boolean                                                                                                    _enableBatch;
+  late List<({String name, Boolean? type})>                                                                       _resource;
+  late List<List<({Boolean singleEnabled, Boolean singleFiltered, Boolean batchEnabled, Boolean batchFiltered})>> _optionMatch;
+  late List<Boolean>                                                                                              _optionExpanded;
+  late ScrollController                                                                                           _optionListScrollController;
 
   Future<Void> _refreshMatch(
   ) async {
     this._optionMatch.clear();
     for (var group in this.widget.configuration.option) {
-      var groupMatch = <(Boolean, Boolean, Boolean, Boolean)>[];
+      var groupMatch = <({Boolean singleEnabled, Boolean singleFiltered, Boolean batchEnabled, Boolean batchFiltered})>[];
       for (var item in group.item) {
         var singleEnabled = true;
         var batchEnabled = item.batch;
         if (item.filter != null) {
           for (var resource in this._resource) {
             singleEnabled &= switch (item.filter!.type) {
-              .any       => resource.$2 != null,
-              .file      => resource.$2 == false,
-              .directory => resource.$2 == true,
+              .any       => resource.type != null,
+              .file      => resource.type == false,
+              .directory => resource.type == true,
             };
-            batchEnabled &= resource.$2 == true;
+            batchEnabled &= resource.type == true;
           }
         }
         var singleFiltered = false;
@@ -72,10 +72,15 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         }
         if (item.filter != null && this._resource.length != 0) {
           var nameRule = RegExp(item.filter!.name);
-          singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.$1));
+          singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.name));
           batchFiltered |= true;
         }
-        groupMatch.add((singleEnabled, singleFiltered, batchEnabled, batchFiltered));
+        groupMatch.add((
+          singleEnabled: singleEnabled,
+          singleFiltered: singleFiltered,
+          batchEnabled: batchEnabled,
+          batchFiltered: batchFiltered,
+        ));
       }
       this._optionMatch.add(groupMatch);
     }
@@ -87,7 +92,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     List<String> list,
   ) async {
     for (var item in list) {
-      if (this._resource.any((value) => value.$1 == item)) {
+      if (this._resource.any((value) => value.name == item)) {
         continue;
       }
       var itemType = null as Boolean?;
@@ -97,7 +102,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       if (await StorageHelper.existDirectory(item)) {
         itemType = true;
       }
-      this._resource.add((item, itemType));
+      this._resource.add((name: item, type: itemType));
     }
     await this._refreshMatch();
     return;
@@ -107,7 +112,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     List<String> list,
   ) async {
     for (var item in list) {
-      this._resource.removeWhere((value) => value.$1 == item);
+      this._resource.removeWhere((value) => value.name == item);
     }
     await this._refreshMatch();
     return;
@@ -117,7 +122,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     String?              method,
     Map<String, Object>? argument,
   ) async {
-    var actualInput = this._resource.isNotEmpty ? this._resource.map((value) => value.$1).toList() : <String?>[null];
+    var actualInput = this._resource.isNotEmpty ? this._resource.map((value) => value.name).toList() : <String?>[null];
     var actualMethod = method == null ? null : core_task_worker.ForwardHelper.makeMethodMaybeBatch(method, this._enableBatch);
     var actualCommand = actualInput.map((value) => core_task_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
     await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
@@ -152,7 +157,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     var optionParallelForward = null as Boolean?;
     var optionEnableFilter = null as Boolean?;
     var optionEnableBatch = null as Boolean?;
-    var optionResource = null as List<(String,)>?;
+    var optionResource = null as List<({String name})>?;
     var option = CommandLineReader(optionView);
     if (option.check('-parallel_forward')) {
       optionParallelForward = option.nextBoolean();
@@ -167,7 +172,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       optionResource = [];
       while (!option.done()) {
         optionResource.add((
-          option.nextString(),
+          name: option.nextString(),
         ));
       }
     }
@@ -184,7 +189,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       this._enableBatch = optionEnableBatch;
     }
     if (optionResource != null) {
-      await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.$1)).toList());
+      await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.name)).toList());
     }
     await refreshState(this.setState);
     return;
@@ -204,7 +209,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     }
     if (option.check('-resource')) {
       for (var item in this._resource) {
-        option.nextString(item.$1);
+        option.nextString(item.name);
       }
     }
     return option.done();
@@ -219,7 +224,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._enableFilter = this.widget.setting.enableFilter;
     this._enableBatch = this.widget.setting.enableBatch;
     this._resource = [];
-    this._optionMatch = this.widget.configuration.option.map((value) => value.item.map((valueItem) => (false, false, false, false)).toList()).toList();
+    this._optionMatch = this.widget.configuration.option.map((value) => value.item.map((valueItem) => (singleEnabled: false, singleFiltered: false, batchEnabled: false, batchFiltered: false)).toList()).toList();
     this._optionExpanded = this.widget.configuration.option.map((value) => true).toList();
     this._optionListScrollController = .new();
     postTask(() async {
@@ -288,7 +293,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       content: StyledText.inherit('Remove All'),
                       onPressed: (context) async {
                         if (await MoreModalDialogExtension.showForConfirm(context)) {
-                          await this._removeResource(this._resource.map((value) => value.$1).toList());
+                          await this._removeResource(this._resource.map((value) => value.name).toList());
                           await refreshState(setStateForPanel);
                         }
                       },
@@ -341,7 +346,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
-                        var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
+                        var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.resource');
                         if (target != null) {
                           await this._appendResource([target]);
                           await refreshState(setStateForPanel);
@@ -353,7 +358,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
-                        var target = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.resource');
+                        var target = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.resource');
                         if (target != null) {
                           await this._appendResource([target]);
                           await refreshState(setStateForPanel);
@@ -368,18 +373,18 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                   ...this._resource.map((value) => StyledListTile.standardCustom(
                     key: ObjectKey(value),
                     padding: .fromLTRB(24, 0, 24, 0),
-                    leading: IconView.of(switch (value.$2) {
+                    leading: IconView.of(switch (value.type) {
                       null  => IconSet.hide_source,
                       false => IconSet.draft,
                       true  => IconSet.folder,
                     }),
                     content: StyledText.custom(
-                      StorageHelper.name(value.$1),
+                      StorageHelper.name(value.name),
                       tooltip: true,
-                      tooltipText: value.$1,
+                      tooltipText: value.name,
                     ),
                     onPressed: (context) async {
-                      await this._removeResource([value.$1]);
+                      await this._removeResource([value.name]);
                       await refreshState(setStateForPanel);
                     },
                   )),

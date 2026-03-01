@@ -9,7 +9,7 @@ import 'package:material_symbols_icons/get.dart' as lib;
 // #region basic
 
 Future<Void> refreshState(
-  Void Function(Void Function()) setState,
+  Void Function(Void Function() action) setState,
 ) async {
   setState(() {});
   await WidgetsBinding.instance.endOfFrame;

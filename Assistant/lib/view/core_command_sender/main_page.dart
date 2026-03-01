@@ -40,10 +40,10 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
-  late Boolean                                                                                                                    _parallelForward;
-  late List<Boolean>                                                                                                              _methodExpanded;
-  late List<(MethodGroupConfiguration, MethodConfiguration, Wrapper<Boolean>, List<Wrapper<ValueExpression?>>, Wrapper<Boolean>)> _command;
-  late ScrollController                                                                                                           _commandListScrollController;
+  late Boolean                                                                                                                                                                                   _parallelForward;
+  late List<Boolean>                                                                                                                                                                             _methodExpanded;
+  late List<({MethodGroupConfiguration groupConfiguration, MethodConfiguration itemConfiguration, Wrapper<Boolean> batch, List<Wrapper<ValueExpression?>> argument, Wrapper<Boolean> expanded})> _command;
+  late ScrollController                                                                                                                                                                          _commandListScrollController;
 
   Future<Void> _appendCommand(
     String              method,
@@ -53,7 +53,13 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   ) async {
     var groupConfiguration = this.widget.configuration.method.firstWhere((value) => method.startsWith('${value.identifier}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.identifier);
-    this._command.add((groupConfiguration, itemConfiguration, .new(batch), ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument), .new(expanded)));
+    this._command.add((
+      groupConfiguration: groupConfiguration,
+      itemConfiguration: itemConfiguration,
+      batch: .new(batch),
+      argument: ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument),
+      expanded: .new(expanded),
+    ));
     await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
     return;
@@ -73,8 +79,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     var actualCommand = <List<String>>[];
     for (var itemIndex in index) {
       var item = this._command[itemIndex];
-      var method = core_task_worker.ForwardHelper.makeMethodMaybeBatch(item.$2.identifier, item.$3.value);
-      var argument = ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, item.$4);
+      var method = core_task_worker.ForwardHelper.makeMethodMaybeBatch(item.itemConfiguration.identifier, item.batch.value);
+      var argument = ConfigurationHelper.makeArgumentValueListJson(item.itemConfiguration.argument, item.argument);
       actualCommand.add(core_task_worker.ForwardHelper.makeArgumentForCommand(null, method, argument));
     }
     await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
@@ -107,7 +113,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   @override
   modulePageApplyOption(optionView) async {
     var optionParallelForward = null as Boolean?;
-    var optionCommand = null as List<(String, Boolean, Map<String, Object>, Boolean)>?;
+    var optionCommand = null as List<({String method, Boolean batch, Map<String, Object> argument, Boolean expanded})>?;
     var option = CommandLineReader(optionView);
     if (option.check('-parallel_forward')) {
       optionParallelForward = option.nextBoolean();
@@ -116,10 +122,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       optionCommand = [];
       while (!option.done()) {
         optionCommand.add((
-          option.nextString(),
-          option.nextBoolean(),
-          option.nextString().selfLet((it) => JsonHelper.deserializeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
-          option.nextBoolean(),
+          method: option.nextString(),
+          batch: option.nextBoolean(),
+          argument: option.nextString().selfLet((it) => JsonHelper.deserializeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
+          expanded: option.nextBoolean(),
         ));
       }
     }
@@ -131,7 +137,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     }
     if (optionCommand != null) {
       for (var item in optionCommand) {
-        await this._appendCommand(item.$1, item.$2, item.$3, item.$4);
+        await this._appendCommand(item.method, item.batch, item.argument, item.expanded);
       }
     }
     await refreshState(this.setState);
@@ -146,10 +152,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     }
     if (option.check('-command')) {
       for (var item in this._command) {
-        option.nextString(item.$2.identifier);
-        option.nextBoolean(item.$3.value);
-        option.nextString(item.$4.selfLet((it) => JsonHelper.serializeText(ConfigurationHelper.makeArgumentValueListJson(item.$2.argument, it), indented: false)));
-        option.nextBoolean(item.$5.value);
+        option.nextString(item.itemConfiguration.identifier);
+        option.nextBoolean(item.batch.value);
+        option.nextString(item.argument.selfLet((it) => JsonHelper.serializeText(ConfigurationHelper.makeArgumentValueListJson(item.itemConfiguration.argument, it), indented: false)));
+        option.nextBoolean(item.expanded.value);
       }
     }
     return option.done();
@@ -197,11 +203,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
             padding: .fromLTRB(0, 6, 0, 6),
             child: CommandPanel(
               key: ObjectKey(this._command[index]),
-              groupConfiguration: this._command[index].$1,
-              itemConfiguration: this._command[index].$2,
-              batch: this._command[index].$3,
-              argument: this._command[index].$4,
-              expanded: this._command[index].$5,
+              groupConfiguration: this._command[index].groupConfiguration,
+              itemConfiguration: this._command[index].itemConfiguration,
+              batch: this._command[index].batch,
+              argument: this._command[index].argument,
+              expanded: this._command[index].expanded,
               onRemove: () async {
                 await this._removeCommand(index);
               },

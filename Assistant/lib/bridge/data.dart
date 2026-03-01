@@ -10,6 +10,6 @@ final class Message extends ffi.Struct {
 }
 
 final class Executor extends ffi.Struct {
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Executor>, ffi.Pointer<Executor>, ffi.Pointer<Message>, ffi.Pointer<Message>, ffi.Pointer<Message>)>> invoke;
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Executor>, ffi.Pointer<Executor>, ffi.Pointer<Message>, ffi.Pointer<Message>, ffi.Pointer<Message>)>> clear;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>> invoke;
+  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>> clear;
 }

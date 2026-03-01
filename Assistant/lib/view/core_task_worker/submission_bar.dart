@@ -26,11 +26,11 @@ class _BasicSubmissionBar extends StatelessWidget {
 
   // ----------------
 
-  final Completer<Void>?                      completer;
-  final List<(ValueExpression, Boolean)>?     history;
-  final Void Function(ValueExpression value)? onSelect;
-  final IconData                              icon;
-  final Widget                                content;
+  final Completer<Void>?                                  completer;
+  final List<({ValueExpression value, Boolean enabled})>? history;
+  final Void Function(ValueExpression value)?             onSelect;
+  final IconData                                          icon;
+  final Widget                                            content;
 
   // ----------------
 
@@ -65,10 +65,10 @@ class _BasicSubmissionBar extends StatelessWidget {
               var value = await StyledMenuExtension.show<ValueExpression>(context, StyledMenu.standard(
                 position: .under,
                 content: (this.history ?? []).mapIndexed((index, value) => StyledMenuItem.standard(
-                  enabled: value.$2,
-                  value: value.$1,
+                  enabled: value.enabled,
+                  value: value.value,
                   content: StyledText.custom(
-                    ValueExpressionHelper.makeString(value.$1),
+                    ValueExpressionHelper.makeString(value.value),
                     overflow: .clip,
                     style: getSpecialFontTextStyle(context, listen: false),
                   ),
@@ -145,7 +145,7 @@ class _PauseSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as PauseExpression;
           await refreshState(setState);
@@ -190,7 +190,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as BooleanExpression;
           await refreshState(setState);
@@ -266,7 +266,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as IntegerExpression;
           await refreshState(setState);
@@ -321,7 +321,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as FloaterExpression;
           await refreshState(setState);
@@ -376,7 +376,7 @@ class _SizeSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as SizeExpression;
           await refreshState(setState);
@@ -461,7 +461,7 @@ class _StringSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as StringExpression;
           await refreshState(setState);
@@ -513,7 +513,7 @@ class _PathSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, true)).toList(),
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
           this.value.value = value as PathExpression;
           await refreshState(setState);
@@ -532,15 +532,15 @@ class _PathSubmissionBar extends StatelessWidget {
               onPressed: (context) async {
                 var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
                   position: .under,
-                  content: [
-                    ('?generate', 'Generate'),
-                    ('?move', 'Move'),
-                    ('?delete', 'Delete'),
-                    ('?overwrite', 'Overwrite'),
+                  content: <({String value, String text})>[
+                    (value: '?generate', text: 'Generate'),
+                    (value: '?move', text: 'Move'),
+                    (value: '?delete', text: 'Delete'),
+                    (value: '?overwrite', text: 'Overwrite'),
                   ].mapIndexed((index, value) => StyledMenuItem.standard(
-                    value: value.$1,
+                    value: value.value,
                     content: StyledText.custom(
-                      value.$2,
+                      value.text,
                       style: getSpecialFontTextStyle(context, listen: false),
                     ),
                   )),
@@ -561,7 +561,7 @@ class _PathSubmissionBar extends StatelessWidget {
                   allowLoadFile: true,
                   allowLoadDirectory: true,
                   allowSaveFile: true,
-                  location: '@${ModuleHelper.query(.core_task_worker).identifier}.generic',
+                  location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.generic',
                   textStyle: getSpecialFontTextStyle(context, listen: false),
                 );
                 if (target != null) {
@@ -617,7 +617,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
-        history: this.history.map((item) => (item, this.option.contains(item.item))).toList(),
+        history: this.history.map((item) => (value: item, enabled: this.option.contains(item.item))).toList(),
         onSelect: (value) async {
           this.value.value = value as EnumerationExpression;
           await refreshState(setState);
@@ -637,7 +637,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
               },
             ),
           ],
-          option: this.option.map((value) => (value, value)).toList(),
+          option: this.option.map((value) => (value: value, name: value)).toList(),
           value: this.value.value == null ? null : this.value.value!.item, // ignore: prefer_null_aware_operators
           onChanged: (context, value) async {
             value as String;

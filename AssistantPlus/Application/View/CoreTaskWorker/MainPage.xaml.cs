@@ -547,48 +547,50 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 					switch (argument[0]) {
 						case "name": {
 							AssertTest(argument.Count == 1);
-							var detail = await this.CallbackName();
-							var detailName = detail.Item1;
-							result.Add(detailName);
+							var detail = await this.CallbackName(
+							);
+							result.Add(detail.Item1);
 							break;
 						}
 						case "version": {
 							AssertTest(argument.Count == 1);
-							var detail = await this.CallbackVersion();
-							var detailVersion = detail.Item1;
-							result.Add(detailVersion);
+							var detail = await this.CallbackVersion(
+							);
+							result.Add(detail.Item1);
 							break;
 						}
 						case "send_message": {
 							AssertTest(argument.Count >= 3);
-							var detailType = argument[1];
-							var detailTitle = argument[2];
-							var detailDescription = argument[3..];
-							await this.CallbackSendMessage(detailType, detailTitle, detailDescription);
+							await this.CallbackSendMessage(
+								argument[1],
+								argument[2],
+								argument[3..]
+							);
 							break;
 						}
 						case "receive_submission": {
 							AssertTest(argument.Count >= 2);
-							var detailType = argument[1];
-							var detailOption = argument[2..];
-							var detail = await this.CallbackReceiveSubmission(detailType, detailOption);
-							var detailValue = detail.Item1;
-							result.Add(detailValue);
+							var detail = await this.CallbackReceiveSubmission(
+								argument[1],
+								argument[2..]
+							);
+							result.Add(detail.Item1);
 							break;
 						}
 						case "pick_storage_item": {
 							AssertTest(argument.Count == 2);
-							var detailType = argument[1];
-							var detail = await this.CallbackPickStorageItem(detailType);
-							var detailTarget = detail.Item1;
-							result.Add(detailTarget);
+							var detail = await this.CallbackPickStorageItem(
+								argument[1]
+							);
+							result.Add(detail.Item1);
 							break;
 						}
 						case "push_system_notification": {
 							AssertTest(argument.Count == 3);
-							var detailType = argument[1];
-							var detailDescription = argument[2];
-							var detail = await this.CallbackPushSystemNotification(detailType, detailDescription);
+							var detail = await this.CallbackPushSystemNotification(
+								argument[1],
+								argument[2]
+							);
 							break;
 						}
 						default: throw new ("invalid method");

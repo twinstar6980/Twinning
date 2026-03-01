@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 102
+ * @version 104
  */
 declare namespace Twinning.Kernel {
 
@@ -3012,6 +3012,14 @@ declare namespace Twinning.Kernel {
 							change: Array<LayerChange>;
 						};
 
+						/** 工作区间 */
+						type WorkArea = [
+							/** 起始 */
+							bigint,
+							/** 持续 */
+							bigint,
+						];
+
 						/** 精灵 */
 						type Sprite = {
 							/** 名称。版本4开始存在 */
@@ -3019,7 +3027,7 @@ declare namespace Twinning.Kernel {
 							/** 帧率。版本4开始存在 */
 							frame_rate?: number;
 							/** 工作区间。版本5开始存在 */
-							work_area?: [bigint, bigint];
+							work_area?: WorkArea;
 							/** 帧 */
 							frame: Array<Frame>;
 						};

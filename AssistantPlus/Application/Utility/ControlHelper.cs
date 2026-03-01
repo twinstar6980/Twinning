@@ -117,7 +117,7 @@ namespace Twinning.AssistantPlus.Utility {
 			String                            title,
 			Object?                           content,
 			Tuple<String?, String?, String?>? action,
-			Tuple<Size, Size>?                size = null,
+			Tuple<Size, Size>?                size        = null,
 			Wrapper<Action>?                  hideWrapper = null
 		) {
 			var dialog = new ContentDialog() {
@@ -182,7 +182,7 @@ namespace Twinning.AssistantPlus.Utility {
 					VerticalAlignment = VerticalAlignment.Center,
 					IsIndeterminate = true,
 				},
-				new("Hide", null, null),
+				new ("Hide", null, null),
 				hideWrapper
 			).SelfLet(ExceptionHelper.WrapTask);
 			return async () => {

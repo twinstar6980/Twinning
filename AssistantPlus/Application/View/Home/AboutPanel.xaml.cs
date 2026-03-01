@@ -580,7 +580,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uOnboarding_Click(
+		public async void uOnboarding_Click (
 			Object          sender,
 			RoutedEventArgs args
 		) {

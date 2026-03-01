@@ -118,7 +118,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   ) async {
     assertTest(!this._sessionRunning);
     var result = null as List<String>?;
-    var exception = null as (Object, StackTrace)?;
+    var exception = null as ({Object exception, StackTrace stack})?;
     this._sessionRunning = true;
     this._messageList.clear();
     await refreshState(this.setState);
@@ -131,7 +131,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         result = await bridge.Launcher.launch(this._sessionClient, library, this.widget.setting.script, this.widget.setting.argument + this._additionalArgument);
       }
       catch (e, s) {
-        exception = (e, s);
+        exception = (exception: e, stack: s);
       }
       if (library.state()) {
         library.close();
@@ -141,13 +141,13 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       }
     }
     catch (e, s) {
-      exception = (e, s);
+        exception = (exception: e, stack: s);
     }
     if (exception == null) {
       this._sendMessage(.success, 'SUCCEEDED', result!);
     }
     else {
-      this._sendMessage(.error, 'FAILED', [ExceptionHelper.generateMessage(exception.$1, exception.$2)]);
+      this._sendMessage(.error, 'FAILED', [ExceptionHelper.generateMessage(exception.exception, exception.stack)]);
     }
     this._sessionRunning = false;
     await refreshState(this.setState);
@@ -238,7 +238,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._additionalArgument = [];
     this._messageList = [];
     this._messageListScrollController = .new();
-    this._submissionBar = SubmissionBar(
+    this._submissionBar = .new(
       type: null,
       option: null,
       history: null,
@@ -385,48 +385,52 @@ class _MainPageBridgeClient extends bridge.Client {
     switch (argument[0]) {
       case 'name': {
         assertTest(argument.length == 1);
-        var detail = await this.callbackName();
-        var detailName = detail.$1;
-        result.add(detailName);
+        var detail = await this.callbackName(
+        );
+        result.add(detail.name);
         break;
       }
       case 'version': {
         assertTest(argument.length == 1);
-        var detail = await this.callbackVersion();
-        var detailVersion = detail.$1;
-        result.add(detailVersion);
+        var detail = await this.callbackVersion(
+        );
+        result.add(detail.version);
         break;
       }
       case 'send_message': {
         assertTest(argument.length >= 3);
-        var detailType = argument[1];
-        var detailTitle = argument[2];
-        var detailDescription = argument.sublist(3);
-        var detail = await this.callbackSendMessage(detailType, detailTitle, detailDescription); // ignore: unused_local_variable
+        // ignore: unused_local_variable
+        var detail = await this.callbackSendMessage(
+          argument[1],
+          argument[2],
+          argument.sublist(3),
+        );
         break;
       }
       case 'receive_submission': {
         assertTest(argument.length >= 2);
-        var detailType = argument[1];
-        var detailOption = argument.sublist(2);
-        var detail = await this.callbackReceiveSubmission(detailType, detailOption);
-        var detailValue = detail.$1;
-        result.add(detailValue);
+        var detail = await this.callbackReceiveSubmission(
+          argument[1],
+          argument.sublist(2),
+        );
+        result.add(detail.value);
         break;
       }
       case 'pick_storage_item': {
         assertTest(argument.length == 2);
-        var detailType = argument[1];
-        var detail = await this.callbackPickStorageItem(detailType);
-        var detailTarget = detail.$1;
-        result.add(detailTarget);
+        var detail = await this.callbackPickStorageItem(
+          argument[1],
+        );
+        result.add(detail.target);
         break;
       }
       case 'push_system_notification': {
         assertTest(argument.length == 3);
-        var detailTitle = argument[1];
-        var detailDescription = argument[2];
-        var detail = await this.callbackPushSystemNotification(detailTitle, detailDescription); // ignore: unused_local_variable
+        // ignore: unused_local_variable
+        var detail = await this.callbackPushSystemNotification(
+          argument[1],
+          argument[2],
+        );
         break;
       }
       default: throw Exception('invalid method');
@@ -434,16 +438,16 @@ class _MainPageBridgeClient extends bridge.Client {
     return result;
   }
 
-  Future<(String,)> callbackName(
+  Future<({String name})> callbackName(
   ) async {
     var name = 'assistant';
-    return (name,);
+    return (name: name);
   }
 
-  Future<(String,)> callbackVersion(
+  Future<({String version})> callbackVersion(
   ) async {
     var version = ApplicationInformation.version;
-    return (version,);
+    return (version: version);
   }
 
   Future<()> callbackSendMessage(
@@ -464,7 +468,7 @@ class _MainPageBridgeClient extends bridge.Client {
     return ();
   }
 
-  Future<(String,)> callbackReceiveSubmission(
+  Future<({String value})> callbackReceiveSubmission(
     String       type,
     List<String> option,
   ) async {
@@ -484,10 +488,10 @@ class _MainPageBridgeClient extends bridge.Client {
     if (valueData != null) {
       value = ValueExpressionHelper.makeString(valueData);
     }
-    return (value,);
+    return (value: value);
   }
 
-  Future<(String,)> callbackPickStorageItem(
+  Future<({String target})> callbackPickStorageItem(
     String type,
   ) async {
     var target = '';
@@ -497,8 +501,8 @@ class _MainPageBridgeClient extends bridge.Client {
       'save_file'      => 'save_file',
       _                => throw Exception(),
     };
-    target = await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleHelper.query(.core_resource_shipper).identifier}.generic', null) ?? '';
-    return (target,);
+    target = await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.generic', null) ?? '';
+    return (target: target);
   }
 
   Future<()> callbackPushSystemNotification(

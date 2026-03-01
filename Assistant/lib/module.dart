@@ -25,23 +25,23 @@ import 'package:provider/provider.dart';
 // ----------------
 
 enum ModuleType {
-  core_task_worker, // ignore: constant_identifier_names
-  core_command_sender, // ignore: constant_identifier_names
-  core_resource_shipper, // ignore: constant_identifier_names
-  popcap_animation_viewer, // ignore: constant_identifier_names
-  kairosoft_game_manager, // ignore: constant_identifier_names
+  coreTaskWorker,
+  coreCommandSender,
+  coreResourceShipper,
+  popcapAnimationViewer,
+  kairosoftGameManager,
 }
 
 class ModuleInformation {
-  ModuleType                                    type;
-  String                                        identifier;
-  String                                        name;
-  IconData                                      icon;
-  Widget Function(Object, Object, List<String>) mainPage;
-  Widget Function(BuildContext)                 settingPanel;
-  Object Function(BuildContext)                 querySetting;
-  Object Function(Object)                       parseConfiguration;
-  Future<List<String>?> Function(List<String>)  generateForwardOption;
+  ModuleType                                                                 type;
+  String                                                                     identifier;
+  String                                                                     name;
+  IconData                                                                   icon;
+  Widget Function(Object setting, Object configuration, List<String> option) mainPage;
+  Widget Function(BuildContext context)                                      settingPanel;
+  Object Function(BuildContext context)                                      querySetting;
+  Object Function(Object json)                                               parseConfiguration;
+  Future<List<String>?> Function(List<String> resource)                      generateForwardOption;
   ModuleInformation({
     required this.type,
     required this.identifier,
@@ -91,7 +91,7 @@ class ModuleHelper {
 
   static final List<ModuleInformation> _information = [
     .new(
-      type: .core_task_worker,
+      type: .coreTaskWorker,
       identifier: 'core_task_worker',
       name: 'Task Worker',
       icon: IconSet.rule_settings,
@@ -112,7 +112,7 @@ class ModuleHelper {
       },
     ),
     .new(
-      type: .core_command_sender,
+      type: .coreCommandSender,
       identifier: 'core_command_sender',
       name: 'Command Sender',
       icon: IconSet.send,
@@ -133,7 +133,7 @@ class ModuleHelper {
       },
     ),
     .new(
-      type: .core_resource_shipper,
+      type: .coreResourceShipper,
       identifier: 'core_resource_shipper',
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
@@ -159,7 +159,7 @@ class ModuleHelper {
       },
     ),
     .new(
-      type: .popcap_animation_viewer,
+      type: .popcapAnimationViewer,
       identifier: 'popcap_animation_viewer',
       name: 'PopCap Animation Viewer',
       icon: IconSet.thread_unread,
@@ -193,7 +193,7 @@ class ModuleHelper {
       },
     ),
     .new(
-      type: .kairosoft_game_manager,
+      type: .kairosoftGameManager,
       identifier: 'kairosoft_game_manager',
       name: 'Kairosoft Game Manager',
       icon: IconSet.history_edu,

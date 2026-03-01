@@ -104,12 +104,12 @@ class ExecutorProxy {
 
   // #region constructor
 
-  Void Function(ExecutorProxy, MessageProxy, MessageProxy) value;
+  Void Function(ExecutorProxy callback, MessageProxy argument, MessageProxy result) value;
 
   // ----------------
 
   ExecutorProxy(
-    Void Function(ExecutorProxy, MessageProxy, MessageProxy)? value,
+    Void Function(ExecutorProxy callback, MessageProxy argument, MessageProxy result)? value,
   ) :
     this.value = value ?? ((_, _, _) => throw UnimplementedException());
 
@@ -117,7 +117,7 @@ class ExecutorProxy {
 
   // #region convert
 
-  static final Map<ffi.Pointer<Executor>, (ffi.NativeCallable, ffi.NativeCallable)> _guard = {};
+  static final Map<ffi.Pointer<Executor>, ({ffi.NativeCallable invoke, ffi.NativeCallable clear})> _guard = {};
 
   // ----------------
 
@@ -142,10 +142,10 @@ class ExecutorProxy {
         MessageProxy.construct(argument, argumentProxy);
       }
       {
-        instance.ref.invoke.asFunction<Void Function(ffi.Pointer<Executor>, ffi.Pointer<Executor>, ffi.Pointer<Message>, ffi.Pointer<Message>, ffi.Pointer<Message>)>()(instance, callback, argument, result, exception);
+        instance.ref.invoke.asFunction<Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
         resultProxy.value = MessageProxy.parse(result).value;
         exceptionProxy.value = MessageProxy.parse(exception).value;
-        instance.ref.clear.asFunction<Void Function(ffi.Pointer<Executor>, ffi.Pointer<Executor>, ffi.Pointer<Message>, ffi.Pointer<Message>, ffi.Pointer<Message>)>()(instance, callback, argument, result, exception);
+        instance.ref.clear.asFunction<Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
       }
       {
         ExecutorProxy.destruct(callback);
@@ -170,7 +170,7 @@ class ExecutorProxy {
     ExecutorProxy         proxy,
   ) {
     assertTest(!ExecutorProxy._guard.containsKey(instance));
-    var guardForInvoke = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<Executor>, ffi.Pointer<Executor>, ffi.Pointer<Message>, ffi.Pointer<Message>, ffi.Pointer<Message>)>.isolateLocal((
+    var guardForInvoke = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>.isolateLocal((
       ffi.Pointer<Executor> self,
       ffi.Pointer<Executor> callback,
       ffi.Pointer<Message>  argument,
@@ -191,7 +191,7 @@ class ExecutorProxy {
       }
       return null as Void;
     });
-    var guardForClear = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<Executor>, ffi.Pointer<Executor>, ffi.Pointer<Message>, ffi.Pointer<Message>, ffi.Pointer<Message>)>.isolateLocal((
+    var guardForClear = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>.isolateLocal((
       ffi.Pointer<Executor> self,
       ffi.Pointer<Executor> callback,
       ffi.Pointer<Message>  argument,
@@ -206,7 +206,7 @@ class ExecutorProxy {
       }
       return null as Void;
     });
-    ExecutorProxy._guard[instance] = (guardForInvoke, guardForClear);
+    ExecutorProxy._guard[instance] = (invoke: guardForInvoke, clear: guardForClear);
     instance.ref.invoke = guardForInvoke.nativeFunction;
     instance.ref.clear = guardForClear.nativeFunction;
     return;
@@ -216,8 +216,8 @@ class ExecutorProxy {
     ffi.Pointer<Executor> instance,
   ) {
     var guard = ExecutorProxy._guard[instance]!;
-    guard.$1.close();
-    guard.$2.close();
+    guard.invoke.close();
+    guard.clear.close();
     assertTest(ExecutorProxy._guard.remove(instance) != null);
     instance.ref.invoke = ffi.nullptr;
     instance.ref.clear = ffi.nullptr;

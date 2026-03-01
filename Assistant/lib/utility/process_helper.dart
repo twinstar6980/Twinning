@@ -25,7 +25,7 @@ class ProcessHelper {
 
   // #region process
 
-  static Future<(Integer, String, String)> runProcess(
+  static Future<({Integer code, String output, String error})> runProcess(
     String               program,
     List<String>         argument,
     Map<String, String>? environment,
@@ -38,7 +38,11 @@ class ProcessHelper {
       argument,
       environment: environment,
     );
-    return (process.exitCode, process.stdout.toString(), process.stderr.toString());
+    return (
+      code: process.exitCode,
+      output: process.stdout.toString(),
+      error: process.stderr.toString(),
+    );
   }
 
   // #endregion

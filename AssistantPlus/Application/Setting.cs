@@ -263,7 +263,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public async Task QuickSetup(
+		public async Task QuickSetup (
 			String homeDirectory
 		) {
 			this.Data.ModuleConfigurationDirectory = $"{homeDirectory}/assistant_plus";

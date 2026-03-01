@@ -43,19 +43,19 @@ class VisualHelper {
     return result;
   }
 
-  static List<(String, Integer, Integer)> parseSpriteFrameLabel(
+  static List<({String name, Integer begin, Integer end})> parseSpriteFrameLabel(
     model.Sprite sprite,
   ) {
-    var result = <(String, Integer, Integer)>[];
-    var currentFrameLabel = <(String, Integer)>[];
+    var result = <({String name, Integer begin, Integer end})>[];
+    var currentFrameLabel = <({String name, Integer begin})>[];
     for (var frameIndex = 0; frameIndex < sprite.frame.length; frameIndex++) {
       var frame = sprite.frame[frameIndex];
       if (frame.label != null) {
-        currentFrameLabel.add((frame.label!, frameIndex));
+        currentFrameLabel.add((name: frame.label!, begin: frameIndex));
       }
       if (frame.stop) {
         for (var item in currentFrameLabel) {
-          result.add((item.$1, item.$2, frameIndex));
+          result.add((name: item.name, begin: item.begin, end: frameIndex));
         }
         currentFrameLabel.clear();
       }
@@ -186,9 +186,9 @@ class VisualHelper {
   // ----------------
 
   static Widget visualizeImage(
-    model.Animation                            animation,
-    Map<String, (lib.Image, Integer, Integer)> texture,
-    model.Image                                image,
+    model.Animation                                                 animation,
+    Map<String, ({lib.Image image, Integer width, Integer height})> texture,
+    model.Image                                                     image,
   ) {
     var textureData = texture[image.name];
     return BoxContainer.of(
@@ -197,20 +197,20 @@ class VisualHelper {
         ? null
         : ImageView.of(
           fit: .fill,
-          width: (image.size?.$1 ?? textureData.$2).toDouble(),
-          height: (image.size?.$2 ?? textureData.$3).toDouble(),
-          source: textureData.$1,
+          width: (image.size?.width ?? textureData.width).toDouble(),
+          height: (image.size?.height ?? textureData.height).toDouble(),
+          source: textureData.image,
         ),
     );
   }
 
   static Widget visualizeSprite(
-    model.Animation                            animation,
-    Map<String, (lib.Image, Integer, Integer)> texture,
-    model.Sprite                               sprite,
-    List<Boolean>                              imageFilter,
-    List<Boolean>                              spriteFilter,
-    Animation<Floater>                         driver,
+    model.Animation                                                 animation,
+    Map<String, ({lib.Image image, Integer width, Integer height})> texture,
+    model.Sprite                                                    sprite,
+    List<Boolean>                                                   imageFilter,
+    List<Boolean>                                                   spriteFilter,
+    Animation<Floater>                                              driver,
   ) {
     var layerList = SplayTreeMap<Integer, _VisualLayer?>();
     var frameIndex = 0;
@@ -258,16 +258,16 @@ class VisualHelper {
             return property == null
               ? BoxContainer.none()
               : BoxContainer.of(
-                transform: property.$1,
-                colorFilter: property.$2,
+                transform: property.transform,
+                colorFilter: property.color,
                 child: subView,
               );
           },
         );
         layer.property = .filled(sprite.frame.length, null);
         layer.property[frameIndex] = (
-          _makeMatrix(.new(value: model.TranslateTransform(x: 0.0, y: 0.0))),
-          _makeColor(.new(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),
+          transform: _makeMatrix(.new(value: model.TranslateTransform(x: 0.0, y: 0.0))),
+          color: _makeColor(.new(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),
         );
         layer.isRemoved = false;
         layer.isChanged = true;
@@ -281,14 +281,14 @@ class VisualHelper {
         assertTest(!layer.isRemoved);
         if (layer.isChanged) {
           layer.property[frameIndex] = (
-            _makeMatrix(action.transform),
-            action.color != null ? _makeColor(action.color!) : layer.property[frameIndex]!.$2,
+            transform: _makeMatrix(action.transform),
+            color: action.color != null ? _makeColor(action.color!) : layer.property[frameIndex]!.color,
           );
         }
         else {
           layer.property[frameIndex] = (
-            _makeMatrix(action.transform),
-            action.color != null ? _makeColor(action.color!) : layer.property[frameIndex - 1]!.$2,
+            transform: _makeMatrix(action.transform),
+            color: action.color != null ? _makeColor(action.color!) : layer.property[frameIndex - 1]!.color,
           );
         }
         layer.isChanged = true;
@@ -323,11 +323,11 @@ class VisualHelper {
     return model.ModelHelper.parseDataFromJson(await JsonHelper.deserializeFile(file));
   }
 
-  static Future<Map<String, (lib.Image, Integer, Integer)>> loadTexture(
+  static Future<Map<String, ({lib.Image image, Integer width, Integer height})>> loadTexture(
     String          directory,
     model.Animation animation,
   ) async {
-    var result = <String, (lib.Image, Integer, Integer)>{};
+    var result = <String, ({lib.Image image, Integer width, Integer height})>{};
     for (var image in animation.image) {
       var textureFile = '${directory}/${parseImageFileName(image.name)}.png';
       if (!await StorageHelper.existFile(textureFile)) {
@@ -336,7 +336,7 @@ class VisualHelper {
       var textureData = await StorageHelper.readFile(textureFile);
       var texture = await ConvertHelper.parseImageFromData(textureData, isPng: true);
       var textureDescriptor = await lib.ImageDescriptor.encoded(await .fromUint8List(textureData));
-      result[image.name] = (texture, textureDescriptor.width, textureDescriptor.height);
+      result[image.name] = (image: texture, width: textureDescriptor.width, height: textureDescriptor.height);
     }
     return result;
   }
@@ -346,10 +346,10 @@ class VisualHelper {
 }
 
 class _VisualLayer {
-  late Widget                        view;
-  late List<(Matrix4, ColorFilter)?> property;
-  late Boolean                       isRemoved;
-  late Boolean                       isChanged;
+  late Widget                                          view;
+  late List<({Matrix4 transform, ColorFilter color})?> property;
+  late Boolean                                         isRemoved;
+  late Boolean                                         isChanged;
 }
 
 class _FrameLoopTween extends Animatable<Floater> {

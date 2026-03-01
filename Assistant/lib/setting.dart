@@ -70,17 +70,17 @@ class SettingData {
 }
 
 class SettingState {
-  Future<Void> Function(String, ModuleType, List<String>)? handleLaunch;
-  Future<Void> Function(List<String>)?                     handleForward;
-  Future<Void> Function(List<String>)?                     handleCommand;
-  Future<Void> Function(Uri)?                              handleLink;
-  GlobalKey<NavigatorState>                                applicationNavigatorKey;
-  List<String>                                             themeFontFamliy;
-  Future<Void> Function()?                                 homeShowOnboarding;
-  Future<Void> Function()?                                 homeShowLauncher;
-  Future<Void> Function(ModuleLauncherConfiguration)?      homeInsertPage;
-  List<String>                                             coreTaskWorkerMessageFontFamily;
-  List<List<core_task_worker.ValueExpression>>             coreTaskWorkerSubmissionHistory;
+  Future<Void> Function(String title, ModuleType type, List<String> option)? handleLaunch;
+  Future<Void> Function(List<String> resource)?                              handleForward;
+  Future<Void> Function(List<String> command)?                               handleCommand;
+  Future<Void> Function(Uri link)?                                           handleLink;
+  GlobalKey<NavigatorState>                                                  applicationNavigatorKey;
+  List<String>                                                               themeFontFamliy;
+  Future<Void> Function()?                                                   homeShowOnboarding;
+  Future<Void> Function()?                                                   homeShowLauncher;
+  Future<Void> Function(ModuleLauncherConfiguration configuration)?          homeInsertPage;
+  List<String>                                                               coreTaskWorkerMessageFontFamily;
+  List<List<core_task_worker.ValueExpression>>                               coreTaskWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
     required this.handleForward,
@@ -193,7 +193,7 @@ class SettingProvider with ChangeNotifier {
       windowSizeHeight: 840,
       storagePickerFallbackDirectory: '',
       storagePickerHistoryLocation: {},
-      forwarderDefaultTarget: .core_resource_shipper,
+      forwarderDefaultTarget: .coreResourceShipper,
       forwarderImmediateJump: false,
       moduleConfigurationDirectory: '',
       moduleLauncher: .new(

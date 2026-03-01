@@ -50,7 +50,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
-                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.kernel',
+                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.kernel',
                       );
                       if (target != null) {
                         this.data.kernel = target;
@@ -94,7 +94,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
-                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.script',
+                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.script',
                       );
                       if (target != null) {
                         this.data.script = target;
@@ -140,7 +140,7 @@ class SettingPanel extends StatelessWidget {
                         allowLoadFile: true,
                         allowLoadDirectory: true,
                         allowSaveFile: true,
-                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.argument',
+                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.argument',
                       );
                       if (target != null) {
                         this.data.argument = [...this.data.argument, target];
@@ -206,7 +206,7 @@ class SettingPanel extends StatelessWidget {
                       var target = await StorageDropRegionExtension.pick(
                         context: context,
                         allowLoadFile: true,
-                        location: '@${ModuleHelper.query(.core_task_worker).identifier}.message_font',
+                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.message_font',
                       );
                       if (target != null) {
                         this.data.messageFont = [...this.data.messageFont, target];

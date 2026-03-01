@@ -22,7 +22,7 @@ class CustomLinkHelper {
   }
 
   static Future<Void> listen(
-    Void Function(Uri) handler,
+    Void Function(Uri link) handler,
   ) async {
     assertTest(_initialized);
     _plugin!.uriLinkStream.listen((link) {

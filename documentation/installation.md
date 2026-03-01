@@ -1,10 +1,10 @@
-# 安装流程
+# 安装步骤
 
 - [平台支持](#平台支持)
 
 - [模块组成](#模块组成)
 
-- [安装步骤](#安装步骤)
+- [分步流程](#分步流程)
 
 - [外部程序](#外部程序)
 
@@ -54,15 +54,15 @@
 	
 	> 该模块仅适用于 `Windows` 系统。
 
-## 安装步骤
+## 分步流程
 
-你可以克隆本项目并自行编译，或是直接下载本项目的捆绑包分发。
+用户可以克隆本项目并自行编译，或是直接下载本项目的捆绑包分发。
 
 1. 下载并解压捆绑包。
 	
 	查看 [Release](https://github.com/twinstar6980/Twinning/releases/tag/latest) ，捆绑包分发的命名为 `<version>.<system>.<architecture>.bundle.zip` ，其中 `system` 代表适配的操作系统，`architecture` 代表适配的 CPU 架构。
 	
-	> GitHub Release 中仅保留最后一次分发，历史分发可以在我的 [OneDrive](https://1drv.ms/f/c/2d321feb9cd374ed/Qu1005zrHzIggC2EAAAAAAAAiShIb2wbJMeZsw) 中找到。
+	> GitHub Release 中仅保留最后一次分发，历史分发可以在开发者的 [OneDrive](https://1drv.ms/f/c/2d321feb9cd374ed/Qu1005zrHzIggC2EAAAAAAAAiShIb2wbJMeZsw) 中找到。
 	
 	目前，提供了预编译分发的平台如下：
 	
@@ -154,7 +154,7 @@
 	
 	* `vietnamese` 越文
 
-8. 至此，已经完成了所有安装步骤，你可以通过终端或 GUI 应用使用工具。
+8. 现在，你可以通过终端或 GUI 应用使用工具。
 
 ## 外部程序
 

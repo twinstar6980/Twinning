@@ -55,12 +55,12 @@ class SettingListItem extends StatelessWidget {
 
   // ----------------
 
-  final Boolean                                                                                   enabled;
-  final IconData                                                                                  icon;
-  final String                                                                                    label;
-  final Iterable<Widget>                                                                          comment;
-  final Void Function(BuildContext context)?                                                      onPressed;
-  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function()) setState)? panelBuilder;
+  final Boolean                                                                                          enabled;
+  final IconData                                                                                         icon;
+  final String                                                                                           label;
+  final Iterable<Widget>                                                                                 comment;
+  final Void Function(BuildContext context)?                                                             onPressed;
+  final Iterable<Widget> Function(BuildContext context, Void Function(Void Function() action) setState)? panelBuilder;
 
   // ----------------
 
@@ -376,20 +376,20 @@ extension StorageDropRegionExtension on StorageDropRegion {
     else {
       type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
         position: .under,
-        content: [
+        content: <({String value, String text})>[
           if (allowLoadFile) ...[
-            ('load_file', 'Load File'),
+            (value: 'load_file', text: 'Load File'),
           ],
           if (allowLoadDirectory) ...[
-            ('load_directory', 'Load Directory'),
+            (value: 'load_directory', text: 'Load Directory'),
           ],
           if (allowSaveFile) ...[
-            ('save_file', 'Save File'),
+            (value: 'save_file', text: 'Save File'),
           ],
         ].map((value) => StyledMenuItem.standard(
-          value: value.$1,
+          value: value.value,
           content: StyledText.custom(
-            value.$2,
+            value.text,
             style: textStyle,
           ),
         )),

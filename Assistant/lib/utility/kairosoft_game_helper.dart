@@ -215,13 +215,13 @@ class GameProgramHelper {
   // #region modify
 
   static Future<Void> modify(
-    GamePlatform          platform,
-    String                programFile,
-    String                metadataFile,
-    Boolean               disableRecordEncryption,
-    Boolean               enableDebugMode,
-    dynamic               externalToolSetting,
-    Void Function(String) onNotify,
+    GamePlatform                  platform,
+    String                        programFile,
+    String                        metadataFile,
+    Boolean                       disableRecordEncryption,
+    Boolean                       enableDebugMode,
+    dynamic                       externalToolSetting,
+    Void Function(String message) onNotify,
   ) async {
     onNotify('Phase: dump program information.');
     var dumpData = await ExternalToolHelper.runIl2cppdumper(programFile, metadataFile);
@@ -230,33 +230,33 @@ class GameProgramHelper {
     {
       symbolAddress['CRC64.GetValue'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'CRC64', 'GetValue')
         .selfAlso((it) => assertTest(it.length == 1))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       symbolAddress['Encrypter.Encode'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'Encrypter', 'Encode')
         .selfAlso((it) => assertTest(it.length == 3))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       symbolAddress['Encrypter.Decode'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'Encrypter', 'Decode')
         .selfAlso((it) => assertTest(it.length == 3))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       symbolAddress['RecordStore.ReadRecord'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'RecordStore', 'ReadRecord')
-        .where((it) => !it.$3 && it.$5 == 'int rcId')
+        .where((it) => !it.statically && it.parameter == 'int rcId')
         .selfAlso((it) => assertTest(it.length == 1))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       symbolAddress['RecordStore.WriteRecord'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'RecordStore', 'WriteRecord')
-        .where((it) => !it.$3 && it.$5 == 'int rcId, byte[][] data')
+        .where((it) => !it.statically && it.parameter == 'int rcId, byte[][] data')
         .selfAlso((it) => assertTest(it.length == 1))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       symbolAddress['MyConfig..cctor'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'MyConfig', '.cctor')
         .selfAlso((it) => assertTest(it.length == 1))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       symbolAddress['MyConfig.DEBUG'] = ExternalToolHelper.doIl2cppdumperSearchFieldFromDumpData(dumpData, 'MyConfig', 'DEBUG')
         .selfAlso((it) => assertTest(it.length == 1))
-        .map((it) => it.$1)
+        .map((it) => it.address)
         .toList();
       for (var symbolName in symbolAddress.keys) {
         onNotify('Tip: the symbol \'${symbolName}\' at ${symbolAddress[symbolName]!.map((value) => value.toRadixString(16).padLeft(8, '0')).join(',')}.');
@@ -380,11 +380,11 @@ class GameProgramHelper {
   }
 
   static Future<Void> modifyBundle(
-    String                target,
-    Boolean               disableRecordEncryption,
-    Boolean               enableDebugMode,
-    dynamic               externalToolSetting,
-    Void Function(String) onNotify,
+    String                        target,
+    Boolean                       disableRecordEncryption,
+    Boolean                       enableDebugMode,
+    dynamic                       externalToolSetting,
+    Void Function(String message) onNotify,
   ) async {
     var temporaryDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(temporaryDirectory);
@@ -407,14 +407,14 @@ class GameProgramHelper {
     assertTest(packageType != null);
     onNotify('Tip: the package type is \'${packageType!.name}\'.');
     var packageBundle = null as lib.Archive?;
-    var packagePartList = null as List<(String, lib.Archive)>?;
+    var packagePartList = null as List<({String name, lib.Archive data})>?;
     if (packageType != .flat) {
       onNotify('Phase: load package file.');
       packageBundle = lib.ZipDecoder().decodeBytes(await StorageHelper.readFile(target));
       packagePartList = switch (packageType) {
-        .zip  => [('main.zip', packageBundle)],
-        .apk  => [('main.apk', packageBundle)],
-        .apks => packageBundle.files.where((it) => it.isFile && it.name.toLowerCase().endsWith('.apk')).map((it) => (it.name, lib.ZipDecoder().decodeBytes(it.content))).toList(),
+        .zip  => [(name: 'main.zip', data: packageBundle)],
+        .apk  => [(name: 'main.apk', data: packageBundle)],
+        .apks => packageBundle.files.where((it) => it.isFile && it.name.toLowerCase().endsWith('.apk')).map((it) => (name: it.name, data: lib.ZipDecoder().decodeBytes(it.content))).toList(),
         _     => throw UnreachableException(),
       };
     }
@@ -432,7 +432,7 @@ class GameProgramHelper {
       packagePartList!;
       for (var packagePart in packagePartList) {
         for (var necessaryFileName in necessaryFileNameList) {
-          var necessaryFile = packagePart.$2.find(necessaryFileName);
+          var necessaryFile = packagePart.data.find(necessaryFileName);
           if (necessaryFile == null) {
             continue;
           }
@@ -460,10 +460,10 @@ class GameProgramHelper {
     if (packageType != .flat) {
       onNotify('Phase: repack package file.');
       packagePartList!;
-      var replaceTaskList = <(lib.Archive, GamePlatform)>[];
+      var replaceTaskList = <({lib.Archive data, GamePlatform platform})>[];
       for (var platform in platformList) {
         if (packageType == .zip || packageType == .apk) {
-          replaceTaskList.add((packagePartList.first.$2, platform));
+          replaceTaskList.add((data: packagePartList.first.data, platform: platform));
         }
         if (packageType == .apks) {
           var architectureName = switch (platform) {
@@ -472,18 +472,16 @@ class GameProgramHelper {
             _             => throw UnreachableException(),
           };
           var packagePartName = 'split_config.${architectureName}.apk';
-          replaceTaskList.add((packagePartList.firstWhere((it) => it.$1 == packagePartName).$2, platform));
+          replaceTaskList.add((data: packagePartList.firstWhere((it) => it.name == packagePartName).data, platform: platform));
         }
       }
       for (var replaceTask in replaceTaskList) {
-        var packagePart = replaceTask.$1;
-        var platform = replaceTask.$2;
-        var fileName = _getProgramFilePath(platform);
-        packagePart.removeFile(packagePart.find(fileName)!);
-        packagePart.add(.bytes(fileName, await StorageHelper.readFile('${targetDirectory}/${fileName}')));
+        var fileName = _getProgramFilePath(replaceTask.platform);
+        replaceTask.data.removeFile(replaceTask.data.find(fileName)!);
+        replaceTask.data.add(.bytes(fileName, await StorageHelper.readFile('${targetDirectory}/${fileName}')));
       }
       for (var packagePart in packagePartList) {
-        await StorageHelper.writeFile('${temporaryDirectory}/package/${packagePart.$1}', lib.ZipEncoder().encodeBytes(packagePart.$2));
+        await StorageHelper.writeFile('${temporaryDirectory}/package/${packagePart.name}', lib.ZipEncoder().encodeBytes(packagePart.data));
       }
     }
     if (packageType == .apk || packageType == .apks) {
@@ -493,7 +491,7 @@ class GameProgramHelper {
       var enableSign = false;
       // TODO
       for (var packagePart in packagePartList) {
-        var packagePartFile = '${temporaryDirectory}/package/${packagePart.$1}';
+        var packagePartFile = '${temporaryDirectory}/package/${packagePart.data}';
         if (enableAlign) {
           await ExternalToolHelper.runZipalign(packagePartFile);
         }
@@ -510,14 +508,14 @@ class GameProgramHelper {
     }
     if (packageType == .zip || packageType == .apk) {
       packagePartList!;
-      await StorageHelper.copy('${temporaryDirectory}/package/${packagePartList.first.$1}', target);
+      await StorageHelper.copy('${temporaryDirectory}/package/${packagePartList.first.name}', target);
     }
     if (packageType == .apks) {
       packageBundle!;
       packagePartList!;
       for (var packagePart in packagePartList) {
-        packageBundle.removeFile(packageBundle.find(packagePart.$1)!);
-        packageBundle.add(.bytes(packagePart.$1, await StorageHelper.readFile('${temporaryDirectory}/package/${packagePart.$1}')));
+        packageBundle.removeFile(packageBundle.find(packagePart.name)!);
+        packageBundle.add(.bytes(packagePart.name, await StorageHelper.readFile('${temporaryDirectory}/package/${packagePart.name}')));
       }
       await StorageHelper.writeFile('${temporaryDirectory}/package/bundle.apks', lib.ZipEncoder().encodeBytes(packageBundle));
       await StorageHelper.copy('${temporaryDirectory}/package/bundle.apks', target);
@@ -707,7 +705,7 @@ class GameRepositoryHelper {
     return result;
   }
 
-  static Future<(GameProgramState, GameRecordState)> checkGameState(
+  static Future<({GameProgramState program, GameRecordState record})> checkGameState(
     String  gameDirectory,
     String? version,
     String  user,
@@ -722,7 +720,7 @@ class GameRepositoryHelper {
     if (await StorageHelper.existDirectory('${gameDirectory}/saves/${user}')) {
       recordState = await GameRecordHelper.detectState('${gameDirectory}/saves/${user}', makeKeyFromSteamUser(user));
     }
-    return (programState, recordState);
+    return (program: programState, record: recordState);
   }
 
   // #endregion
@@ -747,8 +745,8 @@ class GameRepositoryHelper {
       information.key = (await StorageHelper.listDirectory('${gameDirectory}/saves', 1, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it)) ?? '0';
     }
     var gameState = await checkGameState(gameDirectory, information.version, information.key!);
-    information.program = gameState.$1;
-    information.record = gameState.$2;
+    information.program = gameState.program;
+    information.record = gameState.record;
     return information;
   }
 
@@ -810,8 +808,8 @@ class GameRepositoryHelper {
     information.icon = await extractProgramIcon('${gameDirectory}/KairoGames.exe');
     information.key = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
     var gameState = await checkGameState(gameDirectory, information.version, information.key!);
-    information.program = gameState.$1;
-    information.record = gameState.$2;
+    information.program = gameState.program;
+    information.record = gameState.record;
     return information;
   }
 

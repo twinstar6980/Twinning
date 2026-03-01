@@ -60,8 +60,8 @@ class Color {
 }
 
 class Rectangle {
-  (Floater, Floater) position;
-  (Floater, Floater) size;
+  ({Floater x, Floater y})          position;
+  ({Floater width, Floater height}) size;
   Rectangle({
     required this.position,
     required this.size,
@@ -135,11 +135,20 @@ class Frame {
   });
 }
 
+class WorkArea {
+  Integer start;
+  Integer duration;
+  WorkArea({
+    required this.start,
+    required this.duration,
+  });
+}
+
 class Sprite {
-  String?             name;
-  Floater?            frameRate;
-  (Integer, Integer)? workArea;
-  List<Frame>         frame;
+  String?     name;
+  Floater?    frameRate;
+  WorkArea?   workArea;
+  List<Frame> frame;
   Sprite({
     required this.name,
     required this.frameRate,
@@ -149,9 +158,9 @@ class Sprite {
 }
 
 class Image {
-  String              name;
-  (Integer, Integer)? size;
-  VariantTransform    transform;
+  String                             name;
+  ({Integer width, Integer height})? size;
+  VariantTransform                   transform;
   Image({
     required this.name,
     required this.size,
@@ -206,13 +215,13 @@ class ModelHelper {
       size: (json['size'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
       image: (json['image'] as List<dynamic>).map((jsonItem) => Image(
         name: (jsonItem['name'] as String),
-        size: (jsonItem['size'] as List<dynamic>).cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
+        size: (jsonItem['size'] as List<dynamic>).cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (width: it[0], height: it[1])),
         transform: (jsonItem['transform'] as List<dynamic>).cast<Floater>().selfLet(parseVariantTransformFromList),
       )).toList(),
       sprite: (json['sprite'] as List<dynamic>).map((jsonItem) => Sprite(
         name: (jsonItem['name'] as String?),
         frameRate: (jsonItem['frame_rate'] as Floater?),
-        workArea: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
+        workArea: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => .new(start: it[0], duration: it[1])),
         frame: (jsonItem['frame'] as List<dynamic>).map((jsonElement) => Frame(
           label: (jsonElement['label'] as String?),
           stop: (jsonElement['stop'] as Boolean),
@@ -238,8 +247,8 @@ class ModelHelper {
             color: (jsonPart['color'] as List<dynamic>?)?.cast<Floater>().selfAlso((it) => assertTest(it.length == 4)).selfLet((it) => Color(red: it[0], green: it[1], blue: it[2], alpha: it[3])),
             spriteFrameNumber: (jsonPart['sprite_frame_number'] as Integer?),
             sourceRectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
-              position: (jsonChild['position'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
-              size: (jsonChild['size'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
+              position: (jsonChild['position'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (x: it[0], y: it[1])),
+              size: (jsonChild['size'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (width: it[0], height: it[1])),
             )),
           )).toList(),
         )).toList(),
@@ -247,7 +256,7 @@ class ModelHelper {
       mainSprite: (json['main_sprite'] as Map<dynamic, dynamic>?)?.selfLet((jsonItem) => Sprite(
         name: (jsonItem['name'] as String?),
         frameRate: (jsonItem['frame_rate'] as Floater?),
-        workArea: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
+        workArea: (jsonItem['size'] as List<dynamic>?)?.cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => .new(start: it[0], duration: it[1])),
         frame: (jsonItem['frame'] as List<dynamic>).map((jsonElement) => Frame(
           label: (jsonElement['label'] as String?),
           stop: (jsonElement['stop'] as Boolean),
@@ -273,8 +282,8 @@ class ModelHelper {
             color: (jsonPart['color'] as List<dynamic>?)?.cast<Floater>().selfAlso((it) => assertTest(it.length == 4)).selfLet((it) => Color(red: it[0], green: it[1], blue: it[2], alpha: it[3])),
             spriteFrameNumber: (jsonPart['sprite_frame_number'] as Integer?),
             sourceRectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
-              position: (jsonChild['position'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
-              size: (jsonChild['size'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (it[0], it[1])),
+              position: (jsonChild['position'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (x: it[0], y: it[1])),
+              size: (jsonChild['size'] as List<dynamic>).cast<Floater>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (width: it[0], height: it[1])),
             )),
           )).toList(),
         )).toList(),

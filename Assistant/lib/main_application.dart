@@ -118,29 +118,29 @@ class MainApplication {
       }
       command = convertedCommand;
     }
-    var optionLaunch = null as (String, ModuleType, List<String>)?;
-    var optionForward = null as (List<String>,)?;
+    var optionLaunch = null as ({String title, ModuleType type, List<String> option})?;
+    var optionForward = null as ({List<String> resource})?;
     var option = CommandLineReader(command);
     if (option.check('-launch')) {
       optionLaunch = (
-        option.nextString(),
-        option.nextString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
-        option.nextStringList(),
+        title: option.nextString(),
+        type: option.nextString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
+        option: option.nextStringList(),
       );
     }
     if (option.check('-forward')) {
       optionForward = (
-        option.nextStringList(),
+        resource: option.nextStringList(),
       );
     }
     if (!option.done()) {
       throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
     }
     if (optionLaunch != null) {
-      await _handleLaunch(optionLaunch.$1, optionLaunch.$2, optionLaunch.$3);
+      await _handleLaunch(optionLaunch.title, optionLaunch.type, optionLaunch.option);
     }
     if (optionForward != null) {
-      await _handleForward(optionForward.$1);
+      await _handleForward(optionForward.resource);
     }
     return;
   }

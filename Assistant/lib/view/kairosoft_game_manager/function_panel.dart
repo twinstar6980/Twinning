@@ -135,7 +135,7 @@ class FunctionPanel extends StatelessWidget {
                           context: context,
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          location: '@${ModuleHelper.query(.core_resource_shipper).identifier}.function.program.target',
+                          location: '@${ModuleHelper.query(.coreResourceShipper).identifier}.function.program.target',
                         );
                         if (target != null) {
                           this.data.programTarget = target;
@@ -250,7 +250,7 @@ class FunctionPanel extends StatelessWidget {
                           context: context,
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          location: '@${ModuleHelper.query(.core_resource_shipper).identifier}.function.record.target_directory',
+                          location: '@${ModuleHelper.query(.coreResourceShipper).identifier}.function.record.target_directory',
                         );
                         if (target != null) {
                           this.data.recordTargetDirectory = target;
@@ -287,7 +287,7 @@ class FunctionPanel extends StatelessWidget {
                           context: context,
                           allowLoadFile: true,
                           allowLoadDirectory: true,
-                          location: '@${ModuleHelper.query(.core_resource_shipper).identifier}.function.record.archive_file',
+                          location: '@${ModuleHelper.query(.coreResourceShipper).identifier}.function.record.archive_file',
                         );
                         if (target != null) {
                           this.data.recordArchiveFile = target;

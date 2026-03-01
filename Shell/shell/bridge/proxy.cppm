@@ -147,7 +147,7 @@ export namespace Twinning::Shell::Bridge {
 
 	public:
 
-		std::function<void  (ExecutorProxy const &, MessageProxy const &, MessageProxy &)> value;
+		std::function<void  (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> value;
 
 	public:
 
@@ -178,7 +178,7 @@ export namespace Twinning::Shell::Bridge {
 		// ----------------
 
 		explicit ExecutorProxy (
-			std::function<void  (ExecutorProxy const &, MessageProxy const &, MessageProxy &)> const & value
+			std::function<void  (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> const & value
 		) :
 			value{value} {
 			return;

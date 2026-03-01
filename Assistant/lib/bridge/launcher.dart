@@ -65,7 +65,7 @@ class Launcher {
       var script = portMessage[1] as String;
       var argument = portMessage[2] as List<String>;
       var result = null as List<String>?;
-      var exception = null as (Object, StackTrace)?;
+      var exception = null as ({Object exception, StackTrace stack})?;
       try {
         var executorCallback = ExecutorProxy(callbackProxy);
         var executorArgument = MessageProxy(['execute', script, ...argument]);
@@ -74,7 +74,7 @@ class Launcher {
         result = executorResult.value;
       }
       catch (e, s) {
-        exception = (e, s);
+        exception = (exception: e, stack: s);
       }
       await streamQueue.cancel();
       sendPort.send(null);
@@ -89,7 +89,7 @@ class Launcher {
       await Isolate.spawn(subWorker, receivePort.sendPort);
       var sendPort = await streamQueue.next as SendPort;
       var result = null as List<String>?;
-      var exception = null as (Object, StackTrace)?;
+      var exception = null as ({Object exception, StackTrace stack})?;
       await client.start();
       sendPort.send([library.symbol(), script, argument]);
       while (await streamQueue.hasNext) {
@@ -97,7 +97,7 @@ class Launcher {
         if (portMessage == null) {
           portMessage = await streamQueue.next as List<dynamic>;
           result = portMessage[0] as List<String>?;
-          exception = portMessage[1] as (Object, StackTrace)?;
+          exception = portMessage[1] as ({Object exception, StackTrace stack})?;
           break;
         }
         else {
@@ -120,7 +120,7 @@ class Launcher {
       await client.finish();
       await streamQueue.cancel();
       if (exception != null) {
-        Error.throwWithStackTrace(exception.$1, exception.$2);
+        Error.throwWithStackTrace(exception.exception, exception.stack);
       }
       return result!;
     };

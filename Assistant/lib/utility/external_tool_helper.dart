@@ -24,18 +24,18 @@ class ExternalToolHelper {
       ],
       null,
     );
-    assertTest(processResult.$2.replaceAll('\r\n', '\n').endsWith('Done!\nPress any key to exit...\n'));
+    assertTest(processResult.output.replaceAll('\r\n', '\n').endsWith('Done!\nPress any key to exit...\n'));
     var result = (await StorageHelper.readFileText('${dumpDirectory}/dump.cs')).split('\n');
     await StorageHelper.remove(dumpDirectory);
     return result;
   }
 
-  static List<(Integer, String, Boolean, String)> doIl2cppdumperSearchFieldFromDumpData(
+  static List<({Integer address, String modifier, Boolean statically, String type})> doIl2cppdumperSearchFieldFromDumpData(
     List<String> source,
     String       className,
     String       fieldName,
   ) {
-    var result = <(Integer, String, Boolean, String)>[];
+    var result = <({Integer address, String modifier, Boolean statically, String type})>[];
     var classRule = RegExp(r'^(private|protected|public) class ([^ ]+)');
     var fieldRule = RegExp(r'^\t(private|protected|public)( static)? (.+) (.+); \/\/ 0x(.+)$');
     for (var index = 0; index < source.length; index++) {
@@ -52,10 +52,10 @@ class ExternalToolHelper {
           continue;
         }
         result.add((
-          Integer.parse(fieldMatch[5]!, radix: 16),
-          fieldMatch[1]!,
-          fieldMatch[2] != null,
-          fieldMatch[3]!,
+          address: Integer.parse(fieldMatch[5]!, radix: 16),
+          modifier: fieldMatch[1]!,
+          statically: fieldMatch[2] != null,
+          type: fieldMatch[3]!,
         ));
       }
       break;
@@ -63,12 +63,12 @@ class ExternalToolHelper {
     return result;
   }
 
-  static List<(Integer, String, Boolean, String, String)> doIl2cppdumperSearchMethodFromDumpData(
+  static List<({Integer address, String modifier, Boolean statically, String result, String parameter})> doIl2cppdumperSearchMethodFromDumpData(
     List<String> source,
     String       className,
     String       methodName,
   ) {
-    var result = <(Integer, String, Boolean, String, String)>[];
+    var result = <({Integer address, String modifier, Boolean statically, String result, String parameter})>[];
     var classRule = RegExp(r'^(private|protected|public) class ([^ ]+)');
     var methodRule = RegExp(r'^\t(private|protected|public)( static)? (.+) (.+)\((.*)\) \{ \}$');
     var commentRule = RegExp(r'^\t\/\/ RVA: 0x(.+) Offset: 0x(.+) VA: 0x(.+)$');
@@ -87,11 +87,11 @@ class ExternalToolHelper {
         }
         var commentMatch = commentRule.firstMatch(source[index - 1])!;
         result.add((
-          Integer.parse(commentMatch[2]!, radix: 16),
-          methodMatch[1]!,
-          methodMatch[2] != null,
-          methodMatch[3]!,
-          methodMatch[5]!,
+          address: Integer.parse(commentMatch[2]!, radix: 16),
+          modifier: methodMatch[1]!,
+          statically: methodMatch[2] != null,
+          result: methodMatch[3]!,
+          parameter: methodMatch[5]!,
         ));
       }
       break;
@@ -117,7 +117,7 @@ class ExternalToolHelper {
       ],
       null,
     );
-    assertTest(processResult.$1 == 0);
+    assertTest(processResult.code == 0);
     await StorageHelper.copy(alignedFile, zipFile);
     await StorageHelper.remove(alignedFile);
     return;
@@ -144,7 +144,7 @@ class ExternalToolHelper {
       ],
       null,
     );
-    assertTest(processResult.$1 == 0);
+    assertTest(processResult.code == 0);
     return;
   }
 

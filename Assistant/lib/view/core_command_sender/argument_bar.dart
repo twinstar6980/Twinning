@@ -425,7 +425,7 @@ class _PathArgumentBar extends StatelessWidget {
                   allowLoadFile: true,
                   allowLoadDirectory: true,
                   allowSaveFile: true,
-                  location: '@${ModuleHelper.query(.core_command_sender).identifier}.generic',
+                  location: '@${ModuleHelper.query(.coreCommandSender).identifier}.generic',
                 );
                 if (target != null) {
                   this.value.value = .new(target);
@@ -498,7 +498,7 @@ class _EnumerationArgumentBar extends StatelessWidget {
               },
             ),
           ],
-          option: this.option.map((value) => (value, ValueExpressionHelper.makeString(value))).toList(),
+          option: this.option.map((value) => (value: value, name: ValueExpressionHelper.makeString(value))).toList(),
           value: value.value,
           onChanged: (context, value) async {
             value as ValueExpression;
