@@ -49,7 +49,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		public Setting Setting => App.Setting.Data.CoreResourceShipper;
+		public Setting Setting => App.Instance.Setting.Data.CoreResourceShipper;
 
 		public Configuration Configuration { get; set; } = default!;
 
@@ -81,7 +81,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public async Task OpenView (
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.json");
 			this.uOptionList_ItemsSource = this.Configuration.Option.Select((group) => (new MainPageOptionGroupItemController() {
 				Host = this,
 				Configuration = group,
@@ -433,14 +433,14 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 					break;
 				}
 				case "PickFile": {
-					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
+					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
 					if (target != null) {
 						await this.AppendResource([target]);
 					}
 					break;
 				}
 				case "PickDirectory": {
-					var target = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
+					var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.resource");
 					if (target != null) {
 						await this.AppendResource([target]);
 					}

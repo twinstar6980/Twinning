@@ -87,7 +87,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Size uSettingThemeBackdrop_SelectedIndex {
 			get {
-				return App.Setting.Data.ThemeBackdrop.CastPrimitive<Size>();
+				return App.Instance.Setting.Data.ThemeBackdrop.CastPrimitive<Size>();
 			}
 		}
 
@@ -96,9 +96,9 @@ namespace Twinning.AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ThemeBackdrop != senders.SelectedIndex.CastPrimitive<CustomThemeBackdrop>()) {
-				App.Setting.Data.ThemeBackdrop = senders.SelectedIndex.CastPrimitive<CustomThemeBackdrop>();
-				await App.Setting.Save();
+			if (App.Instance.Setting.Data.ThemeBackdrop != senders.SelectedIndex.CastPrimitive<CustomThemeBackdrop>()) {
+				App.Instance.Setting.Data.ThemeBackdrop = senders.SelectedIndex.CastPrimitive<CustomThemeBackdrop>();
+				await App.Instance.Setting.Save();
 			}
 			return;
 		}
@@ -113,7 +113,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Size uSettingThemeMode_SelectedIndex {
 			get {
-				return App.Setting.Data.ThemeMode.CastPrimitive<Size>();
+				return App.Instance.Setting.Data.ThemeMode.CastPrimitive<Size>();
 			}
 		}
 
@@ -122,9 +122,9 @@ namespace Twinning.AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ThemeMode != senders.SelectedIndex.CastPrimitive<CustomThemeMode>()) {
-				App.Setting.Data.ThemeMode = senders.SelectedIndex.CastPrimitive<CustomThemeMode>();
-				await App.Setting.Save();
+			if (App.Instance.Setting.Data.ThemeMode != senders.SelectedIndex.CastPrimitive<CustomThemeMode>()) {
+				App.Instance.Setting.Data.ThemeMode = senders.SelectedIndex.CastPrimitive<CustomThemeMode>();
+				await App.Instance.Setting.Save();
 			}
 			return;
 		}
@@ -133,7 +133,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uSettingThemeColor_IsChecked {
 			get {
-				return App.Setting.Data.ThemeColorState;
+				return App.Instance.Setting.Data.ThemeColorState;
 			}
 		}
 
@@ -142,18 +142,18 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<ToggleSplitButton>();
-			App.Setting.Data.ThemeColorState = senders.IsChecked;
+			App.Instance.Setting.Data.ThemeColorState = senders.IsChecked;
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColor_IsChecked),
 				nameof(this.uSettingThemeColor_Content),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
 		public String uSettingThemeColor_Content {
 			get {
-				return !App.Setting.Data.ThemeColorState ? "Default" : "Custom";
+				return !App.Instance.Setting.Data.ThemeColorState ? "Default" : "Custom";
 			}
 		}
 
@@ -162,17 +162,17 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ColorPicker>();
-			App.Setting.Data.ThemeColorLight = ConvertHelper.MakeColorToInteger(senders.Color);
+			App.Instance.Setting.Data.ThemeColorLight = ConvertHelper.MakeColorToInteger(senders.Color);
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColorLight_Color),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
 		public Color uSettingThemeColorLight_Color {
 			get {
-				return ConvertHelper.ParseColorFromInteger(App.Setting.Data.ThemeColorLight);
+				return ConvertHelper.ParseColorFromInteger(App.Instance.Setting.Data.ThemeColorLight);
 			}
 		}
 
@@ -181,17 +181,17 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ColorPicker>();
-			App.Setting.Data.ThemeColorDark = ConvertHelper.MakeColorToInteger(senders.Color);
+			App.Instance.Setting.Data.ThemeColorDark = ConvertHelper.MakeColorToInteger(senders.Color);
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingThemeColorDark_Color),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
 		public Color uSettingThemeColorDark_Color {
 			get {
-				return ConvertHelper.ParseColorFromInteger(App.Setting.Data.ThemeColorDark);
+				return ConvertHelper.ParseColorFromInteger(App.Instance.Setting.Data.ThemeColorDark);
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uSettingWindowPosition_IsChecked {
 			get {
-				return App.Setting.Data.WindowPositionState;
+				return App.Instance.Setting.Data.WindowPositionState;
 			}
 		}
 
@@ -208,18 +208,18 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<ToggleSplitButton>();
-			App.Setting.Data.WindowPositionState = senders.IsChecked;
+			App.Instance.Setting.Data.WindowPositionState = senders.IsChecked;
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPosition_IsChecked),
 				nameof(this.uSettingWindowPosition_Content),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
 		public String uSettingWindowPosition_Content {
 			get {
-				return !App.Setting.Data.WindowPositionState ? "Default" : "Custom";
+				return !App.Instance.Setting.Data.WindowPositionState ? "Default" : "Custom";
 			}
 		}
 
@@ -229,12 +229,12 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowPositionX = senders.Value.CastPrimitive<Integer>();
+				App.Instance.Setting.Data.WindowPositionX = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPositionX_Value),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
@@ -246,7 +246,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Floater uSettingWindowPositionX_Value {
 			get {
-				return App.Setting.Data.WindowPositionX;
+				return App.Instance.Setting.Data.WindowPositionX;
 			}
 		}
 
@@ -256,12 +256,12 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowPositionY = senders.Value.CastPrimitive<Integer>();
+				App.Instance.Setting.Data.WindowPositionY = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowPositionY_Value),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
@@ -273,7 +273,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Floater uSettingWindowPositionY_Value {
 			get {
-				return App.Setting.Data.WindowPositionY;
+				return App.Instance.Setting.Data.WindowPositionY;
 			}
 		}
 
@@ -281,7 +281,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uSettingWindowSize_IsChecked {
 			get {
-				return App.Setting.Data.WindowSizeState;
+				return App.Instance.Setting.Data.WindowSizeState;
 			}
 		}
 
@@ -290,18 +290,18 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<ToggleSplitButton>();
-			App.Setting.Data.WindowSizeState = senders.IsChecked;
+			App.Instance.Setting.Data.WindowSizeState = senders.IsChecked;
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSize_IsChecked),
 				nameof(this.uSettingWindowSize_Content),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
 		public String uSettingWindowSize_Content {
 			get {
-				return !App.Setting.Data.WindowSizeState ? "Default" : "Custom";
+				return !App.Instance.Setting.Data.WindowSizeState ? "Default" : "Custom";
 			}
 		}
 
@@ -311,12 +311,12 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowSizeWidth = senders.Value.CastPrimitive<Integer>();
+				App.Instance.Setting.Data.WindowSizeWidth = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSizeWidth_Value),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
@@ -328,7 +328,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Floater uSettingWindowSizeWidth_Value {
 			get {
-				return App.Setting.Data.WindowSizeWidth;
+				return App.Instance.Setting.Data.WindowSizeWidth;
 			}
 		}
 
@@ -338,12 +338,12 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<NumberBox>();
 			if (Floater.IsFinite(senders.Value)) {
-				App.Setting.Data.WindowSizeHeight = senders.Value.CastPrimitive<Integer>();
+				App.Instance.Setting.Data.WindowSizeHeight = senders.Value.CastPrimitive<Integer>();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingWindowSizeHeight_Value),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
@@ -355,7 +355,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Floater uSettingWindowSizeHeight_Value {
 			get {
-				return App.Setting.Data.WindowSizeHeight;
+				return App.Instance.Setting.Data.WindowSizeHeight;
 			}
 		}
 
@@ -396,7 +396,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Size uSettingForwarderDefaultTarget_SelectedIndex {
 			get {
-				return App.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>();
+				return App.Instance.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>();
 			}
 		}
 
@@ -405,9 +405,9 @@ namespace Twinning.AssistantPlus.View.Home {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (App.Setting.Data.ForwarderDefaultTarget != senders.SelectedIndex.CastPrimitive<ModuleType>()) {
-				App.Setting.Data.ForwarderDefaultTarget = senders.SelectedIndex.CastPrimitive<ModuleType>();
-				await App.Setting.Save();
+			if (App.Instance.Setting.Data.ForwarderDefaultTarget != senders.SelectedIndex.CastPrimitive<ModuleType>()) {
+				App.Instance.Setting.Data.ForwarderDefaultTarget = senders.SelectedIndex.CastPrimitive<ModuleType>();
+				await App.Instance.Setting.Save();
 			}
 			return;
 		}
@@ -416,7 +416,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uSettingForwarderImmediateJump_IsChecked {
 			get {
-				return App.Setting.Data.ForwarderImmediateJump;
+				return App.Instance.Setting.Data.ForwarderImmediateJump;
 			}
 		}
 
@@ -425,18 +425,18 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			App.Setting.Data.ForwarderImmediateJump = senders.IsChecked.AsNotNull();
+			App.Instance.Setting.Data.ForwarderImmediateJump = senders.IsChecked.AsNotNull();
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingForwarderImmediateJump_IsChecked),
 				nameof(this.uSettingForwarderImmediateJump_Content),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 
 		public String uSettingForwarderImmediateJump_Content {
 			get {
-				return !App.Setting.Data.ForwarderImmediateJump ? "Disabled" : "Enabled";
+				return !App.Instance.Setting.Data.ForwarderImmediateJump ? "Disabled" : "Enabled";
 			}
 		}
 
@@ -447,20 +447,20 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			var target = await StorageHelper.PickLoadDirectory(App.MainWindow, "@application.module_configuration_directory");
+			var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, "@application.module_configuration_directory");
 			if (target != null) {
-				App.Setting.Data.ModuleConfigurationDirectory = target;
+				App.Instance.Setting.Data.ModuleConfigurationDirectory = target;
 				this.NotifyPropertyChanged([
 					nameof(this.uSettingModuleConfigurationDirectoryText_Text),
 				]);
-				await App.Setting.Save();
+				await App.Instance.Setting.Save();
 			}
 			return;
 		}
 
 		public String uSettingModuleConfigurationDirectoryText_Text {
 			get {
-				return App.Setting.Data.ModuleConfigurationDirectory;
+				return App.Instance.Setting.Data.ModuleConfigurationDirectory;
 			}
 		}
 
@@ -473,8 +473,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			await StorageHelper.Reveal(App.PackageDirectory);
-			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await StorageHelper.Reveal(App.Instance.PackageDirectory);
+			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -485,8 +485,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			await StorageHelper.Reveal(App.Setting.File);
-			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await StorageHelper.Reveal(App.Instance.Setting.File);
+			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -498,32 +498,32 @@ namespace Twinning.AssistantPlus.View.Home {
 			var changed = false;
 			switch (senders.Tag.As<String>()) {
 				case "Reload": {
-					await App.Setting.Load();
-					await App.Setting.Save();
+					await App.Instance.Setting.Load();
+					await App.Instance.Setting.Save();
 					changed = true;
 					break;
 				}
 				case "Reset": {
 					if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
-						await App.Setting.Reset();
-						await App.Setting.Save();
+						await App.Instance.Setting.Reset();
+						await App.Instance.Setting.Save();
 						changed = true;
 					}
 					break;
 				}
 				case "Import": {
-					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@application.setting_file");
+					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@application.setting_file");
 					if (target != null) {
-						await App.Setting.Load(target);
-						await App.Setting.Save();
+						await App.Instance.Setting.Load(target);
+						await App.Instance.Setting.Save();
 						changed = true;
 					}
 					break;
 				}
 				case "Export": {
-					var target = await StorageHelper.PickSaveFile(App.MainWindow, $"@application.setting_file", "setting.json");
+					var target = await StorageHelper.PickSaveFile(App.Instance.MainWindow, $"@application.setting_file", "setting.json");
 					if (target != null) {
-						await App.Setting.Save(target, false);
+						await App.Instance.Setting.Save(target, false);
 						changed = true;
 					}
 					break;
@@ -547,7 +547,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					nameof(this.uSettingWindowSizeWidth_Value),
 					nameof(this.uSettingWindowSizeHeight_Value),
 				]);
-				await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+				await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			}
 			return;
 		}
@@ -559,8 +559,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await StorageHelper.Reveal(App.SharedDirectory);
-			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await StorageHelper.Reveal(App.Instance.SharedDirectory);
+			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -571,10 +571,10 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (StorageHelper.Exist(App.CacheDirectory)) {
-				StorageHelper.Remove(App.CacheDirectory);
+			if (StorageHelper.Exist(App.Instance.CacheDirectory)) {
+				StorageHelper.Remove(App.Instance.CacheDirectory);
 			}
-			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
+			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
 
@@ -585,7 +585,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await App.MainWindow.ShowOnboarding();
+			await App.Instance.MainWindow.ShowOnboarding();
 			return;
 		}
 

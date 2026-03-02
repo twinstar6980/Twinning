@@ -51,7 +51,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public Setting Setting => App.Setting.Data.PopcapPackageBuilder;
+		public Setting Setting => App.Instance.Setting.Data.PopcapPackageBuilder;
 
 		public Configuration Configuration { get; set; } = default!;
 
@@ -88,7 +88,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public async Task OpenView (
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.json");
 			return;
 		}
 
@@ -156,10 +156,10 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			this.View.uWorkerButton.Flyout.ShowAt(this.View.uWorkerButton);
 			var result = await this.View.uWorkerPage.ExecuteCommand(argument);
 			if (result != null && result.First() == "s") {
-				await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Execute succeeded", "");
+				await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Execute succeeded", "");
 			}
 			else {
-				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Execute failed", "");
+				await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Execute failed", "");
 			}
 			this.WorkerState = false;
 			this.NotifyPropertyChanged([
@@ -177,7 +177,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			if (this.View.uPackageList.SelectedItems.Count != 1) {
-				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
+				await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Please select single package target", "");
 				return;
 			}
 			await this.WorkerExecuteCommand(CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(
@@ -343,7 +343,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(!this.IsLoaded);
 			if (!(await ProjectSettingHelper.CheckVersionFile(projectDirectory))) {
-				await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
+				await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
 			await using var hideDialogFinalizer = new Finalizer(await ControlHelper.ShowDialogForWait(this.View));
@@ -1127,12 +1127,12 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var projectDirectory = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistDirectory(projectDirectory)) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
 					return;
 				}
 				await this.ApplyLoad(projectDirectory);
@@ -1184,7 +1184,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var target = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.project_directory");
+			var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.project_directory");
 			if (target != null) {
 				await this.ApplyLoad(target);
 			}

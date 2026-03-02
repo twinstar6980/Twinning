@@ -70,7 +70,7 @@ namespace Twinning.AssistantPlus {
 				Icon = FluentIconGlyph.ProvisioningPackage,
 				MainPage = typeof(View.CoreTaskWorker.MainPage),
 				SettingPanel = () => new View.CoreTaskWorker.SettingPanel() {
-					Data = App.Setting.Data.CoreTaskWorker,
+					Data = App.Instance.Setting.Data.CoreTaskWorker,
 				},
 				GenerateForwardOption = (resource) => {
 					return ["-additional_argument", ..resource];
@@ -84,7 +84,7 @@ namespace Twinning.AssistantPlus {
 				Icon = FluentIconGlyph.Send,
 				MainPage = typeof(View.CoreCommandSender.MainPage),
 				SettingPanel = () => new View.CoreCommandSender.SettingPanel() {
-					Data = App.Setting.Data.CoreCommandSender,
+					Data = App.Instance.Setting.Data.CoreCommandSender,
 				},
 				GenerateForwardOption = (resource) => {
 					return null;
@@ -98,7 +98,7 @@ namespace Twinning.AssistantPlus {
 				Icon = FluentIconGlyph.Share,
 				MainPage = typeof(View.CoreResourceShipper.MainPage),
 				SettingPanel = () => new View.CoreResourceShipper.SettingPanel() {
-					Data = App.Setting.Data.CoreResourceShipper,
+					Data = App.Instance.Setting.Data.CoreResourceShipper,
 				},
 				GenerateForwardOption = (resource) => {
 					foreach (var resourceItem in resource) {
@@ -117,7 +117,7 @@ namespace Twinning.AssistantPlus {
 				Icon = FluentIconGlyph.HomeGroup,
 				MainPage = typeof(View.PopcapAnimationViewer.MainPage),
 				SettingPanel = () => new View.PopcapAnimationViewer.SettingPanel() {
-					Data = App.Setting.Data.PopcapAnimationViewer,
+					Data = App.Instance.Setting.Data.PopcapAnimationViewer,
 				},
 				GenerateForwardOption = (resource) => {
 					if (resource.Count != 1) {
@@ -144,7 +144,7 @@ namespace Twinning.AssistantPlus {
 				Icon = FluentIconGlyph.Library,
 				MainPage = typeof(View.PopcapReflectionDescriptor.MainPage),
 				SettingPanel = () => new View.PopcapReflectionDescriptor.SettingPanel() {
-					Data = App.Setting.Data.PopcapReflectionDescriptor,
+					Data = App.Instance.Setting.Data.PopcapReflectionDescriptor,
 				},
 				GenerateForwardOption = (resource) => {
 					if (resource.Count != 1) {
@@ -167,7 +167,7 @@ namespace Twinning.AssistantPlus {
 				Icon = FluentIconGlyph.DialShape3,
 				MainPage = typeof(View.PopcapPackageBuilder.MainPage),
 				SettingPanel = () => new View.PopcapPackageBuilder.SettingPanel() {
-					Data = App.Setting.Data.PopcapPackageBuilder,
+					Data = App.Instance.Setting.Data.PopcapPackageBuilder,
 				},
 				GenerateForwardOption = (resource) => {
 					if (resource.Count != 1) {

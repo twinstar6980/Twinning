@@ -48,7 +48,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		public Setting Setting => App.Setting.Data.PopcapReflectionDescriptor;
+		public Setting Setting => App.Instance.Setting.Data.PopcapReflectionDescriptor;
 
 		public Configuration Configuration { get; set; } = default!;
 
@@ -86,7 +86,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		public async Task OpenView (
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.json");
 			return;
 		}
 
@@ -189,12 +189,12 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var descriptorFile = StorageHelper.GetLongPath(item[0].Path);
 				if (!StorageHelper.ExistFile(descriptorFile)) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}
 				await this.ApplyLoad(descriptorFile);
@@ -282,7 +282,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			var senders = sender.As<MenuFlyoutItem>();
 			switch (senders.Tag.As<String>()) {
 				case "Load": {
-					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.descriptor_file");
+					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.descriptor_file");
 					if (target != null) {
 						await this.ApplyLoad(target);
 					}
@@ -396,7 +396,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			var resultValue = PopcapReflectionHelper.MakeDataValue(this.DescriptorMap, objectType, objectValue);
 			var resultText = JsonHelper.SerializeText(resultValue);
 			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(resultText); }));
-			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
+			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}
 

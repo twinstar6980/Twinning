@@ -48,7 +48,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public Setting Setting => App.Setting.Data.CoreCommandSender;
+		public Setting Setting => App.Instance.Setting.Data.CoreCommandSender;
 
 		public Configuration Configuration { get; set; } = default!;
 
@@ -74,7 +74,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public async Task OpenView (
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.json");
 			this.uMethodList_ItemsSource = this.Configuration.Method.Select((group) => (new MainPageMethodGroupItemController() {
 				Host = this,
 				Configuration = group,

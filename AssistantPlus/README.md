@@ -8,11 +8,11 @@
 
 * 要求
 	
-	* [Visual Studio 2026 18.0](https://visualstudio.microsoft.com/downloads/)
+	* [Visual Studio 2026 18.3](https://visualstudio.microsoft.com/downloads/)
 
 ## 第三方库使用
 
-> 参见 [Application.csproj](./Application/Application.csproj) 。
+> 参见 [Directory.Packages.props](./Directory.Packages.props) 。
 
 ## 说明
 

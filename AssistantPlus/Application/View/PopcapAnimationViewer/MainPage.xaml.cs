@@ -54,7 +54,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public Setting Setting => App.Setting.Data.PopcapAnimationViewer;
+		public Setting Setting => App.Instance.Setting.Data.PopcapAnimationViewer;
 
 		public Configuration Configuration { get; set; } = default!;
 
@@ -149,7 +149,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public async Task OpenView (
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.json");
 			return;
 		}
 
@@ -815,7 +815,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
 				if (item.Count != 1) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
 				var itemPath = StorageHelper.GetLongPath(item[0].Path);
@@ -827,7 +827,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(itemPath);
 				}
 				if (animationFile == null) {
-					await App.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");
 					return;
 				}
 				await this.ApplyLoad(animationFile, null, null, null, null, null, null);
@@ -999,7 +999,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 						this.View.uSprite.State = SpriteControl.StateType.Paused;
 					}
 					var isReloaded = false;
-					var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
+					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
 					if (target != null) {
 						await this.ApplyLoad(target, null, null, null, null, null, null);
 						isReloaded = true;
@@ -1015,11 +1015,11 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 						this.View.uSprite.State = SpriteControl.StateType.Paused;
 					}
 					var isReloaded = false;
-					var target = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
+					var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
 					if (target != null) {
 						target = PopcapAnimationHelper.CheckAnimationDirectoryPath(target);
 						if (target == null) {
-							await App.MainWindow.PushNotification(InfoBarSeverity.Error, "The source directory must contain unique animation file.", "");
+							await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "The source directory must contain unique animation file.", "");
 						}
 						else {
 							await this.ApplyLoad(target, null, null, null, null, null, null);

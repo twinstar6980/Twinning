@@ -47,7 +47,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public static String Temporary (
 		) {
-			var parent = App.CacheDirectory;
+			var parent = App.Instance.CacheDirectory;
 			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
 			var result = $"{parent}/{name}";
 			var suffix = 0;
@@ -280,7 +280,7 @@ namespace Twinning.AssistantPlus.Utility {
 			var locationTag = location == null ? null : !location.StartsWith('@') ? null : location[1..];
 			var locationPath = location;
 			if (locationTag != null) {
-				locationPath = App.Setting.Data.StoragePickerHistoryLocation.GetValueOrDefault(locationTag);
+				locationPath = App.Instance.Setting.Data.StoragePickerHistoryLocation.GetValueOrDefault(locationTag);
 			}
 			if (locationPath != null && !StorageHelper.ExistDirectory(locationPath)) {
 				locationPath = null;
@@ -347,13 +347,13 @@ namespace Twinning.AssistantPlus.Utility {
 				}
 			});
 			if (locationTag != null && target != null) {
-				App.Setting.Data.StoragePickerHistoryLocation[locationTag] = type switch {
+				App.Instance.Setting.Data.StoragePickerHistoryLocation[locationTag] = type switch {
 					"LoadFile"      => StorageHelper.Parent(target).AsNotNull(),
 					"LoadDirectory" => target,
 					"SaveFile"      => StorageHelper.Parent(target).AsNotNull(),
 					_               => throw new UnreachableException(),
 				};
-				await App.Setting.Save(apply: false);
+				await App.Instance.Setting.Save(apply: false);
 			}
 			return target;
 		}

@@ -72,33 +72,33 @@ namespace Twinning.AssistantPlus {
 		public async Task Apply (
 		) {
 			// ThemeBackdrop
-			if (this.State.ThemeBackdrop != this.Data.ThemeBackdrop && App.MainWindowIsInitialized) {
-				App.MainWindow.SystemBackdrop = this.Data.ThemeBackdrop switch {
+			if (this.State.ThemeBackdrop != this.Data.ThemeBackdrop && App.Instance.MainWindowIsInitialized) {
+				App.Instance.MainWindow.SystemBackdrop = this.Data.ThemeBackdrop switch {
 					CustomThemeBackdrop.Solid          => null,
 					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
 					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
 					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
 					_                                  => throw new UnreachableException(),
 				};
-				App.MainWindow.uBackground.Visibility = this.Data.ThemeBackdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
+				App.Instance.MainWindow.uBackground.Visibility = this.Data.ThemeBackdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;
 				this.State.ThemeBackdrop = this.Data.ThemeBackdrop;
 			}
 			// ThemeMode
-			if (this.State.ThemeMode != this.Data.ThemeMode && App.MainWindowIsInitialized) {
-				App.MainWindow.Content.As<FrameworkElement>().RequestedTheme = this.Data.ThemeMode switch {
+			if (this.State.ThemeMode != this.Data.ThemeMode && App.Instance.MainWindowIsInitialized) {
+				App.Instance.MainWindow.Content.As<FrameworkElement>().RequestedTheme = this.Data.ThemeMode switch {
 					CustomThemeMode.System => ElementTheme.Default,
 					CustomThemeMode.Light  => ElementTheme.Light,
 					CustomThemeMode.Dark   => ElementTheme.Dark,
 					_                      => throw new UnreachableException(),
 				};
-				App.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.ThemeMode switch {
+				App.Instance.MainWindow.AppWindow.TitleBar.ButtonForegroundColor = this.Data.ThemeMode switch {
 					CustomThemeMode.System => null,
 					CustomThemeMode.Light  => Colors.Black,
 					CustomThemeMode.Dark   => Colors.White,
 					_                      => throw new UnreachableException(),
 				};
 				await ControlHelper.IterateDialog(async (it) => {
-					it.RequestedTheme = App.MainWindow.Content.As<FrameworkElement>().RequestedTheme;
+					it.RequestedTheme = App.Instance.MainWindow.Content.As<FrameworkElement>().RequestedTheme;
 				});
 				this.State.ThemeMode = this.Data.ThemeMode;
 			}
@@ -139,9 +139,9 @@ namespace Twinning.AssistantPlus {
 						it.Description = "";
 					});
 				};
-				list.AddRange(App.Setting.Data.ModuleLauncher.Module.Select((it) => generateItem(ModuleLauncherCategory.Module, it)));
-				list.AddRange(App.Setting.Data.ModuleLauncher.Pinned.Select((it) => generateItem(ModuleLauncherCategory.Pinned, it)));
-				list.AddRange(App.Setting.Data.ModuleLauncher.Recent.Select((it) => generateItem(ModuleLauncherCategory.Recent, it)));
+				list.AddRange(App.Instance.Setting.Data.ModuleLauncher.Module.Select((it) => generateItem(ModuleLauncherCategory.Module, it)));
+				list.AddRange(App.Instance.Setting.Data.ModuleLauncher.Pinned.Select((it) => generateItem(ModuleLauncherCategory.Pinned, it)));
+				list.AddRange(App.Instance.Setting.Data.ModuleLauncher.Recent.Select((it) => generateItem(ModuleLauncherCategory.Recent, it)));
 				await JumpListHelper.Apply(list);
 			}
 			// CoreTaskWorker.MessageFont
@@ -157,7 +157,7 @@ namespace Twinning.AssistantPlus {
 
 		public String File {
 			get {
-				return $"{App.SharedDirectory}/setting.json";
+				return $"{App.Instance.SharedDirectory}/setting.json";
 			}
 		}
 

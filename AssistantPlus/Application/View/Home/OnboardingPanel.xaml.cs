@@ -79,10 +79,10 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var target = await StorageHelper.PickLoadFile(App.MainWindow, $"@application.setting_file");
+			var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@application.setting_file");
 			if (target != null) {
-				await App.Setting.Load(target);
-				await App.Setting.Save();
+				await App.Instance.Setting.Load(target);
+				await App.Instance.Setting.Save();
 				this.PanelExit();
 			}
 			return;
@@ -93,10 +93,10 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var target = await StorageHelper.PickLoadDirectory(App.MainWindow, $"@application.home_directory");
+			var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, $"@application.home_directory");
 			if (target != null) {
-				await App.Setting.QuickSetup(target);
-				await App.Setting.Save();
+				await App.Instance.Setting.QuickSetup(target);
+				await App.Instance.Setting.Save();
 				this.PanelExit();
 			}
 			return;

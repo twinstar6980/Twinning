@@ -189,7 +189,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			AssertTest(this.Host.IsLoaded);
 			var model = this.Host.DescriptorList[this.Index.Item1].Property[this.Index.Item2];
 			Clipboard.SetContent(new DataPackage().SelfAlso((it) => { it.SetText(model.Name); }));
-			await App.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
+			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Copied!", "");
 			return;
 		}
 

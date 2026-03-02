@@ -14,35 +14,42 @@ namespace Twinning.AssistantPlus {
 
 		public static App Instance { get; private set; } = default!;
 
-		public static SettingProvider Setting { get; private set; } = default!;
-
-		public static View.Home.MainWindow MainWindow { get; private set; } = default!;
-
-		public static String PackageDirectory { get; private set; } = default!;
-
-		public static String ProgramFile { get; private set; } = default!;
-
-		public static String SharedDirectory { get; private set; } = default!;
-
-		public static String CacheDirectory { get; private set; } = default!;
-
-		// ----------------
-
-		public static Boolean MainWindowIsInitialized {
-			get {
-				// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-				return App.MainWindow != null;
-			}
-		}
-
 		#endregion
 
 		#region life
 
+		public String PackageDirectory { get; }
+
+		public String ProgramFile { get; }
+
+		public String SharedDirectory { get; }
+
+		public String CacheDirectory { get; }
+
+		public SettingProvider Setting { get; }
+
+		public View.Home.MainWindow MainWindow { get; private set; }
+
+		public Boolean MainWindowIsInitialized {
+			get {
+				// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+				return this.MainWindow != null;
+			}
+		}
+
+		// ----------------
+
 		public App (
 		) {
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+			AssertTest(App.Instance == null);
 			App.Instance = this;
-			App.Setting = new ();
+			this.PackageDirectory = StorageHelper.Regularize(Package.Current.InstalledPath);
+			this.ProgramFile = $"{this.PackageDirectory}/Application.exe";
+			this.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{ApplicationInformation.Identifier}");
+			this.CacheDirectory = $"{this.SharedDirectory}/cache";
+			this.Setting = new ();
+			this.MainWindow = null!;
 			this.InitializeComponent();
 			return;
 		}
@@ -53,43 +60,39 @@ namespace Twinning.AssistantPlus {
 			LaunchActivatedEventArgs args
 		) {
 			try {
+				var argument = Environment.GetCommandLineArgs()[1..];
 				ExceptionHelper.Initialize(this);
 				ExceptionHelper.Listen(async (exception) => {
-					_ = this.HandleException(exception, App.MainWindow);
+					_ = this.HandleException(exception, this.MainWindow);
 					return;
 				});
-				App.PackageDirectory = StorageHelper.Regularize(Package.Current.InstalledPath);
-				App.ProgramFile = $"{App.PackageDirectory}/Application.exe";
-				App.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{ApplicationInformation.Identifier}");
-				App.CacheDirectory = $"{App.SharedDirectory}/cache";
-				var argument = Environment.GetCommandLineArgs()[1..];
 				var needShowOnboarding = false;
 				try {
-					await App.Setting.Load();
+					await this.Setting.Load();
 				}
 				catch (Exception) {
 					needShowOnboarding = true;
 				}
-				await App.Setting.Save(apply: false);
+				await this.Setting.Save(apply: false);
 				NotificationHelper.Initialize();
 				JumpListHelper.Initialize();
-				App.MainWindow = new ();
-				if (App.Setting.Data.WindowSizeState) {
-					WindowHelper.SetSize(App.MainWindow, App.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), App.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
+				this.MainWindow = new ();
+				if (this.Setting.Data.WindowSizeState) {
+					WindowHelper.SetSize(this.MainWindow, this.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), this.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
 				}
-				if (App.Setting.Data.WindowPositionState) {
-					WindowHelper.SetPosition(App.MainWindow, App.Setting.Data.WindowPositionX.CastPrimitive<Size>(), App.Setting.Data.WindowPositionY.CastPrimitive<Size>());
+				if (this.Setting.Data.WindowPositionState) {
+					WindowHelper.SetPosition(this.MainWindow, this.Setting.Data.WindowPositionX.CastPrimitive<Size>(), this.Setting.Data.WindowPositionY.CastPrimitive<Size>());
 				}
 				else {
-					WindowHelper.SetAtCenter(App.MainWindow);
+					WindowHelper.SetAtCenter(this.MainWindow);
 				}
-				_ = App.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
-					await ControlHelper.PostTask(App.MainWindow.Content.As<FrameworkElement>(), async () => {
+				_ = this.MainWindow.DispatcherQueue.EnqueueAsync(async () => {
+					await ControlHelper.PostTask(this.MainWindow.Content.As<FrameworkElement>(), async () => {
 						if (needShowOnboarding) {
-							await App.MainWindow.ShowOnboarding();
+							await this.MainWindow.ShowOnboarding();
 						}
 						NotificationHelper.Listen(async () => {
-							WindowHelper.SetAsForeground(App.MainWindow);
+							WindowHelper.SetAsForeground(this.MainWindow);
 							return;
 						});
 						if (argument.Length == 1 && argument[0].StartsWith($"{ApplicationInformation.Identifier}:")) {
@@ -99,12 +102,12 @@ namespace Twinning.AssistantPlus {
 							await this.HandleCommand(argument[1..].ToList());
 						}
 						else {
-							await App.MainWindow.ShowLauncher();
+							await this.MainWindow.ShowLauncher();
 						}
 					});
 				}).SelfLet(ExceptionHelper.WrapTask);
-				await App.Setting.Apply();
-				WindowHelper.Activate(App.MainWindow);
+				await this.Setting.Apply();
+				WindowHelper.Activate(this.MainWindow);
 			}
 			catch (Exception e) {
 				_ = this.HandleExceptionFatal(e);
@@ -119,19 +122,19 @@ namespace Twinning.AssistantPlus {
 		public async Task AppendRecentLauncherItem (
 			ModuleLauncherConfiguration launcher
 		) {
-			var pinnedItem = App.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
+			var pinnedItem = this.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
 			if (pinnedItem != null) {
 				return;
 			}
-			var recentItem = App.Setting.Data.ModuleLauncher.Recent.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
+			var recentItem = this.Setting.Data.ModuleLauncher.Recent.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
 			if (recentItem != null) {
-				App.Setting.Data.ModuleLauncher.Recent.Remove(recentItem);
-				App.Setting.Data.ModuleLauncher.Recent.Insert(0, recentItem);
+				this.Setting.Data.ModuleLauncher.Recent.Remove(recentItem);
+				this.Setting.Data.ModuleLauncher.Recent.Insert(0, recentItem);
 			}
 			else {
-				App.Setting.Data.ModuleLauncher.Recent.Insert(0, launcher);
+				this.Setting.Data.ModuleLauncher.Recent.Insert(0, launcher);
 			}
-			await App.Setting.Save();
+			await this.Setting.Save();
 			return;
 		}
 
@@ -140,10 +143,10 @@ namespace Twinning.AssistantPlus {
 			Boolean                     forNewWindow
 		) {
 			if (!forNewWindow) {
-				await App.MainWindow.InsertPage(launcher);
+				await this.MainWindow.InsertPage(launcher);
 			}
 			else {
-				await ProcessHelper.RunProcess(App.ProgramFile, ModuleHelper.GenerateArgument(launcher), null, false);
+				await ProcessHelper.RunProcess(this.ProgramFile, ModuleHelper.GenerateArgument(launcher), null, false);
 			}
 			return;
 		}
@@ -186,12 +189,12 @@ namespace Twinning.AssistantPlus {
 				};
 				window.Closed += async (_, _) => {
 					// if the user close the window externally, the dialog task will not complete, so put the step to close MainWindow in the Closed event
-					if (App.MainWindowIsInitialized) {
-						WindowHelper.Close(App.MainWindow);
+					if (App.Instance.MainWindowIsInitialized) {
+						WindowHelper.Close(this.MainWindow);
 					}
 					return;
 				};
-				WindowHelper.SetIcon(window, $"{App.PackageDirectory}/Asset/Logo.ico");
+				WindowHelper.SetIcon(window, $"{this.PackageDirectory}/Asset/Logo.ico");
 				WindowHelper.SetTitle(window, ApplicationInformation.Name);
 				WindowHelper.SetTitleBar(window, true, null, false);
 				WindowHelper.Activate(window);
@@ -211,7 +214,7 @@ namespace Twinning.AssistantPlus {
 			ModuleType   type,
 			List<String> option
 		) {
-			await App.MainWindow.InsertPage(new () {
+			await this.MainWindow.InsertPage(new () {
 				Title = title,
 				Type = type,
 				Option = option,
@@ -224,8 +227,8 @@ namespace Twinning.AssistantPlus {
 			List<String> resource
 		) {
 			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
-			var targetType = forwardOption[App.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? App.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
-			var canContinue = (App.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(App.MainWindow.Content.As<FrameworkElement>(), "Forward", new ItemsRepeater() {
+			var targetType = forwardOption[this.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? this.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
+			var canContinue = (this.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(this.MainWindow.Content.As<FrameworkElement>(), "Forward", new ItemsRepeater() {
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 				VerticalAlignment = VerticalAlignment.Stretch,
 				ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {
@@ -283,13 +286,13 @@ namespace Twinning.AssistantPlus {
 				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
 			}
 			if (optionWindowSize != null) {
-				WindowHelper.SetSize(App.MainWindow, optionWindowSize.Item1.CastPrimitive<Size>(), optionWindowSize.Item2.CastPrimitive<Size>());
+				WindowHelper.SetSize(this.MainWindow, optionWindowSize.Item1.CastPrimitive<Size>(), optionWindowSize.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition != null) {
-				WindowHelper.SetPosition(App.MainWindow, optionWindowPosition.Item1.CastPrimitive<Size>(), optionWindowPosition.Item2.CastPrimitive<Size>());
+				WindowHelper.SetPosition(this.MainWindow, optionWindowPosition.Item1.CastPrimitive<Size>(), optionWindowPosition.Item2.CastPrimitive<Size>());
 			}
 			if (optionWindowPosition == null && optionWindowSize != null) {
-				WindowHelper.SetAtCenter(App.MainWindow);
+				WindowHelper.SetAtCenter(this.MainWindow);
 			}
 			if (optionLaunch != null) {
 				await this.HandleLaunch(optionLaunch.Item1, optionLaunch.Item2, optionLaunch.Item3);

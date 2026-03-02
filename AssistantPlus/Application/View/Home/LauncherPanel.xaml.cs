@@ -67,9 +67,9 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public async Task UpdateView (
 		) {
-			this.uModuleLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Module.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value })).ToList();
-			this.uPinnedLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Pinned.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value })).ToObservableCollection();
-			this.uRecentLauncherList_ItemsSource = App.Setting.Data.ModuleLauncher.Recent.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Recent, Configuration = value })).ToObservableCollection();
+			this.uModuleLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Module.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value })).ToList();
+			this.uPinnedLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Pinned.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value })).ToObservableCollection();
+			this.uRecentLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Recent.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Recent, Configuration = value })).ToObservableCollection();
 			this.NotifyPropertyChanged([
 				nameof(this.uModuleLauncherList_ItemsSource),
 				nameof(this.uPinnedLauncherList_ItemsSource),
@@ -142,14 +142,14 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			App.Setting.Data.ModuleLauncher.Pinned.Add(new () {
+			App.Instance.Setting.Data.ModuleLauncher.Pinned.Add(new () {
 				Title = "Untitled",
 				Type = ModuleType.CoreTaskWorker,
 				Option = [],
 				Command = [],
 			});
-			this.uPinnedLauncherList_ItemsSource.Add(new () { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = App.Setting.Data.ModuleLauncher.Pinned[^1] });
-			await App.Setting.Save();
+			this.uPinnedLauncherList_ItemsSource.Add(new () { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = App.Instance.Setting.Data.ModuleLauncher.Pinned[^1] });
+			await App.Instance.Setting.Save();
 			return;
 		}
 
@@ -173,9 +173,9 @@ namespace Twinning.AssistantPlus.View.Home {
 			var senders = sender.As<Button>();
 			this.PanelExit();
 			if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
-				App.Setting.Data.ModuleLauncher.Recent.Clear();
+				App.Instance.Setting.Data.ModuleLauncher.Recent.Clear();
 				this.uRecentLauncherList_ItemsSource.Clear();
-				await App.Setting.Save();
+				await App.Instance.Setting.Save();
 			}
 			this.PanelEnter();
 			return;
@@ -231,7 +231,7 @@ namespace Twinning.AssistantPlus.View.Home {
 				nameof(this.uIcon_Glyph),
 				nameof(this.uTitle_Text),
 			]);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			this.Host.PanelEnter();
 			return;
 		}
@@ -261,7 +261,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			AssertTest(this.Category == ModuleLauncherCategory.Module);
 			this.Host.PanelExit();
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", ModuleHelper.Query(this.Configuration.Type).SettingPanel(), null);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			this.Host.PanelEnter();
 			return;
 		}
@@ -281,16 +281,16 @@ namespace Twinning.AssistantPlus.View.Home {
 			if (this.Category == ModuleLauncherCategory.Pinned) {
 				this.Host.PanelExit();
 				if (await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
-					App.Setting.Data.ModuleLauncher.Pinned.Remove(this.Configuration);
+					App.Instance.Setting.Data.ModuleLauncher.Pinned.Remove(this.Configuration);
 					this.Host.uPinnedLauncherList_ItemsSource.Remove(this);
-					await App.Setting.Save();
+					await App.Instance.Setting.Save();
 				}
 				this.Host.PanelEnter();
 			}
 			if (this.Category == ModuleLauncherCategory.Recent) {
-				App.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
+				App.Instance.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
 				this.Host.uRecentLauncherList_ItemsSource.Remove(this);
-				await App.Setting.Save();
+				await App.Instance.Setting.Save();
 			}
 			return;
 		}
@@ -307,11 +307,11 @@ namespace Twinning.AssistantPlus.View.Home {
 		) {
 			var senders = sender.As<Button>();
 			AssertTest(this.Category == ModuleLauncherCategory.Recent);
-			App.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
-			App.Setting.Data.ModuleLauncher.Pinned.Add(this.Configuration);
+			App.Instance.Setting.Data.ModuleLauncher.Recent.Remove(this.Configuration);
+			App.Instance.Setting.Data.ModuleLauncher.Pinned.Add(this.Configuration);
 			this.Host.uPinnedLauncherList_ItemsSource.Add(new () { Host = this.Host, Category = ModuleLauncherCategory.Pinned, Configuration = this.Configuration });
 			this.Host.uRecentLauncherList_ItemsSource.Remove(this);
-			await App.Setting.Save();
+			await App.Instance.Setting.Save();
 			return;
 		}
 

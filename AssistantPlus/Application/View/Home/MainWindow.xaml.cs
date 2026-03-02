@@ -22,7 +22,7 @@ namespace Twinning.AssistantPlus.View.Home {
 		public MainWindow (
 		) {
 			this.InitializeComponent();
-			WindowHelper.SetIcon(this, $"{App.PackageDirectory}/Asset/Logo.ico");
+			WindowHelper.SetIcon(this, $"{App.Instance.PackageDirectory}/Asset/Logo.ico");
 			WindowHelper.SetTitle(this, ApplicationInformation.Name);
 			WindowHelper.SetTitleBar(this, true, this.uTab.TabStripFooter.As<UIElement>(), false);
 			this.Controller = new () { View = this };
@@ -183,8 +183,8 @@ namespace Twinning.AssistantPlus.View.Home {
 				Option = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CollectOption(),
 				Command = [],
 			};
-			App.Setting.Data.ModuleLauncher.Pinned.Add(configuration);
-			await App.Setting.Save();
+			App.Instance.Setting.Data.ModuleLauncher.Pinned.Add(configuration);
+			await App.Instance.Setting.Save();
 			return;
 		}
 

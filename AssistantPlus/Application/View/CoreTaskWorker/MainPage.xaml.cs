@@ -63,7 +63,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public Setting Setting => App.Setting.Data.CoreTaskWorker;
+		public Setting Setting => App.Instance.Setting.Data.CoreTaskWorker;
 
 		public Configuration Configuration { get; set; } = default!;
 
@@ -96,7 +96,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public async Task OpenView (
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.json");
 			return;
 		}
 
@@ -206,7 +206,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			SubmissionType type,
 			List<String>   option
 		) {
-			var history = App.Setting.State.CoreTaskWorkerSubmissionHistory[type.CastPrimitive<Size>()];
+			var history = App.Instance.Setting.State.CoreTaskWorkerSubmissionHistory[type.CastPrimitive<Size>()];
 			this.SubmissionState = true;
 			this.NotifyPropertyChanged([
 				nameof(this.uProgress_ProgressPaused),
@@ -669,7 +669,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				"save_file"      => "SaveFile",
 				_                => throw new (),
 			};
-			target = await StorageHelper.Pick(typeValue, App.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null) ?? "";
+			target = await StorageHelper.Pick(typeValue, App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null) ?? "";
 			return new (target);
 		}
 
