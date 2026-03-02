@@ -152,12 +152,115 @@ export namespace Twinning::Shell {
 
 	// ----------------
 
-	struct MainConsole {
+	class MainConsole {
+
+	public:
+
+		#pragma region singleton
+
+		inline static auto instance (
+		) -> MainConsole & {
+			static auto field = MainConsole{nullptr};
+			return field;
+		}
+
+		#pragma endregion
+
+	protected:
+
+		#pragma region constructor
+
+		explicit MainConsole (
+			std::nullptr_t placeholder
+		) {
+			return;
+		}
+
+		#pragma endregion
+
+	public:
+
+		#pragma region constructor
+
+		~MainConsole (
+		) {
+			return;
+		}
+
+		// ----------------
+
+		MainConsole (
+		) = delete;
+
+		MainConsole (
+			MainConsole const & that
+		) = delete;
+
+		MainConsole (
+			MainConsole && that
+		) = delete;
+
+		#pragma endregion
+
+		#pragma region operator
+
+		auto operator = (
+			MainConsole const & that
+		) -> MainConsole & = delete;
+
+		auto operator = (
+			MainConsole && that
+		) -> MainConsole & = delete;
+
+		#pragma endregion
+
+		#pragma region life
+
+		auto run (
+			int const &                argc,
+			void const * const* const& argv,
+			void * const&              extra
+		) -> int {
+			#if defined M_build_release
+			try
+			#endif
+			{
+				auto args = std::vector<std::string>{};
+				args.reserve(static_cast<std::size_t>(argc));
+				for (auto & arg : std::span{argv, static_cast<std::size_t>(argc)}) {
+					#if defined M_system_windows
+					args.emplace_back(SystemNativeString::wide_to_utf8(std::wstring_view{static_cast<wchar_t const *>(arg)}));
+					#endif
+					#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+					args.emplace_back(static_cast<char const *>(arg));
+					#endif
+				}
+				#if defined M_system_windows
+				Third::system::windows::$SetProcessPreferredUILanguages(Third::system::windows::$MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
+				#endif
+				std::locale::global(std::locale::classic());
+				assert_test(args.size() >= 3);
+				auto result = thiz.launch_session(static_cast<Bridge::Service *>(extra), args[1], args[2], std::vector<std::string>{args.begin() + 3, args.end()});
+				return result.has_value() ? 0 : 1;
+			}
+			#if defined M_build_release
+			catch (...) {
+				auto exception = parse_current_exception();
+				Interaction::output_text("EXCEPTION");
+				Interaction::output_text("\n");
+				Interaction::output_text(exception);
+				Interaction::output_text("\n");
+				return 1;
+			}
+			#endif
+		}
+
+		#pragma endregion
 
 		#pragma region utility
 
-		inline static auto launch_session (
-			Bridge::Service * const &        kernel_library_symbol,
+		auto launch_session (
+			Bridge::Service * const&         kernel_library_symbol,
 			std::string const &              kernel,
 			std::string const &              script,
 			std::vector<std::string> const & argument
@@ -187,49 +290,6 @@ export namespace Twinning::Shell {
 				Interaction::output_text("\n");
 			}
 			return exception.has_value() ? std::nullopt : result;
-		}
-
-		#pragma endregion
-
-		#pragma region life
-
-		inline static auto run (
-			int const &                  argc,
-			void const * const * const & argv,
-			void * const &               extra
-		) -> int {
-			#if defined M_build_release
-			try
-			#endif
-			{
-				auto args = std::vector<std::string>{};
-				args.reserve(static_cast<std::size_t>(argc));
-				for (auto & arg : std::span{argv, static_cast<std::size_t>(argc)}) {
-					#if defined M_system_windows
-					args.emplace_back(SystemNativeString::wide_to_utf8(std::wstring_view{static_cast<wchar_t const *>(arg)}));
-					#endif
-					#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-					args.emplace_back(static_cast<char const *>(arg));
-					#endif
-				}
-				#if defined M_system_windows
-				Third::system::windows::$SetProcessPreferredUILanguages(Third::system::windows::$MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
-				#endif
-				std::locale::global(std::locale::classic());
-				assert_test(args.size() >= 3);
-				auto result = launch_session(static_cast<Bridge::Service *>(extra), args[1], args[2], std::vector<std::string>{args.begin() + 3, args.end()});
-				return result.has_value() ? 0 : 1;
-			}
-			#if defined M_build_release
-			catch (...) {
-				auto exception = parse_current_exception();
-				Interaction::output_text("EXCEPTION");
-				Interaction::output_text("\n");
-				Interaction::output_text(exception);
-				Interaction::output_text("\n");
-				return 1;
-			}
-			#endif
 		}
 
 		#pragma endregion

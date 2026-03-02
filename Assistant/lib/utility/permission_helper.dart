@@ -14,7 +14,7 @@ class PermissionHelper {
       state = true;
     }
     if (SystemChecker.isAndroid) {
-      state = await PlatformMethod.checkExternalStoragePermission('check');
+      state = (await PlatformMethod.checkExternalStoragePermission('check')).state;
     }
     if (SystemChecker.isIphone) {
       state = true;
@@ -29,7 +29,7 @@ class PermissionHelper {
       state = true;
     }
     if (SystemChecker.isAndroid) {
-      state = await PlatformMethod.checkExternalStoragePermission('request');
+      state = (await PlatformMethod.checkExternalStoragePermission('request')).state;
     }
     if (SystemChecker.isIphone) {
       state = true;

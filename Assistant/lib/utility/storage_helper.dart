@@ -322,15 +322,15 @@ class StorageHelper {
       }
     }
     if (SystemChecker.isAndroid) {
-      locationPath ??= await PlatformMethod.queryExternalStoragePath();
+      locationPath ??= (await PlatformMethod.queryExternalStoragePath()).path;
       if (type == 'load_file') {
-        target = await PlatformMethod.pickStorageItem('load_file', locationPath, name);
+        target = (await PlatformMethod.pickStorageItem('load_file', locationPath, name)).target;
       }
       if (type == 'load_directory') {
-        target = await PlatformMethod.pickStorageItem('load_directory', locationPath, name);
+        target = (await PlatformMethod.pickStorageItem('load_directory', locationPath, name)).target;
       }
       if (type == 'save_file') {
-        target = await PlatformMethod.pickStorageItem('save_file', locationPath, name);
+        target = (await PlatformMethod.pickStorageItem('save_file', locationPath, name)).target;
       }
       if (target != null) {
         target = await parseAndroidContentUri(context, Uri.parse(target), true);
@@ -339,10 +339,10 @@ class StorageHelper {
     if (SystemChecker.isIphone) {
       locationPath ??= await queryApplicationSharedDirectory();
       if (type == 'load_file') {
-        target = await PlatformMethod.pickStorageItem('load_file', locationPath, name);
+        target = (await PlatformMethod.pickStorageItem('load_file', locationPath, name)).target;
       }
       if (type == 'load_directory') {
-        target = await PlatformMethod.pickStorageItem('load_directory', locationPath, name);
+        target = (await PlatformMethod.pickStorageItem('load_directory', locationPath, name)).target;
       }
       if (type == 'save_file') {
         throw UnsupportedException();
@@ -437,12 +437,12 @@ class StorageHelper {
         // /document/primary:<path-relative-external-storage>
         if (path.startsWith('/document/primary:')) {
           result = path.substring('/document/primary:'.length);
-          result = '${await PlatformMethod.queryExternalStoragePath()}${result.isEmpty ? '' : '/'}${result}';
+          result = '${(await PlatformMethod.queryExternalStoragePath()).path}${result.isEmpty ? '' : '/'}${result}';
         }
         // /tree/primary:<path-relative-external-storage>
         if (path.startsWith('/tree/primary:')) {
           result = path.substring('/tree/primary:'.length);
-          result = '${await PlatformMethod.queryExternalStoragePath()}${result.isEmpty ? '' : '/'}${result}';
+          result = '${(await PlatformMethod.queryExternalStoragePath()).path}${result.isEmpty ? '' : '/'}${result}';
         }
         break;
       }
@@ -511,7 +511,7 @@ class StorageHelper {
       )) ?? false;
       if (canDuplicate) {
         var setting = Provider.of<SettingProvider>(context, listen: false);
-        result = await PlatformMethod.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory);
+        result = (await PlatformMethod.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory)).destination;
       }
     }
     return result;

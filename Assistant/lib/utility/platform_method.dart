@@ -18,38 +18,56 @@ class PlatformMethod {
 
   // #region interface
 
-  static Future<String?> pickStorageItem(
+  static Future<({String? target})> pickStorageItem(
     String type,
     String location,
     String name,
   ) async {
     assertTest(SystemChecker.isAndroid || SystemChecker.isIphone);
-    var result = await _channel!.invokeMethod('pick_storage_item', <dynamic, dynamic>{ 'type': type, 'location': location, 'name': name }) as String?;
-    return result;
+    var detail = await _channel!.invokeMethod('pick_storage_item', <Object?, Object?>{
+      'type': type,
+      'location': location,
+      'name': name,
+    }) as Map<Object?, Object?>;
+    return (
+      target: detail['target'] as String?,
+    );
   }
 
-  static Future<String?> copyStorageFile(
+  static Future<({String destination})> copyStorageFile(
     String source,
     String placement,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var result = await _channel!.invokeMethod('copy_storage_file', <dynamic, dynamic>{ 'source': source, 'placement': placement }) as String;
-    return result;
+    var detail = await _channel!.invokeMethod('copy_storage_file', <Object?, Object?>{
+      'source': source,
+      'placement': placement,
+    }) as Map<Object?, Object?>;
+    return (
+      destination: detail['destination'] as String,
+    );
   }
 
-  static Future<Boolean> checkExternalStoragePermission(
+  static Future<({Boolean state})> checkExternalStoragePermission(
     String mode,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var result = await _channel!.invokeMethod('check_external_storage_permission', <dynamic, dynamic>{ 'mode': mode }) as Boolean;
-    return result;
+    var detail = await _channel!.invokeMethod('check_external_storage_permission', <Object?, Object?>{
+      'mode': mode,
+    }) as Map<Object?, Object?>;
+    return (
+      state: detail['state'] as Boolean,
+    );
   }
 
-  static Future<String> queryExternalStoragePath(
+  static Future<({String path})> queryExternalStoragePath(
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var result = await _channel!.invokeMethod('query_external_storage_path', <dynamic, dynamic>{}) as String;
-    return result;
+    var detail = await _channel!.invokeMethod('query_external_storage_path', <Object?, Object?>{
+    }) as Map<Object?, Object?>;
+    return (
+      path: detail['path'] as String,
+    );
   }
 
   // #endregion

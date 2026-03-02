@@ -91,36 +91,38 @@ class CustomMethodChannel {
 		try {
 			when (call.method) {
 				"pick_storage_item" -> {
-					val detailType = call.argument<String>("type")!!
-					val detailLocation = call.argument<String>("location")!!
-					val detailName = call.argument<String>("name")!!
-					val detailTarget = this.handlePickStorageItem(
-						detailType,
-						detailLocation,
-						detailName,
+					val detail = this.handlePickStorageItem(
+						call.argument<String>("type")!!,
+						call.argument<String>("location")!!,
+						call.argument<String>("name")!!,
 					)
-					result.success(detailTarget)
+					result.success(mapOf<Any?, Any?>(
+						"target" to detail,
+					))
 				}
 				"copy_storage_file" -> {
-					val detailSource = call.argument<String>("source")!!
-					val detailPlacement = call.argument<String>("placement")!!
-					val detailDestination = this.handleCopyStorageFile(
-						detailSource,
-						detailPlacement,
+					val detail = this.handleCopyStorageFile(
+						call.argument<String>("source")!!,
+						call.argument<String>("placement")!!,
 					)
-					result.success(detailDestination)
+					result.success(mapOf<Any?, Any?>(
+						"destination" to detail,
+					))
 				}
 				"check_external_storage_permission" -> {
-					val detailMode = call.argument<String>("mode")!!
-					val detailState = this.handleCheckExternalStoragePermission(
-						detailMode,
+					val detail = this.handleCheckExternalStoragePermission(
+						call.argument<String>("mode")!!,
 					)
-					result.success(detailState)
+					result.success(mapOf<Any?, Any?>(
+						"state" to detail,
+					))
 				}
 				"query_external_storage_path" -> {
-					val detailResult = this.handleQueryExternalStoragePath(
+					val detail = this.handleQueryExternalStoragePath(
 					)
-					result.success(detailResult)
+					result.success(mapOf<Any?, Any?>(
+						"path" to detail,
+					))
 				}
 				else -> {
 					result.notImplemented()

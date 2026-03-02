@@ -19,7 +19,7 @@ auto main (
 )
 #endif
 	-> int {
-	return Twinning::Shell::MainConsole::run(
+	return Twinning::Shell::MainConsole::instance().run(
 		argc,
 		reinterpret_cast<void * *>(argv),
 		#if defined M_kernel_library_symbol

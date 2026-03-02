@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus {
 
 	public partial class App : Application {
 
-		#region instance
+		#region singleton
 
 		public static App Instance { get; private set; } = default!;
 

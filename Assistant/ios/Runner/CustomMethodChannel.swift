@@ -49,21 +49,20 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       }
       switch call.method {
       case "pick_storage_item":
-        guard let detailType = argument["type"] as? String else {
-          throw NSError(domain: "invalid argument.", code: 0)
-        }
-        guard let detailLocation = argument["location"] as? String else {
-          throw NSError(domain: "invalid argument.", code: 0)
-        }
-        guard let detailName = argument["name"] as? String else {
-          throw NSError(domain: "invalid argument.", code: 0)
-        }
-        let detailTarget = try await self.handlePickStorageItem(
-          type: detailType,
-          location: detailLocation,
-          name: detailName,
+        let detail = try await self.handlePickStorageItem(
+          type: argument["type"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+          location: argument["location"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+          name: argument["name"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
         )
-        result(detailTarget)
+        result([
+          "target": detail,
+        ])
       default:
         result(FlutterMethodNotImplemented)
       }

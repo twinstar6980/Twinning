@@ -6,6 +6,6 @@ import '/main_application.dart';
 Void main(
   List<String> argument,
 ) {
-  MainApplication.run(argument);
+  MainApplication.instance.run(argument);
   return;
 }

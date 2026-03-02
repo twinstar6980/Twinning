@@ -20,16 +20,108 @@ import 'package:flutter/widgets.dart';
 
 class MainApplication {
 
+  // #region singleton
+
+  static final MainApplication instance = ._();
+
+  // #endregion
+
+  // #region constructor
+
+  final SettingProvider _setting;
+
+  // ----------------
+
+  MainApplication._(
+  ) :
+    this._setting = .new();
+
+  // #endregion
+
+  // #region life
+
+  Future<Void> run(
+    List<String> argument,
+  ) async {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      ExceptionHelper.initialize();
+      ExceptionHelper.listen((exception, stack) async {
+        this._handleException(exception, stack);
+        return;
+      });
+      var needShowOnboarding = false;
+      try {
+        await this._setting.load();
+      }
+      catch (e) {
+        needShowOnboarding = true;
+      }
+      await this._setting.save();
+      this._setting.state.handleLaunch = this._handleLaunch;
+      this._setting.state.handleForward = this._handleForward;
+      this._setting.state.handleCommand = this._handleCommand;
+      this._setting.state.handleLink = this._handleLink;
+      await NotificationHelper.initialize();
+      await CustomLinkHelper.initialize();
+      await SystemUiHelper.applyMode(.edgeToEdge);
+      if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
+        await WindowHelper.ensureInitialized();
+        if (this._setting.data.windowSizeState) {
+          await WindowHelper.setSize(this._setting.data.windowSizeWidth, this._setting.data.windowSizeHeight);
+        }
+        if (this._setting.data.windowPositionState) {
+          await WindowHelper.setPosition(this._setting.data.windowPositionX, this._setting.data.windowPositionY);
+        }
+        else {
+          await WindowHelper.setAtCenter();
+        }
+        await WindowHelper.waitUntilReadyToShow();
+        await WindowHelper.show();
+      }
+      postTask(() async {
+        if (needShowOnboarding) {
+          await this._setting.state.homeShowOnboarding!();
+        }
+        await NotificationHelper.listen(() async {
+          if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
+            await WindowHelper.show();
+          }
+          return;
+        });
+        await CustomLinkHelper.listen((link) async {
+          await this._handleLink(link);
+          return;
+        });
+        if (await CustomLinkHelper.getFirst() == null) {
+          if (argument.length >= 1 && argument[0] == 'application') {
+            await this._handleCommand(argument.slice(1));
+          }
+          else {
+            await this._setting.state.homeShowLauncher!();
+          }
+        }
+      });
+    }
+    catch (e, s) {
+      this._handleException(e, s);
+    }
+    runApp(Application(setting: this._setting));
+    return;
+  }
+
+  // #endregion
+
   // #region utility
 
-  static Future<Void> _handleException(
+  Future<Void> _handleException(
     Object      exception,
     StackTrace? stack,
   ) async {
     try {
       await postTask(() async {
-        if (_setting.state.applicationNavigatorKey.currentContext != null) {
-          await StyledModalDialogExtension.show<Void>(_setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
+        if (this._setting.state.applicationNavigatorKey.currentContext != null) {
+          await StyledModalDialogExtension.show<Void>(this._setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
             title: 'Unhandled Exception',
             contentBuilder: (context, setStateForPanel) => [
               FlexContainer.horizontal([
@@ -53,12 +145,12 @@ class MainApplication {
 
   // ----------------
 
-  static Future<Void> _handleLaunch(
+  Future<Void> _handleLaunch(
     String       title,
     ModuleType   type,
     List<String> option,
   ) async {
-    await _setting.state.homeInsertPage!(.new(
+    await this._setting.state.homeInsertPage!(.new(
       title: title,
       type: type,
       option: option,
@@ -66,13 +158,13 @@ class MainApplication {
     return;
   }
 
-  static Future<Void> _handleForward(
+  Future<Void> _handleForward(
     List<String> resource,
   ) async {
-    var setting = Provider.of<SettingProvider>(_setting.state.applicationNavigatorKey.currentContext!, listen: false);
+    var setting = Provider.of<SettingProvider>(this._setting.state.applicationNavigatorKey.currentContext!, listen: false);
     var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
     var targetType = forwardOption[setting.data.forwarderDefaultTarget.index] != null ? setting.data.forwarderDefaultTarget : null;
-    var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await StyledModalDialogExtension.show<Boolean>(_setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
+    var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await StyledModalDialogExtension.show<Boolean>(this._setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
       title: 'Forward',
       contentBuilder: (context, setStateForPanel) => [
         ...ModuleType.values.map((item) => StyledListTile.standardTight(
@@ -100,19 +192,19 @@ class MainApplication {
       ],
     )) ?? false);
     if (canContinue && targetType != null) {
-      await _handleLaunch(ModuleHelper.query(targetType!).name, targetType!, forwardOption[targetType!.index]!);
+      await this._handleLaunch(ModuleHelper.query(targetType!).name, targetType!, forwardOption[targetType!.index]!);
     }
     return;
   }
 
-  static Future<Void> _handleCommand(
+  Future<Void> _handleCommand(
     List<String> command,
   ) async {
     if (SystemChecker.isAndroid) {
       var convertedCommand = <String>[];
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          commandItem = await StorageHelper.parseAndroidContentUri(_setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true) ?? commandItem;
+          commandItem = await StorageHelper.parseAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true) ?? commandItem;
         }
         convertedCommand.add(commandItem);
       }
@@ -137,100 +229,22 @@ class MainApplication {
       throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
     }
     if (optionLaunch != null) {
-      await _handleLaunch(optionLaunch.title, optionLaunch.type, optionLaunch.option);
+      await this._handleLaunch(optionLaunch.title, optionLaunch.type, optionLaunch.option);
     }
     if (optionForward != null) {
-      await _handleForward(optionForward.resource);
+      await this._handleForward(optionForward.resource);
     }
     return;
   }
 
-  static Future<Void> _handleLink(
+  Future<Void> _handleLink(
     Uri link,
   ) async {
     if (link.scheme != ApplicationInformation.identifier || link.authority != '' || link.path != '/application') {
       throw Exception('invalid link');
     }
     var command = link.queryParametersAll['command'] ?? [];
-    await _handleCommand(command);
-    return;
-  }
-
-  // #endregion
-
-  // #region life
-
-  static final SettingProvider _setting = .new();
-
-  // ----------------
-
-  static Future<Void> run(
-    List<String> argument,
-  ) async {
-    try {
-      WidgetsFlutterBinding.ensureInitialized();
-      ExceptionHelper.initialize();
-      ExceptionHelper.listen((exception, stack) async {
-        _handleException(exception, stack);
-        return;
-      });
-      var needShowOnboarding = false;
-      try {
-        await _setting.load();
-      }
-      catch (e) {
-        needShowOnboarding = true;
-      }
-      await _setting.save();
-      _setting.state.handleLaunch = _handleLaunch;
-      _setting.state.handleForward = _handleForward;
-      _setting.state.handleCommand = _handleCommand;
-      _setting.state.handleLink = _handleLink;
-      await NotificationHelper.initialize();
-      await CustomLinkHelper.initialize();
-      await SystemUiHelper.applyMode(.edgeToEdge);
-      if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-        await WindowHelper.ensureInitialized();
-        if (_setting.data.windowSizeState) {
-          await WindowHelper.setSize(_setting.data.windowSizeWidth, _setting.data.windowSizeHeight);
-        }
-        if (_setting.data.windowPositionState) {
-          await WindowHelper.setPosition(_setting.data.windowPositionX, _setting.data.windowPositionY);
-        }
-        else {
-          await WindowHelper.setAtCenter();
-        }
-        await WindowHelper.waitUntilReadyToShow();
-        await WindowHelper.show();
-      }
-      postTask(() async {
-        if (needShowOnboarding) {
-          await _setting.state.homeShowOnboarding!();
-        }
-        await NotificationHelper.listen(() async {
-          if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-            await WindowHelper.show();
-          }
-          return;
-        });
-        await CustomLinkHelper.listen((link) async {
-          await _handleLink(link);
-          return;
-        });
-        if (await CustomLinkHelper.getFirst() == null) {
-          if (argument.length >= 1 && argument[0] == 'application') {
-            await _handleCommand(argument.slice(1));
-          }
-          else {
-            await _setting.state.homeShowLauncher!();
-          }
-        }
-      });
-    }
-    catch (e, s) {
-      _handleException(e, s);
-    }
-    runApp(Application(setting: _setting));
+    await this._handleCommand(command);
     return;
   }
 

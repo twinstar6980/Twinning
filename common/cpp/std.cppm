@@ -101,6 +101,10 @@ export {
 		using ::std::system_error;
 		using ::std::errc;
 	}
+	// pointer
+	namespace std {
+		using ::std::nullptr_t;
+	}
 	// integer
 	namespace std {
 		using ::std::int8_t;
