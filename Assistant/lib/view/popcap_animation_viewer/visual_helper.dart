@@ -192,7 +192,7 @@ class VisualHelper {
   ) {
     var textureData = texture[image.name];
     return BoxContainer.of(
-      transform: _makeMatrix(image.transform),
+      transform: VisualHelper._makeMatrix(image.transform),
       child: textureData == null
         ? null
         : ImageView.of(
@@ -232,21 +232,21 @@ class VisualHelper {
           continue;
         }
         var subView = !action.sprite
-          ? visualizeImage(
+          ? VisualHelper.visualizeImage(
             animation,
             texture,
-            selectImage(animation, action.resource),
+            VisualHelper.selectImage(animation, action.resource),
           )
-          : visualizeSprite(
+          : VisualHelper.visualizeSprite(
             animation,
             texture,
-            selectSprite(animation, action.resource),
+            VisualHelper.selectSprite(animation, action.resource),
             imageFilter,
             spriteFilter,
-            makeAnimationDriver(
+            VisualHelper.makeAnimationDriver(
               driver,
               sprite.frame.length,
-              selectSprite(animation, action.resource).frame.length,
+              VisualHelper.selectSprite(animation, action.resource).frame.length,
               frameIndex,
             ),
           );
@@ -266,8 +266,8 @@ class VisualHelper {
         );
         layer.property = .filled(sprite.frame.length, null);
         layer.property[frameIndex] = (
-          transform: _makeMatrix(.new(value: model.TranslateTransform(x: 0.0, y: 0.0))),
-          color: _makeColor(.new(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),
+          transform: VisualHelper._makeMatrix(.new(value: model.TranslateTransform(x: 0.0, y: 0.0))),
+          color: VisualHelper._makeColor(.new(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)),
         );
         layer.isRemoved = false;
         layer.isChanged = true;
@@ -281,14 +281,14 @@ class VisualHelper {
         assertTest(!layer.isRemoved);
         if (layer.isChanged) {
           layer.property[frameIndex] = (
-            transform: _makeMatrix(action.transform),
-            color: action.color != null ? _makeColor(action.color!) : layer.property[frameIndex]!.color,
+            transform: VisualHelper._makeMatrix(action.transform),
+            color: action.color != null ? VisualHelper._makeColor(action.color!) : layer.property[frameIndex]!.color,
           );
         }
         else {
           layer.property[frameIndex] = (
-            transform: _makeMatrix(action.transform),
-            color: action.color != null ? _makeColor(action.color!) : layer.property[frameIndex - 1]!.color,
+            transform: VisualHelper._makeMatrix(action.transform),
+            color: action.color != null ? VisualHelper._makeColor(action.color!) : layer.property[frameIndex - 1]!.color,
           );
         }
         layer.isChanged = true;
@@ -329,7 +329,7 @@ class VisualHelper {
   ) async {
     var result = <String, ({lib.Image image, Integer width, Integer height})>{};
     for (var image in animation.image) {
-      var textureFile = '${directory}/${parseImageFileName(image.name)}.png';
+      var textureFile = '${directory}/${VisualHelper.parseImageFileName(image.name)}.png';
       if (!await StorageHelper.existFile(textureFile)) {
         continue;
       }

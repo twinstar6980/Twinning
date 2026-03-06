@@ -16,7 +16,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public MainPage (
+		public MainPage(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -32,7 +32,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region module page
 
-		public Home.IModulePageController ModulePageGetController (
+		public Home.IModulePageController ModulePageGetController(
 		) {
 			return this.Controller;
 		}
@@ -41,7 +41,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region action
 
-		public async Task<List<String>?> ExecuteCommand (
+		public async Task<List<String>?> ExecuteCommand(
 			List<String> additionalArgument
 		) {
 			this.Controller.AdditionalArgument = additionalArgument;
@@ -85,7 +85,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			this.Configuration = new () {
 			};
@@ -94,13 +94,13 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async Task OpenView (
+		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.json");
 			return;
 		}
 
-		public async Task<Boolean> CloseView (
+		public async Task<Boolean> CloseView(
 		) {
 			if (this.SessionRunning) {
 				await ControlHelper.ShowDialogAsAutomatic(this.View, "Session In Progress", null, null);
@@ -109,7 +109,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return true;
 		}
 
-		public async Task EnterView (
+		public async Task EnterView(
 		) {
 			if (this.SubmissionState) {
 				this.NotifyPropertyChanged([
@@ -119,12 +119,12 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async Task ExitView (
+		public async Task ExitView(
 		) {
 			return;
 		}
 
-		public async Task ApplyOption (
+		public async Task ApplyOption(
 			List<String> optionView
 		) {
 			var optionAutomaticScroll = default(Boolean?);
@@ -166,7 +166,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async Task<List<String>> CollectOption (
+		public async Task<List<String>> CollectOption(
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-automatic_scroll")) {
@@ -182,7 +182,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region action
 
-		public async Task SendMessage (
+		public async Task SendMessage(
 			MessageType  type,
 			String       title,
 			List<String> description
@@ -202,7 +202,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async Task<ValueExpression?> ReceiveSubmission (
+		public async Task<ValueExpression?> ReceiveSubmission(
 			SubmissionType type,
 			List<String>   option
 		) {
@@ -247,7 +247,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async Task<List<String>?> LaunchSession (
+		public async Task<List<String>?> LaunchSession(
 		) {
 			AssertTest(!this.SessionRunning);
 			var result = default(List<String>?);
@@ -299,7 +299,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region page
 
-		public async void uPage_DragOver (
+		public async void uPage_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -307,7 +307,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async void uPage_Drop (
+		public async void uPage_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -325,7 +325,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uAutomaticScroll_Click (
+		public async void uAutomaticScroll_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -341,7 +341,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region additional argument
 
-		public async void uAdditionalArgument_Click (
+		public async void uAdditionalArgument_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -384,7 +384,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uLaunch_Click (
+		public async void uLaunch_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -433,7 +433,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public Wrapper<ValueExpression> uSubmissionBar_Value { get; } = new ();
 
-		public async void uSubmissionBar_ValueSubmitted (
+		public async void uSubmissionBar_ValueSubmitted(
 		) {
 			this.SubmissionState = false;
 			this.NotifyPropertyChanged([
@@ -508,7 +508,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public MainPageBridgeClient (
+		public MainPageBridgeClient(
 			MainPageController controller
 		) {
 			this.mController = controller;
@@ -520,14 +520,14 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region life
 
-		public override void Start (
+		public override void Start(
 		) {
 			AssertTest(!this.mRunning);
 			this.mRunning = true;
 			return;
 		}
 
-		public override void Finish (
+		public override void Finish(
 		) {
 			AssertTest(this.mRunning);
 			this.mRunning = false;
@@ -536,7 +536,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public override List<String> Callback (
+		public override List<String> Callback(
 			List<String> argument
 		) {
 			AssertTest(this.mRunning);
@@ -606,19 +606,19 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return result;
 		}
 
-		private async Task<ValueTuple<String>> CallbackName (
+		private async Task<ValueTuple<String>> CallbackName(
 		) {
 			var name = "assistant_plus";
 			return new (name);
 		}
 
-		private async Task<ValueTuple<String>> CallbackVersion (
+		private async Task<ValueTuple<String>> CallbackVersion(
 		) {
 			var version = ApplicationInformation.Version;
 			return new (version);
 		}
 
-		private async Task<ValueTuple> CallbackSendMessage (
+		private async Task<ValueTuple> CallbackSendMessage(
 			String       type,
 			String       title,
 			List<String> description
@@ -636,7 +636,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return new ();
 		}
 
-		private async Task<ValueTuple<String>> CallbackReceiveSubmission (
+		private async Task<ValueTuple<String>> CallbackReceiveSubmission(
 			String       type,
 			List<String> option
 		) {
@@ -659,7 +659,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return new (value);
 		}
 
-		private async Task<ValueTuple<String>> CallbackPickStorageItem (
+		private async Task<ValueTuple<String>> CallbackPickStorageItem(
 			String type
 		) {
 			var target = "";
@@ -673,11 +673,11 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return new (target);
 		}
 
-		private async Task<ValueTuple> CallbackPushSystemNotification (
+		private async Task<ValueTuple> CallbackPushSystemNotification(
 			String title,
 			String description
 		) {
-			NotificationHelper.Push(title, description);
+			ApplicationNotificationManager.Instance.Push(title, description);
 			return new ();
 		}
 

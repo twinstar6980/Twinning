@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public LauncherPanel (
+		public LauncherPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -35,14 +35,14 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public event Action? PanelEnter;
 
-		public void OnPanelEnter (
+		public void OnPanelEnter(
 		) => this.PanelEnter?.Invoke();
 
 		// ----------------
 
 		public event Action? PanelExit;
 
-		public void OnPanelExit (
+		public void OnPanelExit(
 		) => this.PanelExit?.Invoke();
 
 		#endregion
@@ -65,7 +65,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.uModuleLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Module.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value })).ToList();
 			this.uPinnedLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Pinned.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value })).ToObservableCollection();
@@ -82,7 +82,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region launcher
 
-		public async void uCommand_Click (
+		public async void uCommand_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -115,7 +115,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public List<LauncherPageLauncherItemController> uModuleLauncherList_ItemsSource { get; set; } = default!;
 
-		public async void uModuleLauncherList_ItemClick (
+		public async void uModuleLauncherList_ItemClick(
 			Object             sender,
 			ItemClickEventArgs args
 		) {
@@ -128,7 +128,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public ObservableCollection<LauncherPageLauncherItemController> uPinnedLauncherList_ItemsSource { get; set; } = default!;
 
-		public async void uPinnedLauncherList_ItemClick (
+		public async void uPinnedLauncherList_ItemClick(
 			Object             sender,
 			ItemClickEventArgs args
 		) {
@@ -137,7 +137,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uAddPinnedLauncherItem_Click (
+		public async void uAddPinnedLauncherItem_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -157,7 +157,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public ObservableCollection<LauncherPageLauncherItemController> uRecentLauncherList_ItemsSource { get; set; } = default!;
 
-		public async void uRecentLauncherList_ItemClick (
+		public async void uRecentLauncherList_ItemClick(
 			Object             sender,
 			ItemClickEventArgs args
 		) {
@@ -166,7 +166,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uClearRecentLauncherItem_Click (
+		public async void uClearRecentLauncherItem_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -215,7 +215,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uEdit_Click (
+		public async void uEdit_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -236,7 +236,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uLaunchAsWindow_Click (
+		public async void uLaunchAsWindow_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -253,7 +253,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSetting_Click (
+		public async void uSetting_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -272,7 +272,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uRemove_Click (
+		public async void uRemove_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -301,7 +301,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uPin_Click (
+		public async void uPin_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

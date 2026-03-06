@@ -31,7 +31,7 @@ class ProcessHelper {
     Map<String, String>? environment,
   ) async {
     if (environment == null) {
-      environment = listEnvironment();
+      environment = ProcessHelper.listEnvironment();
     }
     var process = await Process.run(
       program,
@@ -55,7 +55,7 @@ class ProcessHelper {
   ) async {
     var result = null as String?;
     var itemDelimiter = SystemChecker.isWindows ? ';' : ':';
-    var pathEnvironment = queryEnvironment('PATH');
+    var pathEnvironment = ProcessHelper.queryEnvironment('PATH');
     assertTest(pathEnvironment != null);
     var pathList = pathEnvironment!.split(itemDelimiter);
     if (SystemChecker.isWindows) {
@@ -63,7 +63,7 @@ class ProcessHelper {
     }
     var pathExtensionList = [''];
     if (SystemChecker.isWindows && allowExtension) {
-      var pathExtensionEnvironment = queryEnvironment('PATHEXT');
+      var pathExtensionEnvironment = ProcessHelper.queryEnvironment('PATHEXT');
       assertTest(pathExtensionEnvironment != null);
       pathExtensionList.addAll(pathExtensionEnvironment!.split(itemDelimiter));
     }
@@ -88,7 +88,7 @@ class ProcessHelper {
     String  name,
     Boolean allowExtension,
   ) async {
-    var result = await searchProgram(name, allowExtension);
+    var result = await ProcessHelper.searchProgram(name, allowExtension);
     if (result == null) {
       throw Exception('could not find \'${name}\' program from \'PATH\' environment');
     }

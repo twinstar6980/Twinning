@@ -13,14 +13,14 @@ class ConvertHelper {
   static String makeEnumerationToStringOfSnakeCase<TType extends Enum>(
     TType value,
   ) {
-    return changeStringFromCamelCaseToSnakeCase(value.name);
+    return ConvertHelper.changeStringFromCamelCaseToSnakeCase(value.name);
   }
 
   static TType parseEnumerationFromStringOfSnakeCase<TType extends Enum>(
     String      text,
     List<TType> list,
   ) {
-    return list.firstWhere((it) => makeEnumerationToStringOfSnakeCase(it) == text);
+    return list.firstWhere((it) => ConvertHelper.makeEnumerationToStringOfSnakeCase(it) == text);
   }
 
   // #endregion
@@ -96,7 +96,7 @@ class ConvertHelper {
   static String changeStringFromCamelCaseToSnakeCase(
     String source,
   ) {
-    return splitStringOfCamelCase(source).join('_').toLowerCase();
+    return ConvertHelper.splitStringOfCamelCase(source).join('_').toLowerCase();
   }
 
   // #endregion

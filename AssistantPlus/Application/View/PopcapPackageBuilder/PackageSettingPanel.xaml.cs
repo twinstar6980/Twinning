@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public PackageSettingPanel (
+		public PackageSettingPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -84,7 +84,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uVersionNumber_SelectedItem),
@@ -116,7 +116,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uVersionNumber_SelectionChanged (
+		public async void uVersionNumber_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -139,7 +139,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uVersionExtendedTextureInformationForPvz2Cn_SelectionChanged (
+		public async void uVersionExtendedTextureInformationForPvz2Cn_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -158,7 +158,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uCompressionGeneral_Click (
+		public async void uCompressionGeneral_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -178,7 +178,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uCompressionTexture_Click (
+		public async void uCompressionTexture_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -192,7 +192,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uCompressionFilter_LostFocus (
+		public async void uCompressionFilter_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -231,7 +231,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uManifestType_SelectionChanged (
+		public async void uManifestType_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -242,7 +242,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uManifestSuffix_LostFocus (
+		public async void uManifestSuffix_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -266,7 +266,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region category
 
-		public async void uCategoryResolution_LostFocus (
+		public async void uCategoryResolution_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -286,7 +286,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uCategoryLocale_LostFocus (
+		public async void uCategoryLocale_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {

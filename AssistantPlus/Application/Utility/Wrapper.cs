@@ -14,20 +14,20 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public Wrapper (
+		public Wrapper(
 		) {
 			this.mData = new ();
 			return;
 		}
 
-		public Wrapper (
+		public Wrapper(
 			TValue? value
 		) {
 			this.mData = new () { Value = value };
 			return;
 		}
 
-		private Wrapper (
+		private Wrapper(
 			WrapperData data
 		) {
 			this.mData = data;
@@ -45,7 +45,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public Wrapper<TTarget> Cast<TTarget> (
+		public Wrapper<TTarget> Cast<TTarget>(
 		)
 			where TTarget : class {
 			return new (this.mData);

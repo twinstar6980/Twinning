@@ -17,7 +17,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public SubmissionBar (
+		public SubmissionBar(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -26,7 +26,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			VisualStateManager.GoToState(this, $"{(this.Type == null ? "Idle" : this.Type)}State", false);
 			await this.Controller.UpdateView();
@@ -95,7 +95,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public event Action? ValueSubmitted;
 
-		public void OnValueSubmitted (
+		public void OnValueSubmitted(
 		) => this.ValueSubmitted?.Invoke();
 
 		#endregion
@@ -124,7 +124,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uHistory_IsEnabled),
@@ -210,7 +210,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uHistory_Click (
+		public async void uHistory_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -271,7 +271,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uSubmit_Click (
+		public async void uSubmit_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -303,7 +303,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uBooleanValue_LostFocus (
+		public async void uBooleanValue_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -345,7 +345,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uBooleanValueNo_Click (
+		public async void uBooleanValueNo_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -378,7 +378,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uBooleanValueYes_Click (
+		public async void uBooleanValueYes_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -411,7 +411,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uIntegerValue_LostFocus (
+		public async void uIntegerValue_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -457,7 +457,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uFloaterValue_LostFocus (
+		public async void uFloaterValue_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -503,7 +503,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uSizeCount_LostFocus (
+		public async void uSizeCount_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -548,7 +548,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uSizeExponentMenu_Click (
+		public async void uSizeExponentMenu_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -577,7 +577,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uStringValue_LostFocus (
+		public async void uStringValue_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -617,7 +617,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uPathContent_DragOver (
+		public async void uPathContent_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -631,7 +631,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async void uPathContent_Drop (
+		public async void uPathContent_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -650,7 +650,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async void uPathContent_LostFocus (
+		public async void uPathContent_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -681,7 +681,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uPathCommandMenu_Click (
+		public async void uPathCommandMenu_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -696,7 +696,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public async void uPathPickMenu_Click (
+		public async void uPathPickMenu_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -743,7 +743,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uEnumerationItem_SelectionChanged (
+		public async void uEnumerationItem_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -760,7 +760,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uEnumerationItemNull_Click (
+		public async void uEnumerationItemNull_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

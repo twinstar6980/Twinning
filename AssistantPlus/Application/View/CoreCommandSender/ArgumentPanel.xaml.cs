@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public ArgumentPanel (
+		public ArgumentPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -95,7 +95,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			AssertTest(this.Configuration.Count == this.Value.Count);
 			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() {

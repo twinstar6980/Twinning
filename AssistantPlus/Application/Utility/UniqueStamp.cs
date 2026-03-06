@@ -9,7 +9,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region constructor
 
-		public UniqueStamp (
+		public UniqueStamp(
 		) {
 			return;
 		}
@@ -18,7 +18,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region instance
 
-		public static UniqueStamp Create (
+		public static UniqueStamp Create(
 		) {
 			return new ();
 		}

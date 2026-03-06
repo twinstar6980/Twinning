@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region function
 
-		public static unsafe List<String> Launch (
+		public static unsafe List<String> Launch(
 			Client       client,
 			Library      library,
 			String       script,

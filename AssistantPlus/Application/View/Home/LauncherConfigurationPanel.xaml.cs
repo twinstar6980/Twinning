@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public LauncherConfigurationPanel (
+		public LauncherConfigurationPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -68,7 +68,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uTitleText_Text),
@@ -83,7 +83,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region title
 
-		public async void uTitleText_LostFocus (
+		public async void uTitleText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -117,7 +117,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uTypeSelect_SelectionChanged (
+		public async void uTypeSelect_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -130,7 +130,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region option
 
-		public async void uOptionText_LostFocus (
+		public async void uOptionText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -152,7 +152,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region command
 
-		public async void uCommandText_LostFocus (
+		public async void uCommandText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {

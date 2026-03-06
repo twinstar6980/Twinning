@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public PackagePartPanel (
+		public PackagePartPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -79,7 +79,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.uList_ItemsSource = this.Source.Select((value) => (new PackagePartPanelItemController() {
 				Host = this,
@@ -103,7 +103,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public List<PackagePartPanelItemController> uList_ItemsSource { get; set; } = [];
 
-		public async void uList_SelectionChanged (
+		public async void uList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {

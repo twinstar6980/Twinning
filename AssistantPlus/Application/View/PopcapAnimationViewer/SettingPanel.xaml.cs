@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public SettingPanel (
+		public SettingPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -71,7 +71,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uImmediateSelectToggle_IsChecked),
@@ -95,7 +95,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uImmediateSelectToggle_Click (
+		public async void uImmediateSelectToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -117,7 +117,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uAutomaticPlayToggle_Click (
+		public async void uAutomaticPlayToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -139,7 +139,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uRepeatPlayToggle_Click (
+		public async void uRepeatPlayToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -161,7 +161,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uKeepSpeedToggle_Click (
+		public async void uKeepSpeedToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -183,7 +183,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uShowBoundaryToggle_Click (
+		public async void uShowBoundaryToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -199,7 +199,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region image filter rule
 
-		public async void uImageFilterRuleText_LostFocus (
+		public async void uImageFilterRuleText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -221,7 +221,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region sprite filter rule
 
-		public async void uSpriteFilterRuleText_LostFocus (
+		public async void uSpriteFilterRuleText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {

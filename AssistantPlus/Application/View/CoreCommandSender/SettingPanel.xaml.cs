@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public SettingPanel (
+		public SettingPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -65,7 +65,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uParallelForwardToggle_IsChecked),
@@ -83,7 +83,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			}
 		}
 
-		public async void uParallelForwardToggle_Click (
+		public async void uParallelForwardToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

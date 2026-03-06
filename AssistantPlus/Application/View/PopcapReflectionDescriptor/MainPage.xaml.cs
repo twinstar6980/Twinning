@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		public MainPage (
+		public MainPage(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -31,7 +31,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		#region module page
 
-		public Home.IModulePageController ModulePageGetController (
+		public Home.IModulePageController ModulePageGetController(
 		) {
 			return this.Controller;
 		}
@@ -77,35 +77,35 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			this.Configuration = new () {
 			};
 			return;
 		}
 
-		public async Task OpenView (
+		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.json");
 			return;
 		}
 
-		public async Task<Boolean> CloseView (
+		public async Task<Boolean> CloseView(
 		) {
 			return true;
 		}
 
-		public async Task EnterView (
+		public async Task EnterView(
 		) {
 			return;
 		}
 
-		public async Task ExitView (
+		public async Task ExitView(
 		) {
 			return;
 		}
 
-		public async Task ApplyOption (
+		public async Task ApplyOption(
 			List<String> optionView
 		) {
 			var optionDescriptorFile = default(String?);
@@ -122,7 +122,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			return;
 		}
 
-		public async Task<List<String>> CollectOption (
+		public async Task<List<String>> CollectOption(
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-descriptor_file", this.DescriptorFile != null)) {
@@ -135,7 +135,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		#region action
 
-		public ObjectItemController CreateSource (
+		public ObjectItemController CreateSource(
 			PopcapReflectionModel.ObjectDescriptor descriptor
 		) {
 			return new () {
@@ -147,7 +147,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		public async Task ApplyLoad (
+		public async Task ApplyLoad(
 			String descriptorFile
 		) {
 			if (this.IsLoaded) {
@@ -169,7 +169,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		#region page
 
-		public async void uPage_DragOver (
+		public async void uPage_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -180,7 +180,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			return;
 		}
 
-		public async void uPage_Drop (
+		public async void uPage_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -206,7 +206,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		#region load
 
-		public async Task Load (
+		public async Task Load(
 			String descriptorFile
 		) {
 			AssertTest(!this.IsLoaded);
@@ -230,7 +230,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			return;
 		}
 
-		public async Task Unload (
+		public async Task Unload(
 		) {
 			AssertTest(this.IsLoaded);
 			this.DescriptorFile = null;
@@ -275,7 +275,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			}
 		}
 
-		public async void uDescriptorFileMenu_Click (
+		public async void uDescriptorFileMenu_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -306,7 +306,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		public ObjectItemController? uObjectList_SelectedItem { get; set; } = null;
 
-		public async void uObjectList_ItemInvoked (
+		public async void uObjectList_ItemInvoked(
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
@@ -322,7 +322,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			return;
 		}
 
-		public async void uObjectList_Collapsed (
+		public async void uObjectList_Collapsed(
 			TreeView                   sender,
 			TreeViewCollapsedEventArgs args
 		) {
@@ -334,7 +334,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			return;
 		}
 
-		public async void uObjectList_Expanding (
+		public async void uObjectList_Expanding(
 			TreeView                   sender,
 			TreeViewExpandingEventArgs args
 		) {
@@ -385,7 +385,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			}
 		}
 
-		public async void uPropertyExport_Click (
+		public async void uPropertyExport_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

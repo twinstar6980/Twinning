@@ -19,7 +19,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public MainWindow (
+		public MainWindow(
 		) {
 			this.InitializeComponent();
 			WindowHelper.SetIcon(this, $"{App.Instance.PackageDirectory}/Asset/Logo.ico");
@@ -34,7 +34,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region action
 
-		public async Task PushNotification (
+		public async Task PushNotification(
 			InfoBarSeverity severity,
 			String          title,
 			String          message,
@@ -44,26 +44,26 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task ShowLauncher (
+		public async Task ShowLauncher(
 		) {
 			await this.Controller.ShowLauncher();
 			return;
 		}
 
-		public async Task ShowOnboarding (
+		public async Task ShowOnboarding(
 		) {
 			await this.Controller.ShowOnboarding();
 			return;
 		}
 
-		public async Task InsertPage (
+		public async Task InsertPage(
 			ModuleLauncherConfiguration configuration
 		) {
 			await this.Controller.InsertPage(configuration);
 			return;
 		}
 
-		public async Task RemovePage (
+		public async Task RemovePage(
 			Page content
 		) {
 			await this.Controller.RemovePage(content);
@@ -86,7 +86,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			return;
 		}
@@ -95,7 +95,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region action
 
-		public async Task PushNotification (
+		public async Task PushNotification(
 			InfoBarSeverity severity,
 			String          title,
 			String          message,
@@ -112,7 +112,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task InsertPage (
+		public async Task InsertPage(
 			ModuleLauncherConfiguration configuration
 		) {
 			if (this.View.uLauncherFlyout.IsOpen) {
@@ -138,7 +138,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task RemovePage (
+		public async Task RemovePage(
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -161,7 +161,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task RenamePage (
+		public async Task RenamePage(
 			Page   content,
 			String title
 		) {
@@ -173,7 +173,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task MemorizePage (
+		public async Task MemorizePage(
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -188,7 +188,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task DuplicatePage (
+		public async Task DuplicatePage(
 			Page content
 		) {
 			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
@@ -204,7 +204,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task ShowLauncher (
+		public async Task ShowLauncher(
 		) {
 			AssertTest(!this.View.uLauncherFlyout.IsOpen);
 			this.NotifyPropertyChanged([
@@ -214,7 +214,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task HideLauncher (
+		public async Task HideLauncher(
 		) {
 			AssertTest(this.View.uLauncherFlyout.IsOpen);
 			this.View.uLauncherFlyout.Hide();
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async Task ShowOnboarding (
+		public async Task ShowOnboarding(
 		) {
 			var hideDialogWrapper = new Wrapper<Action>();
 			await ControlHelper.ShowDialogAsAutomatic(this.View.Content.As<FrameworkElement>(), "Onboarding", new OnboardingPanel() {
@@ -243,7 +243,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public ObservableCollection<MainWindowTabItemController> uTab_TabItemsSource { get; } = [];
 
-		public async void uTab_TabCloseRequested (
+		public async void uTab_TabCloseRequested(
 			TabView                           sender,
 			TabViewTabCloseRequestedEventArgs args
 		) {
@@ -252,7 +252,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uTab_AddTabButtonClick (
+		public async void uTab_AddTabButtonClick(
 			TabView sender,
 			Object  args
 		) {
@@ -261,7 +261,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uTab_SelectionChanged (
+		public async void uTab_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -277,7 +277,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uTabKeyboardAccelerator_Invoked (
+		public async void uTabKeyboardAccelerator_Invoked(
 			KeyboardAccelerator                 sender,
 			KeyboardAcceleratorInvokedEventArgs args
 		) {
@@ -302,12 +302,12 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region launcher
 
-		public async void uLauncher_PanelEnter (
+		public async void uLauncher_PanelEnter(
 		) {
 			await this.ShowLauncher();
 		}
 
-		public async void uLauncher_PanelExit (
+		public async void uLauncher_PanelExit(
 		) {
 			await this.HideLauncher();
 		}
@@ -330,7 +330,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uBlank_DragOver (
+		public async void uBlank_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -341,7 +341,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uBlank_Drop (
+		public async void uBlank_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -357,7 +357,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uBlankLauncher_Click (
+		public async void uBlankLauncher_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -408,7 +408,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uCommand_Click (
+		public async void uCommand_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -454,7 +454,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region interface
 
-		IModulePageController ModulePageGetController (
+		IModulePageController ModulePageGetController(
 		);
 
 		#endregion
@@ -465,32 +465,32 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region life
 
-		void InitializeView (
+		void InitializeView(
 		);
 
 		// ----------------
 
-		Task OpenView (
+		Task OpenView(
 		);
 
-		Task<Boolean> CloseView (
-		);
-
-		// ----------------
-
-		Task EnterView (
-		);
-
-		Task ExitView (
+		Task<Boolean> CloseView(
 		);
 
 		// ----------------
 
-		Task ApplyOption (
+		Task EnterView(
+		);
+
+		Task ExitView(
+		);
+
+		// ----------------
+
+		Task ApplyOption(
 			List<String> optionView
 		);
 
-		Task<List<String>> CollectOption (
+		Task<List<String>> CollectOption(
 		);
 
 		#endregion

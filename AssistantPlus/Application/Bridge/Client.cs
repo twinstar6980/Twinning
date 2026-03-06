@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region constructor
 
-		public Client (
+		public Client(
 		) {
 			return;
 		}
@@ -19,15 +19,15 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region life
 
-		public abstract void Start (
+		public abstract void Start(
 		);
 
-		public abstract void Finish (
+		public abstract void Finish(
 		);
 
 		// ----------------
 
-		public abstract List<String> Callback (
+		public abstract List<String> Callback(
 			List<String> argument
 		);
 

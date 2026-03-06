@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public static async Task<Boolean> CheckVersionFile (
+		public static async Task<Boolean> CheckVersionFile(
 			String projectDirectory
 		) {
 			var result = true;
@@ -33,7 +33,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region category
 
-		public static Integer? ParseResolutionString (
+		public static Integer? ParseResolutionString(
 			String   text,
 			Integer? fallback
 		) {
@@ -51,7 +51,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return result;
 		}
 
-		public static String? ParseLocaleString (
+		public static String? ParseLocaleString(
 			String  text,
 			String? fallback
 		) {

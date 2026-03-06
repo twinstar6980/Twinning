@@ -44,14 +44,14 @@ class SystemUiHelper {
   static SystemUiOverlayStyle queryOverlayStyle(
     Brightness brightness,
   ) {
-    return brightness == .light ? _overlayStyleForLight : _overlayStyleForDark;
+    return brightness == .light ? SystemUiHelper._overlayStyleForLight : SystemUiHelper._overlayStyleForDark;
   }
 
   static Future<Void> applyOverlayStyle(
     Brightness brightness,
   ) async {
     await SystemChrome.restoreSystemUIOverlays();
-    SystemChrome.setSystemUIOverlayStyle(queryOverlayStyle(brightness));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiHelper.queryOverlayStyle(brightness));
     return;
   }
 

@@ -9,7 +9,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region environment
 
-		public static String? QueryEnvironment (
+		public static String? QueryEnvironment(
 			String name
 		) {
 			return Environment.GetEnvironmentVariable(name);
@@ -17,7 +17,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static Dictionary<String, String> ListEnvironment (
+		public static Dictionary<String, String> ListEnvironment(
 		) {
 			return Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().ToDictionary(
 				(item) => item.Key.As<String>(),
@@ -29,7 +29,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region process
 
-		public static async Task<Tuple<Size, String, String>?> RunProcess (
+		public static async Task<Tuple<Size, String, String>?> RunProcess(
 			String                      program,
 			List<String>                argument,
 			Dictionary<String, String>? environment,
@@ -65,7 +65,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region program
 
-		public static String? SearchProgram (
+		public static String? SearchProgram(
 			String name
 		) {
 			var result = default(String?);
@@ -87,7 +87,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region command
 
-		private static void EncodeCommandProgramString (
+		private static void EncodeCommandProgramString(
 			String        source,
 			StringBuilder destination
 		) {
@@ -104,7 +104,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		private static void EncodeCommandArgumentString (
+		private static void EncodeCommandArgumentString(
 			String        source,
 			StringBuilder destination
 		) {
@@ -132,7 +132,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		public static String EncodeCommandString (
+		public static String EncodeCommandString(
 			String?      program,
 			List<String> argument
 		) {

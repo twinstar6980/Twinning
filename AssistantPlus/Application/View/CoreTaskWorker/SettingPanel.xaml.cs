@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public SettingPanel (
+		public SettingPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -24,7 +24,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -71,7 +71,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uKernelText_Text),
@@ -88,7 +88,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region kernel
 
-		public async void uKernelText_LostFocus (
+		public async void uKernelText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -106,7 +106,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uKernelPick_Click (
+		public async void uKernelPick_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -125,7 +125,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region script
 
-		public async void uScriptText_LostFocus (
+		public async void uScriptText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -143,7 +143,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uScriptPick_Click (
+		public async void uScriptPick_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -162,7 +162,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region argument
 
-		public async void uArgumentText_LostFocus (
+		public async void uArgumentText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -180,7 +180,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uArgumentPick_Click (
+		public async void uArgumentPick_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -205,7 +205,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uAutomaticScrollToggle_Click (
+		public async void uAutomaticScrollToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -227,7 +227,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 		}
 
-		public async void uImmediateLaunchToggle_Click (
+		public async void uImmediateLaunchToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -243,7 +243,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region message font
 
-		public async void uMessageFontText_LostFocus (
+		public async void uMessageFontText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -263,7 +263,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public async void uMessageFontPick_Click (
+		public async void uMessageFontPick_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

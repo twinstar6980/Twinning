@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public MainPage (
+		public MainPage(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -31,7 +31,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region module page
 
-		public Home.IModulePageController ModulePageGetController (
+		public Home.IModulePageController ModulePageGetController(
 		) {
 			return this.Controller;
 		}
@@ -62,7 +62,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			this.Configuration = new () {
 				Method = [],
@@ -72,7 +72,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async Task OpenView (
+		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.json");
 			this.uMethodList_ItemsSource = this.Configuration.Method.Select((group) => (new MainPageMethodGroupItemController() {
@@ -89,22 +89,22 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async Task<Boolean> CloseView (
+		public async Task<Boolean> CloseView(
 		) {
 			return true;
 		}
 
-		public async Task EnterView (
+		public async Task EnterView(
 		) {
 			return;
 		}
 
-		public async Task ExitView (
+		public async Task ExitView(
 		) {
 			return;
 		}
 
-		public async Task ApplyOption (
+		public async Task ApplyOption(
 			List<String> optionView
 		) {
 			var optionParallelForward = default(Boolean?);
@@ -140,7 +140,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async Task<List<String>> CollectOption (
+		public async Task<List<String>> CollectOption(
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-parallel_forward")) {
@@ -160,7 +160,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region action
 
-		public async Task AppendCommand (
+		public async Task AppendCommand(
 			String                     method,
 			Boolean                    batch,
 			Dictionary<String, Object> argument
@@ -180,7 +180,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async Task RemoveCommand (
+		public async Task RemoveCommand(
 			Size index
 		) {
 			this.Command.RemoveAt(index);
@@ -188,7 +188,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async Task ForwardCommand (
+		public async Task ForwardCommand(
 			List<Size> index
 		) {
 			var actualCommand = new List<List<String>>();
@@ -206,7 +206,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region page
 
-		public async void uPage_DragOver (
+		public async void uPage_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -214,7 +214,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async void uPage_Drop (
+		public async void uPage_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -232,7 +232,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			}
 		}
 
-		public async void uParallelForward_Click (
+		public async void uParallelForward_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -250,7 +250,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public List<MainPageMethodGroupItemController> uMethodList_ItemsSource { get; set; } = default!;
 
-		public async void uMethodList_ItemInvoked (
+		public async void uMethodList_ItemInvoked(
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
@@ -269,7 +269,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region command
 
-		public async void uCommandForward_Click (
+		public async void uCommandForward_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -294,7 +294,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		protected override DataTemplate? SelectTemplateCore (
+		protected override DataTemplate? SelectTemplateCore(
 			Object item
 		) {
 			return item switch {
@@ -440,7 +440,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public async void uRemove_Click (
+		public async void uRemove_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -451,7 +451,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return;
 		}
 
-		public async void uForward_Click (
+		public async void uForward_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -472,7 +472,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			}
 		}
 
-		public async void uBatch_Click (
+		public async void uBatch_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

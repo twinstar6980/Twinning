@@ -1,7 +1,8 @@
 import '/common.dart';
 import '/setting.dart';
+import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import 'widget/export.dart';
+import '/widget/export.dart';
 import '/view/core_task_worker/main_page.dart' as core_task_worker;
 import '/view/core_task_worker/setting_panel.dart' as core_task_worker;
 import '/view/core_task_worker/configuration.dart' as core_task_worker;
@@ -92,7 +93,7 @@ class ModuleHelper {
   static final List<ModuleInformation> _information = [
     .new(
       type: .coreTaskWorker,
-      identifier: 'core_task_worker',
+      identifier: ModuleType.coreTaskWorker.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Task Worker',
       icon: IconSet.rule_settings,
       mainPage: (setting, configuration, option) => core_task_worker.MainPage(
@@ -113,7 +114,7 @@ class ModuleHelper {
     ),
     .new(
       type: .coreCommandSender,
-      identifier: 'core_command_sender',
+      identifier: ModuleType.coreCommandSender.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Command Sender',
       icon: IconSet.send,
       mainPage: (setting, configuration, option) => core_command_sender.MainPage(
@@ -134,7 +135,7 @@ class ModuleHelper {
     ),
     .new(
       type: .coreResourceShipper,
-      identifier: 'core_resource_shipper',
+      identifier: ModuleType.coreResourceShipper.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
       mainPage: (setting, configuration, option) => core_resource_shipper.MainPage(
@@ -160,7 +161,7 @@ class ModuleHelper {
     ),
     .new(
       type: .popcapAnimationViewer,
-      identifier: 'popcap_animation_viewer',
+      identifier: ModuleType.popcapAnimationViewer.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Animation Viewer',
       icon: IconSet.thread_unread,
       mainPage: (setting, configuration, option) => popcap_animation_viewer.MainPage(
@@ -194,7 +195,7 @@ class ModuleHelper {
     ),
     .new(
       type: .kairosoftGameManager,
-      identifier: 'kairosoft_game_manager',
+      identifier: ModuleType.kairosoftGameManager.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Kairosoft Game Manager',
       icon: IconSet.history_edu,
       mainPage: (setting, configuration, option) => kairosoft_game_manager.MainPage(
@@ -218,7 +219,7 @@ class ModuleHelper {
   static ModuleInformation query(
     ModuleType type,
   ) {
-    return _information[type.index];
+    return ModuleHelper._information[type.index];
   }
 
   // ----------------

@@ -18,7 +18,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public MainPage (
+		public MainPage(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -34,7 +34,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region module page
 
-		public Home.IModulePageController ModulePageGetController (
+		public Home.IModulePageController ModulePageGetController(
 		) {
 			return this.Controller;
 		}
@@ -75,7 +75,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			this.Configuration = new () {
 			};
@@ -86,28 +86,28 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task OpenView (
+		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.json");
 			return;
 		}
 
-		public async Task<Boolean> CloseView (
+		public async Task<Boolean> CloseView(
 		) {
 			return true;
 		}
 
-		public async Task EnterView (
+		public async Task EnterView(
 		) {
 			return;
 		}
 
-		public async Task ExitView (
+		public async Task ExitView(
 		) {
 			return;
 		}
 
-		public async Task ApplyOption (
+		public async Task ApplyOption(
 			List<String> optionView
 		) {
 			var optionProjectDirectory = default(String?);
@@ -124,7 +124,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task<List<String>> CollectOption (
+		public async Task<List<String>> CollectOption(
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-project_directory", this.ProjectDirectory != null)) {
@@ -145,7 +145,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public Boolean WorkerState { get; set; } = false;
 
-		public async Task WorkerExecuteCommand (
+		public async Task WorkerExecuteCommand(
 			List<String> argument
 		) {
 			this.WorkerState = true;
@@ -171,7 +171,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task WorkerDoTranspile (
+		public async Task WorkerDoTranspile(
 			List<String>? targetScope,
 			Boolean?      mode
 		) {
@@ -206,7 +206,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task WorkerDoCompile (
+		public async Task WorkerDoCompile(
 			List<String>? targetScope
 		) {
 			AssertTest(this.IsLoaded);
@@ -222,7 +222,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task WorkerDoLink (
+		public async Task WorkerDoLink(
 			Boolean remakeManifest
 		) {
 			AssertTest(this.IsLoaded);
@@ -240,14 +240,14 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public String MakeScopeRootPath (
+		public String MakeScopeRootPath(
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
 			return $"{projectDirectory}";
 		}
 
-		public String MakeScopeRootPath (
+		public String MakeScopeRootPath(
 			String part
 		) {
 			AssertTest(this.IsLoaded);
@@ -255,7 +255,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return $"{projectDirectory}/{part}";
 		}
 
-		public String MakeScopeRootPath (
+		public String MakeScopeRootPath(
 			String part,
 			String group
 		) {
@@ -264,7 +264,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return $"{projectDirectory}/{part}/{group}";
 		}
 
-		public String MakeScopeRootPath (
+		public String MakeScopeRootPath(
 			String part,
 			String group,
 			String resource
@@ -274,7 +274,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return $"{projectDirectory}/{part}/{group}/{resource}";
 		}
 
-		public String MakeScopeChildPath (
+		public String MakeScopeChildPath(
 			String parent,
 			String name
 		) {
@@ -282,21 +282,21 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return $"{parent}/{name}";
 		}
 
-		public String MakeScopeSettingPath (
+		public String MakeScopeSettingPath(
 			String parent
 		) {
 			AssertTest(this.IsLoaded);
 			return $"{parent}/setting.json";
 		}
 
-		public List<String> ListScopeChildName (
+		public List<String> ListScopeChildName(
 			String parent
 		) {
 			AssertTest(this.IsLoaded);
 			return StorageHelper.ListDirectory(parent, 1, false, true).Where((value) => (!value.StartsWith("."))).ToList();
 		}
 
-		public String FindAvailableScopeChildName (
+		public String FindAvailableScopeChildName(
 			String parent,
 			String name
 		) {
@@ -312,14 +312,14 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public MainPagePartItemController FindScopeNode (
+		public MainPagePartItemController FindScopeNode(
 			String part
 		) {
 			AssertTest(this.IsLoaded);
 			return this.uPartList_ItemsSource.First((value) => (value.Name == part));
 		}
 
-		public MainPageGroupItemController FindScopeNode (
+		public MainPageGroupItemController FindScopeNode(
 			String part,
 			String group
 		) {
@@ -327,7 +327,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return this.FindScopeNode(part).Children.First((value) => (value.Name == group));
 		}
 
-		public MainPageResourceItemController FindScopeNode (
+		public MainPageResourceItemController FindScopeNode(
 			String part,
 			String group,
 			String resource
@@ -338,7 +338,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task ProjectOpen (
+		public async Task ProjectOpen(
 			String projectDirectory
 		) {
 			AssertTest(!this.IsLoaded);
@@ -356,7 +356,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ProjectClose (
+		public async Task ProjectClose(
 		) {
 			AssertTest(this.IsLoaded);
 			this.uPackageList_ItemsSource.Clear();
@@ -376,7 +376,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ProjectReload (
+		public async Task ProjectReload(
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.MakeScopeRootPath();
@@ -430,7 +430,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ProjectReveal (
+		public async Task ProjectReveal(
 			Boolean forSetting
 		) {
 			AssertTest(this.IsLoaded);
@@ -445,7 +445,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ProjectSaveSetting (
+		public async Task ProjectSaveSetting(
 		) {
 			AssertTest(this.IsLoaded);
 			await JsonHelper.SerializeFile(this.MakeScopeSettingPath(this.MakeScopeRootPath()), this.ProjectSetting);
@@ -454,7 +454,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task PackageAppend (
+		public async Task PackageAppend(
 		) {
 			AssertTest(this.IsLoaded);
 			var destinationPackage = new PackageSetting() {
@@ -496,7 +496,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PackageRename (
+		public async Task PackageRename(
 			PackageSetting sourcePackage,
 			String         destinationPackage
 		) {
@@ -511,7 +511,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PackageDelete (
+		public async Task PackageDelete(
 			PackageSetting sourcePackage
 		) {
 			AssertTest(this.IsLoaded);
@@ -522,7 +522,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PackageCopy (
+		public async Task PackageCopy(
 			PackageSetting sourcePackage
 		) {
 			AssertTest(this.IsLoaded);
@@ -561,7 +561,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task PartReload (
+		public async Task PartReload(
 			String  sourcePart,
 			Boolean forRefresh = true
 		) {
@@ -617,7 +617,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PartReveal (
+		public async Task PartReveal(
 			String  sourcePart,
 			Boolean forSetting
 		) {
@@ -633,7 +633,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PartAppend (
+		public async Task PartAppend(
 		) {
 			AssertTest(this.IsLoaded);
 			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), "__");
@@ -655,7 +655,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PartRename (
+		public async Task PartRename(
 			String sourcePart,
 			String destinationPart
 		) {
@@ -691,7 +691,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PartDelete (
+		public async Task PartDelete(
 			String sourcePart
 		) {
 			AssertTest(this.IsLoaded);
@@ -710,7 +710,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task PartCopy (
+		public async Task PartCopy(
 			String sourcePart
 		) {
 			AssertTest(this.IsLoaded);
@@ -726,7 +726,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task GroupReload (
+		public async Task GroupReload(
 			String  sourcePart,
 			String  sourceGroup,
 			Boolean forRefresh = true
@@ -772,7 +772,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task GroupReveal (
+		public async Task GroupReveal(
 			String  sourcePart,
 			String  sourceGroup,
 			Boolean forSetting
@@ -789,7 +789,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task GroupAppend (
+		public async Task GroupAppend(
 			String sourcePart
 		) {
 			AssertTest(this.IsLoaded);
@@ -817,7 +817,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task GroupRename (
+		public async Task GroupRename(
 			String sourcePart,
 			String sourceGroup,
 			String destinationGroup
@@ -847,7 +847,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task GroupDelete (
+		public async Task GroupDelete(
 			String sourcePart,
 			String sourceGroup
 		) {
@@ -863,7 +863,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task GroupCopy (
+		public async Task GroupCopy(
 			String sourcePart,
 			String sourceGroup
 		) {
@@ -878,7 +878,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task GroupMove (
+		public async Task GroupMove(
 			String sourcePart,
 			String sourceGroup,
 			String destinationPart
@@ -907,7 +907,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task ResourceReload (
+		public async Task ResourceReload(
 			String  sourcePart,
 			String  sourceGroup,
 			String  sourceResource,
@@ -945,7 +945,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ResourceReveal (
+		public async Task ResourceReveal(
 			String  sourcePart,
 			String  sourceGroup,
 			String  sourceResource,
@@ -963,7 +963,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ResourceAppend (
+		public async Task ResourceAppend(
 			String sourcePart,
 			String sourceGroup
 		) {
@@ -997,7 +997,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ResourceRename (
+		public async Task ResourceRename(
 			String sourcePart,
 			String sourceGroup,
 			String sourceResource,
@@ -1021,7 +1021,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ResourceDelete (
+		public async Task ResourceDelete(
 			String sourcePart,
 			String sourceGroup,
 			String sourceResource
@@ -1038,7 +1038,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ResourceCopy (
+		public async Task ResourceCopy(
 			String sourcePart,
 			String sourceGroup,
 			String sourceResource
@@ -1054,7 +1054,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async Task ResourceMove (
+		public async Task ResourceMove(
 			String sourcePart,
 			String sourceGroup,
 			String sourceResource,
@@ -1085,7 +1085,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task ApplyLoad (
+		public async Task ApplyLoad(
 			String projectDirectory
 		) {
 			if (this.IsLoaded) {
@@ -1107,7 +1107,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region page
 
-		public async void uPage_DragOver (
+		public async void uPage_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -1118,7 +1118,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uPage_Drop (
+		public async void uPage_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -1179,7 +1179,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uProjectOpen_Click (
+		public async void uProjectOpen_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1191,7 +1191,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uProjectClose_Click (
+		public async void uProjectClose_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1203,7 +1203,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uProjectAction_Click (
+		public async void uProjectAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1258,7 +1258,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region package
 
-		public async void uPackageList_DragItemsCompleted (
+		public async void uPackageList_DragItemsCompleted(
 			Object                      sender,
 			DragItemsCompletedEventArgs args
 		) {
@@ -1271,7 +1271,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public ObservableCollection<MainPagePackageItemController> uPackageList_ItemsSource { get; } = [];
 
-		public async void uPackageList_SelectionChanged (
+		public async void uPackageList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1282,7 +1282,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uPackageAction_Click (
+		public async void uPackageAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1306,7 +1306,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uPackageActionAppend_Click (
+		public async void uPackageActionAppend_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1322,7 +1322,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public ObservableCollection<MainPagePartItemController> uPartList_ItemsSource { get; } = [];
 
-		public async void uPartList_SelectionChanged (
+		public async void uPartList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1343,7 +1343,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uPartAction_Click (
+		public async void uPartAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1410,7 +1410,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uPartActionAppend_Click (
+		public async void uPartActionAppend_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1424,7 +1424,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region group
 
-		public async void uGroupList_DragItemsStarting (
+		public async void uGroupList_DragItemsStarting(
 			Object                     sender,
 			DragItemsStartingEventArgs args
 		) {
@@ -1436,7 +1436,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public ObservableCollection<MainPageGroupGroupController> uGroupList_ItemsSource { get; } = [];
 
-		public async void uGroupList_SelectionChanged (
+		public async void uGroupList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1458,7 +1458,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uGroupAction_Click (
+		public async void uGroupAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1531,7 +1531,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public ObservableCollection<MainPageResourceGroupController> uResourceList_ItemsSource { get; } = [];
 
-		public async void uResourceList_DragItemsStarting (
+		public async void uResourceList_DragItemsStarting(
 			Object                     sender,
 			DragItemsStartingEventArgs args
 		) {
@@ -1543,7 +1543,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uResourceAction_Click (
+		public async void uResourceAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1630,7 +1630,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task SaveSetting (
+		public async Task SaveSetting(
 		) {
 			AssertTest(this.Host.IsLoaded);
 			await this.Host.ProjectSaveSetting();
@@ -1676,7 +1676,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uNameEdit_IsEnabledChanged (
+		public async void uNameEdit_IsEnabledChanged(
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
@@ -1688,7 +1688,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uNameEdit_LostFocus (
+		public async void uNameEdit_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1716,7 +1716,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uAction_Click (
+		public async void uAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1809,7 +1809,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task SaveSetting (
+		public async Task SaveSetting(
 		) {
 			AssertTest(this.Host.IsLoaded);
 			await JsonHelper.SerializeFile(this.Host.MakeScopeSettingPath(this.Host.MakeScopeRootPath(this.Name)), this.Setting);
@@ -1820,7 +1820,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region view
 
-		public async void uRoot_DragOver (
+		public async void uRoot_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -1832,7 +1832,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uRoot_Drop (
+		public async void uRoot_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -1889,7 +1889,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uNameEdit_IsEnabledChanged (
+		public async void uNameEdit_IsEnabledChanged(
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
@@ -1901,7 +1901,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uNameEdit_LostFocus (
+		public async void uNameEdit_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1929,7 +1929,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uAction_Click (
+		public async void uAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2040,7 +2040,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uActionAppend_Click (
+		public async void uActionAppend_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2078,7 +2078,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task SaveSetting (
+		public async Task SaveSetting(
 		) {
 			AssertTest(this.Host.IsLoaded);
 			await JsonHelper.SerializeFile(this.Host.MakeScopeSettingPath(this.Host.MakeScopeRootPath(this.Parent.Name, this.Name)), this.Setting);
@@ -2089,7 +2089,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region view
 
-		public async void uRoot_DragOver (
+		public async void uRoot_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -2101,7 +2101,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uRoot_Drop (
+		public async void uRoot_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -2158,7 +2158,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uNameEdit_IsEnabledChanged (
+		public async void uNameEdit_IsEnabledChanged(
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
@@ -2170,7 +2170,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uNameEdit_LostFocus (
+		public async void uNameEdit_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2198,7 +2198,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uAction_Click (
+		public async void uAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2311,7 +2311,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uActionAppend_Click (
+		public async void uActionAppend_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2347,7 +2347,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async Task SaveSetting (
+		public async Task SaveSetting(
 		) {
 			AssertTest(this.Host.IsLoaded);
 			await JsonHelper.SerializeFile(this.Host.MakeScopeSettingPath(this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name)), this.Setting);
@@ -2393,7 +2393,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uNameEdit_IsEnabledChanged (
+		public async void uNameEdit_IsEnabledChanged(
 			Object                             sender,
 			DependencyPropertyChangedEventArgs args
 		) {
@@ -2405,7 +2405,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uNameEdit_LostFocus (
+		public async void uNameEdit_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2433,7 +2433,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uCategoryFlyout_Closed (
+		public async void uCategoryFlyout_Closed(
 			Object sender,
 			Object args
 		) {
@@ -2443,7 +2443,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uCategoryResolution_LostFocus (
+		public async void uCategoryResolution_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2464,7 +2464,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uCategoryLocale_LostFocus (
+		public async void uCategoryLocale_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2519,7 +2519,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uType_Click (
+		public async void uType_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -2589,7 +2589,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return;
 		}
 
-		public async void uTypeCast_Click (
+		public async void uTypeCast_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2682,7 +2682,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uAction_Click (
+		public async void uAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

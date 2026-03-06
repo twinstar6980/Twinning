@@ -13,7 +13,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public CommandLineWriter (
+		public CommandLineWriter(
 		) {
 			this.mView = [];
 			return;
@@ -23,12 +23,12 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region query
 
-		public List<String> Done (
+		public List<String> Done(
 		) {
 			return this.mView;
 		}
 
-		public Boolean Check (
+		public Boolean Check(
 			String  name,
 			Boolean state = true
 		) {
@@ -40,35 +40,35 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public void NextBoolean (
+		public void NextBoolean(
 			Boolean value
 		) {
 			this.NextString(value.SelfLet((it) => (ConvertHelper.MakeBooleanToString(it))));
 			return;
 		}
 
-		public void NextInteger (
+		public void NextInteger(
 			Integer value
 		) {
 			this.NextString(value.SelfLet((it) => (ConvertHelper.MakeIntegerToString(it, false))));
 			return;
 		}
 
-		public void NextFloater (
+		public void NextFloater(
 			Floater value
 		) {
 			this.NextString(value.SelfLet((it) => (ConvertHelper.MakeFloaterToString(it, false))));
 			return;
 		}
 
-		public void NextString (
+		public void NextString(
 			String value
 		) {
 			this.mView.Add(value);
 			return;
 		}
 
-		public void NextStringList (
+		public void NextStringList(
 			List<String> value
 		) {
 			this.mView.AddRange(value);

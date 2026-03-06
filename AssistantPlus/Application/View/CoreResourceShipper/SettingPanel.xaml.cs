@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		public SettingPanel (
+		public SettingPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -67,7 +67,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uParallelForwardToggle_IsChecked),
@@ -87,7 +87,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 		}
 
-		public async void uParallelForwardToggle_Click (
+		public async void uParallelForwardToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -109,7 +109,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 		}
 
-		public async void uEnableFilterToggle_Click (
+		public async void uEnableFilterToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -131,7 +131,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 		}
 
-		public async void uEnableBatchToggle_Click (
+		public async void uEnableBatchToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

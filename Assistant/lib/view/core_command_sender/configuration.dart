@@ -132,7 +132,7 @@ class ConfigurationHelper {
       var itemConfiguration = configuration[index];
       var itemValue = value[index];
       if (itemValue.value != null) {
-        json[itemConfiguration.identifier] = makeArgumentValueJson(itemValue.value!);
+        json[itemConfiguration.identifier] = ConfigurationHelper.makeArgumentValueJson(itemValue.value!);
       }
     }
     return json;

@@ -15,13 +15,13 @@ namespace Twinning.AssistantPlus {
 
 		public class CompositeTypeJsonConverter : JsonConverter<PopcapReflectionModel.CompositeType> {
 
-			public override Boolean CanConvert (
+			public override Boolean CanConvert(
 				Type objectType
 			) {
 				return objectType == typeof(PopcapReflectionModel.CompositeType);
 			}
 
-			public override void Write (
+			public override void Write(
 				Utf8JsonWriter                      writer,
 				PopcapReflectionModel.CompositeType value,
 				JsonSerializerOptions               options
@@ -31,7 +31,7 @@ namespace Twinning.AssistantPlus {
 
 			[UnconditionalSuppressMessage("Trimming", "IL2026")]
 			[UnconditionalSuppressMessage("AOT", "IL3050")]
-			public override PopcapReflectionModel.CompositeType Read (
+			public override PopcapReflectionModel.CompositeType Read(
 				ref Utf8JsonReader    reader,
 				Type                  typeToConvert,
 				JsonSerializerOptions options
@@ -43,7 +43,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static PopcapReflectionModel.CompositeType ParseTypeExpression (
+		public static PopcapReflectionModel.CompositeType ParseTypeExpression(
 			List<String> ripe
 		) {
 			var raw = new PopcapReflectionModel.CompositeType() {
@@ -107,13 +107,13 @@ namespace Twinning.AssistantPlus {
 			return raw;
 		}
 
-		public static PopcapReflectionModel.CompositeType ParseTypeExpression (
+		public static PopcapReflectionModel.CompositeType ParseTypeExpression(
 			String ripe
 		) {
 			return PopcapReflectionHelper.ParseTypeExpression(ripe.Split(".").ToList());
 		}
 
-		public static String MakeTypeName (
+		public static String MakeTypeName(
 			PopcapReflectionModel.CompositeType ripe
 		) {
 			return ripe.Primitive switch {
@@ -132,13 +132,13 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static String MakeEnumerationExpression (
+		public static String MakeEnumerationExpression(
 			Tuple<String> ripe
 		) {
 			return ripe.Item1;
 		}
 
-		public static Tuple<String> ParseEnumerationExpression (
+		public static Tuple<String> ParseEnumerationExpression(
 			String raw
 		) {
 			var ripe = new Tuple<String>(raw);
@@ -147,13 +147,13 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static String MakeReferenceExpression (
+		public static String MakeReferenceExpression(
 			Tuple<String, String> ripe
 		) {
 			return $"RTID({(ripe.Item1.Length == 0 && ripe.Item2.Length == 0 ? "0" : $"{ripe.Item2}@{ripe.Item1}")})";
 		}
 
-		public static Tuple<String, String> ParseReferenceExpression (
+		public static Tuple<String, String> ParseReferenceExpression(
 			String raw
 		) {
 			var rawMatch = Regex.Match(raw, @"^RTID\(([0-9a-zA-Z.$]+)[@]([0-9a-zA-Z.$]+)\)$");
@@ -164,7 +164,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static JsonNode MakeDataValue (
+		public static JsonNode MakeDataValue(
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.CompositeType type,
 			Object                              ripe
@@ -249,7 +249,7 @@ namespace Twinning.AssistantPlus {
 			return raw;
 		}
 
-		public static Object ParseDataValue (
+		public static Object ParseDataValue(
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.CompositeType type,
 			JsonNode                            raw
@@ -346,7 +346,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static Object GenerateDataValueDefault (
+		public static Object GenerateDataValueDefault(
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.CompositeType type,
 			Boolean                             withElement
@@ -417,7 +417,7 @@ namespace Twinning.AssistantPlus {
 
 		#region compile
 
-		public static void CompileEnumerationDescriptor (
+		public static void CompileEnumerationDescriptor(
 			Dictionary<String, PopcapReflectionModel.EnumerationDescriptor> ripe,
 			PopcapReflectionModel.EnumerationDescriptor                     raw
 		) {
@@ -425,7 +425,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public static void CompileObjectDescriptor (
+		public static void CompileObjectDescriptor(
 			Dictionary<String, List<PopcapReflectionModel.ObjectDescriptor>> ripe,
 			PopcapReflectionModel.ObjectDescriptor                           raw,
 			List<PopcapReflectionModel.ObjectDescriptor>                     rawParent
@@ -438,7 +438,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public static PopcapReflectionModel.DescriptorMap CompileDescriptorArchive (
+		public static PopcapReflectionModel.DescriptorMap CompileDescriptorArchive(
 			PopcapReflectionModel.DescriptorArchive raw
 		) {
 			var ripe = new PopcapReflectionModel.DescriptorMap() {
@@ -456,7 +456,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static List<PopcapReflectionModel.AddressedFixedObject> CompileDataArchive (
+		public static List<PopcapReflectionModel.AddressedFixedObject> CompileDataArchive(
 			PopcapReflectionModel.DescriptorMap descriptor,
 			PopcapReflectionModel.DataArchive   raw
 		) {
@@ -482,13 +482,13 @@ namespace Twinning.AssistantPlus {
 
 		#region load
 
-		public static async Task<PopcapReflectionModel.DescriptorArchive> LoadDescriptorArchive (
+		public static async Task<PopcapReflectionModel.DescriptorArchive> LoadDescriptorArchive(
 			String file
 		) {
 			return await JsonHelper.DeserializeFile<PopcapReflectionModel.DescriptorArchive>(file);
 		}
 
-		public static async Task<PopcapReflectionModel.DataArchive> LoadDataArchive (
+		public static async Task<PopcapReflectionModel.DataArchive> LoadDataArchive(
 			String file
 		) {
 			return await JsonHelper.DeserializeFile<PopcapReflectionModel.DataArchive>(file);

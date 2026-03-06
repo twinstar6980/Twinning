@@ -39,7 +39,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public App (
+		public App(
 		) {
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 			AssertTest(App.Instance == null);
@@ -56,7 +56,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		protected override async void OnLaunched (
+		protected override async void OnLaunched(
 			LaunchActivatedEventArgs args
 		) {
 			try {
@@ -74,8 +74,8 @@ namespace Twinning.AssistantPlus {
 					needShowOnboarding = true;
 				}
 				await this.Setting.Save(apply: false);
-				NotificationHelper.Initialize();
-				JumpListHelper.Initialize();
+				ApplicationNotificationManager.Instance.Initialize();
+				ApplicationJumpListManager.Instance.Initialize();
 				this.MainWindow = new ();
 				if (this.Setting.Data.WindowSizeState) {
 					WindowHelper.SetSize(this.MainWindow, this.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), this.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
@@ -91,7 +91,7 @@ namespace Twinning.AssistantPlus {
 						if (needShowOnboarding) {
 							await this.MainWindow.ShowOnboarding();
 						}
-						NotificationHelper.Listen(async () => {
+						ApplicationNotificationManager.Instance.Listen(async () => {
 							WindowHelper.SetAsForeground(this.MainWindow);
 							return;
 						});
@@ -119,7 +119,7 @@ namespace Twinning.AssistantPlus {
 
 		#region utility
 
-		public async Task AppendRecentLauncherItem (
+		public async Task AppendRecentLauncherItem(
 			ModuleLauncherConfiguration launcher
 		) {
 			var pinnedItem = this.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
@@ -138,7 +138,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public async Task ExecuteLauncher (
+		public async Task ExecuteLauncher(
 			ModuleLauncherConfiguration launcher,
 			Boolean                     forNewWindow
 		) {
@@ -153,7 +153,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		private async Task HandleException (
+		private async Task HandleException(
 			Exception exception,
 			Window?   window
 		) {
@@ -179,7 +179,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		private async Task HandleExceptionFatal (
+		private async Task HandleExceptionFatal(
 			Exception exception
 		) {
 			try {
@@ -209,7 +209,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public async Task HandleLaunch (
+		public async Task HandleLaunch(
 			String       title,
 			ModuleType   type,
 			List<String> option
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public async Task HandleForward (
+		public async Task HandleForward(
 			List<String> resource
 		) {
 			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
@@ -250,7 +250,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public async Task HandleCommand (
+		public async Task HandleCommand(
 			List<String> command
 		) {
 			var optionWindowPosition = default(Tuple<Integer, Integer>?);
@@ -303,7 +303,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public async Task HandleLink (
+		public async Task HandleLink(
 			Uri link
 		) {
 			if (link.Scheme != ApplicationInformation.Identifier || link.Authority != "" || link.AbsolutePath != "/application") {

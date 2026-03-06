@@ -104,10 +104,10 @@ class GameProgramHelper {
     assertTest(await StorageHelper.existDirectory(gameDirectory));
     var result = <GamePlatform>[];
     for (var platform in GamePlatform.values) {
-      if (!await StorageHelper.existFile('${gameDirectory}/${_getProgramFilePath(platform)}')) {
+      if (!await StorageHelper.existFile('${gameDirectory}/${GameProgramHelper._getProgramFilePath(platform)}')) {
         continue;
       }
-      if (!await StorageHelper.existFile('${gameDirectory}/${_getMetadataFilePath(platform)}')) {
+      if (!await StorageHelper.existFile('${gameDirectory}/${GameProgramHelper._getMetadataFilePath(platform)}')) {
         continue;
       }
       result.add(platform);
@@ -151,11 +151,11 @@ class GameProgramHelper {
         }
         if (overwrite) {
           data.position -= 5;
-          data.setIntegerU8(_instructionCodeNopIntel32);
-          data.setIntegerU8(_instructionCodeNopIntel32);
-          data.setIntegerU8(_instructionCodeNopIntel32);
-          data.setIntegerU8(_instructionCodeNopIntel32);
-          data.setIntegerU8(_instructionCodeNopIntel32);
+          data.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+          data.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+          data.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+          data.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+          data.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
         }
         state = true;
         break;
@@ -178,7 +178,7 @@ class GameProgramHelper {
         }
         if (overwrite) {
           data.position -= 4;
-          data.setIntegerU32(_instructionCodeNopArm32);
+          data.setIntegerU32(GameProgramHelper._instructionCodeNopArm32);
         }
         state = true;
         break;
@@ -201,7 +201,7 @@ class GameProgramHelper {
         }
         if (overwrite) {
           data.position -= 4;
-          data.setIntegerU32(_instructionCodeNopArm64);
+          data.setIntegerU32(GameProgramHelper._instructionCodeNopArm64);
         }
         state = true;
         break;
@@ -268,9 +268,9 @@ class GameProgramHelper {
     if (disableRecordEncryption) {
       onNotify('Phase: modify method \'RecordStore.ReadRecord\'.');
       programStream.position = symbolAddress['RecordStore.ReadRecord']!.first;
-      assertTest(_findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Decode']!, true, platform));
-      assertTest(_findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Decode']!, true, platform));
-      assertTest(_findCallInstruction(programStream, 0x1000, symbolAddress['CRC64.GetValue']!, false, platform));
+      assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Decode']!, true, platform));
+      assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Decode']!, true, platform));
+      assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['CRC64.GetValue']!, false, platform));
       if (platform == .windowsIntel32) {
         // add esp, .. = 83 C4 XX
         assertTest(programStream.getIntegerU8() == 0x83);
@@ -278,13 +278,13 @@ class GameProgramHelper {
         programStream.position += 1;
         // cmp eax, .. = 3B XX XX
         assertTest(programStream.getIntegerU8() == 0x3B);
-        programStream.setIntegerU8(_instructionCodeNopIntel32);
-        programStream.setIntegerU8(_instructionCodeNopIntel32);
-        programStream.setIntegerU8(_instructionCodeNopIntel32);
+        programStream.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+        programStream.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+        programStream.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
         // jnz .. = 75 XX
         assertTest(programStream.getIntegerU8() == 0x75);
-        programStream.setIntegerU8(_instructionCodeNopIntel32);
-        programStream.setIntegerU8(_instructionCodeNopIntel32);
+        programStream.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
+        programStream.setIntegerU8(GameProgramHelper._instructionCodeNopIntel32);
       }
       if (platform == .androidArm32) {
         // eor; eor; orrs
@@ -292,7 +292,7 @@ class GameProgramHelper {
         // bne #X = 1A XX XX XX
         assertTest((programStream.getIntegerU32() & 0xFF000000) == 0x1A000000);
         programStream.position -= 4;
-        programStream.setIntegerU32(_instructionCodeNopArm32);
+        programStream.setIntegerU32(GameProgramHelper._instructionCodeNopArm32);
       }
       if (platform == .androidArm64) {
         // cmp; mov
@@ -300,14 +300,14 @@ class GameProgramHelper {
         // bne #X = 54 XX XX XX
         assertTest((programStream.getIntegerU32() & 0xFF000000) == 0x54000000);
         programStream.position -= 4;
-        programStream.setIntegerU32(_instructionCodeNopArm64);
+        programStream.setIntegerU32(GameProgramHelper._instructionCodeNopArm64);
       }
     }
     if (disableRecordEncryption) {
       onNotify('Phase: modify method \'RecordStore.WriteRecord\'.');
       programStream.position = symbolAddress['RecordStore.WriteRecord']!.first;
-      assertTest(_findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Encode']!, true, platform));
-      assertTest(_findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Encode']!, true, platform));
+      assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Encode']!, true, platform));
+      assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Encode']!, true, platform));
     }
     if (enableDebugMode) {
       onNotify('Phase: modify method \'MyConfig..cctor\'.');
@@ -420,7 +420,7 @@ class GameProgramHelper {
     }
     onNotify('Phase: extract necessary file.');
     var targetDirectory = '${temporaryDirectory}/flat';
-    var necessaryFileNameList = GamePlatform.values.map((it) => [_getProgramFilePath(it), _getMetadataFilePath(it)]).flattenedToSet;
+    var necessaryFileNameList = GamePlatform.values.map((it) => [GameProgramHelper._getProgramFilePath(it), GameProgramHelper._getMetadataFilePath(it)]).flattenedToSet;
     if (packageType == .flat) {
       for (var necessaryFileName in necessaryFileNameList) {
         if (await StorageHelper.existFile('${target}/${necessaryFileName}')) {
@@ -442,15 +442,15 @@ class GameProgramHelper {
       }
     }
     onNotify('Phase: detect platform.');
-    var platformList = await detectPlatform(targetDirectory);
+    var platformList = await GameProgramHelper.detectPlatform(targetDirectory);
     assertTest(platformList.isNotEmpty);
     onNotify('Tip: the platform is \'${platformList.map((it) => it.name).join('|')}\'.');
     for (var platform in platformList) {
       onNotify('Phase: modify program of \'${platform.name}\'.');
-      await modify(
+      await GameProgramHelper.modify(
         platform,
-        '${targetDirectory}/${_getProgramFilePath(platform)}',
-        '${targetDirectory}/${_getMetadataFilePath(platform)}',
+        '${targetDirectory}/${GameProgramHelper._getProgramFilePath(platform)}',
+        '${targetDirectory}/${GameProgramHelper._getMetadataFilePath(platform)}',
         disableRecordEncryption,
         enableDebugMode,
         externalToolSetting,
@@ -476,7 +476,7 @@ class GameProgramHelper {
         }
       }
       for (var replaceTask in replaceTaskList) {
-        var fileName = _getProgramFilePath(replaceTask.platform);
+        var fileName = GameProgramHelper._getProgramFilePath(replaceTask.platform);
         replaceTask.data.removeFile(replaceTask.data.find(fileName)!);
         replaceTask.data.add(.bytes(fileName, await StorageHelper.readFile('${targetDirectory}/${fileName}')));
       }
@@ -503,7 +503,7 @@ class GameProgramHelper {
     onNotify('Phase: generate result.');
     if (packageType == .flat) {
       for (var platform in platformList) {
-        await StorageHelper.copy('${targetDirectory}/${_getProgramFilePath(platform)}', '${target}/${_getProgramFilePath(platform)}');
+        await StorageHelper.copy('${targetDirectory}/${GameProgramHelper._getProgramFilePath(platform)}', '${target}/${GameProgramHelper._getProgramFilePath(platform)}');
       }
     }
     if (packageType == .zip || packageType == .apk) {
@@ -546,7 +546,7 @@ class GameRecordHelper {
     Uint8List? key,
   ) async {
     var state = GameRecordState.invalid;
-    var itemList = await listFile(recordDirectory);
+    var itemList = await GameRecordHelper.listFile(recordDirectory);
     if (itemList.length == 0) {
       state = .none;
     }
@@ -558,7 +558,7 @@ class GameRecordHelper {
           state = .decrypted;
         }
         else if (key != null) {
-          encryptData(itemData, key);
+          GameRecordHelper.encryptData(itemData, key);
           if (itemData.buffer.asUint32List().first == 0x00000000) {
             state = .original;
           }
@@ -591,7 +591,7 @@ class GameRecordHelper {
     Uint8List? key,
   ) async {
     var data = await StorageHelper.readFile(sourceFile);
-    encryptData(data, key);
+    GameRecordHelper.encryptData(data, key);
     await StorageHelper.writeFile(destinationFile, data);
     return;
   }
@@ -600,9 +600,9 @@ class GameRecordHelper {
     String     recordDirectory,
     Uint8List? key,
   ) async {
-    var itemList = await listFile(recordDirectory);
+    var itemList = await GameRecordHelper.listFile(recordDirectory);
     for (var item in itemList) {
-      await encryptFile('${recordDirectory}/${item}', '${recordDirectory}/${item}', key);
+      await GameRecordHelper.encryptFile('${recordDirectory}/${item}', '${recordDirectory}/${item}', key);
     }
     return;
   }
@@ -621,8 +621,8 @@ class GameRecordHelper {
     // TODO
     await StorageHelper.writeFileText('${archiveDirectory}/configuration', '');
     await StorageHelper.createDirectory('${archiveDirectory}/data');
-    for (var dataFile in await listFile(targetDirectory)) {
-      await encryptFile('${targetDirectory}/${dataFile}', '${targetDirectory}/data/${dataFile}', key);
+    for (var dataFile in await GameRecordHelper.listFile(targetDirectory)) {
+      await GameRecordHelper.encryptFile('${targetDirectory}/${dataFile}', '${targetDirectory}/data/${dataFile}', key);
     }
     if (await StorageHelper.exist(archiveFile)) {
       await StorageHelper.remove(archiveFile);
@@ -650,8 +650,8 @@ class GameRecordHelper {
     // TODO
     var configuration = StorageHelper.readFileText('${archiveDirectory}/configuration');
     await StorageHelper.createDirectory(targetDirectory);
-    for (var dataFile in await listFile('${archiveDirectory}/data')) {
-      await encryptFile('${archiveDirectory}/data/${dataFile}', '${targetDirectory}/${dataFile}', key);
+    for (var dataFile in await GameRecordHelper.listFile('${archiveDirectory}/data')) {
+      await GameRecordHelper.encryptFile('${archiveDirectory}/data/${dataFile}', '${targetDirectory}/${dataFile}', key);
     }
     await StorageHelper.remove(archiveDirectory);
     return;
@@ -718,7 +718,7 @@ class GameRepositoryHelper {
         : .modified;
     }
     if (await StorageHelper.existDirectory('${gameDirectory}/saves/${user}')) {
-      recordState = await GameRecordHelper.detectState('${gameDirectory}/saves/${user}', makeKeyFromSteamUser(user));
+      recordState = await GameRecordHelper.detectState('${gameDirectory}/saves/${user}', GameRepositoryHelper.makeKeyFromSteamUser(user));
     }
     return (program: programState, record: recordState);
   }
@@ -739,12 +739,12 @@ class GameRepositoryHelper {
     information.identifier = null;
     information.version = null;
     information.name = StorageHelper.name(gameDirectory);
-    information.icon = await extractProgramIcon('${gameDirectory}/KairoGames.exe');
+    information.icon = await GameRepositoryHelper.extractProgramIcon('${gameDirectory}/KairoGames.exe');
     information.key = '0';
     if (!await StorageHelper.existDirectory('${gameDirectory}/saves')) {
       information.key = (await StorageHelper.listDirectory('${gameDirectory}/saves', 1, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it)) ?? '0';
     }
-    var gameState = await checkGameState(gameDirectory, information.version, information.key!);
+    var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.version, information.key!);
     information.program = gameState.program;
     information.record = gameState.record;
     return information;
@@ -763,7 +763,7 @@ class GameRepositoryHelper {
     var result = <GameInformation>[];
     for (var library in libraryList) {
       var libraryDirectory = '${repositoryDirectory}/${library}';
-      var gameConfiguration = await loadCustomGame(libraryDirectory);
+      var gameConfiguration = await GameRepositoryHelper.loadCustomGame(libraryDirectory);
       if (gameConfiguration != null) {
         result.add(gameConfiguration);
       }
@@ -805,9 +805,9 @@ class GameRepositoryHelper {
     information.identifier = gameIdentifier;
     information.version = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['buildid']!.as<Integer>().toString();
     information.name = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['name']!.as<String>();
-    information.icon = await extractProgramIcon('${gameDirectory}/KairoGames.exe');
+    information.icon = await GameRepositoryHelper.extractProgramIcon('${gameDirectory}/KairoGames.exe');
     information.key = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
-    var gameState = await checkGameState(gameDirectory, information.version, information.key!);
+    var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.version, information.key!);
     information.program = gameState.program;
     information.record = gameState.record;
     return information;
@@ -830,7 +830,7 @@ class GameRepositoryHelper {
       var libraryDirectory = library.value!.as<Map<Object?, Object?>>()['path']!.as<String>().replaceAll('\\\\', '/');
       for (var game in library.value!.as<Map<Object?, Object?>>()['apps']!.as<Map<Object?, Object?>>().entries) {
         var gameIdentifier = game.key!.as<String>();
-        var gameConfiguration = await loadSteamGame(libraryDirectory, gameIdentifier);
+        var gameConfiguration = await GameRepositoryHelper.loadSteamGame(libraryDirectory, gameIdentifier);
         if (gameConfiguration != null) {
           result.add(gameConfiguration);
         }

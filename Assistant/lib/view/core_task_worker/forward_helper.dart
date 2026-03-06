@@ -30,11 +30,11 @@ class ForwardHelper {
     Boolean            parallel,
   ) async {
     if (!parallel) {
-      await forward(context, argument.expand((value) => [...value]).toList());
+      await ForwardHelper.forward(context, argument.expand((value) => [...value]).toList());
     }
     else {
       for (var argumentItem in argument) {
-        await forward(context, argumentItem);
+        await ForwardHelper.forward(context, argumentItem);
       }
     }
     return;

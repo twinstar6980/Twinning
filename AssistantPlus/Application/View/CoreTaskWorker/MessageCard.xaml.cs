@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public MessageCard (
+		public MessageCard(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			VisualStateManager.GoToState(this, $"{this.Type}State", false);
 			await this.Controller.UpdateView();
@@ -96,7 +96,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uTitle_Text),

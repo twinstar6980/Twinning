@@ -49,7 +49,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region utility
 
-		public static String MakeString (
+		public static String MakeString(
 			ValueExpression value
 		) {
 			return value switch {

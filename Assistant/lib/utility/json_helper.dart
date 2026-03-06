@@ -19,7 +19,7 @@ class JsonHelper {
     Object? value, {
     Boolean indented = true,
   }) {
-    return (indented ? _encoder : _encoderCompact).convert(value);
+    return (indented ? JsonHelper._encoder : JsonHelper._encoderCompact).convert(value);
   }
 
   static Object? deserializeText(
@@ -35,13 +35,13 @@ class JsonHelper {
     Object? value, {
     Boolean indented = true,
   }) async {
-    return await StorageHelper.writeFileText(path, serializeText(value, indented: indented));
+    return await StorageHelper.writeFileText(path, JsonHelper.serializeText(value, indented: indented));
   }
 
   static Future<Object?> deserializeFile(
     String path,
   ) async {
-    return deserializeText(await StorageHelper.readFileText(path));
+    return JsonHelper.deserializeText(await StorageHelper.readFileText(path));
   }
 
   // #endregion

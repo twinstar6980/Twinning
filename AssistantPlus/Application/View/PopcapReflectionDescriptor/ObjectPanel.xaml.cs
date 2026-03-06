@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		public ObjectPanel (
+		public ObjectPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -24,7 +24,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -94,7 +94,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			if (this.Type.Length == 0) {
 				this.DescriptorList = null;
@@ -181,7 +181,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		#region view
 
-		public async void uName_Click (
+		public async void uName_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public SpecialRtonResourcePropertyPanel (
+		public SpecialRtonResourcePropertyPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -82,7 +82,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uConversion_ItemsSource),
@@ -108,7 +108,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uConversion_SelectionChanged (
+		public async void uConversion_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -121,7 +121,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region path
 
-		public async void uPath_LostFocus (
+		public async void uPath_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {

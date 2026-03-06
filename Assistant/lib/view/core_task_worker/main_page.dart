@@ -5,7 +5,7 @@ import '/utility/wrapper.dart';
 import '/utility/exception_helper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/utility/notification_helper.dart';
+import '/utility/application_notification_manager.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
 import '/bridge/library.dart' as bridge;
@@ -509,7 +509,7 @@ class _MainPageBridgeClient extends bridge.Client {
     String title,
     String description,
   ) async {
-    await NotificationHelper.push(title, description);
+    await ApplicationNotificationManager.instance.push(title, description);
     return ();
   }
 

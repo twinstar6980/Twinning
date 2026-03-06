@@ -28,13 +28,13 @@ class VdfHelper {
     Map<String, Object?> value, {
     Boolean              indented = true,
   }) async {
-    return await StorageHelper.writeFileText(path, serializeText(value, indented: indented));
+    return await StorageHelper.writeFileText(path, VdfHelper.serializeText(value, indented: indented));
   }
 
   static Future<Map<String, Object?>> deserializeFile(
     String path,
   ) async {
-    return deserializeText(await StorageHelper.readFileText(path));
+    return VdfHelper.deserializeText(await StorageHelper.readFileText(path));
   }
 
   // #endregion

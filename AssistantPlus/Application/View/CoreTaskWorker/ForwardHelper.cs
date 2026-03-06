@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region utility
 
-		public static async Task Forward (
+		public static async Task Forward(
 			List<String> argument
 		) {
 			await App.Instance.HandleLaunch(
@@ -21,7 +21,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return;
 		}
 
-		public static async Task ForwardMany (
+		public static async Task ForwardMany(
 			List<List<String>> argument,
 			Boolean            parallel
 		) {
@@ -38,14 +38,14 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		// ----------------
 
-		public static String MakeMethodMaybeBatch (
+		public static String MakeMethodMaybeBatch(
 			String  method,
 			Boolean batch
 		) {
 			return $"{method}{(!batch ? "" : "!batch")}";
 		}
 
-		public static List<String> MakeArgumentForCommand (
+		public static List<String> MakeArgumentForCommand(
 			String?                     input,
 			String?                     method,
 			Dictionary<String, Object>? argument

@@ -16,7 +16,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		public MainPage (
+		public MainPage(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -32,7 +32,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		#region module page
 
-		public Home.IModulePageController ModulePageGetController (
+		public Home.IModulePageController ModulePageGetController(
 		) {
 			return this.Controller;
 		}
@@ -67,7 +67,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			this.Configuration = new () {
 				Option = [],
@@ -79,7 +79,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async Task OpenView (
+		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.json");
 			this.uOptionList_ItemsSource = this.Configuration.Option.Select((group) => (new MainPageOptionGroupItemController() {
@@ -101,22 +101,22 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async Task<Boolean> CloseView (
+		public async Task<Boolean> CloseView(
 		) {
 			return true;
 		}
 
-		public async Task EnterView (
+		public async Task EnterView(
 		) {
 			return;
 		}
 
-		public async Task ExitView (
+		public async Task ExitView(
 		) {
 			return;
 		}
 
-		public async Task ApplyOption (
+		public async Task ApplyOption(
 			List<String> optionView
 		) {
 			var optionParallelForward = default(Boolean?);
@@ -168,7 +168,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async Task<List<String>> CollectOption (
+		public async Task<List<String>> CollectOption(
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-parallel_forward")) {
@@ -192,7 +192,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		#region action
 
-		public async Task RefreshMatch (
+		public async Task RefreshMatch(
 		) {
 			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
@@ -225,7 +225,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async Task RefreshFilter (
+		public async Task RefreshFilter(
 		) {
 			foreach (var group in this.uOptionList_ItemsSource) {
 				foreach (var item in group.Children) {
@@ -244,7 +244,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		public async Task AppendResource (
+		public async Task AppendResource(
 			List<String> list
 		) {
 			foreach (var item in list) {
@@ -269,7 +269,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async Task RemoveResource (
+		public async Task RemoveResource(
 			List<String> list
 		) {
 			foreach (var item in list) {
@@ -284,7 +284,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async Task ForwardResource (
+		public async Task ForwardResource(
 			String?                     method,
 			Dictionary<String, Object>? argument
 		) {
@@ -299,7 +299,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		#region page
 
-		public async void uPage_DragOver (
+		public async void uPage_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -310,7 +310,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			return;
 		}
 
-		public async void uPage_Drop (
+		public async void uPage_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -334,7 +334,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 		}
 
-		public async void uParallelForward_Click (
+		public async void uParallelForward_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -354,7 +354,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 		}
 
-		public async void uEnableFilter_Click (
+		public async void uEnableFilter_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -375,7 +375,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 		}
 
-		public async void uEnableBatch_Click (
+		public async void uEnableBatch_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -400,7 +400,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		public async void uResourceAction_Click (
+		public async void uResourceAction_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -455,7 +455,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public ObservableCollection<MainPageResourceItemController> uResourceList_ItemsSource { get; } = [];
 
-		public async void uResourceList_ItemClick (
+		public async void uResourceList_ItemClick(
 			Object             sender,
 			ItemClickEventArgs args
 		) {
@@ -471,7 +471,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public List<MainPageOptionGroupItemController> uOptionList_ItemsSource { get; set; } = default!;
 
-		public async void uOptionList_ItemInvoked (
+		public async void uOptionList_ItemInvoked(
 			TreeView                     sender,
 			TreeViewItemInvokedEventArgs args
 		) {
@@ -540,7 +540,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		protected override DataTemplate? SelectTemplateCore (
+		protected override DataTemplate? SelectTemplateCore(
 			Object item
 		) {
 			return item switch {

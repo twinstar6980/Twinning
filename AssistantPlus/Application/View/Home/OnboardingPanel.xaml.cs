@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public OnboardingPanel (
+		public OnboardingPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -35,14 +35,14 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public event Action? PanelEnter;
 
-		public void OnPanelEnter (
+		public void OnPanelEnter(
 		) => this.PanelEnter?.Invoke();
 
 		// ----------------
 
 		public event Action? PanelExit;
 
-		public void OnPanelExit (
+		public void OnPanelExit(
 		) => this.PanelExit?.Invoke();
 
 		#endregion
@@ -65,7 +65,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			return;
 		}
@@ -74,7 +74,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region feature
 
-		public async void uImportSetting_Click (
+		public async void uImportSetting_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -88,7 +88,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uQuickSetup_Click (
+		public async void uQuickSetup_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

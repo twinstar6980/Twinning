@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public GeneralResourcePropertyPanel (
+		public GeneralResourcePropertyPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -66,7 +66,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uPath_Text),
@@ -79,7 +79,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region path
 
-		public async void uPath_LostFocus (
+		public async void uPath_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -101,7 +101,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region type
 
-		public async void uType_LostFocus (
+		public async void uType_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -119,7 +119,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 		}
 
-		public async void uTypePick_Click (
+		public async void uTypePick_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

@@ -17,7 +17,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public AboutPanel (
+		public AboutPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -26,7 +26,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -52,7 +52,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 			]);
@@ -91,7 +91,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingThemeBackdrop_SelectionChanged (
+		public async void uSettingThemeBackdrop_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -117,7 +117,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingThemeMode_SelectionChanged (
+		public async void uSettingThemeMode_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -137,7 +137,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingThemeColor_Click (
+		public async void uSettingThemeColor_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -157,7 +157,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingThemeColorLight_LostFocus (
+		public async void uSettingThemeColorLight_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -176,7 +176,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingThemeColorDark_LostFocus (
+		public async void uSettingThemeColorDark_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -203,7 +203,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingWindowPosition_Click (
+		public async void uSettingWindowPosition_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingWindowPositionX_LostFocus (
+		public async void uSettingWindowPositionX_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -250,7 +250,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingWindowPositionY_LostFocus (
+		public async void uSettingWindowPositionY_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -285,7 +285,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingWindowSize_Click (
+		public async void uSettingWindowSize_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -305,7 +305,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingWindowSizeWidth_LostFocus (
+		public async void uSettingWindowSizeWidth_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -332,7 +332,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingWindowSizeHeight_LostFocus (
+		public async void uSettingWindowSizeHeight_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -363,16 +363,16 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uSettingForwarderExtension_IsChecked {
 			get {
-				return ForwarderExtensionHelper.Check();
+				return ApplicationExtensionManager.Instance.CheckForwarder();
 			}
 		}
 
-		public async void uSettingForwarderExtension_Click (
+		public async void uSettingForwarderExtension_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			ForwarderExtensionHelper.Toggle(!ForwarderExtensionHelper.Check());
+			ApplicationExtensionManager.Instance.ToggleForwarder(!ApplicationExtensionManager.Instance.CheckForwarder());
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingForwarderExtension_IsChecked),
 				nameof(this.uSettingForwarderExtension_Content),
@@ -382,7 +382,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public String uSettingForwarderExtension_Content {
 			get {
-				return !ForwarderExtensionHelper.Check() ? "Disabled" : "Enabled";
+				return !ApplicationExtensionManager.Instance.CheckForwarder() ? "Disabled" : "Enabled";
 			}
 		}
 
@@ -400,7 +400,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingForwarderDefaultTarget_SelectionChanged (
+		public async void uSettingForwarderDefaultTarget_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -420,7 +420,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 		}
 
-		public async void uSettingForwarderImmediateJump_Click (
+		public async void uSettingForwarderImmediateJump_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -442,7 +442,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uSettingModuleConfigurationDirectory_Click (
+		public async void uSettingModuleConfigurationDirectory_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -468,7 +468,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		#region storage
 
-		public async void uStoragePackageDirectory_Click (
+		public async void uStoragePackageDirectory_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -480,7 +480,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uStorageSettingFile_Click (
+		public async void uStorageSettingFile_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -490,7 +490,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async void uStorageSettingFileMenu_Click (
+		public async void uStorageSettingFileMenu_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -554,7 +554,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uStorageSharedDirectory_Click (
+		public async void uStorageSharedDirectory_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -566,7 +566,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uStorageCacheDirectory_Click (
+		public async void uStorageCacheDirectory_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -580,7 +580,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uOnboarding_Click (
+		public async void uOnboarding_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

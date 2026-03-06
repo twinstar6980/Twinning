@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#region utility
 
-		public static Object MakeArgumentValueJson (
+		public static Object MakeArgumentValueJson(
 			ValueExpression value
 		) {
 			return value switch {
@@ -24,7 +24,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			};
 		}
 
-		public static ValueExpression ParseArgumentValueJson (
+		public static ValueExpression ParseArgumentValueJson(
 			ArgumentType type,
 			Object       json
 		) {
@@ -54,7 +54,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public static Dictionary<String, Object> MakeArgumentValueListJson (
+		public static Dictionary<String, Object> MakeArgumentValueListJson(
 			List<ArgumentConfiguration>    configuration,
 			List<Wrapper<ValueExpression>> value
 		) {
@@ -70,7 +70,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			return json;
 		}
 
-		public static List<Wrapper<ValueExpression>> ParseArgumentValueListJson (
+		public static List<Wrapper<ValueExpression>> ParseArgumentValueListJson(
 			List<ArgumentConfiguration> configuration,
 			Dictionary<String, Object>  json
 		) {

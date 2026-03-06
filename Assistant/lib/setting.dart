@@ -3,7 +3,7 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
-import '/utility/font_helper.dart';
+import '/utility/application_font_manager.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/setting.dart' as core_task_worker;
 import '/view/core_task_worker/submission_type.dart' as core_task_worker;
@@ -108,8 +108,8 @@ class SettingProvider with ChangeNotifier {
 
   SettingProvider(
   ) :
-    this.data = _createDefaultData(),
-    this.state = _createDefaultState();
+    this.data = SettingProvider._createDefaultData(),
+    this.state = SettingProvider._createDefaultState();
 
   // #endregion
 
@@ -117,7 +117,7 @@ class SettingProvider with ChangeNotifier {
 
   Future<Void> reset(
   ) async {
-    this.data = _createDefaultData();
+    this.data = SettingProvider._createDefaultData();
     return;
   }
 
@@ -125,14 +125,14 @@ class SettingProvider with ChangeNotifier {
   ) async {
     this.state.themeFontFamliy.clear();
     for (var index = 0; index < (!this.data.themeFontState ? 0 : this.data.themeFontPath.length); index++) {
-      var family = await FontHelper.loadFile(this.data.themeFontPath[index]);
+      var family = await ApplicationFontManager.instance.loadFile(this.data.themeFontPath[index]);
       if (family != null && !this.state.themeFontFamliy.contains(family)) {
         this.state.themeFontFamliy.add(family);
       }
     }
     this.state.coreTaskWorkerMessageFontFamily.clear();
     for (var index = 0; index < this.data.coreTaskWorker.messageFont.length; index++) {
-      var family = await FontHelper.loadFile(this.data.coreTaskWorker.messageFont[index]);
+      var family = await ApplicationFontManager.instance.loadFile(this.data.coreTaskWorker.messageFont[index]);
       if (family != null && !this.state.coreTaskWorkerMessageFontFamily.contains(family)) {
         this.state.coreTaskWorkerMessageFontFamily.add(family);
       }
@@ -155,7 +155,7 @@ class SettingProvider with ChangeNotifier {
     String? file = null,
   }) async {
     file ??= await this.file;
-    this.data = _parseDataFromJson(await JsonHelper.deserializeFile(file));
+    this.data = SettingProvider._parseDataFromJson(await JsonHelper.deserializeFile(file));
     return;
   }
 
@@ -167,7 +167,7 @@ class SettingProvider with ChangeNotifier {
     if (apply) {
       await this.apply();
     }
-    await JsonHelper.serializeFile(file, _makeDataToJson(this.data));
+    await JsonHelper.serializeFile(file, SettingProvider._makeDataToJson(this.data));
     return;
   }
 

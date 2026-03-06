@@ -3,8 +3,8 @@ import '/setting.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
-import '/utility/permission_helper.dart';
-import '/utility/forwarder_extension_helper.dart';
+import '/utility/application_permission_manager.dart';
+import '/utility/application_extension_manager.dart';
 import '/widget/export.dart';
 import '/view/home/about_panel.dart';
 import 'package:flutter/widgets.dart';
@@ -40,8 +40,8 @@ class _SettingPanelState extends State<SettingPanel> {
     this._storagePermissionState = false;
     this._forwarderExtensionState = null;
     postTask(() async {
-      this._storagePermissionState = await PermissionHelper.checkStorage();
-      this._forwarderExtensionState = await ForwarderExtensionHelper.check();
+      this._storagePermissionState = await ApplicationPermissionManager.instance.checkStorage();
+      this._forwarderExtensionState = await ApplicationExtensionManager.instance.checkForwarder();
       await refreshState(this.setState);
     });
     return;
@@ -338,7 +338,7 @@ class _SettingPanelState extends State<SettingPanel> {
           StyledText.inherit(!this._storagePermissionState ? 'Denied' : 'Granted'),
         ],
         onPressed: (context) async {
-          this._storagePermissionState = await PermissionHelper.requestStorage();
+          this._storagePermissionState = await ApplicationPermissionManager.instance.requestStorage();
           await refreshState(this.setState);
         },
         panelBuilder: null,
@@ -405,8 +405,8 @@ class _SettingPanelState extends State<SettingPanel> {
             leading: StyledSwitch.standard(
               value: this._forwarderExtensionState!,
               onChanged: (context, value) async {
-                await ForwarderExtensionHelper.toggle(!this._forwarderExtensionState!);
-                this._forwarderExtensionState = await ForwarderExtensionHelper.check();
+                await ApplicationExtensionManager.instance.toggleForwarder(!this._forwarderExtensionState!);
+                this._forwarderExtensionState = await ApplicationExtensionManager.instance.checkForwarder();
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
               },

@@ -216,7 +216,7 @@ class ModelHelper {
       image: (json['image'] as List<dynamic>).map((jsonItem) => Image(
         name: (jsonItem['name'] as String),
         size: (jsonItem['size'] as List<dynamic>).cast<Integer>().selfAlso((it) => assertTest(it.length == 2)).selfLet((it) => (width: it[0], height: it[1])),
-        transform: (jsonItem['transform'] as List<dynamic>).cast<Floater>().selfLet(parseVariantTransformFromList),
+        transform: (jsonItem['transform'] as List<dynamic>).cast<Floater>().selfLet(ModelHelper.parseVariantTransformFromList),
       )).toList(),
       sprite: (json['sprite'] as List<dynamic>).map((jsonItem) => Sprite(
         name: (jsonItem['name'] as String?),
@@ -243,7 +243,7 @@ class ModelHelper {
           )).toList(),
           change: (jsonElement['change'] as List<dynamic>).map((jsonPart) => LayerChange(
             index: (jsonPart['index'] as Integer),
-            transform: (jsonPart['transform'] as List<dynamic>).cast<Floater>().selfLet(parseVariantTransformFromList),
+            transform: (jsonPart['transform'] as List<dynamic>).cast<Floater>().selfLet(ModelHelper.parseVariantTransformFromList),
             color: (jsonPart['color'] as List<dynamic>?)?.cast<Floater>().selfAlso((it) => assertTest(it.length == 4)).selfLet((it) => Color(red: it[0], green: it[1], blue: it[2], alpha: it[3])),
             spriteFrameNumber: (jsonPart['sprite_frame_number'] as Integer?),
             sourceRectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(
@@ -278,7 +278,7 @@ class ModelHelper {
           )).toList(),
           change: (jsonElement['change'] as List<dynamic>).map((jsonPart) => LayerChange(
             index: (jsonPart['index'] as Integer),
-            transform: (jsonPart['transform'] as List<dynamic>).cast<Floater>().selfLet(parseVariantTransformFromList),
+            transform: (jsonPart['transform'] as List<dynamic>).cast<Floater>().selfLet(ModelHelper.parseVariantTransformFromList),
             color: (jsonPart['color'] as List<dynamic>?)?.cast<Floater>().selfAlso((it) => assertTest(it.length == 4)).selfLet((it) => Color(red: it[0], green: it[1], blue: it[2], alpha: it[3])),
             spriteFrameNumber: (jsonPart['sprite_frame_number'] as Integer?),
             sourceRectangle: (jsonPart['source_rectangle'] as Map<dynamic, dynamic>?)?.selfLet((jsonChild) => Rectangle(

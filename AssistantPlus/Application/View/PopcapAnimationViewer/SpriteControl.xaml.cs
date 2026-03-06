@@ -12,7 +12,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region life
 
-		public SpriteControl (
+		public SpriteControl(
 		) {
 			this.InitializeComponent();
 			return;
@@ -42,7 +42,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Storyboard? Storyboard { get; private set; } = null;
 
-		private void Storyboard_Completed (
+		private void Storyboard_Completed(
 			Object? sender,
 			Object  args
 		) {
@@ -68,7 +68,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public void Load (
+		public void Load(
 			PopcapAnimationModel.Animation   animation,
 			Dictionary<String, BitmapSource> texture,
 			List<Boolean>                    imageFilter,
@@ -95,7 +95,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public void Unload (
+		public void Unload(
 		) {
 			AssertTest(this.Loaded);
 			this.State = StateType.Idle;

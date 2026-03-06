@@ -16,25 +16,25 @@ class ExceptionHelper {
 
   static Void initialize(
   ) {
-    assertTest(!_initialized);
+    assertTest(!ExceptionHelper._initialized);
     WidgetsBinding.instance.platformDispatcher.onError = (exception, stack) {
-      _handler?.call(exception, stack);
+      ExceptionHelper._handler?.call(exception, stack);
       return true;
     };
     FlutterError.onError = (details) {
       FlutterError.presentError(details);
-      _handler?.call(details.exception, details.stack);
+      ExceptionHelper._handler?.call(details.exception, details.stack);
       return;
     };
-    _initialized = true;
+    ExceptionHelper._initialized = true;
     return;
   }
 
   static Void listen(
     Void Function(Object exception, StackTrace? stack)? handler,
   ) {
-    assertTest(_initialized);
-    _handler = handler;
+    assertTest(ExceptionHelper._initialized);
+    ExceptionHelper._handler = handler;
     return;
   }
 

@@ -1,6 +1,6 @@
 import '/common.dart';
 import '/setting.dart';
-import '/utility/platform_method.dart';
+import '/utility/application_platform_method.dart';
 import '/widget/export.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -20,7 +20,7 @@ class StorageHelper {
   static String regularize(
     String path,
   ) {
-    return toPosixStyle(path);
+    return StorageHelper.toPosixStyle(path);
   }
 
   static String toPosixStyle(
@@ -40,20 +40,20 @@ class StorageHelper {
   static String parent(
     String path,
   ) {
-    return regularize(lib.dirname(path));
+    return StorageHelper.regularize(lib.dirname(path));
   }
 
   static String name(
     String path,
   ) {
-    return regularize(lib.basename(path));
+    return StorageHelper.regularize(lib.basename(path));
   }
 
   // ----------------
 
   static Future<String> temporary(
   ) async {
-    var parent = await queryApplicationCacheDirectory();
+    var parent = await StorageHelper.queryApplicationCacheDirectory();
     var name = DateTime.now().millisecondsSinceEpoch.toString();
     var result = '${parent}/${name}';
     var suffix = 0;
@@ -114,15 +114,15 @@ class StorageHelper {
     String source,
     String destination,
   ) async {
-    assertTest(await exist(source));
-    if (await existFile(source)) {
-      await createFile(destination);
-      await writeFile(destination, await readFile(source));
+    assertTest(await StorageHelper.exist(source));
+    if (await StorageHelper.existFile(source)) {
+      await StorageHelper.createFile(destination);
+      await StorageHelper.writeFile(destination, await StorageHelper.readFile(source));
     }
-    if (await existDirectory(source)) {
-      await createDirectory(destination);
+    if (await StorageHelper.existDirectory(source)) {
+      await StorageHelper.createDirectory(destination);
       await for (var item in Directory(source).list(recursive: true)) {
-        await copy(item.path, '${destination}/${name(item.path)}');
+        await StorageHelper.copy(item.path, '${destination}/${StorageHelper.name(item.path)}');
       }
     }
     return;
@@ -132,12 +132,12 @@ class StorageHelper {
     String source,
     String destination,
   ) async {
-    assertTest(await exist(source));
-    await createDirectory(parent(destination));
-    if (await existFile(source)) {
+    assertTest(await StorageHelper.exist(source));
+    await StorageHelper.createDirectory(StorageHelper.parent(destination));
+    if (await StorageHelper.existFile(source)) {
       await File(source).rename(destination);
     }
-    if (await existDirectory(source)) {
+    if (await StorageHelper.existDirectory(source)) {
       await Directory(source).rename(destination);
     }
     return;
@@ -146,11 +146,11 @@ class StorageHelper {
   static Future<Void> remove(
     String source,
   ) async {
-    assertTest(await exist(source));
-    if (await existFile(source)) {
+    assertTest(await StorageHelper.exist(source));
+    if (await StorageHelper.existFile(source)) {
       await File(source).delete(recursive: true);
     }
-    if (await existDirectory(source)) {
+    if (await StorageHelper.existDirectory(source)) {
       await Directory(source).delete(recursive: true);
     }
     return;
@@ -179,7 +179,7 @@ class StorageHelper {
     String    target,
     Uint8List data,
   ) async {
-    await createFile(target);
+    await StorageHelper.createFile(target);
     await File(target).writeAsBytes(data, flush: true);
     return;
   }
@@ -196,7 +196,7 @@ class StorageHelper {
     String target,
     String text,
   ) async {
-    await createFile(target);
+    await StorageHelper.createFile(target);
     await File(target).writeAsString(text, flush: true);
     return;
   }
@@ -230,7 +230,7 @@ class StorageHelper {
     ) async {
       if (depth == null || currentDepth < depth) {
         await for (var item in Directory(target).list(recursive: false, followLinks: false)) {
-          var itemName = name(item.path);
+          var itemName = StorageHelper.name(item.path);
           var itemPath = '${currentTarget.isEmpty ? '' : '${currentTarget}/'}${itemName}';
           if (allowFile && item is File) {
             result.add(itemPath);
@@ -256,7 +256,7 @@ class StorageHelper {
   static Future<Void> reveal(
     String target,
   ) async {
-    assertTest(await exist(target));
+    assertTest(await StorageHelper.exist(target));
     var revealed = false;
     if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isLinux) {
       revealed = await lib.launchUrl(.file(target), mode: .externalApplication);
@@ -287,23 +287,23 @@ class StorageHelper {
     if (locationTag != null) {
       locationPath = setting.data.storagePickerHistoryLocation[locationTag];
     }
-    if (locationPath != null && !await existDirectory(locationPath)) {
+    if (locationPath != null && !await StorageHelper.existDirectory(locationPath)) {
       locationPath = null;
     }
     name ??= '';
     if (SystemChecker.isWindows) {
       locationPath ??= 'C:/';
       if (type == 'load_file') {
-        target = (await lib.openFile(initialDirectory: toWindowsStyle(locationPath)))?.path;
+        target = (await lib.openFile(initialDirectory: StorageHelper.toWindowsStyle(locationPath)))?.path;
       }
       if (type == 'load_directory') {
-        target = await lib.getDirectoryPath(initialDirectory: toWindowsStyle(locationPath));
+        target = await lib.getDirectoryPath(initialDirectory: StorageHelper.toWindowsStyle(locationPath));
       }
       if (type == 'save_file') {
-        target = (await lib.getSaveLocation(initialDirectory: toWindowsStyle(locationPath), suggestedName: name))?.path;
+        target = (await lib.getSaveLocation(initialDirectory: StorageHelper.toWindowsStyle(locationPath), suggestedName: name))?.path;
       }
       if (target != null) {
-        target = regularize(target);
+        target = StorageHelper.regularize(target);
       }
       if (target == '') {
         target = null;
@@ -322,27 +322,27 @@ class StorageHelper {
       }
     }
     if (SystemChecker.isAndroid) {
-      locationPath ??= (await PlatformMethod.queryExternalStoragePath()).path;
+      locationPath ??= (await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path;
       if (type == 'load_file') {
-        target = (await PlatformMethod.pickStorageItem('load_file', locationPath, name)).target;
+        target = (await ApplicationPlatformMethod.instance.pickStorageItem('load_file', locationPath, name)).target;
       }
       if (type == 'load_directory') {
-        target = (await PlatformMethod.pickStorageItem('load_directory', locationPath, name)).target;
+        target = (await ApplicationPlatformMethod.instance.pickStorageItem('load_directory', locationPath, name)).target;
       }
       if (type == 'save_file') {
-        target = (await PlatformMethod.pickStorageItem('save_file', locationPath, name)).target;
+        target = (await ApplicationPlatformMethod.instance.pickStorageItem('save_file', locationPath, name)).target;
       }
       if (target != null) {
-        target = await parseAndroidContentUri(context, Uri.parse(target), true);
+        target = await StorageHelper.parseAndroidContentUri(context, Uri.parse(target), true);
       }
     }
     if (SystemChecker.isIphone) {
-      locationPath ??= await queryApplicationSharedDirectory();
+      locationPath ??= await StorageHelper.queryApplicationSharedDirectory();
       if (type == 'load_file') {
-        target = (await PlatformMethod.pickStorageItem('load_file', locationPath, name)).target;
+        target = (await ApplicationPlatformMethod.instance.pickStorageItem('load_file', locationPath, name)).target;
       }
       if (type == 'load_directory') {
-        target = (await PlatformMethod.pickStorageItem('load_directory', locationPath, name)).target;
+        target = (await ApplicationPlatformMethod.instance.pickStorageItem('load_directory', locationPath, name)).target;
       }
       if (type == 'save_file') {
         throw UnsupportedException();
@@ -350,9 +350,9 @@ class StorageHelper {
     }
     if (locationTag != null && target != null) {
       setting.data.storagePickerHistoryLocation[locationTag] = switch (type) {
-        'load_file'      => parent(target),
+        'load_file'      => StorageHelper.parent(target),
         'load_directory' => target,
-        'save_file'      => parent(target),
+        'save_file'      => StorageHelper.parent(target),
         _                => throw UnreachableException(),
       };
       await setting.save(apply: false);
@@ -364,14 +364,14 @@ class StorageHelper {
     BuildContext context,
     String?      location,
   ) async {
-    return pick('load_file', context, location, null);
+    return StorageHelper.pick('load_file', context, location, null);
   }
 
   static Future<String?> pickLoadDirectory(
     BuildContext context,
     String?      location,
   ) async {
-    return pick('load_directory', context, location, null);
+    return StorageHelper.pick('load_directory', context, location, null);
   }
 
   static Future<String?> pickSaveFile(
@@ -379,7 +379,7 @@ class StorageHelper {
     String?      location,
     String?      name,
   ) async {
-    return pick('save_file', context, location, name);
+    return StorageHelper.pick('save_file', context, location, name);
   }
 
   // #endregion
@@ -391,7 +391,7 @@ class StorageHelper {
     var result = null as String?;
     if (SystemChecker.isWindows) {
       result = (await lib.getApplicationSupportDirectory()).path;
-      result = regularize(result);
+      result = StorageHelper.regularize(result);
     }
     if (SystemChecker.isLinux) {
       result = (await lib.getApplicationSupportDirectory()).path;
@@ -412,7 +412,7 @@ class StorageHelper {
   ) async {
     var result = null as String?;
     if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isIphone) {
-      result = (await queryApplicationSharedDirectory()) + '/cache';
+      result = (await StorageHelper.queryApplicationSharedDirectory()) + '/cache';
     }
     if (SystemChecker.isAndroid) {
       result = (await lib.getApplicationCacheDirectory()).path;
@@ -437,12 +437,12 @@ class StorageHelper {
         // /document/primary:<path-relative-external-storage>
         if (path.startsWith('/document/primary:')) {
           result = path.substring('/document/primary:'.length);
-          result = '${(await PlatformMethod.queryExternalStoragePath()).path}${result.isEmpty ? '' : '/'}${result}';
+          result = '${(await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path}${result.isEmpty ? '' : '/'}${result}';
         }
         // /tree/primary:<path-relative-external-storage>
         if (path.startsWith('/tree/primary:')) {
           result = path.substring('/tree/primary:'.length);
-          result = '${(await PlatformMethod.queryExternalStoragePath()).path}${result.isEmpty ? '' : '/'}${result}';
+          result = '${(await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path}${result.isEmpty ? '' : '/'}${result}';
         }
         break;
       }
@@ -479,7 +479,7 @@ class StorageHelper {
         break;
       }
       default: {
-        if (path.startsWith('/') && await exist(path)) {
+        if (path.startsWith('/') && await StorageHelper.exist(path)) {
           result = path;
         }
         break;
@@ -511,7 +511,7 @@ class StorageHelper {
       )) ?? false;
       if (canDuplicate) {
         var setting = Provider.of<SettingProvider>(context, listen: false);
-        result = (await PlatformMethod.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory)).destination;
+        result = (await ApplicationPlatformMethod.instance.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory)).destination;
       }
     }
     return result;

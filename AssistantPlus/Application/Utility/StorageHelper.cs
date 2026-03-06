@@ -9,19 +9,19 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region path
 
-		public static String Regularize (
+		public static String Regularize(
 			String path
 		) {
 			return StorageHelper.ToPosixStyle(path);
 		}
 
-		public static String ToPosixStyle (
+		public static String ToPosixStyle(
 			String path
 		) {
 			return path.Replace('\\', '/');
 		}
 
-		public static String ToWindowsStyle (
+		public static String ToWindowsStyle(
 			String path
 		) {
 			return path.Replace('/', '\\');
@@ -29,14 +29,14 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static String? Parent (
+		public static String? Parent(
 			String path
 		) {
 			var parent = Path.GetDirectoryName(path);
 			return parent == null ? null : StorageHelper.Regularize(parent);
 		}
 
-		public static String Name (
+		public static String Name(
 			String path
 		) {
 			var name = Path.GetFileName(path);
@@ -45,7 +45,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static String Temporary (
+		public static String Temporary(
 		) {
 			var parent = App.Instance.CacheDirectory;
 			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
@@ -62,7 +62,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		private static readonly Character[] InvalidPathNameCharacter = Path.GetInvalidFileNameChars();
 
-		public static Boolean CheckName (
+		public static Boolean CheckName(
 			String name
 		) {
 			if (name.Length == 0) {
@@ -76,7 +76,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static String GetLongPath (
+		public static String GetLongPath(
 			String source
 		) {
 			var destinationLength = Win32.PInvoke.GetLongPathName(source, []);
@@ -90,19 +90,19 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region exist
 
-		public static Boolean Exist (
+		public static Boolean Exist(
 			String target
 		) {
 			return File.Exists(target) || Directory.Exists(target);
 		}
 
-		public static Boolean ExistFile (
+		public static Boolean ExistFile(
 			String target
 		) {
 			return File.Exists(target);
 		}
 
-		public static Boolean ExistDirectory (
+		public static Boolean ExistDirectory(
 			String target
 		) {
 			return Directory.Exists(target);
@@ -112,7 +112,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region basic
 
-		public static void Copy (
+		public static void Copy(
 			String source,
 			String destination
 		) {
@@ -133,7 +133,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		public static void Rename (
+		public static void Rename(
 			String source,
 			String destination
 		) {
@@ -148,7 +148,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		public static void Remove (
+		public static void Remove(
 			String source
 		) {
 			AssertTest(StorageHelper.Exist(source));
@@ -165,7 +165,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region file
 
-		public static void CreateFile (
+		public static void CreateFile(
 			String target
 		) {
 			var parent = StorageHelper.Parent(target);
@@ -178,13 +178,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static async Task<Byte[]> ReadFile (
+		public static async Task<Byte[]> ReadFile(
 			String target
 		) {
 			return await File.ReadAllBytesAsync(target);
 		}
 
-		public static async Task WriteFile (
+		public static async Task WriteFile(
 			String target,
 			Byte[] data
 		) {
@@ -195,13 +195,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static async Task<String> ReadFileText (
+		public static async Task<String> ReadFileText(
 			String target
 		) {
 			return await File.ReadAllTextAsync(target);
 		}
 
-		public static async Task WriteFileText (
+		public static async Task WriteFileText(
 			String target,
 			String text
 		) {
@@ -214,7 +214,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region directory
 
-		public static void CreateDirectory (
+		public static void CreateDirectory(
 			String target
 		) {
 			Directory.CreateDirectory(target);
@@ -223,7 +223,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static List<String> ListDirectory (
+		public static List<String> ListDirectory(
 			String  target,
 			Size?   depth,
 			Boolean allowFile,
@@ -259,7 +259,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region shell
 
-		public static async Task Reveal (
+		public static async Task Reveal(
 			String target
 		) {
 			var result = Win32.PInvoke.ShellExecute(new (IntPtr.Zero), "open", $"file://{target}", null, null, Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_SHOWNORMAL);
@@ -269,7 +269,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static async Task<String?> Pick (
+		public static async Task<String?> Pick(
 			String  type,
 			Window  host,
 			String? location,
@@ -358,21 +358,21 @@ namespace Twinning.AssistantPlus.Utility {
 			return target;
 		}
 
-		public static async Task<String?> PickLoadFile (
+		public static async Task<String?> PickLoadFile(
 			Window  host,
 			String? location
 		) {
 			return await StorageHelper.Pick("LoadFile", host, location, null);
 		}
 
-		public static async Task<String?> PickLoadDirectory (
+		public static async Task<String?> PickLoadDirectory(
 			Window  host,
 			String? location
 		) {
 			return await StorageHelper.Pick("LoadDirectory", host, location, null);
 		}
 
-		public static async Task<String?> PickSaveFile (
+		public static async Task<String?> PickSaveFile(
 			Window  host,
 			String? location,
 			String? name
@@ -382,7 +382,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static void Trash (
+		public static void Trash(
 			String target
 		) {
 			AssertTest(StorageHelper.Exist(target));

@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static void Initialize (
+		public static void Initialize(
 			App application
 		) {
 			AssertTest(!ExceptionHelper.Initialized);
@@ -33,7 +33,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		public static void Listen (
+		public static void Listen(
 			Action<Exception>? handler
 		) {
 			AssertTest(ExceptionHelper.Initialized);
@@ -43,7 +43,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static Task WrapTask (
+		public static Task WrapTask(
 			Task task
 		) {
 			return task.ContinueWith((it) => {
@@ -54,7 +54,7 @@ namespace Twinning.AssistantPlus.Utility {
 			});
 		}
 
-		public static String GenerateMessage (
+		public static String GenerateMessage(
 			Exception exception
 		) {
 			var message = $"{exception.Message}";

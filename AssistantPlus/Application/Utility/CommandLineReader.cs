@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public CommandLineReader (
+		public CommandLineReader(
 			List<String> view
 		) {
 			this.mView = view;
@@ -27,12 +27,12 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region query
 
-		public Boolean Done (
+		public Boolean Done(
 		) {
 			return !(0 <= this.mPosition && this.mPosition < this.mView.Count);
 		}
 
-		public Boolean Check (
+		public Boolean Check(
 			String name
 		) {
 			var state = !this.Done() && this.mView[this.mPosition] == name;
@@ -44,22 +44,22 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public Boolean NextBoolean (
+		public Boolean NextBoolean(
 		) {
 			return this.NextString().SelfLet((it) => (Boolean.Parse(it)));
 		}
 
-		public Integer NextInteger (
+		public Integer NextInteger(
 		) {
 			return this.NextString().SelfLet((it) => (Integer.Parse(it)));
 		}
 
-		public Floater NextFloater (
+		public Floater NextFloater(
 		) {
 			return this.NextString().SelfLet((it) => (Floater.Parse(it)));
 		}
 
-		public String NextString (
+		public String NextString(
 		) {
 			AssertTest(!this.Done());
 			var value = this.mView[this.mPosition];
@@ -67,7 +67,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return value;
 		}
 
-		public List<String> NextStringList (
+		public List<String> NextStringList(
 		) {
 			var value = this.mView[this.mPosition..];
 			this.mPosition = this.mView.Count;

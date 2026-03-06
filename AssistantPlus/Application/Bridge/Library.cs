@@ -16,7 +16,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		// ----------------
 
-		public Library (
+		public Library(
 		) {
 			this.mHandle = null;
 			this.mSymbol = null;
@@ -27,14 +27,14 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region access
 
-		public Boolean State (
+		public Boolean State(
 		) {
 			return this.mHandle != null;
 		}
 
 		// ----------------
 
-		public void Open (
+		public void Open(
 			String path
 		) {
 			AssertTest(!this.State());
@@ -55,7 +55,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			return;
 		}
 
-		public void Close (
+		public void Close(
 		) {
 			AssertTest(this.State());
 			(*(Service*)this.mSymbol.AsNotNull().Value).finalize();
@@ -67,7 +67,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		// ----------------
 
-		public ref Service Symbol (
+		public ref Service Symbol(
 		) {
 			AssertTest(this.State());
 			return ref *(Service*)this.mSymbol.AsNotNull().Value;

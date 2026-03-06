@@ -13,7 +13,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region type
 
-		public static Boolean IsTypeOfTuple (
+		public static Boolean IsTypeOfTuple(
 			Type type
 		) {
 			if (!type.IsGenericType) {
@@ -30,7 +30,7 @@ namespace Twinning.AssistantPlus.Utility {
 				|| genericType == typeof(Tuple<,,,,,,,>);
 		}
 
-		public static Boolean IsTypeOfValueTuple (
+		public static Boolean IsTypeOfValueTuple(
 			Type type
 		) {
 			if (!type.IsGenericType) {
@@ -51,14 +51,14 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region enumeration
 
-		public static String MakeEnumerationToStringOfSnakeCase<TType> (
+		public static String MakeEnumerationToStringOfSnakeCase<TType>(
 			TType value
 		)
 			where TType : struct, Enum {
 			return ConvertHelper.ChangeStringFromCamelCaseToSnakeCase(Enum.GetName(value).AsNotNull());
 		}
 
-		public static TType ParseEnumerationFromStringOfSnakeCase<TType> (
+		public static TType ParseEnumerationFromStringOfSnakeCase<TType>(
 			String text
 		)
 			where TType : struct, Enum {
@@ -69,7 +69,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region boolean
 
-		public static String MakeBooleanToString (
+		public static String MakeBooleanToString(
 			Boolean value
 		) {
 			return value switch {
@@ -78,7 +78,7 @@ namespace Twinning.AssistantPlus.Utility {
 			};
 		}
 
-		public static String MakeBooleanToStringOfConfirmationCharacter (
+		public static String MakeBooleanToStringOfConfirmationCharacter(
 			Boolean value
 		) {
 			return value switch {
@@ -87,7 +87,7 @@ namespace Twinning.AssistantPlus.Utility {
 			};
 		}
 
-		public static Floater MakeBooleanToFloaterOfOpacityVisibility (
+		public static Floater MakeBooleanToFloaterOfOpacityVisibility(
 			Boolean value
 		) {
 			return value switch {
@@ -96,7 +96,7 @@ namespace Twinning.AssistantPlus.Utility {
 			};
 		}
 
-		public static Floater MakeBooleanToFloaterOfOpacityEnabled (
+		public static Floater MakeBooleanToFloaterOfOpacityEnabled(
 			Boolean value
 		) {
 			return value switch {
@@ -109,7 +109,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region integer
 
-		public static String MakeIntegerToString (
+		public static String MakeIntegerToString(
 			Integer value,
 			Boolean showPositiveSign
 		) {
@@ -124,7 +124,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region floater
 
-		public static String MakeFloaterToString (
+		public static String MakeFloaterToString(
 			Floater value,
 			Boolean showPositiveSign
 		) {
@@ -141,7 +141,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region string
 
-		public static List<String> SplitStringOfCamelCase (
+		public static List<String> SplitStringOfCamelCase(
 			String source
 		) {
 			return new Regex(@"([A-Z][a-z]*)|([a-z]+)|([0-9]+)", RegexOptions.Compiled)
@@ -152,13 +152,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static String ChangeStringFromCamelCaseToSnakeCase (
+		public static String ChangeStringFromCamelCaseToSnakeCase(
 			String source
 		) {
 			return String.Join('_', ConvertHelper.SplitStringOfCamelCase(source)).ToLower();
 		}
 
-		public static String ChangeStringFromCamelCaseThenInsertSpace (
+		public static String ChangeStringFromCamelCaseThenInsertSpace(
 			String source
 		) {
 			return String.Join(' ', ConvertHelper.SplitStringOfCamelCase(source));
@@ -168,13 +168,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region string list
 
-		public static String MakeStringListToStringWithLine (
+		public static String MakeStringListToStringWithLine(
 			List<String> value
 		) {
 			return String.Join('\r', value) + (value.Count != 0 && value[^1].Length == 0 ? "\r" : "");
 		}
 
-		public static List<String> ParseStringListFromStringWithLine (
+		public static List<String> ParseStringListFromStringWithLine(
 			String text
 		) {
 			var value = text.Split('\r').ToList();
@@ -188,13 +188,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region color
 
-		public static Integer MakeColorToInteger (
+		public static Integer MakeColorToInteger(
 			Color value
 		) {
 			return (value.A.CastPrimitive<Integer>() << 24) | (value.R.CastPrimitive<Integer>() << 16) | (value.G.CastPrimitive<Integer>() << 8) | (value.B.CastPrimitive<Integer>() << 0);
 		}
 
-		public static Color ParseColorFromInteger (
+		public static Color ParseColorFromInteger(
 			Integer integer
 		) {
 			return Color.FromArgb(
@@ -209,7 +209,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region bitmap
 
-		public static async Task<WriteableBitmap> ParseBitmapFromBinary (
+		public static async Task<WriteableBitmap> ParseBitmapFromBinary(
 			Byte[] data
 		) {
 			using var stream = data.AsBuffer().AsStream().AsRandomAccessStream();

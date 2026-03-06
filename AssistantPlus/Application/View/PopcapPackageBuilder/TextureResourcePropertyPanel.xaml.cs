@@ -15,7 +15,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public TextureResourcePropertyPanel (
+		public TextureResourcePropertyPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -24,7 +24,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -71,7 +71,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.NotifyPropertyChanged([
 				nameof(this.uPath_Text),
@@ -87,7 +87,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region path
 
-		public async void uPath_LostFocus (
+		public async void uPath_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -109,7 +109,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region format
 
-		public async void uFormat_LostFocus (
+		public async void uFormat_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -139,7 +139,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region pitch
 
-		public async void uPitch_LostFocus (
+		public async void uPitch_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -169,7 +169,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region additional byte count
 
-		public async void uAdditionalByteCount_LostFocus (
+		public async void uAdditionalByteCount_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -199,7 +199,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region size
 
-		public async void uSizeWidth_LostFocus (
+		public async void uSizeWidth_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -227,7 +227,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uSizeHeight_LostFocus (
+		public async void uSizeHeight_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {

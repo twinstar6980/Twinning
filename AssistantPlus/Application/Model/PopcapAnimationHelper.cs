@@ -17,7 +17,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static String ParseImageFileName (
+		public static String ParseImageFileName(
 			String value
 		) {
 			var result = value;
@@ -45,7 +45,7 @@ namespace Twinning.AssistantPlus {
 			return result;
 		}
 
-		public static List<Tuple<String, FrameRange>> ParseSpriteFrameLabel (
+		public static List<Tuple<String, FrameRange>> ParseSpriteFrameLabel(
 			PopcapAnimationModel.Sprite sprite
 		) {
 			var result = new List<Tuple<String, FrameRange>>();
@@ -70,7 +70,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static PopcapAnimationModel.Image SelectImage (
+		public static PopcapAnimationModel.Image SelectImage(
 			PopcapAnimationModel.Animation animation,
 			Size                           index
 		) {
@@ -84,7 +84,7 @@ namespace Twinning.AssistantPlus {
 			return result;
 		}
 
-		public static PopcapAnimationModel.Sprite SelectSprite (
+		public static PopcapAnimationModel.Sprite SelectSprite(
 			PopcapAnimationModel.Animation animation,
 			Size                           index
 		) {
@@ -103,14 +103,14 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static String? CheckAnimationFilePath (
+		public static String? CheckAnimationFilePath(
 			String path
 		) {
 			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
 			return !nameRule.IsMatch(path) ? null : path;
 		}
 
-		public static String? CheckAnimationDirectoryPath (
+		public static String? CheckAnimationDirectoryPath(
 			String path
 		) {
 			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
@@ -148,7 +148,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		private static Matrix MakeTransformMatrixFromVariant (
+		private static Matrix MakeTransformMatrixFromVariant(
 			List<Floater> list
 		) {
 			var value = new Matrix();
@@ -189,7 +189,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static ImageVisual VisualizeImage (
+		public static ImageVisual VisualizeImage(
 			PopcapAnimationModel.Animation   animation,
 			Dictionary<String, BitmapSource> texture,
 			PopcapAnimationModel.Image       image
@@ -213,7 +213,7 @@ namespace Twinning.AssistantPlus {
 			return visual;
 		}
 
-		public static SpriteVisual VisualizeSprite (
+		public static SpriteVisual VisualizeSprite(
 			PopcapAnimationModel.Animation   animation,
 			Dictionary<String, BitmapSource> texture,
 			PopcapAnimationModel.Sprite      sprite,
@@ -346,13 +346,13 @@ namespace Twinning.AssistantPlus {
 
 		#region load
 
-		public static async Task<PopcapAnimationModel.Animation> LoadAnimation (
+		public static async Task<PopcapAnimationModel.Animation> LoadAnimation(
 			String file
 		) {
 			return await JsonHelper.DeserializeFile<PopcapAnimationModel.Animation>(file);
 		}
 
-		public static async Task<Dictionary<String, BitmapSource>> LoadTexture (
+		public static async Task<Dictionary<String, BitmapSource>> LoadTexture(
 			String                         directory,
 			PopcapAnimationModel.Animation animation
 		) {

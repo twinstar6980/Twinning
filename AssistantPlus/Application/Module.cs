@@ -185,7 +185,7 @@ namespace Twinning.AssistantPlus {
 			},
 		];
 
-		public static ModuleInformation Query (
+		public static ModuleInformation Query(
 			ModuleType type
 		) {
 			return ModuleHelper.Information[type.CastPrimitive<Size>()];
@@ -193,14 +193,14 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static Boolean CompareLauncher (
+		public static Boolean CompareLauncher(
 			ModuleLauncherConfiguration thix,
 			ModuleLauncherConfiguration that
 		) {
 			return thix.Type.Equals(that.Type) && thix.Option.SequenceEqual(that.Option);
 		}
 
-		public static List<String> GenerateArgument (
+		public static List<String> GenerateArgument(
 			ModuleLauncherConfiguration launcher
 		) {
 			return [

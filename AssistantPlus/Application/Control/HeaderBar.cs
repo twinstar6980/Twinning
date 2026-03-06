@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Control {
 
 		#region life
 
-		public HeaderBar (
+		public HeaderBar(
 		) {
 			this.DefaultStyleKey = typeof(HeaderBar);
 			return;

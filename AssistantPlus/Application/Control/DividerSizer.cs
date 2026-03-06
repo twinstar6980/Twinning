@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Control {
 
 		#region life
 
-		public DividerSizer (
+		public DividerSizer(
 		) {
 			this.DefaultStyleKey = typeof(DividerSizer);
 			return;

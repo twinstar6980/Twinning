@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Control {
 
 		#region life
 
-		public SettingItem (
+		public SettingItem(
 		) {
 			this.DefaultStyleKey = typeof(SettingItem);
 			return;

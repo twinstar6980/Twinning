@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus {
 
 		#region life
 
-		public CustomControl (
+		public CustomControl(
 		) {
 			return;
 		}
@@ -35,7 +35,7 @@ namespace Twinning.AssistantPlus {
 
 		#region interface
 
-		protected abstract Task StampUpdate (
+		protected abstract Task StampUpdate(
 		);
 
 		#endregion

@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public VariableListPanel (
+		public VariableListPanel(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		protected override async Task StampUpdate (
+		protected override async Task StampUpdate(
 		) {
 			await this.Controller.UpdateView();
 			return;
@@ -63,7 +63,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region life
 
-		public async Task UpdateView (
+		public async Task UpdateView(
 		) {
 			this.uList_ItemsSource = this.Value.Select((value) => (new VariableListPanelItemController() {
 				Host = this,
@@ -79,7 +79,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region item
 
-		public async void uList_DragItemsCompleted (
+		public async void uList_DragItemsCompleted(
 			Object                      sender,
 			DragItemsCompletedEventArgs args
 		) {
@@ -93,7 +93,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uAppend_Click (
+		public async void uAppend_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -122,7 +122,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region view
 
-		public async void uName_LostFocus (
+		public async void uName_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -142,7 +142,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uValue_LostFocus (
+		public async void uValue_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -162,7 +162,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public async void uRemove_Click (
+		public async void uRemove_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

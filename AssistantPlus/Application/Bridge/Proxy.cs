@@ -14,7 +14,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		// ----------------
 
-		public MessageProxy (
+		public MessageProxy(
 			List<String>? value = null
 		) {
 			this.Value = value ?? [];
@@ -25,7 +25,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region convert
 
-		public static unsafe MessageProxy Parse (
+		public static unsafe MessageProxy Parse(
 			Message* instance
 		) {
 			var proxy = new MessageProxy();
@@ -50,7 +50,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			return proxy;
 		}
 
-		public static unsafe void Construct (
+		public static unsafe void Construct(
 			Message*     instance,
 			MessageProxy proxy
 		) {
@@ -91,7 +91,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			return;
 		}
 
-		public static unsafe void Destruct (
+		public static unsafe void Destruct(
 			Message* instance
 		) {
 			MemoryHelper.Free(instance->data);
@@ -112,7 +112,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		// ----------------
 
-		public ExecutorProxy (
+		public ExecutorProxy(
 			Action<ExecutorProxy, MessageProxy, MessageProxy>? value = null
 		) {
 			this.Value = value ?? ((_, _, _) => throw new NotImplementedException());
@@ -124,7 +124,7 @@ namespace Twinning.AssistantPlus.Bridge {
 		#region convert
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		private unsafe delegate void ExecutorDelegate (
+		private unsafe delegate void ExecutorDelegate(
 			Executor* self,
 			Executor* callback,
 			Message*  argument,
@@ -136,7 +136,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		// ----------------
 
-		public static unsafe ExecutorProxy Parse (
+		public static unsafe ExecutorProxy Parse(
 			Executor* instance
 		) {
 			var proxy = new ExecutorProxy();
@@ -180,7 +180,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			return proxy;
 		}
 
-		public static unsafe void Construct (
+		public static unsafe void Construct(
 			Executor*     instance,
 			ExecutorProxy proxy
 		) {
@@ -227,7 +227,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			return;
 		}
 
-		public static unsafe void Destruct (
+		public static unsafe void Destruct(
 			Executor* instance
 		) {
 			var guard = ExecutorProxy.Guard[(IntPtr)instance];

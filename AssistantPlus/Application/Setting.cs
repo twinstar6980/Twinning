@@ -52,7 +52,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public SettingProvider (
+		public SettingProvider(
 		) {
 			this.Data = SettingProvider.CreateDefaultData();
 			this.State = SettingProvider.CreateDefaultState();
@@ -63,13 +63,13 @@ namespace Twinning.AssistantPlus {
 
 		#region action
 
-		public async Task Reset (
+		public async Task Reset(
 		) {
 			this.Data = SettingProvider.CreateDefaultData();
 			return;
 		}
 
-		public async Task Apply (
+		public async Task Apply(
 		) {
 			// ThemeBackdrop
 			if (this.State.ThemeBackdrop != this.Data.ThemeBackdrop && App.Instance.MainWindowIsInitialized) {
@@ -142,7 +142,7 @@ namespace Twinning.AssistantPlus {
 				list.AddRange(App.Instance.Setting.Data.ModuleLauncher.Module.Select((it) => generateItem(ModuleLauncherCategory.Module, it)));
 				list.AddRange(App.Instance.Setting.Data.ModuleLauncher.Pinned.Select((it) => generateItem(ModuleLauncherCategory.Pinned, it)));
 				list.AddRange(App.Instance.Setting.Data.ModuleLauncher.Recent.Select((it) => generateItem(ModuleLauncherCategory.Recent, it)));
-				await JumpListHelper.Apply(list);
+				await ApplicationJumpListManager.Instance.Apply(list);
 			}
 			// CoreTaskWorker.MessageFont
 			{
@@ -163,7 +163,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public async Task Load (
+		public async Task Load(
 			String? file = null
 		) {
 			file ??= this.File;
@@ -171,7 +171,7 @@ namespace Twinning.AssistantPlus {
 			return;
 		}
 
-		public async Task Save (
+		public async Task Save(
 			String? file  = null,
 			Boolean apply = true
 		) {
@@ -187,7 +187,7 @@ namespace Twinning.AssistantPlus {
 
 		#region utility
 
-		private static SettingData CreateDefaultData (
+		private static SettingData CreateDefaultData(
 		) {
 			return new () {
 				Version = ApplicationInformation.Version,
@@ -252,7 +252,7 @@ namespace Twinning.AssistantPlus {
 			};
 		}
 
-		private static SettingState CreateDefaultState (
+		private static SettingState CreateDefaultState(
 		) {
 			return new () {
 				ThemeBackdrop = null,
@@ -263,7 +263,7 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public async Task QuickSetup (
+		public async Task QuickSetup(
 			String homeDirectory
 		) {
 			this.Data.ModuleConfigurationDirectory = $"{homeDirectory}/assistant_plus";

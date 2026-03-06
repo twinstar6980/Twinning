@@ -7,8 +7,8 @@ import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
-import '/utility/notification_helper.dart';
-import '/utility/custom_link_helper.dart';
+import '/utility/application_notification_manager.dart';
+import '/utility/application_link_manager.dart';
 import '/utility/system_ui_helper.dart';
 import 'dart:async';
 import 'widget/export.dart';
@@ -62,8 +62,8 @@ class MainApplication {
       this._setting.state.handleForward = this._handleForward;
       this._setting.state.handleCommand = this._handleCommand;
       this._setting.state.handleLink = this._handleLink;
-      await NotificationHelper.initialize();
-      await CustomLinkHelper.initialize();
+      await ApplicationNotificationManager.instance.initialize();
+      await ApplicationLinkManager.instance.initialize();
       await SystemUiHelper.applyMode(.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
         await WindowHelper.ensureInitialized();
@@ -83,17 +83,17 @@ class MainApplication {
         if (needShowOnboarding) {
           await this._setting.state.homeShowOnboarding!();
         }
-        await NotificationHelper.listen(() async {
+        await ApplicationNotificationManager.instance.listen(() async {
           if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
             await WindowHelper.show();
           }
           return;
         });
-        await CustomLinkHelper.listen((link) async {
+        await ApplicationLinkManager.instance.listen((link) async {
           await this._handleLink(link);
           return;
         });
-        if (await CustomLinkHelper.getFirst() == null) {
+        if (await ApplicationLinkManager.instance.getFirst() == null) {
           if (argument.length >= 1 && argument[0] == 'application') {
             await this._handleCommand(argument.slice(1));
           }

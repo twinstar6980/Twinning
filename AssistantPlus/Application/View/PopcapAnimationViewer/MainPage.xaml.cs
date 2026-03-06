@@ -21,7 +21,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public MainPage (
+		public MainPage(
 		) {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
@@ -37,7 +37,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region module page
 
-		public Home.IModulePageController ModulePageGetController (
+		public Home.IModulePageController ModulePageGetController(
 		) {
 			return this.Controller;
 		}
@@ -128,7 +128,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region life
 
-		public void InitializeView (
+		public void InitializeView(
 		) {
 			this.Configuration = new () {
 			};
@@ -147,28 +147,28 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task OpenView (
+		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.json");
 			return;
 		}
 
-		public async Task<Boolean> CloseView (
+		public async Task<Boolean> CloseView(
 		) {
 			return true;
 		}
 
-		public async Task EnterView (
+		public async Task EnterView(
 		) {
 			return;
 		}
 
-		public async Task ExitView (
+		public async Task ExitView(
 		) {
 			return;
 		}
 
-		public async Task ApplyOption (
+		public async Task ApplyOption(
 			List<String> optionView
 		) {
 			var optionImmediateSelect = default(Boolean?);
@@ -293,7 +293,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task<List<String>> CollectOption (
+		public async Task<List<String>> CollectOption(
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-immediate_select")) {
@@ -383,7 +383,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public async Task Load (
+		public async Task Load(
 			String animationFile
 		) {
 			AssertTest(!this.Loaded && !this.Activated);
@@ -429,7 +429,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task Unload (
+		public async Task Unload(
 		) {
 			AssertTest(this.Loaded && !this.Activated);
 			this.View.uSprite.Width = 0;
@@ -472,7 +472,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public async Task Activate (
+		public async Task Activate(
 			Tuple<Boolean, Size>              target,
 			PopcapAnimationHelper.FrameRange? frameRange,
 			Floater?                          frameSpeed,
@@ -606,7 +606,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task Deactivate (
+		public async Task Deactivate(
 		) {
 			AssertTest(this.Loaded && this.Activated);
 			this.ActiveTarget = null;
@@ -659,7 +659,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task ChangeElementFilter (
+		public async Task ChangeElementFilter(
 			List<Boolean?>? imageFilter,
 			List<Boolean?>? spriteFilter
 		) {
@@ -722,7 +722,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task ChangeElementFilterByRule (
+		public async Task ChangeElementFilterByRule(
 		) {
 			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
@@ -732,7 +732,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async Task ChangeFrameRange (
+		public async Task ChangeFrameRange(
 			PopcapAnimationHelper.FrameRange frameRange
 		) {
 			AssertTest(this.Loaded && this.Activated);
@@ -752,7 +752,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public async Task ApplyLoad (
+		public async Task ApplyLoad(
 			String                            animationFile,
 			List<Integer>?                    imageFilter,
 			List<Integer>?                    spriteFilter,
@@ -795,7 +795,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region page
 
-		public async void uPage_DragOver (
+		public async void uPage_DragOver(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -806,7 +806,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async void uPage_Drop (
+		public async void uPage_Drop(
 			Object        sender,
 			DragEventArgs args
 		) {
@@ -859,7 +859,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public async void uStage_ViewChanged (
+		public async void uStage_ViewChanged(
 			Object sender,
 			Object args
 		) {
@@ -885,7 +885,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uImmediateSelect_Click (
+		public async void uImmediateSelect_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -905,7 +905,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uAutomaticPlay_Click (
+		public async void uAutomaticPlay_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -925,7 +925,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uRepeatPlay_Click (
+		public async void uRepeatPlay_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -946,7 +946,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uKeepSpeed_Click (
+		public async void uKeepSpeed_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -979,7 +979,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uAnimationFileMenu_Click (
+		public async void uAnimationFileMenu_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1049,7 +1049,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uImageList_SelectionChanged (
+		public async void uImageList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1096,7 +1096,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uSpriteList_SelectionChanged (
+		public async void uSpriteList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1161,7 +1161,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uMainSpriteList_SelectionChanged (
+		public async void uMainSpriteList_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1232,7 +1232,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveFrameRangeBegin_ValueChanged (
+		public async void uActiveFrameRangeBegin_ValueChanged(
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
@@ -1300,7 +1300,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveFrameRangeEnd_ValueChanged (
+		public async void uActiveFrameRangeEnd_ValueChanged(
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
@@ -1369,7 +1369,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveFrameRangeLabel_SelectionChanged (
+		public async void uActiveFrameRangeLabel_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1440,7 +1440,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveFrameSpeed_ValueChanged (
+		public async void uActiveFrameSpeed_ValueChanged(
 			NumberBox                      sender,
 			NumberBoxValueChangedEventArgs args
 		) {
@@ -1492,7 +1492,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveProgress_ValueChanged (
+		public async void uActiveProgress_ValueChanged(
 			Object                         sender,
 			RangeBaseValueChangedEventArgs args
 		) {
@@ -1515,7 +1515,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Boolean uActiveProgress__ChangingWhenPlaying = false;
 
-		public async void uActiveProgress_PointerPressed (
+		public async void uActiveProgress_PointerPressed(
 			Object                 sender,
 			PointerRoutedEventArgs args
 		) {
@@ -1536,7 +1536,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			return;
 		}
 
-		public async void uActiveProgress_PointerReleased (
+		public async void uActiveProgress_PointerReleased(
 			Object                 sender,
 			PointerRoutedEventArgs args
 		) {
@@ -1570,7 +1570,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveProgressState_Click (
+		public async void uActiveProgressState_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1610,7 +1610,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveProgressPrevious_Click (
+		public async void uActiveProgressPrevious_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1639,7 +1639,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uActiveProgressNext_Click (
+		public async void uActiveProgressNext_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1667,7 +1667,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uShowBoundary_Click (
+		public async void uShowBoundary_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1684,7 +1684,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		#region filter rule
 
-		public async void uFilterRule_Click (
+		public async void uFilterRule_Click(
 			SplitButton               sender,
 			SplitButtonClickEventArgs args
 		) {
@@ -1698,7 +1698,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public async void uImageFilterRuleText_LostFocus (
+		public async void uImageFilterRuleText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1718,7 +1718,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public async void uSpriteFilterRuleText_LostFocus (
+		public async void uSpriteFilterRuleText_LostFocus(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1785,7 +1785,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uPlantCustomLayer_SelectionChanged (
+		public async void uPlantCustomLayer_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1853,7 +1853,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uZombieStateLayer_SelectionChanged (
+		public async void uZombieStateLayer_SelectionChanged(
 			Object                    sender,
 			SelectionChangedEventArgs args
 		) {
@@ -1906,7 +1906,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uZombieGroundSwatchLayer_Click (
+		public async void uZombieGroundSwatchLayer_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -1996,7 +1996,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uToggle_Click (
+		public async void uToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2089,7 +2089,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uToggle_Click (
+		public async void uToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
@@ -2180,7 +2180,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 		}
 
-		public async void uToggle_Click (
+		public async void uToggle_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {

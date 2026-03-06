@@ -9,7 +9,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region common
 
-		public static async Task PostTask (
+		public static async Task PostTask(
 			FrameworkElement target,
 			Func<Task>       action
 		) {
@@ -26,7 +26,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		private static readonly List<ContentDialog> Dialog = [];
 
-		private static async Task<ContentDialogResult> PushDialog (
+		private static async Task<ContentDialogResult> PushDialog(
 			ContentDialog item
 		) {
 			ControlHelper.Dialog.Add(item);
@@ -52,7 +52,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return result;
 		}
 
-		public static async Task IterateDialog (
+		public static async Task IterateDialog(
 			Func<ContentDialog, Task> action
 		) {
 			foreach (var item in ControlHelper.Dialog) {
@@ -63,7 +63,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static async Task<ContentDialogResult> ShowDialogAsAutomatic (
+		public static async Task<ContentDialogResult> ShowDialogAsAutomatic(
 			FrameworkElement                  root,
 			String                            title,
 			Object?                           content,
@@ -112,7 +112,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return await ControlHelper.PushDialog(dialog);
 		}
 
-		public static async Task<ContentDialogResult> ShowDialogAsFixed (
+		public static async Task<ContentDialogResult> ShowDialogAsFixed(
 			FrameworkElement                  root,
 			String                            title,
 			Object?                           content,
@@ -170,7 +170,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static async Task<Func<Task>> ShowDialogForWait (
+		public static async Task<Func<Task>> ShowDialogForWait(
 			FrameworkElement root
 		) {
 			var hideWrapper = new Wrapper<Action>();
@@ -192,7 +192,7 @@ namespace Twinning.AssistantPlus.Utility {
 			};
 		}
 
-		public static async Task<Boolean> ShowDialogForConfirm (
+		public static async Task<Boolean> ShowDialogForConfirm(
 			FrameworkElement root,
 			String?          title,
 			Object?          content

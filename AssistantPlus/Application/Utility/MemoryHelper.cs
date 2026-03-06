@@ -13,7 +13,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static void* Allocate (
+		public static void* Allocate(
 			Size size
 		) {
 			var data = Win32.PInvoke.HeapAlloc(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_ZERO_MEMORY, size.CastPrimitive<IntegerUN>());
@@ -21,7 +21,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return data;
 		}
 
-		public static void Free (
+		public static void Free(
 			void* data
 		) {
 			var state = Win32.PInvoke.HeapFree(MemoryHelper.Heap, Win32.System.Memory.HEAP_FLAGS.HEAP_NONE, data);
@@ -31,14 +31,14 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static TValue* Allocate<TValue> (
+		public static TValue* Allocate<TValue>(
 			Size size = 1
 		)
 			where TValue : unmanaged {
 			return (TValue*)MemoryHelper.Allocate(size * sizeof(TValue));
 		}
 
-		public static void Free<TValue> (
+		public static void Free<TValue>(
 			TValue* data
 		)
 			where TValue : unmanaged {
@@ -48,7 +48,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public static void Copy (
+		public static void Copy(
 			void* source,
 			void* destination,
 			Size  size

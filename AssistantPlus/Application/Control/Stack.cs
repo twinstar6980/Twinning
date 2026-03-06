@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Control {
 
 		#region life
 
-		public Stack (
+		public Stack(
 		) {
 			return;
 		}
@@ -54,11 +54,11 @@ namespace Twinning.AssistantPlus.Control {
 			new (Floater.NaN, (o, e) => { o.As<FrameworkElement>().Parent?.As<Stack>()?.InvalidateMeasure(); })
 		);
 
-		public static Floater GetWeight (
+		public static Floater GetWeight(
 			DependencyObject element
 		) => element.GetValue(Stack.WeightProperty).As<Floater>();
 
-		public static void SetWeight (
+		public static void SetWeight(
 			DependencyObject element,
 			Floater          value
 		) => element.SetValue(Stack.WeightProperty, value);
@@ -67,7 +67,7 @@ namespace Twinning.AssistantPlus.Control {
 
 		#region measure & arrange
 
-		protected override Windows.Foundation.Size MeasureWithoutPadding (
+		protected override Windows.Foundation.Size MeasureWithoutPadding(
 			Windows.Foundation.Size availableSize
 		) {
 			var desiredSize = new Windows.Foundation.Size(0.0, 0.0);
@@ -127,7 +127,7 @@ namespace Twinning.AssistantPlus.Control {
 			return new (Math.Min(availableSize.Width, desiredSize.Width), Math.Min(availableSize.Height, desiredSize.Height));
 		}
 
-		protected override Windows.Foundation.Size ArrangeWithoutPadding (
+		protected override Windows.Foundation.Size ArrangeWithoutPadding(
 			Windows.Foundation.Point finalOffset,
 			Windows.Foundation.Size  finalSize
 		) {
