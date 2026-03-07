@@ -224,19 +224,19 @@ class CustomMethodChannel {
 
 	// ----------------
 
-	private inline fun <reified Value> queryDatabaseOfContentUri(
+	private inline fun <reified TValue> queryDatabaseOfContentUri(
 		uri: Uri,
 		name: String,
-	): Value? {
-		var value = null as Value?
+	): TValue? {
+		var value = null as TValue?
 		this.host.contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
 			check(cursor != null)
 			check(cursor.columnCount == 1)
 			check(cursor.moveToFirst())
-			value = when (Value::class.java) {
-				java.lang.Long::class.java -> cursor.getLongOrNull(0) as Value?
-				java.lang.Float::class.java -> cursor.getFloatOrNull(0) as Value?
-				java.lang.String::class.java -> cursor.getStringOrNull(0) as Value?
+			value = when (TValue::class.java) {
+				java.lang.Long::class.java -> cursor.getLongOrNull(0) as TValue?
+				java.lang.Float::class.java -> cursor.getFloatOrNull(0) as TValue?
+				java.lang.String::class.java -> cursor.getStringOrNull(0) as TValue?
 				else -> throw Exception()
 			}
 		}

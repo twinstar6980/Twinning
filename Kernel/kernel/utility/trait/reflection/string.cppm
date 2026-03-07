@@ -26,7 +26,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 		// ----------------
 
-		constexpr auto view (
+		constexpr auto view(
 		) const -> StringView {
 			return StringView{thiz.data, thiz.size};
 		}
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 	template <auto size> requires
 		CategoryConstraint<>
 		&& (IsSameOf<size, ZSize>)
-	inline constexpr auto make_string (
+	inline constexpr auto make_string(
 		ZArray<ZCharacter, size> const & source
 	) -> String<size - 1_szz> {
 		auto result = String<size - 1_szz>{};

@@ -18,7 +18,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 		// ----------------
 
-		inline static auto convert_node (
+		inline static auto convert_node(
 			Third::tinyxml2::XMLDocument & raw_document,
 			Node const &                   node
 		) -> ZPointer<Third::tinyxml2::XMLNode> {
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			String &     data,
 			Node const & value
 		) -> Void {
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			String &     data,
 			Node const & value
 		) -> Void {

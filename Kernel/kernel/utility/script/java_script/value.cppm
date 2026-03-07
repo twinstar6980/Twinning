@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	public:
 
-		explicit ExecutionException (
+		explicit ExecutionException(
 			Value &                      exception,
 			std::source_location const & location = std::source_location::current()
 		);
@@ -71,7 +71,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		explicit Runtime (
+		explicit Runtime(
 			ZPointer<Third::quickjs_ng::$JSRuntime> const & raw_value,
 			Boolean const &                                 is_holder
 		) :
@@ -86,13 +86,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region create
 
-		inline static auto new_reference (
+		inline static auto new_reference(
 			ZPointer<Third::quickjs_ng::$JSRuntime> const & runtime
 		) -> Runtime {
 			return Runtime{runtime, k_false};
 		}
 
-		inline static auto new_instance (
+		inline static auto new_instance(
 		) -> Runtime {
 			return Runtime{Third::quickjs_ng::$JS_NewRuntime(), k_true};
 		}
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		~Runtime (
+		~Runtime(
 		) {
 			if (thiz.m_is_holder) {
 				Third::quickjs_ng::$JS_FreeRuntime(thiz._runtime());
@@ -113,14 +113,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		Runtime (
+		Runtime(
 		) = delete;
 
-		Runtime (
+		Runtime(
 			Runtime const & that
 		) = delete;
 
-		Runtime (
+		Runtime(
 			Runtime && that
 		) :
 			m_runtime{},
@@ -133,11 +133,11 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Runtime const & that
 		) -> Runtime & = delete;
 
-		auto operator = (
+		auto operator =(
 			Runtime && that
 		) -> Runtime & {
 			thiz.m_runtime = that.m_runtime;
@@ -151,7 +151,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region raw
 
-		auto _runtime (
+		auto _runtime(
 		) -> ZPointer<Third::quickjs_ng::$JSRuntime> {
 			return thiz.m_runtime.value;
 		}
@@ -160,17 +160,17 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region context
 
-		auto new_context (
+		auto new_context(
 		) -> Context;
 
 		#pragma endregion
 
 		#pragma region job
 
-		auto has_pending_job (
+		auto has_pending_job(
 		) -> Boolean;
 
-		auto execute_pending_job (
+		auto execute_pending_job(
 			Context & context
 		) -> Void;
 
@@ -178,10 +178,10 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region module
 
-		auto disable_module_loader (
+		auto disable_module_loader(
 		) -> Void;
 
-		auto enable_module_loader (
+		auto enable_module_loader(
 			Optional<Path> & home
 		) -> Void;
 
@@ -192,7 +192,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto finalizer> requires
 			CategoryConstraint<>
 			&& (IsSameOf<finalizer, ClassFinalizer>)
-		auto register_class (
+		auto register_class(
 			Integer &      identifier,
 			String const & name
 		) -> Void;
@@ -213,7 +213,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		explicit Context (
+		explicit Context(
 			ZPointer<Third::quickjs_ng::$JSContext> const & raw_value,
 			Boolean const &                                 is_holder
 		) :
@@ -228,13 +228,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region create
 
-		inline static auto new_reference (
+		inline static auto new_reference(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context
 		) -> Context {
 			return Context{context, k_false};
 		}
 
-		inline static auto new_instance (
+		inline static auto new_instance(
 			ZPointer<Third::quickjs_ng::$JSRuntime> const & runtime
 		) -> Context {
 			return Context{Third::quickjs_ng::$JS_NewContext(runtime), k_true};
@@ -246,7 +246,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		~Context (
+		~Context(
 		) {
 			if (thiz.m_is_holder) {
 				Third::quickjs_ng::$JS_FreeContext(thiz._context());
@@ -256,14 +256,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		Context (
+		Context(
 		) = delete;
 
-		Context (
+		Context(
 			Context const & that
 		) = delete;
 
-		Context (
+		Context(
 			Context && that
 		) :
 			m_context{},
@@ -276,11 +276,11 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Context const & that
 		) -> Context & = delete;
 
-		auto operator = (
+		auto operator =(
 			Context && that
 		) -> Context & {
 			thiz.m_context = that.m_context;
@@ -294,7 +294,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region raw
 
-		auto _context (
+		auto _context(
 		) -> ZPointer<Third::quickjs_ng::$JSContext> {
 			return thiz.m_context.value;
 		}
@@ -303,7 +303,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region runtime
 
-		auto runtime (
+		auto runtime(
 		) -> Runtime {
 			return Runtime::new_reference(Third::quickjs_ng::$JS_GetRuntime(thiz._context()));
 		}
@@ -312,12 +312,12 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region value
 
-		auto new_value (
+		auto new_value(
 		) -> Value;
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsValid<ValueObject>>
-		auto new_value (
+		auto new_value(
 			ValueObject && value
 		) -> Value;
 
@@ -325,7 +325,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region evaluate
 
-		auto evaluate (
+		auto evaluate(
 			ConstantStringView const & script,
 			String const &             name,
 			Boolean const &            is_module
@@ -335,29 +335,29 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region global
 
-		auto global_object (
+		auto global_object(
 		) -> Value;
 
 		#pragma endregion
 
 		#pragma region exception
 
-		auto throw_exception (
+		auto throw_exception(
 			Value && value
 		) -> Void;
 
-		auto catch_exception (
+		auto catch_exception(
 		) -> Value;
 
 		#pragma endregion
 
 		#pragma region class
 
-		auto get_class_proto (
+		auto get_class_proto(
 			Integer const & identifier
 		) -> Value;
 
-		auto set_class_proto (
+		auto set_class_proto(
 			Integer const & identifier,
 			Value &&        value
 		) -> Void;
@@ -378,7 +378,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		explicit Value (
+		explicit Value(
 			Third::quickjs_ng::$JSValue const & value
 		) :
 			m_context{},
@@ -386,7 +386,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		explicit Value (
+		explicit Value(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context,
 			Third::quickjs_ng::$JSValue const &             value
 		) :
@@ -401,20 +401,20 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region create
 
-		inline static auto new_orphan (
+		inline static auto new_orphan(
 			Third::quickjs_ng::$JSValue const & value
 		) -> Value {
 			return Value{value};
 		}
 
-		inline static auto new_reference (
+		inline static auto new_reference(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context,
 			Third::quickjs_ng::$JSValue const &             value
 		) -> Value {
 			return Value{context, Third::quickjs_ng::$JS_DupValue(context, value)};
 		}
 
-		inline static auto new_instance (
+		inline static auto new_instance(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context,
 			Third::quickjs_ng::$JSValue const &             value = Third::quickjs_ng::$JS_UNINITIALIZED
 		) -> Value {
@@ -423,7 +423,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		inline static auto new_instance_of (
+		inline static auto new_instance_of(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context
 		) -> Value {
 			auto result = new_instance(context);
@@ -433,7 +433,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		inline static auto new_instance_of (
+		inline static auto new_instance_of(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context,
 			That &&                                         that,
 			Option && ...                                   option
@@ -449,7 +449,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		~Value (
+		~Value(
 		) {
 			thiz._reset_value();
 			return;
@@ -457,13 +457,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		Value (
+		Value(
 		) :
 			Value{Third::quickjs_ng::$JS_UNINITIALIZED} {
 			return;
 		}
 
-		Value (
+		Value(
 			Value const & that
 		) :
 			Value{} {
@@ -472,7 +472,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		Value (
+		Value(
 			Value && that
 		) :
 			Value{} {
@@ -485,7 +485,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Value const & that
 		) -> Value & {
 			thiz._reset_value();
@@ -494,7 +494,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz;
 		}
 
-		auto operator = (
+		auto operator =(
 			Value && that
 		) -> Value & {
 			thiz._reset_value();
@@ -507,12 +507,12 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region raw
 
-		auto _context (
+		auto _context(
 		) -> ZPointer<Third::quickjs_ng::$JSContext> {
 			return thiz.m_context.get();
 		}
 
-		auto _value (
+		auto _value(
 		) -> Third::quickjs_ng::$JSValue {
 			return thiz.m_value;
 		}
@@ -521,26 +521,26 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region raw bind
 
-		auto _unbind_context (
+		auto _unbind_context(
 		) -> Void {
 			thiz.m_context.reset();
 			return;
 		}
 
-		auto _unbind_value (
+		auto _unbind_value(
 		) -> Void {
 			thiz.m_value = Third::quickjs_ng::$JS_UNINITIALIZED;
 			return;
 		}
 
-		auto _unbind (
+		auto _unbind(
 		) -> Void {
 			thiz._unbind_value();
 			thiz._unbind_context();
 			return;
 		}
 
-		auto _rebind_value (
+		auto _rebind_value(
 			Third::quickjs_ng::$JSValue const & new_value
 		) -> Void {
 			if (thiz.m_context.has()) {
@@ -552,12 +552,12 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto _reset_value (
+		auto _reset_value(
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_UNINITIALIZED);
 		}
 
-		auto _release_value (
+		auto _release_value(
 		) -> Third::quickjs_ng::$JSValue {
 			auto result = thiz.m_value;
 			thiz._unbind_value();
@@ -568,7 +568,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region context
 
-		auto context (
+		auto context(
 		) -> Context {
 			return Context::new_reference(thiz._context());
 		}
@@ -577,14 +577,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region value
 
-		auto new_value (
+		auto new_value(
 		) -> Value {
 			return thiz.new_instance(thiz._context());
 		}
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto new_value (
+		auto new_value(
 			Argument && ... argument
 		) -> Value {
 			return thiz.new_instance_of(thiz._context(), as_forward<Argument>(argument) ...);
@@ -594,12 +594,12 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region check uninitialized
 
-		auto is_uninitialized (
+		auto is_uninitialized(
 		) -> Boolean {
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsUninitialized(thiz._value()));
 		}
 
-		auto set_uninitialized (
+		auto set_uninitialized(
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_UNINITIALIZED);
 		}
@@ -608,43 +608,43 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region is
 
-		auto is_undefined (
+		auto is_undefined(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsUndefined(thiz._value()));
 		}
 
-		auto is_null (
+		auto is_null(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsNull(thiz._value()));
 		}
 
-		auto is_boolean (
+		auto is_boolean(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsBool(thiz._value()));
 		}
 
-		auto is_bigint (
+		auto is_bigint(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsBigInt(thiz._value()));
 		}
 
-		auto is_number (
+		auto is_number(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsNumber(thiz._value()));
 		}
 
-		auto is_string (
+		auto is_string(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsString(thiz._value()));
 		}
 
-		auto is_object (
+		auto is_object(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsObject(thiz._value()));
@@ -652,7 +652,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto is_exception (
+		auto is_exception(
 		) -> Boolean {
 			assert_test(thiz.m_context.has());
 			return mbox<Boolean>(Third::quickjs_ng::$JS_IsException(thiz._value()));
@@ -662,26 +662,26 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region get
 
-		auto get_undefined (
+		auto get_undefined(
 		) -> Void {
 			assert_test(thiz.is_undefined());
 			return;
 		}
 
-		auto get_null (
+		auto get_null(
 		) -> Null {
 			assert_test(thiz.is_null());
 			return k_null;
 		}
 
-		auto get_boolean (
+		auto get_boolean(
 		) -> Boolean {
 			assert_test(thiz.is_boolean());
 			auto raw_value = Third::quickjs_ng::$JS_ToBool(thiz._context(), thiz._value());
 			return mbox<Boolean>(raw_value);
 		}
 
-		auto get_bigint (
+		auto get_bigint(
 		) -> Integer {
 			assert_test(thiz.is_bigint());
 			auto raw_value = std::int64_t{};
@@ -689,7 +689,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return mbox<Integer>(raw_value);
 		}
 
-		auto get_number (
+		auto get_number(
 		) -> Floater {
 			assert_test(thiz.is_number());
 			auto raw_value = double{};
@@ -697,7 +697,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return mbox<Floater>(raw_value);
 		}
 
-		auto get_string (
+		auto get_string(
 		) -> String {
 			assert_test(thiz.is_string());
 			auto raw_length = std::size_t{};
@@ -709,7 +709,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto get_object_of_array_buffer (
+		auto get_object_of_array_buffer(
 		) -> VariableByteListView {
 			auto size = std::size_t{};
 			auto data = Third::quickjs_ng::$JS_GetArrayBuffer(thiz._context(), &size, thiz._value());
@@ -721,43 +721,43 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region set
 
-		auto set_undefined (
+		auto set_undefined(
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_UNDEFINED);
 		}
 
-		auto set_null (
+		auto set_null(
 			Null const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NULL);
 		}
 
-		auto set_boolean (
+		auto set_boolean(
 			Boolean const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewBool(thiz._context(), static_cast<int>(value.value)));
 		}
 
-		auto set_bigint (
+		auto set_bigint(
 			Integer const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewBigInt64(thiz._context(), value.value));
 		}
 
-		auto set_number (
+		auto set_number(
 			Floater const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewFloat64(thiz._context(), value.value));
 		}
 
-		auto set_string (
+		auto set_string(
 			String const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewStringLen(thiz._context(), cast_pointer<char>(value.begin()).value, value.size().value));
 		}
 
 		// TODO: sv remove
-		auto set_string (
+		auto set_string(
 			ConstantStringView const & value
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewStringLen(thiz._context(), cast_pointer<char>(value.begin()).value, value.size().value));
@@ -765,17 +765,17 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto set_object_of_object (
+		auto set_object_of_object(
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewObject(thiz._context()));
 		}
 
-		auto set_object_of_array (
+		auto set_object_of_array(
 		) -> Void {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewArray(thiz._context()));
 		}
 
-		auto set_object_of_array_buffer (
+		auto set_object_of_array_buffer(
 			ConstantByteListView const & data
 		) -> Void {
 			return thiz._rebind_value(
@@ -787,7 +787,7 @@ export namespace Twinning::Kernel::JavaScript {
 			);
 		}
 
-		auto set_object_of_array_buffer (
+		auto set_object_of_array_buffer(
 			VariableByteListView const & data,
 			Boolean const &              is_holder
 		) -> Void {
@@ -798,7 +798,7 @@ export namespace Twinning::Kernel::JavaScript {
 					data.size().value,
 					!is_holder
 					? nullptr
-					: [] (Third::quickjs_ng::$JSRuntime * rt, void * opaque, void * ptr) -> void {
+					: [](Third::quickjs_ng::$JSRuntime * rt, void * opaque, void * ptr) -> void {
 						delete[] static_cast<std::uint8_t *>(ptr);
 						return;
 					},
@@ -811,7 +811,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function> requires
 			CategoryConstraint<>
 			&& (IsSameOf<function, NativeFunction>)
-		auto set_object_of_native_function (
+		auto set_object_of_native_function(
 			String const &  name,
 			Boolean const & is_constructor
 		) -> Void;
@@ -820,13 +820,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region object proto
 
-		auto get_object_proto (
+		auto get_object_proto(
 		) -> Value {
 			assert_test(thiz.is_object());
 			return thiz.new_instance(thiz._context(), Third::quickjs_ng::$JS_GetPrototype(thiz._context(), thiz._value()));
 		}
 
-		auto set_object_proto (
+		auto set_object_proto(
 			Value && value
 		) -> Void {
 			assert_test(thiz.is_object());
@@ -838,7 +838,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region object class name
 
-		auto get_object_class_name (
+		auto get_object_class_name(
 		) -> String {
 			assert_test(thiz.is_object());
 			return thiz.get_object_proto().get_object_property("constructor"_sv).get_object_property("name"_sv).get_string();
@@ -846,14 +846,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto is_object_of_class (
+		auto is_object_of_class(
 			String const & name
 		) -> Boolean {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
 		}
 
 		// TODO: sv remove
-		auto is_object_of_class (
+		auto is_object_of_class(
 			ConstantStringView const & name
 		) -> Boolean {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
@@ -861,12 +861,12 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto is_object_of_object (
+		auto is_object_of_object(
 		) -> Boolean {
 			return thiz.is_object_of_class("Object"_sv);
 		}
 
-		auto is_object_of_array (
+		auto is_object_of_array(
 		) -> Boolean {
 			return thiz.is_object_of_class("Array"_sv);
 		}
@@ -875,7 +875,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region object property
 
-		auto define_object_property (
+		auto define_object_property(
 			String const & name,
 			Value &&       value
 		) -> Void {
@@ -888,7 +888,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		auto define_object_property (
+		auto define_object_property(
 			Size const & index,
 			Value &&     value
 		) -> Void {
@@ -903,7 +903,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto define_object_property (
+		auto define_object_property(
 			String const & name,
 			Value &&       getter,
 			Value &&       setter
@@ -917,7 +917,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		auto define_object_property (
+		auto define_object_property(
 			Size const & index,
 			Value &&     getter,
 			Value &&     setter
@@ -933,7 +933,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto delete_object_property (
+		auto delete_object_property(
 			String const & name
 		) -> Void {
 			assert_test(thiz.is_object());
@@ -945,7 +945,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		auto delete_object_property (
+		auto delete_object_property(
 			Size const & index
 		) -> Void {
 			assert_test(thiz.is_object());
@@ -959,7 +959,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto has_object_property (
+		auto has_object_property(
 			String const & name
 		) -> Boolean {
 			assert_test(thiz.is_object());
@@ -970,7 +970,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return mbox<Boolean>(result == 1);
 		}
 
-		auto has_object_property (
+		auto has_object_property(
 			Size const & index
 		) -> Boolean {
 			assert_test(thiz.is_object());
@@ -984,7 +984,7 @@ export namespace Twinning::Kernel::JavaScript {
 		// ----------------
 
 		// TODO: sv remove
-		auto get_object_property (
+		auto get_object_property(
 			ConstantStringView const & name
 		) -> Value {
 			assert_test(thiz.is_object());
@@ -994,7 +994,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz.new_instance(thiz._context(), result);
 		}
 
-		auto get_object_property (
+		auto get_object_property(
 			String const & name
 		) -> Value {
 			assert_test(thiz.is_object());
@@ -1004,7 +1004,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz.new_instance(thiz._context(), result);
 		}
 
-		auto get_object_property (
+		auto get_object_property(
 			Size const & index
 		) -> Value {
 			assert_test(thiz.is_object());
@@ -1017,7 +1017,7 @@ export namespace Twinning::Kernel::JavaScript {
 		// ----------------
 
 		// TODO: sv remove
-		auto set_object_property (
+		auto set_object_property(
 			ConstantStringView const & name,
 			Value &&                   value
 		) -> Void {
@@ -1030,7 +1030,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		auto set_object_property (
+		auto set_object_property(
 			String const & name,
 			Value &&       value
 		) -> Void {
@@ -1043,7 +1043,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return;
 		}
 
-		auto set_object_property (
+		auto set_object_property(
 			Size const & index,
 			Value &&     value
 		) -> Void {
@@ -1060,7 +1060,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region object own property
 
-		auto collect_object_own_property (
+		auto collect_object_own_property(
 		) -> Map<String, Value> {
 			assert_test(thiz.is_object());
 			auto property_enum = ZPointer<Third::quickjs_ng::$JSPropertyEnum>{};
@@ -1078,14 +1078,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		auto collect_object_own_property_of_object (
+		auto collect_object_own_property_of_object(
 		) -> Map<String, Value> {
 			assert_test(thiz.is_object_of_object());
 			auto map = thiz.collect_object_own_property();
 			return map;
 		}
 
-		auto collect_object_own_property_of_array (
+		auto collect_object_own_property_of_array(
 		) -> List<Value> {
 			assert_test(thiz.is_object_of_array());
 			auto map = thiz.collect_object_own_property();
@@ -1103,14 +1103,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region function call
 
-		auto call (
+		auto call(
 			List<Value> const & argument
 		) -> Value {
 			assert_test(thiz.is_object());
 			auto argument_value = Array<Third::quickjs_ng::$JSValue>{};
 			argument_value.assign(
 				argument,
-				[] (auto & element) -> auto {
+				[](auto & element) -> auto {
 					return as_variable(element)._value();
 				}
 			);
@@ -1121,7 +1121,7 @@ export namespace Twinning::Kernel::JavaScript {
 			return result;
 		}
 
-		auto call_method (
+		auto call_method(
 			String const &      name,
 			List<Value> const & argument
 		) -> Value {
@@ -1130,7 +1130,7 @@ export namespace Twinning::Kernel::JavaScript {
 			auto argument_value = Array<Third::quickjs_ng::$JSValue>{};
 			argument_value.assign(
 				argument,
-				[] (auto & element) -> auto {
+				[](auto & element) -> auto {
 					return as_variable(element)._value();
 				}
 			);
@@ -1147,7 +1147,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto from (
+		auto from(
 			That &&       that,
 			Option && ... option
 		) -> Void {
@@ -1159,7 +1159,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto to (
+		auto to(
 			That &&       that,
 			Option && ... option
 		) -> That && {
@@ -1172,7 +1172,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
-		auto to_of (
+		auto to_of(
 			Option && ... option
 		) -> That {
 			auto that = That{};
@@ -1190,7 +1190,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	namespace Detail {
 
-		inline auto custom_module_loader (
+		inline auto custom_module_loader(
 			Third::quickjs_ng::$JSContext * ctx,
 			char const *                    module_name,
 			void *                          opaque
@@ -1247,7 +1247,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto finalizer> requires
 			CategoryConstraint<>
 			&& (IsSameOf<finalizer, ClassFinalizer>)
-		inline auto proxy_class_finalizer (
+		inline auto proxy_class_finalizer(
 			Third::quickjs_ng::$JSRuntime * rt,
 			Third::quickjs_ng::$JSValue     obj
 		) -> void {
@@ -1262,7 +1262,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function> requires
 			CategoryConstraint<>
 			&& (IsSameOf<function, NativeFunction>)
-		inline auto proxy_native_function (
+		inline auto proxy_native_function(
 			Third::quickjs_ng::$JSContext * ctx,
 			Third::quickjs_ng::$JSValue     this_val,
 			int                             argc,
@@ -1319,7 +1319,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	#pragma region type method implement
 
-	inline ExecutionException::ExecutionException (
+	inline ExecutionException::ExecutionException(
 		Value &                      exception,
 		std::source_location const & location
 	) :
@@ -1367,19 +1367,19 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	inline auto Runtime::new_context (
+	inline auto Runtime::new_context(
 	) -> Context {
 		return Context::new_instance(thiz._runtime());
 	}
 
 	// ----------------
 
-	inline auto Runtime::has_pending_job (
+	inline auto Runtime::has_pending_job(
 	) -> Boolean {
 		return mbox<Boolean>(Third::quickjs_ng::$JS_IsJobPending(thiz._runtime()));
 	}
 
-	inline auto Runtime::execute_pending_job (
+	inline auto Runtime::execute_pending_job(
 		Context & context
 	) -> Void {
 		auto context_pointer = ZPointer<Third::quickjs_ng::$JSContext>{};
@@ -1394,7 +1394,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	inline auto Runtime::disable_module_loader (
+	inline auto Runtime::disable_module_loader(
 	) -> Void {
 		Third::quickjs_ng::$JS_SetModuleLoaderFunc(
 			thiz._runtime(),
@@ -1405,7 +1405,7 @@ export namespace Twinning::Kernel::JavaScript {
 		return;
 	}
 
-	inline auto Runtime::enable_module_loader (
+	inline auto Runtime::enable_module_loader(
 		Optional<Path> & home
 	) -> Void {
 		Third::quickjs_ng::$JS_SetModuleLoaderFunc(
@@ -1422,7 +1422,7 @@ export namespace Twinning::Kernel::JavaScript {
 	template <auto finalizer> requires
 		CategoryConstraint<>
 		&& (IsSameOf<finalizer, ClassFinalizer>)
-	inline auto Runtime::register_class (
+	inline auto Runtime::register_class(
 		Integer &      identifier,
 		String const & name
 	) -> Void {
@@ -1444,14 +1444,14 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	inline auto Context::new_value (
+	inline auto Context::new_value(
 	) -> Value {
 		return Value::new_instance_of(thiz._context());
 	}
 
 	template <typename ValueObject> requires
 		CategoryConstraint<IsValid<ValueObject>>
-	inline auto Context::new_value (
+	inline auto Context::new_value(
 		ValueObject && value
 	) -> Value {
 		return Value::new_instance_of(thiz._context(), as_forward<ValueObject>(value));
@@ -1459,7 +1459,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	inline auto Context::evaluate (
+	inline auto Context::evaluate(
 		ConstantStringView const & script,
 		String const &             name,
 		Boolean const &            is_module
@@ -1479,34 +1479,34 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	inline auto Context::global_object (
+	inline auto Context::global_object(
 	) -> Value {
 		return Value::new_instance(thiz._context(), Third::quickjs_ng::$JS_GetGlobalObject(thiz._context()));
 	}
 
 	// ----------------
 
-	inline auto Context::throw_exception (
+	inline auto Context::throw_exception(
 		Value && value
 	) -> Void {
 		Third::quickjs_ng::$JS_Throw(thiz._context(), value._release_value());
 		return;
 	}
 
-	inline auto Context::catch_exception (
+	inline auto Context::catch_exception(
 	) -> Value {
 		return Value::new_instance(thiz._context(), Third::quickjs_ng::$JS_GetException(thiz._context()));
 	}
 
 	// ----------------
 
-	inline auto Context::get_class_proto (
+	inline auto Context::get_class_proto(
 		Integer const & identifier
 	) -> Value {
 		return Value::new_instance(thiz._context(), Third::quickjs_ng::$JS_GetClassProto(thiz._context(), static_cast<Third::quickjs_ng::$JSClassID>(identifier.value)));
 	}
 
-	inline auto Context::set_class_proto (
+	inline auto Context::set_class_proto(
 		Integer const & identifier,
 		Value &&        value
 	) -> Void {
@@ -1519,7 +1519,7 @@ export namespace Twinning::Kernel::JavaScript {
 	template <auto function> requires
 		CategoryConstraint<>
 		&& (IsSameOf<function, NativeFunction>)
-	inline auto Value::set_object_of_native_function (
+	inline auto Value::set_object_of_native_function(
 		String const &  name,
 		Boolean const & is_constructor
 	) -> Void {

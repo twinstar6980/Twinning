@@ -31,29 +31,29 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region constructor
 
-		constexpr ~NumberIterator (
+		constexpr ~NumberIterator(
 		) = default;
 
 		// ----------------
 
-		constexpr NumberIterator (
+		constexpr NumberIterator(
 		) :
 			m_value{},
 			m_step{} {
 			return;
 		}
 
-		constexpr NumberIterator (
+		constexpr NumberIterator(
 			NumberIterator const & that
 		) = default;
 
-		constexpr NumberIterator (
+		constexpr NumberIterator(
 			NumberIterator && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr NumberIterator (
+		explicit constexpr NumberIterator(
 			Number const & value,
 			Number const & step
 		) :
@@ -66,24 +66,24 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			NumberIterator const & that
 		) -> NumberIterator & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			NumberIterator && that
 		) -> NumberIterator & = default;
 
 		// ----------------
 
-		constexpr auto operator * (
+		constexpr auto operator *(
 		) const -> Number const & {
 			return thiz.m_value;
 		}
 
 		// ----------------
 
-		constexpr auto operator ++ (
+		constexpr auto operator ++(
 		) -> NumberIterator & {
 			thiz.m_value += thiz.m_step;
 			return thiz;
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			NumberIterator const & thix,
 			NumberIterator const & that
 		) -> bool = default;

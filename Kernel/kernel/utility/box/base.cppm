@@ -39,28 +39,28 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~BaseBox (
+		constexpr ~BaseBox(
 		) = default;
 
 		// ----------------
 
-		constexpr BaseBox (
+		constexpr BaseBox(
 		) :
 			value{} {
 			return;
 		}
 
-		constexpr BaseBox (
+		constexpr BaseBox(
 			BaseBox const & that
 		) = default;
 
-		constexpr BaseBox (
+		constexpr BaseBox(
 			BaseBox && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr BaseBox (
+		explicit constexpr BaseBox(
 			Value const & value
 		) :
 			value{value} {
@@ -71,11 +71,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BaseBox const & that
 		) -> BaseBox & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BaseBox && that
 		) -> BaseBox & = default;
 
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<Box> && IsPureInstance<Value>>
 		&& (IsBaseBox<Box>)
 		&& (IsBaseBoxValue<Value>)
-	inline constexpr auto mbox (
+	inline constexpr auto mbox(
 		Value const & value
 	) -> Box {
 		return Box{static_cast<typename Box::Value>(value)};
@@ -110,7 +110,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<Destination> && IsPureInstance<Source>>
 		&& (IsBaseBox<Destination>)
 		&& (IsBaseBox<Source>)
-	inline constexpr auto cbox (
+	inline constexpr auto cbox(
 		Source const & source
 	) -> Destination {
 		return Destination{static_cast<typename Destination::Value>(source.value)};

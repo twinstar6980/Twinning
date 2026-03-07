@@ -24,7 +24,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Position1 const & thix,
 			Position1 const & that
 		) -> bool = default;
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Position2 const & thix,
 			Position2 const & that
 		) -> bool = default;
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Position3 const & thix,
 			Position3 const & that
 		) -> bool = default;
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto area (
+		constexpr auto area(
 		) const -> XValue requires
 			(IsSame<XValue, XValue>) &&
 			(IsNumberBox<XValue>) {
@@ -104,7 +104,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Size1 const & thix,
 			Size1 const & that
 		) -> bool = default;
@@ -127,7 +127,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto area (
+		constexpr auto area(
 		) const -> XValue requires
 			(IsSame<XValue, XValue>) &&
 			(IsSame<XValue, YValue>) &&
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Size2 const & thix,
 			Size2 const & that
 		) -> bool = default;
@@ -164,7 +164,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto area (
+		constexpr auto area(
 		) const -> XValue requires
 			(IsSame<XValue, XValue>) &&
 			(IsSame<XValue, YValue>) &&
@@ -175,7 +175,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Size3 const & thix,
 			Size3 const & that
 		) -> bool = default;

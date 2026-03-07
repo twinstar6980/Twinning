@@ -27,7 +27,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
 			Size const &           window_bits
@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
 		// ----------------
 
-		inline static auto estimate_whole (
+		inline static auto estimate_whole(
 			ConstantByteListView const & ripe,
 			Size &                       raw_size
 		) -> Void {
@@ -63,7 +63,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
 			Size const &           window_bits
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			return process_whole(ripe, raw, window_bits);
 		}
 
-		inline static auto estimate (
+		inline static auto estimate(
 			ConstantByteListView const & ripe,
 			Size &                       raw_size
 		) -> Void {

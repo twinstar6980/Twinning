@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.SexyTexture {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { image_file: string; }) => (argument.image_file.replace(/(\.png)?$/i, '.tex')),
+						automatic: (argument: {image_file: string}) => (argument.image_file.replace(/(\.png)?$/i, '.tex')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -57,13 +57,13 @@ namespace Twinning.Script.Executor.Implementation.Popcap.SexyTexture {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { image_file: string; }) => (argument.image_file + '.encode'),
+						automatic: (argument: {image_file: string}) => (argument.image_file + '.encode'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.tex')),
 					}),
 				],
-				worker: ({ image_file, data_file, version_number, format, compress_texture_data }, temporary: {}) => {
-					KernelX.Tool.Popcap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, { number: version_number as any });
+				worker: ({image_file, data_file, version_number, format, compress_texture_data}, temporary: {}) => {
+					KernelX.Tool.Popcap.SexyTexture.encode_fs(data_file, image_file, format as any, compress_texture_data, {number: version_number as any});
 					return;
 				},
 			}),
@@ -82,7 +82,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.SexyTexture {
 						identifier: 'image_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.tex)?$/i, '.png')),
+						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.tex)?$/i, '.png')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -106,13 +106,13 @@ namespace Twinning.Script.Executor.Implementation.Popcap.SexyTexture {
 						identifier: 'image_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
+						automatic: (argument: {data_file: string}) => (argument.data_file + '.decode'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.tex)?$/i, '.png')),
 					}),
 				],
-				worker: ({ data_file, image_file, version_number }, temporary: {}) => {
-					KernelX.Tool.Popcap.SexyTexture.decode_fs(data_file, image_file, { number: version_number as any });
+				worker: ({data_file, image_file, version_number}, temporary: {}) => {
+					KernelX.Tool.Popcap.SexyTexture.decode_fs(data_file, image_file, {number: version_number as any});
 					return;
 				},
 			}),

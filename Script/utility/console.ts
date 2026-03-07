@@ -151,15 +151,15 @@ namespace Twinning.Script.Console {
 
 	// #region input
 
-	function common_input<Value>(
+	function common_input<TValue>(
 		inputer: () => string,
 		echoer: (value: string) => void,
-		converter: (value: string) => string | [null | Value],
+		converter: (value: string) => string | [null | TValue],
 		nullable: boolean,
-		checker: CheckHelper.Checker<Value>,
-		initial: undefined | null | Value,
-	): null | Value {
-		let result: null | Value;
+		checker: CheckHelper.Checker<TValue>,
+		initial: undefined | null | TValue,
+	): null | TValue {
+		let result: null | TValue;
 		while (true) {
 			let state: null | string = null;
 			let input: null | string = null;
@@ -195,14 +195,14 @@ namespace Twinning.Script.Console {
 		return result;
 	}
 
-	function basic_common_input<Value>(
+	function basic_common_input<TValue>(
 		leading: string,
 		messager: () => void,
-		converter: (value: string) => string | [null | Value],
+		converter: (value: string) => string | [null | TValue],
 		nullable: null | boolean,
-		checker: null | CheckHelper.Checker<Value>,
-		initial: undefined | null | Value,
-	): null | Value {
+		checker: null | CheckHelper.Checker<TValue>,
+		initial: undefined | null | TValue,
+	): null | TValue {
 		let first_input = true;
 		return common_input(
 			() => {
@@ -226,15 +226,15 @@ namespace Twinning.Script.Console {
 		);
 	}
 
-	function assistant_common_input<Value>(
+	function assistant_common_input<TValue>(
 		inputer: () => string,
 		leading: string,
 		echoer: (value: string) => string,
-		converter: (value: string) => string | [null | Value],
+		converter: (value: string) => string | [null | TValue],
 		nullable: null | boolean,
-		checker: null | CheckHelper.Checker<Value>,
-		initial: undefined | null | Value,
-	): null | Value {
+		checker: null | CheckHelper.Checker<TValue>,
+		initial: undefined | null | TValue,
+	): null | TValue {
 		return common_input(
 			inputer,
 			(value) => {
@@ -764,31 +764,31 @@ namespace Twinning.Script.Console {
 
 	// ----------------
 
-	export function enumeration<Value>(
-		option: Array<[Value, string, null | string]>,
+	export function enumeration<TValue>(
+		option: Array<[TValue, string, null | string]>,
 		nullable: null,
-		checker: null | CheckHelper.Checker<Value>,
-		initial?: Value,
-	): Value;
+		checker: null | CheckHelper.Checker<TValue>,
+		initial?: TValue,
+	): TValue;
 
-	export function enumeration<Value>(
-		option: Array<[Value, string, null | string]>,
+	export function enumeration<TValue>(
+		option: Array<[TValue, string, null | string]>,
 		nullable: boolean,
-		checker: null | CheckHelper.Checker<Value>,
-		initial?: null | Value,
-	): null | Value;
+		checker: null | CheckHelper.Checker<TValue>,
+		initial?: null | TValue,
+	): null | TValue;
 
-	export function enumeration<Value>(
-		option: Array<[Value, string, null | string]>,
+	export function enumeration<TValue>(
+		option: Array<[TValue, string, null | string]>,
 		nullable: null | boolean,
-		checker: null | CheckHelper.Checker<Value>,
-		initial?: null | Value,
-	): null | Value {
-		let result: null | Value = undefined!;
+		checker: null | CheckHelper.Checker<TValue>,
+		initial?: null | TValue,
+	): null | TValue {
+		let result: null | TValue = undefined!;
 		let leading = 'Enumeration';
 		let maximum_key_length = Math.max(...option.map((value) => (value[1].length)));
 		let message = option.map((value) => (`${value[1].padStart(maximum_key_length, ' ')}${value[2] === null ? '' : `. ${value[2]}`}`));
-		let converter = (value: string): string | [null | Value] => {
+		let converter = (value: string): string | [null | TValue] => {
 			if (value === '') {
 				return [null];
 			}
@@ -798,7 +798,7 @@ namespace Twinning.Script.Console {
 			}
 			return [option[index][0]];
 		};
-		let checker_proxy = (value: Value): null | string => {
+		let checker_proxy = (value: TValue): null | string => {
 			let index = option.findIndex((item) => (item[0] === value));
 			if (index === -1) {
 				return los('console:option_invalid');
@@ -848,39 +848,39 @@ namespace Twinning.Script.Console {
 
 	// ----------------
 
-	export function option_boolean<Value extends boolean>(
-		value: Array<Value>,
-	): Array<[Value, string, null | string]> {
+	export function option_boolean<TValue extends boolean>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
 		return value.map((value, index) => ([value, `${value === false ? 'n' : 'y'}`, null]));
 	}
 
-	export function option_integer<Value extends bigint>(
-		value: Array<Value>,
-	): Array<[Value, string, null | string]> {
+	export function option_integer<TValue extends bigint>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
 		return value.map((value, index) => ([value, `${value}`, null]));
 	}
 
-	export function option_floater<Value extends number>(
-		value: Array<Value>,
-	): Array<[Value, string, null | string]> {
+	export function option_floater<TValue extends number>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
 		return value.map((value, index) => ([value, `${value}`, null]));
 	}
 
-	export function option_size<Value extends bigint>(
-		value: Array<Value>,
-	): Array<[Value, string, null | string]> {
+	export function option_size<TValue extends bigint>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
 		return value.map((value, index) => ([value, `${index + 1}`, `${ConvertHelper.make_size_to_string(value)}`]));
 	}
 
-	export function option_string<Value extends string>(
-		value: Array<Value>,
-	): Array<[Value, string, null | string]> {
+	export function option_string<TValue extends string>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
 		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
 	}
 
-	export function option_path<Value extends string>(
-		value: Array<Value>,
-	): Array<[Value, string, null | string]> {
+	export function option_path<TValue extends string>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
 		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
 	}
 

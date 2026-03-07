@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 			CategoryConstraint<>
 			&& (IsSameOf<mode, Mode>)
 			&& (IsSameOf<bit_count, BitCount>)
-		inline static auto process_whole_integer (
+		inline static auto process_whole_integer(
 			ConstantByteListView const &           data,
 			typename Parameter<bit_count>::Value & value
 		) -> Void {
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 			return;
 		}
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			ConstantByteListView const & data,
 			ByteArray &                  value,
 			Mode const &                 mode,
@@ -59,14 +59,14 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 				Mode::Constant::m_1a()
 			>>(
 				mode,
-				[&] <auto index, auto mode> (ValuePackage<index>, ValuePackage<mode>) {
+				[&] <auto index, auto mode>(ValuePackage<index>, ValuePackage<mode>) {
 					Generalization::match<ValuePackage<
 						BitCount::Constant::b_32(),
 						BitCount::Constant::b_64()
 					>>(
 						bit_count,
 						// NOTE: COMPILER: error if use same name
-						[&] <auto index_, auto bit_count_> (ValuePackage<index_>, ValuePackage<bit_count_>) {
+						[&] <auto index_, auto bit_count_>(ValuePackage<index_>, ValuePackage<bit_count_>) {
 							auto value_integer = typename Parameter<bit_count_>::Value{};
 							process_whole_integer<mode, bit_count_>(data, value_integer);
 							value.allocate(k_type_size<typename Parameter<bit_count_>::Value>);
@@ -80,7 +80,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			ConstantByteListView const & data,
 			ByteArray &                  value,
 			Mode const &                 mode,

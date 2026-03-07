@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &           data_,
 			Image::ConstantImageView const & image
 		) -> Void {

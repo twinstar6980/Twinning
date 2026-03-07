@@ -13,7 +13,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 
 		// ----------------
 
-		inline static auto test_palette (
+		inline static auto test_palette(
 			List<Image::Color> const & palette
 		) -> Size {
 			assert_test(0b1_sz < palette.size() && palette.size() <= 0b1_sz << k_maximum_bit_count);

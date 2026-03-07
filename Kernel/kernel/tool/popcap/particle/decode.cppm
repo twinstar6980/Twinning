@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 		// ----------------
 
-		inline static auto exchange_track_node_list (
+		inline static auto exchange_track_node_list(
 			InputByteStreamView &                  data,
 			List<typename Definition::TrackNode> & value_list
 		) -> Void {
@@ -48,7 +48,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			return;
 		}
 
-		inline static auto exchange_field_list (
+		inline static auto exchange_field_list(
 			InputByteStreamView &              data,
 			List<typename Definition::Field> & value_list
 		) -> Void {
@@ -68,7 +68,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			return;
 		}
 
-		inline static auto exchange_emitter_list (
+		inline static auto exchange_emitter_list(
 			InputByteStreamView &                data,
 			List<typename Definition::Emitter> & value_list
 		) -> Void {
@@ -157,7 +157,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			return;
 		}
 
-		inline static auto exchange_particle (
+		inline static auto exchange_particle(
 			InputByteStreamView &           data,
 			typename Definition::Particle & value
 		) -> Void {
@@ -169,7 +169,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &           data,
 			typename Definition::Particle & definition
 		) -> Void {
@@ -180,7 +180,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &           data_,
 			typename Definition::Particle & definition
 		) -> Void {

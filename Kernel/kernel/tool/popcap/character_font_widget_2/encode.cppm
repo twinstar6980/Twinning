@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		// ----------------
 
-		inline static auto exchange_character_item (
+		inline static auto exchange_character_item(
 			OutputByteStreamView &                     data,
 			typename Definition::CharacterItem const & value
 		) -> Void {
@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_kerning (
+		inline static auto exchange_font_kerning(
 			OutputByteStreamView &                   data,
 			typename Definition::FontKerning const & value
 		) -> Void {
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_character (
+		inline static auto exchange_font_character(
 			OutputByteStreamView &                     data,
 			typename Definition::FontCharacter const & value
 		) -> Void {
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_layer (
+		inline static auto exchange_font_layer(
 			OutputByteStreamView &                 data,
 			typename Definition::FontLayer const & value
 		) -> Void {
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_widget (
+		inline static auto exchange_font_widget(
 			OutputByteStreamView &                  data,
 			typename Definition::FontWidget const & value
 		) -> Void {
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			OutputByteStreamView &                  data,
 			typename Definition::FontWidget const & definition
 		) -> Void {
@@ -126,7 +126,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &                  data_,
 			typename Definition::FontWidget const & definition
 		) -> Void {

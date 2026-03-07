@@ -28,22 +28,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~Optional (
+		constexpr ~Optional(
 		) = default;
 
 		// ----------------
 
-		constexpr Optional (
+		constexpr Optional(
 		) :
 			m_value{} {
 			return;
 		}
 
-		constexpr Optional (
+		constexpr Optional(
 			Optional const & that
 		) = default;
 
-		constexpr Optional (
+		constexpr Optional(
 			Optional && that
 		) = default;
 
@@ -52,7 +52,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsValid<ValueObject>>
 			&& (IsSame<AsPure<ValueObject>, Value>)
-		explicit constexpr Optional (
+		explicit constexpr Optional(
 			ValueObject && value
 		) :
 			m_value{as_forward<ValueObject>(value)} {
@@ -63,11 +63,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Optional const & that
 		) -> Optional & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Optional && that
 		) -> Optional & = default;
 
@@ -75,14 +75,14 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		constexpr auto has (
+		constexpr auto has(
 		) const -> Boolean {
 			return thiz.m_value.has_value();
 		}
 
 		// ----------------
 
-		constexpr auto reset (
+		constexpr auto reset(
 		) -> Void {
 			thiz.m_value.reset();
 			return;
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel {
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
 			&& (IsConstructible<Value, Argument && ...>)
-		constexpr auto set (
+		constexpr auto set(
 			Argument && ... argument
 		) -> Value & {
 			thiz.m_value.emplace(as_forward<Argument>(argument) ...);
@@ -100,13 +100,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto get (
+		constexpr auto get(
 		) -> Value & {
 			assert_test(thiz.has());
 			return thiz.m_value.value();
 		}
 
-		constexpr auto get (
+		constexpr auto get(
 		) const -> Value const & {
 			assert_test(thiz.has());
 			return thiz.m_value.value();
@@ -118,7 +118,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Optional const & thix,
 			Optional const & that
 		) -> bool = default;
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Value, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
-	inline constexpr auto make_optional (
+	inline constexpr auto make_optional(
 		Argument && ... argument
 	) -> Optional<Value> {
 		auto result = Optional<Value>{};
@@ -143,7 +143,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		CategoryConstraint<IsValid<Value>>
-	inline constexpr auto make_optional_of (
+	inline constexpr auto make_optional_of(
 		Value && value
 	) -> Optional<AsPure<Value>> {
 		return Optional<AsPure<Value>>{as_forward<Value>(value)};

@@ -32,19 +32,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~EnumerableVariant (
+		constexpr ~EnumerableVariant(
 		) = default;
 
 		// ----------------
 
-		constexpr EnumerableVariant (
+		constexpr EnumerableVariant(
 		) = default;
 
-		constexpr EnumerableVariant (
+		constexpr EnumerableVariant(
 			EnumerableVariant const & that
 		) = default;
 
-		constexpr EnumerableVariant (
+		constexpr EnumerableVariant(
 			EnumerableVariant && that
 		) = default;
 
@@ -56,11 +56,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			EnumerableVariant const & that
 		) -> EnumerableVariant & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			EnumerableVariant && that
 		) -> EnumerableVariant & = default;
 
@@ -68,7 +68,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region type
 
-		constexpr auto type (
+		constexpr auto type(
 		) const -> Enumeration {
 			return cbox<Enumeration>(thiz.index());
 		}
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
-		constexpr auto is_of_type (
+		constexpr auto is_of_type(
 		) const -> Boolean {
 			return thiz.template is<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel {
 			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
 			&& (IsConstructible<AsSelect<static_cast<ZSize>(type.value), TValue ...>, Argument && ...>)
-		constexpr auto set_of_type (
+		constexpr auto set_of_type(
 			Argument && ... argument
 		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
 			return thiz.template set<AsSelect<static_cast<ZSize>(type.value), TValue ...>>(as_forward<Argument>(argument) ...);
@@ -105,7 +105,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
-		constexpr auto get_of_type (
+		constexpr auto get_of_type(
 		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
 			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
@@ -114,7 +114,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<type, Enumeration>)
 			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
-		constexpr auto get_of_type (
+		constexpr auto get_of_type(
 		) const -> AsSelect<static_cast<ZSize>(type.value), TValue ...> const & {
 			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
 		}
@@ -125,7 +125,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			EnumerableVariant const & thix,
 			EnumerableVariant const & that
 		) -> bool = default;

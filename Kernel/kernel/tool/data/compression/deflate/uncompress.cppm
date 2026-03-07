@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
 			Size const &           window_bits,
@@ -79,7 +79,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
 			Size const &           window_bits,

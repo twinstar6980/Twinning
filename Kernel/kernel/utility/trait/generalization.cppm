@@ -20,15 +20,15 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		&& ((IsTypePackage<Package> || IsValuePackage<Package>) && ...)
 		&& ((Package::size == AsSelect<1_ixz, Package ..., TypePackage<>>::size) && ...)
 		&& (IsGenericCallable<Executor>)
-	inline constexpr auto each (
+	inline constexpr auto each(
 		Executor const & executor
 	) -> Void {
-		auto iterate = [&] <auto element_index> (
+		auto iterate = [&] <auto element_index>(
 			ValuePackage<element_index>
 		) {
 			executor(
 				ValuePackage<element_index>{},
-				[] <typename CurrentPackage> (CurrentPackage) {
+				[] <typename CurrentPackage>(CurrentPackage) {
 					if constexpr (IsTypePackage<CurrentPackage>) {
 						return TypePackage<typename CurrentPackage::template Element<element_index>>{};
 					}
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 				}(Package{}) ...
 			);
 		};
-		[&] <auto ... element_index> (
+		[&] <auto ... element_index>(
 			ValuePackage<element_index ...>
 		) {
 				(iterate(ValuePackage<element_index>{}), ...);
@@ -51,17 +51,17 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		&& ((IsTypePackage<Package> || IsValuePackage<Package>) && ...)
 		&& ((Package::size == sizeof...(Argument)) && ...)
 		&& (IsGenericCallable<Executor>)
-	inline constexpr auto each_with (
+	inline constexpr auto each_with(
 		Executor const & executor,
 		Argument && ...  argument
 	) -> Void {
-		auto iterate = [&] <auto element_index, typename CurrentArgument> (
+		auto iterate = [&] <auto element_index, typename CurrentArgument>(
 			ValuePackage<element_index>,
 			CurrentArgument && current_argument
 		) {
 			executor(
 				ValuePackage<element_index>{},
-				[] <typename CurrentPackage> (CurrentPackage) {
+				[] <typename CurrentPackage>(CurrentPackage) {
 					if constexpr (IsTypePackage<CurrentPackage>) {
 						return TypePackage<typename CurrentPackage::template Element<element_index>>{};
 					}
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 				as_forward<CurrentArgument>(current_argument)
 			);
 		};
-		[&] <auto ... element_index> (
+		[&] <auto ... element_index>(
 			ValuePackage<element_index ...>
 		) {
 				(iterate(ValuePackage<element_index>{}, as_forward<Argument>(argument)), ...);
@@ -86,13 +86,13 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		CategoryConstraint<IsPureInstance<Package> && IsPureInstance<Condition> && IsPureInstance<Executor>>
 		&& (IsValuePackage<Package>)
 		&& (IsGenericCallable<Executor>)
-	inline constexpr auto match (
+	inline constexpr auto match(
 		Condition const & condition,
 		Executor const &  executor
 	) -> Void {
 		auto has_case = false;
 		each<Package>(
-			[&] <auto index, auto element> (ValuePackage<index>, ValuePackage<element>) {
+			[&] <auto index, auto element>(ValuePackage<index>, ValuePackage<element>) {
 				if (element == condition) {
 					executor(ValuePackage<index>{}, ValuePackage<element>{});
 					has_case = true;

@@ -13,9 +13,9 @@ export namespace Twinning::Shell::Bridge {
 
 		Executor * executor{nullptr};
 
-		std::add_pointer_t<void  ()> initialize{nullptr};
+		std::add_pointer_t<void ()> initialize{nullptr};
 
-		std::add_pointer_t<void  ()> finalize{nullptr};
+		std::add_pointer_t<void ()> finalize{nullptr};
 
 	};
 

@@ -22,7 +22,7 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region constructor
 
-		~Library (
+		~Library(
 		) {
 			thiz.m_symbol->finalize();
 			if (thiz.m_handle.state()) {
@@ -33,20 +33,20 @@ export namespace Twinning::Shell::Bridge {
 
 		// ----------------
 
-		Library (
+		Library(
 		) = delete;
 
-		Library (
+		Library(
 			Library const & that
 		) = delete;
 
-		Library (
+		Library(
 			Library && that
 		) = delete;
 
 		// ----------------
 
-		explicit Library (
+		explicit Library(
 			std::string_view const & path
 		) :
 			m_handle{},
@@ -57,7 +57,7 @@ export namespace Twinning::Shell::Bridge {
 			return;
 		}
 
-		explicit Library (
+		explicit Library(
 			Service * const & symbol
 		) :
 			m_handle{},
@@ -71,11 +71,11 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Library const & that
 		) -> Library & = delete;
 
-		auto operator = (
+		auto operator =(
 			Library && that
 		) -> Library & = delete;
 
@@ -83,7 +83,7 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region access
 
-		auto symbol (
+		auto symbol(
 		) -> Service & {
 			return *thiz.m_symbol;
 		}

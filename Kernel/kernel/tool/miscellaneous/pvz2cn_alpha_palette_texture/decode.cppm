@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image,
 			List<Image::Color> const &       palette
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &            data_,
 			Image::VariableImageView const & image,
 			List<Image::Color> const &       palette

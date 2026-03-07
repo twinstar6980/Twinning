@@ -6,7 +6,7 @@ namespace Twinning.Script.Support.Marmalade.Dzip.PackAutomatic {
 		resource_directory: string,
 		version_number: [0n][number],
 	): [Kernel.ByteArray, Kernel.Size] {
-		let version_c = Kernel.Tool.Marmalade.Dzip.Version.value({ number: version_number });
+		let version_c = Kernel.Tool.Marmalade.Dzip.Version.value({number: version_number});
 		let resource_list = KernelX.Storage.list_directory(resource_directory, null, true, false);
 		let definition_js: Kernel.Tool.Marmalade.Dzip.Definition.JS_N.Package = {
 			resource: [],
@@ -19,7 +19,7 @@ namespace Twinning.Script.Support.Marmalade.Dzip.PackAutomatic {
 		for (let resource of resource_list) {
 			definition_js.resource.push({
 				path: resource,
-				chunk: [{ flag: 'copy_coded' }],
+				chunk: [{flag: 'copy_coded'}],
 			});
 			let resource_size = KernelX.Storage.size_file(`${resource_directory}/${resource}`);
 			data_size_bound += (2 + resource.length) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data

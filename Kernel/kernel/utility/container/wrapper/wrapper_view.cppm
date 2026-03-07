@@ -32,28 +32,28 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~WrapperView (
+		constexpr ~WrapperView(
 		) = default;
 
 		// ----------------
 
-		constexpr WrapperView (
+		constexpr WrapperView(
 		) :
 			m_value{} {
 			return;
 		}
 
-		constexpr WrapperView (
+		constexpr WrapperView(
 			WrapperView const & that
 		) = default;
 
-		constexpr WrapperView (
+		constexpr WrapperView(
 			WrapperView && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr WrapperView (
+		explicit constexpr WrapperView(
 			QualifyValue & value
 		) :
 			m_value{&value} {
@@ -64,11 +64,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			WrapperView const & that
 		) -> WrapperView & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			WrapperView && that
 		) -> WrapperView & = default;
 
@@ -76,7 +76,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		constexpr auto set (
+		constexpr auto set(
 			QualifyValue & value
 		) -> QualifyValue & {
 			thiz.m_value = make_pointer_of(value);
@@ -85,7 +85,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto get (
+		constexpr auto get(
 		) const -> QualifyValue & {
 			return thiz.m_value.dereference();
 		}
@@ -96,7 +96,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			WrapperView const & thix,
 			WrapperView const & that
 		) -> bool {

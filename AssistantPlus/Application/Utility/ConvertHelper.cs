@@ -51,18 +51,18 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region enumeration
 
-		public static String MakeEnumerationToStringOfSnakeCase<TType>(
-			TType value
+		public static String MakeEnumerationToStringOfSnakeCase<TValue>(
+			TValue value
 		)
-			where TType : struct, Enum {
+			where TValue : struct, Enum {
 			return ConvertHelper.ChangeStringFromCamelCaseToSnakeCase(Enum.GetName(value).AsNotNull());
 		}
 
-		public static TType ParseEnumerationFromStringOfSnakeCase<TType>(
+		public static TValue ParseEnumerationFromStringOfSnakeCase<TValue>(
 			String text
 		)
-			where TType : struct, Enum {
-			return Enum.GetValues<TType>().First((it) => ConvertHelper.MakeEnumerationToStringOfSnakeCase(it) == text);
+			where TValue : struct, Enum {
+			return Enum.GetValues<TValue>().First((it) => ConvertHelper.MakeEnumerationToStringOfSnakeCase(it) == text);
 		}
 
 		#endregion

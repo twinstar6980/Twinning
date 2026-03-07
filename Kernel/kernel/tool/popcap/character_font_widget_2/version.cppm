@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 	// ----------------
 
-	inline constexpr auto check_version (
+	inline constexpr auto check_version(
 		Version const & it
 	) -> ZBoolean {
 		auto result = true;

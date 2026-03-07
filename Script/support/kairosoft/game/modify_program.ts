@@ -293,7 +293,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		};
 		{
 			let check_search_result = (
-				search_result: Array<{address: number;}>,
+				search_result: Array<{address: number}>,
 				expect_count: number,
 				name: string,
 			): Array<number> => {

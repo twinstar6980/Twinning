@@ -138,8 +138,8 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		container: Box,
 		item_weighter: (it: Box) => number,
 	): null | Record<string, Rect> {
-		let space_list: Array<Rect> = [{ x: 0, y: 0, ...container }];
-		let item_list = ConvertHelper.record_to_array(item_map, (key, value) => ({ name: key, box: item_map[key] })).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
+		let space_list: Array<Rect> = [{x: 0, y: 0, ...container}];
+		let item_list = ConvertHelper.record_to_array(item_map, (key, value) => ({name: key, box: item_map[key]})).sort((a, b) => (item_weighter(a.box) > item_weighter(b.box) ? -1 : +1));
 		let result: Record<string, Rect> = {};
 		for (let item of item_list) {
 			let box = item.box;
@@ -149,7 +149,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 			}
 			let space = space_list[space_index];
 			space_list.splice(space_index, 1);
-			result[item.name] = { x: space.x, y: space.y, ...box };
+			result[item.name] = {x: space.x, y: space.y, ...box};
 			let reserve_w = space.w - box.w;
 			let reserve_h = space.h - box.h;
 			let new_space = [
@@ -184,7 +184,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		container_expander: (it: Box, step: number) => void,
 		item_weighter: (it: Box) => number,
 	): [Box, Record<string, Rect>] {
-		let container: Box = { w: 0, h: 0 };
+		let container: Box = {w: 0, h: 0};
 		let result: null | Record<string, Rect>;
 		let expand_step = 0;
 		while (true) {

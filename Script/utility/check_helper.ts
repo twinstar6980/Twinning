@@ -2,13 +2,13 @@ namespace Twinning.Script.CheckHelper {
 
 	// #region basic
 
-	export type Checker<T> = (value: T) => null | string;
+	export type Checker<TValue> = (value: TValue) => null | string;
 
 	// ----------------
 
-	export function enumeration_checker<T>(
-		rule: Array<T>,
-	): Checker<T> {
+	export function enumeration_checker<TValue>(
+		rule: Array<TValue>,
+	): Checker<TValue> {
 		return (value) => (rule.includes(value) ? null : los('checker_helper:enumeration_message', `[ ${rule.join(', ')} ]`));
 	}
 
@@ -66,49 +66,49 @@ namespace Twinning.Script.CheckHelper {
 
 	// ----------------
 
-	export function is_or<Value, Except extends Value, Fallback>(
-		value: Value,
-		expect: Except,
-		fallback: Fallback,
-	): Except | Fallback {
-		return value === expect ? value as Except : fallback;
+	export function is_or<TValue, TExcept extends TValue, TFallback>(
+		value: TValue,
+		expect: TExcept,
+		fallback: TFallback,
+	): TExcept | TFallback {
+		return value === expect ? value as TExcept : fallback;
 	}
 
-	export function not_or<Value, Except extends Value, Fallback>(
-		value: Value,
-		expect: Except,
-		fallback: Fallback,
-	): Exclude<Value, Except> | Fallback {
-		return value !== expect ? value as Exclude<Value, Except> : fallback;
+	export function not_or<TValue, TExcept extends TValue, TFallback>(
+		value: TValue,
+		expect: TExcept,
+		fallback: TFallback,
+	): Exclude<TValue, TExcept> | TFallback {
+		return value !== expect ? value as Exclude<TValue, TExcept> : fallback;
 	}
 
 	// ----------------
 
-	export function is_undefined_or<Value, Fallback>(
-		value: Value | undefined,
-		fallback: Fallback,
-	): undefined | Fallback {
+	export function is_undefined_or<TValue, TFallback>(
+		value: TValue | undefined,
+		fallback: TFallback,
+	): undefined | TFallback {
 		return is_or(value, undefined, fallback);
 	}
 
-	export function not_undefined_or<Value, Fallback>(
-		value: Value | undefined,
-		fallback: Fallback,
-	): Value | Fallback {
+	export function not_undefined_or<TValue, TFallback>(
+		value: TValue | undefined,
+		fallback: TFallback,
+	): TValue | TFallback {
 		return not_or(value, undefined, fallback);
 	}
 
-	export function is_null_or<Value, Fallback>(
-		value: Value | null,
-		fallback: Fallback,
-	): null | Fallback {
+	export function is_null_or<TValue, TFallback>(
+		value: TValue | null,
+		fallback: TFallback,
+	): null | TFallback {
 		return is_or(value, null, fallback);
 	}
 
-	export function not_null_or<Value, Fallback>(
-		value: Value | null,
-		fallback: Fallback,
-	): Value | Fallback {
+	export function not_null_or<TValue, TFallback>(
+		value: TValue | null,
+		fallback: TFallback,
+	): TValue | TFallback {
 		return not_or(value, null, fallback);
 	}
 

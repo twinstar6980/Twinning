@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundlePat
 						identifier: 'patch_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { after_file: string; }) => (argument.after_file.replace(/(\.rsb)?$/i, '.rsbpatch')),
+						automatic: (argument: {after_file: string}) => (argument.after_file.replace(/(\.rsb)?$/i, '.rsbpatch')),
 						condition: null,
 					}),
 					typical_argument_path({
@@ -52,8 +52,8 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundlePat
 					}),
 				],
 				batch: null,
-				worker: ({ after_file, patch_file, before_file, version_number, use_raw_packet, buffer_size }, temporary: {}) => {
-					KernelX.Tool.Popcap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
+				worker: ({after_file, patch_file, before_file, version_number, use_raw_packet, buffer_size}, temporary: {}) => {
+					KernelX.Tool.Popcap.ResourceStreamBundlePatch.encode_fs(before_file, after_file, patch_file, use_raw_packet, {number: version_number as any}, buffer_size);
 					return;
 				},
 			}),
@@ -72,7 +72,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundlePat
 						identifier: 'after_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { patch_file: string; }) => (argument.patch_file.replace(/(\.rsbpatch)?$/i, '.rsb')),
+						automatic: (argument: {patch_file: string}) => (argument.patch_file.replace(/(\.rsbpatch)?$/i, '.rsb')),
 						condition: null,
 					}),
 					typical_argument_path({
@@ -104,8 +104,8 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundlePat
 					}),
 				],
 				batch: null,
-				worker: ({ patch_file, after_file, before_file, version_number, use_raw_packet, buffer_size }, temporary: {}) => {
-					KernelX.Tool.Popcap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, { number: version_number as any }, buffer_size);
+				worker: ({patch_file, after_file, before_file, version_number, use_raw_packet, buffer_size}, temporary: {}) => {
+					KernelX.Tool.Popcap.ResourceStreamBundlePatch.decode_fs(before_file, after_file, patch_file, use_raw_packet, {number: version_number as any}, buffer_size);
 					return;
 				},
 			}),

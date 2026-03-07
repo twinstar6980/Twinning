@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		inline static auto test_hash (
+		inline static auto test_hash(
 			ConstantByteListView const &   data,
 			StaticByteArray<16_sz> const & hash
 		) -> Void {
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		inline static auto process_sub (
+		inline static auto process_sub(
 			ConstantByteListView const & before,
 			OutputByteStreamView &       after,
 			InputByteStreamView &        patch,
@@ -67,7 +67,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			return;
 		}
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  before,
 			OutputByteStreamView & after,
 			InputByteStreamView &  patch,
@@ -179,7 +179,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  before_,
 			OutputByteStreamView & after_,
 			InputByteStreamView &  patch_,

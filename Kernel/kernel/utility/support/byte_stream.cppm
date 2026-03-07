@@ -47,18 +47,18 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			return k_type_size<That>;
 		}
 
-		inline static constexpr auto size (
+		inline static constexpr auto size(
 			That const & that
 		) -> Size {
 			return k_type_size<That>;
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -101,18 +101,18 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			return bs_static_size<BaseBox<TValue>>();
 		}
 
-		inline static constexpr auto size (
+		inline static constexpr auto size(
 			That const & that
 		) -> Size {
 			return bs_size<BaseBox<TValue>>(that);
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -122,7 +122,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -189,18 +189,18 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			return bs_static_size<typename That::Underlying>();
 		}
 
-		inline static constexpr auto size (
+		inline static constexpr auto size(
 			That const & that
 		) -> Size {
 			return bs_size<typename That::Underlying>(that.underlying());
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -208,7 +208,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -260,13 +260,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 			Size const & size
 		) -> Size {
 			return bs_static_size<TElement>() * size;
 		}
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			auto result = k_none_size;
@@ -276,7 +276,7 @@ export namespace Twinning::Kernel {
 			return result;
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -286,7 +286,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput &  thix,
 			That const & that
 		) -> Void requires
@@ -311,19 +311,19 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 			Size const & size
 		) -> Size {
 			return bs_static_size<TElement>() * size;
 		}
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			return bs_size(that.as_view());
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -331,7 +331,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -339,7 +339,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput &  thix,
 			That &       that,
 			Size const & size
@@ -363,19 +363,19 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 			Size const & size
 		) -> Size {
 			return bs_static_size<TElement>() * size;
 		}
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			return bs_size(that.as_view());
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -383,7 +383,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -391,7 +391,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput &  thix,
 			That &       that,
 			Size const & size
@@ -415,18 +415,18 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			return bs_static_size<TElement>() * t_size;
 		}
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			return bs_size(that.view());
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -434,7 +434,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -545,47 +545,47 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			auto result = k_none_size;
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					result += bs_static_size<AsPure<decltype(Field::value_of(declare<That const &>()))>>();
 				}
 			);
 			return result;
 		}
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			auto result = k_none_size;
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					result += bs_size(Field::value_of(that));
 				}
 			);
 			return result;
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					thix.write(Field::value_of(that));
 				}
 			);
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					thix.read(Field::value_of(that));
 				}
 			);
@@ -609,7 +609,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			auto result = k_none_size;
 			result += bs_static_size<decltype(That::first)>();
@@ -619,7 +619,7 @@ export namespace Twinning::Kernel {
 			return result;
 		}
 
-		inline static constexpr auto size (
+		inline static constexpr auto size(
 			That const & that
 		) -> Size {
 			auto result = k_none_size;
@@ -630,7 +630,7 @@ export namespace Twinning::Kernel {
 			return result;
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -641,7 +641,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -668,18 +668,18 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static constexpr auto static_size (
+		inline static constexpr auto static_size(
 		) -> Size {
 			return bs_static_size<AsUnmakeConstant<decltype(t_value)>>();
 		}
 
-		inline static constexpr auto size (
+		inline static constexpr auto size(
 			That const & that
 		) -> Size {
 			return bs_size(t_value);
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -687,7 +687,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -711,7 +711,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			if constexpr (IsVoid<TLength>) {
@@ -722,7 +722,7 @@ export namespace Twinning::Kernel {
 			}
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -737,7 +737,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {

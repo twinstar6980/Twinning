@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		// ----------------
 
-		inline static auto process_value (
+		inline static auto process_value(
 			InputCharacterStreamView &  data,
 			Value &                     value,
 			OutputCharacterStreamView & buffer
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 						}
 						array.assign(
 							item_list,
-							[] (auto & element) -> auto && {
+							[](auto & element) -> auto && {
 								return as_moveable(element);
 							}
 						);
@@ -212,7 +212,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 						}
 						object.assign(
 							item_list,
-							[] (auto & element) -> auto && {
+							[](auto & element) -> auto && {
 								return as_moveable(element);
 							}
 						);
@@ -229,7 +229,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 			return;
 		}
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputCharacterStreamView &  data,
 			Value &                     value,
 			OutputCharacterStreamView & buffer
@@ -240,7 +240,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputCharacterStreamView &  data_,
 			Value &                     value,
 			OutputCharacterStreamView & buffer

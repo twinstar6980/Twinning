@@ -48,19 +48,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~ByteStreamView (
+		~ByteStreamView(
 		) = default;
 
 		// ----------------
 
-		ByteStreamView (
+		ByteStreamView(
 		) = default;
 
-		ByteStreamView (
+		ByteStreamView(
 			ByteStreamView const & that
 		) = default;
 
-		ByteStreamView (
+		ByteStreamView(
 			ByteStreamView && that
 		) = default;
 
@@ -72,22 +72,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			ByteStreamView const & that
 		) -> ByteStreamView & = default;
 
-		auto operator = (
+		auto operator =(
 			ByteStreamView && that
 		) -> ByteStreamView & = default;
 
 		// ----------------
 
-		implicit operator InputStream & () requires
+		implicit operator InputStream &() requires
 			(mode == StreamMode::Constant::access()) {
 			return thiz.as_input_stream();
 		}
 
-		implicit operator OutputStream & () requires
+		implicit operator OutputStream &() requires
 			(mode == StreamMode::Constant::access()) {
 			return thiz.as_output_stream();
 		}
@@ -98,7 +98,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto write (
+		auto write(
 			That &&       that,
 			Option && ... option
 		) -> Void requires
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto read (
+		auto read(
 			That &&       that,
 			Option && ... option
 		) -> Void requires
@@ -122,7 +122,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto write_constant (
+		auto write_constant(
 			That const &  that,
 			Option && ... option
 		) -> Void requires
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto read_constant (
+		auto read_constant(
 			That const &  that,
 			Option && ... option
 		) -> Void requires
@@ -148,7 +148,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That = Byte, typename ... Option> requires
 			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
-		auto read_of (
+		auto read_of(
 			Option && ... option
 		) -> That requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
@@ -161,13 +161,13 @@ export namespace Twinning::Kernel {
 
 		#pragma region mode cast
 
-		auto as_input_stream (
+		auto as_input_stream(
 		) -> InputStream & requires
 			(mode == StreamMode::Constant::access()) {
 			return self_cast<InputStream>(thiz);
 		}
 
-		auto as_output_stream (
+		auto as_output_stream(
 		) -> OutputStream & requires
 			(mode == StreamMode::Constant::access()) {
 			return self_cast<OutputStream>(thiz);
@@ -183,7 +183,7 @@ export namespace Twinning::Kernel {
 
 	template <typename That, typename ... Option> requires
 		CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
-	inline constexpr auto bs_static_size (
+	inline constexpr auto bs_static_size(
 		Option && ... option
 	) -> Size {
 		return ByteStreamAdapter<That>::static_size(as_forward<Option>(option) ...);
@@ -191,7 +191,7 @@ export namespace Twinning::Kernel {
 
 	template <typename That, typename ... Option> requires
 		CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
-	inline constexpr auto bs_size (
+	inline constexpr auto bs_size(
 		That const &  that,
 		Option && ... option
 	) -> Size {

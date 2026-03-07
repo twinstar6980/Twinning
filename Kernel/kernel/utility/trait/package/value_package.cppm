@@ -32,12 +32,12 @@ export namespace Twinning::Kernel::Trait {
 
 		template <typename Value> requires
 			CategoryConstraint<>
-		inline static constexpr auto has (
+		inline static constexpr auto has(
 			Value const & value
 		) -> ZBoolean {
 			auto result = false;
 			auto iterate =
-				[&] <typename CurrentValue> (
+				[&] <typename CurrentValue>(
 				CurrentValue current_value
 			) {
 				if constexpr (IsSame<CurrentValue, Value>) {
@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Trait {
 		&& (IsValuePackage<Package> && IsSameOf<begin, ZSize> && IsSameOf<size, ZSize>)
 		&& (begin + size <= Package::size)
 	using AsValuePackageSub = decltype(
-		[] <ZSize ... index> (
+		[] <ZSize ... index>(
 		std::index_sequence<index ...>
 	) -> ValuePackage<Package::template value<begin + index> ...> {
 			return {};
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<Package1> && IsPureInstance<Package2>>
 		&& (IsValuePackage<Package1> && IsValuePackage<Package2>)
 	using AsValuePackageConcat = decltype(
-		[] <auto ... index_1, auto ... index_2> (
+		[] <auto ... index_1, auto ... index_2>(
 		std::index_sequence<index_1 ...>,
 		std::index_sequence<index_2 ...>
 	) -> ValuePackage<Package1::template value<index_1> ..., Package2::template value<index_2> ...> {
@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<>
 		&& (IsSameOf<size, ZSize>)
 	using AsValuePackageOfIndex = decltype(
-		[] <auto ... index> (
+		[] <auto ... index>(
 		std::index_sequence<index ...>
 	) -> ValuePackage<index ...> {
 			return {};

@@ -29,7 +29,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~Finalizer (
+		constexpr ~Finalizer(
 		) {
 			thiz.m_action();
 			return;
@@ -37,20 +37,20 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr Finalizer (
+		constexpr Finalizer(
 		) = delete;
 
-		constexpr Finalizer (
+		constexpr Finalizer(
 			Finalizer const & that
 		) = delete;
 
-		constexpr Finalizer (
+		constexpr Finalizer(
 			Finalizer && that
 		) = delete;
 
 		// ----------------
 
-		explicit constexpr Finalizer (
+		explicit constexpr Finalizer(
 			Action const & action
 		) :
 			m_action{action} {
@@ -61,11 +61,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Finalizer const & that
 		) -> Finalizer & = delete;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Finalizer && that
 		) -> Finalizer & = delete;
 
@@ -80,7 +80,7 @@ export namespace Twinning::Kernel {
 	template <typename FinalizerAction> requires
 		CategoryConstraint<IsPureInstance<FinalizerAction>>
 		&& (IsInvocable<FinalizerAction>)
-	inline constexpr auto make_finalizer (
+	inline constexpr auto make_finalizer(
 		FinalizerAction const & finalizer
 	) -> Finalizer<FinalizerAction> {
 		return Finalizer<FinalizerAction>{finalizer};
@@ -89,7 +89,7 @@ export namespace Twinning::Kernel {
 	template <typename InitializerAction, typename FinalizerAction> requires
 		CategoryConstraint<IsPureInstance<InitializerAction> && IsPureInstance<FinalizerAction>>
 		&& (IsInvocable<InitializerAction> && IsInvocable<FinalizerAction>)
-	inline constexpr auto make_finalizer (
+	inline constexpr auto make_finalizer(
 		InitializerAction const & initializer,
 		FinalizerAction const &   finalizer
 	) -> Finalizer<FinalizerAction> {

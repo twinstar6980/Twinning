@@ -14,19 +14,19 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region constructor
 
-		virtual ~Client (
+		virtual ~Client(
 		) = default;
 
 		// ----------------
 
-		Client (
+		Client(
 		) = default;
 
-		Client (
+		Client(
 			Client const & that
 		) = delete;
 
-		Client (
+		Client(
 			Client && that
 		) = delete;
 
@@ -34,11 +34,11 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Client const & that
 		) -> Client & = delete;
 
-		auto operator = (
+		auto operator =(
 			Client && that
 		) -> Client & = delete;
 
@@ -46,15 +46,15 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region life
 
-		virtual auto start (
+		virtual auto start(
 		) -> void = 0;
 
-		virtual auto finish (
+		virtual auto finish(
 		) -> void = 0;
 
 		// ----------------
 
-		virtual auto callback (
+		virtual auto callback(
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> = 0;
 

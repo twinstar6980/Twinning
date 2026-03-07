@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  cipher,
 			OutputByteStreamView & plain,
 			Mode const &           mode,
@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  cipher_,
 			OutputByteStreamView & plain_,
 			Mode const &           mode,

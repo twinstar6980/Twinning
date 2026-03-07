@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 		// ----------------
 
-		inline static auto exchange_transform_list (
+		inline static auto exchange_transform_list(
 			OutputByteStreamView &                       data,
 			List<typename Definition::Transform> const & value_list
 		) -> Void {
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			return;
 		}
 
-		inline static auto exchange_track_list (
+		inline static auto exchange_track_list(
 			OutputByteStreamView &                   data,
 			List<typename Definition::Track> const & value_list
 		) -> Void {
@@ -96,7 +96,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			return;
 		}
 
-		inline static auto exchange_animation (
+		inline static auto exchange_animation(
 			OutputByteStreamView &                 data,
 			typename Definition::Animation const & value
 		) -> Void {
@@ -111,7 +111,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			OutputByteStreamView &                 data,
 			typename Definition::Animation const & definition
 		) -> Void {
@@ -122,7 +122,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &                 data_,
 			typename Definition::Animation const & definition
 		) -> Void {

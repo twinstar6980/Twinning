@@ -29,22 +29,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~Variant (
+		constexpr ~Variant(
 		) = default;
 
 		// ----------------
 
-		constexpr Variant (
+		constexpr Variant(
 		) :
 			m_value{} {
 			return;
 		}
 
-		constexpr Variant (
+		constexpr Variant(
 			Variant const & that
 		) = default;
 
-		constexpr Variant (
+		constexpr Variant(
 			Variant && that
 		) = default;
 
@@ -53,7 +53,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsValid<ValueObject>>
 			&& (IsSame<AsPure<ValueObject>, TValue ...>)
-		explicit constexpr Variant (
+		explicit constexpr Variant(
 			ValueObject && value
 		) :
 			m_value{as_forward<ValueObject>(value)} {
@@ -64,11 +64,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Variant const & that
 		) -> Variant & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Variant && that
 		) -> Variant & = default;
 
@@ -79,7 +79,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
 			&& (IsSame<ValueObject, TValue ...>)
-		constexpr auto is (
+		constexpr auto is(
 		) const -> Boolean {
 			return std::holds_alternative<ValueObject>(thiz.m_value);
 		}
@@ -90,7 +90,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument ...>>
 			&& (IsSame<ValueObject, TValue ...>)
 			&& (IsConstructible<ValueObject, Argument && ...>)
-		constexpr auto set (
+		constexpr auto set(
 			Argument && ... argument
 		) -> ValueObject & {
 			thiz.m_value.template emplace<ValueObject>(as_forward<Argument>(argument) ...);
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
 			&& (IsSame<ValueObject, TValue ...>)
-		constexpr auto get (
+		constexpr auto get(
 		) -> ValueObject & {
 			assert_test(thiz.template is<ValueObject>());
 			return std::get<ValueObject>(thiz.m_value);
@@ -111,7 +111,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
 			&& (IsSame<ValueObject, TValue ...>)
-		constexpr auto get (
+		constexpr auto get(
 		) const -> ValueObject const & {
 			assert_test(thiz.template is<ValueObject>());
 			return std::get<ValueObject>(thiz.m_value);
@@ -121,7 +121,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region index
 
-		constexpr auto index (
+		constexpr auto index(
 		) const -> Size {
 			return mbox<Size>(thiz.m_value.index());
 		}
@@ -134,7 +134,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
-		constexpr auto is_of_index (
+		constexpr auto is_of_index(
 		) const -> Boolean {
 			return thiz.template is<AsSelect<index.value, TValue ...>>();
 		}
@@ -146,7 +146,7 @@ export namespace Twinning::Kernel {
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
 			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
-		constexpr auto set_of_index (
+		constexpr auto set_of_index(
 			Argument && ... argument
 		) -> AsSelect<index.value, TValue ...> & {
 			return thiz.template set<AsSelect<index.value, TValue ...>>(as_forward<Argument>(argument) ...);
@@ -158,7 +158,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
-		constexpr auto get_of_index (
+		constexpr auto get_of_index(
 		) -> AsSelect<index.value, TValue ...> & {
 			return thiz.template get<AsSelect<index.value, TValue ...>>();
 		}
@@ -167,7 +167,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
-		constexpr auto get_of_index (
+		constexpr auto get_of_index(
 		) const -> AsSelect<index.value, TValue ...> const & {
 			return thiz.template get<AsSelect<index.value, TValue ...>>();
 		}
@@ -178,7 +178,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Variant const & thix,
 			Variant const & that
 		) -> bool = default;
@@ -193,7 +193,7 @@ export namespace Twinning::Kernel {
 
 	template <typename ActiveValue, typename ... Value, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<ActiveValue> && IsPureInstance<Value ...> && IsValid<Argument ...>>
-	inline constexpr auto make_variant (
+	inline constexpr auto make_variant(
 		Argument && ... argument
 	) -> Variant<Value ...> {
 		auto result = Variant<Value ...>{};
@@ -203,7 +203,7 @@ export namespace Twinning::Kernel {
 
 	template <typename ActiveValue, typename ... Value> requires
 		CategoryConstraint<IsValid<ActiveValue> && IsPureInstance<Value ...>>
-	inline constexpr auto make_variant_of (
+	inline constexpr auto make_variant_of(
 		ActiveValue && value
 	) -> Variant<AsPure<Value> ...> {
 		return Variant<AsPure<Value> ...>{as_forward<ActiveValue>(value)};

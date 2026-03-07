@@ -30,7 +30,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 
 	export function read_utf8_character(
 		data: ByteStreamView,
-		size: { value: number; },
+		size: {value: number},
 	): bigint {
 		let value = 0n;
 		let current = data.u8();
@@ -72,10 +72,10 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 	export function read_utf8_string(
 		data: ByteStreamView,
 		length: bigint,
-		size: { value: number; },
+		size: {value: number},
 	): string {
 		let value = ``;
-		let character_size = { value: undefined! };
+		let character_size = {value: undefined!};
 		size.value = 0;
 		for (let index = 0n; index < length; index++) {
 			let character = read_utf8_character(data, character_size);
@@ -90,7 +90,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 		size: bigint,
 	): string {
 		let value = ``;
-		let character_size = { value: undefined! };
+		let character_size = {value: undefined!};
 		let count = 0;
 		while (count < Number(size)) {
 			let character = read_utf8_character(data, character_size);
@@ -270,7 +270,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 			case 0x82n: {
 				let length = read_pb_varint_unsigned(data);
 				let size = read_pb_varint_unsigned(data);
-				let actual_size = { value: undefined! };
+				let actual_size = {value: undefined!};
 				let content = read_utf8_string(data, length, actual_size);
 				if (actual_size.value !== Number(size)) {
 					Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${size} but actual ${actual_size.value}`, []);
@@ -281,7 +281,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 			case 0x92n: {
 				let length = read_pb_varint_unsigned(data);
 				let size = read_pb_varint_unsigned(data);
-				let actual_size = { value: undefined! };
+				let actual_size = {value: undefined!};
 				let content = read_utf8_string(data, length, actual_size);
 				if (actual_size.value !== Number(size)) {
 					Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${size} but actual ${actual_size.value}`, []);
@@ -307,7 +307,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 					case 0x02n: {
 						let sheet_length = read_pb_varint_unsigned(data);
 						let sheet_size = read_pb_varint_unsigned(data);
-						let sheet_actual_size = { value: undefined! };
+						let sheet_actual_size = {value: undefined!};
 						let sheet_content = read_utf8_string(data, sheet_length, sheet_actual_size);
 						if (sheet_actual_size.value !== Number(sheet_size)) {
 							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
@@ -321,14 +321,14 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 					case 0x03n: {
 						let sheet_length = read_pb_varint_unsigned(data);
 						let sheet_size = read_pb_varint_unsigned(data);
-						let sheet_actual_size = { value: undefined! };
+						let sheet_actual_size = {value: undefined!};
 						let sheet_content = read_utf8_string(data, sheet_length, sheet_actual_size);
 						if (sheet_actual_size.value !== Number(sheet_size)) {
 							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${sheet_size} but actual ${sheet_actual_size.value}`, []);
 						}
 						let alias_length = read_pb_varint_unsigned(data);
 						let alias_size = read_pb_varint_unsigned(data);
-						let alias_actual_size = { value: undefined! };
+						let alias_actual_size = {value: undefined!};
 						let alias_content = read_utf8_string(data, alias_length, alias_actual_size);
 						if (alias_actual_size.value !== Number(alias_size)) {
 							Console.warning(`data@${data.p().toString(16)}h: invalid utf-8 string size, except ${alias_size} but actual ${alias_actual_size.value}`, []);

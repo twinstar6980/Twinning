@@ -20,28 +20,28 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region constructor
 
-		~MessageProxy (
+		~MessageProxy(
 		) = default;
 
 		// ----------------
 
-		MessageProxy (
+		MessageProxy(
 		) :
 			value{} {
 			return;
 		}
 
-		MessageProxy (
+		MessageProxy(
 			MessageProxy const & that
 		) = default;
 
-		MessageProxy (
+		MessageProxy(
 			MessageProxy && that
 		) = default;
 
 		// ----------------
 
-		explicit MessageProxy (
+		explicit MessageProxy(
 			std::vector<std::string> const & value
 		) :
 			value{value} {
@@ -52,11 +52,11 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			MessageProxy const & that
 		) -> MessageProxy & = default;
 
-		auto operator = (
+		auto operator =(
 			MessageProxy && that
 		) -> MessageProxy & = default;
 
@@ -66,7 +66,7 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region convert
 
-		inline static auto parse (
+		inline static auto parse(
 			Message const & instance
 		) -> MessageProxy {
 			auto   proxy = MessageProxy{};
@@ -91,7 +91,7 @@ export namespace Twinning::Shell::Bridge {
 			return proxy;
 		}
 
-		inline static auto construct (
+		inline static auto construct(
 			Message &            instance,
 			MessageProxy const & proxy
 		) -> void {
@@ -130,7 +130,7 @@ export namespace Twinning::Shell::Bridge {
 			return;
 		}
 
-		inline static auto destruct (
+		inline static auto destruct(
 			Message & instance
 		) -> void {
 			delete[] instance.data;
@@ -147,38 +147,38 @@ export namespace Twinning::Shell::Bridge {
 
 	public:
 
-		std::function<void  (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> value;
+		std::function<void (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> value;
 
 	public:
 
 		#pragma region constructor
 
-		~ExecutorProxy (
+		~ExecutorProxy(
 		) = default;
 
 		// ----------------
 
-		ExecutorProxy (
+		ExecutorProxy(
 		) :
-			value{[] (auto &, auto &, auto &) -> auto {
+			value{[](auto &, auto &, auto &) -> auto {
 				throw std::runtime_error{std::format("UnimplementedException")};
 				return;
 			}} {
 			return;
 		}
 
-		ExecutorProxy (
+		ExecutorProxy(
 			ExecutorProxy const & that
 		) = default;
 
-		ExecutorProxy (
+		ExecutorProxy(
 			ExecutorProxy && that
 		) = default;
 
 		// ----------------
 
-		explicit ExecutorProxy (
-			std::function<void  (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> const & value
+		explicit ExecutorProxy(
+			std::function<void (ExecutorProxy const & callback, MessageProxy const & argument, MessageProxy & result)> const & value
 		) :
 			value{value} {
 			return;
@@ -188,11 +188,11 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			ExecutorProxy const & that
 		) -> ExecutorProxy & = default;
 
-		auto operator = (
+		auto operator =(
 			ExecutorProxy && that
 		) -> ExecutorProxy & = default;
 
@@ -206,11 +206,11 @@ export namespace Twinning::Shell::Bridge {
 
 		// ----------------
 
-		inline static auto parse (
+		inline static auto parse(
 			Executor const & instance
 		) -> ExecutorProxy {
 			auto proxy = ExecutorProxy{};
-			proxy.value = [self=&const_cast<Executor &>(instance)] (
+			proxy.value = [self=&const_cast<Executor &>(instance)](
 				ExecutorProxy const & callback_proxy,
 				MessageProxy const &  argument_proxy,
 				MessageProxy &        result_proxy
@@ -254,12 +254,12 @@ export namespace Twinning::Shell::Bridge {
 			return proxy;
 		}
 
-		inline static auto construct (
+		inline static auto construct(
 			Executor &            instance,
 			ExecutorProxy const & proxy
 		) -> void {
 			g_guard.emplace(&instance, std::make_unique<ExecutorProxy>(proxy));
-			instance.invoke = [] (
+			instance.invoke = [](
 				Executor * self,
 				Executor * callback,
 				Message *  argument,
@@ -286,7 +286,7 @@ export namespace Twinning::Shell::Bridge {
 					#endif
 					return;
 				};
-			instance.clear = [] (
+			instance.clear = [](
 				Executor * self,
 				Executor * callback,
 				Message *  argument,
@@ -305,7 +305,7 @@ export namespace Twinning::Shell::Bridge {
 			return;
 		}
 
-		inline static auto destruct (
+		inline static auto destruct(
 			Executor & instance
 		) -> void {
 			assert_test(g_guard.erase(&instance) == 1);

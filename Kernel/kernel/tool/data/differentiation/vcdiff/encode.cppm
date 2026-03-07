@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  before,
 			InputByteStreamView &  after,
 			OutputByteStreamView & patch,
@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  before_,
 			InputByteStreamView &  after_,
 			OutputByteStreamView & patch_,

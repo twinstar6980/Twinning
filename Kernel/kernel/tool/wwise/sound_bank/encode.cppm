@@ -51,13 +51,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsEnumerationBox<Value>)
-		inline static auto convert_enumeration_index (
+		inline static auto convert_enumeration_index(
 			Enumerated &  index_value,
 			Value const & value
 		) -> Void {
 			auto has_case = k_false;
 			Generalization::each<typename EnumerationAttribute<Value>::Index>(
-				[&] <auto index, auto value_index> (ValuePackage<index>, ValuePackage<value_index>) {
+				[&] <auto index, auto value_index>(ValuePackage<index>, ValuePackage<value_index>) {
 					if (index == static_cast<ZSize>(value.value)) {
 						index_value = value_index;
 						has_case = k_true;
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <auto type, typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>, Value, Enumerated, IdentifierWrapper>)
-		inline static auto convert_common_property (
+		inline static auto convert_common_property(
 			CommonPropertyMap<decltype(type)> & map,
 			Value const &                       value
 		) -> Void {
@@ -107,7 +107,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<Value, typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
 			&& (IsSame<Value, Boolean, Integer, Floater>)
-		inline static auto convert_common_property_as_regular (
+		inline static auto convert_common_property_as_regular(
 			CommonPropertyMap<decltype(type)> &                       map,
 			typename Definition::template RegularValue<Value> const & value
 		) -> Void {
@@ -123,7 +123,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPureInstance<Value>>
 			&& (IsSame<Value, typename EnumerationAttribute<decltype(type)>::Attribute::template Element<static_cast<ZSize>(type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
 			&& (IsSame<Value, Boolean, Integer, Floater>)
-		inline static auto convert_common_property_as_randomizable (
+		inline static auto convert_common_property_as_randomizable(
 			CommonPropertyMap<decltype(type)> &                            map,
 			typename Definition::template RandomizableValue<Value> const & value
 		) -> Void {
@@ -143,7 +143,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			typename Definition::BusVoiceSetting const & value
 		) -> Void {
@@ -163,7 +163,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			typename Definition::AudioVoice const &      value
 		) -> Void {
@@ -183,7 +183,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &           map,
 			typename Definition::BusVoiceVolumeGainSetting const & value
 		) -> Void {
@@ -194,7 +194,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &             map,
 			typename Definition::AudioVoiceVolumeGainSetting const & value
 		) -> Void {
@@ -208,7 +208,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			typename Definition::BusBusSetting const &   value
 		) -> Void {
@@ -219,7 +219,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &     map,
 			typename Definition::BusOutputBusSetting const & value
 		) -> Void {
@@ -236,7 +236,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &       map,
 			typename Definition::AudioOutputBusSetting const & value
 		) -> Void {
@@ -253,7 +253,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &           map,
 			typename Definition::AudioAuxiliarySendSetting const & value
 		) -> Void {
@@ -309,7 +309,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &         map,
 			typename Definition::AudioPositioningSetting const & value
 		) -> Void {
@@ -335,7 +335,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			typename Definition::BusHdrSetting const &   value
 		) -> Void {
@@ -361,7 +361,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			typename Definition::AudioHdrSetting const & value
 		) -> Void {
@@ -372,7 +372,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
 			typename Definition::SoundMidiSetting const & value
 		) -> Void {
@@ -407,7 +407,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
 			typename Definition::MusicMidiSetting const & value
 		) -> Void {
@@ -421,7 +421,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &           map,
 			typename Definition::AudioPlaybackLimitSetting const & value
 		) -> Void {
@@ -429,7 +429,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &          map,
 			typename Definition::AudioVirtualVoiceSetting const & value
 		) -> Void {
@@ -437,7 +437,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &              map,
 			typename Definition::AudioPlaybackPrioritySetting const & value
 		) -> Void {
@@ -451,7 +451,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &    map,
 			typename Definition::AudioMotionSetting const & value
 		) -> Void {
@@ -465,7 +465,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto load_common_property (
+		inline static auto load_common_property(
 			CommonPropertyMap<AudioCommonPropertyType> &   map,
 			typename Definition::AudioMixerSetting const & value
 		) -> Void {
@@ -478,7 +478,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto exchange_identifier (
+		inline static auto exchange_identifier(
 			OutputByteStreamView &                  data,
 			typename Definition::Identifier const & value
 		) -> Void {
@@ -491,7 +491,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			&& (IsIntegerBox<RawValue>)
 			&& (IsSameOf<ignore_reserve, Boolean>)
 			&& ((IsSame<Value, Boolean> || IsEnumerationBox<Value>) && ...)
-		inline static auto exchange_bit_multi (
+		inline static auto exchange_bit_multi(
 			OutputByteStreamView & data,
 			Value const & ...      value
 		) -> Void {
@@ -499,7 +499,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			auto bit_set = BitSet<k_type_bit_count<RawValue>>{};
 			auto current_index = k_begin_index;
 			Generalization::each_with<>(
-				[&] <auto index, typename CurrentValue> (ValuePackage<index>, CurrentValue const & current_value) {
+				[&] <auto index, typename CurrentValue>(ValuePackage<index>, CurrentValue const & current_value) {
 					if constexpr (IsSame<CurrentValue, Boolean>) {
 						bit_set.set(current_index, current_value);
 						++current_index;
@@ -524,7 +524,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPure<RawSizeValue>>
 			&& (IsVoid<RawSizeValue> || IsIntegerBox<RawSizeValue>)
 			&& (IsSameOf<is_zeroed, Boolean>)
-		inline static auto exchange_string (
+		inline static auto exchange_string(
 			OutputByteStreamView & data,
 			String const &         value
 		) -> Void {
@@ -549,7 +549,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <typename ActualValue> requires
 			CategoryConstraint<>
 			&& (IsSame<ActualValue, Boolean, Integer, Floater, Enumerated, IdentifierWrapper>)
-		inline static auto exchange_common_property_value (
+		inline static auto exchange_common_property_value(
 			OutputByteStreamView &      data,
 			CommonPropertyValue const & value
 		) -> Void {
@@ -577,7 +577,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPureInstance<Type> && IsPureInstance<Parser>>
 			&& (IsEnumerationBox<Type>)
 			&& (IsGenericCallable<Parser>)
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView & data,
 			Boolean const &        randomizable,
 			Parser const &         parser
@@ -589,11 +589,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				data,
 				map.regular.as_list(),
 				&exchange_size_fixed<IntegerU8>,
-				[] (auto & data, auto & element) {
+				[](auto & data, auto & element) {
 					auto type = Enumerated{};
 					auto has_case = k_false;
 					Generalization::each<typename EnumerationAttribute<Type>::Attribute>(
-						[&] <auto index, typename Attribute> (ValuePackage<index>, TypePackage<Attribute>) {
+						[&] <auto index, typename Attribute>(ValuePackage<index>, TypePackage<Attribute>) {
 							if (index == static_cast<ZSize>(element.key.value)) {
 								type = Attribute::template Element<1_ixz>::template element<1_ixz>;
 								has_case = k_true;
@@ -603,10 +603,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					assert_test(has_case);
 					exchange_enumerated_fixed<IntegerU8>(data, type);
 				},
-				[] (auto & data, auto & element) {
+				[](auto & data, auto & element) {
 					auto has_case = k_false;
 					Generalization::each<typename EnumerationAttribute<Type>::Attribute>(
-						[&] <auto index, typename Attribute> (ValuePackage<index>, TypePackage<Attribute>) {
+						[&] <auto index, typename Attribute>(ValuePackage<index>, TypePackage<Attribute>) {
 							if (index == static_cast<ZSize>(element.key.value)) {
 								exchange_common_property_value<typename Attribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<1_ix>());
 								has_case = k_true;
@@ -621,11 +621,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					map.randomizer.as_list(),
 					&exchange_size_fixed<IntegerU8>,
-					[] (auto & data, auto & element) {
+					[](auto & data, auto & element) {
 						auto type = Enumerated{};
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<Type>::Attribute>(
-							[&] <auto index, typename Attribute> (ValuePackage<index>, TypePackage<Attribute>) {
+							[&] <auto index, typename Attribute>(ValuePackage<index>, TypePackage<Attribute>) {
 								if (index == static_cast<ZSize>(element.key.value)) {
 									type = Attribute::template Element<1_ixz>::template element<1_ixz>;
 									has_case = k_true;
@@ -635,10 +635,10 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						assert_test(has_case);
 						exchange_enumerated_fixed<IntegerU8>(data, type);
 					},
-					[] (auto & data, auto & element) {
+					[](auto & data, auto & element) {
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<Type>::Attribute>(
-							[&] <auto index, typename Attribute> (ValuePackage<index>, TypePackage<Attribute>) {
+							[&] <auto index, typename Attribute>(ValuePackage<index>, TypePackage<Attribute>) {
 								if (index == static_cast<ZSize>(element.key.value)) {
 									exchange_common_property_value<typename Attribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<1_ix>());
 									exchange_common_property_value<typename Attribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<2_ix>());
@@ -656,7 +656,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <typename RawSizeValue> requires
 			CategoryConstraint<IsPureInstance<RawSizeValue>>
 			&& (IsIntegerBox<RawSizeValue>)
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                        data,
 			List<typename Definition::Identifier> const & value_list
 		) -> Void {
@@ -664,14 +664,14 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				data,
 				value_list,
 				&exchange_size_fixed<RawSizeValue>,
-				[] (auto & data, auto & value) {
+				[](auto & data, auto & value) {
 					exchange_identifier(data, value);
 				}
 			);
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                       data,
 			typename Definition::RealTimeParameterControlSetting const & real_time_parameter_control_value
 		) -> Void {
@@ -680,7 +680,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					real_time_parameter_control_value.item,
 					&exchange_size_fixed<IntegerU16>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.parameter.identifier);
 						}
@@ -707,7 +707,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.point,
 								&exchange_size_fixed<IntegerU16>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -726,7 +726,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                    data,
 			typename Definition::StateSetting const & state_value
 		) -> Void {
@@ -735,7 +735,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					state_value.item,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72, 125})) {
 							exchange_identifier(data, value.group);
 						}
@@ -747,7 +747,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.apply,
 								&exchange_size_fixed<IntegerU16>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72, 125})) {
 										exchange_identifier(data, value.target);
 									}
@@ -765,7 +765,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					state_value.attribute,
 					&exchange_size_fixed<IntegerU8>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {125})) {
 							exchange_integer_fixed<IntegerU8>(data, value.type);
 						}
@@ -781,7 +781,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					state_value.item,
 					&exchange_size_fixed<IntegerU8>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {125})) {
 							exchange_identifier(data, value.group);
 						}
@@ -793,7 +793,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.apply,
 								&exchange_size_fixed<IntegerU8>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {125})) {
 										exchange_identifier(data, value.target);
 									}
@@ -809,7 +809,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                      data,
 			List<typename Definition::EffectU1> const & u1_value
 		) -> Void {
@@ -818,7 +818,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					u1_value,
 					&exchange_size_fixed<IntegerU16>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {112})) {
 							exchange_integer_fixed<IntegerU8>(data, value.type);
 						}
@@ -834,7 +834,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                   data,
 			typename Definition::AudioVoiceVolumeGainSetting const & voice_volume_gain_value,
 			typename Definition::AudioHdrSetting const &             hdr_value,
@@ -865,7 +865,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                             data,
 			typename Definition::AudioOutputBusSetting const & output_bus_value
 		) -> Void {
@@ -875,7 +875,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                         data,
 			typename Definition::AudioMixerSetting const & mixer_value,
 			Boolean const &                                mixer_override
@@ -889,7 +889,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                 data,
 			typename Definition::AudioAuxiliarySendSetting const & auxiliary_send_value,
 			Boolean const &                                        game_defined_auxiliary_send_override,
@@ -929,7 +929,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                 data,
 			typename Definition::AudioAuxiliarySendSetting const & auxiliary_send_value,
 			Boolean const &                                        game_defined_auxiliary_send_override,
@@ -968,7 +968,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                               data,
 			typename Definition::AudioPositioningSetting const & positioning_value,
 			Boolean const &                                      positioning_override
@@ -1045,7 +1045,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								positioning_value.listener_routing.position_source.automation.point,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									exchange_raw_constant(data, 0_iu32);
 									exchange_floater_fixed<FloaterS32>(data, value.position.y);
@@ -1056,11 +1056,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								positioning_value.listener_routing.position_source.automation.path,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									exchange_integer_fixed<IntegerU32>(data, value.point.begin);
 									exchange_integer_fixed<IntegerU32>(data, value.point.count);
 								},
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									exchange_floater_fixed<FloaterS32>(data, value.random_range.left_right);
 									exchange_floater_fixed<FloaterS32>(data, value.random_range.front_back);
 								}
@@ -1133,7 +1133,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								positioning_value.listener_routing.position_source.automation.point,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {112, 132})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -1154,7 +1154,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								positioning_value.listener_routing.position_source.automation.path,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {112, 132})) {
 										exchange_integer_fixed<IntegerU32>(data, value.point.begin);
 									}
@@ -1162,7 +1162,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 										exchange_integer_fixed<IntegerU32>(data, value.point.count);
 									}
 								},
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {112, 132})) {
 										exchange_floater_fixed<FloaterS32>(data, value.random_range.left_right);
 									}
@@ -1238,7 +1238,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								positioning_value.listener_routing.position_source.automation.point,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {132})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -1259,7 +1259,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								positioning_value.listener_routing.position_source.automation.path,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {132})) {
 										exchange_integer_fixed<IntegerU32>(data, value.point.begin);
 									}
@@ -1267,7 +1267,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 										exchange_integer_fixed<IntegerU32>(data, value.point.count);
 									}
 								},
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {132})) {
 										exchange_floater_fixed<FloaterS32>(data, value.random_range.left_right);
 									}
@@ -1286,7 +1286,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                        data,
 			typename Definition::MusicMidiSetting const & midi_value,
 			Boolean const &                               midi_target_override,
@@ -1303,7 +1303,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                    data,
 			typename Definition::SoundMidiSetting const &             midi_value,
 			typename Definition::AudioPlaybackPrioritySetting const & playback_priority_value,
@@ -1325,7 +1325,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                    data,
 			typename Definition::AudioPlaybackPrioritySetting const & playback_priority_value,
 			Boolean const &                                           playback_priority_override
@@ -1344,7 +1344,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                 data,
 			typename Definition::AudioPlaybackLimitSetting const & playback_limit_value,
 			Boolean const &                                        playback_limit_override
@@ -1364,7 +1364,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                      data,
 			typename Definition::AudioPlaybackLimitSetting const &      playback_limit_value,
 			typename Definition::AudioBusMuteForBackgroundMusic const & mute_for_background_music_value,
@@ -1385,7 +1385,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                 data,
 			typename Definition::AudioPlaybackLimitSetting const & playback_limit_value,
 			typename Definition::AudioVirtualVoiceSetting const &  virtual_voice_value,
@@ -1438,7 +1438,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                          data,
 			typename Definition::AudioEffectSetting const & effect_value
 		) -> Void {
@@ -1446,7 +1446,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_list(
 					data,
 					effect_value.item,
-					[&] (auto & data, auto & value) {
+					[&](auto & data, auto & value) {
 						exchange_size_fixed<IntegerU8>(data, value);
 						if constexpr (check_version(version, {72, 150})) {
 							if (value > 0_sz) {
@@ -1466,7 +1466,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							}
 						}
 					},
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_integer_fixed<IntegerU8>(data, value.index);
 						}
@@ -1490,7 +1490,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                          data,
 			typename Definition::AudioEffectSetting const & effect_value,
 			Boolean const &                                 effect_override
@@ -1502,7 +1502,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                            data,
 			typename Definition::AudioMetadataSetting const & metadata_value
 		) -> Void {
@@ -1511,7 +1511,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					metadata_value.item,
 					&exchange_size_fixed<IntegerU8>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {140})) {
 							exchange_integer_fixed<IntegerU8>(data, value.index);
 						}
@@ -1527,7 +1527,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                            data,
 			typename Definition::AudioMetadataSetting const & metadata_value,
 			Boolean const &                                   metadata_override
@@ -1539,7 +1539,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                          data,
 			typename Definition::AudioSourceSetting const & value
 		) -> Void {
@@ -1594,7 +1594,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                data,
 			List<typename Definition::AudioSourceSetting> const & value
 		) -> Void {
@@ -1603,7 +1603,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						exchange_section_sub(data, value);
 					}
 				);
@@ -1611,7 +1611,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                  data,
 			typename Definition::BusAutomaticDuckingSetting const & automatic_ducking_value
 		) -> Void {
@@ -1626,7 +1626,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					automatic_ducking_value.bus,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.identifier);
 						}
@@ -1651,7 +1651,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                             data,
 			typename Definition::AudioBusConfiguration const & bus_configuration_value
 		) -> Void {
@@ -1661,7 +1661,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                     data,
 			typename Definition::BusHdrSetting const & hdr_value
 		) -> Void {
@@ -1685,7 +1685,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                        data,
 			typename Definition::AudioTimeSetting const & time_setting_value,
 			Boolean const &                               time_setting_override
@@ -1725,7 +1725,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                      data,
 			typename Definition::MusicTrackClip const & clip_value
 		) -> Void {
@@ -1734,7 +1734,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					clip_value.item,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_integer_fixed<IntegerU32>(data, value.u1);
 						}
@@ -1769,7 +1769,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					clip_value.curve,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_integer_fixed<IntegerU32>(data, value.index);
 						}
@@ -1781,7 +1781,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.point,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -1800,7 +1800,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                           data,
 			typename Definition::MusicStingerSetting const & stinger_value
 		) -> Void {
@@ -1809,7 +1809,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					stinger_value.item,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.trigger);
 						}
@@ -1834,7 +1834,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                      data,
 			typename Definition::MusicTransitionSettingItemFade const & fade_value
 		) -> Void {
@@ -1850,7 +1850,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                              data,
 			typename Definition::MusicTransitionSetting const & transition_value
 		) -> Void {
@@ -1859,7 +1859,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					transition_value.item,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {88})) {
 							exchange_raw_constant(data, 1_iu32);
 						}
@@ -1952,7 +1952,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                   data,
 			typename Definition::MusicTrackTransitionSetting const & transition_value
 		) -> Void {
@@ -1977,7 +1977,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                            data,
 			typename Definition::AudioSwitcherSetting const & switcher_value
 		) -> Void {
@@ -1996,7 +1996,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                               data,
 			typename Definition::AudioAssociationSetting const & association_value
 		) -> Void {
@@ -2005,12 +2005,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					association_value.argument,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.identifier);
 						}
 					},
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {88})) {
 							exchange_bit_multi<IntegerU8>(data, value.is_state);
 						}
@@ -2021,7 +2021,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_list(
 					data,
 					association_value.path,
-					[&] (auto & data, auto & value) {
+					[&](auto & data, auto & value) {
 						// NOTE: HERE
 						exchange_size_fixed<IntegerU32>(data, value * 12_sz);
 						if constexpr (check_version(version, {72, 88})) {
@@ -2034,7 +2034,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							);
 						}
 					},
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.u1);
 						}
@@ -2053,7 +2053,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                   data,
 			typename Definition::SoundPlaylistContainerScope const & scope_value,
 			typename Definition::AudioPlayType const &               play_type_value,
@@ -2119,7 +2119,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                                data,
 			List<typename Definition::SoundPlaylistContainerPlaylistItem> const & playlist_value
 		) -> Void {
@@ -2128,7 +2128,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					playlist_value,
 					&exchange_size_fixed<IntegerU16>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.item);
 						}
@@ -2141,7 +2141,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                                     data,
 			List<typename Definition::SoundSwitchContainerObjectAttributeItem> const & object_attribute_value
 		) -> Void {
@@ -2150,7 +2150,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					object_attribute_value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.identifier);
 						}
@@ -2181,7 +2181,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                                  data,
 			List<typename Definition::SoundSwitchContainerObjectAssignItem> const & assigned_object_value
 		) -> Void {
@@ -2190,7 +2190,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					assigned_object_value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.item);
 						}
@@ -2199,7 +2199,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.object,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72})) {
 										exchange_identifier(data, value);
 									}
@@ -2212,7 +2212,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                          data,
 			List<typename Definition::SoundBlendContainerTrackItem> const & track_value
 		) -> Void {
@@ -2221,7 +2221,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					track_value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.identifier);
 						}
@@ -2239,7 +2239,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.child,
 								&exchange_size_fixed<IntegerU32>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72})) {
 										exchange_identifier(data, value.identifier);
 									}
@@ -2248,7 +2248,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 											data,
 											value.point,
 											&exchange_size_fixed<IntegerU32>,
-											[] (auto & data, auto & value) {
+											[](auto & data, auto & value) {
 												if constexpr (check_version(version, {72})) {
 													exchange_floater_fixed<FloaterS32>(data, value.position.x);
 												}
@@ -2270,7 +2270,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                           data,
 			typename Definition::MusicTrackTrackType const & track_type_value
 		) -> Void {
@@ -2280,7 +2280,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                   data,
 			typename Definition::MusicTrackTrackType const &         track_type_value,
 			typename Definition::AudioSwitcherSetting const &        switcher_value,
@@ -2302,7 +2302,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                        data,
 			typename Definition::MusicTrackStream const & stream_value
 		) -> Void {
@@ -2312,7 +2312,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                       data,
 			typename Definition::MusicSegmentCue const & cue_value
 		) -> Void {
@@ -2321,7 +2321,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					cue_value.item,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.name);
 						}
@@ -2340,7 +2340,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                                data,
 			List<typename Definition::MusicPlaylistContainerPlaylistItem> const & playlist_value
 		) -> Void {
@@ -2349,7 +2349,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					playlist_value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.item);
 						}
@@ -2386,7 +2386,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                                                 data,
 			List<typename Definition::MusicSwitchContainerAssociationItem> const & association_value
 		) -> Void {
@@ -2395,7 +2395,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					association_value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72, 88})) {
 							exchange_identifier(data, value.item);
 						}
@@ -2408,7 +2408,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section_sub (
+		inline static auto exchange_section_sub(
 			OutputByteStreamView &                     data,
 			typename Definition::AudioPlayMode const & play_mode_value
 		) -> Void {
@@ -2420,7 +2420,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                  data,
 			typename Definition::StateGroup const & value
 		) -> Void {
@@ -2433,7 +2433,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value.custom_transition,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.from);
 						}
@@ -2449,7 +2449,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                   data,
 			typename Definition::SwitchGroup const & value
 		) -> Void {
@@ -2465,7 +2465,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value.point,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_floater_fixed<FloaterS32>(data, value.position.x);
 						}
@@ -2481,7 +2481,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                     data,
 			typename Definition::GameParameter const & value
 		) -> Void {
@@ -2504,7 +2504,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                             data,
 			typename Definition::GameSynchronizationU1 const & value
 		) -> Void {
@@ -2530,7 +2530,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                               data,
 			typename Definition::StatefulPropertySetting const & value
 		) -> Void {
@@ -2540,12 +2540,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value.value,
 					&exchange_size_fixed<IntegerU8>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72, 128})) {
 							exchange_integer_fixed<IntegerU8>(data, value.type);
 						}
 					},
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72, 128})) {
 							exchange_floater_fixed<FloaterS32>(data, value.value);
 						}
@@ -2557,12 +2557,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value.value,
 					&exchange_size_fixed<IntegerU16>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {128})) {
 							exchange_integer_fixed<IntegerU16>(data, value.type);
 						}
 					},
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {128})) {
 							exchange_floater_fixed<FloaterS32>(data, value.value);
 						}
@@ -2572,7 +2572,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                   data,
 			typename Definition::EventAction const & value
 		) -> Void {
@@ -2593,14 +2593,14 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(version, {72})) {
 				exchange_integer_fixed<IntegerU8>(data, value.u1);
 			}
-			auto exchange_section_sub_of_exception_list = [&] (
+			auto exchange_section_sub_of_exception_list = [&](
 			) -> Void {
 				if constexpr (check_version(version, {72, 125})) {
 					exchange_list(
 						data,
 						value.exception,
 						&exchange_size_fixed<IntegerU32>,
-						[] (auto & data, auto & value) {
+						[](auto & data, auto & value) {
 							if constexpr (check_version(version, {72, 125})) {
 								exchange_identifier(data, value.identifier);
 							}
@@ -2615,7 +2615,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						data,
 						value.exception,
 						&exchange_size_fixed<IntegerU8>,
-						[] (auto & data, auto & value) {
+						[](auto & data, auto & value) {
 							if constexpr (check_version(version, {125})) {
 								exchange_identifier(data, value.identifier);
 							}
@@ -2636,7 +2636,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2670,7 +2670,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2706,7 +2706,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2748,7 +2748,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2790,7 +2790,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2809,7 +2809,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2849,7 +2849,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {113})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2868,7 +2868,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2908,7 +2908,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2948,7 +2948,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -2988,7 +2988,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3028,7 +3028,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {112})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3068,7 +3068,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3096,7 +3096,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3139,7 +3139,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3158,7 +3158,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3183,7 +3183,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3208,7 +3208,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3227,7 +3227,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {72})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3265,7 +3265,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {112})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3284,7 +3284,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_section_sub<EventActionCommonPropertyType>(
 							data,
 							k_true,
-							[&] (auto & common_property) {
+							[&](auto & common_property) {
 								using CPTC = typename EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(version, {113})) {
 									convert_common_property_as_randomizable<CPTC::delay()>(common_property, property_value.delay);
@@ -3311,7 +3311,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &             data,
 			typename Definition::Event const & value
 		) -> Void {
@@ -3325,7 +3325,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                     data,
 			typename Definition::DialogueEvent const & value
 		) -> Void {
@@ -3342,7 +3342,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                   data,
 			typename Definition::Attenuation const & value
 		) -> Void {
@@ -3418,7 +3418,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value.curve,
 					&exchange_size_fixed<IntegerU8>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_bit_multi<IntegerU8>(data, value.mode);
 						}
@@ -3427,7 +3427,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.point,
 								&exchange_size_fixed<IntegerU16>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -3449,7 +3449,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                                       data,
 			typename Definition::LowFrequencyOscillatorModulator const & value
 		) -> Void {
@@ -3458,7 +3458,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<ModulatorCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename ModulatorCommonPropertyType::Constant;
 						if constexpr (check_version(version, {112})) {
 							convert_common_property_as_randomizable<CPTC::depth()>(common_property, value.depth);
@@ -3493,7 +3493,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                         data,
 			typename Definition::EnvelopeModulator const & value
 		) -> Void {
@@ -3502,7 +3502,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<ModulatorCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename ModulatorCommonPropertyType::Constant;
 						if constexpr (check_version(version, {112})) {
 							convert_common_property_as_randomizable<CPTC::attack_time()>(common_property, value.attack_time);
@@ -3540,7 +3540,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                     data,
 			typename Definition::TimeModulator const & value
 		) -> Void {
@@ -3549,7 +3549,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<ModulatorCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename ModulatorCommonPropertyType::Constant;
 						if constexpr (check_version(version, {132})) {
 							convert_common_property_as_randomizable<CPTC::initial_delay()>(common_property, value.initial_delay);
@@ -3581,7 +3581,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &              data,
 			typename Definition::Effect const & value
 		) -> Void {
@@ -3610,14 +3610,14 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &              data,
 			typename Definition::Source const & value
 		) -> Void {
 			return exchange_section(data, self_cast<typename Definition::Effect>(value));
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                   data,
 			typename Definition::AudioDevice const & value
 		) -> Void {
@@ -3646,7 +3646,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                data,
 			typename Definition::AudioBus const & value
 		) -> Void {
@@ -3665,7 +3665,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_false,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -3758,14 +3758,14 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                         data,
 			typename Definition::AuxiliaryAudioBus const & value
 		) -> Void {
 			return exchange_section(data, self_cast<typename Definition::AudioBus>(value));
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &             data,
 			typename Definition::Sound const & value
 		) -> Void {
@@ -3798,7 +3798,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
 							convert_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
@@ -3869,7 +3869,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                              data,
 			typename Definition::SoundPlaylistContainer const & value
 		) -> Void {
@@ -3899,7 +3899,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
 							convert_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
@@ -3976,7 +3976,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                            data,
 			typename Definition::SoundSwitchContainer const & value
 		) -> Void {
@@ -4006,7 +4006,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
 							convert_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
@@ -4089,7 +4089,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                           data,
 			typename Definition::SoundBlendContainer const & value
 		) -> Void {
@@ -4119,7 +4119,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {88})) {
 							convert_common_property_as_randomizable<CPTC::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
@@ -4196,7 +4196,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                  data,
 			typename Definition::ActorMixer const & value
 		) -> Void {
@@ -4226,7 +4226,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4294,7 +4294,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                  data,
 			typename Definition::MusicTrack const & value
 		) -> Void {
@@ -4330,7 +4330,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4407,7 +4407,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                    data,
 			typename Definition::MusicSegment const & value
 		) -> Void {
@@ -4437,7 +4437,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {112})) {
 							convert_common_property_as_regular<CPTC::playback_speed()>(common_property, value.playback_setting.speed);
@@ -4520,7 +4520,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                              data,
 			typename Definition::MusicPlaylistContainer const & value
 		) -> Void {
@@ -4550,7 +4550,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {112})) {
 							convert_common_property_as_regular<CPTC::playback_speed()>(common_property, value.playback_setting.speed);
@@ -4633,7 +4633,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			OutputByteStreamView &                            data,
 			typename Definition::MusicSwitchContainer const & value
 		) -> Void {
@@ -4663,7 +4663,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_section_sub<AudioCommonPropertyType>(
 					data,
 					k_true,
-					[&] (auto & common_property) {
+					[&](auto & common_property) {
 						using CPTC = typename AudioCommonPropertyType::Constant;
 						if constexpr (check_version(version, {112})) {
 							convert_common_property_as_regular<CPTC::playback_speed()>(common_property, value.playback_setting.speed);
@@ -4754,7 +4754,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto exchange_chunk_bkhd (
+		inline static auto exchange_chunk_bkhd(
 			OutputByteStreamView &                 data,
 			typename Definition::SoundBank const & value
 		) -> Void {
@@ -4777,7 +4777,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_didx_data (
+		inline static auto exchange_chunk_didx_data(
 			OutputByteStreamView &                        didx_data,
 			OutputByteStreamView &                        data_data,
 			List<typename Definition::Identifier> const & value,
@@ -4789,7 +4789,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				exchange_list_element(
 					didx_data,
 					value,
-					[&] (auto & data, auto & value) {
+					[&](auto & data, auto & value) {
 						auto data_offset = Size{};
 						auto data_size = Size{};
 						if (value == 0_i) {
@@ -4810,7 +4810,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_init (
+		inline static auto exchange_chunk_init(
 			OutputByteStreamView &               data,
 			typename Definition::Setting const & value
 		) -> Void {
@@ -4819,7 +4819,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value.plug_in,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {118})) {
 							exchange_identifier(data, value.identifier);
 						}
@@ -4835,7 +4835,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_stmg (
+		inline static auto exchange_chunk_stmg(
 			OutputByteStreamView &                           data,
 			typename Definition::Setting const &             value,
 			typename Definition::GameSynchronization const & game_synchronization_value
@@ -4857,7 +4857,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					game_synchronization_value.state_group,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						exchange_section(data, value);
 					}
 				);
@@ -4867,7 +4867,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					game_synchronization_value.switch_group,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						exchange_section(data, value);
 					}
 				);
@@ -4877,7 +4877,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					game_synchronization_value.game_parameter,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						exchange_section(data, value);
 					}
 				);
@@ -4894,7 +4894,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					game_synchronization_value.u1,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						exchange_section(data, value);
 					}
 				);
@@ -4902,7 +4902,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_hirc (
+		inline static auto exchange_chunk_hirc(
 			OutputByteStreamView &                       data,
 			List<typename Definition::Hierarchy> const & value
 		) -> Void {
@@ -4911,7 +4911,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						// NOTE: HERE
 						auto type = Enumerated{};
 						auto type_data = OutputByteStreamView{data.forward_view(bs_static_size<IntegerU8>())};
@@ -4919,7 +4919,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						auto item_data = OutputByteStreamView{data.reserve_view()};
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<typename Definition::HierarchyType>::Index>(
-							[&] <auto index, auto value_index> (ValuePackage<index>, ValuePackage<value_index>) {
+							[&] <auto index, auto value_index>(ValuePackage<index>, ValuePackage<value_index>) {
 								constexpr auto variant_type = mbox<typename Definition::HierarchyType>(index);
 								if constexpr (variant_type != Definition::HierarchyType::Constant::unknown()) {
 									if (static_cast<ZSize>(value.index().value) == index) {
@@ -4945,7 +4945,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_stid (
+		inline static auto exchange_chunk_stid(
 			OutputByteStreamView &                                data,
 			List<typename Definition::SoundBankReference> const & value
 		) -> Void {
@@ -4957,7 +4957,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					value,
 					&exchange_size_fixed<IntegerU32>,
-					[] (auto & data, auto & value) {
+					[](auto & data, auto & value) {
 						if constexpr (check_version(version, {72})) {
 							exchange_identifier(data, value.identifier);
 						}
@@ -4970,7 +4970,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_envs (
+		inline static auto exchange_chunk_envs(
 			OutputByteStreamView &               data,
 			typename Definition::Setting const & value
 		) -> Void {
@@ -4986,7 +4986,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							value.occlusion.low_pass_filter
 						)
 					),
-					[] (auto & data, auto & value_view) {
+					[](auto & data, auto & value_view) {
 						auto & value = value_view.get();
 						if constexpr (check_version(version, {72, 112})) {
 							exchange_bit_multi<IntegerU8>(data, value.enable);
@@ -4999,7 +4999,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.point,
 								&exchange_size_fixed<IntegerU16>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {72, 112})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -5029,7 +5029,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							value.occlusion.high_pass_filter
 						)
 					),
-					[] (auto & data, auto & value_view) {
+					[](auto & data, auto & value_view) {
 						auto & value = value_view.get();
 						if constexpr (check_version(version, {112})) {
 							exchange_bit_multi<IntegerU8>(data, value.enable);
@@ -5042,7 +5042,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 								data,
 								value.point,
 								&exchange_size_fixed<IntegerU16>,
-								[] (auto & data, auto & value) {
+								[](auto & data, auto & value) {
 									if constexpr (check_version(version, {112})) {
 										exchange_floater_fixed<FloaterS32>(data, value.position.x);
 									}
@@ -5061,7 +5061,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			return;
 		}
 
-		inline static auto exchange_chunk_plat (
+		inline static auto exchange_chunk_plat(
 			OutputByteStreamView &               data,
 			typename Definition::Setting const & value
 		) -> Void {
@@ -5079,7 +5079,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto exchange_sound_bank (
+		inline static auto exchange_sound_bank(
 			OutputByteStreamView &                 data,
 			typename Definition::SoundBank const & value,
 			Path const &                           embedded_media_directory
@@ -5211,7 +5211,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			OutputByteStreamView &                 data,
 			typename Definition::SoundBank const & definition,
 			Path const &                           embedded_media_directory
@@ -5222,7 +5222,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &                 data_,
 			typename Definition::SoundBank const & definition,
 			Path const &                           embedded_media_directory

@@ -28,25 +28,25 @@ export namespace Twinning::Kernel::Executor {
 
 		#pragma region constructor
 
-		~Context (
+		~Context(
 		) = default;
 
 		// ----------------
 
-		Context (
+		Context(
 		) = delete;
 
-		Context (
+		Context(
 			Context const & that
 		) = delete;
 
-		Context (
+		Context(
 			Context && that
 		) = default;
 
 		// ----------------
 
-		Context (
+		Context(
 			Interface::ExecutorProxy const & callback
 		) :
 			m_runtime{JavaScript::Runtime::new_instance()},
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Executor {
 			return;
 		}
 
-		Context (
+		Context(
 			JavaScript::Runtime &            runtime,
 			Interface::ExecutorProxy const & callback
 		) :
@@ -74,11 +74,11 @@ export namespace Twinning::Kernel::Executor {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Context const & that
 		) -> Context & = delete;
 
-		auto operator = (
+		auto operator =(
 			Context && that
 		) -> Context & = default;
 
@@ -86,12 +86,12 @@ export namespace Twinning::Kernel::Executor {
 
 		#pragma region runtime & context
 
-		auto runtime (
+		auto runtime(
 		) -> JavaScript::Runtime & {
 			return thiz.m_runtime;
 		}
 
-		auto context (
+		auto context(
 		) -> JavaScript::Context & {
 			return thiz.m_context;
 		}
@@ -100,7 +100,7 @@ export namespace Twinning::Kernel::Executor {
 
 		#pragma region basic
 
-		auto evaluate (
+		auto evaluate(
 			ConstantStringView const & script,
 			String const &             name,
 			Boolean const &            is_module
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel::Executor {
 			return thiz.m_context.evaluate(script, name, is_module);
 		}
 
-		auto callback (
+		auto callback(
 			List<String> const & argument
 		) -> List<String> {
 			auto result = List<String>{};
@@ -135,7 +135,7 @@ export namespace Twinning::Kernel::Executor {
 
 		#pragma region extension
 
-		auto spawn (
+		auto spawn(
 		) -> Context {
 			auto locker = Thread::Locker{JavaScript::g_mutex};
 			return Context{thiz.m_runtime, thiz.m_callback};
@@ -143,12 +143,12 @@ export namespace Twinning::Kernel::Executor {
 
 		// ----------------
 
-		auto busy (
+		auto busy(
 		) -> Boolean {
 			return thiz.m_busy;
 		}
 
-		auto execute (
+		auto execute(
 			Thread::Thread &    thread,
 			JavaScript::Value & executor
 		) -> Void {
@@ -171,14 +171,14 @@ export namespace Twinning::Kernel::Executor {
 
 		#pragma region environment
 
-		auto query_module_home (
+		auto query_module_home(
 		) -> Optional<Path> & {
 			return thiz.m_module_home;
 		}
 
 		// ----------------
 
-		auto query_byte_stream_use_big_endian (
+		auto query_byte_stream_use_big_endian(
 		) -> Boolean & {
 			return g_byte_stream_use_big_endian;
 		}

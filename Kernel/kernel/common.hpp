@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "104"
+#define M_version "105"
 
 #pragma endregion
 
@@ -195,8 +195,8 @@
 	}
 
 #define M_simple_function_alias(_alias, _name)\
-	template <typename ... Argument> \
-	inline constexpr auto _alias (\
+	template <typename ... Argument>\
+	inline constexpr auto _alias(\
 		Argument && ... argument\
 	) -> decltype(_name(std::forward<Argument>(argument)...)) {\
 		return _name(std::forward<Argument>(argument)...);\
@@ -233,7 +233,7 @@
 	Trait::Reflection::EnumerationValueField<Trait::Reflection::make_string(#_name), Type::_name>,
 
 #define M_enumeration_item_getter(_name)\
-	inline static constexpr auto _name (\
+	inline static constexpr auto _name(\
 	) -> Type {\
 		return Type{Type::Value::_name};\
 	}
@@ -278,7 +278,7 @@
 	struct _type :\
 		_category {\
 		M_map(M_record_field, _item)\
-		inline friend constexpr auto operator == (\
+		inline friend constexpr auto operator ==(\
 			_type const & thix,\
 			_type const & that\
 		) -> bool = default;\

@@ -21,7 +21,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 			CategoryConstraint<>
 			&& (IsSameOf<format, Texture::Encoding::Format>)
 			&& (Texture::Encoding::FormatPackage::has(format))
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -44,14 +44,14 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 			return;
 		}
 
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &            data,
 			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format
 		) -> Void {
 			Generalization::match<Texture::Encoding::FormatPackage>(
 				format,
-				[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
+				[&] <auto index, auto format>(ValuePackage<index>, ValuePackage<format>) {
 					process_image<format>(data, image);
 				}
 			);
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &            data_,
 			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format

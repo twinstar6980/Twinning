@@ -64,19 +64,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~Map (
+		~Map(
 		) = default;
 
 		// ----------------
 
-		Map (
+		Map(
 		) = default;
 
-		Map (
+		Map(
 			Map const & that
 		) = default;
 
-		Map (
+		Map(
 			Map && that
 		) = default;
 
@@ -88,17 +88,17 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Map const & that
 		) -> Map & = default;
 
-		auto operator = (
+		auto operator =(
 			Map && that
 		) -> Map & = default;
 
 		// ----------------
 
-		auto operator = (
+		auto operator =(
 			ConstantView const & that
 		) -> Map & {
 			thiz.as_list() = that.as_list();
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto operator [] (
+		auto operator [](
 			KeyObject const & key
 		) -> VariableValue & {
 			return thiz.query(key).value;
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto operator [] (
+		auto operator [](
 			KeyObject const & key
 		) const -> ConstantValue & {
 			return thiz.query(key).value;
@@ -127,7 +127,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto operator () (
+		auto operator ()(
 			KeyObject const & key
 		) -> VariableValue & {
 			return thiz.query_force(key).value;
@@ -135,11 +135,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VariableView const & () {
+		implicit operator VariableView const &() {
 			return thiz.as_view();
 		}
 
-		implicit operator ConstantView const & () const {
+		implicit operator ConstantView const &() const {
 			return thiz.as_view();
 		}
 
@@ -147,12 +147,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region as list
 
-		auto as_list (
+		auto as_list(
 		) -> List & {
 			return self_cast<List>(thiz);
 		}
 
-		auto as_list (
+		auto as_list(
 		) const -> List const & {
 			return self_cast<List>(thiz);
 		}
@@ -161,24 +161,24 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		auto as_view (
+		auto as_view(
 		) -> VariableView const & {
 			return self_cast<VariableView>(thiz);
 		}
 
-		auto as_view (
+		auto as_view(
 		) const -> ConstantView const & {
 			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
-		auto view (
+		auto view(
 		) -> VariableView {
 			return thiz.as_view();
 		}
 
-		auto view (
+		auto view(
 		) const -> ConstantView {
 			return thiz.as_view();
 		}
@@ -229,7 +229,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto find_key (
+		auto find_key(
 			KeyObject const & key
 		) const -> Optional<Size> {
 			return thiz.as_view().find_key(key);
@@ -237,7 +237,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto has_key (
+		auto has_key(
 			KeyObject const & key
 		) const -> Boolean {
 			return thiz.as_view().has_key(key);
@@ -247,7 +247,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto query (
+		auto query(
 			KeyObject const & key
 		) -> VariableElement & {
 			return thiz.as_view().query(key);
@@ -255,7 +255,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto query_if (
+		auto query_if(
 			KeyObject const & key
 		) -> VariableOptionalView<Element> {
 			return thiz.as_view().query_if(key);
@@ -265,7 +265,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto query (
+		auto query(
 			KeyObject const & key
 		) const -> ConstantElement & {
 			return thiz.as_view().query(key);
@@ -273,7 +273,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto query_if (
+		auto query_if(
 			KeyObject const & key
 		) const -> ConstantOptionalView<Element> {
 			return thiz.as_view().query_if(key);
@@ -283,20 +283,20 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().tail(size);
@@ -304,20 +304,20 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().tail(size);
@@ -425,7 +425,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		auto query_force (
+		auto query_force(
 			KeyObject const & key
 		) -> VariableElement & {
 			auto index = thiz.find_key(key);
@@ -438,7 +438,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend auto operator == (
+		inline friend auto operator ==(
 			Map const & thix,
 			Map const & that
 		) -> bool {
@@ -456,13 +456,13 @@ export namespace Twinning::Kernel {
 	template <typename Key, typename Value, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Key> && IsPureInstance<Value> && IsValid<Argument ...>>
 		&& (IsConstructible<KeyValuePair<Key, Value>, Argument &&> && ...)
-	inline auto make_map (
+	inline auto make_map(
 		Argument && ... argument
 	) -> Map<Key, Value> {
 		auto result = Map<Key, Value>{mbox<Size>(sizeof...(Argument))};
 		result.expand_size_to_full();
 		Generalization::each_with<>(
-			[&] <auto index, typename CurrentArgument> (ValuePackage<index>, CurrentArgument && current_argument) {
+			[&] <auto index, typename CurrentArgument>(ValuePackage<index>, CurrentArgument && current_argument) {
 				restruct(result.at(mbox<Size>(index)), as_forward<CurrentArgument>(current_argument));
 			},
 			as_forward<Argument>(argument) ...

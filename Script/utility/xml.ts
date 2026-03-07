@@ -38,20 +38,20 @@ namespace Twinning.Script.Xml {
 		attribute: Record<string, string>,
 		child: Array<Kernel.Xml.JS_Node>,
 	): Kernel.Xml.JS_Element {
-		return { name, attribute, child };
+		return {name, attribute, child};
 	}
 
 	export function create_text(
 		value: string,
 		cdata: boolean,
 	): Kernel.Xml.JS_Text {
-		return { value, cdata };
+		return {value, cdata};
 	}
 
 	export function create_comment(
 		value: string,
 	): Kernel.Xml.JS_Comment {
-		return { value };
+		return {value};
 	}
 
 	// ----------------

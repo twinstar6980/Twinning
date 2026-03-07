@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range> requires
 		CategoryConstraint<IsPureInstance<Range>>
 		&& (IsRange<Range>)
-	inline constexpr auto size (
+	inline constexpr auto size(
 		Range const & range
 	) -> Size {
 		if constexpr (Detail::IsHasSizeMethodRange<Range>) {
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Executor>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Executor>)
-	inline constexpr auto each (
+	inline constexpr auto each(
 		Range &&         range,
 		Executor const & executor
 	) -> Void {
@@ -86,7 +86,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range1> && IsValid<Range2> && IsPureInstance<Executor>>
 		&& (IsRange<AsPure<Range1>> && IsRange<AsPure<Range2>>)
 		&& (IsGenericCallable<Executor>)
-	inline constexpr auto each_pair (
+	inline constexpr auto each_pair(
 		Range1 &&        range_1,
 		Range2 &&        range_2,
 		Executor const & executor
@@ -111,7 +111,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Checker>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Checker>)
-	inline constexpr auto all_of (
+	inline constexpr auto all_of(
 		Range &&        range,
 		Checker const & checker
 	) -> Boolean {
@@ -130,7 +130,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Checker>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Checker>)
-	inline constexpr auto any_of (
+	inline constexpr auto any_of(
 		Range &&        range,
 		Checker const & checker
 	) -> Boolean {
@@ -149,7 +149,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Checker>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Checker>)
-	inline constexpr auto none_of (
+	inline constexpr auto none_of(
 		Range &&        range,
 		Checker const & checker
 	) -> Boolean {
@@ -171,7 +171,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range1, typename Range2> requires
 		CategoryConstraint<IsValid<Range1> && IsValid<Range2>>
 		&& (IsRange<AsPure<Range1>> && IsRange<AsPure<Range2>>)
-	inline constexpr auto equal (
+	inline constexpr auto equal(
 		Range1 && range_1,
 		Range2 && range_2
 	) -> Boolean {
@@ -195,7 +195,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range1> && IsPureInstance<Range2>>
 		&& (IsRange<AsPure<Range1>> && IsRange<AsPure<Range2>>)
 		&& (IsGenericCallable<Comparer>)
-	inline constexpr auto equal (
+	inline constexpr auto equal(
 		Range1 &&        range_1,
 		Range2 &&        range_2,
 		Comparer const & comparer
@@ -221,7 +221,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range1, typename Range2> requires
 		CategoryConstraint<IsValid<Range1> && IsValid<Range2>>
 		&& (IsRange<AsPure<Range1>> && IsRange<AsPure<Range2>>)
-	inline constexpr auto common_size (
+	inline constexpr auto common_size(
 		Range1 && range_1,
 		Range2 && range_2
 	) -> Size {
@@ -248,7 +248,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename Value> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Value>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto find (
+	inline constexpr auto find(
 		Range &&      range,
 		Value const & value
 	) -> decltype(range.begin()) {
@@ -266,7 +266,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename Value> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Value>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto find (
+	inline constexpr auto find(
 		Range &&                  range,
 		Value const &             value,
 		decltype(range.begin()) & result
@@ -278,7 +278,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename Value> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Value>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto has (
+	inline constexpr auto has(
 		Range &&      range,
 		Value const & value
 	) -> Boolean {
@@ -291,7 +291,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Finder>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Finder>)
-	inline constexpr auto find_if (
+	inline constexpr auto find_if(
 		Range &&       range,
 		Finder const & finder
 	) -> decltype(range.begin()) {
@@ -310,7 +310,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Finder>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Finder>)
-	inline constexpr auto find_if (
+	inline constexpr auto find_if(
 		Range &&                  range,
 		Finder const &            finder,
 		decltype(range.begin()) & result
@@ -323,7 +323,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Finder>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Finder>)
-	inline constexpr auto has_if (
+	inline constexpr auto has_if(
 		Range &&       range,
 		Finder const & finder
 	) -> Boolean {
@@ -335,7 +335,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename Value> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Value>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto find_index (
+	inline constexpr auto find_index(
 		Range &&      range,
 		Value const & value
 	) -> Optional<Size> {
@@ -356,7 +356,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Finder>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Finder>)
-	inline constexpr auto find_index_if (
+	inline constexpr auto find_index_if(
 		Range &&       range,
 		Finder const & finder
 	) -> Optional<Size> {
@@ -380,7 +380,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename SubRange> requires
 		CategoryConstraint<IsValid<Range> && IsValid<SubRange>>
 		&& (IsRange<AsPure<Range>> && IsRange<AsPure<SubRange>>)
-	inline constexpr auto find_sub_index (
+	inline constexpr auto find_sub_index(
 		Range &&    range,
 		SubRange && sub_range
 	) -> Optional<Size> {
@@ -404,7 +404,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename SubRange> requires
 		CategoryConstraint<IsValid<Range> && IsValid<SubRange>>
 		&& (IsRange<AsPure<Range>> && IsRange<AsPure<SubRange>>)
-	inline constexpr auto has_sub (
+	inline constexpr auto has_sub(
 		Range &&    range,
 		SubRange && sub_range
 	) -> Boolean {
@@ -416,7 +416,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename SubRange> requires
 		CategoryConstraint<IsValid<Range> && IsValid<SubRange>>
 		&& (IsRange<AsPure<Range>> && IsRange<AsPure<SubRange>>)
-	inline constexpr auto start_with (
+	inline constexpr auto start_with(
 		Range &&    range,
 		SubRange && sub_range
 	) -> Boolean {
@@ -428,7 +428,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename SubRange> requires
 		CategoryConstraint<IsValid<Range> && IsValid<SubRange>>
 		&& (IsRange<AsPure<Range>> && IsRange<AsPure<SubRange>>)
-	inline constexpr auto end_with (
+	inline constexpr auto end_with(
 		Range &&    range,
 		SubRange && sub_range
 	) -> Boolean {
@@ -444,14 +444,14 @@ export namespace Twinning::Kernel::Range {
 	template <typename Value, typename Range> requires
 		CategoryConstraint<IsPureInstance<Value> && IsValid<Range>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto accumulate (
+	inline constexpr auto accumulate(
 		Range &&      range,
 		Value const & initial_value = Value{}
 	) -> Value {
 		auto result = initial_value;
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				result += as_forward<Element>(element);
 				return;
 			}
@@ -463,7 +463,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsPureInstance<Value> && IsValid<Range> && IsPureInstance<Calculator>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Calculator>)
-	inline constexpr auto accumulate (
+	inline constexpr auto accumulate(
 		Range &&           range,
 		Calculator const & calculator,
 		Value const &      initial_value = Value{}
@@ -471,7 +471,7 @@ export namespace Twinning::Kernel::Range {
 		auto result = initial_value;
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				result += calculator(as_forward<Element>(element));
 				return;
 			}
@@ -486,14 +486,14 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename Value> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Value>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto count (
+	inline constexpr auto count(
 		Range &&      range,
 		Value const & value
 	) -> Size {
 		auto result = k_none_size;
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				if (element == value) {
 					++result;
 				}
@@ -506,14 +506,14 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename ValueRange> requires
 		CategoryConstraint<IsValid<Range> && IsValid<ValueRange>>
 		&& (IsRange<AsPure<Range>> && IsRange<AsPure<ValueRange>>)
-	inline constexpr auto count_many (
+	inline constexpr auto count_many(
 		Range &&      range,
 		ValueRange && value_range
 	) -> Size {
 		auto result = k_none_size;
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				if (has(value_range, as_forward<Element>(element))) {
 					++result;
 				}
@@ -527,14 +527,14 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Checker>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Checker>)
-	inline constexpr auto count_if (
+	inline constexpr auto count_if(
 		Range &&        range,
 		Checker const & checker
 	) -> Size {
 		auto result = k_none_size;
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				if (checker(as_forward<Element>(element))) {
 					++result;
 				}
@@ -551,13 +551,13 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename ... Argument> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Argument ...>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto restruct (
+	inline constexpr auto restruct(
 		Range &&             range,
 		Argument const & ... argument
 	) -> Void {
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				Trait::restruct(element, argument ...);
 				return;
 			}
@@ -568,13 +568,13 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range, typename Value> requires
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Value>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto assign (
+	inline constexpr auto assign(
 		Range &&      range,
 		Value const & value
 	) -> Void {
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				element = value;
 				return;
 			}
@@ -586,14 +586,14 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Transformer>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Transformer>)
-	inline constexpr auto assign (
+	inline constexpr auto assign(
 		Range &&            range,
 		Value const &       value,
 		Transformer const & transformer
 	) -> Void {
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				element = transformer(value);
 				return;
 			}
@@ -605,14 +605,14 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Converter>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Converter>)
-	inline constexpr auto convert (
+	inline constexpr auto convert(
 		Range &&          range,
 		Value const &     value,
 		Converter const & converter
 	) -> Void {
 		each(
 			range,
-			[&] <typename Element> (Element && element) -> auto {
+			[&] <typename Element>(Element && element) -> auto {
 				converter(element, value);
 				return;
 			}
@@ -625,14 +625,14 @@ export namespace Twinning::Kernel::Range {
 	template <typename DestinationRange, typename SourceRange> requires
 		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange>>
 		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
-	inline constexpr auto restruct_from (
+	inline constexpr auto restruct_from(
 		DestinationRange && destination,
 		SourceRange &&      source
 	) -> Void {
 		each_pair(
 			destination,
 			source,
-			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+			[&] <typename DestinationElement, typename SourceElement>(DestinationElement && destination_element, SourceElement && source_element) -> auto {
 				Trait::restruct(destination_element, as_forward<SourceElement>(source_element));
 				return;
 			}
@@ -643,14 +643,14 @@ export namespace Twinning::Kernel::Range {
 	template <typename DestinationRange, typename SourceRange> requires
 		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange>>
 		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
-	inline constexpr auto assign_from (
+	inline constexpr auto assign_from(
 		DestinationRange && destination,
 		SourceRange &&      source
 	) -> Void {
 		each_pair(
 			destination,
 			source,
-			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+			[&] <typename DestinationElement, typename SourceElement>(DestinationElement && destination_element, SourceElement && source_element) -> auto {
 				destination_element = as_forward<SourceElement>(source_element);
 				return;
 			}
@@ -662,7 +662,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange> && IsPureInstance<Transformer>>
 		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
 		&& (IsGenericCallable<Transformer>)
-	inline constexpr auto assign_from (
+	inline constexpr auto assign_from(
 		DestinationRange && destination,
 		SourceRange &&      source,
 		Transformer const & transformer
@@ -670,7 +670,7 @@ export namespace Twinning::Kernel::Range {
 		each_pair(
 			destination,
 			source,
-			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+			[&] <typename DestinationElement, typename SourceElement>(DestinationElement && destination_element, SourceElement && source_element) -> auto {
 				destination_element = transformer(as_forward<SourceElement>(source_element));
 				return;
 			}
@@ -682,7 +682,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<DestinationRange> && IsValid<SourceRange> && IsPureInstance<Converter>>
 		&& (IsRange<AsPure<DestinationRange>> && IsRange<AsPure<SourceRange>>)
 		&& (IsGenericCallable<Converter>)
-	inline constexpr auto convert_from (
+	inline constexpr auto convert_from(
 		DestinationRange && destination,
 		SourceRange &&      source,
 		Converter const &   converter
@@ -690,7 +690,7 @@ export namespace Twinning::Kernel::Range {
 		each_pair(
 			destination,
 			source,
-			[&] <typename DestinationElement, typename SourceElement> (DestinationElement && destination_element, SourceElement && source_element) -> auto {
+			[&] <typename DestinationElement, typename SourceElement>(DestinationElement && destination_element, SourceElement && source_element) -> auto {
 				converter(destination_element, as_forward<SourceElement>(source_element));
 				return;
 			}
@@ -706,7 +706,7 @@ export namespace Twinning::Kernel::Range {
 		CategoryConstraint<IsValid<Range> && IsPureInstance<Sorter>>
 		&& (IsRange<AsPure<Range>>)
 		&& (IsGenericCallable<Sorter>)
-	inline constexpr auto sort (
+	inline constexpr auto sort(
 		Range &&       range,
 		Sorter const & sorter
 	) -> Void {
@@ -725,12 +725,12 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range> requires
 		CategoryConstraint<IsValid<Range>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto sort_ascend (
+	inline constexpr auto sort_ascend(
 		Range && range
 	) -> Void {
 		return sort(
 			range,
-			[] <typename Element1, typename Element2> (Element1 && element_1, Element2 && element_2) -> auto {
+			[] <typename Element1, typename Element2>(Element1 && element_1, Element2 && element_2) -> auto {
 				return element_1 > element_2;
 			}
 		);
@@ -740,12 +740,12 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range> requires
 		CategoryConstraint<IsValid<Range>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto sort_descend (
+	inline constexpr auto sort_descend(
 		Range && range
 	) -> Void {
 		return sort(
 			range,
-			[] <typename Element1, typename Element2> (Element1 && element_1, Element2 && element_2) -> auto {
+			[] <typename Element1, typename Element2>(Element1 && element_1, Element2 && element_2) -> auto {
 				return element_1 < element_2;
 			}
 		);

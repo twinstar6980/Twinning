@@ -178,7 +178,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto size (
+		inline static auto size(
 			That const & that
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamGroup::Structure;
@@ -196,7 +196,7 @@ export namespace Twinning::Kernel {
 			return size;
 		}
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -214,7 +214,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {

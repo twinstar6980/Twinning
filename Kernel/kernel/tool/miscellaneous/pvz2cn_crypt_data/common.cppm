@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 
 		// ----------------
 
-		inline static auto compute_rijndael_key (
+		inline static auto compute_rijndael_key(
 			String const & key
 		) -> String {
 			auto string = String{16_sz * 2_sz};
@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			return string;
 		}
 
-		inline static auto compute_rijndael_iv (
+		inline static auto compute_rijndael_iv(
 			String const & rijndael_key
 		) -> String {
 			return String{rijndael_key.sub(5_ix, 24_sz)};

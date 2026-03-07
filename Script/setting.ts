@@ -26,7 +26,7 @@ namespace Twinning.Script {
 		data: Partial<Setting>,
 		store: Setting,
 	): void {
-		let action: { [Key in keyof Setting]: (value: Setting[Key]) => void; } = {
+		let action: {[Key in keyof Setting]: (value: Setting[Key]) => void} = {
 			byte_stream_use_big_endian: (value) => {
 				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
 			},

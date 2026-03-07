@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.zlib {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { raw_file: string; }) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_boolean({
@@ -43,13 +43,13 @@ namespace Twinning.Script.Executor.Implementation.Popcap.zlib {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { raw_file: string; }) => (argument.raw_file + '.compress'),
+						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.compress'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				worker: ({ raw_file, ripe_file, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.Popcap.Zlib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', { variant_64: version_variant_64 });
+				worker: ({raw_file, ripe_file, version_variant_64}, temporary: {}) => {
+					KernelX.Tool.Popcap.Zlib.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', {variant_64: version_variant_64});
 					return;
 				},
 			}),
@@ -68,7 +68,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.zlib {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_boolean({
@@ -91,13 +91,13 @@ namespace Twinning.Script.Executor.Implementation.Popcap.zlib {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { ripe_file: string; }) => (argument.ripe_file + '.uncompress'),
+						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.uncompress'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				worker: ({ ripe_file, raw_file, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.Popcap.Zlib.uncompress_fs(ripe_file, raw_file, 15n, { variant_64: version_variant_64 });
+				worker: ({ripe_file, raw_file, version_variant_64}, temporary: {}) => {
+					KernelX.Tool.Popcap.Zlib.uncompress_fs(ripe_file, raw_file, 15n, {variant_64: version_variant_64});
 					return;
 				},
 			}),

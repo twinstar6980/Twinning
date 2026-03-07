@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView & data,
 			Json::Boolean const &  value
 		) -> Void {
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			return;
 		}
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView & data,
 			Json::Number const &   value
 		) -> Void {
@@ -70,7 +70,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			return;
 		}
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView &                                   data,
 			Json::String const &                                     value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index
@@ -107,7 +107,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			return;
 		}
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView &                                   data,
 			Json::String const &                                     value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			return;
 		}
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView &                                   data,
 			Json::Array const &                                      value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
@@ -186,7 +186,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			return;
 		}
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView &                                   data,
 			Json::Object const &                                     value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			return;
 		}
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputByteStreamView &                                   data,
 			Json::Value const &                                      value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
@@ -239,7 +239,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			OutputByteStreamView & data,
 			Json::Value const &    definition,
 			Boolean const &        enable_string_index,
@@ -260,7 +260,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView & data_,
 			Json::Value const &    definition,
 			Boolean const &        enable_string_index,

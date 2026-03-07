@@ -22,22 +22,22 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region constructor
 
-		~Mutex (
+		~Mutex(
 		) = default;
 
 		// ----------------
 
-		Mutex (
+		Mutex(
 		) :
 			m_mutex{} {
 			return;
 		}
 
-		Mutex (
+		Mutex(
 			Mutex const & that
 		) = delete;
 
-		Mutex (
+		Mutex(
 			Mutex && that
 		) = delete;
 
@@ -45,11 +45,11 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Mutex const & that
 		) -> Mutex & = delete;
 
-		auto operator = (
+		auto operator =(
 			Mutex && that
 		) -> Mutex & = delete;
 
@@ -57,13 +57,13 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region control
 
-		auto lock (
+		auto lock(
 		) -> Void {
 			thiz.m_mutex.lock();
 			return;
 		}
 
-		auto unlock (
+		auto unlock(
 		) -> Void {
 			thiz.m_mutex.unlock();
 			return;

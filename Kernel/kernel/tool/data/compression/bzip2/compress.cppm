@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  raw,
 			OutputByteStreamView & ripe,
 			Size const &           block_size,
@@ -64,7 +64,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  raw_,
 			OutputByteStreamView & ripe_,
 			Size const &           block_size,

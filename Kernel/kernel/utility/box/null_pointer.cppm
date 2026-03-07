@@ -21,7 +21,7 @@ export namespace Twinning::Kernel {
 		template <typename It> requires
 			CategoryConstraint<IsPureInstance<It>>
 			&& (IsPointerBox<It>)
-		implicit constexpr operator It () const {
+		implicit constexpr operator It() const {
 			return It{static_cast<ZPointer<typename It::Target>>(nullptr)};
 		}
 
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel {
 
 	#pragma region operator
 
-	inline constexpr auto operator == (
+	inline constexpr auto operator ==(
 		NullPointerBox const & thix,
 		NullPointerBox const & that
 	) -> bool {
@@ -45,7 +45,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsPointerBox<It>)
-	inline constexpr auto operator == (
+	inline constexpr auto operator ==(
 		It const &             thix,
 		NullPointerBox const & that
 	) -> bool {

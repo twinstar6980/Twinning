@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation {
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			Image::VariableImageView const & target,
 			Boolean const &                  horizontal,
 			Boolean const &                  vertical
@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			Image::VariableImageView const & target,
 			Boolean const &                  horizontal,
 			Boolean const &                  vertical

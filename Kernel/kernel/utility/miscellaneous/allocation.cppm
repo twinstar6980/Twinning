@@ -18,7 +18,7 @@ export namespace Twinning::Kernel {
 	template <typename It, typename ... Argument> requires
 		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
 		&& (IsConstructible<AsPure<It>, Argument && ...>)
-	inline constexpr auto allocate_instance (
+	inline constexpr auto allocate_instance(
 		Argument && ... argument
 	) -> Pointer<It> {
 		auto pointer = make_pointer(new It{as_forward<Argument>(argument) ...});
@@ -27,7 +27,7 @@ export namespace Twinning::Kernel {
 
 	template <typename It> requires
 		CategoryConstraint<IsInstance<It>>
-	inline constexpr auto free_instance (
+	inline constexpr auto free_instance(
 		Pointer<It> & pointer
 	) -> Void {
 		delete pointer.value;
@@ -43,7 +43,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsInstance<It> && IsPureInstance<Argument ...>>
 		&& (IsDefaultConstructible<AsPure<It>>)
 		&& (IsConstructible<AsPure<It>, Argument const & ...>)
-	inline constexpr auto allocate_instance_array (
+	inline constexpr auto allocate_instance_array(
 		Size const &         size,
 		Argument const & ... argument
 	) -> Pointer<It> {
@@ -56,7 +56,7 @@ export namespace Twinning::Kernel {
 
 	template <typename It> requires
 		CategoryConstraint<IsInstance<It>>
-	inline constexpr auto free_instance_array (
+	inline constexpr auto free_instance_array(
 		Pointer<It> & pointer
 	) -> Void {
 		delete[] pointer.value;

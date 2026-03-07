@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 		// ----------------
 
-		inline static auto process_image_v1_4bpp_rgb (
+		inline static auto process_image_v1_4bpp_rgb(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 			return;
 		}
 
-		inline static auto process_image_v1_4bpp_rgba (
+		inline static auto process_image_v1_4bpp_rgba(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -63,7 +63,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image,
 			Format const &                   format
@@ -79,7 +79,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &           data_,
 			Image::ConstantImageView const & image,
 			Format const &                   format

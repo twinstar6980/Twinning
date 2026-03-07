@@ -21,7 +21,7 @@ export namespace Twinning::Shell {
 
 		#pragma region constructor
 
-		~LibraryLoader (
+		~LibraryLoader(
 		) {
 			if (thiz.state()) {
 				thiz.close();
@@ -31,17 +31,17 @@ export namespace Twinning::Shell {
 
 		// ----------------
 
-		LibraryLoader (
+		LibraryLoader(
 		) :
 			m_handle{} {
 			return;
 		}
 
-		LibraryLoader (
+		LibraryLoader(
 			LibraryLoader const & that
 		) = delete;
 
-		LibraryLoader (
+		LibraryLoader(
 			LibraryLoader && that
 		) = delete;
 
@@ -49,11 +49,11 @@ export namespace Twinning::Shell {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			LibraryLoader const & that
 		) -> LibraryLoader & = delete;
 
-		auto operator = (
+		auto operator =(
 			LibraryLoader && that
 		) -> LibraryLoader & = delete;
 
@@ -61,14 +61,14 @@ export namespace Twinning::Shell {
 
 		#pragma region access
 
-		auto state (
+		auto state(
 		) -> bool {
 			return thiz.m_handle != nullptr;
 		}
 
 		// ----------------
 
-		auto open (
+		auto open(
 			std::string_view const & path
 		) -> void {
 			assert_test(!thiz.state());
@@ -86,7 +86,7 @@ export namespace Twinning::Shell {
 			return;
 		}
 
-		auto close (
+		auto close(
 		) -> void {
 			assert_test(thiz.state());
 			auto state = bool{};
@@ -106,7 +106,7 @@ export namespace Twinning::Shell {
 		// ----------------
 
 		template <typename Symbol>
-		auto lookup (
+		auto lookup(
 			std::string_view const & name
 		) -> Symbol * {
 			assert_test(thiz.state());

@@ -22,7 +22,7 @@ final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '149';
+  static const String version = '150';
 
   static const String name = 'Twinning Assistant';
 
@@ -156,16 +156,16 @@ Void assertTest(
 
 // ----------------
 
-extension CommonObjectExtension<TType extends Object> on TType {
+extension CommonObjectExtension<TSelf extends Object> on TSelf {
 
   TResult selfLet<TResult>(
-    TResult Function(TType it) action,
+    TResult Function(TSelf it) action,
   ) {
     return action(this);
   }
 
-  TType selfAlso(
-    Void Function(TType it) action,
+  TSelf selfAlso(
+    Void Function(TSelf it) action,
   ) {
     action(this);
     return this;

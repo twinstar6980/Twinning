@@ -67,7 +67,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename Value, typename Exchanger> requires
 			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<Exchanger>>
 			&& (IsGenericCallable<Exchanger>)
-		inline static auto exchange (
+		inline static auto exchange(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Value> &   value,
 			Exchanger const &            exchanger
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_boolean (
+		inline static auto exchange_boolean(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Boolean> & value,
 			ValueExchanger const &       value_exchanger
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_integer (
+		inline static auto exchange_integer(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Integer> & value,
 			ValueExchanger const &       value_exchanger
@@ -105,7 +105,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_floater (
+		inline static auto exchange_floater(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Floater> & value,
 			ValueExchanger const &       value_exchanger
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_size (
+		inline static auto exchange_size(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Size> &    value,
 			ValueExchanger const &       value_exchanger
@@ -129,7 +129,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_character (
+		inline static auto exchange_character(
 			ExchangeableByteStreamView &   data,
 			ExchangeableValue<Character> & value,
 			ValueExchanger const &         value_exchanger
@@ -141,7 +141,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_unicode (
+		inline static auto exchange_unicode(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Unicode> & value,
 			ValueExchanger const &       value_exchanger
@@ -153,7 +153,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_enumerated (
+		inline static auto exchange_enumerated(
 			ExchangeableByteStreamView &    data,
 			ExchangeableValue<Enumerated> & value,
 			ValueExchanger const &          value_exchanger
@@ -166,7 +166,7 @@ export namespace Twinning::Kernel::Tool {
 			CategoryConstraint<IsPureInstance<SizeExchanger> && IsPureInstance<ContentExchanger>>
 			&& (IsGenericCallable<SizeExchanger>)
 			&& (IsGenericCallable<ContentExchanger>)
-		inline static auto exchange_string (
+		inline static auto exchange_string(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<String> &  value,
 			SizeExchanger const &        size_exchanger,
@@ -189,7 +189,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename Value, typename StateExchanger> requires
 			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<StateExchanger>>
 			&& (IsGenericCallable<StateExchanger>)
-		inline static auto exchange_optional_state (
+		inline static auto exchange_optional_state(
 			ExchangeableByteStreamView &         data,
 			ExchangeableValue<Optional<Value>> & value,
 			StateExchanger const &               state_exchanger
@@ -214,7 +214,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename Value, typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_optional_value (
+		inline static auto exchange_optional_value(
 			ExchangeableByteStreamView &         data,
 			ExchangeableValue<Optional<Value>> & value,
 			ValueExchanger const &               value_exchanger
@@ -229,7 +229,7 @@ export namespace Twinning::Kernel::Tool {
 			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<StateExchanger> && IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<StateExchanger>)
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_optional (
+		inline static auto exchange_optional(
 			ExchangeableByteStreamView &         data,
 			ExchangeableValue<Optional<Value>> & value,
 			StateExchanger const &               state_exchanger,
@@ -245,7 +245,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ... Value, typename IndexExchanger> requires
 			CategoryConstraint<IsPureInstance<Value ...> && IsPureInstance<IndexExchanger>>
 			&& (IsGenericCallable<IndexExchanger>)
-		inline static auto exchange_variant_index (
+		inline static auto exchange_variant_index(
 			ExchangeableByteStreamView &            data,
 			ExchangeableValue<Variant<Value ...>> & value,
 			IndexExchanger const &                  index_exchanger
@@ -265,14 +265,14 @@ export namespace Twinning::Kernel::Tool {
 		template <typename ... Value, typename ValueExchanger> requires
 			CategoryConstraint<IsPureInstance<Value ...> && IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_variant_value (
+		inline static auto exchange_variant_value(
 			ExchangeableByteStreamView &            data,
 			ExchangeableValue<Variant<Value ...>> & value,
 			ValueExchanger const &                  value_exchanger
 		) -> Void {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(Value)>>(
 				value.index().value,
-				[&] <auto index, auto value_index> (ValuePackage<index>, ValuePackage<value_index>) {
+				[&] <auto index, auto value_index>(ValuePackage<index>, ValuePackage<value_index>) {
 					value_exchanger(data, value.template get_of_index<mbox<Size>(value_index)>());
 				}
 			);
@@ -283,7 +283,7 @@ export namespace Twinning::Kernel::Tool {
 			CategoryConstraint<IsPureInstance<Value ...> && IsPureInstance<IndexExchanger> && IsPureInstance<ValueExchanger>>
 			&& (IsGenericCallable<IndexExchanger>)
 			&& (IsGenericCallable<ValueExchanger>)
-		inline static auto exchange_variant (
+		inline static auto exchange_variant(
 			ExchangeableByteStreamView &            data,
 			ExchangeableValue<Variant<Value ...>> & value,
 			IndexExchanger const &                  index_exchanger,
@@ -299,7 +299,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename Element, typename SizeExchanger> requires
 			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<SizeExchanger>>
 			&& (IsGenericCallable<SizeExchanger>)
-		inline static auto exchange_list_size (
+		inline static auto exchange_list_size(
 			ExchangeableByteStreamView &       data,
 			ExchangeableValue<List<Element>> & value,
 			SizeExchanger const &              size_exchanger
@@ -319,13 +319,13 @@ export namespace Twinning::Kernel::Tool {
 		template <typename Element, typename ... ElementExchanger> requires
 			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<ElementExchanger ...>>
 			&& (IsGenericCallable<ElementExchanger> && ...)
-		inline static auto exchange_list_element (
+		inline static auto exchange_list_element(
 			ExchangeableByteStreamView &       data,
 			ExchangeableValue<List<Element>> & value,
 			ElementExchanger const & ...       element_exchanger
 		) -> Void {
 			Generalization::each_with<>(
-				[&] (auto, auto & current_element_parser) {
+				[&](auto, auto & current_element_parser) {
 					for (auto & value_element : value) {
 						current_element_parser(data, value_element);
 					}
@@ -339,7 +339,7 @@ export namespace Twinning::Kernel::Tool {
 			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<SizeExchanger> && IsPureInstance<ElementExchanger ...>>
 			&& (IsGenericCallable<SizeExchanger>)
 			&& (IsGenericCallable<ElementExchanger> && ...)
-		inline static auto exchange_list (
+		inline static auto exchange_list(
 			ExchangeableByteStreamView &       data,
 			ExchangeableValue<List<Element>> & value,
 			SizeExchanger const &              size_exchanger,
@@ -355,7 +355,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename SizeExchanger> requires
 			CategoryConstraint<IsPureInstance<SizeExchanger>>
 			&& (IsGenericCallable<SizeExchanger>)
-		inline static auto exchange_data (
+		inline static auto exchange_data(
 			ExchangeableByteStreamView &  data,
 			ExchangeableValue<ByteList> & value,
 			SizeExchanger const &         size_exchanger
@@ -380,7 +380,7 @@ export namespace Twinning::Kernel::Tool {
 
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
-		inline static auto exchange_raw (
+		inline static auto exchange_raw(
 			ExchangeableByteStreamView &  data,
 			ExchangeableValue<RawValue> & value
 		) -> Void {
@@ -395,7 +395,7 @@ export namespace Twinning::Kernel::Tool {
 
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
-		inline static auto exchange_raw_constant (
+		inline static auto exchange_raw_constant(
 			ExchangeableByteStreamView &          data,
 			ExchangeableConstantValue<RawValue> & value
 		) -> Void {
@@ -413,7 +413,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsBooleanBox<RawValue>)
-		inline static auto exchange_boolean_fixed (
+		inline static auto exchange_boolean_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Boolean> & value
 		) -> Void {
@@ -432,7 +432,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsIntegerBox<RawValue>)
-		inline static auto exchange_integer_fixed (
+		inline static auto exchange_integer_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Integer> & value
 		) -> Void {
@@ -451,7 +451,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsFloaterBox<RawValue>)
-		inline static auto exchange_floater_fixed (
+		inline static auto exchange_floater_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Floater> & value
 		) -> Void {
@@ -470,7 +470,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsIntegerBox<RawValue>)
-		inline static auto exchange_size_fixed (
+		inline static auto exchange_size_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Size> &    value
 		) -> Void {
@@ -489,7 +489,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsCharacterBox<RawValue>)
-		inline static auto exchange_character_fixed (
+		inline static auto exchange_character_fixed(
 			ExchangeableByteStreamView &   data,
 			ExchangeableValue<Character> & value
 		) -> Void {
@@ -508,7 +508,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsCharacterBox<RawValue>)
-		inline static auto exchange_unicode_fixed (
+		inline static auto exchange_unicode_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Unicode> & value
 		) -> Void {
@@ -527,7 +527,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawValue> requires
 			CategoryConstraint<IsPureInstance<RawValue>>
 			&& (IsIntegerBox<RawValue>)
-		inline static auto exchange_enumerated_fixed (
+		inline static auto exchange_enumerated_fixed(
 			ExchangeableByteStreamView &    data,
 			ExchangeableValue<Enumerated> & value
 		) -> Void {
@@ -546,7 +546,7 @@ export namespace Twinning::Kernel::Tool {
 		template <typename RawSizeValue> requires
 			CategoryConstraint<IsPure<RawSizeValue>>
 			&& (IsVoid<RawSizeValue> || IsIntegerBox<RawSizeValue>)
-		inline static auto exchange_string_block (
+		inline static auto exchange_string_block(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<String> &  value
 		) -> Void {

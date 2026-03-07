@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &        plain,
 			OutputByteStreamView &       cipher,
 			ConstantByteListView const & key
@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &        plain_,
 			OutputByteStreamView &       cipher_,
 			ConstantByteListView const & key

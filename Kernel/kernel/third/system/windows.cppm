@@ -99,7 +99,7 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline auto const $INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE;
 
-	inline auto $_wenviron (
+	inline auto $_wenviron(
 	) -> wchar_t * * {
 		return _wenviron;
 	}

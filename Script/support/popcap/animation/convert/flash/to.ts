@@ -57,8 +57,8 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 		}
 		return {
 			name: extra.name,
-			...(version.number < 4n ? {} : { size: extra.size }),
-			...(version.number < 2n ? { transform: convert_transform_from_standard_to_rotate(transform) } : { transform: transform }),
+			...(version.number < 4n ? {} : {size: extra.size}),
+			...(version.number < 2n ? {transform: convert_transform_from_standard_to_rotate(transform)} : {transform: transform}),
 		};
 	}
 
@@ -198,9 +198,9 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 		}
 		frame_list.pop();
 		return {
-			...(version.number < 4n ? {} : { name: extra.name }),
-			...(version.number < 4n ? {} : { frame_rate: extra.frame_rate }),
-			...(version.number < 5n ? {} : { work_area: extra.work_area === null ? [0n, BigInt(frame_list.length - 1)] : extra.work_area }),
+			...(version.number < 4n ? {} : {name: extra.name}),
+			...(version.number < 4n ? {} : {frame_rate: extra.frame_rate}),
+			...(version.number < 5n ? {} : {work_area: extra.work_area === null ? [0n, BigInt(frame_list.length - 1)] : extra.work_area}),
 			frame: frame_list,
 		};
 	}

@@ -43,19 +43,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~BasicStringView (
+		constexpr ~BasicStringView(
 		) = default;
 
 		// ----------------
 
-		constexpr BasicStringView (
+		constexpr BasicStringView(
 		) = default;
 
-		constexpr BasicStringView (
+		constexpr BasicStringView(
 			BasicStringView const & that
 		) = default;
 
-		constexpr BasicStringView (
+		constexpr BasicStringView(
 			BasicStringView && that
 		) = default;
 
@@ -67,22 +67,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BasicStringView const & that
 		) -> BasicStringView & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BasicStringView && that
 		) -> BasicStringView & = default;
 
 		// ----------------
 
-		implicit operator ConstantView & () requires
+		implicit operator ConstantView &() requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator ConstantView const & () const requires
+		implicit operator ConstantView const &() const requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region case convert
 
-		constexpr auto as_lower_case (
+		constexpr auto as_lower_case(
 		) const -> Void requires
 			(!constant.value) &&
 			(IsSame<Element, Character>) {
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		constexpr auto as_upper_case (
+		constexpr auto as_upper_case(
 		) const -> Void requires
 			(!constant.value) &&
 			(IsSame<Element, Character>) {
@@ -111,7 +111,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region comparison
 
-		constexpr auto compare_3way (
+		constexpr auto compare_3way(
 			ConstantView const & that
 		) const -> StrongOrdering requires
 			(IsSame<Element, Character>) {
@@ -135,7 +135,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region hash
 
-		constexpr auto hash (
+		constexpr auto hash(
 		) const -> IntegerU64 {
 			auto offset = 14695981039346656037_iu64;
 			auto prime = 1099511628211_iu64;
@@ -151,7 +151,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		constexpr auto sub (
+		constexpr auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> BasicStringView {
@@ -159,14 +159,14 @@ export namespace Twinning::Kernel {
 			return BasicStringView{thiz.iterator(begin), size};
 		}
 
-		constexpr auto head (
+		constexpr auto head(
 			Size const & size
 		) const -> BasicStringView {
 			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.begin_index(), size);
 		}
 
-		constexpr auto tail (
+		constexpr auto tail(
 			Size const & size
 		) const -> BasicStringView {
 			assert_test(size <= thiz.size());
@@ -179,7 +179,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator <=> (
+		inline friend constexpr auto operator <=>(
 			BasicStringView const & thix,
 			BasicStringView const & that
 		) -> StrongOrdering requires
@@ -210,7 +210,7 @@ export namespace Twinning::Kernel {
 	template <typename Element> requires
 		CategoryConstraint<IsInstance<Element>>
 		&& (IsCharacterBox<AsPure<Element>>)
-	inline auto null_terminated_string_size_of (
+	inline auto null_terminated_string_size_of(
 		Pointer<Element> const & string
 	) -> Size {
 		return mbox<Size>(std::char_traits<typename AsPure<Element>::Value>::length(cast_pointer<typename AsPure<Element>::Value>(string).value));

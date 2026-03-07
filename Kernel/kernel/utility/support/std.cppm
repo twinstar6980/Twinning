@@ -16,7 +16,7 @@ export {
 
 	template <>
 	struct std::hash<Twinning::Kernel::ConstantStringView> {
-		auto operator () (
+		auto operator ()(
 			Twinning::Kernel::ConstantStringView const & it
 		) const noexcept -> std::size_t {
 			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
@@ -25,7 +25,7 @@ export {
 
 	template <>
 	struct std::hash<Twinning::Kernel::VariableStringView> {
-		auto operator () (
+		auto operator ()(
 			Twinning::Kernel::VariableStringView const & it
 		) const noexcept -> std::size_t {
 			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
@@ -34,7 +34,7 @@ export {
 
 	template <>
 	struct std::hash<Twinning::Kernel::String> {
-		auto operator () (
+		auto operator ()(
 			Twinning::Kernel::String const & it
 		) const noexcept -> std::size_t {
 			return std::hash<std::string_view>{}(Twinning::Kernel::make_std_string_view(it));
@@ -50,7 +50,7 @@ export {
 		std::formatter<std::string_view> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
-		auto format (
+		auto format(
 			Twinning::Kernel::ConstantStringView const & value,
 			Context &                                    context
 		) const -> typename Context::iterator {
@@ -63,7 +63,7 @@ export {
 		std::formatter<std::string_view> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
-		auto format (
+		auto format(
 			Twinning::Kernel::VariableStringView const & value,
 			Context &                                    context
 		) const -> typename Context::iterator {
@@ -76,7 +76,7 @@ export {
 		std::formatter<std::string_view> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
-		auto format (
+		auto format(
 			Twinning::Kernel::String const & value,
 			Context &                        context
 		) const -> typename Context::iterator {
@@ -91,7 +91,7 @@ export {
 		std::formatter<Twinning::Kernel::String> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
-		auto format (
+		auto format(
 			Twinning::Kernel::Storage::Path const & value,
 			Context &                               context
 		) const -> typename Context::iterator {
@@ -109,7 +109,7 @@ export {
 		std::formatter<typename TType::Value> {
 		template <typename Context> requires
 			Twinning::Kernel::NoneConstraint
-		auto format (
+		auto format(
 			TType const & value,
 			Context &     context
 		) const -> typename Context::iterator {

@@ -56,7 +56,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 		inline static constexpr auto package_version = ResourceStreamBundle::Version{.number = 4_i, .extended_texture_information_for_pvz2cn = 0_i};
 
-		inline static auto read_package_information_structure (
+		inline static auto read_package_information_structure(
 			InputByteStreamView &                                           data,
 			ResourceStreamBundle::Structure::Information<package_version> & information_structure
 		) -> Void {
@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 		inline static constexpr auto packet_version = ResourceStreamGroup::Version{.number = 4_i};
 
-		inline static auto compress_packet (
+		inline static auto compress_packet(
 			InputByteStreamView &  raw,
 			OutputByteStreamView & ripe
 		) -> ResourceStreamGroup::Structure::Information<packet_version> {
@@ -142,7 +142,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			return information_structure;
 		}
 
-		inline static auto uncompress_packet (
+		inline static auto uncompress_packet(
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw
 		) -> ResourceStreamGroup::Structure::Information<packet_version> {
@@ -194,7 +194,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
 		// ----------------
 
-		inline static auto indexing_subgroup_information_by_identifier (
+		inline static auto indexing_subgroup_information_by_identifier(
 			List<ResourceStreamBundle::Structure::SubgroupInformation<package_version>> const & list
 		) -> Map<String, Size> {
 			auto index_map = Map<String, Size>{};

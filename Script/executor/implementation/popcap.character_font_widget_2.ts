@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CharacterFontWidget2 {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
+						automatic: (argument: {definition_file: string}) => (argument.definition_file.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
 						condition: null,
 					}),
 					typical_argument_size({
@@ -44,12 +44,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CharacterFontWidget2 {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
+						automatic: (argument: {definition_file: string}) => (argument.definition_file + '.encode'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.cfw2\.json)?$/i, '.cfw2')),
 					}),
 				],
-				worker: ({ definition_file, data_file, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
+				worker: ({definition_file, data_file, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -72,7 +72,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CharacterFontWidget2 {
 						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.cfw2)?$/i, '.cfw2.json')),
+						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.cfw2)?$/i, '.cfw2.json')),
 						condition: null,
 					}),
 				],
@@ -89,12 +89,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CharacterFontWidget2 {
 						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
+						automatic: (argument: {data_file: string}) => (argument.data_file + '.decode'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.cfw2)?$/i, '.cfw2.json')),
 					}),
 				],
-				worker: ({ data_file, definition_file }, temporary: {}) => {
+				worker: ({data_file, definition_file}, temporary: {}) => {
 					KernelX.Tool.Popcap.CharacterFontWidget2.decode_fs(data_file, definition_file, {});
 					return;
 				},

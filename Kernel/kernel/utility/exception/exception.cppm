@@ -22,12 +22,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~Exception (
+		~Exception(
 		) = default;
 
 		// ----------------
 
-		Exception (
+		Exception(
 		) :
 			m_title{},
 			m_description{},
@@ -35,17 +35,17 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		Exception (
+		Exception(
 			Exception const & that
 		) = default;
 
-		Exception (
+		Exception(
 			Exception && that
 		) = default;
 
 		// ----------------
 
-		explicit Exception (
+		explicit Exception(
 			std::string const &              title,
 			std::vector<std::string> const & description,
 			std::source_location const &     location = std::source_location::current()
@@ -60,11 +60,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Exception const & that
 		) -> Exception & = default;
 
-		auto operator = (
+		auto operator =(
 			Exception && that
 		) -> Exception & = default;
 
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region what
 
-		auto what (
+		auto what(
 		) const -> std::string {
 			auto message = std::string{};
 			{

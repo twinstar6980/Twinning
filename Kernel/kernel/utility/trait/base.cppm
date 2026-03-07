@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		NoneConstraint
-	inline constexpr auto declare (
+	inline constexpr auto declare(
 	) -> It {
 		throw UnreachableException{};
 	}

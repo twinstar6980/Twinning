@@ -28,32 +28,32 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.RemoteProject {
 						option: Support.Pvz2.RemoteProject.TargetE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { action: string; }) => (['clear', 'pull', 'push'].includes(argument.action) ? null : ''),
+						condition: (argument: {action: string}) => (['clear', 'pull', 'push'].includes(argument.action) ? null : ''),
 					}),
 					typical_argument_integer({
 						identifier: 'rton_version_number',
 						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { action: string; target: string; }) => (['pull', 'push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : 0n),
+						condition: (argument: {action: string, target: string}) => (['pull', 'push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : 0n),
 					}),
 					typical_argument_boolean({
 						identifier: 'rton_version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
-						condition: (argument: { action: string; target: string; }) => (['pull', 'push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : false),
+						condition: (argument: {action: string, target: string}) => (['pull', 'push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : false),
 					}),
 					typical_argument_size({
 						identifier: 'rton_encode_buffer_size',
 						option: null,
 						checker: null,
 						automatic: null,
-						condition: (argument: { action: string; target: string; }) => (['push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : 0n),
+						condition: (argument: {action: string, target: string}) => (['push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : 0n),
 					}),
 				],
 				batch: null,
-				worker: ({ project_directory, action, target, rton_version_number, rton_version_native_string_encoding_use_utf8, rton_encode_buffer_size }, temporary: {}) => {
-					Support.Pvz2.RemoteProject.execute(project_directory, action as any, target === '' ? null : target as any, { number: rton_version_number as any, native_string_encoding_use_utf8: rton_version_native_string_encoding_use_utf8 }, rton_encode_buffer_size);
+				worker: ({project_directory, action, target, rton_version_number, rton_version_native_string_encoding_use_utf8, rton_encode_buffer_size}, temporary: {}) => {
+					Support.Pvz2.RemoteProject.execute(project_directory, action as any, target === '' ? null : target as any, {number: rton_version_number as any, native_string_encoding_use_utf8: rton_version_native_string_encoding_use_utf8}, rton_encode_buffer_size);
 					return;
 				},
 			}),

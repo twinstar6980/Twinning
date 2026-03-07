@@ -15,7 +15,7 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region function
 
-		inline static auto launch (
+		inline static auto launch(
 			Client &                         client,
 			Library &                        library,
 			std::string const &              script,
@@ -29,7 +29,7 @@ export namespace Twinning::Shell::Bridge {
 			#endif
 			{
 				auto executor_callback = ExecutorProxy{};
-				executor_callback.value = [&client] (auto & callback_proxy, auto & argument_proxy, auto & result_proxy) -> auto {
+				executor_callback.value = [&client](auto & callback_proxy, auto & argument_proxy, auto & result_proxy) -> auto {
 					result_proxy.value = client.callback(argument_proxy.value);
 					return;
 				};

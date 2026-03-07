@@ -32,12 +32,12 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region constructor
 
-		~Path (
+		~Path(
 		) = default;
 
 		// ----------------
 
-		Path (
+		Path(
 		) :
 			m_root{},
 			m_absolute{},
@@ -45,17 +45,17 @@ export namespace Twinning::Kernel::Storage {
 			return;
 		}
 
-		Path (
+		Path(
 			Path const & that
 		) = default;
 
-		Path (
+		Path(
 			Path && that
 		) = default;
 
 		// ----------------
 
-		explicit Path (
+		explicit Path(
 			String const & path
 		) :
 			Path{} {
@@ -67,17 +67,17 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Path const & that
 		) -> Path & = default;
 
-		auto operator = (
+		auto operator =(
 			Path && that
 		) -> Path & = default;
 
 		// ----------------
 
-		auto operator / (
+		auto operator /(
 			String const & that
 		) const -> Path {
 			auto result = Path{};
@@ -89,7 +89,7 @@ export namespace Twinning::Kernel::Storage {
 			return result;
 		}
 
-		auto operator / (
+		auto operator /(
 			String && that
 		) const -> Path {
 			auto result = Path{};
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Storage {
 
 		// ----------------
 
-		auto operator / (
+		auto operator /(
 			Path const & that
 		) const -> Path {
 			assert_test(!that.m_root.has() && !that.m_absolute);
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Storage {
 			return result;
 		}
 
-		auto operator / (
+		auto operator /(
 			Path && that
 		) const -> Path {
 			assert_test(!that.m_root.has() && !that.m_absolute);
@@ -131,14 +131,14 @@ export namespace Twinning::Kernel::Storage {
 
 		// ----------------
 
-		auto operator /= (
+		auto operator /=(
 			String const & that
 		) -> Path & {
 			thiz.m_relative.append(that);
 			return thiz;
 		}
 
-		auto operator /= (
+		auto operator /=(
 			String && that
 		) -> Path & {
 			thiz.m_relative.append(as_moveable(that));
@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Storage {
 
 		// ----------------
 
-		auto operator /= (
+		auto operator /=(
 			Path const & that
 		) -> Path & {
 			assert_test(!that.m_root.has() && !that.m_absolute);
@@ -155,7 +155,7 @@ export namespace Twinning::Kernel::Storage {
 			return thiz;
 		}
 
-		auto operator /= (
+		auto operator /=(
 			Path && that
 		) -> Path & {
 			assert_test(!that.m_root.has() && !that.m_absolute);
@@ -167,36 +167,36 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region value
 
-		auto root (
+		auto root(
 		) -> Optional<String> & {
 			return thiz.m_root;
 		}
 
-		auto root (
+		auto root(
 		) const -> Optional<String> const & {
 			return thiz.m_root;
 		}
 
 		// ----------------
 
-		auto absolute (
+		auto absolute(
 		) -> Boolean & {
 			return thiz.m_absolute;
 		}
 
-		auto absolute (
+		auto absolute(
 		) const -> Boolean const & {
 			return thiz.m_absolute;
 		}
 
 		// ----------------
 
-		auto relative (
+		auto relative(
 		) -> List<String> & {
 			return thiz.m_relative;
 		}
 
-		auto relative (
+		auto relative(
 		) const -> List<String> const & {
 			return thiz.m_relative;
 		}
@@ -205,7 +205,7 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region split
 
-		auto parent (
+		auto parent(
 		) const -> Path {
 			assert_test(!thiz.m_relative.empty());
 			auto result = Path{};
@@ -215,7 +215,7 @@ export namespace Twinning::Kernel::Storage {
 			return result;
 		}
 
-		auto name (
+		auto name(
 		) const -> String {
 			assert_test(!thiz.m_relative.empty());
 			return thiz.m_relative.last();
@@ -225,7 +225,7 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region string convert
 
-		auto from_string (
+		auto from_string(
 			String const & path
 		) -> Void {
 			thiz.m_root.reset();
@@ -244,7 +244,7 @@ export namespace Twinning::Kernel::Storage {
 			return;
 		}
 
-		auto to_string (
+		auto to_string(
 			Character const & separator = CharacterType::k_path_separator_generic
 		) const -> String {
 			auto result = String{};
@@ -264,7 +264,7 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region operator
 
-		inline friend auto operator == (
+		inline friend auto operator ==(
 			Path const & thix,
 			Path const & that
 		) -> bool = default;

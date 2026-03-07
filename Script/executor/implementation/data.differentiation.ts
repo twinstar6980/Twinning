@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Differentiation {
 						identifier: 'patch_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { after_file: string; }) => (argument.after_file.replace(/()?$/i, '.patch.bin')),
+						automatic: (argument: {after_file: string}) => (argument.after_file.replace(/()?$/i, '.patch.bin')),
 						condition: null,
 					}),
 					typical_argument_path({
@@ -39,7 +39,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Differentiation {
 					}),
 				],
 				batch: null,
-				worker: ({ after_file, patch_file, before_file, buffer_size }, temporary: {}) => {
+				worker: ({after_file, patch_file, before_file, buffer_size}, temporary: {}) => {
 					KernelX.Tool.Data.Differentiation.Vcdiff.encode_fs(before_file, after_file, patch_file, false, buffer_size);
 					return;
 				},
@@ -59,7 +59,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Differentiation {
 						identifier: 'after_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { patch_file: string; }) => (argument.patch_file.replace(/()?$/i, '.after.bin')),
+						automatic: (argument: {patch_file: string}) => (argument.patch_file.replace(/()?$/i, '.after.bin')),
 						condition: null,
 					}),
 					typical_argument_path({
@@ -78,7 +78,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Differentiation {
 					}),
 				],
 				batch: null,
-				worker: ({ patch_file, after_file, before_file, buffer_size }, temporary: {}) => {
+				worker: ({patch_file, after_file, before_file, buffer_size}, temporary: {}) => {
 					KernelX.Tool.Data.Differentiation.Vcdiff.decode_fs(before_file, after_file, patch_file, 0x7FFFFFFFn, buffer_size);
 					return;
 				},

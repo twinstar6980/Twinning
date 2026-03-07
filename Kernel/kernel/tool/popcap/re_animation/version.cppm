@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 	// ----------------
 
-	inline constexpr auto check_version (
+	inline constexpr auto check_version(
 		Version const &                                it,
 		std::initializer_list<VersionPlatform> const & platform,
 		std::initializer_list<Boolean::Value> const &  variant_64

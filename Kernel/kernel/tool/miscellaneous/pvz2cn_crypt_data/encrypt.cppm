@@ -17,7 +17,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  plain,
 			OutputByteStreamView & cipher,
 			String const &         key
@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 
 		// ----------------
 
-		inline static auto estimate_whole (
+		inline static auto estimate_whole(
 			Size const & plain_size,
 			Size &       cipher_size
 		) -> Void {
@@ -56,7 +56,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  plain_,
 			OutputByteStreamView & cipher_,
 			String const &         key
@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			return process_whole(plain, cipher, key);
 		}
 
-		inline static auto estimate (
+		inline static auto estimate(
 			Size const & plain_size,
 			Size &       cipher_size
 		) -> Void {

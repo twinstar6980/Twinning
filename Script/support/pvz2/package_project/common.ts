@@ -237,20 +237,20 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 
 	// #region conversion
 
-	export function find_conversion_setting<Type extends keyof ConversionSetting>(
+	export function find_conversion_setting<TType extends keyof ConversionSetting>(
 		list: ConversionSetting,
-		type: Type,
+		type: TType,
 		name: string,
-	): null | ConversionSetting[Type][number] {
+	): null | ConversionSetting[TType][number] {
 		let result = list[type].find((value) => (value.name === name));
 		return result === undefined ? null : result;
 	}
 
-	export function find_conversion_setting_strict<Type extends keyof ConversionSetting>(
+	export function find_conversion_setting_strict<TType extends keyof ConversionSetting>(
 		list: ConversionSetting,
-		type: Type,
+		type: TType,
 		name: string,
-	): ConversionSetting[Type][number] {
+	): ConversionSetting[TType][number] {
 		let result = find_conversion_setting(list, type, name);
 		if (result === null) {
 			throw new Error(`could not find conversion setting of type '${type}' by name '${name}'`);

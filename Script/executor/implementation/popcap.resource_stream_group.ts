@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamGroup {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.rsg\.bundle)?$/i, '.rsg')),
+						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory.replace(/(\.rsg\.bundle)?$/i, '.rsg')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -51,18 +51,18 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamGroup {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
+						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory + '.pack'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsg\.bundle)?$/i, '.rsg')),
 					}),
 				],
-				worker: ({ bundle_directory, data_file, version_number, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
+				worker: ({bundle_directory, data_file, version_number, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.Popcap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, { number: version_number as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ResourceStreamGroup.pack_fs(data_file, definition_file, resource_directory, {number: version_number as any}, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -81,7 +81,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamGroup {
 						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rsg)?$/i, '.rsg.bundle')),
+						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.rsg)?$/i, '.rsg.bundle')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -105,15 +105,15 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamGroup {
 						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
+						automatic: (argument: {data_file: string}) => (argument.data_file + '.unpack'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsg)?$/i, '.rsg.bundle')),
 					}),
 				],
-				worker: ({ data_file, bundle_directory, version_number }, temporary: {}) => {
+				worker: ({data_file, bundle_directory, version_number}, temporary: {}) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.Popcap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, { number: version_number as any });
+					KernelX.Tool.Popcap.ResourceStreamGroup.unpack_fs(data_file, definition_file, resource_directory, {number: version_number as any});
 					return;
 				},
 			}),

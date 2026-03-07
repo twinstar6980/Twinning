@@ -23,22 +23,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~Any (
+		~Any(
 		) = default;
 
 		// ----------------
 
-		Any (
+		Any(
 		) :
 			m_value{} {
 			return;
 		}
 
-		Any (
+		Any(
 			Any const & that
 		) = default;
 
-		Any (
+		Any(
 			Any && that
 		) = default;
 
@@ -46,11 +46,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Any const & that
 		) -> Any & = default;
 
-		auto operator = (
+		auto operator =(
 			Any && that
 		) -> Any & = default;
 
@@ -58,21 +58,21 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		auto has (
+		auto has(
 		) const -> Boolean {
 			return mbox<Boolean>(thiz.m_value.has_value());
 		}
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
-		auto is (
+		auto is(
 		) const -> Boolean {
 			return mbox<Boolean>(thiz.m_value.type() == typeid(ValueObject));
 		}
 
 		// ----------------
 
-		auto reset (
+		auto reset(
 		) -> Void {
 			thiz.m_value.reset();
 			return;
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject, typename ... Argument> requires
 			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument ...>>
 			&& (IsConstructible<ValueObject, Argument && ...>)
-		auto set (
+		auto set(
 			Argument && ... argument
 		) -> ValueObject & {
 			thiz.m_value.emplace<ValueObject>(as_forward<Argument>(argument) ...);
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel {
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
-		auto get (
+		auto get(
 		) -> ValueObject & {
 			assert_test(thiz.is<ValueObject>());
 			return *std::any_cast<ValueObject>(&thiz.m_value);
@@ -100,7 +100,7 @@ export namespace Twinning::Kernel {
 
 		template <typename ValueObject> requires
 			CategoryConstraint<IsPureInstance<ValueObject>>
-		auto get (
+		auto get(
 		) const -> ValueObject const & {
 			assert_test(thiz.is<ValueObject>());
 			return *std::any_cast<ValueObject>(&thiz.m_value);
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Value, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
-	inline auto make_any (
+	inline auto make_any(
 		Argument && ... argument
 	) -> Any {
 		auto result = Any{};
@@ -126,7 +126,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		CategoryConstraint<IsValid<Value>>
-	inline auto make_any_of (
+	inline auto make_any_of(
 		Value && value
 	) -> Any {
 		return make_any<AsPure<Value>>(as_forward<Value>(value));

@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputCharacterStreamView & ripe,
 			OutputByteStreamView &     raw
 		) -> Void {
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 		// ----------------
 
-		inline static auto estimate_whole (
+		inline static auto estimate_whole(
 			ConstantCharacterListView const & ripe,
 			Size &                            raw_size
 		) -> Void {
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputCharacterStreamView & ripe_,
 			OutputByteStreamView &     raw_
 		) -> Void {
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 			return process_whole(ripe, raw);
 		}
 
-		inline static auto estimate (
+		inline static auto estimate(
 			ConstantCharacterListView const & ripe,
 			Size &                            raw_size
 		) -> Void {

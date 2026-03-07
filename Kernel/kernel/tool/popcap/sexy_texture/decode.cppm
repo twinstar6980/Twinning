@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image
 		) -> Void {
@@ -128,7 +128,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 		// ----------------
 
-		inline static auto estimate_image (
+		inline static auto estimate_image(
 			ConstantByteListView const & data,
 			Image::ImageSize &           image_size
 		) -> Void {
@@ -143,7 +143,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &            data_,
 			Image::VariableImageView const & image
 		) -> Void {
@@ -151,7 +151,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			return process_image(data, image);
 		}
 
-		inline static auto estimate (
+		inline static auto estimate(
 			ConstantByteListView const & data,
 			Image::ImageSize &           image_size
 		) -> Void {

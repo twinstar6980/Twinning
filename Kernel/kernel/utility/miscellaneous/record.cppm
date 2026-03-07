@@ -15,7 +15,7 @@ export namespace Twinning::Kernel {
 
 	struct Record {
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Record const & thix,
 			Record const & that
 		) -> bool = default;
@@ -27,7 +27,7 @@ export namespace Twinning::Kernel {
 	struct DataRecord :
 		Record {
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			DataRecord const & thix,
 			DataRecord const & that
 		) -> bool = default;
@@ -37,7 +37,7 @@ export namespace Twinning::Kernel {
 	struct ListRecord :
 		Record {
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			ListRecord const & thix,
 			ListRecord const & that
 		) -> bool = default;
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel {
 	struct MapRecord :
 		Record {
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			MapRecord const & thix,
 			MapRecord const & that
 		) -> bool = default;
@@ -62,7 +62,7 @@ export namespace Twinning::Kernel {
 	struct ListRecordVariant :
 		Variant<TValue ...> {
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			ListRecordVariant const & thix,
 			ListRecordVariant const & that
 		) -> bool = default;
@@ -75,7 +75,7 @@ export namespace Twinning::Kernel {
 	struct MapRecordVariant :
 		Variant<TValue ...> {
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			MapRecordVariant const & thix,
 			MapRecordVariant const & that
 		) -> bool = default;

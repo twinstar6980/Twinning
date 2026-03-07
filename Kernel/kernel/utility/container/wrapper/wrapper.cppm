@@ -27,22 +27,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~Wrapper (
+		constexpr ~Wrapper(
 		) = default;
 
 		// ----------------
 
-		constexpr Wrapper (
+		constexpr Wrapper(
 		) :
 			m_value{} {
 			return;
 		}
 
-		constexpr Wrapper (
+		constexpr Wrapper(
 			Wrapper const & that
 		) = default;
 
-		constexpr Wrapper (
+		constexpr Wrapper(
 			Wrapper && that
 		) = default;
 
@@ -51,7 +51,7 @@ export namespace Twinning::Kernel {
 		template <typename ValueObject> requires
 			CategoryConstraint<IsValid<ValueObject>>
 			&& (IsSame<AsPure<ValueObject>, Value>)
-		explicit constexpr Wrapper (
+		explicit constexpr Wrapper(
 			ValueObject && value
 		) :
 			m_value{as_forward<ValueObject>(value)} {
@@ -62,11 +62,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Wrapper const & that
 		) -> Wrapper & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Wrapper && that
 		) -> Wrapper & = default;
 
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel {
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
 			&& (IsConstructible<Value, Argument && ...>)
-		constexpr auto set (
+		constexpr auto set(
 			Argument && ... argument
 		) -> Value & {
 			restruct(thiz.m_value, as_forward<Argument>(argument) ...);
@@ -86,12 +86,12 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto get (
+		constexpr auto get(
 		) -> Value & {
 			return thiz.m_value;
 		}
 
-		constexpr auto get (
+		constexpr auto get(
 		) const -> Value const & {
 			return thiz.m_value;
 		}
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Wrapper const & thix,
 			Wrapper const & that
 		) -> bool = default;
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Value, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
-	inline constexpr auto make_wrapper (
+	inline constexpr auto make_wrapper(
 		Argument && ... argument
 	) -> Wrapper<Value> {
 		auto result = Wrapper<Value>{};
@@ -127,7 +127,7 @@ export namespace Twinning::Kernel {
 
 	template <typename Value> requires
 		CategoryConstraint<IsValid<Value>>
-	inline constexpr auto make_wrapper_of (
+	inline constexpr auto make_wrapper_of(
 		Value && value
 	) -> Wrapper<AsPure<Value>> {
 		return Wrapper<AsPure<Value>>{as_forward<Value>(value)};

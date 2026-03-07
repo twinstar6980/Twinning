@@ -9,7 +9,7 @@ using Twinning::AssistantPlus::Forwarder::ForwarderExplorerCommandClassFactory;
 
 #pragma region main
 
-STDAPI_(BOOL) DllMain (
+STDAPI_(BOOL) DllMain(
 	HINSTANCE hinstDLL,
 	DWORD     fdwReason,
 	LPVOID    lpvReserved
@@ -17,7 +17,7 @@ STDAPI_(BOOL) DllMain (
 	return TRUE;
 }
 
-STDAPI DllCanUnloadNow (
+STDAPI DllCanUnloadNow(
 ) {
 	if (winrt::get_module_lock()) {
 		return S_FALSE;
@@ -26,7 +26,7 @@ STDAPI DllCanUnloadNow (
 	return S_OK;
 }
 
-STDAPI DllGetClassObject (
+STDAPI DllGetClassObject(
 	REFCLSID     rclsid,
 	REFIID       riid,
 	LPVOID FAR * ppv

@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto from (
+		inline static auto from(
 			This &  thix,
 			That && that
 		) -> Void {
@@ -53,7 +53,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -76,7 +76,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -84,7 +84,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto from (
+		inline static auto from(
 			This &  thix,
 			That && that
 		) -> Void {
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -123,7 +123,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -142,7 +142,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -150,7 +150,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -171,7 +171,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -179,7 +179,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -200,7 +200,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -208,7 +208,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -229,7 +229,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -237,7 +237,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -262,7 +262,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -270,7 +270,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -294,7 +294,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -302,7 +302,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -324,7 +324,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -337,7 +337,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -364,28 +364,28 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that,
 			Size const & variant_index
 		) -> Void {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix.from(that.template get_of_index<mbox<Size>(index)>());
 				}
 			);
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that,
 			Size const & variant_index
 		) -> Void {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix.to(that.template set_of_index<mbox<Size>(index)>());
 				}
 			);
@@ -394,7 +394,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -406,7 +406,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -430,7 +430,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &               thix,
 			That const &         that,
 			TEnumeration const & variant_type
@@ -438,14 +438,14 @@ export namespace Twinning::Kernel::Json {
 			auto variant_index = cbox<Size>(variant_type);
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix.from(that.template get_of_index<mbox<Size>(index)>());
 				}
 			);
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const &         thix,
 			That &               that,
 			TEnumeration const & variant_type
@@ -453,7 +453,7 @@ export namespace Twinning::Kernel::Json {
 			auto variant_index = cbox<Size>(variant_type);
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix.to(that.template set_of_index<mbox<Size>(index)>());
 				}
 			);
@@ -462,7 +462,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -474,7 +474,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -500,28 +500,28 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
 			auto & thix_array = thix.set_array();
 			thix_array.allocate_full(mbox<Size>(sizeof...(TValue)));
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix_array.at(mbox<Size>(index)).from(that.template get<mbox<Size>(index)>());
 				}
 			);
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
 			assert_test(thix_array.size() == mbox<Size>(sizeof...(TValue)));
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix_array.at(mbox<Size>(index)).to(that.template set<mbox<Size>(index)>());
 				}
 			);
@@ -542,14 +542,14 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
 			auto & thix_array = thix.set_array();
 			thix_array.convert(
 				that,
-				[] (auto & thix_element, auto & that_element) -> auto {
+				[](auto & thix_element, auto & that_element) -> auto {
 					thix_element.from(that_element);
 					return;
 				}
@@ -557,14 +557,14 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
 			that.convert(
 				thix_array,
-				[] (auto & that_element, auto & thix_element) -> auto {
+				[](auto & that_element, auto & thix_element) -> auto {
 					thix_element.to(that_element);
 					return;
 				}
@@ -586,14 +586,14 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
 			auto & thix_object = thix.set_object();
 			thix_object.convert(
 				that,
-				[] (auto & thix_member, auto & that_member) -> auto {
+				[](auto & thix_member, auto & that_member) -> auto {
 					thix_member.key.from(that_member.key);
 					thix_member.value.from(that_member.value);
 					return;
@@ -602,14 +602,14 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
 			that.convert(
 				thix_object,
-				[] (auto & that_member, auto & thix_member) -> auto {
+				[](auto & that_member, auto & thix_member) -> auto {
 					thix_member.key.to(that_member.key);
 					thix_member.value.to(that_member.value);
 					return;
@@ -637,28 +637,28 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
 			auto & thix_array = thix.set_array();
 			thix_array.allocate_full(mbox<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					thix_array.at(mbox<Size>(index)).from(Field::value_of(that));
 				}
 			);
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			auto & thix_array = thix.get_array();
 			assert_test(thix_array.size() == mbox<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					thix_array.at(mbox<Size>(index)).to(Field::value_of(that));
 				}
 			);
@@ -680,14 +680,14 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
 			auto & thix_object = thix.set_object();
 			thix_object.allocate_full(mbox<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					thix_object.at(mbox<Size>(index)).key = make_string_view(Field::name.view());
 					thix_object.at(mbox<Size>(index)).value.from(Field::value_of(that));
 				}
@@ -695,14 +695,14 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			auto & thix_object = thix.get_object();
 			assert_test(thix_object.size() == mbox<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					assert_test(thix_object.at(mbox<Size>(index)).key == make_string_view(Field::name.view()));
 					thix_object.at(mbox<Size>(index)).value.to(Field::value_of(that));
 				}
@@ -724,7 +724,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -732,13 +732,13 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
 				thix.get_array().size().value,
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix.to(that.template set_of_index<mbox<Size>(index)>());
 				}
 			);
@@ -757,7 +757,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -765,13 +765,13 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
 				thix.get_object().size().value,
-				[&] <auto index> (ValuePackage<index>, auto) {
+				[&] <auto index>(ValuePackage<index>, auto) {
 					thix.to(that.template set_of_index<mbox<Size>(index)>());
 				}
 			);
@@ -793,7 +793,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -801,7 +801,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -822,7 +822,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -830,7 +830,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -854,7 +854,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -864,7 +864,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -886,7 +886,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -897,7 +897,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -920,7 +920,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -932,7 +932,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -956,7 +956,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -966,7 +966,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -988,7 +988,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -999,7 +999,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -1022,7 +1022,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -1034,7 +1034,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -1059,7 +1059,7 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -1067,7 +1067,7 @@ export namespace Twinning::Kernel::Json {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {

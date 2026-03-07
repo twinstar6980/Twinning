@@ -50,7 +50,7 @@ namespace Twinning.Script.Support.Pvz2.ResourceConvert {
 		resource_manifest: RegularResourceManifest.Package,
 		option: Option,
 	): void {
-		let find_item_by_identifier_ignore_case = <T extends { identifier: string }>(list: Array<T>, value: string): null | T => {
+		let find_item_by_identifier_ignore_case = <Item extends {identifier: string}>(list: Array<Item>, value: string): null | Item => {
 			let value_lower = value.toLowerCase();
 			for (let item of list) {
 				let item_value = item.identifier;
@@ -60,7 +60,7 @@ namespace Twinning.Script.Support.Pvz2.ResourceConvert {
 			}
 			return null;
 		};
-		let find_item_by_path_ignore_case = <T extends RegularResourceManifest.Resource>(list: Array<T>, value: string): null | T => {
+		let find_item_by_path_ignore_case = <Item extends RegularResourceManifest.Resource>(list: Array<Item>, value: string): null | Item => {
 			let value_lower = value.toLowerCase();
 			for (let item of list) {
 				if (item.additional.type === 'dummy') {
@@ -304,7 +304,7 @@ namespace Twinning.Script.Support.Pvz2.ResourceConvert {
 				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(
 					stream,
 					result as any,
-					Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }),
+					Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true}),
 				);
 				resource_manifest = result.value;
 			}

@@ -52,19 +52,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~MapView (
+		constexpr ~MapView(
 		) = default;
 
 		// ----------------
 
-		constexpr MapView (
+		constexpr MapView(
 		) = default;
 
-		constexpr MapView (
+		constexpr MapView(
 			MapView const & that
 		) = default;
 
-		constexpr MapView (
+		constexpr MapView(
 			MapView && that
 		) = default;
 
@@ -76,11 +76,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			MapView const & that
 		) -> MapView & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			MapView && that
 		) -> MapView & = default;
 
@@ -88,7 +88,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		constexpr auto operator [] (
+		constexpr auto operator [](
 			KeyObject const & key
 		) const -> QualifyValue & {
 			return thiz.query(key).value;
@@ -96,12 +96,12 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator ConstantView & () requires
+		implicit operator ConstantView &() requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator ConstantView const & () const requires
+		implicit operator ConstantView const &() const requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
@@ -110,12 +110,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region as list
 
-		auto as_list (
+		auto as_list(
 		) -> ListView & {
 			return self_cast<ListView>(thiz);
 		}
 
-		auto as_list (
+		auto as_list(
 		) const -> ListView const & {
 			return self_cast<ListView>(thiz);
 		}
@@ -174,12 +174,12 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		constexpr auto find_key (
+		constexpr auto find_key(
 			KeyObject const & key
 		) const -> Optional<Size> {
 			return Range::find_index_if(
 				thiz,
-				[&] (auto & element) -> auto {
+				[&](auto & element) -> auto {
 					return element.key == key;
 				}
 			);
@@ -187,7 +187,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		constexpr auto has_key (
+		constexpr auto has_key(
 			KeyObject const & key
 		) const -> Boolean {
 			return thiz.find_key(key).has();
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		constexpr auto query (
+		constexpr auto query(
 			KeyObject const & key
 		) const -> QualifyElement & {
 			auto index = thiz.find_key(key);
@@ -207,7 +207,7 @@ export namespace Twinning::Kernel {
 
 		template <typename KeyObject> requires
 			CategoryConstraint<IsPureInstance<KeyObject>>
-		constexpr auto query_if (
+		constexpr auto query_if(
 			KeyObject const & key
 		) const -> OptionalView<Element, constant> {
 			auto index = thiz.find_key(key);
@@ -218,7 +218,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		constexpr auto sub (
+		constexpr auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> MapView {
@@ -226,14 +226,14 @@ export namespace Twinning::Kernel {
 			return MapView{thiz.iterator(begin), size};
 		}
 
-		constexpr auto head (
+		constexpr auto head(
 			Size const & size
 		) const -> MapView {
 			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.begin_index(), size);
 		}
 
-		constexpr auto tail (
+		constexpr auto tail(
 			Size const & size
 		) const -> MapView {
 			assert_test(size <= thiz.size());
@@ -246,7 +246,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			MapView const & thix,
 			MapView const & that
 		) -> bool {

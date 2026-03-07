@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory.replace(/(\.rsb\.bundle)?$/i, '.rsb')),
+						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory.replace(/(\.rsb\.bundle)?$/i, '.rsb')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -35,7 +35,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_number: bigint; }) => ([4n].includes(argument.version_number) ? null : 0n),
+						condition: (argument: {version_number: bigint}) => ([4n].includes(argument.version_number) ? null : 0n),
 					}),
 					typical_argument_string({
 						identifier: 'layout_mode',
@@ -77,12 +77,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { bundle_directory: string; }) => (argument.bundle_directory + '.pack'),
+						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory + '.pack'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb\.bundle)?$/i, '.rsb')),
 					}),
 				],
-				worker: ({ bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, input_packet, output_new_packet, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
+				worker: ({bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, input_packet, output_new_packet, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
@@ -92,7 +92,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					let resource_directory = `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !input_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
 					let new_packet_file = !output_new_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					KernelX.Tool.Popcap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, new_packet_file, { number: version_number as any, extended_texture_information_for_pvz2cn: version_extended_texture_information_for_pvz2cn as any }, temporary.buffer.view());
+					KernelX.Tool.Popcap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, new_packet_file, {number: version_number as any, extended_texture_information_for_pvz2cn: version_extended_texture_information_for_pvz2cn as any}, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -111,7 +111,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rsb)?$/i, '.rsb.bundle')),
+						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.rsb)?$/i, '.rsb.bundle')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -126,7 +126,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_number: bigint; }) => ([4n].includes(argument.version_number) ? null : 0n),
+						condition: (argument: {version_number: bigint}) => ([4n].includes(argument.version_number) ? null : 0n),
 					}),
 					typical_argument_string({
 						identifier: 'layout_mode',
@@ -161,18 +161,18 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack'),
+						automatic: (argument: {data_file: string}) => (argument.data_file + '.unpack'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb)?$/i, '.rsb.bundle')),
 					}),
 				],
-				worker: ({ data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, output_resource, output_packet }, temporary: {}) => {
+				worker: ({data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, output_resource, output_packet}, temporary: {}) => {
 					let relative_path = Support.Popcap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = !output_resource ? null : `${bundle_directory}/${relative_path.resource_directory}`;
 					let packet_file = !output_packet ? null : `${bundle_directory}/${relative_path.packet_file}`;
-					KernelX.Tool.Popcap.ResourceStreamBundle.unpack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, { number: version_number as any, extended_texture_information_for_pvz2cn: version_extended_texture_information_for_pvz2cn as any });
+					KernelX.Tool.Popcap.ResourceStreamBundle.unpack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, {number: version_number as any, extended_texture_information_for_pvz2cn: version_extended_texture_information_for_pvz2cn as any});
 					return;
 				},
 			}),
@@ -191,7 +191,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.rsb)?$/i, '.rsb.bundle')),
+						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.rsb)?$/i, '.rsb.bundle')),
 						condition: null,
 					}),
 				],
@@ -208,12 +208,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.unpack_lenient'),
+						automatic: (argument: {data_file: string}) => (argument.data_file + '.unpack_lenient'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.rsb)?$/i, '.rsb.bundle')),
 					}),
 				],
-				worker: ({ data_file, bundle_directory }, temporary: {}) => {
+				worker: ({data_file, bundle_directory}, temporary: {}) => {
 					let definition_file = `${bundle_directory}/definition.json`;
 					let manifest_file = `${bundle_directory}/manifest.json`;
 					let resource_directory = `${bundle_directory}/resource`;
@@ -249,26 +249,26 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_rton: boolean; }) => (argument.option_rton ? null : 0n),
+						condition: (argument: {option_rton: boolean}) => (argument.option_rton ? null : 0n),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_rton_version_native_string_encoding_use_utf8',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_rton: boolean; }) => (argument.option_rton ? null : false),
+						condition: (argument: {option_rton: boolean}) => (argument.option_rton ? null : false),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_rton_crypt',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_rton: boolean; }) => (argument.option_rton ? null : false),
+						condition: (argument: {option_rton: boolean}) => (argument.option_rton ? null : false),
 					}),
 					typical_argument_string({
 						identifier: 'option_rton_crypt_key',
 						option: null,
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_rton: boolean; option_rton_crypt: boolean; }) => (argument.option_rton && argument.option_rton_crypt ? null : ''),
+						condition: (argument: {option_rton: boolean, option_rton_crypt: boolean}) => (argument.option_rton && argument.option_rton_crypt ? null : ''),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_ptx',
@@ -281,25 +281,25 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						option: Object.keys(MainScript.g_setting.executor_pvz2_resource_convert_ptx_format_map_list),
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : ''),
+						condition: (argument: {option_ptx: boolean}) => (argument.option_ptx ? null : ''),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_ptx_atlas',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : false),
+						condition: (argument: {option_ptx: boolean}) => (argument.option_ptx ? null : false),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_ptx_atlas_resize',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_ptx: boolean; option_ptx_atlas: boolean; }) => (argument.option_ptx && argument.option_ptx_atlas ? null : false),
+						condition: (argument: {option_ptx: boolean, option_ptx_atlas: boolean}) => (argument.option_ptx && argument.option_ptx_atlas ? null : false),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_ptx_sprite',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_ptx: boolean; }) => (argument.option_ptx ? null : false),
+						condition: (argument: {option_ptx: boolean}) => (argument.option_ptx ? null : false),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_pam',
@@ -312,19 +312,19 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						option: KernelX.Tool.Popcap.Animation.VersionNumberE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : 0n),
+						condition: (argument: {option_pam: boolean}) => (argument.option_pam ? null : 0n),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_pam_json',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : false),
+						condition: (argument: {option_pam: boolean}) => (argument.option_pam ? null : false),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_pam_flash',
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_pam: boolean; }) => (argument.option_pam ? null : false),
+						condition: (argument: {option_pam: boolean}) => (argument.option_pam ? null : false),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_bnk',
@@ -337,7 +337,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						option: KernelX.Tool.Wwise.SoundBank.VersionNumberE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { option_bnk: boolean; }) => (argument.option_bnk ? null : 0n),
+						condition: (argument: {option_bnk: boolean}) => (argument.option_bnk ? null : 0n),
 					}),
 					typical_argument_boolean({
 						identifier: 'option_wem',

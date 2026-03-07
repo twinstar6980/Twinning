@@ -43,19 +43,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~BasicByteListView (
+		constexpr ~BasicByteListView(
 		) = default;
 
 		// ----------------
 
-		constexpr BasicByteListView (
+		constexpr BasicByteListView(
 		) = default;
 
-		constexpr BasicByteListView (
+		constexpr BasicByteListView(
 			BasicByteListView const & that
 		) = default;
 
-		constexpr BasicByteListView (
+		constexpr BasicByteListView(
 			BasicByteListView && that
 		) = default;
 
@@ -67,22 +67,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BasicByteListView const & that
 		) -> BasicByteListView & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BasicByteListView && that
 		) -> BasicByteListView & = default;
 
 		// ----------------
 
-		implicit operator ConstantView & () requires
+		implicit operator ConstantView &() requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator ConstantView const & () const requires
+		implicit operator ConstantView const &() const requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		constexpr auto sub (
+		constexpr auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> BasicByteListView {
@@ -99,14 +99,14 @@ export namespace Twinning::Kernel {
 			return BasicByteListView{thiz.iterator(begin), size};
 		}
 
-		constexpr auto head (
+		constexpr auto head(
 			Size const & size
 		) const -> BasicByteListView {
 			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.begin_index(), size);
 		}
 
-		constexpr auto tail (
+		constexpr auto tail(
 			Size const & size
 		) const -> BasicByteListView {
 			assert_test(size <= thiz.size());
@@ -161,19 +161,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~BasicByteList (
+		~BasicByteList(
 		) = default;
 
 		// ----------------
 
-		BasicByteList (
+		BasicByteList(
 		) = default;
 
-		BasicByteList (
+		BasicByteList(
 			BasicByteList const & that
 		) = default;
 
-		BasicByteList (
+		BasicByteList(
 			BasicByteList && that
 		) = default;
 
@@ -185,17 +185,17 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			BasicByteList const & that
 		) -> BasicByteList & = default;
 
-		auto operator = (
+		auto operator =(
 			BasicByteList && that
 		) -> BasicByteList & = default;
 
 		// ----------------
 
-		auto operator = (
+		auto operator =(
 			ConstantView const & that
 		) -> BasicByteList & {
 			thiz.assign(that);
@@ -204,11 +204,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VariableView const & () {
+		implicit operator VariableView const &() {
 			return thiz.as_view();
 		}
 
-		implicit operator ConstantView const & () const {
+		implicit operator ConstantView const &() const {
 			return thiz.as_view();
 		}
 
@@ -216,24 +216,24 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		auto as_view (
+		auto as_view(
 		) -> VariableView const & {
 			return self_cast<VariableView>(thiz);
 		}
 
-		auto as_view (
+		auto as_view(
 		) const -> ConstantView const & {
 			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
-		auto view (
+		auto view(
 		) -> VariableView {
 			return thiz.as_view();
 		}
 
-		auto view (
+		auto view(
 		) const -> ConstantView {
 			return thiz.as_view();
 		}
@@ -242,20 +242,20 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().tail(size);
@@ -263,20 +263,20 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().tail(size);
@@ -320,19 +320,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~BasicByteArray (
+		~BasicByteArray(
 		) = default;
 
 		// ----------------
 
-		BasicByteArray (
+		BasicByteArray(
 		) = default;
 
-		BasicByteArray (
+		BasicByteArray(
 			BasicByteArray const & that
 		) = default;
 
-		BasicByteArray (
+		BasicByteArray(
 			BasicByteArray && that
 		) = default;
 
@@ -344,17 +344,17 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			BasicByteArray const & that
 		) -> BasicByteArray & = default;
 
-		auto operator = (
+		auto operator =(
 			BasicByteArray && that
 		) -> BasicByteArray & = default;
 
 		// ----------------
 
-		auto operator = (
+		auto operator =(
 			ConstantView const & that
 		) -> BasicByteArray & {
 			thiz.assign(that);
@@ -363,11 +363,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VariableView const & () {
+		implicit operator VariableView const &() {
 			return thiz.as_view();
 		}
 
-		implicit operator ConstantView const & () const {
+		implicit operator ConstantView const &() const {
 			return thiz.as_view();
 		}
 
@@ -375,24 +375,24 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		auto as_view (
+		auto as_view(
 		) -> VariableView const & {
 			return self_cast<VariableView>(thiz);
 		}
 
-		auto as_view (
+		auto as_view(
 		) const -> ConstantView const & {
 			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
-		auto view (
+		auto view(
 		) -> VariableView {
 			return thiz.as_view();
 		}
 
-		auto view (
+		auto view(
 		) const -> ConstantView {
 			return thiz.as_view();
 		}
@@ -401,20 +401,20 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) -> VariableView {
 			return thiz.as_view().tail(size);
@@ -422,20 +422,20 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().tail(size);
@@ -480,19 +480,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~BasicStaticByteArray (
+		constexpr ~BasicStaticByteArray(
 		) = default;
 
 		// ----------------
 
-		constexpr BasicStaticByteArray (
+		constexpr BasicStaticByteArray(
 		) = default;
 
-		constexpr BasicStaticByteArray (
+		constexpr BasicStaticByteArray(
 			BasicStaticByteArray const & that
 		) = default;
 
-		constexpr BasicStaticByteArray (
+		constexpr BasicStaticByteArray(
 			BasicStaticByteArray && that
 		) = default;
 
@@ -504,21 +504,21 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BasicStaticByteArray const & that
 		) -> BasicStaticByteArray & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BasicStaticByteArray && that
 		) -> BasicStaticByteArray & = default;
 
 		// ----------------
 
-		implicit operator VariableView const & () {
+		implicit operator VariableView const &() {
 			return thiz.as_view();
 		}
 
-		implicit operator ConstantView const & () const {
+		implicit operator ConstantView const &() const {
 			return thiz.as_view();
 		}
 
@@ -526,12 +526,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		constexpr auto view (
+		constexpr auto view(
 		) -> VariableView {
 			return VariableView{thiz.begin(), thiz.size()};
 		}
 
-		constexpr auto view (
+		constexpr auto view(
 		) const -> ConstantView {
 			return ConstantView{thiz.begin(), thiz.size()};
 		}

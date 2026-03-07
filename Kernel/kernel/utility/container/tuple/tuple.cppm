@@ -28,22 +28,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~Tuple (
+		constexpr ~Tuple(
 		) = default;
 
 		// ----------------
 
-		constexpr Tuple (
+		constexpr Tuple(
 		) :
 			m_value{} {
 			return;
 		}
 
-		constexpr Tuple (
+		constexpr Tuple(
 			Tuple const & that
 		) = default;
 
-		constexpr Tuple (
+		constexpr Tuple(
 			Tuple && that
 		) = default;
 
@@ -52,7 +52,7 @@ export namespace Twinning::Kernel {
 		template <typename ... ValueObject> requires
 			CategoryConstraint<IsValid<ValueObject ...>>
 			&& (IsSame<AsPure<ValueObject>, TValue> && ...)
-		explicit constexpr Tuple (
+		explicit constexpr Tuple(
 			ValueObject && ... value
 		) :
 			m_value{as_forward<ValueObject>(value) ...} {
@@ -63,11 +63,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Tuple const & that
 		) -> Tuple & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			Tuple && that
 		) -> Tuple & = default;
 
@@ -79,11 +79,11 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsValid<Argument ...>>
 			&& (sizeof...(Argument) == sizeof...(TValue))
 			&& (IsConstructible<TValue, Argument &&> && ...)
-		constexpr auto set (
+		constexpr auto set(
 			Argument && ... argument
 		) -> Void {
 			Generalization::each_with<>(
-				[&] <auto index, typename CurrentArgument> (ValuePackage<index>, CurrentArgument && current_argument) {
+				[&] <auto index, typename CurrentArgument>(ValuePackage<index>, CurrentArgument && current_argument) {
 					restruct(thiz.template get<mbox<Size>(index)>(), as_forward<CurrentArgument>(current_argument));
 				},
 				as_forward<Argument>(argument) ...
@@ -96,7 +96,7 @@ export namespace Twinning::Kernel {
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
 			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
-		constexpr auto set (
+		constexpr auto set(
 			Argument && ... argument
 		) -> AsSelect<index.value, TValue ...> & {
 			restruct(thiz.template get<index>(), as_forward<Argument>(argument) ...);
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
-		constexpr auto get (
+		constexpr auto get(
 		) -> AsSelect<index.value, TValue ...> & {
 			return std::get<index.value>(thiz.m_value);
 		}
@@ -118,7 +118,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<index, Size>)
 			&& (index.value < sizeof...(TValue))
-		constexpr auto get (
+		constexpr auto get(
 		) const -> AsSelect<index.value, TValue ...> const & {
 			return std::get<index.value>(thiz.m_value);
 		}
@@ -129,7 +129,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Tuple const & thix,
 			Tuple const & that
 		) -> bool = default;
@@ -144,7 +144,7 @@ export namespace Twinning::Kernel {
 
 	template <typename ... Value, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Value ...> && IsValid<Argument ...>>
-	inline constexpr auto make_tuple (
+	inline constexpr auto make_tuple(
 		Argument && ... argument
 	) -> Tuple<Value ...> {
 		auto result = Tuple<Value ...>{};
@@ -154,7 +154,7 @@ export namespace Twinning::Kernel {
 
 	template <typename ... Value> requires
 		CategoryConstraint<IsValid<Value ...>>
-	inline constexpr auto make_tuple_of (
+	inline constexpr auto make_tuple_of(
 		Value && ... value
 	) -> Tuple<AsPure<Value> ...> {
 		return Tuple<AsPure<Value> ...>{as_forward<Value>(value) ...};

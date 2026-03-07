@@ -17,21 +17,21 @@ export namespace Twinning::Kernel {
 
 	#pragma region padding
 
-	inline constexpr auto is_padded_size (
+	inline constexpr auto is_padded_size(
 		Size const & size,
 		Size const & unit
 	) -> Boolean {
 		return size % unit == k_none_size;
 	}
 
-	inline constexpr auto compute_padded_size (
+	inline constexpr auto compute_padded_size(
 		Size const & size,
 		Size const & unit
 	) -> Size {
 		return is_padded_size(size, unit) ? (size) : ((size / unit + 1_sz) * unit);
 	}
 
-	inline constexpr auto compute_padding_size (
+	inline constexpr auto compute_padding_size(
 		Size const & size,
 		Size const & unit
 	) -> Size {
@@ -43,7 +43,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline auto clip_bit (
+	inline auto clip_bit(
 		It const &   it,
 		Size const & begin,
 		Size const & size
@@ -53,7 +53,7 @@ export namespace Twinning::Kernel {
 
 	template <typename It> requires
 		CategoryConstraint<IsBaseBox<It>>
-	inline auto reverse_endian (
+	inline auto reverse_endian(
 		It const & it
 	) -> It {
 		if constexpr (k_type_size<It> == 1_sz) {
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel {
 	template <typename SourceElement, auto constant> requires
 		CategoryConstraint<IsPureInstance<SourceElement>>
 		&& (IsSameOf<constant, Boolean>)
-	inline auto to_byte_view (
+	inline auto to_byte_view(
 		ListView<SourceElement, constant> const & source
 	) -> ByteListView<constant> {
 		return ByteListView<constant>{cast_pointer<Byte>(source.begin()), source.size() * k_type_size<AsPure<SourceElement>>};
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel {
 	template <typename DestinationElement, template <typename, auto> typename DestinationView = ListView, auto constant> requires
 		CategoryConstraint<IsPureInstance<DestinationElement>>
 		&& (IsSameOf<constant, Boolean>)
-	inline auto from_byte_view (
+	inline auto from_byte_view(
 		ByteListView<constant> const & source
 	) -> DestinationView<DestinationElement, constant> {
 		assert_test(is_padded_size(source.size(), k_type_size<DestinationElement>));

@@ -30,7 +30,7 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 					}),
 				],
 				batch: null,
-				worker: ({ target_directory, disable_record_encryption, enable_debug_mode }, temporary: {}) => {
+				worker: ({target_directory, disable_record_encryption, enable_debug_mode}, temporary: {}) => {
 					Support.Kairosoft.Game.ModifyProgram.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
 					return;
 				},
@@ -55,7 +55,7 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 					}),
 				],
 				batch: null,
-				worker: ({ target_directory, key }, temporary: {}) => {
+				worker: ({target_directory, key}, temporary: {}) => {
 					let key_value = [] as Array<bigint>;
 					if (key.startsWith('d32:')) {
 						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4);

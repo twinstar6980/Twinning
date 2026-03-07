@@ -34,7 +34,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto from (
+		inline static auto from(
 			This &  thix,
 			That && that
 		) -> Void {
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -82,7 +82,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -113,7 +113,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -138,7 +138,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -146,7 +146,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -169,7 +169,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -177,7 +177,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -208,7 +208,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &          thix,
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
@@ -220,7 +220,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -241,7 +241,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &          thix,
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
@@ -253,7 +253,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -276,7 +276,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &          thix,
 			That const &    that,
 			Boolean const & disable_sign_when_positive = k_false
@@ -288,7 +288,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -319,13 +319,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
 			auto has_case = k_false;
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					if (!has_case) {
 						if (Field::value == that.value) {
 							thix = make_string(Field::name.view());
@@ -340,14 +340,14 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
 			auto has_case = k_false;
 			auto thix_hash = thix.hash().value;
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field> (ValuePackage<index>, TypePackage<Field>) {
+				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
 					if (!has_case) {
 						constexpr auto name_hash = hash_std_string_view(Field::name.view());
 						if (name_hash == thix_hash) {
@@ -378,7 +378,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -389,7 +389,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -414,7 +414,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -424,7 +424,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -450,7 +450,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -462,7 +462,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {
@@ -487,7 +487,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto from (
+		inline static auto from(
 			This &       thix,
 			That const & that
 		) -> Void {
@@ -495,7 +495,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto to (
+		inline static auto to(
 			This const & thix,
 			That &       that
 		) -> Void {

@@ -18,7 +18,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		template <auto format> requires
 			CategoryConstraint<>
 			&& (IsSameOf<format, Format>)
-		inline static auto process_pixel (
+		inline static auto process_pixel(
 			OutputByteStreamView & data,
 			Image::Pixel const &   pixel
 		) -> Void {
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		template <auto format> requires
 			CategoryConstraint<>
 			&& (IsSameOf<format, Format>)
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -149,14 +149,14 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			return;
 		}
 
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image,
 			Format const &                   format
 		) -> Void {
 			Generalization::match<FormatPackage>(
 				format,
-				[&] <auto index, auto format> (ValuePackage<index>, ValuePackage<format>) {
+				[&] <auto index, auto format>(ValuePackage<index>, ValuePackage<format>) {
 					process_image<format>(data, image);
 				}
 			);
@@ -165,7 +165,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &           data_,
 			Image::ConstantImageView const & image,
 			Format const &                   format

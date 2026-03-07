@@ -84,7 +84,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 										identifier: subgroup_name,
 										category: {
 											resolution: resource_state_item.category.resolution,
-											...(package_setting.version.number < 3n ? {} : { locale: resource_state_item.category.locale }),
+											...(package_setting.version.number < 3n ? {} : {locale: resource_state_item.category.locale}),
 										},
 										compression: package_setting.compression.filter.includes(group_state.identifier) ? package_compression_none : package_compression_default,
 										resource: [],
@@ -119,7 +119,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 					if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path') {
 						manifesr_resource_path += '.rton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, package_setting.manifest.type === 'external_rton_with_array_path');
-						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true });
+						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true});
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
 						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
 						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.stream_view());
@@ -140,7 +140,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 								identifier: manifest_group_name,
 								category: {
 									resolution: null,
-									...(package_setting.version.number < 3n ? {} : { locale: null }),
+									...(package_setting.version.number < 3n ? {} : {locale: null}),
 								},
 								compression: package_compression_none,
 								resource: [

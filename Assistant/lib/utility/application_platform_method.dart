@@ -19,9 +19,9 @@ class ApplicationPlatformMethod {
 
   ApplicationPlatformMethod._(
   ) :
-    _channel = null {
+    this._channel = null {
     if (SystemChecker.isAndroid || SystemChecker.isIphone) {
-      _channel = .new('${ApplicationInformation.identifier}.CustomMethodChannel');
+      this._channel = .new('${ApplicationInformation.identifier}.CustomMethodChannel');
     }
     return;
   }
@@ -36,11 +36,12 @@ class ApplicationPlatformMethod {
     String name,
   ) async {
     assertTest(SystemChecker.isAndroid || SystemChecker.isIphone);
-    var detail = await this._channel!.invokeMethod('pick_storage_item', <Object?, Object?>{
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('pick_storage_item', <Object?, Object?>{
       'type': type,
       'location': location,
       'name': name,
-    }) as Map<Object?, Object?>;
+    });
+    detail!;
     return (
       target: detail['target'] as String?,
     );
@@ -51,10 +52,11 @@ class ApplicationPlatformMethod {
     String placement,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMethod('copy_storage_file', <Object?, Object?>{
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('copy_storage_file', <Object?, Object?>{
       'source': source,
       'placement': placement,
-    }) as Map<Object?, Object?>;
+    });
+    detail!;
     return (
       destination: detail['destination'] as String,
     );
@@ -64,9 +66,10 @@ class ApplicationPlatformMethod {
     String mode,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMethod('check_external_storage_permission', <Object?, Object?>{
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_external_storage_permission', <Object?, Object?>{
       'mode': mode,
-    }) as Map<Object?, Object?>;
+    });
+    detail!;
     return (
       state: detail['state'] as Boolean,
     );
@@ -75,8 +78,9 @@ class ApplicationPlatformMethod {
   Future<({String path})> queryExternalStoragePath(
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMethod('query_external_storage_path', <Object?, Object?>{
-    }) as Map<Object?, Object?>;
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('query_external_storage_path', <Object?, Object?>{
+    });
+    detail!;
     return (
       path: detail['path'] as String,
     );

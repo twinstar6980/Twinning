@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {plain_file: string}) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -44,12 +44,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
+						automatic: (argument: {plain_file: string}) => (argument.plain_file + '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				worker: ({ plain_file, cipher_file, key }, temporary: {}) => {
+				worker: ({plain_file, cipher_file, key}, temporary: {}) => {
 					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(plain_file, cipher_file, ConvertHelper.make_string_to_byte_array(key));
 					return;
 				},
@@ -69,7 +69,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						identifier: 'cipher_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { plain_file: string; }) => (argument.plain_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {plain_file: string}) => (argument.plain_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -96,9 +96,9 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					typical_argument_string({
 						identifier: 'iv',
 						option: null,
-						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
+						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
 						automatic: null,
-						condition: (argument: { mode: string; }) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
+						condition: (argument: {mode: string}) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
 					}),
 				],
 				batch: [
@@ -114,12 +114,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						identifier: 'cipher_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { plain_file: string; }) => (argument.plain_file + '.encrypt'),
+						automatic: (argument: {plain_file: string}) => (argument.plain_file + '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				worker: ({ plain_file, cipher_file, mode, block_size, key, iv }, temporary: {}) => {
+				worker: ({plain_file, cipher_file, mode, block_size, key, iv}, temporary: {}) => {
 					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},
@@ -139,7 +139,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						identifier: 'plain_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {cipher_file: string}) => (argument.cipher_file.replace(/()?$/i, '.bin')),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -166,9 +166,9 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					typical_argument_string({
 						identifier: 'iv',
 						option: null,
-						checker: (argument: { block_size: bigint; }, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
+						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
 						automatic: null,
-						condition: (argument: { mode: string; }) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
+						condition: (argument: {mode: string}) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
 					}),
 				],
 				batch: [
@@ -184,12 +184,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						identifier: 'plain_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { cipher_file: string; }) => (argument.cipher_file + '.decrypt'),
+						automatic: (argument: {cipher_file: string}) => (argument.cipher_file + '.decrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
 					}),
 				],
-				worker: ({ cipher_file, plain_file, mode, block_size, key, iv }, temporary: {}) => {
+				worker: ({cipher_file, plain_file, mode, block_size, key, iv}, temporary: {}) => {
 					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},

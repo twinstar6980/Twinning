@@ -24,7 +24,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma region constructor
 
-		explicit ForwarderExplorerCommand (
+		explicit ForwarderExplorerCommand(
 		) :
 			winrt::implements<ForwarderExplorerCommand, IExplorerCommand>{} {
 			return;
@@ -34,7 +34,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma region implement IExplorerCommand
 
-		virtual IFACEMETHODIMP GetTitle (
+		virtual IFACEMETHODIMP GetTitle(
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszName
 		) override {
@@ -44,7 +44,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return S_OK;
 		}
 
-		virtual IFACEMETHODIMP GetIcon (
+		virtual IFACEMETHODIMP GetIcon(
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszIcon
 		) override {
@@ -54,7 +54,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return S_OK;
 		}
 
-		virtual IFACEMETHODIMP GetToolTip (
+		virtual IFACEMETHODIMP GetToolTip(
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszInfotip
 		) override {
@@ -62,14 +62,14 @@ export namespace Twinning::Assistant::Forwarder {
 			return E_NOTIMPL;
 		}
 
-		virtual IFACEMETHODIMP GetCanonicalName (
+		virtual IFACEMETHODIMP GetCanonicalName(
 			GUID * pguidCommandName
 		) override {
 			*pguidCommandName = GUID_NULL;
 			return E_NOTIMPL;
 		}
 
-		virtual IFACEMETHODIMP GetState (
+		virtual IFACEMETHODIMP GetState(
 			IShellItemArray * psiItemArray,
 			BOOL              fOkToBeSlow,
 			EXPCMDSTATE *     pCmdState
@@ -81,7 +81,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return S_OK;
 		}
 
-		virtual IFACEMETHODIMP Invoke (
+		virtual IFACEMETHODIMP Invoke(
 			IShellItemArray * psiItemArray,
 			IBindCtx *        pbc
 		) override {
@@ -116,14 +116,14 @@ export namespace Twinning::Assistant::Forwarder {
 			return S_OK;
 		}
 
-		virtual IFACEMETHODIMP GetFlags (
+		virtual IFACEMETHODIMP GetFlags(
 			EXPCMDFLAGS * pFlags
 		) override {
 			*pFlags = ECF_DEFAULT;
 			return S_OK;
 		}
 
-		virtual IFACEMETHODIMP EnumSubCommands (
+		virtual IFACEMETHODIMP EnumSubCommands(
 			IEnumExplorerCommand * * ppEnum
 		) override {
 			*ppEnum = nullptr;
@@ -136,22 +136,22 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma region utility
 
-		auto get_application_identifier (
+		auto get_application_identifier(
 		) -> std::wstring {
 			return std::wstring{winrt::Windows::ApplicationModel::Package::Current().Id().Name()};
 		}
 
-		auto get_application_name (
+		auto get_application_name(
 		) -> std::wstring {
 			return std::wstring{winrt::Windows::ApplicationModel::Package::Current().DisplayName()};
 		}
 
-		auto get_application_logo (
+		auto get_application_logo(
 		) -> std::wstring {
 			return std::format(L"{},0", thiz.get_library_file());
 		}
 
-		auto get_library_file (
+		auto get_library_file(
 		) -> std::wstring {
 			auto state_d = DWORD{};
 			auto handle = reinterpret_cast<HMODULE>(&__ImageBase);
@@ -170,7 +170,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return result;
 		}
 
-		auto get_state_file (
+		auto get_state_file(
 		) -> std::wstring {
 			auto state_h = DWORD{};
 			auto parent = std::wstring{};
@@ -184,7 +184,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		// ----------------
 
-		auto get_file_long_path (
+		auto get_file_long_path(
 			std::wstring const & source
 		) -> std::wstring {
 			auto state_d = DWORD{};
@@ -200,7 +200,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return destination;
 		}
 
-		auto encode_percent_string (
+		auto encode_percent_string(
 			std::wstring const & source
 		) -> std::wstring {
 			auto data = winrt::to_string(source);
@@ -227,7 +227,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return destination;
 		}
 
-		auto open_link (
+		auto open_link(
 			std::wstring const & link
 		) -> void {
 			auto state_hi = HINSTANCE{};
@@ -238,7 +238,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		// ----------------
 
-		auto show_exception (
+		auto show_exception(
 			std::exception_ptr const & exception
 		) -> void {
 			auto message = std::string{};
@@ -259,7 +259,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return;
 		}
 
-		auto forward_resource (
+		auto forward_resource(
 			std::vector<std::wstring> const & resource
 		) -> void {
 			auto command = std::vector<std::wstring>{};
@@ -270,7 +270,7 @@ export namespace Twinning::Assistant::Forwarder {
 				thiz.get_application_identifier(),
 				command
 				| std::views::transform(
-					[&] (auto & item) {
+					[&](auto & item) {
 						return std::format(L"command={}", thiz.encode_percent_string(item));
 					}
 				)
@@ -294,7 +294,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma region constructor
 
-		explicit ForwarderExplorerCommandClassFactory (
+		explicit ForwarderExplorerCommandClassFactory(
 		) :
 			winrt::implements<ForwarderExplorerCommandClassFactory, IClassFactory>{} {
 			return;
@@ -304,7 +304,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 		#pragma region implement IClassFactory
 
-		virtual IFACEMETHODIMP CreateInstance (
+		virtual IFACEMETHODIMP CreateInstance(
 			IUnknown * pUnkOuter,
 			REFIID     riid,
 			void * *   ppvObject
@@ -317,7 +317,7 @@ export namespace Twinning::Assistant::Forwarder {
 			}
 		}
 
-		virtual IFACEMETHODIMP LockServer (
+		virtual IFACEMETHODIMP LockServer(
 			BOOL fLock
 		) override {
 			if (fLock) {

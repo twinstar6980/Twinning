@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  cipher,
 			OutputByteStreamView & plain,
 			Size const &           limit,
@@ -48,7 +48,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 		// ----------------
 
-		inline static auto estimate_whole (
+		inline static auto estimate_whole(
 			ConstantByteListView const & cipher,
 			Size &                       plain_size,
 			Size const &                 limit
@@ -71,7 +71,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  cipher_,
 			OutputByteStreamView & plain_,
 			Size const &           limit,
@@ -82,7 +82,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 			return process_whole(cipher, plain, limit, key);
 		}
 
-		inline static auto estimate (
+		inline static auto estimate(
 			ConstantByteListView const & cipher,
 			Size &                       plain_size,
 			Size const &                 limit

@@ -38,7 +38,7 @@ export namespace Twinning::Kernel {
 
 	#pragma region literal
 
-	inline constexpr auto operator ""_e8 (
+	inline constexpr auto operator ""_e8(
 		ZLiteralInteger value
 	) -> Enumerated8 {
 		return mbox<Enumerated8>(value);
@@ -46,7 +46,7 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto operator ""_e (
+	inline constexpr auto operator ""_e(
 		ZLiteralInteger value
 	) -> Enumerated {
 		return mbox<Enumerated>(value);

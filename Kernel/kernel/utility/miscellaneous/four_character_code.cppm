@@ -26,7 +26,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			FourCharacterCode const & thix,
 			FourCharacterCode const & that
 		) -> bool = default;
@@ -37,7 +37,7 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	inline constexpr auto four_character_code_from_string (
+	inline constexpr auto four_character_code_from_string(
 		ConstantStringView const & string
 	) -> FourCharacterCode {
 		assert_test(string.size() == 4_sz);
@@ -51,7 +51,7 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto four_character_code_from_integer (
+	inline constexpr auto four_character_code_from_integer(
 		IntegerU32 const & integer
 	) -> FourCharacterCode {
 		auto data = FourCharacterCode{};
@@ -62,7 +62,7 @@ export namespace Twinning::Kernel {
 		return data;
 	}
 
-	inline constexpr auto four_character_code_to_integer (
+	inline constexpr auto four_character_code_to_integer(
 		FourCharacterCode const & data
 	) -> IntegerU32 {
 		auto integer = IntegerU32{};

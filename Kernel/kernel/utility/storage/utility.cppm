@@ -22,11 +22,11 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region declaration
 
-	inline auto exist_directory (
+	inline auto exist_directory(
 		Path const & target
 	) -> Boolean;
 
-	inline auto create_directory (
+	inline auto create_directory(
 		Path const & target
 	) -> Void;
 
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Storage {
 
 		#if defined M_system_windows
 
-		inline auto make_regular_path (
+		inline auto make_regular_path(
 			Path const & original
 		) -> Path {
 			auto result = original;
@@ -64,7 +64,7 @@ export namespace Twinning::Kernel::Storage {
 
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 
-		inline auto make_regular_path (
+		inline auto make_regular_path(
 			Path const & original
 		) -> Path const & {
 			return original;
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Storage {
 
 		// ----------------
 
-		inline auto make_std_path (
+		inline auto make_std_path(
 			Path const & value
 		) -> std::filesystem::path {
 			auto string = make_regular_path(value).to_string();
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::Storage {
 
 		// ----------------
 
-		inline auto get_type (
+		inline auto get_type(
 			std::filesystem::file_type const & type
 		) -> ObjectType {
 			auto result = ObjectType{};
@@ -127,7 +127,7 @@ export namespace Twinning::Kernel::Storage {
 			return result;
 		}
 
-		inline auto get_type (
+		inline auto get_type(
 			Path const & target
 		) -> ObjectType {
 			auto status = std::filesystem::status(make_std_path(target));
@@ -148,7 +148,7 @@ export namespace Twinning::Kernel::Storage {
 
 			#pragma region constructor
 
-			explicit FileHandler (
+			explicit FileHandler(
 				Pointer<std::FILE> const & value
 			) :
 				m_value{value} {
@@ -161,7 +161,7 @@ export namespace Twinning::Kernel::Storage {
 
 			#pragma region constructor
 
-			~FileHandler (
+			~FileHandler(
 			) {
 				if (thiz.m_value != k_null_pointer) {
 					std::fclose(thiz.m_value.value); // NOTE: EXPLAIN: skip result check
@@ -172,14 +172,14 @@ export namespace Twinning::Kernel::Storage {
 
 			// ----------------
 
-			FileHandler (
+			FileHandler(
 			) = delete;
 
-			FileHandler (
+			FileHandler(
 				FileHandler const & that
 			) = delete;
 
-			FileHandler (
+			FileHandler(
 				FileHandler && that
 			) = delete;
 
@@ -187,11 +187,11 @@ export namespace Twinning::Kernel::Storage {
 
 			#pragma region operator
 
-			auto operator = (
+			auto operator =(
 				FileHandler const & that
 			) -> FileHandler & = delete;
 
-			auto operator = (
+			auto operator =(
 				FileHandler && that
 			) -> FileHandler & = delete;
 
@@ -199,7 +199,7 @@ export namespace Twinning::Kernel::Storage {
 
 			#pragma region value
 
-			auto value (
+			auto value(
 			) -> ZPointer<std::FILE> {
 				return thiz.m_value.value;
 			}
@@ -210,7 +210,7 @@ export namespace Twinning::Kernel::Storage {
 
 			#pragma region open
 
-			inline static auto open (
+			inline static auto open(
 				Path const &            target,
 				ZConstantString const & mode
 			) -> FileHandler {
@@ -226,7 +226,7 @@ export namespace Twinning::Kernel::Storage {
 
 			// ----------------
 
-			inline static auto open_by_read (
+			inline static auto open_by_read(
 				Path const & target
 			) -> FileHandler {
 				if (!exist_directory(target.parent())) {
@@ -235,7 +235,7 @@ export namespace Twinning::Kernel::Storage {
 				return open(target, "rb");
 			}
 
-			inline static auto open_by_write (
+			inline static auto open_by_write(
 				Path const & target
 			) -> FileHandler {
 				if (!exist_directory(target.parent())) {
@@ -244,7 +244,7 @@ export namespace Twinning::Kernel::Storage {
 				return open(target, "wb");
 			}
 
-			inline static auto open_by_append (
+			inline static auto open_by_append(
 				Path const & target
 			) -> FileHandler {
 				if (!exist_directory(target.parent())) {
@@ -265,7 +265,7 @@ export namespace Twinning::Kernel::Storage {
 			CategoryConstraint<>
 			&& (IsSameOf<allow_file, Boolean>)
 			&& (IsSameOf<allow_directory, Boolean>)
-		inline auto count_directory (
+		inline auto count_directory(
 			Path const &           target,
 			Optional<Size> const & depth,
 			Size const &           current_depth
@@ -300,7 +300,7 @@ export namespace Twinning::Kernel::Storage {
 			CategoryConstraint<>
 			&& (IsSameOf<allow_file, Boolean>)
 			&& (IsSameOf<allow_directory, Boolean>)
-		inline auto list_directory (
+		inline auto list_directory(
 			Path const &           target,
 			Optional<Size> const & depth,
 			List<Path> &           result,
@@ -342,21 +342,21 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region exist
 
-	inline auto exist (
+	inline auto exist(
 		Path const & target
 	) -> Boolean {
 		auto type = Detail::get_type(target);
 		return type == Detail::ObjectType::Constant::file() || type == Detail::ObjectType::Constant::directory();
 	}
 
-	inline auto exist_file (
+	inline auto exist_file(
 		Path const & target
 	) -> Boolean {
 		auto type = Detail::get_type(target);
 		return type == Detail::ObjectType::Constant::file();
 	}
 
-	inline auto exist_directory (
+	inline auto exist_directory(
 		Path const & target
 	) -> Boolean {
 		auto type = Detail::get_type(target);
@@ -367,7 +367,7 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region basic
 
-	inline auto copy (
+	inline auto copy(
 		Path const & source,
 		Path const & destination
 	) -> Void {
@@ -379,7 +379,7 @@ export namespace Twinning::Kernel::Storage {
 		return;
 	}
 
-	inline auto rename (
+	inline auto rename(
 		Path const & source,
 		Path const & destination
 	) -> Void {
@@ -388,7 +388,7 @@ export namespace Twinning::Kernel::Storage {
 		return;
 	}
 
-	inline auto remove (
+	inline auto remove(
 		Path const & source
 	) -> Void {
 		assert_test(exist(source));
@@ -400,7 +400,7 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region link
 
-	inline auto create_link (
+	inline auto create_link(
 		Path const &    target,
 		Path const &    object,
 		Boolean const & is_directory
@@ -417,7 +417,7 @@ export namespace Twinning::Kernel::Storage {
 		return;
 	}
 
-	inline auto parse_link (
+	inline auto parse_link(
 		Path const & target
 	) -> Path {
 		auto object = std::filesystem::read_symlink(Detail::make_std_path(target));
@@ -428,7 +428,7 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region hard link
 
-	inline auto create_hard_link (
+	inline auto create_hard_link(
 		Path const & target,
 		Path const & object
 	) -> Void {
@@ -443,7 +443,7 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region file
 
-	inline auto create_file (
+	inline auto create_file(
 		Path const & target
 	) -> Void {
 		auto handler = Detail::FileHandler::open_by_append(target);
@@ -452,14 +452,14 @@ export namespace Twinning::Kernel::Storage {
 
 	// ----------------
 
-	inline auto size_file (
+	inline auto size_file(
 		Path const & target
 	) -> Size {
 		auto size = std::filesystem::file_size(Detail::make_std_path(target));
 		return mbox<Size>(size);
 	}
 
-	inline auto resize_file (
+	inline auto resize_file(
 		Path const & target,
 		Size const & size
 	) -> Void {
@@ -469,7 +469,7 @@ export namespace Twinning::Kernel::Storage {
 
 	// ----------------
 
-	inline auto read_file (
+	inline auto read_file(
 		Path const & target
 	) -> ByteArray {
 		auto size = size_file(target);
@@ -480,7 +480,7 @@ export namespace Twinning::Kernel::Storage {
 		return data;
 	}
 
-	inline auto write_file (
+	inline auto write_file(
 		Path const &                 target,
 		ConstantByteListView const & data
 	) -> Void {
@@ -493,7 +493,7 @@ export namespace Twinning::Kernel::Storage {
 
 	// ----------------
 
-	inline auto read_file_stream (
+	inline auto read_file_stream(
 		Path const &           target,
 		OutputByteStreamView & data
 	) -> Size {
@@ -506,7 +506,7 @@ export namespace Twinning::Kernel::Storage {
 		return size;
 	}
 
-	inline auto write_file_stream (
+	inline auto write_file_stream(
 		Path const &          target,
 		InputByteStreamView & data
 	) -> Size {
@@ -522,7 +522,7 @@ export namespace Twinning::Kernel::Storage {
 
 	#pragma region directory
 
-	inline auto create_directory (
+	inline auto create_directory(
 		Path const & target
 	) -> Void {
 		std::filesystem::create_directories(Detail::make_std_path(target));
@@ -531,7 +531,7 @@ export namespace Twinning::Kernel::Storage {
 
 	// ----------------
 
-	inline auto list_directory (
+	inline auto list_directory(
 		Path const &           target,
 		Optional<Size> const & depth,
 		Boolean const &        allow_file,

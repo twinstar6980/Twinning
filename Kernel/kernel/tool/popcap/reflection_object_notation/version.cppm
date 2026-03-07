@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 	// ----------------
 
-	inline constexpr auto check_version (
+	inline constexpr auto check_version(
 		Version const &                               it,
 		std::initializer_list<Integer::Value> const & number,
 		std::initializer_list<Boolean::Value> const & native_string_encoding_use_utf8

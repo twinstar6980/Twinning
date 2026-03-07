@@ -27,7 +27,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 		// ----------------
 
-		inline static auto exchange_track_node_list (
+		inline static auto exchange_track_node_list(
 			InputByteStreamView &                  data,
 			List<typename Definition::TrackNode> & value_list
 		) -> Void {
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 			return;
 		}
 
-		inline static auto exchange_trail (
+		inline static auto exchange_trail(
 			InputByteStreamView &        data,
 			typename Definition::Trail & value
 		) -> Void {
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &        data,
 			typename Definition::Trail & value
 		) -> Void {
@@ -88,7 +88,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &        data_,
 			typename Definition::Trail & value
 		) -> Void {

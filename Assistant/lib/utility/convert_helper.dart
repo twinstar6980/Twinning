@@ -10,15 +10,15 @@ class ConvertHelper {
 
   // #region enumeration
 
-  static String makeEnumerationToStringOfSnakeCase<TType extends Enum>(
-    TType value,
+  static String makeEnumerationToStringOfSnakeCase<TValue extends Enum>(
+    TValue value,
   ) {
     return ConvertHelper.changeStringFromCamelCaseToSnakeCase(value.name);
   }
 
-  static TType parseEnumerationFromStringOfSnakeCase<TType extends Enum>(
-    String      text,
-    List<TType> list,
+  static TValue parseEnumerationFromStringOfSnakeCase<TValue extends Enum>(
+    String       text,
+    List<TValue> list,
   ) {
     return list.firstWhere((it) => ConvertHelper.makeEnumerationToStringOfSnakeCase(it) == text);
   }

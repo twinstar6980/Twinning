@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Math {
 	template <typename Value> requires
 		CategoryConstraint<IsPureInstance<Value>>
 		&& (IsNumberBox<Value>)
-	inline constexpr auto between (
+	inline constexpr auto between(
 		Value const & value,
 		Value const & minimum_limit,
 		Value const & maximum_limit
@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Math {
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
 		&& (IsNumberBox<Result>)
 		&& (IsFloaterBox<Value>)
-	inline constexpr auto floor (
+	inline constexpr auto floor(
 		Value const & value
 	) -> Result {
 		return mbox<Result>(std::floor(value.value));
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Math {
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
 		&& (IsNumberBox<Result>)
 		&& (IsFloaterBox<Value>)
-	inline constexpr auto round (
+	inline constexpr auto round(
 		Value const & value
 	) -> Result {
 		return mbox<Result>(std::round(value.value));
@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Math {
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
 		&& (IsNumberBox<Result>)
 		&& (IsFloaterBox<Value>)
-	inline constexpr auto ceil (
+	inline constexpr auto ceil(
 		Value const & value
 	) -> Result {
 		return mbox<Result>(std::ceil(value.value));

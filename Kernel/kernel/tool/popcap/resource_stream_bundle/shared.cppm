@@ -46,7 +46,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 		inline constexpr auto general = Size{2_ix};
 	}
 
-	inline auto packet_compression_to_data (
+	inline auto packet_compression_to_data(
 		PacketCompression const & value
 	) -> IntegerU32 {
 		auto data_bit = BitSet<k_packet_compression_flag_count>{};
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 		return cbox<IntegerU32>(data_bit.to_integer());
 	}
 
-	inline auto packet_compression_from_data (
+	inline auto packet_compression_from_data(
 		IntegerU32 const & data
 	) -> PacketCompression {
 		auto value = PacketCompression{};
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 	// ----------------
 
-	inline auto string_block_fixed_128_from_string (
+	inline auto string_block_fixed_128_from_string(
 		ConstantStringView const & block
 	) -> StringBlockFixed128 {
 		assert_test(block.size() < 128_sz);
@@ -91,19 +91,19 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 		template <typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
-		inline auto adjust_sequence (
+		inline auto adjust_sequence(
 			Map<String, Value> & map
 		) -> Void {
 			Range::each(
 				map,
-				[] (auto & element) -> auto {
+				[](auto & element) -> auto {
 					element.key.as_upper_case();
 					return;
 				}
 			);
 			Range::sort(
 				map,
-				[] (auto & thix, auto & that) -> auto {
+				[](auto & thix, auto & that) -> auto {
 					return thix.key > that.key;
 				}
 			);
@@ -114,7 +114,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 		template <typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
-		inline auto compute_ripe_size (
+		inline auto compute_ripe_size(
 			Map<String, Value> const & map
 		) -> Size {
 			struct WorkOption {
@@ -162,7 +162,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 		template <typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
-		inline auto encode (
+		inline auto encode(
 			Map<String, Value> const & map,
 			OutputByteStreamView &     data
 		) -> Void {
@@ -222,7 +222,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 		template <typename Value> requires
 			CategoryConstraint<IsPureInstance<Value>>
-		inline auto decode (
+		inline auto decode(
 			Map<String, Value> &  map,
 			InputByteStreamView & data
 		) -> Void {

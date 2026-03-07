@@ -33,19 +33,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~NumberVariant (
+		constexpr ~NumberVariant(
 		) = default;
 
 		// ----------------
 
-		constexpr NumberVariant (
+		constexpr NumberVariant(
 		) = default;
 
-		constexpr NumberVariant (
+		constexpr NumberVariant(
 			NumberVariant const & that
 		) = default;
 
-		constexpr NumberVariant (
+		constexpr NumberVariant(
 			NumberVariant && that
 		) = default;
 
@@ -57,11 +57,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			NumberVariant const & that
 		) -> NumberVariant & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			NumberVariant && that
 		) -> NumberVariant & = default;
 
@@ -69,12 +69,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		constexpr auto is_integer (
+		constexpr auto is_integer(
 		) const -> Boolean {
 			return thiz.is<Integer>();
 		}
 
-		constexpr auto is_floater (
+		constexpr auto is_floater(
 		) const -> Boolean {
 			return thiz.is<Floater>();
 		}
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		constexpr auto set_integer (
+		constexpr auto set_integer(
 			Argument && ... argument
 		) -> Integer & {
 			return thiz.set<Integer>(as_forward<Argument>(argument) ...);
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		constexpr auto set_floater (
+		constexpr auto set_floater(
 			Argument && ... argument
 		) -> Floater & {
 			return thiz.set<Floater>(as_forward<Argument>(argument) ...);
@@ -99,24 +99,24 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto get_integer (
+		constexpr auto get_integer(
 		) -> Integer & {
 			return thiz.get<Integer>();
 		}
 
-		constexpr auto get_floater (
+		constexpr auto get_floater(
 		) -> Floater & {
 			return thiz.get<Floater>();
 		}
 
 		// ----------------
 
-		constexpr auto get_integer (
+		constexpr auto get_integer(
 		) const -> Integer const & {
 			return thiz.get<Integer>();
 		}
 
-		constexpr auto get_floater (
+		constexpr auto get_floater(
 		) const -> Floater const & {
 			return thiz.get<Floater>();
 		}

@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 	>;
 
 	// TODO
-	inline constexpr auto bpp_of (
+	inline constexpr auto bpp_of(
 		Format const & format
 	) -> Size {
 		auto result = Size{};

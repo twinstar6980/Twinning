@@ -17,7 +17,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Null const & thix,
 			Null const & that
 		) -> bool = default;

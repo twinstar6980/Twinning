@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 
 	#if defined M_system_windows
 
-	inline auto wide_to_utf8 (
+	inline auto wide_to_utf8(
 		std::wstring_view const & source
 	) -> std::string {
 		auto destination = std::string{};
@@ -65,7 +65,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 
 	// ----------------
 
-	inline auto wide_from_utf8 (
+	inline auto wide_from_utf8(
 		std::string_view const & source
 	) -> std::wstring {
 		auto destination = std::wstring{};
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 		return destination;
 	}
 
-	inline auto wide_from_ansi (
+	inline auto wide_from_ansi(
 		std::string_view const & source
 	) -> std::wstring {
 		auto destination = std::wstring{};
@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 
 	#pragma region universal
 
-	inline auto utf8_from_native (
+	inline auto utf8_from_native(
 		std::string_view const & source
 	) -> std::string {
 		#if defined M_system_windows

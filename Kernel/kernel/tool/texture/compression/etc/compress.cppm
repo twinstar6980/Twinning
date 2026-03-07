@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
 		// ----------------
 
-		inline static auto process_image_v1_rgb (
+		inline static auto process_image_v1_rgb(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 			return;
 		}
 
-		inline static auto process_image_v2_rgb (
+		inline static auto process_image_v2_rgb(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -68,7 +68,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 			return;
 		}
 
-		inline static auto process_image_v2_rgba (
+		inline static auto process_image_v2_rgba(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
@@ -96,7 +96,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image,
 			Format const &                   format
@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &           data_,
 			Image::ConstantImageView const & image,
 			Format const &                   format

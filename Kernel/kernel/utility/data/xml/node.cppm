@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Xml {
 
 		// ----------------
 
-		inline friend auto operator == (
+		inline friend auto operator ==(
 			Element const & thix,
 			Element const & that
 		) -> bool = default;
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::Xml {
 
 		// ----------------
 
-		inline friend auto operator == (
+		inline friend auto operator ==(
 			Text const & thix,
 			Text const & that
 		) -> bool = default;
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Xml {
 
 		// ----------------
 
-		inline friend auto operator == (
+		inline friend auto operator ==(
 			Comment const & thix,
 			Comment const & that
 		) -> bool = default;
@@ -89,19 +89,19 @@ export namespace Twinning::Kernel::Xml {
 
 		#pragma region constructor
 
-		~Node (
+		~Node(
 		) = default;
 
 		// ----------------
 
-		Node (
+		Node(
 		) = default;
 
-		Node (
+		Node(
 			Node const & that
 		) = default;
 
-		Node (
+		Node(
 			Node && that
 		) = default;
 
@@ -113,11 +113,11 @@ export namespace Twinning::Kernel::Xml {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Node const & that
 		) -> Node & = default;
 
-		auto operator = (
+		auto operator =(
 			Node && that
 		) -> Node & = default;
 
@@ -125,17 +125,17 @@ export namespace Twinning::Kernel::Xml {
 
 		#pragma region value
 
-		auto is_element (
+		auto is_element(
 		) const -> Boolean {
 			return thiz.is<Element>();
 		}
 
-		auto is_text (
+		auto is_text(
 		) const -> Boolean {
 			return thiz.is<Text>();
 		}
 
-		auto is_comment (
+		auto is_comment(
 		) const -> Boolean {
 			return thiz.is<Comment>();
 		}
@@ -144,7 +144,7 @@ export namespace Twinning::Kernel::Xml {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_element (
+		auto set_element(
 			Argument && ... argument
 		) -> Element & {
 			return thiz.set<Element>(as_forward<Argument>(argument) ...);
@@ -152,7 +152,7 @@ export namespace Twinning::Kernel::Xml {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_text (
+		auto set_text(
 			Argument && ... argument
 		) -> Text & {
 			return thiz.set<Text>(as_forward<Argument>(argument) ...);
@@ -160,7 +160,7 @@ export namespace Twinning::Kernel::Xml {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_comment (
+		auto set_comment(
 			Argument && ... argument
 		) -> Comment & {
 			return thiz.set<Comment>(as_forward<Argument>(argument) ...);
@@ -168,34 +168,34 @@ export namespace Twinning::Kernel::Xml {
 
 		// ----------------
 
-		auto get_element (
+		auto get_element(
 		) -> Element & {
 			return thiz.get<Element>();
 		}
 
-		auto get_text (
+		auto get_text(
 		) -> Text & {
 			return thiz.get<Text>();
 		}
 
-		auto get_comment (
+		auto get_comment(
 		) -> Comment & {
 			return thiz.get<Comment>();
 		}
 
 		// ----------------
 
-		auto get_element (
+		auto get_element(
 		) const -> Element const & {
 			return thiz.get<Element>();
 		}
 
-		auto get_text (
+		auto get_text(
 		) const -> Text const & {
 			return thiz.get<Text>();
 		}
 
-		auto get_comment (
+		auto get_comment(
 		) const -> Comment const & {
 			return thiz.get<Comment>();
 		}

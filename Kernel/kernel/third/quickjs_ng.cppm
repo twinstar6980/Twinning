@@ -181,7 +181,7 @@ export namespace Twinning::Kernel::Third::quickjs_ng {
 
 	inline auto const $JS_EXCEPTION = JS_EXCEPTION;
 
-	inline auto $JS_VALUE_GET_PTR (
+	inline auto $JS_VALUE_GET_PTR(
 		JSValue v
 	) -> void * {
 		return JS_VALUE_GET_PTR(v);

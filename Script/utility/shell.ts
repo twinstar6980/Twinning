@@ -34,9 +34,9 @@ namespace Twinning.Script.Shell {
 	}
 
 	export function basic_input_text(
-	): { text: string; } {
+	): {text: string} {
 		let result = callback(['input_text']);
-		return { text: result[0] };
+		return {text: result[0]};
 	}
 
 	// #endregion
@@ -55,18 +55,18 @@ namespace Twinning.Script.Shell {
 	export function assistant_receive_submission(
 		type: 'pause' | 'boolean' | 'integer' | 'floater' | 'size' | 'string' | 'path' | 'enumeration',
 		option: Array<string>,
-	): { value: string; } {
+	): {value: string} {
 		let result = callback(['receive_submission', type, ...option]);
-		return { value: result[0] };
+		return {value: result[0]};
 	}
 
 	// ----------------
 
 	export function assistant_pick_storage_item(
 		type: 'load_file' | 'load_directory' | 'save_file',
-	): { target: string; } {
+	): {target: string} {
 		let result = callback(['pick_storage_item', type]);
-		return { target: result[0] };
+		return {target: result[0]};
 	}
 
 	export function assistant_push_system_notification(

@@ -89,7 +89,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 				let resource_data = KernelX.Storage.read_file(`${package_resource_directory}/${resource_path}`);
 				let resource_data_stream = Kernel.ByteStreamView.watch(resource_data.view());
 				let resource_definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
-				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({ number: 1n, native_string_encoding_use_utf8: true }));
+				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true}));
 				package_manifest_official = resource_definition.value as any;
 				break;
 			}

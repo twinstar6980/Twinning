@@ -17,15 +17,15 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename Result, typename ... Argument> requires
 		CategoryConstraint<IsAnything<Result> && IsValid<Argument ...>>
-	using AsGlobalFunction = ZPointer<Result  (Argument ...)>;
+	using AsGlobalFunction = ZPointer<Result (Argument ...)>;
 
 	template <typename Class, typename Result, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-	using AsVariableMemberFunction = ZMemberPointer<Class, Result  (Argument ...)>;
+	using AsVariableMemberFunction = ZMemberPointer<Class, Result (Argument ...)>;
 
 	template <typename Class, typename Result, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-	using AsConstantMemberFunction = ZMemberPointer<Class, Result  (Argument ...) const>;
+	using AsConstantMemberFunction = ZMemberPointer<Class, Result (Argument ...) const>;
 
 	template <typename Class, auto constant, typename Result, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
@@ -185,7 +185,7 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto function, typename ... ProxyArgument> requires
 			NoneConstraint
-		inline auto proxy_global_function (
+		inline auto proxy_global_function(
 			ProxyArgument ... argument
 		) -> typename CallableTraitOf<function>::Result {
 			return function(as_forward<ProxyArgument>(argument) ...);
@@ -193,7 +193,7 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto function, typename ... ProxyArgument, auto ... argument_index> requires
 			NoneConstraint
-		inline constexpr auto make_proxy_global_function (
+		inline constexpr auto make_proxy_global_function(
 			ValuePackage<argument_index ...>
 		) -> auto {
 			return &proxy_global_function<function, AsSwitch<!IsVoid<typename TypePackage<ProxyArgument ...>::template Element<argument_index>>, typename TypePackage<ProxyArgument ...>::template Element<argument_index>, typename CallableTraitOf<function>::Argument::template Element<argument_index>> ...>;
@@ -213,7 +213,7 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto function, typename Object, auto constant, typename Result, typename ... Argument> requires
 			NoneConstraint
-		inline auto normalized_member_function (
+		inline auto normalized_member_function(
 			AsConstantIf<Object, constant> & object,
 			Argument ...                     argument
 		) -> Result {
@@ -222,7 +222,7 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto function, typename Object, auto ... argument_index> requires
 			NoneConstraint
-		inline constexpr auto make_normalized_member_function (
+		inline constexpr auto make_normalized_member_function(
 			ValuePackage<argument_index ...>
 		) -> auto {
 			return &normalized_member_function<function, Object, CallableTraitOf<function>::constant, typename CallableTraitOf<function>::Result, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
@@ -242,7 +242,7 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto lambda, typename Result, typename ... Argument> requires
 			NoneConstraint
-		inline auto normalized_lambda (
+		inline auto normalized_lambda(
 			Argument ... argument
 		) -> Result {
 			return lambda(as_forward<Argument>(argument) ...);
@@ -250,7 +250,7 @@ export namespace Twinning::Kernel::Trait {
 
 		template <auto lambda, auto ... argument_index> requires
 			NoneConstraint
-		inline constexpr auto make_normalized_lambda (
+		inline constexpr auto make_normalized_lambda(
 			ValuePackage<argument_index ...>
 		) -> auto {
 			return &normalized_lambda<lambda, typename CallableTraitOf<lambda>::Result, typename CallableTraitOf<lambda>::Argument::template Element<argument_index> ...>;

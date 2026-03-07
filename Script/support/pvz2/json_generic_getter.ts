@@ -2,14 +2,14 @@ namespace Twinning.Script.Support.Pvz2.JsonGenericGetter {
 
 	// #region utility
 
-	export type ValueType = boolean | number | bigint | string | ValueType[] | { [key: string]: ValueType; };
+	export type ValueType = boolean | number | bigint | string | ValueType[] | {[key: string]: ValueType};
 
 	// ----------------
 
-	export function boolean<T = never>(
+	export function boolean<TDefault = never>(
 		source: ValueType | undefined,
-		default_value?: T,
-	): boolean | T {
+		default_value?: TDefault,
+	): boolean | TDefault {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
@@ -28,10 +28,10 @@ namespace Twinning.Script.Support.Pvz2.JsonGenericGetter {
 		throw new Error(`type error`);
 	}
 
-	export function number<T = never>(
+	export function number<TDefault = never>(
 		source: ValueType | undefined,
-		default_value?: T,
-	): number | T {
+		default_value?: TDefault,
+	): number | TDefault {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
@@ -50,10 +50,10 @@ namespace Twinning.Script.Support.Pvz2.JsonGenericGetter {
 		throw new Error(`type error`);
 	}
 
-	export function integer<T = never>(
+	export function integer<TDefault = never>(
 		source: ValueType | undefined,
-		default_value?: T,
-	): bigint | T {
+		default_value?: TDefault,
+	): bigint | TDefault {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}
@@ -72,10 +72,10 @@ namespace Twinning.Script.Support.Pvz2.JsonGenericGetter {
 		throw new Error(`type error`);
 	}
 
-	export function string<T = never>(
+	export function string<TDefault = never>(
 		source: ValueType | undefined,
-		default_value?: T,
-	): string | T {
+		default_value?: TDefault,
+	): string | TDefault {
 		if (source === undefined && default_value !== undefined) {
 			return default_value;
 		}

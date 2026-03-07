@@ -29,25 +29,25 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~BooleanBox (
+		constexpr ~BooleanBox(
 		) = default;
 
 		// ----------------
 
-		constexpr BooleanBox (
+		constexpr BooleanBox(
 		) = default;
 
-		constexpr BooleanBox (
+		constexpr BooleanBox(
 			BooleanBox const & that
 		) = default;
 
-		constexpr BooleanBox (
+		constexpr BooleanBox(
 			BooleanBox && that
 		) = default;
 
 		// ----------------
 
-		implicit constexpr BooleanBox (
+		implicit constexpr BooleanBox(
 			Value const & value
 		) :
 			BaseBox{value} {
@@ -58,21 +58,21 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BooleanBox const & that
 		) -> BooleanBox & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BooleanBox && that
 		) -> BooleanBox & = default;
 
 		// ----------------
 
-		implicit constexpr operator Value & () {
+		implicit constexpr operator Value &() {
 			return thiz.value;
 		}
 
-		implicit constexpr operator Value const & () const {
+		implicit constexpr operator Value const &() const {
 			return thiz.value;
 		}
 
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsBooleanBox<It>)
-	inline constexpr auto operator == (
+	inline constexpr auto operator ==(
 		It const & thix,
 		It const & that
 	) -> bool {
@@ -104,7 +104,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsBooleanBox<It>)
-	inline constexpr auto operator ! (
+	inline constexpr auto operator !(
 		It const & thix
 	) -> It {
 		return It{!thix.value};

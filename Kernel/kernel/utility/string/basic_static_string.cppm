@@ -29,7 +29,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit constexpr BasicStaticString (
+		implicit constexpr BasicStaticString(
 			ZArray<typename Element::Value, t_size.value> const & data
 		) :
 			data{} {
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto view (
+		constexpr auto view(
 		) const -> ConstantBasicStringView<Element> {
 			return ConstantBasicStringView<Element>{make_pointer(static_cast<decltype(&*thiz.data)>(thiz.data)), t_size - 1_sz};
 		}

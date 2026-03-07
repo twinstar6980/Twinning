@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
 		// ----------------
 
-		inline static auto process_package (
+		inline static auto process_package(
 			OutputByteStreamView &               data,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory
@@ -177,7 +177,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &               data_,
 			typename Definition::Package const & definition,
 			Path const &                         resource_directory

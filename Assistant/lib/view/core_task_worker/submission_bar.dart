@@ -147,7 +147,8 @@ class _PauseSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as PauseExpression;
+          value as PauseExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.pause,
@@ -192,7 +193,8 @@ class _BooleanSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as BooleanExpression;
+          value as BooleanExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.check_box,
@@ -268,7 +270,8 @@ class _IntegerSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as IntegerExpression;
+          value as IntegerExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.speed_1_2,
@@ -323,7 +326,8 @@ class _FloaterSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as FloaterExpression;
+          value as FloaterExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.speed_1_2,
@@ -378,7 +382,8 @@ class _SizeSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as SizeExpression;
+          value as SizeExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.memory,
@@ -463,7 +468,8 @@ class _StringSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as StringExpression;
+          value as StringExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.text_fields,
@@ -515,7 +521,8 @@ class _PathSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
         onSelect: (value) async {
-          this.value.value = value as PathExpression;
+          value as PathExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.link,
@@ -619,7 +626,8 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: this.option.contains(item.item))).toList(),
         onSelect: (value) async {
-          this.value.value = value as EnumerationExpression;
+          value as EnumerationExpression;
+          this.value.value = value;
           await refreshState(setState);
         },
         icon: IconSet.menu,

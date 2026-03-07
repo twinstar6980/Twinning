@@ -40,19 +40,19 @@ namespace Twinning.Script.KernelX {
 
 		// ----------------
 
-		export function read<Constraint extends Kernel.Json.JS_Value>(
+		export function read<TConstraint extends Kernel.Json.JS_Value>(
 			data: ArrayBuffer,
-		): Kernel.Json.Value<Constraint> {
+		): Kernel.Json.Value<TConstraint> {
 			let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
-			let value = Kernel.Json.Value.default<Constraint>();
+			let value = Kernel.Json.Value.default<TConstraint>();
 			let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_for_string.view()));
 			Kernel.Tool.Data.Serialization.Json.Read.process(data_stream, value, buffer_stream);
 			return value;
 		}
 
 		/** result is a view of buffer */
-		export function write<Constraint extends Kernel.Json.JS_Value>(
-			value: Kernel.Json.Value<Constraint>,
+		export function write<TConstraint extends Kernel.Json.JS_Value>(
+			value: Kernel.Json.Value<TConstraint>,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
@@ -66,15 +66,15 @@ namespace Twinning.Script.KernelX {
 
 		// ----------------
 
-		export function read_s<Constraint extends Kernel.Json.JS_Value>(
+		export function read_s<TConstraint extends Kernel.Json.JS_Value>(
 			data: string,
-		): Kernel.Json.Value<Constraint> {
+		): Kernel.Json.Value<TConstraint> {
 			let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
 			return read(data_byte.view().value);
 		}
 
-		export function write_s<Constraint extends Kernel.Json.JS_Value>(
-			value: Kernel.Json.Value<Constraint>,
+		export function write_s<TConstraint extends Kernel.Json.JS_Value>(
+			value: Kernel.Json.Value<TConstraint>,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
@@ -87,16 +87,16 @@ namespace Twinning.Script.KernelX {
 
 		// ----------------
 
-		export function read_fs<Constraint extends Kernel.Json.JS_Value>(
+		export function read_fs<TConstraint extends Kernel.Json.JS_Value>(
 			data_file: string,
-		): Kernel.Json.Value<Constraint> {
+		): Kernel.Json.Value<TConstraint> {
 			let data = Storage.read_file(data_file);
 			return read(data.view().value);
 		}
 
-		export function write_fs<Constraint extends Kernel.Json.JS_Value>(
+		export function write_fs<TConstraint extends Kernel.Json.JS_Value>(
 			data_file: string,
-			value: Kernel.Json.Value<Constraint>,
+			value: Kernel.Json.Value<TConstraint>,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
@@ -110,61 +110,61 @@ namespace Twinning.Script.KernelX {
 
 		// ----------------
 
-		export function read_js<Constraint extends Kernel.Json.JS_Value>(
+		export function read_js<TConstraint extends Kernel.Json.JS_Value>(
 			data: ArrayBuffer,
-		): Constraint {
-			return read<Constraint>(data).value;
+		): TConstraint {
+			return read<TConstraint>(data).value;
 		}
 
 		/** result is a view of buffer */
-		export function write_js<Constraint extends Kernel.Json.JS_Value>(
-			value: Constraint,
+		export function write_js<TConstraint extends Kernel.Json.JS_Value>(
+			value: TConstraint,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
 			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): ArrayBuffer {
-			return write(Kernel.Json.Value.value<Constraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+			return write(Kernel.Json.Value.value<TConstraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
 		// ----------------
 
-		export function read_s_js<Constraint extends Kernel.Json.JS_Value>(
+		export function read_s_js<TConstraint extends Kernel.Json.JS_Value>(
 			data: string,
-		): Constraint {
-			return read_s<Constraint>(data).value;
+		): TConstraint {
+			return read_s<TConstraint>(data).value;
 		}
 
-		export function write_s_js<Constraint extends Kernel.Json.JS_Value>(
-			value: Constraint,
+		export function write_s_js<TConstraint extends Kernel.Json.JS_Value>(
+			value: TConstraint,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
 			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): string {
-			return write_s(Kernel.Json.Value.value<Constraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+			return write_s(Kernel.Json.Value.value<TConstraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
 		// ----------------
 
-		export function read_fs_js<Constraint extends Kernel.Json.JS_Value>(
+		export function read_fs_js<TConstraint extends Kernel.Json.JS_Value>(
 			data_file: string,
-		): Constraint {
-			return read_fs<Constraint>(data_file).value;
+		): TConstraint {
+			return read_fs<TConstraint>(data_file).value;
 		}
 
-		export function write_fs_js<Constraint extends Kernel.Json.JS_Value>(
+		export function write_fs_js<TConstraint extends Kernel.Json.JS_Value>(
 			data_file: string,
-			value: Constraint,
+			value: TConstraint,
 			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
 			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
 			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
 		): void {
-			return write_fs(data_file, Kernel.Json.Value.value<Constraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+			return write_fs(data_file, Kernel.Json.Value.value<TConstraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 		}
 
 	}

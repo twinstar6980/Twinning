@@ -46,7 +46,7 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region constructor
 
-		~BasicImage (
+		~BasicImage(
 		) {
 			thiz.reset();
 			return;
@@ -54,23 +54,23 @@ export namespace Twinning::Kernel::Image {
 
 		// ----------------
 
-		BasicImage (
+		BasicImage(
 		) :
 			m_data{} {
 			return;
 		}
 
-		BasicImage (
+		BasicImage(
 			BasicImage const & that
 		) = default;
 
-		BasicImage (
+		BasicImage(
 			BasicImage && that
 		) = default;
 
 		// ----------------
 
-		explicit BasicImage (
+		explicit BasicImage(
 			ImageSize const & size
 		) :
 			BasicImage{} {
@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Image {
 			return;
 		}
 
-		explicit BasicImage (
+		explicit BasicImage(
 			ConstantView const & view
 		) :
 			BasicImage{} {
@@ -90,17 +90,17 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			BasicImage const & that
 		) -> BasicImage & = default;
 
-		auto operator = (
+		auto operator =(
 			BasicImage && that
 		) -> BasicImage & = default;
 
 		// ----------------
 
-		auto operator = (
+		auto operator =(
 			ConstantView const & that
 		) -> BasicImage & {
 			thiz.draw(that);
@@ -109,25 +109,25 @@ export namespace Twinning::Kernel::Image {
 
 		// ----------------
 
-		auto operator [] (
+		auto operator [](
 			Size const & y
 		) -> VariablePixelRow const & {
 			return thiz.as_view()[y];
 		}
 
-		auto operator [] (
+		auto operator [](
 			Size const & y
 		) const -> ConstantPixelRow const & {
 			return thiz.as_view()[y];
 		}
 
-		auto operator [] (
+		auto operator [](
 			ImagePosition const & position
 		) -> Pixel & {
 			return thiz.as_view()[position];
 		}
 
-		auto operator [] (
+		auto operator [](
 			ImagePosition const & position
 		) const -> Pixel const & {
 			return thiz.as_view()[position];
@@ -135,11 +135,11 @@ export namespace Twinning::Kernel::Image {
 
 		// ----------------
 
-		implicit operator VariableView const & () {
+		implicit operator VariableView const &() {
 			return thiz.as_view();
 		}
 
-		implicit operator ConstantView const & () const {
+		implicit operator ConstantView const &() const {
 			return thiz.as_view();
 		}
 
@@ -147,24 +147,24 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region view
 
-		auto as_view (
+		auto as_view(
 		) -> VariableView const & {
 			return self_cast<VariableView>(thiz);
 		}
 
-		auto as_view (
+		auto as_view(
 		) const -> ConstantView const & {
 			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
-		auto view (
+		auto view(
 		) -> VariableView {
 			return thiz.as_view();
 		}
 
-		auto view (
+		auto view(
 		) const -> ConstantView {
 			return thiz.as_view();
 		}
@@ -173,17 +173,17 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region data & size
 
-		auto data (
+		auto data(
 		) -> ConstantListView<VariablePixelRow> const & {
 			return thiz.as_view().data();
 		}
 
-		auto data (
+		auto data(
 		) const -> ConstantListView<ConstantPixelRow> const & {
 			return thiz.as_view().data();
 		}
 
-		auto size (
+		auto size(
 		) const -> ImageSize {
 			return thiz.as_view().size();
 		}
@@ -192,13 +192,13 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region draw
 
-		auto fill (
+		auto fill(
 			Pixel const & pixel
 		) -> Void {
 			return thiz.as_view().fill(pixel);
 		}
 
-		auto draw (
+		auto draw(
 			ConstantView const & image
 		) -> Void {
 			return thiz.as_view().draw(image);
@@ -208,14 +208,14 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region sub
 
-		auto sub (
+		auto sub(
 			ImagePosition const & position,
 			ImageSize const &     size
 		) -> VariableView {
 			return thiz.as_view().sub(position, size);
 		}
 
-		auto sub (
+		auto sub(
 			ImagePosition const & position,
 			ImageSize const &     size
 		) const -> ConstantView {
@@ -226,13 +226,13 @@ export namespace Twinning::Kernel::Image {
 
 		#pragma region allocate
 
-		auto reset (
+		auto reset(
 		) -> Void {
 			thiz.m_data.reset();
 			return;
 		}
 
-		auto allocate (
+		auto allocate(
 			ImageSize const & size
 		) -> Void {
 			thiz.m_data.allocate(size.height);

@@ -10,7 +10,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 
 	struct Common {
 
-		inline static auto png_error (
+		inline static auto png_error(
 			Third::libpng::$png_structp     png_ptr,
 			Third::libpng::$png_const_charp error_message
 		) -> Void {
@@ -18,7 +18,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 			return;
 		}
 
-		inline static auto png_warning (
+		inline static auto png_warning(
 			Third::libpng::$png_structp     png_ptr,
 			Third::libpng::$png_const_charp error_message
 		) -> Void {
@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 
 		// ----------------
 
-		inline static auto png_read_data (
+		inline static auto png_read_data(
 			Third::libpng::$png_structp png_ptr,
 			Third::libpng::$png_bytep   data,
 			Third::libpng::$size_t      length
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 			return;
 		}
 
-		inline static auto png_write_data (
+		inline static auto png_write_data(
 			Third::libpng::$png_structp png_ptr,
 			Third::libpng::$png_bytep   data,
 			Third::libpng::$size_t      length
@@ -56,7 +56,7 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 			return;
 		}
 
-		inline static auto png_output_flush (
+		inline static auto png_output_flush(
 			Third::libpng::$png_structp png_ptr
 		) -> Void {
 			return;

@@ -54,7 +54,7 @@ namespace Twinning.Script.StorageHelper {
 
 	// ----------------
 
-	export type Tree = { [key: string]: null | Tree; };
+	export type Tree = {[key: string]: null | Tree};
 
 	export function tree(
 		target: Array<string>,

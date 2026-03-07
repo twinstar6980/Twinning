@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Process {
 
 		// NOTE: EXPLAIN: see https://learn.microsoft.com/cpp/c-language/parsing-c-command-line-arguments?view=msvc-170
 
-		inline auto encode_windows_command_program_string (
+		inline auto encode_windows_command_program_string(
 			Path const & source,
 			String &     destination
 		) -> Void {
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Process {
 			return;
 		}
 
-		inline auto encode_windows_command_argument_string (
+		inline auto encode_windows_command_argument_string(
 			String const & source,
 			String &       destination
 		) -> Void {
@@ -79,7 +79,7 @@ export namespace Twinning::Kernel::Process {
 
 		// ----------------
 
-		inline auto encode_windows_command_string (
+		inline auto encode_windows_command_string(
 			Path const &         program,
 			List<String> const & argument
 		) -> String {
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Process {
 
 		// NOTE: EXPLAIN: see https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
 
-		inline auto encode_windows_environment_string (
+		inline auto encode_windows_environment_string(
 			List<String> const & environment
 		) -> String {
 			auto destination_size = k_none_size;
@@ -128,13 +128,13 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma region workspace
 
-	inline auto get_workspace (
+	inline auto get_workspace(
 	) -> Path {
 		auto target = std::filesystem::current_path();
 		return Path{make_string(self_cast<std::string>(target.generic_u8string()))};
 	}
 
-	inline auto set_workspace (
+	inline auto set_workspace(
 		Path const & target
 	) -> Void {
 		std::filesystem::current_path(Storage::Detail::make_std_path(target));
@@ -145,7 +145,7 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma region environment
 
-	inline auto get_environment (
+	inline auto get_environment(
 		String const & name
 	) -> Optional<String> {
 		auto value = Optional<String>{};
@@ -176,7 +176,7 @@ export namespace Twinning::Kernel::Process {
 		return value;
 	}
 
-	inline auto set_environment (
+	inline auto set_environment(
 		String const &           name,
 		Optional<String> const & value
 	) -> Void {
@@ -207,7 +207,7 @@ export namespace Twinning::Kernel::Process {
 
 	// ----------------
 
-	inline auto list_environment (
+	inline auto list_environment(
 	) -> List<String> {
 		auto result = List<String>{};
 		#if defined M_system_windows
@@ -244,7 +244,7 @@ export namespace Twinning::Kernel::Process {
 	// Windows   : all 32 bit
 	// Linux     : low 08 bit
 	// Macintosh : low 24 bit
-	inline auto run_process (
+	inline auto run_process(
 		Path const &           program,
 		List<String> const &   argument,
 		List<String> const &   environment,
@@ -387,7 +387,7 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma region command
 
-	inline auto execute_command (
+	inline auto execute_command(
 		String const & command
 	) -> IntegerU32 {
 		auto result = IntegerU32{};

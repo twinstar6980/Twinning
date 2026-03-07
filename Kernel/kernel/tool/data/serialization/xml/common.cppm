@@ -21,7 +21,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 		public:
 
-			virtual auto PrintSpace (
+			virtual auto PrintSpace(
 				int depth
 			) -> void override {
 				for (auto index = 0; index < depth; ++index) {
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		};
 
 		struct TinyXml2PrinterImitator {
-			virtual                                    ~TinyXml2PrinterImitator () = 0;
+			virtual                                    ~TinyXml2PrinterImitator() = 0;
 			bool                                       _elementJustOpened;
 			TinyXml2DynArrayImitator<char const *, 10> _stack;
 			bool                                       _firstElement;
@@ -57,7 +57,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// NOTE: EXPLAIN: maybe failed if api changed
 		static_assert(sizeof(TinyXml2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));
 
-		inline static auto move_printer_buffer_if_can (
+		inline static auto move_printer_buffer_if_can(
 			Third::tinyxml2::XMLPrinter & printer
 		) -> String {
 			auto & printer_imitator = self_cast<TinyXml2PrinterImitator>(printer);

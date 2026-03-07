@@ -32,19 +32,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~EnumerationBox (
+		constexpr ~EnumerationBox(
 		) = default;
 
 		// ----------------
 
-		constexpr EnumerationBox (
+		constexpr EnumerationBox(
 		) = default;
 
-		constexpr EnumerationBox (
+		constexpr EnumerationBox(
 			EnumerationBox const & that
 		) = default;
 
-		constexpr EnumerationBox (
+		constexpr EnumerationBox(
 			EnumerationBox && that
 		) = default;
 
@@ -56,11 +56,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			EnumerationBox const & that
 		) -> EnumerationBox & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			EnumerationBox && that
 		) -> EnumerationBox & = default;
 
@@ -68,19 +68,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region underlying
 
-		auto as_underlying (
+		auto as_underlying(
 		) -> Underlying & {
 			return self_cast<Underlying>(thiz);
 		}
 
-		auto as_underlying (
+		auto as_underlying(
 		) const -> Underlying const & {
 			return self_cast<Underlying>(thiz);
 		}
 
 		// ----------------
 
-		constexpr auto underlying (
+		constexpr auto underlying(
 		) const -> Underlying {
 			return cbox<Underlying>(thiz);
 		}

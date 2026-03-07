@@ -34,29 +34,29 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region constructor
 
-		constexpr ~RangeWrapper (
+		constexpr ~RangeWrapper(
 		) = default;
 
 		// ----------------
 
-		constexpr RangeWrapper (
+		constexpr RangeWrapper(
 		) :
 			m_begin{},
 			m_end{} {
 			return;
 		}
 
-		constexpr RangeWrapper (
+		constexpr RangeWrapper(
 			RangeWrapper const & that
 		) = default;
 
-		constexpr RangeWrapper (
+		constexpr RangeWrapper(
 			RangeWrapper && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr RangeWrapper (
+		explicit constexpr RangeWrapper(
 			Iterator const & begin,
 			Iterator const & end
 		) :
@@ -69,11 +69,11 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			RangeWrapper const & that
 		) -> RangeWrapper & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			RangeWrapper && that
 		) -> RangeWrapper & = default;
 
@@ -81,19 +81,19 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region iterator
 
-		constexpr auto iterator (
+		constexpr auto iterator(
 			Size const & index
 		) const -> Iterator {
 			assert_test(index <= thiz.size());
 			return thiz.m_begin + index;
 		}
 
-		constexpr auto begin (
+		constexpr auto begin(
 		) const -> Iterator {
 			return thiz.m_begin;
 		}
 
-		constexpr auto end (
+		constexpr auto end(
 		) const -> Iterator {
 			return thiz.m_end;
 		}
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region size
 
-		constexpr auto size (
+		constexpr auto size(
 		) const -> Size {
 			if constexpr (IsSame<decltype(thiz.m_end - thiz.m_begin), Size>) {
 				return thiz.m_end - thiz.m_begin;
@@ -130,7 +130,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Iterator> requires
 		CategoryConstraint<IsPureInstance<Iterator>>
 		&& (IsIterator<Iterator>)
-	inline constexpr auto make_range (
+	inline constexpr auto make_range(
 		Iterator const & begin,
 		Iterator const & end
 	) -> RangeWrapper<Iterator> {
@@ -140,7 +140,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Iterator> requires
 		CategoryConstraint<IsPureInstance<Iterator>>
 		&& (IsIterator<Iterator>)
-	inline constexpr auto make_range_n (
+	inline constexpr auto make_range_n(
 		Iterator const & begin,
 		Size const &     size
 	) -> RangeWrapper<Iterator> {
@@ -150,7 +150,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range> requires
 		CategoryConstraint<IsValid<Range>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto make_range_of (
+	inline constexpr auto make_range_of(
 		Range && range
 	) -> auto {
 		return make_range(range.begin(), range.end());
@@ -161,7 +161,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Iterator> requires
 		CategoryConstraint<IsPureInstance<Iterator>>
 		&& (IsIterator<Iterator>)
-	inline constexpr auto make_reverse_range (
+	inline constexpr auto make_reverse_range(
 		Iterator const & end,
 		Iterator const & begin
 	) -> auto {
@@ -176,7 +176,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Iterator> requires
 		CategoryConstraint<IsPureInstance<Iterator>>
 		&& (IsIterator<Iterator>)
-	inline constexpr auto make_reverse_range_n (
+	inline constexpr auto make_reverse_range_n(
 		Iterator const & end,
 		Size const &     size
 	) -> auto {
@@ -186,7 +186,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range> requires
 		CategoryConstraint<IsValid<Range>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto make_reverse_range_of (
+	inline constexpr auto make_reverse_range_of(
 		Range && range
 	) -> auto {
 		return make_reverse_range(range.end(), range.begin());
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Iterator> requires
 		CategoryConstraint<IsPureInstance<Iterator>>
 		&& (IsIterator<Iterator>)
-	inline constexpr auto make_moveable_range (
+	inline constexpr auto make_moveable_range(
 		Iterator const & begin,
 		Iterator const & end
 	) -> auto {
@@ -212,7 +212,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Iterator> requires
 		CategoryConstraint<IsPureInstance<Iterator>>
 		&& (IsIterator<Iterator>)
-	inline constexpr auto make_moveable_range_n (
+	inline constexpr auto make_moveable_range_n(
 		Iterator const & begin,
 		Size const &     size
 	) -> auto {
@@ -222,7 +222,7 @@ export namespace Twinning::Kernel::Range {
 	template <typename Range> requires
 		CategoryConstraint<IsValid<Range>>
 		&& (IsRange<AsPure<Range>>)
-	inline constexpr auto make_moveable_range_of (
+	inline constexpr auto make_moveable_range_of(
 		Range && range
 	) -> auto {
 		return make_moveable_range(range.begin(), range.end());

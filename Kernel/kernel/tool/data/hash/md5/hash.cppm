@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Md5 {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			ConstantByteListView const & data,
 			ByteArray &                  value
 		) -> Void {
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Md5 {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			ConstantByteListView const & data,
 			ByteArray &                  value
 		) -> Void {

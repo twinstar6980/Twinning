@@ -36,12 +36,12 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region constructor
 
-		constexpr ~NumberRange (
+		constexpr ~NumberRange(
 		) = default;
 
 		// ----------------
 
-		constexpr NumberRange (
+		constexpr NumberRange(
 		) :
 			m_begin{},
 			m_end{},
@@ -49,17 +49,17 @@ export namespace Twinning::Kernel::Range {
 			return;
 		}
 
-		constexpr NumberRange (
+		constexpr NumberRange(
 			NumberRange const & that
 		) = default;
 
-		constexpr NumberRange (
+		constexpr NumberRange(
 			NumberRange && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr NumberRange (
+		explicit constexpr NumberRange(
 			Number const & begin,
 			Number const & end,
 			Number const & step = mbox<Number>(1)
@@ -70,7 +70,7 @@ export namespace Twinning::Kernel::Range {
 			return;
 		}
 
-		explicit constexpr NumberRange (
+		explicit constexpr NumberRange(
 			Number const & size
 		) :
 			m_begin{mbox<Number>(0)},
@@ -83,11 +83,11 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			NumberRange const & that
 		) -> NumberRange & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			NumberRange && that
 		) -> NumberRange & = default;
 
@@ -95,12 +95,12 @@ export namespace Twinning::Kernel::Range {
 
 		#pragma region iterator
 
-		constexpr auto begin (
+		constexpr auto begin(
 		) const -> Iterator {
 			return Iterator{thiz.m_begin, thiz.m_step};
 		}
 
-		constexpr auto end (
+		constexpr auto end(
 		) const -> Iterator {
 			return Iterator{thiz.m_end, thiz.m_step};
 		}

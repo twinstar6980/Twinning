@@ -8,7 +8,7 @@ export namespace Twinning::Shell {
 
 	#pragma region function
 
-	inline auto parse_current_exception (
+	inline auto parse_current_exception(
 		std::source_location const & location = std::source_location::current()
 	) -> std::string {
 		auto message = std::string{};

@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
 	// ----------------
 
-	inline constexpr auto check_version (
+	inline constexpr auto check_version(
 		Version const & it
 	) -> ZBoolean {
 		auto result = true;

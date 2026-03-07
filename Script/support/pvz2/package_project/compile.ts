@@ -132,8 +132,8 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Compile {
 									size: resource_property.size,
 									format: resource_property.format,
 									pitch: resource_property.pitch,
-									...(package_setting.version.extended_texture_information_for_pvz2cn < 1n ? {} : { additional_byte_count: resource_property.additional_byte_count }),
-									...(package_setting.version.extended_texture_information_for_pvz2cn < 2n ? {} : { scale: 100n }),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 1n ? {} : {additional_byte_count: resource_property.additional_byte_count}),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 2n ? {} : {scale: 100n}),
 								},
 							},
 						},
@@ -226,7 +226,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Compile {
 							Kernel.Tool.Texture.Transformation.Scale.process(sprite_view, current_sprite_view);
 						}
 					}
-					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, { w: Number(value[1].size().value[0]), h: Number(value[1].size().value[1]) }]));
+					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, {w: Number(value[1].size().value[0]), h: Number(value[1].size().value[1])}]));
 					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
 					let atlas_size = Popcap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));
@@ -270,8 +270,8 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Compile {
 									size: atlas_size,
 									format: conversion_setting.index,
 									pitch: atlas_size[0] * Popcap.Texture.Encoding.get_bpp_for_pitch(conversion_setting.format) / 8n,
-									...(package_setting.version.extended_texture_information_for_pvz2cn < 1n ? {} : { additional_byte_count: conversion_setting.format !== 'rgb_etc1_a_palette' ? 0n : KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.compute_data_size_with_palette(atlas_size, texture_encode_option.rgb_etc1_a_palette!.palette.length) }),
-									...(package_setting.version.extended_texture_information_for_pvz2cn < 2n ? {} : { scale: 100n }),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 1n ? {} : {additional_byte_count: conversion_setting.format !== 'rgb_etc1_a_palette' ? 0n : KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.compute_data_size_with_palette(atlas_size, texture_encode_option.rgb_etc1_a_palette!.palette.length)}),
+									...(package_setting.version.extended_texture_information_for_pvz2cn < 2n ? {} : {scale: 100n}),
 								},
 							},
 						},

@@ -46,7 +46,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		inline static auto process_value (
+		inline static auto process_value(
 			InputByteStreamView &      data,
 			Json::Value &              value,
 			List<ConstantStringView> & native_string_index,
@@ -293,7 +293,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 					}
 					object.assign(
 						member_list,
-						[] (auto & element) -> auto && {
+						[](auto & element) -> auto && {
 							return as_moveable(element);
 						}
 					);
@@ -309,7 +309,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView & data,
 			Json::Value &         definition
 		) -> Void {
@@ -342,7 +342,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView & data_,
 			Json::Value &         definition
 		) -> Void {

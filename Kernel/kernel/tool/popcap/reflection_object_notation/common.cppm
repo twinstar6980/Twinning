@@ -118,7 +118,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static constexpr auto k_reference_expression_format_of_alias = StringFormatter{"RTID({:s}@{:s})"_sf};
 
-		inline static auto analysis_reference (
+		inline static auto analysis_reference(
 			ConstantStringView const & string
 		) -> Optional<ReferenceTypeIdentifier> {
 			if (!(string.size() > "RTID()"_sl && string.head("RTID("_sl) == "RTID("_sv && string.tail(")"_sl) == ")"_sv)) {

@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Particle {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { definition_file: string; }) => (argument.definition_file.replace(/(\.particle\.json)?$/i, '.xml.compiled')),
+						automatic: (argument: {definition_file: string}) => (argument.definition_file.replace(/(\.particle\.json)?$/i, '.xml.compiled')),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -34,7 +34,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Particle {
 						identifier: 'version_variant_64',
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
+						condition: (argument: {version_platform: string}) => (['mobile'].includes(argument.version_platform) ? null : false),
 					}),
 					typical_argument_size({
 						identifier: 'buffer_size',
@@ -57,16 +57,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Particle {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { definition_file: string; }) => (argument.definition_file + '.encode'),
+						automatic: (argument: {definition_file: string}) => (argument.definition_file + '.encode'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.particle\.json)?$/i, '.xml.compiled')),
 					}),
 				],
-				worker: ({ definition_file, data_file, version_platform, version_variant_64, buffer_size }, temporary: { buffer: Kernel.ByteArray; }) => {
+				worker: ({definition_file, data_file, version_platform, version_variant_64, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
 					if (temporary.buffer === undefined) {
 						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
 					}
-					KernelX.Tool.Popcap.Particle.encode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 }, temporary.buffer.view());
+					KernelX.Tool.Popcap.Particle.encode_fs(data_file, definition_file, {platform: version_platform as any, variant_64: version_variant_64}, temporary.buffer.view());
 					return;
 				},
 			}),
@@ -85,7 +85,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Particle {
 						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file.replace(/(\.xml\.compiled)?$/i, '.particle.json')),
+						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.xml\.compiled)?$/i, '.particle.json')),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -99,7 +99,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Particle {
 						identifier: 'version_variant_64',
 						checker: null,
 						automatic: null,
-						condition: (argument: { version_platform: string; }) => (['mobile'].includes(argument.version_platform) ? null : false),
+						condition: (argument: {version_platform: string}) => (['mobile'].includes(argument.version_platform) ? null : false),
 					}),
 				],
 				batch: [
@@ -115,13 +115,13 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Particle {
 						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { data_file: string; }) => (argument.data_file + '.decode'),
+						automatic: (argument: {data_file: string}) => (argument.data_file + '.decode'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.xml\.compiled)?$/i, '.particle.json')),
 					}),
 				],
-				worker: ({ data_file, definition_file, version_platform, version_variant_64 }, temporary: {}) => {
-					KernelX.Tool.Popcap.Particle.decode_fs(data_file, definition_file, { platform: version_platform as any, variant_64: version_variant_64 });
+				worker: ({data_file, definition_file, version_platform, version_variant_64}, temporary: {}) => {
+					KernelX.Tool.Popcap.Particle.decode_fs(data_file, definition_file, {platform: version_platform as any, variant_64: version_variant_64});
 					return;
 				},
 			}),

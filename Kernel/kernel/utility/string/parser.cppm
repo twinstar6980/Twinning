@@ -27,7 +27,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region character
 
-	inline auto write_character_repeat (
+	inline auto write_character_repeat(
 		OutputCharacterStreamView & stream,
 		Character const &           character,
 		Size const &                count
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region escape character
 
-	inline auto write_escape_character (
+	inline auto write_escape_character(
 		OutputCharacterStreamView & stream,
 		Unicode const &             character
 	) -> Void {
@@ -119,7 +119,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_escape_character (
+	inline auto read_escape_character(
 		InputCharacterStreamView & stream,
 		Unicode &                  character
 	) -> Void {
@@ -209,7 +209,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region e-ascii character
 
-	inline auto write_eascii_character (
+	inline auto write_eascii_character(
 		OutputCharacterStreamView & stream,
 		Unicode const &             character
 	) -> Void {
@@ -218,7 +218,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_eascii_character (
+	inline auto read_eascii_character(
 		InputCharacterStreamView & stream,
 		Unicode &                  character
 	) -> Void {
@@ -230,7 +230,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region utf-8 character
 
-	inline auto write_utf8_character (
+	inline auto write_utf8_character(
 		OutputCharacterStreamView & stream,
 		Unicode const &             character
 	) -> Void {
@@ -261,7 +261,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_utf8_character (
+	inline auto read_utf8_character(
 		InputCharacterStreamView & stream,
 		Unicode &                  character
 	) -> Void {
@@ -300,7 +300,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto compute_utf8_character_extra_size (
+	inline auto compute_utf8_character_extra_size(
 		Character8 const & character
 	) -> Size {
 		auto extra_size = Size{};
@@ -329,7 +329,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region string
 
-	inline auto write_string (
+	inline auto write_string(
 		OutputCharacterStreamView & stream,
 		ConstantStringView const &  string,
 		Size &                      length
@@ -339,7 +339,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_string (
+	inline auto read_string(
 		InputCharacterStreamView & stream,
 		ConstantStringView &       string,
 		Size const &               length
@@ -352,7 +352,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region e-ascii string
 
-	inline auto write_eascii_string (
+	inline auto write_eascii_string(
 		OutputCharacterStreamView & stream,
 		String const &              string,
 		Size &                      length
@@ -368,7 +368,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_eascii_string (
+	inline auto read_eascii_string(
 		InputCharacterStreamView & stream,
 		String &                   string,
 		Size const &               length
@@ -389,7 +389,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region utf-8 string
 
-	inline auto write_utf8_string (
+	inline auto write_utf8_string(
 		OutputCharacterStreamView & stream,
 		ConstantStringView const &  string,
 		Size &                      length
@@ -412,7 +412,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_utf8_string (
+	inline auto read_utf8_string(
 		InputCharacterStreamView & stream,
 		ConstantStringView &       string,
 		Size const &               length
@@ -434,7 +434,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_utf8_string_by_size (
+	inline auto read_utf8_string_by_size(
 		InputCharacterStreamView & stream,
 		ConstantStringView &       string,
 		Size &                     length,
@@ -459,7 +459,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto compute_utf8_string_length (
+	inline auto compute_utf8_string_length(
 		ConstantStringView const & string
 	) -> Size {
 		auto string_stream = InputCharacterStreamView{string};
@@ -472,7 +472,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region string until
 
-	inline auto write_string_until (
+	inline auto write_string_until(
 		OutputCharacterStreamView & stream,
 		ConstantStringView const &  string,
 		Character const &           end_marker
@@ -483,7 +483,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_string_until (
+	inline auto read_string_until(
 		InputCharacterStreamView & stream,
 		ConstantStringView &       string,
 		Character const &          end_marker
@@ -505,7 +505,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region escape utf-8 string until
 
-	inline auto write_escape_utf8_string_until (
+	inline auto write_escape_utf8_string_until(
 		OutputCharacterStreamView & stream,
 		InputCharacterStreamView &  string,
 		Character const &           end_marker
@@ -532,7 +532,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_escape_utf8_string_until (
+	inline auto read_escape_utf8_string_until(
 		InputCharacterStreamView &  stream,
 		OutputCharacterStreamView & string,
 		Character const &           end_marker
@@ -568,7 +568,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region comment
 
-	inline auto read_line_comment_after_mark (
+	inline auto read_line_comment_after_mark(
 		InputCharacterStreamView & stream
 	) -> ConstantStringView {
 		auto begin = stream.current_pointer();
@@ -582,7 +582,7 @@ export namespace Twinning::Kernel::StringParser {
 		return ConstantStringView{begin, length};
 	}
 
-	inline auto read_block_comment_after_mark (
+	inline auto read_block_comment_after_mark(
 		InputCharacterStreamView & stream
 	) -> ConstantStringView {
 		auto begin = stream.current_pointer();
@@ -599,7 +599,7 @@ export namespace Twinning::Kernel::StringParser {
 		return ConstantStringView{begin, length};
 	}
 
-	inline auto read_comment_after_first_mark (
+	inline auto read_comment_after_first_mark(
 		InputCharacterStreamView & stream
 	) -> ConstantStringView {
 		auto result = ConstantStringView{};
@@ -624,7 +624,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region null
 
-	inline auto write_null (
+	inline auto write_null(
 		OutputCharacterStreamView & stream,
 		Null const &                value
 	) -> Void {
@@ -632,7 +632,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_null (
+	inline auto read_null(
 		InputCharacterStreamView & stream,
 		Null &                     value
 	) -> Void {
@@ -647,7 +647,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region boolean
 
-	inline auto write_boolean (
+	inline auto write_boolean(
 		OutputCharacterStreamView & stream,
 		Boolean const &             value
 	) -> Void {
@@ -655,7 +655,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_boolean (
+	inline auto read_boolean(
 		InputCharacterStreamView & stream,
 		Boolean &                  value
 	) -> Void {
@@ -683,7 +683,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region number
 
-	inline auto write_number (
+	inline auto write_number(
 		OutputCharacterStreamView & stream,
 		Integer const &             value,
 		Boolean const &             disable_sign_when_positive = k_false
@@ -699,7 +699,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_number (
+	inline auto read_number(
 		InputCharacterStreamView & stream,
 		Integer &                  value
 	) -> Void {
@@ -746,7 +746,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	// ----------------
 
-	inline auto write_number (
+	inline auto write_number(
 		OutputCharacterStreamView & stream,
 		Floater const &             value,
 		Boolean const &             disable_sign_when_positive = k_false
@@ -766,7 +766,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_number (
+	inline auto read_number(
 		InputCharacterStreamView & stream,
 		Floater &                  value
 	) -> Void {
@@ -835,7 +835,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	// ----------------
 
-	inline auto write_number (
+	inline auto write_number(
 		OutputCharacterStreamView & stream,
 		NumberVariant const &       value,
 		Boolean const &             disable_sign_when_positive = k_false
@@ -854,7 +854,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_number (
+	inline auto read_number(
 		InputCharacterStreamView & stream,
 		NumberVariant &            value
 	) -> Void {
@@ -930,7 +930,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region byte
 
-	inline auto write_byte (
+	inline auto write_byte(
 		OutputCharacterStreamView & stream,
 		Byte const &                value
 	) -> Void {
@@ -939,7 +939,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_byte (
+	inline auto read_byte(
 		InputCharacterStreamView & stream,
 		Byte &                     value
 	) -> Void {
@@ -953,7 +953,7 @@ export namespace Twinning::Kernel::StringParser {
 
 	#pragma region byte list
 
-	inline auto write_byte_list (
+	inline auto write_byte_list(
 		OutputCharacterStreamView &  stream,
 		ConstantByteListView const & value
 	) -> Void {
@@ -967,7 +967,7 @@ export namespace Twinning::Kernel::StringParser {
 		return;
 	}
 
-	inline auto read_byte_list (
+	inline auto read_byte_list(
 		InputCharacterStreamView &   stream,
 		VariableByteListView const & value
 	) -> Void {

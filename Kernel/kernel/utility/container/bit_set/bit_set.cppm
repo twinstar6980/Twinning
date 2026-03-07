@@ -49,22 +49,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~BitSet (
+		constexpr ~BitSet(
 		) = default;
 
 		// ----------------
 
-		constexpr BitSet (
+		constexpr BitSet(
 		) :
 			m_data{} {
 			return;
 		}
 
-		constexpr BitSet (
+		constexpr BitSet(
 			BitSet const & that
 		) = default;
 
-		constexpr BitSet (
+		constexpr BitSet(
 			BitSet && that
 		) = default;
 
@@ -72,11 +72,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BitSet const & that
 		) -> BitSet & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			BitSet && that
 		) -> BitSet & = default;
 
@@ -84,7 +84,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region size
 
-		auto size (
+		auto size(
 		) const -> Size {
 			return mbox<Size>(thiz.m_data.size());
 		}
@@ -93,13 +93,13 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		auto get (
+		auto get(
 			Size const & index
 		) -> Boolean {
 			return thiz.m_data.test(index.value);
 		}
 
-		auto set (
+		auto set(
 			Size const &    index,
 			Boolean const & value
 		) -> Void {
@@ -109,13 +109,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto reset (
+		auto reset(
 		) -> Void {
 			thiz.m_data.reset();
 			return;
 		}
 
-		auto reset (
+		auto reset(
 			Size const & index
 		) -> Void {
 			thiz.m_data.reset(index.value);
@@ -124,13 +124,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto set (
+		auto set(
 		) -> Void {
 			thiz.m_data.set();
 			return;
 		}
 
-		auto set (
+		auto set(
 			Size const & index
 		) -> Void {
 			thiz.m_data.set(index.value);
@@ -141,31 +141,31 @@ export namespace Twinning::Kernel {
 
 		#pragma region utility
 
-		auto all (
+		auto all(
 		) const -> Boolean {
 			return mbox<Boolean>(thiz.m_data.all());
 		}
 
-		auto any (
+		auto any(
 		) const -> Boolean {
 			return mbox<Boolean>(thiz.m_data.any());
 		}
 
-		auto none (
+		auto none(
 		) const -> Boolean {
 			return mbox<Boolean>(thiz.m_data.none());
 		}
 
 		// ----------------
 
-		auto count (
+		auto count(
 		) const -> Size {
 			return mbox<Size>(thiz.m_data.count());
 		}
 
 		// ----------------
 
-		auto flip (
+		auto flip(
 		) -> Void {
 			thiz.m_data.flip();
 			return;
@@ -177,7 +177,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<>
 			&& (IsSameOf<begin, Size> && IsSameOf<size, Size>)
 			&& (begin + size <= t_size)
-		auto sub (
+		auto sub(
 		) -> BitSet<size> {
 			auto result = BitSet<size>{};
 			for (auto & index : SizeRange{size}) {
@@ -194,7 +194,7 @@ export namespace Twinning::Kernel {
 			AutomaticConstraint
 			&& (IsSame<TargetInteger, BoundedInteger>)
 			&& (!IsVoid<TargetInteger>)
-		auto from_integer (
+		auto from_integer(
 			TargetInteger const & value
 		) -> Void {
 			thiz.m_data = std::bitset<t_size.value>{value.value};
@@ -205,7 +205,7 @@ export namespace Twinning::Kernel {
 			AutomaticConstraint
 			&& (IsSame<TargetInteger, BoundedInteger>)
 			&& (!IsVoid<TargetInteger>)
-		auto to_integer (
+		auto to_integer(
 		) const -> TargetInteger {
 			return mbox<TargetInteger>(thiz.m_data.to_ullong());
 		}

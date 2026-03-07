@@ -75,7 +75,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator == (
+	inline constexpr auto operator ==(
 		It const & thix,
 		It const & that
 	) -> bool {
@@ -87,7 +87,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator < (
+	inline constexpr auto operator <(
 		It const & thix,
 		It const & that
 	) -> bool {
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator > (
+	inline constexpr auto operator >(
 		It const & thix,
 		It const & that
 	) -> bool {
@@ -107,7 +107,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator <= (
+	inline constexpr auto operator <=(
 		It const & thix,
 		It const & that
 	) -> bool {
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator >= (
+	inline constexpr auto operator >=(
 		It const & thix,
 		It const & that
 	) -> bool {
@@ -129,7 +129,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsSignedIntegerBox<It> || IsSignedFloaterBox<It>)
-	inline constexpr auto operator + (
+	inline constexpr auto operator +(
 		It const & thix
 	) -> It {
 		return It{+thix.value};
@@ -138,7 +138,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsSignedIntegerBox<It> || IsSignedFloaterBox<It>)
-	inline constexpr auto operator - (
+	inline constexpr auto operator -(
 		It const & thix
 	) -> It {
 		return It{-thix.value};
@@ -149,7 +149,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator + (
+	inline constexpr auto operator +(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -159,7 +159,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator - (
+	inline constexpr auto operator -(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -169,7 +169,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator * (
+	inline constexpr auto operator *(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -179,7 +179,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator / (
+	inline constexpr auto operator /(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -189,7 +189,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator % (
+	inline constexpr auto operator %(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator += (
+	inline constexpr auto operator +=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -212,7 +212,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator -= (
+	inline constexpr auto operator -=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -223,7 +223,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator *= (
+	inline constexpr auto operator *=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -234,7 +234,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsNumberBox<It>)
-	inline constexpr auto operator /= (
+	inline constexpr auto operator /=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -245,7 +245,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator %= (
+	inline constexpr auto operator %=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -258,7 +258,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator ++ (
+	inline constexpr auto operator ++(
 		It & thix
 	) -> It & {
 		++thix.value;
@@ -268,7 +268,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator -- (
+	inline constexpr auto operator --(
 		It & thix
 	) -> It & {
 		--thix.value;
@@ -280,7 +280,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator ++ (
+	inline constexpr auto operator ++(
 		It & thix,
 		int
 	) -> It {
@@ -290,7 +290,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator -- (
+	inline constexpr auto operator --(
 		It & thix,
 		int
 	) -> It {
@@ -302,7 +302,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator ~ (
+	inline constexpr auto operator ~(
 		It const & thix
 	) -> It {
 		return It{static_cast<typename It::Value>(~thix.value)};
@@ -311,7 +311,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator | (
+	inline constexpr auto operator |(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -321,7 +321,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator & (
+	inline constexpr auto operator &(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -331,7 +331,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator ^ (
+	inline constexpr auto operator ^(
 		It const & thix,
 		It const & that
 	) -> It {
@@ -342,7 +342,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerBox<It>)
 		&& (IsSizeBox<Size>)
-	inline constexpr auto operator << (
+	inline constexpr auto operator <<(
 		It const &   thix,
 		Size const & size
 	) -> It {
@@ -353,7 +353,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerBox<It>)
 		&& (IsSizeBox<Size>)
-	inline constexpr auto operator >> (
+	inline constexpr auto operator >>(
 		It const &   thix,
 		Size const & size
 	) -> It {
@@ -365,7 +365,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator |= (
+	inline constexpr auto operator |=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -376,7 +376,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator &= (
+	inline constexpr auto operator &=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -387,7 +387,7 @@ export namespace Twinning::Kernel {
 	template <typename It> requires
 		CategoryConstraint<IsPureInstance<It>>
 		&& (IsIntegerBox<It>)
-	inline constexpr auto operator ^= (
+	inline constexpr auto operator ^=(
 		It &       thix,
 		It const & that
 	) -> It & {
@@ -399,7 +399,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerBox<It>)
 		&& (IsSizeBox<Size>)
-	inline constexpr auto operator <<= (
+	inline constexpr auto operator <<=(
 		It &         thix,
 		Size const & size
 	) -> It & {
@@ -411,7 +411,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
 		&& (IsIntegerBox<It>)
 		&& (IsSizeBox<Size>)
-	inline constexpr auto operator >>= (
+	inline constexpr auto operator >>=(
 		It &         thix,
 		Size const & size
 	) -> It & {
@@ -471,49 +471,49 @@ export namespace Twinning::Kernel {
 
 	#pragma region literal
 
-	inline constexpr auto operator ""_iu8 (
+	inline constexpr auto operator ""_iu8(
 		ZLiteralInteger value
 	) -> IntegerU8 {
 		return mbox<IntegerU8>(value);
 	}
 
-	inline constexpr auto operator ""_iu16 (
+	inline constexpr auto operator ""_iu16(
 		ZLiteralInteger value
 	) -> IntegerU16 {
 		return mbox<IntegerU16>(value);
 	}
 
-	inline constexpr auto operator ""_iu32 (
+	inline constexpr auto operator ""_iu32(
 		ZLiteralInteger value
 	) -> IntegerU32 {
 		return mbox<IntegerU32>(value);
 	}
 
-	inline constexpr auto operator ""_iu64 (
+	inline constexpr auto operator ""_iu64(
 		ZLiteralInteger value
 	) -> IntegerU64 {
 		return mbox<IntegerU64>(value);
 	}
 
-	inline constexpr auto operator ""_is8 (
+	inline constexpr auto operator ""_is8(
 		ZLiteralInteger value
 	) -> IntegerS8 {
 		return mbox<IntegerS8>(value);
 	}
 
-	inline constexpr auto operator ""_is16 (
+	inline constexpr auto operator ""_is16(
 		ZLiteralInteger value
 	) -> IntegerS16 {
 		return mbox<IntegerS16>(value);
 	}
 
-	inline constexpr auto operator ""_is32 (
+	inline constexpr auto operator ""_is32(
 		ZLiteralInteger value
 	) -> IntegerS32 {
 		return mbox<IntegerS32>(value);
 	}
 
-	inline constexpr auto operator ""_is64 (
+	inline constexpr auto operator ""_is64(
 		ZLiteralInteger value
 	) -> IntegerS64 {
 		return mbox<IntegerS64>(value);
@@ -521,13 +521,13 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto operator ""_fs32 (
+	inline constexpr auto operator ""_fs32(
 		ZLiteralFloater value
 	) -> FloaterS32 {
 		return mbox<FloaterS32>(value);
 	}
 
-	inline constexpr auto operator ""_fs64 (
+	inline constexpr auto operator ""_fs64(
 		ZLiteralFloater value
 	) -> FloaterS64 {
 		return mbox<FloaterS64>(value);
@@ -535,13 +535,13 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto operator ""_szu (
+	inline constexpr auto operator ""_szu(
 		ZLiteralInteger value
 	) -> SizeU {
 		return mbox<SizeU>(value);
 	}
 
-	inline constexpr auto operator ""_szs (
+	inline constexpr auto operator ""_szs(
 		ZLiteralInteger value
 	) -> SizeS {
 		return mbox<SizeS>(value);
@@ -549,7 +549,7 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto operator ""_i (
+	inline constexpr auto operator ""_i(
 		ZLiteralInteger value
 	) -> Integer {
 		return mbox<Integer>(value);
@@ -557,7 +557,7 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto operator ""_f (
+	inline constexpr auto operator ""_f(
 		ZLiteralFloater value
 	) -> Floater {
 		return mbox<Floater>(value);
@@ -565,13 +565,13 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline constexpr auto operator ""_sz (
+	inline constexpr auto operator ""_sz(
 		ZLiteralInteger value
 	) -> Size {
 		return mbox<Size>(value);
 	}
 
-	inline constexpr auto operator ""_ix (
+	inline constexpr auto operator ""_ix(
 		ZLiteralInteger value
 	) -> Size {
 		return mbox<Size>(value - 1);

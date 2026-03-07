@@ -28,7 +28,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -36,7 +36,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput & thix,
 			That &      that
 		) -> Void {
@@ -62,7 +62,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline static auto write (
+		inline static auto write(
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		inline static auto read (
+		inline static auto read(
 			ThisInput &  thix,
 			That const & that
 		) -> Void requires

@@ -61,7 +61,8 @@ namespace Twinning.Script {
 		public pr(
 			value: number,
 		): void {
-			return (this.m_position += value, undefined);
+			this.m_position += value;
+			return;
 		}
 
 		// #endregion

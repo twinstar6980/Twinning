@@ -49,29 +49,29 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~StreamView (
+		~StreamView(
 		) = default;
 
 		// ----------------
 
-		StreamView (
+		StreamView(
 		) :
 			m_view{},
 			m_position{} {
 			return;
 		}
 
-		StreamView (
+		StreamView(
 			StreamView const & that
 		) = default;
 
-		StreamView (
+		StreamView(
 			StreamView && that
 		) = default;
 
 		// ----------------
 
-		explicit StreamView (
+		explicit StreamView(
 			ListView const & view,
 			Size const &     position = k_begin_index
 		) :
@@ -85,22 +85,22 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			StreamView const & that
 		) -> StreamView & = default;
 
-		auto operator = (
+		auto operator =(
 			StreamView && that
 		) -> StreamView & = default;
 
 		// ----------------
 
-		implicit operator InputStream & () requires
+		implicit operator InputStream &() requires
 			(mode == StreamMode::Constant::access()) {
 			return thiz.as_input_stream();
 		}
 
-		implicit operator OutputStream & () requires
+		implicit operator OutputStream &() requires
 			(mode == StreamMode::Constant::access()) {
 			return thiz.as_output_stream();
 		}
@@ -109,14 +109,14 @@ export namespace Twinning::Kernel {
 
 		#pragma region set
 
-		auto reset (
+		auto reset(
 		) -> Void {
 			thiz.m_view.reset();
 			thiz.m_position = k_begin_index;
 			return;
 		}
 
-		auto set (
+		auto set(
 			ListView const & view,
 			Size const &     position = k_begin_index
 		) -> Void {
@@ -130,7 +130,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region data
 
-		auto data (
+		auto data(
 		) const -> QualifyIterator {
 			return thiz.m_view.begin();
 		}
@@ -139,7 +139,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region size
 
-		auto size (
+		auto size(
 		) const -> Size {
 			return thiz.m_view.size();
 		}
@@ -148,19 +148,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region position
 
-		auto position (
+		auto position(
 		) const -> Size {
 			return thiz.m_position;
 		}
 
 		// ----------------
 
-		auto full (
+		auto full(
 		) const -> Boolean {
 			return thiz.position() >= thiz.size();
 		}
 
-		auto reserve (
+		auto reserve(
 		) const -> Size {
 			return thiz.size() - thiz.position();
 		}
@@ -169,7 +169,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region set position
 
-		auto set_position (
+		auto set_position(
 			Size const & position
 		) -> Void {
 			assert_test(position <= thiz.size());
@@ -179,14 +179,14 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto backward (
+		auto backward(
 			Size const & size = 1_sz
 		) -> Void {
 			assert_test(size <= thiz.position());
 			return thiz.set_position(thiz.position() - size);
 		}
 
-		auto forward (
+		auto forward(
 			Size const & size = 1_sz
 		) -> Void {
 			assert_test(size <= thiz.reserve());
@@ -195,12 +195,12 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto backward_to_begin (
+		auto backward_to_begin(
 		) -> Void {
 			return thiz.set_position(k_begin_index);
 		}
 
-		auto forward_to_end (
+		auto forward_to_end(
 		) -> Void {
 			return thiz.set_position(thiz.size());
 		}
@@ -209,12 +209,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		auto view (
+		auto view(
 		) -> ListView {
 			return ListView{thiz.data(), thiz.size()};
 		}
 
-		auto sub_view (
+		auto sub_view(
 			Size const & begin,
 			Size const & count
 		) -> ListView {
@@ -224,14 +224,14 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto previous_view (
+		auto previous_view(
 			Size const & size
 		) -> ListView {
 			assert_test(size <= thiz.position());
 			return thiz.sub_view(thiz.position() - size, size);
 		}
 
-		auto next_view (
+		auto next_view(
 			Size const & size
 		) -> ListView {
 			assert_test(size <= thiz.reserve());
@@ -240,12 +240,12 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto stream_view (
+		auto stream_view(
 		) -> ListView {
 			return thiz.sub_view(k_begin_index, thiz.position());
 		}
 
-		auto reserve_view (
+		auto reserve_view(
 		) -> ListView {
 			return thiz.sub_view(thiz.position(), thiz.size() - thiz.position());
 		}
@@ -254,7 +254,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region query
 
-		auto current_pointer (
+		auto current_pointer(
 		) -> QualifyIterator {
 			assert_test(thiz.position() <= thiz.size());
 			return thiz.data() + thiz.position();
@@ -262,13 +262,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto current (
+		auto current(
 		) -> QualifyElement & {
 			assert_test(!thiz.full());
 			return thiz.m_view[thiz.m_position];
 		}
 
-		auto next (
+		auto next(
 		) -> QualifyElement & {
 			auto & current = thiz.current();
 			thiz.forward();
@@ -277,7 +277,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto forward_view (
+		auto forward_view(
 			Size const & size
 		) -> ListView {
 			auto view = thiz.next_view(size);
@@ -289,7 +289,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region write & read
 
-		auto write (
+		auto write(
 			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
@@ -298,7 +298,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		auto read (
+		auto read(
 			Element & value
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
@@ -309,7 +309,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto write_constant (
+		auto write_constant(
 			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
@@ -317,7 +317,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		auto read_constant (
+		auto read_constant(
 			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
@@ -329,7 +329,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto read_of (
+		auto read_of(
 		) -> Element requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			auto value = Element{};
@@ -341,7 +341,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region write & read space
 
-		auto write_space (
+		auto write_space(
 			Element const & value,
 			Size const &    size
 		) -> Void requires
@@ -354,7 +354,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		auto read_space (
+		auto read_space(
 			Element const & value,
 			Size const &    size
 		) -> Void requires
@@ -371,13 +371,13 @@ export namespace Twinning::Kernel {
 
 		#pragma region mode cast
 
-		auto as_input_stream (
+		auto as_input_stream(
 		) -> InputStream & requires
 			(mode == StreamMode::Constant::access()) {
 			return self_cast<InputStream>(thiz);
 		}
 
-		auto as_output_stream (
+		auto as_output_stream(
 		) -> OutputStream & requires
 			(mode == StreamMode::Constant::access()) {
 			return self_cast<OutputStream>(thiz);

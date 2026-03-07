@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto make_original_group_identifier_upper (
+		inline static auto make_original_group_identifier_upper(
 			ConstantStringView const & standard_identifier,
 			Boolean &                  is_composite,
 			String &                   original_identifier
@@ -52,7 +52,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			return;
 		}
 
-		inline static auto make_original_group_identifier (
+		inline static auto make_original_group_identifier(
 			ConstantStringView const & standard_identifier,
 			Boolean &                  is_composite,
 			String &                   original_identifier
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto process_package_manifest (
+		inline static auto process_package_manifest(
 			InputByteStreamView &              data,
 			Structure::Header<version> const & header_structure,
 			typename Manifest::Package &       manifest
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			auto group_manifest_information_data = InputByteStreamView{data.sub_view(cbox<Size>(header_structure.group_manifest_information_section_offset), cbox<Size>(header_structure.resource_manifest_information_section_offset - header_structure.group_manifest_information_section_offset))};
 			auto resource_manifest_information_data = InputByteStreamView{data.sub_view(cbox<Size>(header_structure.resource_manifest_information_section_offset), cbox<Size>(header_structure.string_manifest_information_section_offset - header_structure.resource_manifest_information_section_offset))};
 			auto string_manifest_information_data = InputCharacterStreamView{from_byte_view<Character, BasicCharacterListView>(data.sub_view(cbox<Size>(header_structure.string_manifest_information_section_offset), cbox<Size>(header_structure.information_section_size - header_structure.string_manifest_information_section_offset)))};
-			auto get_string = [&] (
+			auto get_string = [&](
 				IntegerU32 const & offset
 			) -> ConstantStringView {
 				auto result = ConstantStringView{};
@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			return;
 		}
 
-		inline static auto process_package (
+		inline static auto process_package(
 			InputByteStreamView &                  data,
 			typename Definition::Package &         definition,
 			Optional<typename Manifest::Package> & manifest,
@@ -192,7 +192,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			auto subgroup_identifier_list = Map<Size, String>{};
 			group_identifier_list.convert(
 				information_structure.group_identifier,
-				[] (auto & destination_element, auto & source_element) -> auto {
+				[](auto & destination_element, auto & source_element) -> auto {
 					destination_element.key = cbox<Size>(source_element.value);
 					destination_element.value = source_element.key;
 					return;
@@ -200,7 +200,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			);
 			subgroup_identifier_list.convert(
 				information_structure.subgroup_identifier,
-				[] (auto & destination_element, auto & source_element) -> auto {
+				[](auto & destination_element, auto & source_element) -> auto {
 					destination_element.key = cbox<Size>(source_element.value);
 					destination_element.value = source_element.key;
 					return;
@@ -238,7 +238,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							subgroup_definition.category.locale.set().from(four_character_code_from_integer(simple_subgroup_information_structure.locale));
 						}
 					}
-					auto make_formatted_path = [&] (
+					auto make_formatted_path = [&](
 						Path const & path_format
 					) -> Path {
 						return Path{format_string(path_format.to_string(), group_definition.identifier, subgroup_definition.identifier)};
@@ -304,7 +304,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &                  data_,
 			typename Definition::Package &         definition,
 			Optional<typename Manifest::Package> & manifest,

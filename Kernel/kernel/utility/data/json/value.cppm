@@ -62,19 +62,19 @@ export namespace Twinning::Kernel::Json {
 
 		#pragma region constructor
 
-		~Value (
+		~Value(
 		) = default;
 
 		// ----------------
 
-		Value (
+		Value(
 		) = default;
 
-		Value (
+		Value(
 			Value const & that
 		) = default;
 
-		Value (
+		Value(
 			Value && that
 		) = default;
 
@@ -86,29 +86,29 @@ export namespace Twinning::Kernel::Json {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Value const & that
 		) -> Value & = default;
 
-		auto operator = (
+		auto operator =(
 			Value && that
 		) -> Value & = default;
 
 		// ----------------
 
-		auto operator [] (
+		auto operator [](
 			Size const & index
 		) -> Value & {
 			return thiz.get_array()[index];
 		}
 
-		auto operator [] (
+		auto operator [](
 			Size const & index
 		) const -> Value const & {
 			return thiz.get_array()[index];
 		}
 
-		auto operator () (
+		auto operator ()(
 			Size const & index
 		) -> Value & {
 			return thiz.get_array()(index);
@@ -116,19 +116,19 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		auto operator [] (
+		auto operator [](
 			String const & key
 		) -> Value & {
 			return thiz.get_object()[key];
 		}
 
-		auto operator [] (
+		auto operator [](
 			String const & key
 		) const -> Value const & {
 			return thiz.get_object()[key];
 		}
 
-		auto operator () (
+		auto operator ()(
 			String const & key
 		) -> Value & {
 			return thiz.get_object()(key);
@@ -137,19 +137,19 @@ export namespace Twinning::Kernel::Json {
 		// ----------------
 		// TODO: sv remove
 
-		auto operator [] (
+		auto operator [](
 			ConstantStringView const & key
 		) -> Value & {
 			return thiz.get_object()[key];
 		}
 
-		auto operator [] (
+		auto operator [](
 			ConstantStringView const & key
 		) const -> Value const & {
 			return thiz.get_object()[key];
 		}
 
-		auto operator () (
+		auto operator ()(
 			ConstantStringView const & key
 		) -> Value & {
 			return thiz.get_object()(key);
@@ -159,32 +159,32 @@ export namespace Twinning::Kernel::Json {
 
 		#pragma region value
 
-		auto is_null (
+		auto is_null(
 		) const -> Boolean {
 			return thiz.is<Null>();
 		}
 
-		auto is_boolean (
+		auto is_boolean(
 		) const -> Boolean {
 			return thiz.is<Boolean>();
 		}
 
-		auto is_number (
+		auto is_number(
 		) const -> Boolean {
 			return thiz.is<Number>();
 		}
 
-		auto is_string (
+		auto is_string(
 		) const -> Boolean {
 			return thiz.is<String>();
 		}
 
-		auto is_array (
+		auto is_array(
 		) const -> Boolean {
 			return thiz.is<Array>();
 		}
 
-		auto is_object (
+		auto is_object(
 		) const -> Boolean {
 			return thiz.is<Object>();
 		}
@@ -193,7 +193,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_null (
+		auto set_null(
 			Argument && ... argument
 		) -> Null & {
 			return thiz.set<Null>(as_forward<Argument>(argument) ...);
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_boolean (
+		auto set_boolean(
 			Argument && ... argument
 		) -> Boolean & {
 			return thiz.set<Boolean>(as_forward<Argument>(argument) ...);
@@ -209,7 +209,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_number (
+		auto set_number(
 			Argument && ... argument
 		) -> Number & {
 			return thiz.set<Number>(as_forward<Argument>(argument) ...);
@@ -217,7 +217,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_string (
+		auto set_string(
 			Argument && ... argument
 		) -> String & {
 			return thiz.set<String>(as_forward<Argument>(argument) ...);
@@ -225,7 +225,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_array (
+		auto set_array(
 			Argument && ... argument
 		) -> Array & {
 			return thiz.set<Array>(as_forward<Argument>(argument) ...);
@@ -233,7 +233,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto set_object (
+		auto set_object(
 			Argument && ... argument
 		) -> Object & {
 			return thiz.set<Object>(as_forward<Argument>(argument) ...);
@@ -241,64 +241,64 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		auto get_null (
+		auto get_null(
 		) -> Null & {
 			return thiz.get<Null>();
 		}
 
-		auto get_boolean (
+		auto get_boolean(
 		) -> Boolean & {
 			return thiz.get<Boolean>();
 		}
 
-		auto get_number (
+		auto get_number(
 		) -> Number & {
 			return thiz.get<Number>();
 		}
 
-		auto get_string (
+		auto get_string(
 		) -> String & {
 			return thiz.get<String>();
 		}
 
-		auto get_array (
+		auto get_array(
 		) -> Array & {
 			return thiz.get<Array>();
 		}
 
-		auto get_object (
+		auto get_object(
 		) -> Object & {
 			return thiz.get<Object>();
 		}
 
 		// ----------------
 
-		auto get_null (
+		auto get_null(
 		) const -> Null const & {
 			return thiz.get<Null>();
 		}
 
-		auto get_boolean (
+		auto get_boolean(
 		) const -> Boolean const & {
 			return thiz.get<Boolean>();
 		}
 
-		auto get_number (
+		auto get_number(
 		) const -> Number const & {
 			return thiz.get<Number>();
 		}
 
-		auto get_string (
+		auto get_string(
 		) const -> String const & {
 			return thiz.get<String>();
 		}
 
-		auto get_array (
+		auto get_array(
 		) const -> Array const & {
 			return thiz.get<Array>();
 		}
 
-		auto get_object (
+		auto get_object(
 		) const -> Object const & {
 			return thiz.get<Object>();
 		}
@@ -309,7 +309,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto from (
+		auto from(
 			That &&       that,
 			Option && ... option
 		) -> Void {
@@ -319,7 +319,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto to (
+		auto to(
 			That &&       that,
 			Option && ... option
 		) const -> Void {
@@ -331,7 +331,7 @@ export namespace Twinning::Kernel::Json {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
-		auto to_of (
+		auto to_of(
 			Option && ... option
 		) const -> That {
 			auto that = That{};

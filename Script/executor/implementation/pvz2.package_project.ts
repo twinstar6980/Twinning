@@ -150,7 +150,7 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.PackageProject {
 					}),
 				],
 				batch: null,
-				worker: ({ project_directory, target_scope, target_package, buffer_size }, temporary: {}) => {
+				worker: ({project_directory, target_scope, target_package, buffer_size}, temporary: {}) => {
 					let target_scope_list = target_scope === '*' ? null : target_scope.length === 0 ? [] : target_scope.split('|').map(Support.Pvz2.PackageProject.parse_scope_expression);
 					let target_package_list = target_package === '*' ? null : target_package.length === 0 ? [] : target_package.split('|');
 					Support.Pvz2.PackageProject.Compile.compile(project_directory, target_scope_list as any, target_package_list, buffer_size);
@@ -190,7 +190,7 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.PackageProject {
 					}),
 				],
 				batch: null,
-				worker: ({ project_directory, target_package, remake_manifest, buffer_size }, temporary: {}) => {
+				worker: ({project_directory, target_package, remake_manifest, buffer_size}, temporary: {}) => {
 					let target_package_list = target_package === '*' ? null : target_package.length === 0 ? [] : target_package.split('|');
 					Support.Pvz2.PackageProject.Link.link(project_directory, target_package_list, remake_manifest, buffer_size);
 					return;
@@ -218,7 +218,7 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.PackageProject {
 						identifier: 'package_name',
 						option: null,
 						checker: null,
-						automatic: (argument: { package_directory: string; }) => (StorageHelper.name(argument.package_directory).replace(/(\.rsb\.bundle)?$/i, '')),
+						automatic: (argument: {package_directory: string}) => (StorageHelper.name(argument.package_directory).replace(/(\.rsb\.bundle)?$/i, '')),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -233,12 +233,12 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.PackageProject {
 						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
-						condition: (argument: { package_version_number: bigint; }) => ([4n].includes(argument.package_version_number) ? null : 0n),
+						condition: (argument: {package_version_number: bigint}) => ([4n].includes(argument.package_version_number) ? null : 0n),
 					}),
 				],
 				batch: null,
-				worker: ({ project_directory, package_directory, package_name, package_version_number, package_version_extended_texture_information_for_pvz2cn }, temporary: {}) => {
-					Support.Pvz2.PackageProject.Parse.parse(project_directory, package_directory, package_name, { number: package_version_number as any, extended_texture_information_for_pvz2cn: package_version_extended_texture_information_for_pvz2cn as any }, MainScript.g_setting.executor_pvz2_package_project_conversion_setting);
+				worker: ({project_directory, package_directory, package_name, package_version_number, package_version_extended_texture_information_for_pvz2cn}, temporary: {}) => {
+					Support.Pvz2.PackageProject.Parse.parse(project_directory, package_directory, package_name, {number: package_version_number as any, extended_texture_information_for_pvz2cn: package_version_extended_texture_information_for_pvz2cn as any}, MainScript.g_setting.executor_pvz2_package_project_conversion_setting);
 					return;
 				},
 			}),

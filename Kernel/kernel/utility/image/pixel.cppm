@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Image {
 
 		// ----------------
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			BasicPixelRGBA const & thix,
 			BasicPixelRGBA const & that
 		) -> bool = default;

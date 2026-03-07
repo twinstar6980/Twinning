@@ -12,7 +12,7 @@ namespace Twinning::Kernel::Interface {
 
 	#pragma region implement
 
-	static auto service_executor_execute (
+	static auto service_executor_execute(
 		ExecutorProxy const & callback,
 		String const &        script,
 		List<String> const &  argument
@@ -32,7 +32,7 @@ namespace Twinning::Kernel::Interface {
 
 	// ----------------
 
-	static auto service_executor (
+	static auto service_executor(
 		ExecutorProxy const & callback_proxy,
 		MessageProxy const &  argument_proxy,
 		MessageProxy &        result_proxy
@@ -70,12 +70,12 @@ namespace Twinning::Kernel::Interface {
 	__attribute__((visibility("default")))
 	extern "C++" Service service = Service{
 		.executor = nullptr,
-		.initialize = [] () {
+		.initialize = []() {
 			service.executor = new Executor{};
 			ExecutorProxy::construct(*service.executor, ExecutorProxy{&service_executor});
 			return;
 		},
-		.finalize = [] () {
+		.finalize = []() {
 			ExecutorProxy::destruct(*service.executor);
 			delete service.executor;
 			return;

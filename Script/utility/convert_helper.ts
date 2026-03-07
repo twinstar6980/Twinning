@@ -33,9 +33,9 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #region object
 
-	export function object_clear_undefined<Target extends Object>(
-		target: Target,
-	): Target {
+	export function object_clear_undefined<TTarget extends Object>(
+		target: TTarget,
+	): TTarget {
 		for (let key in target) {
 			let value = target[key];
 			if (value === undefined) {
@@ -49,11 +49,11 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #region record
 
-	export function record_from_array<Element extends any, Key extends string, Value extends any>(
-		source: Array<Element>,
-		mapper: (index: number, element: Element) => [Key, Value],
-	): Record<Key, Value> {
-		let destination = {} as Record<Key, Value>;
+	export function record_from_array<TElement extends any, TKey extends string, TValue extends any>(
+		source: Array<TElement>,
+		mapper: (index: number, element: TElement) => [TKey, TValue],
+	): Record<TKey, TValue> {
+		let destination = {} as Record<TKey, TValue>;
 		for (let index in source) {
 			let [key, value] = mapper(Number(index), source[index]);
 			destination[key] = value;
@@ -61,22 +61,22 @@ namespace Twinning.Script.ConvertHelper {
 		return destination;
 	}
 
-	export function record_to_array<Key extends string | number | symbol, Value extends any, Element extends any>(
-		source: Record<Key, Value>,
-		mapper: (key: Key, value: Value) => Element,
-	): Array<Element> {
-		let destination = [] as Array<Element>;
+	export function record_to_array<TKey extends string | number | symbol, TValue extends any, TElement extends any>(
+		source: Record<TKey, TValue>,
+		mapper: (key: TKey, value: TValue) => TElement,
+	): Array<TElement> {
+		let destination = [] as Array<TElement>;
 		for (let key in source) {
 			destination.push(mapper(key, source[key]));
 		}
 		return destination;
 	}
 
-	export function record_transform<Key extends string | number | symbol, Value extends any, NewKey extends string | number | symbol, NewValue extends any>(
-		source: Record<Key, Value>,
-		mapper: (key: Key, value: Value) => [NewKey, NewValue],
-	): Record<NewKey, NewValue> {
-		let destination = {} as Record<NewKey, NewValue>;
+	export function record_transform<TKey extends string | number | symbol, TValue extends any, TNewKey extends string | number | symbol, TNewValue extends any>(
+		source: Record<TKey, TValue>,
+		mapper: (key: TKey, value: TValue) => [TNewKey, TNewValue],
+	): Record<TNewKey, TNewValue> {
+		let destination = {} as Record<TNewKey, TNewValue>;
 		for (let key in source) {
 			let [new_key, new_value] = mapper(key, source[key]);
 			destination[new_key] = new_value;

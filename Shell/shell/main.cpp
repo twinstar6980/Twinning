@@ -7,13 +7,13 @@ import twinning.shell.main_console;
 #pragma region main
 
 #if defined M_system_windows
-auto wmain (
+auto wmain(
 	int       argc,
 	wchar_t * argv[]
 )
 #endif
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-auto main (
+auto main(
 	int    argc,
 	char * argv[]
 )

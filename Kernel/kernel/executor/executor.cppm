@@ -12,7 +12,7 @@ export namespace Twinning::Kernel::Executor {
 
 	#pragma region function
 
-	inline auto execute (
+	inline auto execute(
 		Interface::ExecutorProxy const & callback,
 		String const &                   script,
 		List<String> const &             argument

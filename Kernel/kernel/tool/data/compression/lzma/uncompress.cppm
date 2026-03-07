@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw
 		) -> Void {
@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_
 		) -> Void {

@@ -48,7 +48,7 @@ namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation.En
 		write_integer(data, definition.slot_count);
 		write_integer(data, BigInt(definition.groups.length));
 		for (let groups_index = 0; groups_index < definition.groups.length; groups_index++) {
-			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = { ...definition.groups[groups_index] } as any;
+			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = {...definition.groups[groups_index]} as any;
 			group.subgroups = CheckHelper.not_undefined_or(group.subgroups, []);
 			group.resources = CheckHelper.not_undefined_or(group.resources, []);
 			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index!;
@@ -71,7 +71,7 @@ namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation.En
 				write_string(data, subgroup.id);
 			}
 			for (let resources_index = 0; resources_index < group.resources.length; resources_index++) {
-				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GeneralResourceAdditional & ResourceManifest.AtlasImageResourceAdditional & ResourceManifest.SpriteImageResourceAdditional) = { ...group.resources[resources_index] } as any;
+				let resource: ResourceManifest.ResourceBase & (ResourceManifest.GeneralResourceAdditional & ResourceManifest.AtlasImageResourceAdditional & ResourceManifest.SpriteImageResourceAdditional) = {...group.resources[resources_index]} as any;
 				if (resource.type !== 'Image' || resource.parent === undefined) {
 					resource.y = 0x7FFFFFFFn;
 				}

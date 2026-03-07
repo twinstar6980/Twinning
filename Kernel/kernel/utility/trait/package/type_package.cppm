@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Trait {
 		&& (IsTypePackage<Package> && IsSameOf<begin, ZSize> && IsSameOf<size, ZSize>)
 		&& (begin + size <= Package::size)
 	using AsTypePackageSub = decltype(
-		[] <auto ... index> (
+		[] <auto ... index>(
 		std::index_sequence<index ...>
 	) -> TypePackage<typename Package::template Element<begin + index> ...> {
 			return {};
@@ -65,7 +65,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<Package1> && IsPureInstance<Package2>>
 		&& (IsTypePackage<Package1> && IsTypePackage<Package2>)
 	using AsTypePackageConcat = decltype(
-		[] <auto ... index_1, auto ... index_2> (
+		[] <auto ... index_1, auto ... index_2>(
 		std::index_sequence<index_1 ...>,
 		std::index_sequence<index_2 ...>
 	) -> TypePackage<typename Package1::template Element<index_1> ..., typename Package2::template Element<index_2> ...> {
@@ -88,7 +88,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Package, template <typename ...> typename Transformer> requires
 		CategoryConstraint<IsPureInstance<Package>>
 	using AsTypePackageTransform = decltype([] {
-		return [&] <auto ... index> (
+		return [&] <auto ... index>(
 			std::index_sequence<index ...>
 		) -> Transformer<typename Package::template Element<index> ...> {
 				return declare<Transformer<typename Package::template Element<index> ...>>();

@@ -7,10 +7,10 @@ module;
 #include "third/etcpak/ProcessRGB.hpp"
 
 // ReSharper disable once CppEnforceFunctionDeclarationStyle
-extern "C++" void DecodeRGBPart (uint64_t d, uint32_t * dst, uint32_t w);
+extern "C++" void DecodeRGBPart(uint64_t d, uint32_t * dst, uint32_t w);
 
 // ReSharper disable once CppEnforceFunctionDeclarationStyle
-extern "C++" void DecodeRGBAPart (uint64_t d, uint64_t alpha, uint32_t * dst, uint32_t w);
+extern "C++" void DecodeRGBAPart(uint64_t d, uint64_t alpha, uint32_t * dst, uint32_t w);
 
 #pragma clang diagnostic pop
 

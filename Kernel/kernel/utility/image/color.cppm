@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Image {
 	template <typename Value> requires
 		CategoryConstraint<>
 		&& (IsBaseBoxValue<Value>)
-	inline auto compress_color (
+	inline auto compress_color(
 		BasicColor<Value> const & value,
 		Size const &              bit_count
 	) -> BasicColor<Value> {
@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Image {
 	template <typename Value> requires
 		CategoryConstraint<>
 		&& (IsBaseBoxValue<Value>)
-	inline auto uncompress_color (
+	inline auto uncompress_color(
 		BasicColor<Value> const & value,
 		Size const &              bit_count
 	) -> BasicColor<Value> {
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::Image {
 	template <typename Value> requires
 		CategoryConstraint<>
 		&& (IsBaseBoxValue<Value>)
-	inline auto convert_luminance_from_rgb (
+	inline auto convert_luminance_from_rgb(
 		BasicColor<Value> const & red,
 		BasicColor<Value> const & green,
 		BasicColor<Value> const & blue

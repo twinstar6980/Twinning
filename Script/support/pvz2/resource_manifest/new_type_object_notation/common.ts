@@ -3,18 +3,18 @@ namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation {
 	// #region type
 
 	export const GroupTypeEnumeration = [
-		{ index: 1n, value: 'composite' },
-		{ index: 2n, value: 'simple' },
+		{index: 1n, value: 'composite'},
+		{index: 2n, value: 'simple'},
 	] as const;
 
 	export const ResourceTypeEnumeration = [
-		{ index: 1n, value: 'Image' },
-		{ index: 2n, value: 'PopAnim' },
-		{ index: 3n, value: 'SoundBank' },
-		{ index: 4n, value: 'File' },
-		{ index: 5n, value: 'PrimeFont' },
-		{ index: 6n, value: 'RenderEffect' },
-		{ index: 7n, value: 'DecodedSoundBank' },
+		{index: 1n, value: 'Image'},
+		{index: 2n, value: 'PopAnim'},
+		{index: 3n, value: 'SoundBank'},
+		{index: 4n, value: 'File'},
+		{index: 5n, value: 'PrimeFont'},
+		{index: 6n, value: 'RenderEffect'},
+		{index: 7n, value: 'DecodedSoundBank'},
 	] as const;
 
 	// #endregion

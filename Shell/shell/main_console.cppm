@@ -28,24 +28,24 @@ export namespace Twinning::Shell {
 
 		#pragma region constructor
 
-		virtual ~MainConsoleBridgeClient (
+		virtual ~MainConsoleBridgeClient(
 		) override {
 			return;
 		}
 
 		// ----------------
 
-		MainConsoleBridgeClient (
+		MainConsoleBridgeClient(
 		) :
 			m_running{false} {
 			return;
 		}
 
-		MainConsoleBridgeClient (
+		MainConsoleBridgeClient(
 			MainConsoleBridgeClient const & that
 		) = delete;
 
-		MainConsoleBridgeClient (
+		MainConsoleBridgeClient(
 			MainConsoleBridgeClient && that
 		) = delete;
 
@@ -53,11 +53,11 @@ export namespace Twinning::Shell {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			MainConsoleBridgeClient const & that
 		) -> MainConsoleBridgeClient & = delete;
 
-		auto operator = (
+		auto operator =(
 			MainConsoleBridgeClient && that
 		) -> MainConsoleBridgeClient & = delete;
 
@@ -65,14 +65,14 @@ export namespace Twinning::Shell {
 
 		#pragma region life
 
-		virtual auto start (
+		virtual auto start(
 		) -> void override {
 			assert_test(!thiz.m_running);
 			thiz.m_running = true;
 			return;
 		}
 
-		virtual auto finish (
+		virtual auto finish(
 		) -> void override {
 			assert_test(thiz.m_running);
 			thiz.m_running = false;
@@ -81,7 +81,7 @@ export namespace Twinning::Shell {
 
 		// ----------------
 
-		virtual auto callback (
+		virtual auto callback(
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> override {
 			assert_test(thiz.m_running);
@@ -121,26 +121,26 @@ export namespace Twinning::Shell {
 			return result;
 		}
 
-		auto callback_name (
+		auto callback_name(
 		) -> std::tuple<std::string> {
 			auto name = std::string{"basic"};
 			return std::make_tuple(name);
 		}
 
-		auto callback_version (
+		auto callback_version(
 		) -> std::tuple<std::string> {
 			auto version = std::string{M_version};
 			return std::make_tuple(version);
 		}
 
-		auto callback_output_text (
+		auto callback_output_text(
 			std::string const & text
 		) -> std::tuple<> {
 			Interaction::output_text(text);
 			return std::make_tuple();
 		}
 
-		auto callback_input_text (
+		auto callback_input_text(
 		) -> std::tuple<std::string> {
 			auto text = Interaction::input_text();
 			return std::make_tuple(text);
@@ -158,7 +158,7 @@ export namespace Twinning::Shell {
 
 		#pragma region singleton
 
-		inline static auto instance (
+		inline static auto instance(
 		) -> MainConsole & {
 			static auto field = MainConsole{nullptr};
 			return field;
@@ -170,7 +170,7 @@ export namespace Twinning::Shell {
 
 		#pragma region constructor
 
-		explicit MainConsole (
+		explicit MainConsole(
 			std::nullptr_t placeholder
 		) {
 			return;
@@ -182,21 +182,21 @@ export namespace Twinning::Shell {
 
 		#pragma region constructor
 
-		~MainConsole (
+		~MainConsole(
 		) {
 			return;
 		}
 
 		// ----------------
 
-		MainConsole (
+		MainConsole(
 		) = delete;
 
-		MainConsole (
+		MainConsole(
 			MainConsole const & that
 		) = delete;
 
-		MainConsole (
+		MainConsole(
 			MainConsole && that
 		) = delete;
 
@@ -204,11 +204,11 @@ export namespace Twinning::Shell {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			MainConsole const & that
 		) -> MainConsole & = delete;
 
-		auto operator = (
+		auto operator =(
 			MainConsole && that
 		) -> MainConsole & = delete;
 
@@ -216,7 +216,7 @@ export namespace Twinning::Shell {
 
 		#pragma region life
 
-		auto run (
+		auto run(
 			int const &                argc,
 			void const * const* const& argv,
 			void * const&              extra
@@ -259,7 +259,7 @@ export namespace Twinning::Shell {
 
 		#pragma region utility
 
-		auto launch_session (
+		auto launch_session(
 			Bridge::Service * const&         kernel_library_symbol,
 			std::string const &              kernel,
 			std::string const &              script,

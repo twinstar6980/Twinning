@@ -2,13 +2,13 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 
 	// #region utility
 
-	function decode_compiled_map<Value>(
+	function decode_compiled_map<TValue>(
 		data: ByteListView,
-		value_parser: (stream: ByteStreamView) => Value,
-	): Record<string, Value> {
+		value_parser: (stream: ByteStreamView) => TValue,
+	): Record<string, TValue> {
 		let stream = new ByteStreamView(data.sub(0, data.size()));
 		let parent_string: Record<number, string> = {};
-		let map: Record<string, Value> = {};
+		let map: Record<string, TValue> = {};
 		while (stream.p() < stream.size()) {
 			let key = '';
 			let position = stream.p() / 4;
@@ -41,7 +41,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 		ripe: ByteListView,
 		size: null | number,
 		type: number,
-		list: Record<string, { type: number, offset: number, size: number; }>,
+		list: Record<string, {type: number, offset: number, size: number}>,
 		directory: string,
 	): void {
 		let raw: ByteListView;

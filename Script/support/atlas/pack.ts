@@ -48,7 +48,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		let sprite_file_list = KernelX.Storage.list_directory(sprite_directory, null, true, false).filter((value) => (/.+(\.png)/i.test(value))).map((value) => (value.slice(0, -4)));
 		let sprite_box = ConvertHelper.record_from_array(sprite_file_list, (index, value) => {
 			let size = KernelX.Image.File.Png.size_fs(`${sprite_directory}/${value}.png`);
-			return [value, { w: Number(size[0]), h: Number(size[1]) }];
+			return [value, {w: Number(size[0]), h: Number(size[1])}];
 		});
 		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'exponent_of_2' ? PackAutomatic.expander_exponent_of_2_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
 		let definition: AtlasDefinition = {

@@ -52,18 +52,18 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~StaticArray (
+		constexpr ~StaticArray(
 		) = default;
 
 		// ----------------
 
-		constexpr StaticArray (
+		constexpr StaticArray(
 		) :
 			m_data{Element{}} {
 			return;
 		}
 
-		constexpr StaticArray (
+		constexpr StaticArray(
 			StaticArray const & that
 		) :
 			StaticArray{} {
@@ -71,7 +71,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		constexpr StaticArray (
+		constexpr StaticArray(
 			StaticArray && that
 		) :
 			StaticArray{} {
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		explicit constexpr StaticArray (
+		explicit constexpr StaticArray(
 			ConstantView const & view
 		) :
 			StaticArray{} {
@@ -89,7 +89,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		explicit constexpr StaticArray (
+		explicit constexpr StaticArray(
 			ConstantIterator const & begin,
 			Size const &             size
 		) :
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		explicit constexpr StaticArray (
+		explicit constexpr StaticArray(
 			RawArray const & raw_array
 		) :
 			StaticArray{ConstantView{make_pointer(static_cast<decltype(&*raw_array)>(raw_array)), t_size}} {
@@ -108,14 +108,14 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			StaticArray const & that
 		) -> StaticArray & {
 			Range::assign_from(thiz, that);
 			return thiz;
 		}
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			StaticArray && that
 		) -> StaticArray & {
 			Range::assign_from(thiz, Range::make_moveable_range_of(that));
@@ -124,13 +124,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		constexpr auto operator [] (
+		constexpr auto operator [](
 			Size const & index
 		) -> VariableElement & {
 			return thiz.at(index);
 		}
 
-		constexpr auto operator [] (
+		constexpr auto operator [](
 			Size const & index
 		) const -> ConstantElement & {
 			return thiz.at(index);
@@ -140,37 +140,37 @@ export namespace Twinning::Kernel {
 
 		#pragma region size & index
 
-		constexpr auto size (
+		constexpr auto size(
 		) const -> Size {
 			return t_size;
 		}
 
-		constexpr auto empty (
+		constexpr auto empty(
 		) const -> Boolean {
 			return thiz.size() == k_none_size;
 		}
 
 		// ----------------
 
-		constexpr auto begin_index (
+		constexpr auto begin_index(
 		) const -> Size {
 			return k_begin_index;
 		}
 
-		constexpr auto end_index (
+		constexpr auto end_index(
 		) const -> Size {
 			return thiz.size();
 		}
 
 		// ----------------
 
-		constexpr auto first_index (
+		constexpr auto first_index(
 		) const -> Size {
 			assert_test(!thiz.empty());
 			return thiz.begin_index();
 		}
 
-		constexpr auto last_index (
+		constexpr auto last_index(
 		) const -> Size {
 			assert_test(!thiz.empty());
 			return thiz.end_index() - k_next_index;
@@ -180,38 +180,38 @@ export namespace Twinning::Kernel {
 
 		#pragma region iterator
 
-		constexpr auto iterator (
+		constexpr auto iterator(
 			Size const & index
 		) -> VariableIterator {
 			assert_test(index <= thiz.end_index());
 			return Iterator{thiz.m_data + index.value};
 		}
 
-		constexpr auto begin (
+		constexpr auto begin(
 		) -> VariableIterator {
 			return Iterator{thiz.m_data + thiz.begin_index().value};
 		}
 
-		constexpr auto end (
+		constexpr auto end(
 		) -> VariableIterator {
 			return Iterator{thiz.m_data + thiz.end_index().value};
 		}
 
 		// ----------------
 
-		constexpr auto iterator (
+		constexpr auto iterator(
 			Size const & index
 		) const -> ConstantIterator {
 			assert_test(index <= thiz.end_index());
 			return ConstantIterator{thiz.m_data + index.value};
 		}
 
-		constexpr auto begin (
+		constexpr auto begin(
 		) const -> ConstantIterator {
 			return ConstantIterator{thiz.m_data + thiz.begin_index().value};
 		}
 
-		constexpr auto end (
+		constexpr auto end(
 		) const -> ConstantIterator {
 			return ConstantIterator{thiz.m_data + thiz.end_index().value};
 		}
@@ -220,38 +220,38 @@ export namespace Twinning::Kernel {
 
 		#pragma region element
 
-		constexpr auto at (
+		constexpr auto at(
 			Size const & index
 		) -> VariableElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
-		constexpr auto first (
+		constexpr auto first(
 		) -> VariableElement & {
 			return thiz.at(thiz.first_index());
 		}
 
-		constexpr auto last (
+		constexpr auto last(
 		) -> VariableElement & {
 			return thiz.at(thiz.last_index());
 		}
 
 		// ----------------
 
-		constexpr auto at (
+		constexpr auto at(
 			Size const & index
 		) const -> ConstantElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data[index.value];
 		}
 
-		constexpr auto first (
+		constexpr auto first(
 		) const -> ConstantElement & {
 			return thiz.at(thiz.first_index());
 		}
 
-		constexpr auto last (
+		constexpr auto last(
 		) const -> ConstantElement & {
 			return thiz.at(thiz.last_index());
 		}
@@ -260,12 +260,12 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		constexpr auto view (
+		constexpr auto view(
 		) -> VariableView {
 			return VariableView{thiz.begin(), thiz.size()};
 		}
 
-		constexpr auto view (
+		constexpr auto view(
 		) const -> ConstantView {
 			return ConstantView{thiz.begin(), thiz.size()};
 		}
@@ -276,7 +276,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			StaticArray const & thix,
 			StaticArray const & that
 		) -> bool {
@@ -294,12 +294,12 @@ export namespace Twinning::Kernel {
 	template <typename Element, typename ... Argument> requires
 		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument ...>>
 		&& (IsConstructible<Element, Argument &&> && ...)
-	inline constexpr auto make_static_array (
+	inline constexpr auto make_static_array(
 		Argument && ... argument
 	) -> StaticArray<Element, mbox<Size>(sizeof...(Argument))> {
 		auto result = StaticArray<Element, mbox<Size>(sizeof...(Argument))>{};
 		Generalization::each_with<>(
-			[&] <auto index, typename CurrentArgument> (ValuePackage<index>, CurrentArgument && current_argument) {
+			[&] <auto index, typename CurrentArgument>(ValuePackage<index>, CurrentArgument && current_argument) {
 				restruct(result.at(mbox<Size>(index)), as_forward<CurrentArgument>(current_argument));
 			},
 			as_forward<Argument>(argument) ...

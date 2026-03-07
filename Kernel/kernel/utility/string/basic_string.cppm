@@ -53,19 +53,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		~BasicString (
+		~BasicString(
 		) = default;
 
 		// ----------------
 
-		BasicString (
+		BasicString(
 		) = default;
 
-		BasicString (
+		BasicString(
 			BasicString const & that
 		) = default;
 
-		BasicString (
+		BasicString(
 			BasicString && that
 		) = default;
 
@@ -77,17 +77,17 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			BasicString const & that
 		) -> BasicString & = default;
 
-		auto operator = (
+		auto operator =(
 			BasicString && that
 		) -> BasicString & = default;
 
 		// ----------------
 
-		auto operator = (
+		auto operator =(
 			ConstantView const & that
 		) -> BasicString & {
 			thiz.assign(that);
@@ -96,11 +96,11 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator VariableView const & () {
+		implicit operator VariableView const &() {
 			return thiz.as_view();
 		}
 
-		implicit operator ConstantView const & () const {
+		implicit operator ConstantView const &() const {
 			return thiz.as_view();
 		}
 
@@ -108,24 +108,24 @@ export namespace Twinning::Kernel {
 
 		#pragma region view
 
-		auto as_view (
+		auto as_view(
 		) -> View const & {
 			return self_cast<View>(thiz);
 		}
 
-		auto as_view (
+		auto as_view(
 		) const -> ConstantView const & {
 			return self_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
 
-		auto view (
+		auto view(
 		) -> View {
 			return thiz.as_view();
 		}
 
-		auto view (
+		auto view(
 		) const -> ConstantView {
 			return thiz.as_view();
 		}
@@ -134,13 +134,13 @@ export namespace Twinning::Kernel {
 
 		#pragma region case convert
 
-		auto as_lower_case (
+		auto as_lower_case(
 		) -> Void requires
 			(IsSame<Element, Character>) {
 			return thiz.as_view().as_lower_case();
 		}
 
-		auto as_upper_case (
+		auto as_upper_case(
 		) -> Void requires
 			(IsSame<Element, Character>) {
 			return thiz.as_view().as_upper_case();
@@ -150,7 +150,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region comparison
 
-		auto compare_3way (
+		auto compare_3way(
 			ConstantView const & that
 		) const -> StrongOrdering requires
 			(IsSame<Element, Character>) {
@@ -161,7 +161,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region hash
 
-		auto hash (
+		auto hash(
 		) const -> IntegerU64 {
 			return thiz.as_view().hash();
 		}
@@ -170,20 +170,20 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) -> View {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) -> View {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) -> View {
 			return thiz.as_view().tail(size);
@@ -191,20 +191,20 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto sub (
+		auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().sub(begin, size);
 		}
 
-		auto head (
+		auto head(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().head(size);
 		}
 
-		auto tail (
+		auto tail(
 			Size const & size
 		) const -> ConstantView {
 			return thiz.as_view().tail(size);
@@ -216,7 +216,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto from (
+		auto from(
 			That &&       that,
 			Option && ... option
 		) -> Void {
@@ -226,7 +226,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
-		auto to (
+		auto to(
 			That &&       that,
 			Option && ... option
 		) const -> Void {
@@ -238,7 +238,7 @@ export namespace Twinning::Kernel {
 
 		template <typename That, typename ... Option> requires
 			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
-		auto to_of (
+		auto to_of(
 			Option && ... option
 		) const -> That {
 			auto that = That{};
@@ -252,7 +252,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend auto operator + (
+		inline friend auto operator +(
 			ConstantView const & thix,
 			ConstantView const & that
 		) -> BasicString {
@@ -262,7 +262,7 @@ export namespace Twinning::Kernel {
 			return result;
 		}
 
-		inline friend auto operator += (
+		inline friend auto operator +=(
 			BasicString &        thix,
 			ConstantView const & that
 		) -> BasicString & {
@@ -272,7 +272,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend auto operator <=> (
+		inline friend auto operator <=>(
 			BasicString const & thix,
 			BasicString const & that
 		) -> StrongOrdering requires
@@ -291,7 +291,7 @@ export namespace Twinning::Kernel {
 	template <typename Source> requires
 		CategoryConstraint<IsPureInstance<Source>>
 		&& (IsConvertible<Source, BasicStringView<typename Source::Element, k_true> const &>)
-	inline auto make_null_terminated_string (
+	inline auto make_null_terminated_string(
 		Source const & source
 	) -> BasicString<typename Source::Element> {
 		auto result = BasicString<typename Source::Element>{source.size() + 1_sz};
@@ -309,7 +309,7 @@ export namespace Twinning::Kernel {
 		&& (IsTemplateInstanceOfT<Result, BasicString>)
 		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
 		&& (IsRange<Separator>)
-	inline auto split_string (
+	inline auto split_string(
 		Source const &    source,
 		Separator const & separator
 	) -> List<Result> {
@@ -319,7 +319,7 @@ export namespace Twinning::Kernel {
 			auto sub_count = k_none_size;
 			auto sub_begin = k_begin_index;
 			auto sub_end = k_begin_index;
-			auto get_next_sub_range = [&] (
+			auto get_next_sub_range = [&](
 			) -> Void {
 				result[sub_count] = source.sub(sub_begin, sub_end - sub_begin);
 				sub_begin = sub_end + k_next_index;
@@ -342,7 +342,7 @@ export namespace Twinning::Kernel {
 	template <typename Source> requires
 		CategoryConstraint<IsPureInstance<Source>>
 		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
-	inline auto compute_catenate_string_size (
+	inline auto compute_catenate_string_size(
 		Source const & source
 	) -> Size {
 		auto size = k_none_size;
@@ -359,7 +359,7 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
 		&& (IsTemplateInstanceOfT<Result, BasicString>)
 		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
-	inline auto catenate_string (
+	inline auto catenate_string(
 		Source const &    source,
 		Separator const & separator
 	) -> Result {

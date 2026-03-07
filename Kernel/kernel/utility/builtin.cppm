@@ -123,13 +123,13 @@ export namespace Twinning::Kernel {
 
 	#pragma region miscellaneous
 
-	inline constexpr auto operator ""_szz (
+	inline constexpr auto operator ""_szz(
 		ZLiteralInteger value
 	) -> ZSize {
 		return static_cast<ZSize>(value);
 	}
 
-	inline constexpr auto operator ""_ixz (
+	inline constexpr auto operator ""_ixz(
 		ZLiteralInteger value
 	) -> ZSize {
 		return static_cast<ZSize>(value - 1);
@@ -150,7 +150,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	template <typename Element>
-	inline constexpr auto make_initializer_list (
+	inline constexpr auto make_initializer_list(
 		std::initializer_list<Element> value
 	) -> std::initializer_list<Element> {
 		return value;

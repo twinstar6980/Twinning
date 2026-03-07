@@ -189,7 +189,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsValid<It>>
-	inline constexpr auto as_left (
+	inline constexpr auto as_left(
 		It && it
 	) -> AsUnmakeReference<It> & {
 		return static_cast<AsUnmakeReference<It> &>(it);
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsValid<It>>
-	inline constexpr auto as_right (
+	inline constexpr auto as_right(
 		It && it
 	) -> AsUnmakeReference<It> && {
 		return static_cast<AsUnmakeReference<It> &&>(it);
@@ -207,7 +207,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsInstance<It>>
-	inline constexpr auto as_variable (
+	inline constexpr auto as_variable(
 		It & it
 	) -> AsPure<It> & {
 		return const_cast<AsPure<It> &>(it);
@@ -215,7 +215,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsInstance<It>>
-	inline constexpr auto as_constant (
+	inline constexpr auto as_constant(
 		It & it
 	) -> AsPure<It> const & {
 		return static_cast<AsPure<It> const &>(it);
@@ -223,7 +223,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsInstance<It>>
-	inline constexpr auto as_moveable (
+	inline constexpr auto as_moveable(
 		It & it
 	) -> AsPure<It> && {
 		return static_cast<AsPure<It> &&>(it);
@@ -233,7 +233,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsValid<It>>
-	inline constexpr auto as_forward (
+	inline constexpr auto as_forward(
 		AsUnmakeReference<It> & it
 	) -> It && {
 		return static_cast<It &&>(it);
@@ -241,7 +241,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename It> requires
 		CategoryConstraint<IsValid<It>>
-	inline constexpr auto as_forward (
+	inline constexpr auto as_forward(
 		AsUnmakeReference<It> && it
 	) -> It && {
 		return static_cast<It &&>(it);
@@ -251,7 +251,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename That, typename It> requires
 		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
-	inline auto self_cast (
+	inline auto self_cast(
 		It & it
 	) -> That & {
 		return reinterpret_cast<That &>(it);
@@ -259,7 +259,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename That, typename It> requires
 		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
-	inline auto self_cast (
+	inline auto self_cast(
 		It const & it
 	) -> That const & {
 		return reinterpret_cast<That const &>(it);
@@ -267,7 +267,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename That, typename It> requires
 		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
-	inline auto self_cast (
+	inline auto self_cast(
 		It && it
 	) -> That && {
 		return reinterpret_cast<That &&>(it);

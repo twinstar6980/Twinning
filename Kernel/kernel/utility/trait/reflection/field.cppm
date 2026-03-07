@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 		// ----------------
 
-		inline static constexpr auto value_of (
+		inline static constexpr auto value_of(
 		) -> auto && requires
 			(is_static) {
 			return *(Field<t_name, t_value>::value);
@@ -52,7 +52,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 		template <typename Class> requires
 			AutomaticConstraint // TODO: check type
-		inline static constexpr auto value_of (
+		inline static constexpr auto value_of(
 			Class && thix
 		) -> auto && requires
 			(!is_static) {

@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block1 & value
 		) -> Void {
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block2 & value
 		) -> Void {
@@ -53,7 +53,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block3 & value,
 			InputByteStreamView &         string_chunk_data,
@@ -71,7 +71,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block4 & value
 		) -> Void {
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block5 & value
 		) -> Void {
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block6 & value
 		) -> Void {
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block7 & value
 		) -> Void {
@@ -120,7 +120,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_block (
+		inline static auto exchange_block(
 			InputByteStreamView &         data,
 			typename Definition::Block8 & value
 		) -> Void {
@@ -138,7 +138,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		template <typename Block, typename ... ExtraArgument> requires
 			CategoryConstraint<IsPureInstance<Block> && IsValid<ExtraArgument ...>>
-		inline static auto exchange_section (
+		inline static auto exchange_section(
 			InputByteStreamView & section_information_data,
 			InputByteStreamView & section_data,
 			List<Block> &         section_value,
@@ -162,7 +162,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			return;
 		}
 
-		inline static auto exchange_effect (
+		inline static auto exchange_effect(
 			InputByteStreamView &         data,
 			typename Definition::Effect & value
 		) -> Void {
@@ -216,7 +216,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &         data,
 			typename Definition::Effect & definition
 		) -> Void {
@@ -228,7 +228,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &         data_,
 			typename Definition::Effect & definition
 		) -> Void {

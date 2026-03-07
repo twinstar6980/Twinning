@@ -76,19 +76,19 @@ public static class CommonUtility {
 
 	// ----------------
 
-	public static TResult SelfLet<TType, TResult>(
-		this TType           self,
-		Func<TType, TResult> action
+	public static TResult SelfLet<TSelf, TResult>(
+		this TSelf           self,
+		Func<TSelf, TResult> action
 	)
-		where TType : notnull {
+		where TSelf : notnull {
 		return action(self);
 	}
 
-	public static TType SelfAlso<TType>(
-		this TType    self,
-		Action<TType> action
+	public static TSelf SelfAlso<TSelf>(
+		this TSelf    self,
+		Action<TSelf> action
 	)
-		where TType : notnull {
+		where TSelf : notnull {
 		action(self);
 		return self;
 	}
@@ -107,17 +107,17 @@ public static class CommonUtility {
 
 	// ----------------
 
-	public static TType AsNotNull<TType>(
-		[NotNull] this TType? self
+	public static TSelf AsNotNull<TSelf>(
+		[NotNull] this TSelf? self
 	)
-		where TType : struct {
+		where TSelf : struct {
 		return self ?? throw new NullReferenceException();
 	}
 
-	public static TType AsNotNull<TType>(
-		[NotNull] this TType? self
+	public static TSelf AsNotNull<TSelf>(
+		[NotNull] this TSelf? self
 	)
-		where TType : class {
+		where TSelf : class {
 		return self ?? throw new NullReferenceException();
 	}
 
@@ -164,8 +164,8 @@ public static class CommonUtility {
 
 	// ----------------
 
-	public static ObservableCollection<TSource> ToObservableCollection<TSource>(
-		this IEnumerable<TSource> self
+	public static ObservableCollection<TValue> ToObservableCollection<TValue>(
+		this IEnumerable<TValue> self
 	) {
 		return new (self);
 	}

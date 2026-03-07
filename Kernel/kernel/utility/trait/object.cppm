@@ -86,7 +86,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Base, typename Derived> requires
 		CategoryConstraint<IsPureInstance<Base> && IsPureInstance<Derived>>
 		&& (IsDerivedFrom<Derived, Base>)
-	inline constexpr auto up_cast (
+	inline constexpr auto up_cast(
 		Derived & it
 	) -> Base & {
 		return static_cast<Base &>(it);
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Base, typename Derived> requires
 		CategoryConstraint<IsPureInstance<Base> && IsPureInstance<Derived>>
 		&& (IsDerivedFrom<Derived, Base>)
-	inline constexpr auto up_cast (
+	inline constexpr auto up_cast(
 		Derived const & it
 	) -> Base const & {
 		return static_cast<Base const &>(it);
@@ -104,7 +104,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Base, typename Derived> requires
 		CategoryConstraint<IsPureInstance<Base> && IsPureInstance<Derived>>
 		&& (IsDerivedFrom<Derived, Base>)
-	inline constexpr auto up_cast (
+	inline constexpr auto up_cast(
 		Derived && it
 	) -> Base && {
 		return static_cast<Base &&>(it);
@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Derived, typename Base> requires
 		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
 		&& (IsDerivedFrom<Derived, Base>)
-	inline constexpr auto down_cast (
+	inline constexpr auto down_cast(
 		Base & it
 	) -> Derived & {
 		return static_cast<Derived &>(it);
@@ -124,7 +124,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Derived, typename Base> requires
 		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
 		&& (IsDerivedFrom<Derived, Base>)
-	inline constexpr auto down_cast (
+	inline constexpr auto down_cast(
 		Base const & it
 	) -> Derived const & {
 		return static_cast<Derived const &>(it);
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename Derived, typename Base> requires
 		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
 		&& (IsDerivedFrom<Derived, Base>)
-	inline constexpr auto down_cast (
+	inline constexpr auto down_cast(
 		Base && it
 	) -> Derived && {
 		return static_cast<Derived &&>(it);
@@ -145,7 +145,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename It, typename ... Argument> requires
 		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
 		&& (IsConstructible<AsPure<It>, Argument && ...>)
-	inline constexpr auto construct (
+	inline constexpr auto construct(
 		It &            it,
 		Argument && ... argument
 	) -> Void {
@@ -161,7 +161,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename It> requires
 		CategoryConstraint<IsInstance<It>>
 		&& (IsDestructible<AsPure<It>>)
-	inline constexpr auto destruct (
+	inline constexpr auto destruct(
 		It & it
 	) -> Void {
 		if (std::is_constant_evaluated()) {
@@ -176,7 +176,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
 		&& (IsConstructible<AsPure<It>, Argument && ...>)
 		&& (IsDestructible<AsPure<It>>)
-	inline constexpr auto restruct (
+	inline constexpr auto restruct(
 		It &            it,
 		Argument && ... argument
 	) -> Void {

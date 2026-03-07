@@ -43,29 +43,29 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~ListView (
+		constexpr ~ListView(
 		) = default;
 
 		// ----------------
 
-		constexpr ListView (
+		constexpr ListView(
 		) :
 			m_data{},
 			m_size{} {
 			return;
 		}
 
-		constexpr ListView (
+		constexpr ListView(
 			ListView const & that
 		) = default;
 
-		constexpr ListView (
+		constexpr ListView(
 			ListView && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr ListView (
+		explicit constexpr ListView(
 			QualifyIterator const & begin,
 			Size const &            size
 		) :
@@ -78,17 +78,17 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			ListView const & that
 		) -> ListView & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			ListView && that
 		) -> ListView & = default;
 
 		// ----------------
 
-		constexpr auto operator [] (
+		constexpr auto operator [](
 			Size const & index
 		) const -> QualifyElement & {
 			return thiz.at(index);
@@ -96,12 +96,12 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit operator ConstantView & () requires
+		implicit operator ConstantView &() requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
 
-		implicit operator ConstantView const & () const requires
+		implicit operator ConstantView const &() const requires
 			(!constant.value) {
 			return self_cast<ConstantView>(thiz);
 		}
@@ -110,14 +110,14 @@ export namespace Twinning::Kernel {
 
 		#pragma region set
 
-		constexpr auto reset (
+		constexpr auto reset(
 		) -> Void {
 			thiz.m_data = k_null_pointer;
 			thiz.m_size = k_none_size;
 			return;
 		}
 
-		constexpr auto set (
+		constexpr auto set(
 			QualifyIterator const & data,
 			Size const &            size
 		) -> Void {
@@ -130,37 +130,37 @@ export namespace Twinning::Kernel {
 
 		#pragma region size & index
 
-		constexpr auto size (
+		constexpr auto size(
 		) const -> Size {
 			return thiz.m_size;
 		}
 
-		constexpr auto empty (
+		constexpr auto empty(
 		) const -> Boolean {
 			return thiz.size() == k_none_size;
 		}
 
 		// ----------------
 
-		constexpr auto begin_index (
+		constexpr auto begin_index(
 		) const -> Size {
 			return k_begin_index;
 		}
 
-		constexpr auto end_index (
+		constexpr auto end_index(
 		) const -> Size {
 			return thiz.size();
 		}
 
 		// ----------------
 
-		constexpr auto first_index (
+		constexpr auto first_index(
 		) const -> Size {
 			assert_test(!thiz.empty());
 			return thiz.begin_index();
 		}
 
-		constexpr auto last_index (
+		constexpr auto last_index(
 		) const -> Size {
 			assert_test(!thiz.empty());
 			return thiz.end_index() - k_next_index;
@@ -170,19 +170,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region iterator
 
-		constexpr auto iterator (
+		constexpr auto iterator(
 			Size const & index
 		) const -> QualifyIterator {
 			assert_test(index <= thiz.end_index());
 			return QualifyIterator{thiz.m_data + index};
 		}
 
-		constexpr auto begin (
+		constexpr auto begin(
 		) const -> QualifyIterator {
 			return QualifyIterator{thiz.m_data + thiz.begin_index()};
 		}
 
-		constexpr auto end (
+		constexpr auto end(
 		) const -> QualifyIterator {
 			return QualifyIterator{thiz.m_data + thiz.end_index()};
 		}
@@ -191,19 +191,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region element
 
-		constexpr auto at (
+		constexpr auto at(
 			Size const & index
 		) const -> QualifyElement & {
 			assert_test(index < thiz.end_index());
 			return thiz.m_data.dereference(index);
 		}
 
-		constexpr auto first (
+		constexpr auto first(
 		) const -> QualifyElement & {
 			return thiz.at(thiz.first_index());
 		}
 
-		constexpr auto last (
+		constexpr auto last(
 		) const -> QualifyElement & {
 			return thiz.at(thiz.last_index());
 		}
@@ -212,7 +212,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region sub
 
-		constexpr auto sub (
+		constexpr auto sub(
 			Size const & begin,
 			Size const & size
 		) const -> ListView {
@@ -220,14 +220,14 @@ export namespace Twinning::Kernel {
 			return ListView{thiz.iterator(begin), size};
 		}
 
-		constexpr auto head (
+		constexpr auto head(
 			Size const & size
 		) const -> ListView {
 			assert_test(size <= thiz.size());
 			return thiz.sub(thiz.begin_index(), size);
 		}
 
-		constexpr auto tail (
+		constexpr auto tail(
 			Size const & size
 		) const -> ListView {
 			assert_test(size <= thiz.size());
@@ -240,7 +240,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			ListView const & thix,
 			ListView const & that
 		) -> bool {

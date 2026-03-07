@@ -16,7 +16,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit UnknownException (
+		explicit UnknownException(
 			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Unknown", {}, location} {
@@ -29,7 +29,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit UnnamedException (
+		explicit UnnamedException(
 			std::string const &          message,
 			std::source_location const & location = std::source_location::current()
 		) :
@@ -46,7 +46,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit UnreachableException (
+		explicit UnreachableException(
 			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Unreachable", {}, location} {
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit UnimplementedException (
+		explicit UnimplementedException(
 			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Unimplemented", {}, location} {
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit UnsupportedException (
+		explicit UnsupportedException(
 			std::source_location const & location = std::source_location::current()
 		) :
 			Exception{"Unsupported", {}, location} {
@@ -87,7 +87,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit AssertionException (
+		explicit AssertionException(
 			std::string const &          expression,
 			std::source_location const & location = std::source_location::current()
 		) :
@@ -104,7 +104,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit InvocationException (
+		explicit InvocationException(
 			std::string const &          target,
 			std::string const &          message,
 			std::source_location const & location = std::source_location::current()
@@ -123,7 +123,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit SyntaxException (
+		explicit SyntaxException(
 			std::size_t const &          position,
 			std::string const &          message,
 			std::source_location const & location = std::source_location::current()
@@ -142,7 +142,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit StandardException (
+		explicit StandardException(
 			std::exception const &       exception,
 			std::source_location const & location = std::source_location::current()
 		) :
@@ -158,7 +158,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit StandardSystemException (
+		explicit StandardSystemException(
 			std::system_error const &    exception,
 			std::source_location const & location = std::source_location::current()
 		) :
@@ -174,7 +174,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		explicit StandardFileSystemException (
+		explicit StandardFileSystemException(
 			std::filesystem::filesystem_error const & exception,
 			std::source_location const &              location = std::source_location::current()
 		) :
@@ -193,7 +193,7 @@ export namespace Twinning::Kernel {
 
 	#pragma region function
 
-	inline auto parse_current_exception (
+	inline auto parse_current_exception(
 		std::source_location const & location = std::source_location::current()
 	) -> Exception {
 		auto result = Exception{};

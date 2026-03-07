@@ -645,7 +645,7 @@ declare namespace Twinning.Kernel {
 	namespace Json {
 
 		/** 值 */
-		type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | { [key: string]: JS_Value; };
+		type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | {[key: string]: JS_Value};
 
 		/**
 		 * 值，存储 null、boolean、bigint、number、string、array、object 类型值的变体
@@ -2606,7 +2606,7 @@ declare namespace Twinning.Kernel {
 			namespace ReflectionObjectNotation {
 
 				/** ReflectionObjectNotation所能存储的Json值类型 */
-				type JS_ValidValue = boolean | number | bigint | string | JS_ValidValue[] | { [key: string]: JS_ValidValue; };
+				type JS_ValidValue = boolean | number | bigint | string | JS_ValidValue[] | {[key: string]: JS_ValidValue};
 
 				/** 版本 */
 				class Version {

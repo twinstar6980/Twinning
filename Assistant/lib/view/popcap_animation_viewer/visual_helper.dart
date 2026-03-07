@@ -140,8 +140,8 @@ class VisualHelper {
   ) {
     var result = null as Matrix4?;
     if (variant.value is model.TranslateTransform) {
-      var value = variant.value as model.TranslateTransform;
-      result = Matrix4(
+      var value = variant.value.as<model.TranslateTransform>();
+      result = .new(
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -149,10 +149,10 @@ class VisualHelper {
       );
     }
     if (variant.value is model.RotateTranslateTransform) {
-      var value = variant.value as model.RotateTranslateTransform;
+      var value = variant.value.as<model.RotateTranslateTransform>();
       var valueCos = cos(value.angle);
       var valueSin = sin(value.angle);
-      result = Matrix4(
+      result = .new(
         valueCos, valueSin, 0, 0,
         -valueSin, valueCos, 0, 0,
         0, 0, 1, 0,
@@ -160,8 +160,8 @@ class VisualHelper {
       );
     }
     if (variant.value is model.MatrixTranslateTransform) {
-      var value = variant.value as model.MatrixTranslateTransform;
-      result = Matrix4(
+      var value = variant.value.as<model.MatrixTranslateTransform>();
+      result = .new(
         value.a, value.b, 0, 0,
         value.c, value.d, 0, 0,
         0, 0, 1, 0,
@@ -174,13 +174,12 @@ class VisualHelper {
   static ColorFilter _makeColor(
     model.Color value,
   ) {
-    var result = ColorFilter.mode(.from(
+    return .mode(.from(
       alpha: value.alpha,
       red: value.red,
       green: value.green,
       blue: value.blue,
     ), .modulate);
-    return result;
   }
 
   // ----------------

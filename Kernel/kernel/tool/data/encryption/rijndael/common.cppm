@@ -29,7 +29,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
 		// ----------------
 
-		inline static constexpr auto is_valid_block_size (
+		inline static constexpr auto is_valid_block_size(
 			Size const & value
 		) -> Boolean {
 			return value == 16_sz || value == 24_sz || value == 32_sz;

@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Text.Json {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { source_file: string; }) => (argument.source_file.replace(/(\.json)?$/i, '.format.json')),
+						automatic: (argument: {source_file: string}) => (argument.source_file.replace(/(\.json)?$/i, '.format.json')),
 						condition: null,
 					}),
 					typical_argument_boolean({
@@ -61,12 +61,12 @@ namespace Twinning.Script.Executor.Implementation.Text.Json {
 						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: { source_file: string; }) => (argument.source_file + '.format'),
+						automatic: (argument: {source_file: string}) => (argument.source_file + '.format'),
 						condition: null,
 						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.json')),
 					}),
 				],
-				worker: ({ source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking }, temporary: {}) => {
+				worker: ({source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking}, temporary: {}) => {
 					let data = KernelX.Json.read_fs(source_file);
 					KernelX.Json.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 					return;

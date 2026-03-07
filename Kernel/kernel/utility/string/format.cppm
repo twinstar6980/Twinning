@@ -18,7 +18,7 @@ export namespace Twinning::Kernel {
 
 	template <typename ... Argument> requires
 		CategoryConstraint<IsValid<Argument ...>>
-	inline auto format_string (
+	inline auto format_string(
 		ConstantStringView const & format,
 		Argument && ...            argument
 	) -> String {
@@ -39,28 +39,28 @@ export namespace Twinning::Kernel {
 
 		#pragma region constructor
 
-		constexpr ~StringFormatter (
+		constexpr ~StringFormatter(
 		) = default;
 
 		// ----------------
 
-		constexpr StringFormatter (
+		constexpr StringFormatter(
 		) :
 			m_format{} {
 			return;
 		}
 
-		constexpr StringFormatter (
+		constexpr StringFormatter(
 			StringFormatter const & that
 		) = default;
 
-		constexpr StringFormatter (
+		constexpr StringFormatter(
 			StringFormatter && that
 		) = default;
 
 		// ----------------
 
-		explicit constexpr StringFormatter (
+		explicit constexpr StringFormatter(
 			ConstantStringView const & format
 		) :
 			m_format{format} {
@@ -71,11 +71,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			StringFormatter const & that
 		) -> StringFormatter & = default;
 
-		constexpr auto operator = (
+		constexpr auto operator =(
 			StringFormatter && that
 		) -> StringFormatter & = default;
 
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel {
 
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
-		auto operator () (
+		auto operator ()(
 			Argument && ... argument
 		) const -> String {
 			return format_string(thiz.m_format, as_forward<Argument>(argument) ...);
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel {
 
 	template <StaticString string> requires
 		NoneConstraint
-	inline constexpr auto operator ""_sf (
+	inline constexpr auto operator ""_sf(
 	) -> StringFormatter {
 		return StringFormatter{string.view()};
 	}

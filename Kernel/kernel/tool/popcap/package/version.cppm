@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 
 	// ----------------
 
-	inline constexpr auto check_version (
+	inline constexpr auto check_version(
 		Version const &                               it,
 		std::initializer_list<Integer::Value> const & number,
 		std::initializer_list<Boolean::Value> const & compress_resource_data

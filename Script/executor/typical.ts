@@ -2,34 +2,34 @@ namespace Twinning.Script.Executor {
 
 	// #region common
 
-	export type TypicalArgumentExpression<Value> = Value | '?automatic' | '?input';
+	export type TypicalArgumentExpression<TValue> = TValue | '?automatic' | '?input';
 
-	export type TypicalArgument<Identifier extends string, Value extends any, GivenValue extends any> = {
-		Value: Value;
-		GivenValue: GivenValue;
-		identifier: Identifier;
-		initial_echoer: (value: Value) => string;
-		given_converter: (argument: any, given: GivenValue) => Value;
-		automatic_generator: (argument: any) => null | Value;
-		input_generator: (argument: any, initial?: Value) => null | Value;
-		condition: (argument: any) => null | Value;
-		default: TypicalArgumentExpression<GivenValue>;
+	export type TypicalArgument<TIdentifier extends string, TValue extends any, TGivenValue extends any> = {
+		Value: TValue;
+		GivenValue: TGivenValue;
+		identifier: TIdentifier;
+		initial_echoer: (value: TValue) => string;
+		given_converter: (argument: any, given: TGivenValue) => TValue;
+		automatic_generator: (argument: any) => null | TValue;
+		input_generator: (argument: any, initial?: TValue) => null | TValue;
+		condition: (argument: any) => null | TValue;
+		default: TypicalArgumentExpression<TGivenValue>;
 	};
 
-	export type TypicalBatchArgument<Identifier extends string> = TypicalArgument<Identifier, string, string> & {
+	export type TypicalBatchArgument<TIdentifier extends string> = TypicalArgument<TIdentifier, string, string> & {
 		item_mapper: (argument: any, value: string) => string;
 	};
 
 	// ----------------
 
-	export type TypicalMethod<Identifier extends string, Argument extends Array<TypicalArgument<string, any, any>>, Batch extends Array<TypicalBatchArgument<string>>, WorkerTemporary extends Record<string, any>> = {
-		Argument: { [Element in Argument[number]as Element['identifier']]: Element['Value'] };
-		GivenArgument: { [Element in Argument[number]as Element['identifier']]: Element['GivenValue'] };
-		identifier: Identifier;
+	export type TypicalMethod<TIdentifier extends string, TArgument extends Array<TypicalArgument<string, any, any>>, TBatch extends Array<TypicalBatchArgument<string>>, TWorkerTemporary extends Record<string, any>> = {
+		Argument: {[Element in TArgument[number]as Element['identifier']]: Element['Value']};
+		GivenArgument: {[Element in TArgument[number]as Element['identifier']]: Element['GivenValue']};
+		identifier: TIdentifier;
 		filter: null | ['any' | 'file' | 'directory', RegExp];
-		argument: Argument;
-		batch: null | Batch;
-		worker: (argument: { [Element in Argument[number]as Element['identifier']]: Element['Value'] }, temporary: WorkerTemporary) => void;
+		argument: TArgument;
+		batch: null | TBatch;
+		worker: (argument: {[Element in TArgument[number]as Element['identifier']]: Element['Value']}, temporary: TWorkerTemporary) => void;
 	};
 
 	export type TypicalMethodConfiguration = {
@@ -48,14 +48,14 @@ namespace Twinning.Script.Executor {
 
 	// #region basic
 
-	export function typical_argument_boolean<Identifier extends string>(
+	export function typical_argument_boolean<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			checker: null | ((argument: any, value: boolean) => null | string);
 			automatic: null | ((argument: any) => null | boolean);
 			condition: null | ((argument: any) => null | boolean);
 		},
-	): TypicalArgument<Identifier, boolean, boolean> {
+	): TypicalArgument<TIdentifier, boolean, boolean> {
 		return {
 			Value: undefined!,
 			GivenValue: undefined!,
@@ -69,15 +69,15 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	export function typical_argument_integer<Identifier extends string>(
+	export function typical_argument_integer<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			option: null | Array<bigint>;
 			checker: null | ((argument: any, value: bigint) => null | string);
 			automatic: null | ((argument: any) => null | bigint);
 			condition: null | ((argument: any) => null | bigint);
 		},
-	): TypicalArgument<Identifier, bigint, bigint> {
+	): TypicalArgument<TIdentifier, bigint, bigint> {
 		return {
 			Value: undefined!,
 			GivenValue: undefined!,
@@ -91,15 +91,15 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	export function typical_argument_floater<Identifier extends string>(
+	export function typical_argument_floater<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			option: null | Array<number>;
 			checker: null | ((argument: any, value: number) => null | string);
 			automatic: null | ((argument: any) => null | number);
 			condition: null | ((argument: any) => null | number);
 		},
-	): TypicalArgument<Identifier, number, number> {
+	): TypicalArgument<TIdentifier, number, number> {
 		return {
 			Value: undefined!,
 			GivenValue: undefined!,
@@ -113,15 +113,15 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	export function typical_argument_size<Identifier extends string>(
+	export function typical_argument_size<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			option: null | Array<bigint>;
 			checker: null | ((argument: any, value: bigint) => null | string);
 			automatic: null | ((argument: any) => null | bigint);
 			condition: null | ((argument: any) => null | bigint);
 		},
-	): TypicalArgument<Identifier, bigint, string> {
+	): TypicalArgument<TIdentifier, bigint, string> {
 		return {
 			Value: undefined!,
 			GivenValue: undefined!,
@@ -135,15 +135,15 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	export function typical_argument_string<Identifier extends string>(
+	export function typical_argument_string<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			option: null | Array<string>;
 			checker: null | ((argument: any, value: string) => null | string);
 			automatic: null | ((argument: any) => null | string);
 			condition: null | ((argument: any) => null | string);
 		},
-	): TypicalArgument<Identifier, string, string> {
+	): TypicalArgument<TIdentifier, string, string> {
 		return {
 			Value: undefined!,
 			GivenValue: undefined!,
@@ -157,15 +157,15 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	export function typical_argument_path<Identifier extends string>(
+	export function typical_argument_path<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			rule: ['any' | 'file' | 'directory', 'any' | 'input' | 'output'],
 			checker: null | ((argument: any, value: string) => null | string);
 			automatic: null | ((argument: any) => null | string);
 			condition: null | ((argument: any) => null | string);
 		},
-	): TypicalArgument<Identifier, string, string> {
+	): TypicalArgument<TIdentifier, string, string> {
 		return {
 			Value: undefined! as string,
 			GivenValue: undefined! as string,
@@ -179,16 +179,16 @@ namespace Twinning.Script.Executor {
 		};
 	}
 
-	export function typical_argument_batch<Identifier extends string>(
+	export function typical_argument_batch<TIdentifier extends string>(
 		object: {
-			identifier: Identifier;
+			identifier: TIdentifier;
 			rule: 'any' | 'input' | 'output',
 			checker: null | ((argument: any, value: string) => null | string);
 			automatic: null | ((argument: any) => null | string);
 			condition: null | ((argument: any) => null | string);
 			item_mapper: (argument: any, value: string) => string;
 		},
-	): TypicalBatchArgument<Identifier> {
+	): TypicalBatchArgument<TIdentifier> {
 		return {
 			Value: undefined!,
 			GivenValue: undefined!,
@@ -211,7 +211,7 @@ namespace Twinning.Script.Executor {
 			filter: null | ['any' | 'file' | 'directory', RegExp];
 			argument: Argument;
 			batch: null | Batch;
-			worker: (argument: { [Element in Argument[number]as Element['identifier']]: Element['Value'] }, temporary: WorkerTemporary) => void;
+			worker: (argument: {[Element in Argument[number]as Element['identifier']]: Element['Value']}, temporary: WorkerTemporary) => void;
 		},
 	): TypicalMethod<Identifier, Argument, Batch, WorkerTemporary> {
 		return {
@@ -261,20 +261,20 @@ namespace Twinning.Script.Executor {
 
 	// ----------------
 
-	export function request_typical_argument<Given, Result>(
+	export function request_typical_argument<TGiven, TResult>(
 		name: string,
-		given: Given | '?automatic' | '?input',
-		initial_echoer: (value: Result) => string,
-		given_converter: (given: Given) => Result,
-		automatic_generator: () => null | Result,
-		input_generator: (initial?: Result) => null | Result,
-		skip_value: null | Result,
-	): null | Result {
+		given: TGiven | '?automatic' | '?input',
+		initial_echoer: (value: TResult) => string,
+		given_converter: (given: TGiven) => TResult,
+		automatic_generator: () => null | TResult,
+		input_generator: (initial?: TResult) => null | TResult,
+		skip_value: null | TResult,
+	): null | TResult {
 		if (skip_value !== null) {
 			Console.information(los('executor.typical:argument_skipped', name), []);
 			return skip_value;
 		}
-		let initial: undefined | Result = undefined;
+		let initial: undefined | TResult = undefined;
 		if (given === '?input') {
 			Console.information(los('executor.typical:argument_input', name), []);
 		}
@@ -349,7 +349,7 @@ namespace Twinning.Script.Executor {
 						final_argument[source.argument[0].identifier],
 						source.filter!,
 						(item) => {
-							let item_argument = { ...final_argument };
+							let item_argument = {...final_argument};
 							for (let batch_argument of source.batch!) {
 								item_argument[batch_argument.identifier] += '/' + batch_argument.item_mapper(final_argument, item);
 							}
@@ -374,7 +374,7 @@ namespace Twinning.Script.Executor {
 						state &&= false;
 					}
 					else if (!batch) {
-						state &&= KernelX.Storage[({ any: 'exist', file: 'exist_file', directory: 'exist_directory' } as const)[source.filter[0]]](input);
+						state &&= KernelX.Storage[({any: 'exist', file: 'exist_file', directory: 'exist_directory'} as const)[source.filter[0]]](input);
 						if (!g_typical_method_disable_name_filter) {
 							state &&= source.filter[1].test(input);
 						}

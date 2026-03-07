@@ -23,7 +23,7 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region constructor
 
-		~Unlocker (
+		~Unlocker(
 		) {
 			thiz.m_mutex.lock();
 			return;
@@ -31,20 +31,20 @@ export namespace Twinning::Kernel::Thread {
 
 		// ----------------
 
-		Unlocker (
+		Unlocker(
 		) = delete;
 
-		Unlocker (
+		Unlocker(
 			Unlocker const & that
 		) = delete;
 
-		Unlocker (
+		Unlocker(
 			Unlocker && that
 		) = delete;
 
 		// ----------------
 
-		explicit Unlocker (
+		explicit Unlocker(
 			Mutex & mutex
 		) :
 			m_mutex{mutex} {
@@ -56,11 +56,11 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Unlocker const & that
 		) -> Unlocker & = delete;
 
-		auto operator = (
+		auto operator =(
 			Unlocker && that
 		) -> Unlocker & = delete;
 

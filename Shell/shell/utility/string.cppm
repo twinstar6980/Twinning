@@ -8,7 +8,7 @@ export namespace Twinning::Shell {
 
 	#pragma region hash
 
-	inline constexpr auto hash_string (
+	inline constexpr auto hash_string(
 		std::string_view const & string
 	) -> std::uint64_t {
 		auto offset = std::uint64_t{14695981039346656037ull};

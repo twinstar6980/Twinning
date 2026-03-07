@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
 	// ----------------
 
-	inline constexpr auto check_version (
+	inline constexpr auto check_version(
 		Version const &                               it,
 		std::initializer_list<Integer::Value> const & number
 	) -> ZBoolean {

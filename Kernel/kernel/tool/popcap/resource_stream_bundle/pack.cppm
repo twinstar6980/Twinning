@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto make_standard_group_identifier (
+		inline static auto make_standard_group_identifier(
 			ConstantStringView const & group_identifier,
 			Boolean const &            is_composite
 		) -> String {
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto process_package_manifest (
+		inline static auto process_package_manifest(
 			OutputByteStreamView &             data,
 			Structure::Header<version> &       header_structure,
 			typename Manifest::Package const & manifest
@@ -61,7 +61,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			auto resource_detail_manifest_information_structure_list = List<Structure::ResourceDetailManifestInformation<version>>{};
 			auto string_map = std::unordered_map<String, Size>{};
 			auto string_list = List<String>{};
-			auto set_string = [&] (
+			auto set_string = [&](
 				String const & string
 			) -> IntegerU32 {
 				auto result = Size{};
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			return;
 		}
 
-		inline static auto process_package (
+		inline static auto process_package(
 			OutputByteStreamView &                       data,
 			typename Definition::Package const &         definition,
 			Optional<typename Manifest::Package> const & manifest,
@@ -423,7 +423,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					pool_information_structure.flag = 0_iu32;
 					packet_package_definition.compression = subgroup_definition.compression;
 					packet_package_definition.resource.allocate_full(subgroup_definition.resource.size());
-					auto make_formatted_path = [&] (
+					auto make_formatted_path = [&](
 						Path const & path_format
 					) -> Path {
 						return Path{format_string(path_format.to_string(), group_definition.identifier, subgroup_definition.identifier)};
@@ -536,7 +536,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &                       data_,
 			typename Definition::Package const &         definition,
 			Optional<typename Manifest::Package> const & manifest,

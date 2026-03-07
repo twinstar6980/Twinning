@@ -22,22 +22,22 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region constructor
 
-		~Thread (
+		~Thread(
 		) = default;
 
 		// ----------------
 
-		Thread (
+		Thread(
 		) :
 			m_thread{} {
 			return;
 		}
 
-		Thread (
+		Thread(
 			Thread const & that
 		) = delete;
 
-		Thread (
+		Thread(
 			Thread && that
 		) = default;
 
@@ -45,11 +45,11 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			Thread const & that
 		) -> Thread & = delete;
 
-		auto operator = (
+		auto operator =(
 			Thread && that
 		) -> Thread & = default;
 
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Thread {
 		template <typename Executor> requires
 			CategoryConstraint<IsPureInstance<Executor>>
 			&& (IsCallable<Executor> && CallableTrait<Executor>::Argument::size == 0_szz)
-		auto run (
+		auto run(
 			Executor const & executor
 		) -> Void {
 			assert_test(!thiz.joinable());
@@ -70,20 +70,20 @@ export namespace Twinning::Kernel::Thread {
 
 		// ----------------
 
-		auto joinable (
+		auto joinable(
 		) -> Boolean {
 			return thiz.m_thread.joinable();
 		}
 
 		// ----------------
 
-		auto join (
+		auto join(
 		) -> Void {
 			assert_test(thiz.joinable());
 			return thiz.m_thread.join();
 		}
 
-		auto detach (
+		auto detach(
 		) -> Void {
 			assert_test(thiz.joinable());
 			return thiz.m_thread.detach();
@@ -91,13 +91,13 @@ export namespace Twinning::Kernel::Thread {
 
 		// ----------------
 
-		inline static auto yield (
+		inline static auto yield(
 		) -> Void {
 			std::this_thread::yield();
 			return;
 		}
 
-		inline static auto sleep (
+		inline static auto sleep(
 			Size const & duration
 		) -> Void {
 			std::this_thread::sleep_for(std::chrono::milliseconds{duration.value});

@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		// ----------------
 
-		inline static auto process_value (
+		inline static auto process_value(
 			OutputCharacterStreamView & data,
 			Value const &               value,
 			Boolean const &             disable_array_trailing_comma,
@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 			Boolean const &             disable_object_line_breaking,
 			Size const &                indent_level
 		) -> Void {
-			auto write_space = [&] (
+			auto write_space = [&](
 				Boolean const & disable_line_breaking,
 				Boolean const & is_inner
 			) -> Void {
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 			return;
 		}
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			OutputCharacterStreamView & data,
 			Value const &               value,
 			Boolean const &             disable_array_trailing_comma,
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputCharacterStreamView & data_,
 			Value const &               value,
 			Boolean const &             disable_array_trailing_comma,

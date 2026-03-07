@@ -29,7 +29,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 		// ----------------
 
-		inline static auto process_image (
+		inline static auto process_image(
 			OutputByteStreamView &            data,
 			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 		// ----------------
 
-		inline static auto estimate_image (
+		inline static auto estimate_image(
 			Size &                            data_size_bound,
 			Image::ImageSize const &          image_size,
 			Texture::Encoding::Format const & format
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			OutputByteStreamView &            data_,
 			Image::ConstantImageView const &  image,
 			Texture::Encoding::Format const & format
@@ -112,7 +112,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			return process_image(data, image, format);
 		}
 
-		inline static auto estimate (
+		inline static auto estimate(
 			Size &                            data_size_bound,
 			Image::ImageSize const &          image_size,
 			Texture::Encoding::Format const & format

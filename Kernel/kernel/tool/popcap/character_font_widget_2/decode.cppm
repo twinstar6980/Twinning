@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		// ----------------
 
-		inline static auto exchange_character_item (
+		inline static auto exchange_character_item(
 			InputByteStreamView &                data,
 			typename Definition::CharacterItem & value
 		) -> Void {
@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_kerning (
+		inline static auto exchange_font_kerning(
 			InputByteStreamView &              data,
 			typename Definition::FontKerning & value
 		) -> Void {
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_character (
+		inline static auto exchange_font_character(
 			InputByteStreamView &                data,
 			typename Definition::FontCharacter & value
 		) -> Void {
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_layer (
+		inline static auto exchange_font_layer(
 			InputByteStreamView &            data,
 			typename Definition::FontLayer & value
 		) -> Void {
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 			return;
 		}
 
-		inline static auto exchange_font_widget (
+		inline static auto exchange_font_widget(
 			InputByteStreamView &             data,
 			typename Definition::FontWidget & value
 		) -> Void {
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		// ----------------
 
-		inline static auto process_whole (
+		inline static auto process_whole(
 			InputByteStreamView &             data,
 			typename Definition::FontWidget & definition
 		) -> Void {
@@ -126,7 +126,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		// ----------------
 
-		inline static auto process (
+		inline static auto process(
 			InputByteStreamView &             data_,
 			typename Definition::FontWidget & definition
 		) -> Void {

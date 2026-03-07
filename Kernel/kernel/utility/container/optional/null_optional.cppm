@@ -22,13 +22,13 @@ export namespace Twinning::Kernel {
 
 		template <typename Value> requires
 			AutomaticConstraint
-		implicit constexpr operator Optional<Value> () const {
+		implicit constexpr operator Optional<Value>() const {
 			return Optional<Value>{};
 		}
 
 		template <typename Value, auto constant> requires
 			AutomaticConstraint
-		implicit constexpr operator OptionalView<Value, constant> () const {
+		implicit constexpr operator OptionalView<Value, constant>() const {
 			return OptionalView<Value, constant>{};
 		}
 
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			NullOptional const & thix,
 			NullOptional const & that
 		) -> bool = default;
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel {
 
 		template <typename Value> requires
 			AutomaticConstraint
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			Optional<Value> const & thix,
 			NullOptional const &    that
 		) -> bool {
@@ -56,7 +56,7 @@ export namespace Twinning::Kernel {
 
 		template <typename Value, auto constant> requires
 			AutomaticConstraint
-		inline friend constexpr auto operator == (
+		inline friend constexpr auto operator ==(
 			OptionalView<Value, constant> const & thix,
 			NullOptional const &                  that
 		) -> bool {

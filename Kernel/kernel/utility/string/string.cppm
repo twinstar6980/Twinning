@@ -32,7 +32,7 @@ export namespace Twinning::Kernel {
 		&& (IsSameOf<t_size, ZSize>)
 	struct StaticString :
 		BasicStaticString<Character, mbox<Size>(t_size)> {
-		implicit constexpr StaticString (
+		implicit constexpr StaticString(
 			ZArray<Character::Value, t_size> const & data
 		) :
 			BasicStaticString<Character, mbox<Size>(t_size)>{data} {
@@ -43,14 +43,14 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	inline auto make_string_view (
+	inline auto make_string_view(
 		ZConstantString const & string,
 		ZSize const &           length
 	) -> ConstantStringView {
 		return ConstantStringView{cast_pointer<Character>(make_pointer(string)), mbox<Size>(length)};
 	}
 
-	inline auto make_string (
+	inline auto make_string(
 		ZConstantString const & string,
 		ZSize const &           length
 	) -> String {
@@ -59,13 +59,13 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline auto make_string_view (
+	inline auto make_string_view(
 		std::string_view const & string
 	) -> ConstantStringView {
 		return make_string_view(string.data(), string.length());
 	}
 
-	inline auto make_string (
+	inline auto make_string(
 		std::string_view const & string
 	) -> String {
 		return make_string(string.data(), string.length());
@@ -73,13 +73,13 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	inline auto make_std_string_view (
+	inline auto make_std_string_view(
 		ConstantStringView const & string
 	) -> std::string_view {
 		return std::string_view{cast_pointer<char>(string.begin()).value, string.size().value};
 	}
 
-	inline constexpr auto hash_std_string_view (
+	inline constexpr auto hash_std_string_view(
 		std::string_view const & string
 	) -> ZIntegerU64 {
 		auto offset = ZIntegerU64{14695981039346656037ull};
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	// NOTE: ALIAS: make_std_string
-	inline auto mss (
+	inline auto mss(
 		ConstantStringView const & string
 	) -> std::string {
 		return std::string{cast_pointer<char>(string.begin()).value, string.size().value};
@@ -107,28 +107,28 @@ export namespace Twinning::Kernel {
 
 	template <StaticString string> requires
 		NoneConstraint
-	inline constexpr auto operator ""_sv (
+	inline constexpr auto operator ""_sv(
 	) -> ConstantStringView {
 		return string.view();
 	}
 
 	template <StaticString string> requires
 		NoneConstraint
-	inline constexpr auto operator ""_sl (
+	inline constexpr auto operator ""_sl(
 	) -> Size {
 		return string.view().size();
 	}
 
 	template <StaticString string> requires
 		NoneConstraint
-	inline constexpr auto operator ""_sh (
+	inline constexpr auto operator ""_sh(
 	) -> IntegerU64 {
 		return string.view().hash();
 	}
 
 	template <StaticString string> requires
 		NoneConstraint
-	inline auto operator ""_s (
+	inline auto operator ""_s(
 	) -> String {
 		return String{string.view()};
 	}
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel {
 
 	template <StaticString string> requires
 		NoneConstraint
-	inline constexpr auto operator ""_shz (
+	inline constexpr auto operator ""_shz(
 	) -> ZIntegerU64 {
 		return operator ""_sh<string>().value;
 	}

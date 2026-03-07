@@ -27,12 +27,12 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.TextTable {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: { source_file: string; destination_version: string; }) => (argument.source_file.replace(/(\.(txt|json))?$/i, `.convert.${{ 'text': 'txt', 'json_map': 'json', 'json_list': 'json' }[argument.destination_version]}`)),
+						automatic: (argument: {source_file: string, destination_version: string}) => (argument.source_file.replace(/(\.(txt|json))?$/i, `.convert.${{'text': 'txt', 'json_map': 'json', 'json_list': 'json'}[argument.destination_version]}`)),
 						condition: null,
 					}),
 				],
 				batch: null,
-				worker: ({ source_file, destination_version, destination_file }, temporary: {}) => {
+				worker: ({source_file, destination_version, destination_file}, temporary: {}) => {
 					Support.Pvz2.TextTable.Convert.convert_fs(source_file, destination_file, 'automatic', destination_version as any);
 					return;
 				},

@@ -11,7 +11,7 @@ export namespace Twinning::Shell::Interaction {
 
 	#pragma region console
 
-	inline auto input_text (
+	inline auto input_text(
 	) -> std::string {
 		auto text = std::string{};
 		#if defined M_system_windows
@@ -35,7 +35,7 @@ export namespace Twinning::Shell::Interaction {
 		return text;
 	}
 
-	inline auto output_text (
+	inline auto output_text(
 		std::string const & text
 	) -> void {
 		#if defined M_system_windows

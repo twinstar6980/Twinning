@@ -28,13 +28,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		implicit constexpr KeyValuePair (
+		implicit constexpr KeyValuePair(
 		) = default;
 
 		template <typename KeyObject, typename ValueObject> requires
 			CategoryConstraint<IsValid<KeyObject> && IsValid<ValueObject>>
 			&& (IsConstructible<Key, KeyObject &&> && IsConstructible<Value, ValueObject &&>)
-		explicit constexpr KeyValuePair (
+		explicit constexpr KeyValuePair(
 			KeyObject &&   key,
 			ValueObject && value
 		) :
@@ -44,7 +44,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		inline friend auto operator == (
+		inline friend auto operator ==(
 			KeyValuePair const & thix,
 			KeyValuePair const & that
 		) -> bool = default;

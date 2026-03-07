@@ -4,13 +4,13 @@ namespace Twinning.Script.Executor {
 
 	export type Argument = Record<string, null | boolean | bigint | number | string>;
 
-	export type Method<Argument extends Executor.Argument = Executor.Argument, InputForwarderKey extends Exclude<keyof Argument, number> = Exclude<keyof Argument, number>> = {
+	export type Method<TArgument extends Executor.Argument = Executor.Argument, TInputForwarderKey extends Exclude<keyof TArgument, number> = Exclude<keyof TArgument, number>> = {
 		identifier: string;
 		name(): string;
-		worker(argument: Argument): string | [boolean, number];
-		default_argument: Argument;
+		worker(argument: TArgument): string | [boolean, number];
+		default_argument: TArgument;
 		input_filter(input: null | string): boolean;
-		input_forwarder: null | InputForwarderKey;
+		input_forwarder: null | TInputForwarderKey;
 	};
 
 	export type Command = {
@@ -104,7 +104,7 @@ namespace Twinning.Script.Executor {
 				break;
 			}
 			assert_test(target_method !== null);
-			let actual_argument = { ...command.argument };
+			let actual_argument = {...command.argument};
 			if (actual_input !== null && target_method.input_forwarder !== null) {
 				actual_argument[target_method.input_forwarder] = actual_input;
 			}

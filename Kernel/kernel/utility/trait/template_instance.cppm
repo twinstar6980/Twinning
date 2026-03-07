@@ -17,7 +17,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1> (Template<T1> & it) {
+				[] <typename T1>(Template<T1> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1, typename T2> (Template<T1, T2> & it) {
+				[] <typename T1, typename T2>(Template<T1, T2> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1, typename T2, auto t_3> (Template<T1, T2, t_3> & it) {
+				[] <typename T1, typename T2, auto t_3>(Template<T1, T2, t_3> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <auto t_1> (Template<t_1> & it) {
+				[] <auto t_1>(Template<t_1> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -61,7 +61,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <auto t_1, auto t_2> (Template<t_1, t_2> & it) {
+				[] <auto t_1, auto t_2>(Template<t_1, t_2> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <auto t_1, auto t_2, auto t_3, auto t_4> (Template<t_1, t_2, t_3, t_4> & it) {
+				[] <auto t_1, auto t_2, auto t_3, auto t_4>(Template<t_1, t_2, t_3, t_4> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1, auto t_2> (Template<T1, t_2> & it) {
+				[] <typename T1, auto t_2>(Template<T1, t_2> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -94,7 +94,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1, auto t_2, template <typename, auto> typename TM3> (Template<T1, t_2, TM3> & it) {
+				[] <typename T1, auto t_2, template <typename, auto> typename TM3>(Template<T1, t_2, TM3> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -105,7 +105,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename ... T1> (Template<T1 ...> & it) {
+				[] <typename ... T1>(Template<T1 ...> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <auto ... t_1> (Template<t_1 ...> & it) {
+				[] <auto ... t_1>(Template<t_1 ...> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -127,7 +127,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1, typename ... T2> (Template<T1, T2 ...> & it) {
+				[] <typename T1, typename ... T2>(Template<T1, T2 ...> & it) {
 				}(declare<It &>())
 			};
 		})
@@ -138,7 +138,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<It>>
 		&& (requires {
 			{
-				[] <typename T1, auto t_2, typename T3, typename ... T4> (Template<T1, t_2, T3, T4 ...> & it) {
+				[] <typename T1, auto t_2, typename T3, typename ... T4>(Template<T1, t_2, T3, T4 ...> & it) {
 				}(declare<It &>())
 			};
 		})

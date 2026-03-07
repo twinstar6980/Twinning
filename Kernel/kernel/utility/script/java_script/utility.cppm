@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		explicit NativeValueHandler (
+		explicit NativeValueHandler(
 			Pointer<Value> const & value,
 			Boolean const &        is_holder
 		) :
@@ -67,22 +67,22 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		~NativeValueHandler (
+		~NativeValueHandler(
 		) = default;
 
 		// ----------------
 
-		NativeValueHandler (
+		NativeValueHandler(
 		) :
 			m_value{} {
 			return;
 		}
 
-		NativeValueHandler (
+		NativeValueHandler(
 			NativeValueHandler const & that
 		) = default;
 
-		NativeValueHandler (
+		NativeValueHandler(
 			NativeValueHandler && that
 		) = default;
 
@@ -90,11 +90,11 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			NativeValueHandler const & that
 		) -> NativeValueHandler & = default;
 
-		auto operator = (
+		auto operator =(
 			NativeValueHandler && that
 		) -> NativeValueHandler & = default;
 
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region value
 
-		auto value (
+		auto value(
 		) -> Value & {
 			assert_test(!thiz.m_value.template is<Null>());
 			if (thiz.m_value.template is<Pointer<Value>>()) {
@@ -122,13 +122,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region create
 
-		inline static auto new_instance (
+		inline static auto new_instance(
 			Value & value
 		) -> NativeValueHandler {
 			return NativeValueHandler{make_pointer_of(value), k_true};
 		}
 
-		inline static auto new_reference (
+		inline static auto new_reference(
 			Value & value
 		) -> NativeValueHandler {
 			return NativeValueHandler{make_pointer_of(value), k_false};
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
 			&& (IsConstructible<Value, Argument && ...>)
-		inline static auto new_instance_allocate (
+		inline static auto new_instance_allocate(
 			Argument && ... argument
 		) -> NativeValueHandler {
 			return new_instance(*allocate_instance<Value>(as_forward<Argument>(argument) ...));
@@ -160,7 +160,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto function, typename ... Argument> requires
 			NoneConstraint
-		inline auto call_native_function_wrapper_inner (
+		inline auto call_native_function_wrapper_inner(
 			Argument && ... argument
 		) -> typename CallableTraitOf<function>::Result {
 			auto unlocker = Thread::Unlocker{g_mutex};
@@ -169,12 +169,12 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto function, auto forward_object> requires
 			NoneConstraint
-		inline auto call_native_function_wrapper (
+		inline auto call_native_function_wrapper(
 			Context &     context,
 			Value &       object,
 			List<Value> & argument
 		) -> typename CallableTraitOf<function>::Result {
-			return [&] <auto ... index> (ValuePackage<index ...>) -> typename CallableTraitOf<function>::Result {
+			return [&] <auto ... index>(ValuePackage<index ...>) -> typename CallableTraitOf<function>::Result {
 				if constexpr (!forward_object) {
 					using Argument = typename CallableTraitOf<function>::Argument;
 					return call_native_function_wrapper_inner<function>(
@@ -196,7 +196,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSameOf<forward_object, Boolean>)
-		inline auto proxy_native_function_wrapper (
+		inline auto proxy_native_function_wrapper(
 			Context &     context,
 			Value &       object,
 			List<Value> & argument,
@@ -216,7 +216,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSameOf<forward_object, Boolean>)
-		inline constexpr auto make_proxy_native_function_wrapper (
+		inline constexpr auto make_proxy_native_function_wrapper(
 		) -> auto {
 			return &proxy_native_function_wrapper<function, forward_object>;
 		}
@@ -235,7 +235,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto function, typename ... Argument> requires
 			NoneConstraint
-		inline auto proxy_native_function_by_handler (
+		inline auto proxy_native_function_by_handler(
 			NativeValueHandler<AsPure<Argument>> & ... argument
 		) -> auto {
 			using Result = typename CallableTraitOf<function>::Result;
@@ -252,7 +252,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <auto function, auto ... argument_index> requires
 			NoneConstraint
-		inline constexpr auto make_proxy_native_function_by_handler (
+		inline constexpr auto make_proxy_native_function_by_handler(
 			ValuePackage<argument_index ...>
 		) -> auto {
 			return &proxy_native_function_by_handler<function, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
@@ -272,7 +272,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename Type, typename ... Argument> requires
 			NoneConstraint
-		inline constexpr auto proxy_native_function_allocate_by_handler (
+		inline constexpr auto proxy_native_function_allocate_by_handler(
 			NativeValueHandler<AsPure<Argument>> & ... argument
 		) -> NativeValueHandler<Type> {
 			return NativeValueHandler<Type>::new_instance_allocate(as_forward<Argument>(argument.value()) ...);
@@ -280,7 +280,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename Type, typename ... Argument> requires
 			NoneConstraint
-		inline constexpr auto make_proxy_native_function_allocate_by_handler (
+		inline constexpr auto make_proxy_native_function_allocate_by_handler(
 		) -> auto {
 			return &proxy_native_function_allocate_by_handler<Type, Argument ...>;
 		}
@@ -332,7 +332,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename Class> requires
 			CategoryConstraint<IsPureInstance<Class>>
-		inline auto free_native_class (
+		inline auto free_native_class(
 			Runtime & rt,
 			Value &   obj
 		) -> Void {
@@ -368,25 +368,25 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		~NativeClassBuilder (
+		~NativeClassBuilder(
 		) = default;
 
 		// ----------------
 
-		NativeClassBuilder (
+		NativeClassBuilder(
 		) = delete;
 
-		NativeClassBuilder (
+		NativeClassBuilder(
 			NativeClassBuilder const & that
 		) = delete;
 
-		NativeClassBuilder (
+		NativeClassBuilder(
 			NativeClassBuilder && that
 		) = default;
 
 		// ----------------
 
-		explicit NativeClassBuilder (
+		explicit NativeClassBuilder(
 			Optional<String> const & parent_name,
 			String const &           name,
 			Value &                  parent
@@ -408,11 +408,11 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			NativeClassBuilder const & that
 		) -> NativeClassBuilder & = delete;
 
-		auto operator = (
+		auto operator =(
 			NativeClassBuilder && that
 		) -> NativeClassBuilder & = default;
 
@@ -420,7 +420,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region name
 
-		auto whole_name (
+		auto whole_name(
 		) -> String {
 			return !thiz.m_parent_name.has() ? (thiz.m_name) : ("{}::{}"_sf(thiz.m_parent_name.get(), thiz.m_name));
 		}
@@ -433,7 +433,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
-		auto set_constructor (
+		auto set_constructor(
 		) -> NativeClassBuilder & {
 			thiz.m_constructor = thiz.m_proto.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::constructor()>{thiz.whole_name()});
 			Third::quickjs_ng::$JS_SetConstructor(thiz.m_constructor._context(), thiz.m_constructor._value(), thiz.m_proto._value());
@@ -448,7 +448,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
-		auto add_constructor (
+		auto add_constructor(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
@@ -465,7 +465,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-		auto add_static_function (
+		auto add_static_function(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
@@ -479,7 +479,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>>)
-		auto add_member_function (
+		auto add_member_function(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
@@ -499,7 +499,7 @@ export namespace Twinning::Kernel::JavaScript {
 			&& (IsGlobalFunction<decltype(setter)>)
 			&& (CallableTraitOf<getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<getter>::Result>)
 			&& (CallableTraitOf<setter>::Argument::size == 2_szz && IsSame<AsPure<typename CallableTraitOf<setter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && IsVoid<typename CallableTraitOf<setter>::Result>)
-		auto add_getter_setter (
+		auto add_getter_setter(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
@@ -514,7 +514,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(getter)>)
 			&& (CallableTraitOf<getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<getter>::Result>)
-		auto add_getter (
+		auto add_getter(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
@@ -536,7 +536,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <typename ... Argument> requires
 			CategoryConstraint<IsValid<Argument ...>>
 			&& (IsConstructible<Class, Argument ...>)
-		auto add_constructor_allocate_proxy (
+		auto add_constructor_allocate_proxy(
 			String const & name
 		) -> NativeClassBuilder & {
 			return thiz.template add_constructor<&proxy_native_function_allocate_by_handler<Class, Argument ...>>(name);
@@ -547,7 +547,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-		auto add_static_function_proxy (
+		auto add_static_function_proxy(
 			String const & name
 		) -> NativeClassBuilder & {
 			return thiz.template add_static_function<&proxy_native_function_by_handler<function>>(name);
@@ -557,7 +557,7 @@ export namespace Twinning::Kernel::JavaScript {
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
 			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, Class>)
-		auto add_member_function_proxy (
+		auto add_member_function_proxy(
 			String const & name
 		) -> NativeClassBuilder & {
 			return thiz.template add_member_function<&proxy_native_function_by_handler<function>>(name);
@@ -585,25 +585,25 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		~NativeSpaceBuilder (
+		~NativeSpaceBuilder(
 		) = default;
 
 		// ----------------
 
-		NativeSpaceBuilder (
+		NativeSpaceBuilder(
 		) = delete;
 
-		NativeSpaceBuilder (
+		NativeSpaceBuilder(
 			NativeSpaceBuilder const & that
 		) = delete;
 
-		NativeSpaceBuilder (
+		NativeSpaceBuilder(
 			NativeSpaceBuilder && that
 		) = default;
 
 		// ----------------
 
-		explicit NativeSpaceBuilder (
+		explicit NativeSpaceBuilder(
 			Optional<String> const & parent_name,
 			String const &           name,
 			Value &                  parent
@@ -621,11 +621,11 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region operator
 
-		auto operator = (
+		auto operator =(
 			NativeSpaceBuilder const & that
 		) -> NativeSpaceBuilder & = delete;
 
-		auto operator = (
+		auto operator =(
 			NativeSpaceBuilder && that
 		) -> NativeSpaceBuilder & = default;
 
@@ -633,7 +633,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region name
 
-		auto whole_name (
+		auto whole_name(
 		) -> String {
 			return !thiz.m_parent_name.has() ? (thiz.m_name) : ("{}::{}"_sf(thiz.m_parent_name.get(), thiz.m_name));
 		}
@@ -642,7 +642,7 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region member
 
-		auto add_space (
+		auto add_space(
 			String const & name
 		) -> NativeSpaceBuilder {
 			return NativeSpaceBuilder{make_optional_of(thiz.whole_name()), name, thiz.m_object};
@@ -650,13 +650,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		template <typename Class> requires
 			CategoryConstraint<IsPureInstance<Class>>
-		auto add_class (
+		auto add_class(
 			String const & name
 		) -> NativeClassBuilder<Class> {
 			return NativeClassBuilder<Class>{make_optional_of(thiz.whole_name()), name, thiz.m_object};
 		}
 
-		auto add_variable (
+		auto add_variable(
 			String const & name,
 			Value &&       value
 		) -> NativeSpaceBuilder & {
@@ -667,7 +667,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-		auto add_function (
+		auto add_function(
 			String const & name
 		) -> NativeSpaceBuilder & {
 			return thiz.add_variable(name, thiz.m_object.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name}));
@@ -678,7 +678,7 @@ export namespace Twinning::Kernel::JavaScript {
 		template <auto function> requires
 			CategoryConstraint<>
 			&& (IsGlobalFunction<decltype(function)>)
-		auto add_function_proxy (
+		auto add_function_proxy(
 			String const & name
 		) -> NativeSpaceBuilder & {
 			return thiz.add_function<&proxy_native_function_by_handler<function>>(name);
