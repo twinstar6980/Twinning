@@ -102,10 +102,10 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			}
 			else {
 				this.DescriptorList = this.Descriptor.Object[this.Type];
-				this.uGroup_ItemsSource = this.DescriptorList.Select((value, index) => (new ObjectPropertyGroupItemController() {
+				this.uGroup_ItemsSource = this.DescriptorList.Select((value, index) => new ObjectPropertyGroupItemController() {
 					Host = this,
 					Index = index,
-				})).ToList();
+				}).ToList();
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uGroup_ItemsSource),
@@ -159,7 +159,10 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			get {
 				AssertTest(this.Host.IsLoaded);
 				var model = this.Host.DescriptorList[this.Index];
-				return Enumerable.Range(0, model.Property.Count).Select((propertyIndex) => (new ObjectPropertyItemController() { Host = this.Host, Index = new (this.Index, propertyIndex) })).ToList();
+				return Enumerable.Range(0, model.Property.Count).Select((propertyIndex) => new ObjectPropertyItemController() {
+					Host = this.Host,
+					Index = new (this.Index, propertyIndex),
+				}).ToList();
 			}
 		}
 

@@ -271,7 +271,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseResolutionString(value, null))).Where((value) => (value != null)).Select(CommonUtility.AsNotNull).ToList();
+			this.Value.Category.Resolution = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => ProjectSettingHelper.ParseResolutionString(value, null)).Where((value) => value != null).Select(CommonUtility.AsNotNull).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uCategoryResolution_Text),
 			]);
@@ -280,7 +280,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public String uCategoryResolution_Text {
 			get {
-				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Category.Resolution.Select((value) => (value.ToString())).ToList());
+				return ConvertHelper.MakeStringListToStringWithLine(this.Value.Category.Resolution.Select((value) => value.ToString()).ToList());
 			}
 		}
 
@@ -291,7 +291,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => (ProjectSettingHelper.ParseLocaleString(value, null))).Where((value) => (value != null)).Select(CommonUtility.AsNotNull).ToList();
+			this.Value.Category.Locale = ConvertHelper.ParseStringListFromStringWithLine(senders.Text).Select((value) => ProjectSettingHelper.ParseLocaleString(value, null)).Where((value) => value != null).Select(CommonUtility.AsNotNull).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uCategoryLocale_Text),
 			]);

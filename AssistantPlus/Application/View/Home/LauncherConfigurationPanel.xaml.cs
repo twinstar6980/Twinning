@@ -107,7 +107,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public List<String> uTypeSelect_ItemsSource {
 			get {
-				return Enum.GetValues<ModuleType>().Select((value) => (ModuleHelper.Query(value).Name)).ToList();
+				return Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).Name).ToList();
 			}
 		}
 

@@ -71,7 +71,7 @@ namespace Twinning.AssistantPlus.Utility {
 			if (name[0] == ' ' || name[^1] == ' ' || name[^1] == '.') {
 				return false;
 			}
-			return name.All((value) => (!StorageHelper.InvalidPathNameCharacter.Contains(value)));
+			return name.All((value) => !StorageHelper.InvalidPathNameCharacter.Contains(value));
 		}
 
 		// ----------------
@@ -252,7 +252,7 @@ namespace Twinning.AssistantPlus.Utility {
 				result = Directory.EnumerateFileSystemEntries(target, pattern, option);
 			}
 			var targetFullPath = new DirectoryInfo(target).FullName;
-			return result!.Select((value) => (StorageHelper.Regularize(value[(targetFullPath.Length + 1)..]))).Order().ToList();
+			return result!.Select((value) => StorageHelper.Regularize(value[(targetFullPath.Length + 1)..])).Order().ToList();
 		}
 
 		#endregion
@@ -262,7 +262,7 @@ namespace Twinning.AssistantPlus.Utility {
 		public static async Task Reveal(
 			String target
 		) {
-			var result = Win32.PInvoke.ShellExecute(new (IntPtr.Zero), "open", $"file://{target}", null, null, Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_SHOWNORMAL);
+			var result = Win32.PInvoke.ShellExecute(new (IntegerSN.Zero), "open", $"file://{target}", null, null, Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_SHOWNORMAL);
 			AssertTest(result >= 32);
 			return;
 		}

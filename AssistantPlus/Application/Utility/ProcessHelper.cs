@@ -74,7 +74,7 @@ namespace Twinning.AssistantPlus.Utility {
 			pathExtensionList.Insert(0, "");
 			foreach (var path in pathList) {
 				var pathBase = $"{path}/{name}";
-				var pathExtension = pathExtensionList.FirstOrDefault((value) => (StorageHelper.ExistFile($"{pathBase}{value}")));
+				var pathExtension = pathExtensionList.FirstOrDefault((value) => StorageHelper.ExistFile($"{pathBase}{value}"));
 				if (pathExtension != null) {
 					result = $"{pathBase}{pathExtension}";
 					break;

@@ -67,9 +67,9 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public async Task UpdateView(
 		) {
-			this.uModuleLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Module.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value })).ToList();
-			this.uPinnedLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Pinned.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value })).ToObservableCollection();
-			this.uRecentLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Recent.Select((value) => (new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Recent, Configuration = value })).ToObservableCollection();
+			this.uModuleLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Module.Select((value) => new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Module, Configuration = value }).ToList();
+			this.uPinnedLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Pinned.Select((value) => new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Pinned, Configuration = value }).ToObservableCollection();
+			this.uRecentLauncherList_ItemsSource = App.Instance.Setting.Data.ModuleLauncher.Recent.Select((value) => new LauncherPageLauncherItemController() { Host = this, Category = ModuleLauncherCategory.Recent, Configuration = value }).ToObservableCollection();
 			this.NotifyPropertyChanged([
 				nameof(this.uModuleLauncherList_ItemsSource),
 				nameof(this.uPinnedLauncherList_ItemsSource),

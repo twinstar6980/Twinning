@@ -75,14 +75,14 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.json");
-			this.uMethodList_ItemsSource = this.Configuration.Method.Select((group) => (new MainPageMethodGroupItemController() {
+			this.uMethodList_ItemsSource = this.Configuration.Method.Select((group) => new MainPageMethodGroupItemController() {
 				Host = this,
 				Configuration = group,
-				Children = group.Item.Select((item) => (new MainPageMethodItemItemController() {
+				Children = group.Item.Select((item) => new MainPageMethodItemItemController() {
 					Host = this,
 					Configuration = item,
-				})).ToList(),
-			})).ToList();
+				}).ToList(),
+			}).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uMethodList_ItemsSource),
 			]);
@@ -119,7 +119,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 					optionCommand.Add(new (
 						option.NextString(),
 						option.NextBoolean(),
-						option.NextString().SelfLet((it) => (JsonHelper.DeserializeText<Dictionary<String, Object>>(it)))
+						option.NextString().SelfLet((it) => JsonHelper.DeserializeText<Dictionary<String, Object>>(it))
 					));
 				}
 			}
@@ -150,7 +150,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				foreach (var item in this.Command) {
 					option.NextString(item.Item2.Identifier);
 					option.NextBoolean(item.Item3.Value);
-					option.NextString(item.Item4.SelfLet((it) => (JsonHelper.SerializeText(ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, it), false))));
+					option.NextString(item.Item4.SelfLet((it) => JsonHelper.SerializeText(ConfigurationHelper.MakeArgumentValueListJson(item.Item2.Argument, it), false)));
 				}
 			}
 			return option.Done();
@@ -165,8 +165,8 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			Boolean                    batch,
 			Dictionary<String, Object> argument
 		) {
-			var groupConfiguration = this.Configuration.Method.First((value) => (method.StartsWith($"{value.Identifier}.")));
-			var itemConfiguration = groupConfiguration.Item.First((value) => (value.Identifier == method));
+			var groupConfiguration = this.Configuration.Method.First((value) => method.StartsWith($"{value.Identifier}."));
+			var itemConfiguration = groupConfiguration.Item.First((value) => value.Identifier == method);
 			this.Command.Add(new (groupConfiguration, itemConfiguration, new (batch), ConfigurationHelper.ParseArgumentValueListJson(itemConfiguration.Argument, argument)));
 			this.uCommandList_ItemsSource.Add(new () {
 				Host = this,
@@ -256,7 +256,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 		) {
 			var senders = sender.As<TreeView>();
 			if (args.InvokedItem is MainPageMethodGroupItemController groupItem) {
-				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
+				var node = senders.RootNodes.ToList().Find((value) => Object.ReferenceEquals(value.Content, groupItem)).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
 			}
 			if (args.InvokedItem is MainPageMethodItemItemController itemItem) {
@@ -274,7 +274,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await this.ForwardCommand(this.Command.Select((value, index) => (index)).ToList());
+			await this.ForwardCommand(this.Command.Select((value, index) => index).ToList());
 			return;
 		}
 
@@ -501,7 +501,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 							}.SelfAlso((it) => {
 								it.Click += async (_, _) => {
 									foreach (var argument in preset.Argument) {
-										var argumentIndex = this.ItemConfiguration.Argument.FindIndex((value) => (value.Identifier == argument.Key));
+										var argumentIndex = this.ItemConfiguration.Argument.FindIndex((value) => value.Identifier == argument.Key);
 										AssertTest(argumentIndex != -1);
 										this.Argument[argumentIndex].Value = ConfigurationHelper.ParseArgumentValueJson(this.ItemConfiguration.Argument[argumentIndex].Type, argument.Value);
 									}
@@ -519,7 +519,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public String uPresetCount_Text {
 			get {
-				return this.ItemConfiguration.Preset.Count((value) => (value != null)).ToString();
+				return this.ItemConfiguration.Preset.Count((value) => value != null).ToString();
 			}
 		}
 
@@ -539,7 +539,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public List<Boolean> uArgumentPanel_Batch {
 			get {
-				return this.ItemConfiguration.Argument.Select((value) => (this.Batch.Value && (this.ItemConfiguration.Batch?.Contains(value.Identifier) ?? false))).ToList();
+				return this.ItemConfiguration.Argument.Select((value) => this.Batch.Value && (this.ItemConfiguration.Batch?.Contains(value.Identifier) ?? false)).ToList();
 			}
 		}
 

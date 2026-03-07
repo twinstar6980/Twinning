@@ -394,9 +394,9 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			this.Texture = texture;
 			this.ImageFilter = Enumerable.Repeat(false, this.Animation.Image.Count).ToList();
 			this.SpriteFilter = Enumerable.Repeat(false, this.Animation.Sprite.Count).ToList();
-			this.PlantCustomLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value.StartsWith("custom_"))).ToList();
-			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ink" || value == "butter")).ToList();
-			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => (value.Name != null)).Select((value) => (value.Name.AsNotNull())).Where((value) => (value == "ground_swatch" || value == "ground_swatch_plane")).ToList();
+			this.PlantCustomLayerName = this.Animation.Sprite.Where((value) => value.Name != null).Select((value) => value.Name.AsNotNull()).Where((value) => value.StartsWith("custom_")).ToList();
+			this.ZombieStateLayerName = this.Animation.Sprite.Where((value) => value.Name != null).Select((value) => value.Name.AsNotNull()).Where((value) => value == "ink" || value == "butter").ToList();
+			this.ZombieGroundSwatchLayerName = this.Animation.Sprite.Where((value) => value.Name != null).Select((value) => value.Name.AsNotNull()).Where((value) => value == "ground_swatch" || value == "ground_swatch_plane").ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uAnimationFile_Content),
 				nameof(this.uAnimationFileMenuClear_IsEnabled),
@@ -726,8 +726,8 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		) {
 			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
-				this.Animation.Image.Select((value) => (this.ImageFilterRule.Length != 0 && Regex.IsMatch(PopcapAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null)).ToList(),
-				this.Animation.Sprite.Select((value) => (value.Name != null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null)).ToList()
+				this.Animation.Image.Select((value) => this.ImageFilterRule.Length != 0 && Regex.IsMatch(PopcapAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null).ToList(),
+				this.Animation.Sprite.Select((value) => value.Name != null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null).ToList()
 			);
 			return;
 		}
@@ -770,7 +770,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			await this.Load(animationFile);
 			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
-				imageFilter == null ? null : this.Animation.Image.Select((value,   index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
+				imageFilter == null ? null : this.Animation.Image.Select((value, index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
 				spriteFilter == null ? null : this.Animation.Sprite.Select((value, index) => (Boolean?)!spriteFilter.Contains(index)).ToList()
 			);
 			if (imageFilter == null && spriteFilter == null) {
@@ -1045,7 +1045,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded) {
 					return [];
 				}
-				return this.Animation.Image.Select((value, index) => (new MainPageImageItemController() { Host = this, Index = index })).ToList();
+				return this.Animation.Image.Select((value, index) => new MainPageImageItemController() { Host = this, Index = index }).ToList();
 			}
 		}
 
@@ -1092,7 +1092,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded) {
 					return [];
 				}
-				return this.Animation.Sprite.Select((value, index) => (new MainPageSpriteItemController() { Host = this, Index = index })).ToList();
+				return this.Animation.Sprite.Select((value, index) => new MainPageSpriteItemController() { Host = this, Index = index }).ToList();
 			}
 		}
 
@@ -1355,7 +1355,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Activated) {
 					return [];
 				}
-				return [..this.ActiveFrameLabel.Select((value) => (value.Item1)), this.uActiveFrameRangeLabel__ItemNameOfAll];
+				return [..this.ActiveFrameLabel.Select((value) => value.Item1), this.uActiveFrameRangeLabel__ItemNameOfAll];
 			}
 		}
 
@@ -1364,7 +1364,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Activated) {
 					return null;
 				}
-				var result = this.ActiveFrameLabel.Find((value) => (value.Item2 == this.ActiveFrameRange))?.Item1;
+				var result = this.ActiveFrameLabel.Find((value) => value.Item2 == this.ActiveFrameRange)?.Item1;
 				return result ?? (this.ActiveFrameRange.Begin == 0 && this.ActiveFrameRange.End == this.ActiveSprite.AsNotNull().Frame.Count - 1 ? this.uActiveFrameRangeLabel__ItemNameOfAll : null);
 			}
 		}
@@ -1386,7 +1386,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				End = this.ActiveSprite.AsNotNull().Frame.Count - 1,
 			};
 			if (newLabel != this.uActiveFrameRangeLabel__ItemNameOfAll) {
-				newRange = this.ActiveFrameLabel.Find((value) => (value.Item1 == newLabel)).AsNotNull().Item2;
+				newRange = this.ActiveFrameLabel.Find((value) => value.Item1 == newLabel).AsNotNull().Item2;
 			}
 			if (newRange != this.ActiveFrameRange) {
 				await this.ChangeFrameRange(newRange);
@@ -1767,7 +1767,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
 					return [];
 				}
-				return [..this.PlantCustomLayerName.Select((value) => (value["custom_".Length..])), this.uPlantCustomLayer__ItemNameOfNone];
+				return [..this.PlantCustomLayerName.Select((value) => value["custom_".Length..]), this.uPlantCustomLayer__ItemNameOfNone];
 			}
 		}
 
@@ -1776,7 +1776,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
 					return null;
 				}
-				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
+				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.PlantCustomLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
 				return selectedItem.Count switch {
 					0 => this.uPlantCustomLayer__ItemNameOfNone,
 					1 => selectedItem[0].Name.AsNotNull()["custom_".Length..],
@@ -1797,7 +1797,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				return;
 			}
 			var targetLayer = $"custom_{senders.SelectedItem.As<String>()}";
-			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => value.Name != null && this.PlantCustomLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null).ToList());
 			this.NotifyPropertyChanged([
 				nameof(this.uPlantCustomLayer_SelectedItem),
 			]);
@@ -1844,7 +1844,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
 					return null;
 				}
-				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
+				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
 				return selectedItem.Count switch {
 					0 => this.uZombieStateLayer__ItemNameOfNone,
 					1 => selectedItem[0].Name.AsNotNull(),
@@ -1865,7 +1865,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				return;
 			}
 			var targetLayer = senders.SelectedItem.As<String>();
-			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null)).ToList());
+			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => value.Name != null && this.ZombieStateLayerName.Contains(value.Name) ? value.Name == targetLayer : (Boolean?)null).ToList());
 			this.NotifyPropertyChanged([
 				nameof(this.uZombieStateLayer_SelectedItem),
 			]);
@@ -1901,7 +1901,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
 					return false;
 				}
-				var selectedItem = this.Animation.Sprite.Where((value, index) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) && this.SpriteFilter[index])).ToList();
+				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
 				return selectedItem.Count != 0;
 			}
 		}
@@ -1915,7 +1915,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				return;
 			}
 			var newValue = senders.IsChecked.AsNotNull();
-			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => (value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null)).ToList());
+			await this.ChangeElementFilter(null, this.Animation.Sprite.Select((value) => value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) ? newValue : (Boolean?)null).ToList());
 			this.NotifyPropertyChanged([
 				nameof(this.uZombieGroundSwatchLayer_IsChecked),
 			]);

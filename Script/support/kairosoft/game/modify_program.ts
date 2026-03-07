@@ -298,7 +298,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				name: string,
 			): Array<number> => {
 				assert_test(search_result.length === expect_count);
-				let address_list = search_result.map((it) => it.address);
+				let address_list = search_result.map((it) => (it.address));
 				Console.information(`Tip: the symbol '${name}' at ${address_list.map((it) => (it.toString(16).padStart(8, '0'))).join(',')}`, []);
 				return address_list;
 			};

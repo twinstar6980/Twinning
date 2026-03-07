@@ -67,7 +67,7 @@ namespace Twinning.Script.ProcessHelper {
 			KernelX.Storage.create_file(output_file);
 			KernelX.Storage.create_file(error_file);
 		}
-		let code = KernelX.Process.run_process(program, argument, ConvertHelper.record_to_array(environment, (key, value) => `${key}=${value}`), input_file, output_file, error_file);
+		let code = KernelX.Process.run_process(program, argument, ConvertHelper.record_to_array(environment, (key, value) => (`${key}=${value}`)), input_file, output_file, error_file);
 		let read_file = (path: string): string => {
 			let data = KernelX.Storage.read_file_s(path);
 			return ConvertHelper.normalize_string_line_feed(data);

@@ -82,18 +82,18 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 		public async Task OpenView(
 		) {
 			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.json");
-			this.uOptionList_ItemsSource = this.Configuration.Option.Select((group) => (new MainPageOptionGroupItemController() {
+			this.uOptionList_ItemsSource = this.Configuration.Option.Select((group) => new MainPageOptionGroupItemController() {
 				Host = this,
 				Configuration = group,
-				Children = group.Item.Select((item) => (new MainPageOptionItemItemController() {
+				Children = group.Item.Select((item) => new MainPageOptionItemItemController() {
 					Host = this,
 					Configuration = item,
 					SingleEnabled = false,
 					SingleFiltered = false,
 					BatchEnabled = false,
 					BatchFiltered = false,
-				})).ToList(),
-			})).ToList();
+				}).ToList(),
+			}).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uOptionList_ItemsSource),
 			]);
@@ -163,7 +163,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 				]);
 			}
 			if (optionResource != null) {
-				await this.AppendResource(optionResource.Select((item) => (StorageHelper.Regularize(item.Item1))).ToList());
+				await this.AppendResource(optionResource.Select((item) => StorageHelper.Regularize(item.Item1)).ToList());
 			}
 			return;
 		}
@@ -248,7 +248,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			List<String> list
 		) {
 			foreach (var item in list) {
-				if (this.Resource.Any((value) => (value.Item1 == item))) {
+				if (this.Resource.Any((value) => value.Item1 == item)) {
 					continue;
 				}
 				var itemType = null as Boolean?;
@@ -273,8 +273,8 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			List<String> list
 		) {
 			foreach (var item in list) {
-				this.Resource.RemoveAll((value) => (value.Item1 == item));
-				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => (value.Path == item)));
+				this.Resource.RemoveAll((value) => value.Item1 == item);
+				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => value.Path == item));
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uResourceCount_Text),
@@ -290,7 +290,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 		) {
 			var actualInput = this.Resource.Count != 0 ? this.Resource.Select((value) => value.Item1).Cast<String?>() : [null];
 			var actualMethod = method == null ? null : CoreTaskWorker.ForwardHelper.MakeMethodMaybeBatch(method, this.EnableBatch);
-			var actualCommand = actualInput.Select((value) => (CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(value, actualMethod, argument))).ToList();
+			var actualCommand = actualInput.Select((value) => CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(value, actualMethod, argument)).ToList();
 			await CoreTaskWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);
 			return;
 		}
@@ -318,7 +318,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
 				var item = await args.DataView.GetStorageItemsAsync();
-				var resource = item.Select((value) => (StorageHelper.GetLongPath(value.Path))).ToList();
+				var resource = item.Select((value) => StorageHelper.GetLongPath(value.Path)).ToList();
 				await this.AppendResource(resource);
 			}
 			return;
@@ -408,7 +408,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			switch (senders.Tag.As<String>()) {
 				case "RemoveAll": {
 					if (await ControlHelper.ShowDialogForConfirm(this.View, null, null)) {
-						await this.RemoveResource(this.Resource.Select((value) => (value.Item1)).ToList());
+						await this.RemoveResource(this.Resource.Select((value) => value.Item1).ToList());
 					}
 					break;
 				}
@@ -477,7 +477,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 		) {
 			var senders = sender.As<TreeView>();
 			if (args.InvokedItem is MainPageOptionGroupItemController groupItem) {
-				var node = senders.RootNodes.ToList().Find((value) => (Object.ReferenceEquals(value.Content, groupItem))).AsNotNull();
+				var node = senders.RootNodes.ToList().Find((value) => Object.ReferenceEquals(value.Content, groupItem)).AsNotNull();
 				node.IsExpanded = !node.IsExpanded;
 			}
 			if (args.InvokedItem is MainPageOptionItemItemController itemItem) {
@@ -690,7 +690,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public String uPresetCount_Text {
 			get {
-				return this.Configuration.Preset.Count((value) => (value != null)).ToString();
+				return this.Configuration.Preset.Count((value) => value != null).ToString();
 			}
 		}
 

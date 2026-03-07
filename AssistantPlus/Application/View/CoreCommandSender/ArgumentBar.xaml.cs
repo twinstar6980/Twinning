@@ -634,7 +634,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				if (this.Type == null || this.Option == null) {
 					return [];
 				}
-				return this.Option.Select((value) => (ValueExpressionHelper.MakeString(value))).ToList();
+				return this.Option.Select((value) => ValueExpressionHelper.MakeString(value)).ToList();
 			}
 		}
 

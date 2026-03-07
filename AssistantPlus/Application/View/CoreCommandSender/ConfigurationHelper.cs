@@ -39,8 +39,8 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 					Value = json.As<Floater>(),
 				},
 				ArgumentType.Size => new SizeExpression() {
-					Count = json.As<String>().SelfLet((it) => (Floater.Parse(it[..^1]))),
-					Exponent = json.As<String>().SelfLet((it) => (new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(it[^1]))).SelfAlso((it) => { AssertTest(it != -1); }),
+					Count = json.As<String>().SelfLet((it) => Floater.Parse(it[..^1])),
+					Exponent = json.As<String>().SelfLet((it) => new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(it[^1])).SelfAlso((it) => { AssertTest(it != -1); }),
 				},
 				ArgumentType.String => new StringExpression() {
 					Value = json.As<String>(),

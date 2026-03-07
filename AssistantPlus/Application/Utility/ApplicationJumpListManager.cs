@@ -1,4 +1,4 @@
-#pragma warning disable 0,
+#pragma warning disable 0, CS0162
 // ReSharper disable
 
 using Twinning.AssistantPlus;

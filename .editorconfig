@@ -1,0 +1,101 @@
+
+[*]
+root = true
+indent_style = tab
+indent_size = 4
+tab_width = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = unset
+
+[*.{txt,md}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{sh,cmd}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{json}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{yaml}]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[*.{xml}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{plist}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{properties}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{hpp,cpp,cppm}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{ts}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{dart}]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[*.{java}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{kt}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{kts}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.{swift}]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[*.{cs}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{xaml}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{lua}]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[*.{py}]
+indent_style = tab
+indent_size = 4
+tab_width = 4

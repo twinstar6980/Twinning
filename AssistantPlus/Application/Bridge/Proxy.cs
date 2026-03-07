@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region constructor
 
-		public List<String> Value;
+		public List<String> Value { get; set; }
 
 		// ----------------
 
@@ -54,7 +54,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			Message*     instance,
 			MessageProxy proxy
 		) {
-			var value = proxy.Value.Select((value) => (Encoding.UTF8.GetBytes(value.ToCharArray()))).ToList();
+			var value = proxy.Value.Select((value) => Encoding.UTF8.GetBytes(value.ToCharArray())).ToList();
 			var dataSize = 0;
 			dataSize += sizeof(IntegerU32);
 			foreach (var valueItem in value) {
@@ -108,7 +108,7 @@ namespace Twinning.AssistantPlus.Bridge {
 
 		#region constructor
 
-		public Action<ExecutorProxy, MessageProxy, MessageProxy> Value;
+		public Action<ExecutorProxy, MessageProxy, MessageProxy> Value { get; set; }
 
 		// ----------------
 
@@ -132,7 +132,7 @@ namespace Twinning.AssistantPlus.Bridge {
 			Message*  exception
 		);
 
-		private static readonly Dictionary<IntPtr, Tuple<GCHandle, GCHandle>> Guard = [];
+		private static readonly Dictionary<IntegerSN, Tuple<GCHandle, GCHandle>> Guard = [];
 
 		// ----------------
 
@@ -185,11 +185,11 @@ namespace Twinning.AssistantPlus.Bridge {
 			ExecutorProxy proxy
 		) {
 			var guardForInvoke = GCHandle.Alloc((ExecutorDelegate)((
-				Executor* self,
-				Executor* callback,
-				Message*  argument,
-				Message*  result,
-				Message*  exception
+				self,
+				callback,
+				argument,
+				result,
+				exception
 			) => {
 				try {
 					var callbackProxy = ExecutorProxy.Parse(callback);
@@ -206,11 +206,11 @@ namespace Twinning.AssistantPlus.Bridge {
 				return;
 			}));
 			var guardForClear = GCHandle.Alloc((ExecutorDelegate)((
-				Executor* self,
-				Executor* callback,
-				Message*  argument,
-				Message*  result,
-				Message*  exception
+				self,
+				callback,
+				argument,
+				result,
+				exception
 			) => {
 				if (result != null) {
 					MessageProxy.Destruct(result);
@@ -220,8 +220,8 @@ namespace Twinning.AssistantPlus.Bridge {
 				}
 				return;
 			}));
-			AssertTest(!ExecutorProxy.Guard.ContainsKey((IntPtr)instance));
-			ExecutorProxy.Guard.Add((IntPtr)instance, new (guardForInvoke, guardForClear));
+			AssertTest(!ExecutorProxy.Guard.ContainsKey((IntegerSN)instance));
+			ExecutorProxy.Guard.Add((IntegerSN)instance, new (guardForInvoke, guardForClear));
 			instance->invoke = (delegate* unmanaged<Executor*, Executor*, Message*, Message*, Message*, void>)Marshal.GetFunctionPointerForDelegate(guardForInvoke.Target.AsNotNull());
 			instance->clear = (delegate* unmanaged<Executor*, Executor*, Message*, Message*, Message*, void>)Marshal.GetFunctionPointerForDelegate(guardForClear.Target.AsNotNull());
 			return;
@@ -230,10 +230,10 @@ namespace Twinning.AssistantPlus.Bridge {
 		public static unsafe void Destruct(
 			Executor* instance
 		) {
-			var guard = ExecutorProxy.Guard[(IntPtr)instance];
+			var guard = ExecutorProxy.Guard[(IntegerSN)instance];
 			guard.Item1.Free();
 			guard.Item2.Free();
-			AssertTest(ExecutorProxy.Guard.Remove((IntPtr)instance));
+			AssertTest(ExecutorProxy.Guard.Remove((IntegerSN)instance));
 			instance->invoke = null;
 			instance->clear = null;
 			return;

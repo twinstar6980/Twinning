@@ -215,7 +215,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				"pvz2.package_project.compile",
 				new ([
 					new ("project_directory", this.MakeScopeRootPath()),
-					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
+					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).Select((value) => value.Setting.Name))),
 					new ("target_scope", targetScope == null ? "*" : String.Join('|', targetScope)),
 				])
 			));
@@ -231,7 +231,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				"pvz2.package_project.link",
 				new ([
 					new ("project_directory", this.MakeScopeRootPath()),
-					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).Select((value) => (value.Setting.Name)))),
+					new ("target_package", String.Join('|', this.View.uPackageList.SelectedItems.Select(CommonUtility.As<MainPagePackageItemController>).Select((value) => value.Setting.Name))),
 					new ("remake_manifest", remakeManifest),
 				])
 			));
@@ -293,7 +293,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String parent
 		) {
 			AssertTest(this.IsLoaded);
-			return StorageHelper.ListDirectory(parent, 1, false, true).Where((value) => (!value.StartsWith("."))).ToList();
+			return StorageHelper.ListDirectory(parent, 1, false, true).Where((value) => !value.StartsWith(".")).ToList();
 		}
 
 		public String FindAvailableScopeChildName(
@@ -316,7 +316,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String part
 		) {
 			AssertTest(this.IsLoaded);
-			return this.uPartList_ItemsSource.First((value) => (value.Name == part));
+			return this.uPartList_ItemsSource.First((value) => value.Name == part);
 		}
 
 		public MainPageGroupItemController FindScopeNode(
@@ -324,7 +324,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String group
 		) {
 			AssertTest(this.IsLoaded);
-			return this.FindScopeNode(part).Children.First((value) => (value.Name == group));
+			return this.FindScopeNode(part).Children.First((value) => value.Name == group);
 		}
 
 		public MainPageResourceItemController FindScopeNode(
@@ -333,7 +333,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String resource
 		) {
 			AssertTest(this.IsLoaded);
-			return this.FindScopeNode(part, group).Children.First((value) => (value.Name == resource));
+			return this.FindScopeNode(part, group).Children.First((value) => value.Name == resource);
 		}
 
 		// ----------------
@@ -342,7 +342,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String projectDirectory
 		) {
 			AssertTest(!this.IsLoaded);
-			if (!(await ProjectSettingHelper.CheckVersionFile(projectDirectory))) {
+			if (!await ProjectSettingHelper.CheckVersionFile(projectDirectory)) {
 				await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Failed to check version.txt", "");
 				return;
 			}
@@ -502,7 +502,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			sourcePackage.Name = destinationPackage;
-			var itemNode = this.uPackageList_ItemsSource.First((value) => (Object.ReferenceEquals(value.Setting, sourcePackage)));
+			var itemNode = this.uPackageList_ItemsSource.First((value) => Object.ReferenceEquals(value.Setting, sourcePackage));
 			itemNode.NotifyPropertyChanged([
 				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
@@ -517,7 +517,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			AssertTest(this.IsLoaded);
 			this.ProjectSetting.Package.Remove(sourcePackage);
 			await this.ProjectSaveSetting();
-			var itemNode = this.uPackageList_ItemsSource.First((value) => (Object.ReferenceEquals(value.Setting, sourcePackage)));
+			var itemNode = this.uPackageList_ItemsSource.First((value) => Object.ReferenceEquals(value.Setting, sourcePackage));
 			this.uPackageList_ItemsSource.Remove(itemNode);
 			return;
 		}
@@ -547,7 +547,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					Locale = sourcePackage.Category.Locale.ToList(),
 				},
 				Conversion = JsonHelper.DeepCopy(sourcePackage.Conversion),
-				Variable = sourcePackage.Variable.Select((value) => (new Variable() { Name = value.Name, Value = value.Value })).ToList(),
+				Variable = sourcePackage.Variable.Select((value) => new Variable() { Name = value.Name, Value = value.Value }).ToList(),
 			};
 			this.ProjectSetting.Package.Add(destinationPackage);
 			await this.ProjectSaveSetting();
@@ -674,14 +674,14 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
 			]);
-			foreach (var groupNode in this.uGroupList_ItemsSource.Where((value) => (value.PartName == sourcePart))) {
+			foreach (var groupNode in this.uGroupList_ItemsSource.Where((value) => value.PartName == sourcePart)) {
 				groupNode.PartName = destinationPart;
 				groupNode.NotifyPropertyChanged([
 					nameof(groupNode.uName_ToolTip),
 					nameof(groupNode.uName_Text),
 				]);
 			}
-			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => (value.PartName == sourcePart))) {
+			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => value.PartName == sourcePart)) {
 				groupNode.PartName = destinationPart;
 				groupNode.NotifyPropertyChanged([
 					nameof(groupNode.uName_ToolTip),
@@ -701,7 +701,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			var itemNode = this.FindScopeNode(sourcePart);
 			this.uPartList_ItemsSource.Remove(itemNode);
 			foreach (var packageNode in this.uPackageList_ItemsSource) {
-				packageNode.Setting.Part.RemoveAll((value) => (value == sourcePart));
+				packageNode.Setting.Part.RemoveAll((value) => value == sourcePart);
 				packageNode.NotifyPropertyChanged([
 					nameof(packageNode.uCount_Value),
 				]);
@@ -837,7 +837,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				nameof(itemNode.uName_ToolTip),
 				nameof(itemNode.uName_Text),
 			]);
-			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => (value.PartName == sourcePart && value.GroupName == sourceGroup))) {
+			foreach (var groupNode in this.uResourceList_ItemsSource.Where((value) => value.PartName == sourcePart && value.GroupName == sourceGroup)) {
 				groupNode.GroupName = destinationGroup;
 				groupNode.NotifyPropertyChanged([
 					nameof(groupNode.uName_ToolTip),
@@ -1264,7 +1264,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			var senders = sender.As<ListView>();
 			AssertTest(this.IsLoaded);
-			this.ProjectSetting.Package = this.uPackageList_ItemsSource.Select((value) => (value.Setting)).ToList();
+			this.ProjectSetting.Package = this.uPackageList_ItemsSource.Select((value) => value.Setting).ToList();
 			await this.ProjectSaveSetting();
 			return;
 		}
@@ -1329,7 +1329,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			var senders = sender.As<ListView>();
 			AssertTest(this.IsLoaded);
 			foreach (var item in args.RemovedItems.Select(CommonUtility.As<MainPagePartItemController>)) {
-				this.uGroupList_ItemsSource.Remove(this.uGroupList_ItemsSource.First((value) => (value.PartName == item.Name)));
+				this.uGroupList_ItemsSource.Remove(this.uGroupList_ItemsSource.First((value) => value.PartName == item.Name));
 			}
 			foreach (var item in args.AddedItems.Select(CommonUtility.As<MainPagePartItemController>)) {
 				this.uGroupList_ItemsSource.Add(new () {
@@ -1381,28 +1381,28 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), null);
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => $"/{value.Name}").ToList(), null);
 					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), false);
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => $"/{value.Name}").ToList(), false);
 					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList(), true);
+					await this.WorkerDoTranspile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => $"/{value.Name}").ToList(), true);
 					foreach (var item in this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).ToList()) {
 						await this.PartReload(item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => ($"/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uPartList.SelectedItems.Select(CommonUtility.As<MainPagePartItemController>).Select((value) => $"/{value.Name}").ToList());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -1430,7 +1430,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			var senders = sender.As<ListView>();
 			AssertTest(this.IsLoaded);
-			args.Data.SetData(MainPageController.DataViewFormatForGroup, String.Join('\n', args.Items.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"{value.Parent.Name}/{value.Name}"))));
+			args.Data.SetData(MainPageController.DataViewFormatForGroup, String.Join('\n', args.Items.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => $"{value.Parent.Name}/{value.Name}")));
 			return;
 		}
 
@@ -1443,7 +1443,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			var senders = sender.As<ListView>();
 			AssertTest(this.IsLoaded);
 			foreach (var item in args.RemovedItems.Select(CommonUtility.As<MainPageGroupItemController>)) {
-				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => (value.PartName == item.Parent.Name && value.GroupName == item.Name)));
+				this.uResourceList_ItemsSource.Remove(this.uResourceList_ItemsSource.First((value) => value.PartName == item.Parent.Name && value.GroupName == item.Name));
 			}
 			foreach (var item in args.AddedItems.Select(CommonUtility.As<MainPageGroupItemController>)) {
 				this.uResourceList_ItemsSource.Add(new () {
@@ -1496,28 +1496,28 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), null);
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => $"/{value.Parent.Name}/{value.Name}").ToList(), null);
 					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), false);
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => $"/{value.Parent.Name}/{value.Name}").ToList(), false);
 					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList(), true);
+					await this.WorkerDoTranspile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => $"/{value.Parent.Name}/{value.Name}").ToList(), true);
 					foreach (var item in this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).ToList()) {
 						await this.GroupReload(item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => ($"/{value.Parent.Name}/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uGroupList.SelectedItems.Select(CommonUtility.As<MainPageGroupItemController>).Select((value) => $"/{value.Parent.Name}/{value.Name}").ToList());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -1537,7 +1537,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			var senders = sender.As<ListView>();
 			AssertTest(this.IsLoaded);
-			args.Data.SetData(MainPageController.DataViewFormatForResource, String.Join('\n', args.Items.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}"))));
+			args.Data.SetData(MainPageController.DataViewFormatForResource, String.Join('\n', args.Items.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => $"{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")));
 			return;
 		}
 
@@ -1581,28 +1581,28 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					break;
 				}
 				case "TranspileCustom": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), null);
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => $"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}").ToList(), null);
 					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileGeneralize": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), false);
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => $"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}").ToList(), false);
 					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "TranspileSpecialize": {
-					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList(), true);
+					await this.WorkerDoTranspile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => $"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}").ToList(), true);
 					foreach (var item in this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).ToList()) {
 						await this.ResourceReload(item.Parent.Parent.Name, item.Parent.Name, item.Name);
 					}
 					break;
 				}
 				case "Compile": {
-					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => ($"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}")).ToList());
+					await this.WorkerDoCompile(this.View.uResourceList.SelectedItems.Select(CommonUtility.As<MainPageResourceItemController>).Select((value) => $"/{value.Parent.Parent.Name}/{value.Parent.Name}/{value.Name}").ToList());
 					break;
 				}
 				default: throw new UnreachableException();
@@ -1743,7 +1743,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					break;
 				}
 				case "Part": {
-					var partList = this.Host.uPartList_ItemsSource.Select((value) => (value.Name)).ToList();
+					var partList = this.Host.uPartList_ItemsSource.Select((value) => value.Name).ToList();
 					await ControlHelper.ShowDialogAsFixed(this.Host.View, "Package Part", new PackagePartPanel() {
 						HorizontalAlignment = HorizontalAlignment.Stretch,
 						VerticalAlignment = VerticalAlignment.Stretch,
@@ -1751,7 +1751,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Value = this.Setting.Part,
 						Stamp = UniqueStamp.Create(),
 					}, null);
-					this.Setting.Part = partList.Where((value) => (this.Setting.Part.Contains(value))).ToList();
+					this.Setting.Part = partList.Where((value) => this.Setting.Part.Contains(value)).ToList();
 					await this.SaveSetting();
 					this.NotifyPropertyChanged([
 						nameof(this.uCount_Value),
@@ -2557,28 +2557,28 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				ResourceType.SpecialRton => new SpecialRtonResourcePropertyPanel() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Rton.Select((x) => (x.Name)))).Distinct().ToList(),
+					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => value.Conversion.Rton.Select((it) => it.Name)).Distinct().ToList(),
 					Value = property.As<SpecialRtonResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialPtx => new SpecialPtxResourcePropertyPanel() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Ptx.Select((x) => (x.Name)))).Distinct().ToList(),
+					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => value.Conversion.Ptx.Select((it) => it.Name)).Distinct().ToList(),
 					Value = property.As<SpecialPtxResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialPam => new SpecialPamResourcePropertyPanel() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Pam.Select((x) => (x.Name)))).Distinct().ToList(),
+					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => value.Conversion.Pam.Select((it) => it.Name)).Distinct().ToList(),
 					Value = property.As<SpecialPamResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},
 				ResourceType.SpecialWem => new SpecialWemResourcePropertyPanel() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => (value.Conversion.Wem.Select((x) => (x.Name)))).Distinct().ToList(),
+					ConversionSource = this.Host.ProjectSetting.Package.SelectMany((value) => value.Conversion.Wem.Select((it) => it.Name)).Distinct().ToList(),
 					Value = property.As<SpecialWemResourceProperty>(),
 					Stamp = UniqueStamp.Create(),
 				},

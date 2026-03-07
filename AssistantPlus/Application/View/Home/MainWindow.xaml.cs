@@ -141,7 +141,7 @@ namespace Twinning.AssistantPlus.View.Home {
 		public async Task RemovePage(
 			Page content
 		) {
-			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => Object.ReferenceEquals(value.Frame.Content, content)).AsNotNull();
 			var lastSelectedItem = this.View.uTab.SelectedItem;
 			this.View.uTab.SelectedItem = item;
 			var state = await item.Frame.Content.As<IModulePage>().ModulePageGetController().CloseView();
@@ -165,7 +165,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			Page   content,
 			String title
 		) {
-			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => Object.ReferenceEquals(value.Frame.Content, content)).AsNotNull();
 			item.Title = title;
 			item.NotifyPropertyChanged([
 				nameof(item.uRoot_Header),
@@ -176,7 +176,7 @@ namespace Twinning.AssistantPlus.View.Home {
 		public async Task MemorizePage(
 			Page content
 		) {
-			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => Object.ReferenceEquals(value.Frame.Content, content)).AsNotNull();
 			var configuration = new ModuleLauncherConfiguration() {
 				Title = item.Title,
 				Type = item.Type,
@@ -191,7 +191,7 @@ namespace Twinning.AssistantPlus.View.Home {
 		public async Task DuplicatePage(
 			Page content
 		) {
-			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => (Object.ReferenceEquals(value.Frame.Content, content))).AsNotNull();
+			var item = this.uTab_TabItemsSource.FirstOrDefault((value) => Object.ReferenceEquals(value.Frame.Content, content)).AsNotNull();
 			var configuration = new ModuleLauncherConfiguration() {
 				Title = item.Title,
 				Type = item.Type,

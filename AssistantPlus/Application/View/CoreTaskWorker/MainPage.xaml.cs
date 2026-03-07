@@ -239,7 +239,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			]);
 			if (value != null) {
 				var valueString = ValueExpressionHelper.MakeString(value);
-				history.RemoveAll((item) => (ValueExpressionHelper.MakeString(item) == valueString));
+				history.RemoveAll((item) => ValueExpressionHelper.MakeString(item) == valueString);
 				history.Add(value);
 			}
 			return value;
@@ -265,7 +265,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				try {
 					StorageHelper.Copy(this.Setting.Kernel, kernel);
 					library.Open(kernel);
-					result = await Task.Run(() => (Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script, [..this.Setting.Argument, ..this.AdditionalArgument])));
+					result = await Task.Run(() => Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script, [..this.Setting.Argument, ..this.AdditionalArgument]));
 				}
 				catch (Exception e) {
 					exception = e;

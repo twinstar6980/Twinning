@@ -46,17 +46,17 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public Boolean NextBoolean(
 		) {
-			return this.NextString().SelfLet((it) => (Boolean.Parse(it)));
+			return this.NextString().SelfLet((it) => Boolean.Parse(it));
 		}
 
 		public Integer NextInteger(
 		) {
-			return this.NextString().SelfLet((it) => (Integer.Parse(it)));
+			return this.NextString().SelfLet((it) => Integer.Parse(it));
 		}
 
 		public Floater NextFloater(
 		) {
-			return this.NextString().SelfLet((it) => (Floater.Parse(it)));
+			return this.NextString().SelfLet((it) => Floater.Parse(it));
 		}
 
 		public String NextString(

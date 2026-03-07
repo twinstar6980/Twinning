@@ -10,7 +10,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region utility
 
-		public static IntPtr GetHandle(
+		public static IntegerSN GetHandle(
 			Window window
 		) {
 			return WinRT.Interop.WindowNative.GetWindowHandle(window);

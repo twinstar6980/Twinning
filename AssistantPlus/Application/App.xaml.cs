@@ -122,11 +122,11 @@ namespace Twinning.AssistantPlus {
 		public async Task AppendRecentLauncherItem(
 			ModuleLauncherConfiguration launcher
 		) {
-			var pinnedItem = this.Setting.Data.ModuleLauncher.Pinned.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
+			var pinnedItem = this.Setting.Data.ModuleLauncher.Pinned.Find((value) => ModuleHelper.CompareLauncher(value, launcher));
 			if (pinnedItem != null) {
 				return;
 			}
-			var recentItem = this.Setting.Data.ModuleLauncher.Recent.Find((value) => (ModuleHelper.CompareLauncher(value, launcher)));
+			var recentItem = this.Setting.Data.ModuleLauncher.Recent.Find((value) => ModuleHelper.CompareLauncher(value, launcher));
 			if (recentItem != null) {
 				this.Setting.Data.ModuleLauncher.Recent.Remove(recentItem);
 				this.Setting.Data.ModuleLauncher.Recent.Insert(0, recentItem);
@@ -273,7 +273,7 @@ namespace Twinning.AssistantPlus {
 			if (option.Check("-launch")) {
 				optionLaunch = new (
 					option.NextString(),
-					option.NextString().SelfLet((it) => (ConvertHelper.ParseEnumerationFromStringOfSnakeCase<ModuleType>(it))),
+					option.NextString().SelfLet((it) => ConvertHelper.ParseEnumerationFromStringOfSnakeCase<ModuleType>(it)),
 					option.NextStringList()
 				);
 			}
@@ -311,11 +311,10 @@ namespace Twinning.AssistantPlus {
 			}
 			var command = link.GetComponents(UriComponents.Query, UriFormat.UriEscaped)
 				.Split("&")
-				.Where((item) => (item.Count((it) => (it == '=')) == 1))
-				.Select((item) => (item.Split("=").Select(Uri.UnescapeDataString).ToList()))
-				.Select((item) => (new KeyValuePair<String, String>(item[0], item[1])))
-				.Where((item) => (item.Key == "command"))
-				.Select((item) => (item.Value))
+				.Where((item) => item.Count((it) => it == '=') == 1)
+				.Select((item) => item.Split("=").Select(Uri.UnescapeDataString).ToList())
+				.Where((item) => item[0] == "command")
+				.Select((item) => item[1])
 				.ToList();
 			await this.HandleCommand(command);
 			return;

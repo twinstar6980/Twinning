@@ -81,10 +81,10 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public async Task UpdateView(
 		) {
-			this.uList_ItemsSource = this.Source.Select((value) => (new PackagePartPanelItemController() {
+			this.uList_ItemsSource = this.Source.Select((value) => new PackagePartPanelItemController() {
 				Host = this,
 				Name = value,
-			})).ToList();
+			}).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uList_ItemsSource),
 			]);

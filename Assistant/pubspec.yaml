@@ -1,5 +1,5 @@
 name: assistant
-version: 150.0.0+150
+version: 151.0.0+151
 publish_to: 'none'
 environment:
   sdk: ^3.11.1

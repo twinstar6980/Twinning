@@ -26,7 +26,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			Boolean            parallel
 		) {
 			if (!parallel) {
-				await ForwardHelper.Forward(argument.SelectMany((value) => (value)).ToList());
+				await ForwardHelper.Forward(argument.SelectMany((value) => value).ToList());
 			}
 			else {
 				foreach (var argumentItem in argument) {

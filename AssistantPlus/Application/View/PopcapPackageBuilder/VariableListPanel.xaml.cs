@@ -65,10 +65,10 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public async Task UpdateView(
 		) {
-			this.uList_ItemsSource = this.Value.Select((value) => (new VariableListPanelItemController() {
+			this.uList_ItemsSource = this.Value.Select((value) => new VariableListPanelItemController() {
 				Host = this,
 				Item = value,
-			})).ToObservableCollection();
+			}).ToObservableCollection();
 			this.NotifyPropertyChanged([
 				nameof(this.uList_ItemsSource),
 			]);
@@ -85,7 +85,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			var senders = sender.As<ListView>();
 			this.Value.Clear();
-			this.Value.AddRange(this.uList_ItemsSource.Select((value) => (value.Item)));
+			this.Value.AddRange(this.uList_ItemsSource.Select((value) => value.Item));
 			return;
 		}
 

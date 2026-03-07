@@ -117,7 +117,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public List<String> uDescription_ItemsSource {
 			get {
-				return this.Description.Select((value) => (value + '\0')).ToList();
+				return this.Description.Select((value) => value + '\0').ToList();
 			}
 		}
 

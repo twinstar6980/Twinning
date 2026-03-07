@@ -207,7 +207,7 @@ namespace Twinning.AssistantPlus {
 				ForwarderImmediateJump = false,
 				ModuleConfigurationDirectory = "",
 				ModuleLauncher = new () {
-					Module = Enum.GetValues<ModuleType>().Select(ModuleHelper.Query).Select((value) => (new ModuleLauncherConfiguration() {
+					Module = Enum.GetValues<ModuleType>().Select(ModuleHelper.Query).Select((value) => new ModuleLauncherConfiguration() {
 						Title = value.Name,
 						Type = value.Type,
 						Option = [],
@@ -216,7 +216,7 @@ namespace Twinning.AssistantPlus {
 							$"{value.StandardSize.Item1}",
 							$"{value.StandardSize.Item2}",
 						],
-					})).ToList(),
+					}).ToList(),
 					Pinned = [],
 					Recent = [],
 				},
@@ -257,7 +257,7 @@ namespace Twinning.AssistantPlus {
 			return new () {
 				ThemeBackdrop = null,
 				ThemeMode = null,
-				CoreTaskWorkerSubmissionHistory = Enum.GetValues<View.CoreTaskWorker.SubmissionType>().Select((value) => (new List<View.CoreTaskWorker.ValueExpression>())).ToList(),
+				CoreTaskWorkerSubmissionHistory = Enum.GetValues<View.CoreTaskWorker.SubmissionType>().Select((value) => new List<View.CoreTaskWorker.ValueExpression>()).ToList(),
 			};
 		}
 

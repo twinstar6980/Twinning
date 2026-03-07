@@ -14,13 +14,13 @@ class ApplicationFontManager {
 
   // #region constructor
 
-  List<String> _loadedFilePath;
+  List<String> _loadedFile;
 
   // ----------------
 
   ApplicationFontManager._(
   ) :
-    this._loadedFilePath = [];
+    this._loadedFile = [];
 
   // #endregion
 
@@ -30,13 +30,13 @@ class ApplicationFontManager {
     String path,
   ) async {
     try {
-      var index = this._loadedFilePath.indexOf(path);
+      var index = this._loadedFile.indexOf(path);
       if (index == -1) {
-        index = this._loadedFilePath.length;
+        index = this._loadedFile.length;
         var loader = FontLoader('_custom_${index + 1}');
         loader.addFont(Future.sync(() async => (await StorageHelper.readFile(path)).buffer.asByteData()));
         await loader.load();
-        this._loadedFilePath.add(path);
+        this._loadedFile.add(path);
       }
       return '_custom_${index + 1}';
     }

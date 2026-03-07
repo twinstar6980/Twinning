@@ -403,7 +403,7 @@ namespace Twinning.AssistantPlus {
 					AssertTest(type.Element == null && type.Class != null);
 					var objectDescriptor = descriptor.Object[type.Class];
 					value = new PopcapReflectionModel.FixedObject() {
-						Property = objectDescriptor.Select((propertyGroupDescriptor) => (propertyGroupDescriptor.Property.Select((propertyItemDescriptor) => (!withElement ? null : new PopcapReflectionModel.FixedValue() { Value = PopcapReflectionHelper.GenerateDataValueDefault(descriptor, propertyItemDescriptor.Type, withElement) })).ToList())).ToList(),
+						Property = objectDescriptor.Select((propertyGroupDescriptor) => propertyGroupDescriptor.Property.Select((propertyItemDescriptor) => !withElement ? null : new PopcapReflectionModel.FixedValue() { Value = PopcapReflectionHelper.GenerateDataValueDefault(descriptor, propertyItemDescriptor.Type, withElement) }).ToList()).ToList(),
 						ExtraProperty = [],
 					};
 					break;

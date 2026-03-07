@@ -20,11 +20,10 @@ namespace Twinning.AssistantPlus.Bridge {
 			var exception = default(Exception?);
 			client.Start();
 			try {
-				var executorCallback = new ExecutorProxy();
-				executorCallback.Value = (callbackProxy, argumentProxy, resultProxy) => {
+				var executorCallback = new ExecutorProxy((callbackProxy, argumentProxy, resultProxy) => {
 					resultProxy.Value = client.Callback(argumentProxy.Value);
 					return;
-				};
+				});
 				var executorArgument = new MessageProxy(["execute", script, ..argument]);
 				var executorResult = new MessageProxy();
 				ExecutorProxy.Parse(library.Symbol().executor).Value(executorCallback, executorArgument, executorResult);

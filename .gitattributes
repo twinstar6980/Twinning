@@ -28,9 +28,6 @@
 /**/*.dll                                    binary
 /**/*.jar                                    binary
 
-# Language - Lua
-/**/*.lua                                    text eol=lf
-
 # Language - C/C++
 /**/*.h                                      text eol=lf
 /**/*.hpp                                    text eol=lf
@@ -65,6 +62,9 @@
 # Language - C#/XAML
 /**/*.cs                                     text eol=lf
 /**/*.xaml                                   text eol=lf
+
+# Language - Lua
+/**/*.lua                                    text eol=lf
 
 # Language - Python
 /**/*.py                                     text eol=lf

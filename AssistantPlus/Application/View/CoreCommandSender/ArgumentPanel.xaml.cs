@@ -98,12 +98,12 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 		public async Task UpdateView(
 		) {
 			AssertTest(this.Configuration.Count == this.Value.Count);
-			this.uList_ItemsSource = this.Configuration.Select((value, index) => (new ArgumentPanelItemController() {
+			this.uList_ItemsSource = this.Configuration.Select((value, index) => new ArgumentPanelItemController() {
 				Host = this,
 				Configuration = value,
 				Value = this.Value[index],
 				Batch = this.Batch[index],
-			})).ToList();
+			}).ToList();
 			this.NotifyPropertyChanged([
 				nameof(this.uList_ItemsSource),
 			]);
@@ -152,7 +152,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public List<ValueExpression>? uValue_Option {
 			get {
-				return this.Configuration.Option?.Select((value) => (ConfigurationHelper.ParseArgumentValueJson(this.Configuration.Type, value).AsNotNull())).ToList();
+				return this.Configuration.Option?.Select((value) => ConfigurationHelper.ParseArgumentValueJson(this.Configuration.Type, value).AsNotNull()).ToList();
 			}
 		}
 
