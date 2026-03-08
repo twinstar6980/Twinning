@@ -10,34 +10,29 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.TextureResourcePropertyPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.TextureResourcePropertyPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		>
+		Spacing="2">
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.StorageOptical}"
-			Title="Path"
-			>
+			Title="Path">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uPath_LostFocus}"
-						Text="{x:Bind Controller.uPath_Text}"
-						/>
+						Text="{x:Bind Controller.uPath_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -45,23 +40,20 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.TiltDown}"
-			Title="Format"
-			>
+			Title="Format">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<NumberBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uFormat_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uFormat_NumberFormatter}"
-						Value="{x:Bind Controller.uFormat_Value}"
-						/>
+						Value="{x:Bind Controller.uFormat_Value}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -69,23 +61,20 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.GenericScan}"
-			Title="Pitch"
-			>
+			Title="Pitch">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<NumberBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uPitch_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uPitch_NumberFormatter}"
-						Value="{x:Bind Controller.uPitch_Value}"
-						/>
+						Value="{x:Bind Controller.uPitch_Value}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -93,23 +82,20 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.DockRight}"
-			Title="Additional Byte Count"
-			>
+			Title="Additional Byte Count">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<NumberBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uAdditionalByteCount_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uAdditionalByteCount_NumberFormatter}"
-						Value="{x:Bind Controller.uAdditionalByteCount_Value}"
-						/>
+						Value="{x:Bind Controller.uAdditionalByteCount_Value}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -117,31 +103,27 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.FullScreen}"
-			Title="Size"
-			>
+			Title="Size">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<NumberBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uSizeWidth_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uSizeWidth_NumberFormatter}"
-						Value="{x:Bind Controller.uSizeWidth_Value}"
-						/>
+						Value="{x:Bind Controller.uSizeWidth_Value}" />
 					<NumberBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uSizeHeight_LostFocus}"
 						NumberFormatter="{x:Bind Controller.uSizeHeight_NumberFormatter}"
-						Value="{x:Bind Controller.uSizeHeight_Value}"
-						/>
+						Value="{x:Bind Controller.uSizeHeight_Value}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

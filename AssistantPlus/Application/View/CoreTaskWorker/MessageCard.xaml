@@ -10,15 +10,13 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.CoreTaskWorker.MessageCard"
-	>
+	x:Class="Twinning.AssistantPlus.View.CoreTaskWorker.MessageCard">
 	<Border
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		CornerRadius="{ThemeResource ControlCornerRadius}"
 		BorderThickness="{StaticResource BorderThickness}"
-		Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}"
-		>
+		Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}">
 		<Border.BorderBrush>
 			<LinearGradientBrush MappingMode="Absolute" StartPoint="0,0" EndPoint="0,3">
 				<LinearGradientBrush.RelativeTransform>
@@ -35,8 +33,7 @@
 			VerticalAlignment="Stretch"
 			Padding="12,8"
 			Orientation="Horizontal"
-			Spacing="0"
-			>
+			Spacing="0">
 			<Border
 				x:Name="uBadge"
 				HorizontalAlignment="Stretch"
@@ -44,24 +41,21 @@
 				Width="17"
 				Height="17"
 				Margin="0,0,13,0"
-				CornerRadius="8"
-				>
+				CornerRadius="8">
 				<FontIcon
 					x:Name="uIcon"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Margin="1,-1,0,0"
 					Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
-					FontSize="16"
-					/>
+					FontSize="16" />
 			</Border>
 			<my:Stack
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Orientation="Vertical"
-				Spacing="0"
-				>
+				Spacing="0">
 				<TextBlock
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -71,13 +65,11 @@
 					FontFamily="{StaticResource CoreTaskWorker.MessageFont}"
 					LineHeight="20"
 					TextWrapping="Wrap"
-					Text="{x:Bind Controller.uTitle_Text}"
-					/>
+					Text="{x:Bind Controller.uTitle_Text}" />
 				<ItemsControl
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					ItemsSource="{x:Bind Controller.uDescription_ItemsSource}"
-					>
+					ItemsSource="{x:Bind Controller.uDescription_ItemsSource}">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate x:DataType="x:String">
 							<TextBlock
@@ -90,8 +82,7 @@
 								FontFamily="{StaticResource CoreTaskWorker.MessageFont}"
 								LineHeight="20"
 								TextWrapping="Wrap"
-								Text="{x:Bind Mode=OneTime}"
-								/>
+								Text="{x:Bind Mode=OneTime}" />
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

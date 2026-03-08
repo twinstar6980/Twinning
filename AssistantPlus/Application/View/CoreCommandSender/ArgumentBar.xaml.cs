@@ -163,7 +163,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 						}
 						case ArgumentType.Size: {
 							if (this.ValueOfSize != null) {
-								this.uSizeExponent__Value = this.ValueOfSize.Exponent;
+								this.uSizeExponent_mValue = this.ValueOfSize.Exponent;
 							}
 							this.NotifyPropertyChanged([
 								nameof(this.uSizeCount_Value),
@@ -441,7 +441,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				this.ValueOfSize = null;
 			}
 			else if (Floater.IsFinite(senders.Value) && senders.Value >= 0.0) {
-				this.ValueOfSize = new () { Count = senders.Value, Exponent = this.uSizeExponent__Value };
+				this.ValueOfSize = new () { Count = senders.Value, Exponent = this.uSizeExponent_mValue };
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSizeCount_Value),
@@ -466,11 +466,11 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		// ----------------
 
-		public Integer uSizeExponent__Value { get; set; } = 2;
+		private Integer uSizeExponent_mValue = 2;
 
 		public String uSizeExponent_Content {
 			get {
-				return new[] { "B", "K", "M", "G" }[this.uSizeExponent__Value];
+				return new[] { "B", "K", "M", "G" }[this.uSizeExponent_mValue];
 			}
 		}
 
@@ -482,9 +482,9 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			if (this.Type != ArgumentType.Size || this.Option != null) {
 				return;
 			}
-			this.uSizeExponent__Value = Integer.Parse(senders.Tag.As<String>());
+			this.uSizeExponent_mValue = Integer.Parse(senders.Tag.As<String>());
 			if (this.ValueOfSize != null) {
-				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent__Value };
+				this.ValueOfSize = new () { Count = this.ValueOfSize.Count, Exponent = this.uSizeExponent_mValue };
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uSizeExponent_Content),

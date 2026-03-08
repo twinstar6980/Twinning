@@ -39,30 +39,30 @@
 如果使用的外壳模块为 `Assistant` ，则访问权限根据运行系统的不同而不同：
 
 * `Windows` `Linux`
-	
-	取决于启动程序的用户所具备的权限。
+
+  取决于启动程序的用户所具备的权限。
 
 * `Macintosh`
-	
-	应用能访问绝大部分文件，部分受保护的文件需要用户在系统设置中授予 ⌈ 完全磁盘访问权限 ⌋ 才可访问。
+
+  应用能访问绝大部分文件，部分受保护的文件需要用户在系统设置中授予 ⌈ 完全磁盘访问权限 ⌋ 才可访问。
 
 * `Android`
-	
+
 	* 应用的专属内部存储空间：`/data/user/<user>/<package>` 。
-	
+
 	* 应用的专属外部存储空间：`/storage/emulated/<user>/Android/data/<package>` 、`/storage/emulated/<user>/Android/obb/<package>` 。
-	
+
 	* 系统的共享外部存储空间：`/storage/emulated/<user>` ，但不包括 `Android/data` 、`Android/obb` 。
-		
-		> 仅当应用取得了外部存储空间的完全访问权限时才可访问该目录。
-		> 
-		> 该目录实际上是 `/data/media/<user>` 的映射。通过 `/storage/emulated/<user>` 路径访问文件时，会受 FUSE 影响而导致访问性能的降低，并且访问权限被硬编码为 RW ，文件无法被作为程序执行；可以通过 `/data/media/<user>` 路径访问文件以绕过 FUSE ，但需要 ROOT 权限。
+
+	  > 仅当应用取得了外部存储空间的完全访问权限时才可访问该目录。
+	  >
+	  > 该目录实际上是 `/data/media/<user>` 的映射。通过 `/storage/emulated/<user>` 路径访问文件时，会受 FUSE 影响而导致访问性能的降低，并且访问权限被硬编码为 RW ，文件无法被作为程序执行；可以通过 `/data/media/<user>` 路径访问文件以绕过 FUSE ，但需要 ROOT 权限。
 
 * `Iphone`
-	
+
 	* 应用的专属沙盒存储空间：`/var/mobile/Containers/Data/Application/<application>` 。
-	
-	> 若设备已越狱，则应用可以访问系统文件在内的绝大部分存储空间，不受沙盒规则限制。
+
+  > 若设备已越狱，则应用可以访问系统文件在内的绝大部分存储空间，不受沙盒规则限制。
 
 ## Windows 文件路径长度限制
 
@@ -84,21 +84,21 @@
 
 由于 Android 的系统限制，用户所转发或选择的文件以 Content URI（而非绝对路径）的形式传递给应用，`Assistant` 接收到 Content URI 后，会对其依次进行以下转换：
 
-1. 尝试解析 URI ，得到其对应的绝对路径。
+* 尝试解析 URI ，得到其对应的绝对路径。
 
-2. 若无法解析出绝对路径，应用会弹出确认对话框：若选择“复制”，应用会将 URI 对应的文件复制到用户定义的回退目录中，并返回副本文件的绝对路径；若选择“忽略”，应用会返回 null ，视为用户取消了选择。
+* 若无法解析出绝对路径，应用会弹出确认对话框：若选择“复制”，应用会将 URI 对应的文件复制到用户定义的回退目录中，并返回副本文件的绝对路径；若选择“忽略”，应用会返回 null ，视为用户取消了选择。
 
 下表列出了受支持的 Content URI 格式，应用能够从以下几类 Content URI 中解析出绝对路径：
 
-| 应用名称         | URI Provider                                | URI Path              |
+|       应用名称       |                URI Provider                 |       URI Path        |
 |:----------------:|:-------------------------------------------:|:---------------------:|
-| AOSP DocumentsUI | com.android.externalstorage.documents       | /document/primary:... |
-| AOSP DocumentsUI | com.android.externalstorage.documents       | /tree/primary:...     |
-| Material Files   | me.zhanghai.android.files.file_provider     | /file://...           |
-| Root Explorer    | com.speedsoftware.rootexplorer.fileprovider | /root/...             |
-| Solid Explorer   | pl.solidexplorer2.files                     | /...                  |
-| MT Manager       | bin.mt.plus.fp                              | /...                  |
-| NMM              | in.mfile.files                              | /...                  |
+| AOSP DocumentsUI |    com.android.externalstorage.documents    | /document/primary:... |
+| AOSP DocumentsUI |    com.android.externalstorage.documents    |   /tree/primary:...   |
+|  Material Files  |   me.zhanghai.android.files.file_provider   |      /file://...      |
+|  Root Explorer   | com.speedsoftware.rootexplorer.fileprovider |       /root/...       |
+|  Solid Explorer  |           pl.solidexplorer2.files           |         /...          |
+|    MT Manager    |               bin.mt.plus.fp                |         /...          |
+|       NMM        |               in.mfile.files                |         /...          |
 
 > 建议使用上表中提及的第三方文件管理器应用，以避免不必要的文件复制开销。
 
@@ -106,15 +106,15 @@
 
 `Shell` 提供了基于终端的命令行界面，但需要宿主终端支持以下特性：
 
-1. UTF-8 输入/输出：必需，若不支持，将导致程序无法正常进行输入输出。
+* UTF-8 输入/输出：必需，若不支持，将导致程序无法正常进行输入输出。
 
-2. 虚拟终端控制序列：可选，若不支持，将导致程序无法对不同类型的文本修饰以不同的颜色。
-	
+* 虚拟终端控制序列：可选，若不支持，将导致程序无法对不同类型的文本修饰以不同的颜色。
+
 	> 默认情况下，工具会使用控制序列来优化输出效果，但如果运行在不支持控制序列的终端中，控制序列将直接输出为字符串，影响用户的阅读。
-	> 
+	>
 	> 用户可以通过修改 `<home>/script/configuration/setting.json` 配置中的 `console_basic_disable_virtual_terminal_sequence` 项为 `true` 以禁用控制序列的使用。
 
-3. 完备的字体：可选，若不支持，一些字符（如汉字、emoji ）将无法正常显示。
+* 完备的字体：可选，若不支持，一些字符（如汉字、emoji ）将无法正常显示。
 
 有些操作系统未提供终端程序，或默认终端程序不提供（或默认关闭）这些支持，用户可以安装第三方终端并在其中运行本程序，可以参照以下列表：
 
@@ -131,19 +131,19 @@
 
 工具的 JSON 读写规则是自实现的，并且不完全遵循 JSON 标准，差异如下：
 
-1. 注释
-	
-	JSON 标准不允许注释，但工具允许注释，包括行注释 `// ...` 与块注释 `/* ... */` 。
+* 注释
 
-2. 尾随逗号
-	
-	数组与对象的最末元素后的逗号称为尾随逗号，JSON 标准不允许尾随逗号的存在，但在 JS 及许多编程语言中，尾随逗号是被允许乃至被推荐使用的语法。考虑到尾随逗号为 JSON 读写提供的便利，工具支持尾随逗号，并且在输出 JSON 时默认添加尾随逗号。
-	
-	在一些编辑器中，尾随逗号会被默认视为格式错误，用户可以通过修改 `<home>/script/configuration/setting.json` 配置中的 `json_format_disable_array_trailing_comma` 与 `json_format_disable_object_trailing_comma` 项为 `true` 以禁止尾随逗号的输出。
-	
-	> 在 `VS Code` 中，可以将以下配置添加进 `settings.json` 中，以使编辑器允许 JSON 尾随逗号：
-	> 
-	> ```json
+  JSON 标准不允许注释，但工具允许注释，包括行注释 `// ...` 与块注释 `/* ... */` 。
+
+* 尾随逗号
+
+  数组与对象的最末元素后的逗号称为尾随逗号，JSON 标准不允许尾随逗号的存在，但在 JS 及许多编程语言中，尾随逗号是被允许乃至被推荐使用的语法。考虑到尾随逗号为 JSON 读写提供的便利，工具支持尾随逗号，并且在输出 JSON 时默认添加尾随逗号。
+
+  在一些编辑器中，尾随逗号会被默认视为格式错误，用户可以通过修改 `<home>/script/configuration/setting.json` 配置中的 `json_format_disable_array_trailing_comma` 与 `json_format_disable_object_trailing_comma` 项为 `true` 以禁止尾随逗号的输出。
+
+  > 在 `VS Code` 中，可以将以下配置添加进 `settings.json` 中，以使编辑器允许 JSON 尾随逗号：
+  >
+  > ```json
 	> "json.schemas": [
 	> 	{
 	> 		"fileMatch": [
@@ -155,46 +155,46 @@
 	> 	},
 	> ],
 	> ```
-	> 
-	> 其中，`allowTrailingCommas` 是 `VS Code` 的扩展，并不符合 `JSON-Schema` 标准。
+  >
+  > 其中，`allowTrailingCommas` 是 `VS Code` 的扩展，并不符合 `JSON-Schema` 标准。
 
-3. 转义字符
-	
-	工具的转义字符支持不遵从 JSON 标准，转义规则如下：
-	
+* 转义字符
+
+  工具的转义字符支持不遵从 JSON 标准，转义规则如下：
+
 	* `\\ \' \"` 转义为原字符。
-	
+
 	* `\a \b \f \n \r \t \v` 转义为对应的控制字符。
-	
+
 	* `\0` 转义为空字符。
-	
+
 	* `\oNNN` 3 位八进制数表示的 Unicode 字符。
-	
+
 	* `\xNN` 2 位十六进制数表示的 Unicode 字符。
-	
+
 	* `\uNNNN` 4 位十六进制数表示的 Unicode 字符。
-	
+
 	* `\UNNNNNNNN` 8 位十六进制数表示的 Unicode 字符。
 
-4. 数字格式
-	
-	工具的数字格式支持不遵从 JSON 标准，格式规则如下：
-	
+* 数字格式
+
+  工具的数字格式支持不遵从 JSON 标准，格式规则如下：
+
 	* 整数：匹配正则 `^[+-]?[\d]+$` 。
-	
+
 	* 浮点数：匹配正则 `^[+-]?[\d]+[.][\d]+$` 。
-	
+
 	* 科学计数法表示的浮点数：匹配正则 `^[+-]?[\d]+[.][\d]+[e][+-][\d]+$` 。
-	
-	换言之，与 JSON 标准的差异如下：
-	
+
+  换言之，与 JSON 标准的差异如下：
+
 	* 允许正数具有正号，无符号数视为正数。
-	
+
 	* 浮点数必须以数字起始，必须具有小数点，小数点后必须跟随数字。
-	
+
 	* 科学计数法表示的浮点数必须以数字起始，必须具有小数点，小数点后必须跟随数字；只能使用小写 `e` 而不允许大写 `E` ，其后必须跟随正号或负号。
-	
-	此外，工具还严格区分整数与浮点数，整数被解码为 JS 中的 `bigint` ，而浮点数被解码为 JS 中的 `number` ，用户使用错误的值类型将导致潜在 BUG 甚至运行失败。
+
+  此外，工具还严格区分整数与浮点数，整数被解码为 JS 中的 `bigint` ，而浮点数被解码为 JS 中的 `number` ，用户使用错误的值类型将导致潜在 BUG 甚至运行失败。
 
 ## 严格的文件处理机制
 
@@ -237,5 +237,5 @@ PopCap 利用了这一特性，在一些 PopCap 游戏的安卓端 APK 安装包
 用户可以直接从 APK 中提取 SMF 文件，但若要转发给工具进行处理，则应先删除这些文件的 `.smf` 扩展名。
 
 > 例如 PvZ-2 中文安卓版中存在 `*.rsb.smf` 文件，它们本身是 `*.rsb` 文件，需要删除 `.smf` 扩展名再转发给工具处理。
-> 
+>
 > 注意：这些 *.rsb.smf 文件经过了一次 ZLib 压缩，需要先用工具对其进行 `PopCap ZLib 解压` ；此外，PvZ-2 中文安卓版不支持在 RSG 中存储 ZLib 压缩数据段。

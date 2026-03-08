@@ -98,9 +98,11 @@ namespace Twinning.AssistantPlus {
 
 		// ReSharper disable InconsistentNaming
 
+		// @formatter:off
+
 		public record DataObject {
 			[JsonOptional()]
-			public String? uid { get; set; } = default!;
+			public String?       uid      { get; set; } = default!;
 			[JsonOptional()]
 			public List<String>? aliases  { get; set; } = default!;
 			public String        objclass { get; set; } = default!;
@@ -112,6 +114,8 @@ namespace Twinning.AssistantPlus {
 			public Integer?         version { get; set; } = default!;
 			public List<DataObject> objects { get; set; } = default!;
 		}
+
+		// @formatter:on
 
 		// ReSharper restore InconsistentNaming
 

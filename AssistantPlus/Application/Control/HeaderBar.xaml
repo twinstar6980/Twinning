@@ -4,8 +4,7 @@
 	xmlns:community="using:CommunityToolkit.WinUI"
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Twinning.AssistantPlus"
-	xmlns:my="using:Twinning.AssistantPlus.Control"
-	>
+	xmlns:my="using:Twinning.AssistantPlus.Control">
 	<Style TargetType="my:HeaderBar">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -16,29 +15,25 @@
 						Height="48"
 						Padding="16,8"
 						Orientation="Horizontal"
-						Spacing="12"
-						>
+						Spacing="12">
 						<FontIcon
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="32"
 							Height="22"
 							FontSize="{StaticResource LargeIconSize}"
-							Glyph="{TemplateBinding Icon}"
-							/>
+							Glyph="{TemplateBinding Icon}" />
 						<TextBlock
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Style="{StaticResource BodyStrongTextBlockStyle}"
 							TextWrapping="NoWrap"
-							Text="{TemplateBinding Title}"
-							/>
+							Text="{TemplateBinding Title}" />
 						<ContentPresenter
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							Content="{TemplateBinding Action}"
-							/>
+							Content="{TemplateBinding Action}" />
 					</my:Stack>
 				</ControlTemplate>
 			</Setter.Value>

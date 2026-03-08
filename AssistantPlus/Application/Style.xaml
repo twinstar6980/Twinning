@@ -1,11 +1,11 @@
+<!-- ReSharper disable Xaml.ConstructorWarning -->
 <ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:community="using:CommunityToolkit.WinUI"
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Twinning.AssistantPlus"
-	xmlns:my="using:Twinning.AssistantPlus.Control"
-	>
+	xmlns:my="using:Twinning.AssistantPlus.Control">
 	<!-- Common -->
 	<Thickness x:Key="BorderThickness">1</Thickness>
 	<x:Double x:Key="DividerThickness">1</x:Double>
@@ -82,8 +82,7 @@
 						CornerRadius="{TemplateBinding CornerRadius}"
 						BorderThickness="{TemplateBinding BorderThickness}"
 						BorderBrush="{TemplateBinding BorderBrush}"
-						Background="{TemplateBinding Background}"
-						>
+						Background="{TemplateBinding Background}">
 						<Rectangle
 							x:Name="SelectionIndicator"
 							HorizontalAlignment="Left"
@@ -93,24 +92,21 @@
 							Opacity="0"
 							Fill="{ThemeResource TreeViewItemSelectionIndicatorForeground}"
 							RadiusX="2"
-							RadiusY="2"
-							/>
+							RadiusY="2" />
 						<Grid
 							x:Name="MultiSelectGrid"
 							Margin="{ThemeResource TreeViewItemMultiSelectSelectedItemBorderMargin}"
 							Padding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TreeViewItemTemplateSettings.Indentation}"
 							CornerRadius="{ThemeResource ControlCornerRadius}"
 							BorderThickness="{ThemeResource TreeViewItemBorderThemeThickness}"
-							BorderBrush="Transparent"
-							>
+							BorderBrush="Transparent">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition />
 							</Grid.ColumnDefinitions>
 							<Grid
-								Grid.Column="0"
-								>
+								Grid.Column="0">
 								<CheckBox
 									x:Name="MultiSelectCheckBox"
 									Visibility="Collapsed"
@@ -120,8 +116,7 @@
 									MinHeight="{ThemeResource TreeViewItemMultiSelectCheckBoxMinHeight}"
 									Margin="10,0,0,0"
 									IsTabStop="False"
-									AutomationProperties.AccessibilityView="Raw"
-									/>
+									AutomationProperties.AccessibilityView="Raw" />
 								<Border
 									x:Name="MultiArrangeOverlayTextBorder"
 									Visibility="Collapsed"
@@ -133,8 +128,7 @@
 									BorderThickness="1"
 									BorderBrush="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
 									Background="{ThemeResource SystemControlBackgroundAccentBrush}"
-									IsHitTestVisible="False"
-									>
+									IsHitTestVisible="False">
 									<TextBlock
 										x:Name="MultiArrangeOverlayText"
 										HorizontalAlignment="Center"
@@ -143,8 +137,7 @@
 										Style="{ThemeResource CaptionTextBlockStyle}"
 										Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TreeViewItemTemplateSettings.DragItemsCount}"
 										IsHitTestVisible="False"
-										AutomationProperties.AccessibilityView="Raw"
-										/>
+										AutomationProperties.AccessibilityView="Raw" />
 								</Border>
 							</Grid>
 							<Grid
@@ -153,8 +146,7 @@
 								Width="Auto"
 								Padding="14,0"
 								Background="Transparent"
-								Opacity="{TemplateBinding GlyphOpacity}"
-								>
+								Opacity="{TemplateBinding GlyphOpacity}">
 								<TextBlock
 									x:Name="CollapsedGlyph"
 									Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TreeViewItemTemplateSettings.CollapsedGlyphVisibility}"
@@ -168,8 +160,7 @@
 									FontFamily="{StaticResource SymbolThemeFontFamily}"
 									AutomationProperties.AccessibilityView="Raw"
 									IsTextScaleFactorEnabled="False"
-									IsHitTestVisible="False"
-									/>
+									IsHitTestVisible="False" />
 								<TextBlock
 									x:Name="ExpandedGlyph"
 									Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TreeViewItemTemplateSettings.ExpandedGlyphVisibility}"
@@ -183,8 +174,7 @@
 									FontFamily="{StaticResource SymbolThemeFontFamily}"
 									AutomationProperties.AccessibilityView="Raw"
 									IsTextScaleFactorEnabled="False"
-									IsHitTestVisible="False"
-									/>
+									IsHitTestVisible="False" />
 							</Grid>
 							<ContentPresenter
 								x:Name="ContentPresenter"
@@ -195,8 +185,7 @@
 								Margin="{TemplateBinding Padding}"
 								ContentTransitions="{TemplateBinding ContentTransitions}"
 								ContentTemplate="{TemplateBinding ContentTemplate}"
-								Content="{TemplateBinding Content}"
-								/>
+								Content="{TemplateBinding Content}" />
 						</Grid>
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="FocusedStates">

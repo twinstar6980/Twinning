@@ -10,12 +10,10 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapReflectionDescriptor.SettingPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapReflectionDescriptor.SettingPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		/>
+		Spacing="2" />
 </local:CustomControl>

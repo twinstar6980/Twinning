@@ -13,16 +13,14 @@
 	x:Class="Twinning.AssistantPlus.View.PopcapAnimationViewer.MainPage"
 	AllowDrop="True"
 	DragOver="{x:Bind Controller.uPage_DragOver}"
-	Drop="{x:Bind Controller.uPage_Drop}"
-	>
+	Drop="{x:Bind Controller.uPage_Drop}">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		MinWidth="1600"
 		Padding="4"
 		Orientation="Horizontal"
-		Spacing="4"
-		>
+		Spacing="4">
 		<my:Stack
 			x:Name="uImagePanel"
 			x:FieldModifier="public"
@@ -32,21 +30,18 @@
 			Width="{x:Bind uImagePanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.Picture}"
-				Title="Image"
-				>
+				Title="Image">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						/>
+						Spacing="8" />
 				</my:HeaderBar.Action>
 			</my:HeaderBar>
 			<my:Divider />
@@ -60,8 +55,7 @@
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uImageList_ItemsSource}"
-				SelectionChanged="{x:Bind Controller.uImageList_SelectionChanged}"
-				>
+				SelectionChanged="{x:Bind Controller.uImageList_SelectionChanged}">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localViewPopcapAnimationViewer:MainPageImageItemController">
 						<my:Stack
@@ -69,40 +63,35 @@
 							VerticalAlignment="Stretch"
 							Padding="0,8,4,8"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<Viewbox
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								Stretch="None"
-								Child="{x:Bind uPreview_Content}"
-								/>
+								Child="{x:Bind uPreview_Content}" />
 							<my:Stack
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Padding="0"
 								Orientation="Vertical"
-								Spacing="0"
-								>
+								Spacing="0">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uTitle_Text}"
-									/>
+									Text="{x:Bind uTitle_Text}" />
 								<TextBlock
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Foreground="{ThemeResource TextFillColorSecondary}"
 									Style="{StaticResource CaptionTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uDescription_Text}"
-									/>
+									Text="{x:Bind uDescription_Text}" />
 							</my:Stack>
 							<ToggleButton
 								ToolTipService.ToolTip="Toggle"
@@ -110,15 +99,13 @@
 								VerticalAlignment="Center"
 								Padding="5,5,5,6"
 								IsChecked="{x:Bind uToggle_IsChecked}"
-								Click="{x:Bind uToggle_Click}"
-								>
+								Click="{x:Bind uToggle_Click}">
 								<FontIcon
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Opacity="0.7"
 									FontSize="{StaticResource MediumIconSize}"
-									Glyph="{StaticResource FluentIconGlyph.Flow}"
-									/>
+									Glyph="{StaticResource FluentIconGlyph.Flow}" />
 							</ToggleButton>
 						</my:Stack>
 					</DataTemplate>
@@ -129,8 +116,7 @@
 			SizerOrientation="Vertical"
 			SizerInverted="False"
 			SizerValue="{x:Bind uImagePanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uImagePanel.MinWidth, Mode=OneTime}"
-			/>
+			SizerMinimum="{x:Bind uImagePanel.MinWidth, Mode=OneTime}" />
 		<my:Stack
 			x:Name="uStagePanel"
 			x:FieldModifier="public"
@@ -140,21 +126,18 @@
 			MinWidth="950"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.FitPage}"
-				Title="Stage"
-				>
+				Title="Stage">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<DropDownButton
 							ToolTipService.ToolTip="Animation File"
 							HorizontalAlignment="Stretch"
@@ -162,8 +145,7 @@
 							HorizontalContentAlignment="Left"
 							MinWidth="98"
 							MaxWidth="928"
-							Content="{x:Bind Controller.uAnimationFile_Content}"
-							>
+							Content="{x:Bind Controller.uAnimationFile_Content}">
 							<DropDownButton.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutItem
@@ -171,20 +153,17 @@
 										IsEnabled="{x:Bind Controller.uAnimationFileMenuClear_IsEnabled}"
 										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Clear}}"
-										Text="Clear"
-										/>
+										Text="Clear" />
 									<MenuFlyoutItem
 										Tag="LoadFile"
 										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenFile}}"
-										Text="Load File"
-										/>
+										Text="Load File" />
 									<MenuFlyoutItem
 										Tag="LoadDirectory"
 										Click="{x:Bind Controller.uAnimationFileMenu_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenFolderHorizontal}}"
-										Text="Load Directory"
-										/>
+										Text="Load Directory" />
 								</MenuFlyout>
 							</DropDownButton.Flyout>
 						</DropDownButton>
@@ -195,8 +174,7 @@
 			<my:Box
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
+				VerticalAlignment="Stretch">
 				<ScrollViewer
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -208,40 +186,34 @@
 					MinZoomFactor="0.1"
 					MaxZoomFactor="100.0"
 					ViewChanged="{x:Bind Controller.uStage_ViewChanged}"
-					SizeChanged="{x:Bind Controller.uStage_ViewChanged}"
-					>
+					SizeChanged="{x:Bind Controller.uStage_ViewChanged}">
 					<localViewPopcapAnimationViewer:SpriteControl
 						x:Name="uSprite"
 						x:FieldModifier="public"
 						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
-						/>
+						VerticalAlignment="Stretch" />
 				</ScrollViewer>
 				<my:Box
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
-					Padding="16"
-					>
+					Padding="16">
 					<my:Stack
 						HorizontalAlignment="Left"
 						VerticalAlignment="Bottom"
 						Orientation="Vertical"
-						Spacing="8"
-						>
+						Spacing="8">
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
-								>
+								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}">
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="90" />
 								</FontIcon.RenderTransform>
@@ -251,23 +223,20 @@
 								VerticalAlignment="Center"
 								Width="94"
 								IsReadOnly="True"
-								Text="{x:Bind Controller.uStagePositionX_Text}"
-								/>
+								Text="{x:Bind Controller.uStagePositionX_Text}" />
 						</my:Stack>
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}"
-								>
+								Glyph="{StaticResource FluentIconGlyph.ScrollUpDown}">
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="0" />
 								</FontIcon.RenderTransform>
@@ -277,23 +246,20 @@
 								VerticalAlignment="Center"
 								Width="94"
 								IsReadOnly="True"
-								Text="{x:Bind Controller.uStagePositionY_Text}"
-								/>
+								Text="{x:Bind Controller.uStagePositionY_Text}" />
 						</my:Stack>
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.Reshare}"
-								>
+								Glyph="{StaticResource FluentIconGlyph.Reshare}">
 								<FontIcon.RenderTransform>
 									<RotateTransform CenterX="16" CenterY="16" Angle="0" />
 								</FontIcon.RenderTransform>
@@ -303,22 +269,19 @@
 								VerticalAlignment="Center"
 								Width="94"
 								IsReadOnly="True"
-								Text="{x:Bind Controller.uStageScale_Text}"
-								/>
+								Text="{x:Bind Controller.uStageScale_Text}" />
 						</my:Stack>
 					</my:Stack>
 					<my:Stack
 						HorizontalAlignment="Right"
 						VerticalAlignment="Bottom"
 						Orientation="Vertical"
-						Spacing="8"
-						>
+						Spacing="8">
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -326,8 +289,7 @@
 								Height="32"
 								Opacity="{x:Bind Controller.uZombieGroundSwatchLayerIcon_Opacity}"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.GenericScan}"
-								/>
+								Glyph="{StaticResource FluentIconGlyph.GenericScan}" />
 							<ToggleButton
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -336,15 +298,13 @@
 								IsEnabled="{x:Bind Controller.uZombieGroundSwatchLayer_IsEnabled}"
 								IsChecked="{x:Bind Controller.uZombieGroundSwatchLayer_IsChecked}"
 								Click="{x:Bind Controller.uZombieGroundSwatchLayer_Click}"
-								Content="Swatch"
-								/>
+								Content="Swatch" />
 						</my:Stack>
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -352,8 +312,7 @@
 								Height="32"
 								Opacity="{x:Bind Controller.uZombieStateLayerIcon_Opacity}"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.Eyedropper}"
-								/>
+								Glyph="{StaticResource FluentIconGlyph.Eyedropper}" />
 							<ComboBox
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -363,15 +322,13 @@
 								PlaceholderText="State"
 								ItemsSource="{x:Bind Controller.uZombieStateLayer_ItemsSource}"
 								SelectedItem="{x:Bind Controller.uZombieStateLayer_SelectedItem}"
-								SelectionChanged="{x:Bind Controller.uZombieStateLayer_SelectionChanged}"
-								/>
+								SelectionChanged="{x:Bind Controller.uZombieStateLayer_SelectionChanged}" />
 						</my:Stack>
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -379,8 +336,7 @@
 								Height="32"
 								Opacity="{x:Bind Controller.uPlantCustomLayerIcon_Opacity}"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}"
-								/>
+								Glyph="{StaticResource FluentIconGlyph.EmojiTabCelebrationObjects}" />
 							<ComboBox
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -390,31 +346,27 @@
 								PlaceholderText="Custom"
 								ItemsSource="{x:Bind Controller.uPlantCustomLayer_ItemsSource}"
 								SelectedItem="{x:Bind Controller.uPlantCustomLayer_SelectedItem}"
-								SelectionChanged="{x:Bind Controller.uPlantCustomLayer_SelectionChanged}"
-								/>
+								SelectionChanged="{x:Bind Controller.uPlantCustomLayer_SelectionChanged}" />
 						</my:Stack>
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.Filter}"
-								/>
+								Glyph="{StaticResource FluentIconGlyph.Filter}" />
 							<SplitButton
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								HorizontalContentAlignment="Left"
 								Width="130"
 								Click="{x:Bind Controller.uFilterRule_Click}"
-								Content="Filter"
-								>
+								Content="Filter">
 								<SplitButton.Flyout>
 									<Flyout>
 										<Flyout.FlyoutPresenterStyle>
@@ -427,22 +379,19 @@
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Stretch"
 											Orientation="Vertical"
-											Spacing="2"
-											>
+											Spacing="2">
 											<TextBox
 												HorizontalAlignment="Stretch"
 												VerticalAlignment="Stretch"
 												LostFocus="{x:Bind Controller.uImageFilterRuleText_LostFocus}"
 												PlaceholderText="Image"
-												Text="{x:Bind Controller.uImageFilterRuleText_Text}"
-												/>
+												Text="{x:Bind Controller.uImageFilterRuleText_Text}" />
 											<TextBox
 												HorizontalAlignment="Stretch"
 												VerticalAlignment="Stretch"
 												LostFocus="{x:Bind Controller.uSpriteFilterRuleText_LostFocus}"
 												PlaceholderText="Sprite"
-												Text="{x:Bind Controller.uSpriteFilterRuleText_Text}"
-												/>
+												Text="{x:Bind Controller.uSpriteFilterRuleText_Text}" />
 										</my:Stack>
 									</Flyout>
 								</SplitButton.Flyout>
@@ -452,16 +401,14 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="8"
-							>
+							Spacing="8">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{StaticResource FluentIconGlyph.FitPage}"
-								/>
+								Glyph="{StaticResource FluentIconGlyph.FitPage}" />
 							<ToggleButton
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
@@ -469,8 +416,7 @@
 								Width="130"
 								IsChecked="{x:Bind Controller.uShowBoundary_IsChecked}"
 								Click="{x:Bind Controller.uShowBoundary_Click}"
-								Content="Boundary"
-								/>
+								Content="Boundary" />
 						</my:Stack>
 					</my:Stack>
 				</my:Box>
@@ -481,15 +427,13 @@
 				VerticalAlignment="Stretch"
 				Padding="16,8"
 				Orientation="Vertical"
-				Spacing="8"
-				>
+				Spacing="8">
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Padding="0,-8"
 					Orientation="Horizontal"
-					Spacing="0"
-					>
+					Spacing="0">
 					<Slider
 						x:Name="uActiveProgress"
 						x:FieldModifier="public"
@@ -500,62 +444,54 @@
 						StepFrequency="1"
 						Minimum="{x:Bind Controller.uActiveProgress_Minimum}"
 						Maximum="{x:Bind Controller.uActiveProgress_Maximum}"
-						ValueChanged="{x:Bind Controller.uActiveProgress_ValueChanged}"
-						/>
+						ValueChanged="{x:Bind Controller.uActiveProgress_ValueChanged}" />
 				</my:Stack>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="16"
-					>
+					Spacing="16">
 					<my:Stack
 						my:Stack.Weight="1"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<FontIcon
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="32"
 							Height="32"
 							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.Play}"
-							/>
+							Glyph="{StaticResource FluentIconGlyph.Play}" />
 						<ToggleButton
 							ToolTipService.ToolTip="Immediate Select"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uImmediateSelect_IsChecked}"
 							Click="{x:Bind Controller.uImmediateSelect_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Touch}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Touch}}" />
 						<ToggleButton
 							ToolTipService.ToolTip="Automatic Play"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uAutomaticPlay_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticPlay_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime2}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime2}}" />
 						<ToggleButton
 							ToolTipService.ToolTip="Repeat Play"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uRepeatPlay_IsChecked}"
 							Click="{x:Bind Controller.uRepeatPlay_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RepeatAll}}" />
 						<ToggleButton
 							ToolTipService.ToolTip="Keep Speed"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uKeepSpeed_IsChecked}"
 							Click="{x:Bind Controller.uKeepSpeed_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pinned}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Pinned}}" />
 						<FontIcon
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -563,8 +499,7 @@
 							Height="32"
 							Opacity="{x:Bind Controller.uActiveFrameSpeedIcon_Opacity}"
 							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.SpeedMedium}"
-							/>
+							Glyph="{StaticResource FluentIconGlyph.SpeedMedium}" />
 						<NumberBox
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -575,15 +510,13 @@
 							Minimum="0.1"
 							Maximum="960.0"
 							Value="{x:Bind Controller.uActiveFrameSpeed_Value}"
-							ValueChanged="{x:Bind Controller.uActiveFrameSpeed_ValueChanged}"
-							/>
+							ValueChanged="{x:Bind Controller.uActiveFrameSpeed_ValueChanged}" />
 					</my:Stack>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<Button
 							ToolTipService.ToolTip="Previous"
 							HorizontalAlignment="Stretch"
@@ -591,22 +524,19 @@
 							Width="48"
 							IsEnabled="{x:Bind Controller.uActiveProgressPrevious_IsEnabled}"
 							Click="{x:Bind Controller.uActiveProgressPrevious_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.LeftArrowKeyTime0}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.LeftArrowKeyTime0}}" />
 						<Button
 							ToolTipService.ToolTip="Pause &amp; Resume"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Width="48"
 							IsEnabled="{x:Bind Controller.uActiveProgressState_IsEnabled}"
-							Click="{x:Bind Controller.uActiveProgressState_Click}"
-							>
+							Click="{x:Bind Controller.uActiveProgressState_Click}">
 							<FontIcon
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Stretch"
 								FontSize="{StaticResource MediumIconSize}"
-								Glyph="{x:Bind Controller.uActiveProgressStateIcon_Glyph}"
-								/>
+								Glyph="{x:Bind Controller.uActiveProgressStateIcon_Glyph}" />
 						</Button>
 						<Button
 							ToolTipService.ToolTip="Next"
@@ -615,16 +545,14 @@
 							Width="48"
 							IsEnabled="{x:Bind Controller.uActiveProgressNext_IsEnabled}"
 							Click="{x:Bind Controller.uActiveProgressNext_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RightArrowKeyTime0}}" />
 					</my:Stack>
 					<my:Stack
 						my:Stack.Weight="1"
 						HorizontalAlignment="Right"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<FontIcon
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -632,8 +560,7 @@
 							Height="32"
 							Opacity="{x:Bind Controller.uActiveFrameRangeIcon_Opacity}"
 							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.ScrollMode}"
-							>
+							Glyph="{StaticResource FluentIconGlyph.ScrollMode}">
 							<FontIcon.RenderTransform>
 								<RotateTransform CenterX="16" CenterY="16" Angle="90" />
 							</FontIcon.RenderTransform>
@@ -648,8 +575,7 @@
 							Minimum="{x:Bind Controller.uActiveFrameRangeBegin_Minimum}"
 							Maximum="{x:Bind Controller.uActiveFrameRangeBegin_Maximum}"
 							Value="{x:Bind Controller.uActiveFrameRangeBegin_Value}"
-							ValueChanged="{x:Bind Controller.uActiveFrameRangeBegin_ValueChanged}"
-							/>
+							ValueChanged="{x:Bind Controller.uActiveFrameRangeBegin_ValueChanged}" />
 						<NumberBox
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -660,8 +586,7 @@
 							Minimum="{x:Bind Controller.uActiveFrameRangeEnd_Minimum}"
 							Maximum="{x:Bind Controller.uActiveFrameRangeEnd_Maximum}"
 							Value="{x:Bind Controller.uActiveFrameRangeEnd_Value}"
-							ValueChanged="{x:Bind Controller.uActiveFrameRangeEnd_ValueChanged}"
-							/>
+							ValueChanged="{x:Bind Controller.uActiveFrameRangeEnd_ValueChanged}" />
 						<FontIcon
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -669,8 +594,7 @@
 							Height="32"
 							Opacity="{x:Bind Controller.uActiveFrameRangeLabelIcon_Opacity}"
 							FontSize="{StaticResource MediumIconSize}"
-							Glyph="{StaticResource FluentIconGlyph.Tag}"
-							/>
+							Glyph="{StaticResource FluentIconGlyph.Tag}" />
 						<ComboBox
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
@@ -679,8 +603,7 @@
 							PlaceholderText="Label"
 							ItemsSource="{x:Bind Controller.uActiveFrameRangeLabel_ItemsSource}"
 							SelectedItem="{x:Bind Controller.uActiveFrameRangeLabel_SelectedItem}"
-							SelectionChanged="{x:Bind Controller.uActiveFrameRangeLabel_SelectionChanged}"
-							/>
+							SelectionChanged="{x:Bind Controller.uActiveFrameRangeLabel_SelectionChanged}" />
 					</my:Stack>
 				</my:Stack>
 			</my:Stack>
@@ -689,8 +612,7 @@
 			SizerOrientation="Vertical"
 			SizerInverted="True"
 			SizerValue="{x:Bind uSpritePanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uSpritePanel.MinWidth, Mode=OneTime}"
-			/>
+			SizerMinimum="{x:Bind uSpritePanel.MinWidth, Mode=OneTime}" />
 		<my:Stack
 			x:Name="uSpritePanel"
 			x:FieldModifier="public"
@@ -700,21 +622,18 @@
 			Width="{x:Bind uSpritePanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.Tiles}"
-				Title="Sprite"
-				>
+				Title="Sprite">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						/>
+						Spacing="8" />
 				</my:HeaderBar.Action>
 			</my:HeaderBar>
 			<my:Divider />
@@ -728,8 +647,7 @@
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uSpriteList_ItemsSource}"
-				SelectionChanged="{x:Bind Controller.uSpriteList_SelectionChanged}"
-				>
+				SelectionChanged="{x:Bind Controller.uSpriteList_SelectionChanged}">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localViewPopcapAnimationViewer:MainPageSpriteItemController">
 						<my:Stack
@@ -737,40 +655,35 @@
 							VerticalAlignment="Stretch"
 							Padding="0,8,4,8"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<Viewbox
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								Stretch="None"
-								Child="{x:Bind uPreview_Content}"
-								/>
+								Child="{x:Bind uPreview_Content}" />
 							<my:Stack
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Padding="0"
 								Orientation="Vertical"
-								Spacing="0"
-								>
+								Spacing="0">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uTitle_Text}"
-									/>
+									Text="{x:Bind uTitle_Text}" />
 								<TextBlock
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Foreground="{ThemeResource TextFillColorSecondary}"
 									Style="{StaticResource CaptionTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uDescription_Text}"
-									/>
+									Text="{x:Bind uDescription_Text}" />
 							</my:Stack>
 							<ToggleButton
 								ToolTipService.ToolTip="Toggle"
@@ -778,15 +691,13 @@
 								VerticalAlignment="Center"
 								Padding="5,5,5,6"
 								IsChecked="{x:Bind uToggle_IsChecked}"
-								Click="{x:Bind uToggle_Click}"
-								>
+								Click="{x:Bind uToggle_Click}">
 								<FontIcon
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Opacity="0.7"
 									FontSize="{StaticResource MediumIconSize}"
-									Glyph="{StaticResource FluentIconGlyph.Flow}"
-									/>
+									Glyph="{StaticResource FluentIconGlyph.Flow}" />
 							</ToggleButton>
 						</my:Stack>
 					</DataTemplate>
@@ -804,8 +715,7 @@
 				SelectionMode="Extended"
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uMainSpriteList_ItemsSource}"
-				SelectionChanged="{x:Bind Controller.uMainSpriteList_SelectionChanged}"
-				>
+				SelectionChanged="{x:Bind Controller.uMainSpriteList_SelectionChanged}">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localViewPopcapAnimationViewer:MainPageMainSpriteItemController">
 						<my:Stack
@@ -813,40 +723,35 @@
 							VerticalAlignment="Stretch"
 							Padding="0,8,4,8"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<Viewbox
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Width="32"
 								Height="32"
 								Stretch="None"
-								Child="{x:Bind uPreview_Content}"
-								/>
+								Child="{x:Bind uPreview_Content}" />
 							<my:Stack
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Padding="0"
 								Orientation="Vertical"
-								Spacing="0"
-								>
+								Spacing="0">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uTitle_ToolTip}"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uTitle_Text}"
-									/>
+									Text="{x:Bind uTitle_Text}" />
 								<TextBlock
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Foreground="{ThemeResource TextFillColorSecondary}"
 									Style="{StaticResource CaptionTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uDescription_Text}"
-									/>
+									Text="{x:Bind uDescription_Text}" />
 							</my:Stack>
 							<ToggleButton
 								ToolTipService.ToolTip="Toggle"
@@ -854,15 +759,13 @@
 								VerticalAlignment="Center"
 								Padding="5,5,5,6"
 								IsChecked="{x:Bind uToggle_IsChecked}"
-								Click="{x:Bind uToggle_Click}"
-								>
+								Click="{x:Bind uToggle_Click}">
 								<FontIcon
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Opacity="0.7"
 									FontSize="{StaticResource MediumIconSize}"
-									Glyph="{StaticResource FluentIconGlyph.Flow}"
-									/>
+									Glyph="{StaticResource FluentIconGlyph.Flow}" />
 							</ToggleButton>
 						</my:Stack>
 					</DataTemplate>

@@ -4,8 +4,7 @@
 	xmlns:community="using:CommunityToolkit.WinUI"
 	xmlns:communityControls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:Twinning.AssistantPlus"
-	xmlns:my="using:Twinning.AssistantPlus.Control"
-	>
+	xmlns:my="using:Twinning.AssistantPlus.Control">
 	<Style TargetType="my:SettingItem">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -15,45 +14,39 @@
 						VerticalAlignment="Stretch"
 						Padding="16,8"
 						BorderThickness="0,0,0,1"
-						BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
-						>
+						BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}">
 						<my:Stack
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<my:Stack
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Top"
 								Margin="0,5,0,0"
 								Orientation="Horizontal"
-								Spacing="12"
-								>
+								Spacing="12">
 								<FontIcon
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
 									Width="32"
 									Height="22"
 									FontSize="{StaticResource LargeIconSize}"
-									Glyph="{TemplateBinding Icon}"
-									/>
+									Glyph="{TemplateBinding Icon}" />
 								<TextBlock
 									my:Stack.Weight="1"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
 									Style="{StaticResource BodyStrongTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{TemplateBinding Title}"
-									/>
+									Text="{TemplateBinding Title}" />
 							</my:Stack>
 							<ContentPresenter
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Top"
-								Content="{TemplateBinding Action}"
-								/>
+								Content="{TemplateBinding Action}" />
 						</my:Stack>
 					</Border>
 				</ControlTemplate>

@@ -14,16 +14,14 @@
 	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.MainPage"
 	AllowDrop="True"
 	DragOver="{x:Bind Controller.uPage_DragOver}"
-	Drop="{x:Bind Controller.uPage_Drop}"
-	>
+	Drop="{x:Bind Controller.uPage_Drop}">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		MinWidth="1440"
 		Padding="4"
 		Orientation="Horizontal"
-		Spacing="4"
-		>
+		Spacing="4">
 		<my:Stack
 			x:Name="uPackagePanel"
 			x:FieldModifier="public"
@@ -33,28 +31,24 @@
 			Width="{x:Bind uPackagePanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.FileExplorer}"
-				Title="Project"
-				>
+				Title="Project">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<ProgressRing
 							HorizontalAlignment="Center"
 							VerticalAlignment="Center"
 							Width="22"
 							Height="22"
-							IsActive="{x:Bind Controller.uWorkerProgress_IsActive}"
-							/>
+							IsActive="{x:Bind Controller.uWorkerProgress_IsActive}" />
 						<Button
 							x:Name="uWorkerButton"
 							x:FieldModifier="public"
@@ -62,8 +56,7 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Style="{x:Bind Controller.uWorkerButton_Style}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ProvisioningPackage}}"
-							>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ProvisioningPackage}}">
 							<Button.Flyout>
 								<Flyout Placement="Full">
 									<Flyout.FlyoutPresenterStyle>
@@ -76,8 +69,7 @@
 										x:Name="uWorkerPage"
 										x:FieldModifier="public"
 										HorizontalAlignment="Stretch"
-										VerticalAlignment="Stretch"
-										/>
+										VerticalAlignment="Stretch" />
 								</Flyout>
 							</Button.Flyout>
 						</Button>
@@ -86,79 +78,66 @@
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
-							>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}">
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind Controller.uProjectAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Connected}}"
-										Text="Link"
-										>
+										Text="Link">
 										<MenuFlyoutItem
 											Tag="LinkLegacy"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.History}}"
-											Text="Legacy"
-											/>
+											Text="Legacy" />
 										<MenuFlyoutItem
 											Tag="LinkRemake"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.DevUpdate}}"
-											Text="Remake"
-											/>
+											Text="Remake" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind Controller.uProjectAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind Controller.uProjectAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</Button.Flyout>
@@ -172,37 +151,32 @@
 				VerticalAlignment="Stretch"
 				Padding="16,8,16,8"
 				Orientation="Vertical"
-				Spacing="8"
-				>
+				Spacing="8">
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
 						IsReadOnly="True"
 						PlaceholderText="Project Directory"
-						Text="{x:Bind Controller.uProjectDirectory_Text}"
-						/>
+						Text="{x:Bind Controller.uProjectDirectory_Text}" />
 					<Button
 						ToolTipService.ToolTip="Open"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
 						Click="{x:Bind Controller.uProjectOpen_Click}"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}"
-						/>
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenLocal}}" />
 					<Button
 						ToolTipService.ToolTip="Close"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
 						IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
 						Click="{x:Bind Controller.uProjectClose_Click}"
-						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}"
-						/>
+						Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Clear}}" />
 				</my:Stack>
 			</my:Stack>
 			<my:Divider />
@@ -210,44 +184,38 @@
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.DialShape3}"
-				Title="Package"
-				>
+				Title="Package">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<Button
 							ToolTipService.ToolTip="Append"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
 							Click="{x:Bind Controller.uPackageActionAppend_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}" />
 						<Button
 							ToolTipService.ToolTip="Action"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
-							>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}">
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind Controller.uPackageAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind Controller.uPackageAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 								</MenuFlyout>
 							</Button.Flyout>
 						</Button>
@@ -270,8 +238,7 @@
 				DragItemsCompleted="{x:Bind Controller.uPackageList_DragItemsCompleted}"
 				ItemsSource="{x:Bind Controller.uPackageList_ItemsSource}"
 				SelectionChanged="{x:Bind Controller.uPackageList_SelectionChanged}"
-				ItemContainerTransitions="{x:Null}"
-				>
+				ItemContainerTransitions="{x:Null}">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localViewPopcapPackageBuilder:MainPagePackageItemController">
 						<my:Stack
@@ -280,13 +247,11 @@
 							Height="48"
 							Padding="0,8,4,8"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<my:Box
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								>
+								VerticalAlignment="Center">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
@@ -295,8 +260,7 @@
 									Padding="11,0,0,0"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 								<TextBox
 									Visibility="{x:Bind uNameEdit_Visibility}"
 									HorizontalAlignment="Stretch"
@@ -305,52 +269,44 @@
 									IsEnabled="{x:Bind uNameEdit_IsEnabled}"
 									IsEnabledChanged="{x:Bind uNameEdit_IsEnabledChanged}"
 									LostFocus="{x:Bind uNameEdit_LostFocus}"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 							</my:Box>
 							<InfoBadge
 								VerticalAlignment="Center"
-								Value="{x:Bind uCount_Value}"
-								/>
+								Value="{x:Bind uCount_Value}" />
 							<my:Stack.ContextFlyout>
 								<MenuFlyout>
 									<MenuFlyoutItem
 										Tag="Part"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.HomeGroup}}"
-										Text="Part"
-										/>
+										Text="Part" />
 									<MenuFlyoutItem
 										Tag="Setting"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Settings}}"
-										Text="Setting"
-										/>
+										Text="Setting" />
 									<MenuFlyoutItem
 										Tag="Variable"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Sustainable}}"
-										Text="Variable"
-										/>
+										Text="Variable" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Rename"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
-										Text="Rename"
-										/>
+										Text="Rename" />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 								</MenuFlyout>
 							</my:Stack.ContextFlyout>
 						</my:Stack>
@@ -362,8 +318,7 @@
 			SizerOrientation="Vertical"
 			SizerInverted="False"
 			SizerValue="{x:Bind uPackagePanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uPackagePanel.MinWidth, Mode=OneTime}"
-			/>
+			SizerMinimum="{x:Bind uPackagePanel.MinWidth, Mode=OneTime}" />
 		<my:Stack
 			x:Name="uPartPanel"
 			x:FieldModifier="public"
@@ -373,103 +328,87 @@
 			Width="{x:Bind uPartPanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.TreeFolderFolder}"
-				Title="Part"
-				>
+				Title="Part">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<Button
 							ToolTipService.ToolTip="Append"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
 							Click="{x:Bind Controller.uPartActionAppend_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}" />
 						<Button
 							ToolTipService.ToolTip="Action"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
-							>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}">
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind Controller.uPartAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind Controller.uPartAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind Controller.uPartAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind Controller.uPartAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind Controller.uPartAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind Controller.uPartAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind Controller.uPartAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind Controller.uPartAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind Controller.uPartAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</Button.Flyout>
@@ -489,8 +428,7 @@
 				IsItemClickEnabled="True"
 				ItemsSource="{x:Bind Controller.uPartList_ItemsSource}"
 				SelectionChanged="{x:Bind Controller.uPartList_SelectionChanged}"
-				ItemContainerTransitions="{x:Null}"
-				>
+				ItemContainerTransitions="{x:Null}">
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="localViewPopcapPackageBuilder:MainPagePartItemController">
 						<my:Stack
@@ -502,13 +440,11 @@
 							DragOver="{x:Bind uRoot_DragOver}"
 							Drop="{x:Bind uRoot_Drop}"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<my:Box
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								>
+								VerticalAlignment="Center">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
@@ -517,8 +453,7 @@
 									Padding="11,0,0,0"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 								<TextBox
 									Visibility="{x:Bind uNameEdit_Visibility}"
 									HorizontalAlignment="Stretch"
@@ -527,94 +462,79 @@
 									IsEnabled="{x:Bind uNameEdit_IsEnabled}"
 									IsEnabledChanged="{x:Bind uNameEdit_IsEnabledChanged}"
 									LostFocus="{x:Bind uNameEdit_LostFocus}"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 							</my:Box>
 							<InfoBadge
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
-								Value="{x:Bind uCount_Value}"
-								/>
+								Value="{x:Bind uCount_Value}" />
 							<my:Stack.ContextFlyout>
 								<MenuFlyout>
 									<MenuFlyoutItem
 										Tag="Variable"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Sustainable}}"
-										Text="Variable"
-										/>
+										Text="Variable" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Rename"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
-										Text="Rename"
-										/>
+										Text="Rename" />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</my:Stack.ContextFlyout>
@@ -627,8 +547,7 @@
 			SizerOrientation="Vertical"
 			SizerInverted="False"
 			SizerValue="{x:Bind uPartPanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uPartPanel.MinWidth, Mode=OneTime}"
-			/>
+			SizerMinimum="{x:Bind uPartPanel.MinWidth, Mode=OneTime}" />
 		<my:Stack
 			x:Name="uGroupPanel"
 			x:FieldModifier="public"
@@ -638,95 +557,80 @@
 			Width="{x:Bind uGroupPanel.MinWidth, Mode=OneTime}"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.ZipFolder}"
-				Title="Group"
-				>
+				Title="Group">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<Button
 							ToolTipService.ToolTip="Action"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
-							>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}">
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind Controller.uGroupAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind Controller.uGroupAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind Controller.uGroupAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind Controller.uGroupAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind Controller.uGroupAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind Controller.uGroupAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind Controller.uGroupAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind Controller.uGroupAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind Controller.uGroupAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</Button.Flyout>
@@ -748,15 +652,13 @@
 				DragItemsStarting="{x:Bind Controller.uGroupList_DragItemsStarting}"
 				ItemsSource="{x:Bind uGroupList_ItemsSource.View}"
 				SelectionChanged="{x:Bind Controller.uGroupList_SelectionChanged}"
-				ItemContainerTransitions="{x:Null}"
-				>
+				ItemContainerTransitions="{x:Null}">
 				<ListView.Resources>
 					<CollectionViewSource
 						x:Name="uGroupList_ItemsSource"
 						IsSourceGrouped="True"
 						ItemsPath="Children"
-						Source="{x:Bind Controller.uGroupList_ItemsSource}"
-						/>
+						Source="{x:Bind Controller.uGroupList_ItemsSource}" />
 				</ListView.Resources>
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
@@ -772,8 +674,7 @@
 									VerticalAlignment="Stretch"
 									Padding="12,0,4,0"
 									Orientation="Horizontal"
-									Spacing="12"
-									>
+									Spacing="12">
 									<TextBlock
 										ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 										my:Stack.Weight="1"
@@ -781,15 +682,13 @@
 										VerticalAlignment="Center"
 										Style="{StaticResource SubtitleTextBlockStyle}"
 										TextWrapping="NoWrap"
-										Text="{x:Bind uName_Text}"
-										/>
+										Text="{x:Bind uName_Text}" />
 									<Button
 										ToolTipService.ToolTip="Append"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Center"
 										Click="{x:Bind uActionAppend_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
-										/>
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}" />
 								</my:Stack>
 							</DataTemplate>
 						</GroupStyle.HeaderTemplate>
@@ -806,13 +705,11 @@
 							DragOver="{x:Bind uRoot_DragOver}"
 							Drop="{x:Bind uRoot_Drop}"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<my:Box
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								>
+								VerticalAlignment="Center">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
@@ -821,8 +718,7 @@
 									Padding="11,0,0,0"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 								<TextBox
 									Visibility="{x:Bind uNameEdit_Visibility}"
 									HorizontalAlignment="Stretch"
@@ -831,94 +727,79 @@
 									IsEnabled="{x:Bind uNameEdit_IsEnabled}"
 									IsEnabledChanged="{x:Bind uNameEdit_IsEnabledChanged}"
 									LostFocus="{x:Bind uNameEdit_LostFocus}"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 							</my:Box>
 							<InfoBadge
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
-								Value="{x:Bind uCount_Value}"
-								/>
+								Value="{x:Bind uCount_Value}" />
 							<my:Stack.ContextFlyout>
 								<MenuFlyout>
 									<MenuFlyoutItem
 										Tag="Variable"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Sustainable}}"
-										Text="Variable"
-										/>
+										Text="Variable" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Rename"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
-										Text="Rename"
-										/>
+										Text="Rename" />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</my:Stack.ContextFlyout>
@@ -931,8 +812,7 @@
 			SizerOrientation="Vertical"
 			SizerInverted="False"
 			SizerValue="{x:Bind uGroupPanel.Width, Mode=TwoWay}"
-			SizerMinimum="{x:Bind uGroupPanel.MinWidth, Mode=OneTime}"
-			/>
+			SizerMinimum="{x:Bind uGroupPanel.MinWidth, Mode=OneTime}" />
 		<my:Stack
 			x:Name="uResourcePanel"
 			x:FieldModifier="public"
@@ -942,95 +822,80 @@
 			MinWidth="469"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.KnowledgeArticle}"
-				Title="Resource"
-				>
+				Title="Resource">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<Button
 							ToolTipService.ToolTip="Action"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							IsEnabled="{x:Bind Controller.uLoadedAction_IsEnabled}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}"
-							>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.More}}">
 							<Button.Flyout>
 								<MenuFlyout Placement="BottomEdgeAlignedRight">
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind Controller.uResourceAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind Controller.uResourceAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind Controller.uResourceAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind Controller.uResourceAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind Controller.uResourceAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind Controller.uResourceAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind Controller.uResourceAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind Controller.uResourceAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind Controller.uResourceAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</Button.Flyout>
@@ -1051,15 +916,13 @@
 				CanDragItems="True"
 				DragItemsStarting="{x:Bind Controller.uResourceList_DragItemsStarting}"
 				ItemsSource="{x:Bind uResourceList_ItemsSource.View}"
-				ItemContainerTransitions="{x:Null}"
-				>
+				ItemContainerTransitions="{x:Null}">
 				<ListView.Resources>
 					<CollectionViewSource
 						x:Name="uResourceList_ItemsSource"
 						IsSourceGrouped="True"
 						ItemsPath="Children"
-						Source="{x:Bind Controller.uResourceList_ItemsSource}"
-						/>
+						Source="{x:Bind Controller.uResourceList_ItemsSource}" />
 				</ListView.Resources>
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
@@ -1075,8 +938,7 @@
 									VerticalAlignment="Stretch"
 									Padding="12,0,4,0"
 									Orientation="Horizontal"
-									Spacing="12"
-									>
+									Spacing="12">
 									<TextBlock
 										ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 										my:Stack.Weight="1"
@@ -1084,15 +946,13 @@
 										VerticalAlignment="Center"
 										Style="{StaticResource SubtitleTextBlockStyle}"
 										TextWrapping="NoWrap"
-										Text="{x:Bind uName_Text}"
-										/>
+										Text="{x:Bind uName_Text}" />
 									<Button
 										ToolTipService.ToolTip="Append"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Center"
 										Click="{x:Bind uActionAppend_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
-										/>
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}" />
 								</my:Stack>
 							</DataTemplate>
 						</GroupStyle.HeaderTemplate>
@@ -1107,13 +967,11 @@
 							Padding="0,8,4,8"
 							AllowDrop="True"
 							Orientation="Horizontal"
-							Spacing="12"
-							>
+							Spacing="12">
 							<my:Box
 								my:Stack.Weight="1"
 								HorizontalAlignment="Stretch"
-								VerticalAlignment="Center"
-								>
+								VerticalAlignment="Center">
 								<TextBlock
 									ToolTipService.ToolTip="{x:Bind uName_ToolTip}"
 									Visibility="{x:Bind uName_Visibility}"
@@ -1122,8 +980,7 @@
 									Padding="11,0,0,0"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 								<TextBox
 									Visibility="{x:Bind uNameEdit_Visibility}"
 									HorizontalAlignment="Stretch"
@@ -1132,35 +989,30 @@
 									IsEnabled="{x:Bind uNameEdit_IsEnabled}"
 									IsEnabledChanged="{x:Bind uNameEdit_IsEnabledChanged}"
 									LostFocus="{x:Bind uNameEdit_LostFocus}"
-									Text="{x:Bind uName_Text}"
-									/>
+									Text="{x:Bind uName_Text}" />
 							</my:Box>
 							<my:Stack
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Center"
 								Orientation="Horizontal"
-								Spacing="8"
-								>
+								Spacing="8">
 								<SplitButton
 									ToolTipService.ToolTip="Type"
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
 									HorizontalContentAlignment="Stretch"
 									Width="132"
-									Click="{x:Bind uType_Click}"
-									>
+									Click="{x:Bind uType_Click}">
 									<my:Stack
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										Orientation="Horizontal"
-										Spacing="8"
-										>
+										Spacing="8">
 										<FontIcon
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Center"
 											FontSize="16"
-											Glyph="{x:Bind uTypeIcon_Glyph}"
-											/>
+											Glyph="{x:Bind uTypeIcon_Glyph}" />
 										<TextBlock
 											my:Stack.Weight="1"
 											HorizontalAlignment="Stretch"
@@ -1168,8 +1020,7 @@
 											Style="{StaticResource BodyTextBlockStyle}"
 											TextWrapping="NoWrap"
 											TextAlignment="Center"
-											Text="{x:Bind uTypeText_Text}"
-											/>
+											Text="{x:Bind uTypeText_Text}" />
 									</my:Stack>
 									<SplitButton.Flyout>
 										<MenuFlyout>
@@ -1183,45 +1034,38 @@
 												Tag="Dummy"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Preview}}"
-												Text="Dummy"
-												/>
+												Text="Dummy" />
 											<MenuFlyoutItem
 												Tag="General"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
-												Text="General"
-												/>
+												Text="General" />
 											<MenuFlyoutItem
 												Tag="Texture"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Tiles}}"
-												Text="Texture"
-												/>
+												Text="Texture" />
 											<MenuFlyoutSeparator />
 											<MenuFlyoutItem
 												Tag="SpecialRton"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.KnowledgeArticle}}"
-												Text="RTON"
-												/>
+												Text="RTON" />
 											<MenuFlyoutItem
 												Tag="SpecialPtx"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Picture}}"
-												Text="PTX"
-												/>
+												Text="PTX" />
 											<MenuFlyoutItem
 												Tag="SpecialPam"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.HomeGroup}}"
-												Text="PAM"
-												/>
+												Text="PAM" />
 											<MenuFlyoutItem
 												Tag="SpecialWem"
 												Click="{x:Bind uTypeCast_Click}"
 												Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Audio}}"
-												Text="WEM"
-												/>
+												Text="WEM" />
 										</MenuFlyout>
 									</SplitButton.Flyout>
 								</SplitButton>
@@ -1230,8 +1074,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
 									Style="{x:Bind uCategory_Style}"
-									Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Tag}}"
-									>
+									Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Tag}}">
 									<Button.Flyout>
 										<Flyout Placement="BottomEdgeAlignedRight" Closed="{x:Bind uCategoryFlyout_Closed}">
 											<Flyout.FlyoutPresenterStyle>
@@ -1245,49 +1088,42 @@
 												VerticalAlignment="Stretch"
 												Padding="8"
 												Orientation="Vertical"
-												Spacing="8"
-												>
+												Spacing="8">
 												<my:Stack
 													HorizontalAlignment="Stretch"
 													VerticalAlignment="Stretch"
 													Orientation="Horizontal"
-													Spacing="8"
-													>
+													Spacing="8">
 													<FontIcon
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
 														Margin="4,0"
 														FontSize="{StaticResource SmallIconSize}"
-														Glyph="{StaticResource FluentIconGlyph.Picture}"
-														/>
+														Glyph="{StaticResource FluentIconGlyph.Picture}" />
 													<TextBox
 														my:Stack.Weight="1"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Stretch"
 														LostFocus="{x:Bind uCategoryResolution_LostFocus}"
-														Text="{x:Bind uCategoryResolution_Text}"
-														/>
+														Text="{x:Bind uCategoryResolution_Text}" />
 												</my:Stack>
 												<my:Stack
 													HorizontalAlignment="Stretch"
 													VerticalAlignment="Stretch"
 													Orientation="Horizontal"
-													Spacing="8"
-													>
+													Spacing="8">
 													<FontIcon
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Center"
 														Margin="4,0"
 														FontSize="{StaticResource SmallIconSize}"
-														Glyph="{StaticResource FluentIconGlyph.LocaleLanguage}"
-														/>
+														Glyph="{StaticResource FluentIconGlyph.LocaleLanguage}" />
 													<TextBox
 														my:Stack.Weight="1"
 														HorizontalAlignment="Stretch"
 														VerticalAlignment="Stretch"
 														LostFocus="{x:Bind uCategoryLocale_LostFocus}"
-														Text="{x:Bind uCategoryLocale_Text}"
-														/>
+														Text="{x:Bind uCategoryLocale_Text}" />
 												</my:Stack>
 											</my:Stack>
 										</Flyout>
@@ -1300,80 +1136,67 @@
 										Tag="Variable"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Sustainable}}"
-										Text="Variable"
-										/>
+										Text="Variable" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.RepeatAll}}"
-										Text="Transpile"
-										>
+										Text="Transpile">
 										<MenuFlyoutItem
 											Tag="TranspileCustom"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.More}}"
-											Text="Custom"
-											/>
+											Text="Custom" />
 										<MenuFlyoutItem
 											Tag="TranspileGeneralize"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Previous}}"
-											Text="Generalize"
-											/>
+											Text="Generalize" />
 										<MenuFlyoutItem
 											Tag="TranspileSpecialize"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Next}}"
-											Text="Specialize"
-											/>
+											Text="Specialize" />
 									</MenuFlyoutSubItem>
 									<MenuFlyoutItem
 										Tag="Compile"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Process}}"
-										Text="Compile"
-										/>
+										Text="Compile" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Rename"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Rename}}"
-										Text="Rename"
-										/>
+										Text="Rename" />
 									<MenuFlyoutItem
 										Tag="Delete"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Delete}}"
-										Text="Delete"
-										/>
+										Text="Delete" />
 									<MenuFlyoutItem
 										Tag="Copy"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.SaveCopy}}"
-										Text="Copy"
-										/>
+										Text="Copy" />
 									<MenuFlyoutSeparator />
 									<MenuFlyoutItem
 										Tag="Reload"
 										Click="{x:Bind uAction_Click}"
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Refresh}}"
-										Text="Reload"
-										/>
+										Text="Reload" />
 									<MenuFlyoutSubItem
 										Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										Text="Reveal"
-										>
+										Text="Reveal">
 										<MenuFlyoutItem
 											Tag="RevealRoot"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.TreeFolderFolderOpen}}"
-											Text="Root"
-											/>
+											Text="Root" />
 										<MenuFlyoutItem
 											Tag="RevealSetting"
 											Click="{x:Bind uAction_Click}"
 											Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.ReportDocument}}"
-											Text="Setting"
-											/>
+											Text="Setting" />
 									</MenuFlyoutSubItem>
 								</MenuFlyout>
 							</my:Stack.ContextFlyout>

@@ -1,5 +1,5 @@
 #pragma warning disable 0, CS0162
-// ReSharper disable
+// ReSharper disable HeuristicUnreachableCode
 
 using Twinning.AssistantPlus;
 using Windows.UI.StartScreen;

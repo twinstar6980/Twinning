@@ -48,7 +48,7 @@ namespace Twinning.AssistantPlus {
 
 		public SettingData Data { get; private set; }
 
-		public SettingState State { get; }
+		public SettingState State { get; private set; }
 
 		// ----------------
 
@@ -77,7 +77,7 @@ namespace Twinning.AssistantPlus {
 					CustomThemeBackdrop.Solid          => null,
 					CustomThemeBackdrop.MicaBase       => new MicaBackdrop() { Kind = MicaKind.Base },
 					CustomThemeBackdrop.MicaAlt        => new MicaBackdrop() { Kind = MicaKind.BaseAlt },
-					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() { },
+					CustomThemeBackdrop.AcrylicDesktop => new DesktopAcrylicBackdrop() {},
 					_                                  => throw new UnreachableException(),
 				};
 				App.Instance.MainWindow.uBackground.Visibility = this.Data.ThemeBackdrop == CustomThemeBackdrop.Solid ? Visibility.Visible : Visibility.Collapsed;

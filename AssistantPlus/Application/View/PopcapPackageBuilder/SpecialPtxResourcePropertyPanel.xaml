@@ -10,27 +10,23 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.SpecialPtxResourcePropertyPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.SpecialPtxResourcePropertyPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		>
+		Spacing="2">
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Repair}"
-			Title="Conversion"
-			>
+			Title="Conversion">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ComboBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -38,8 +34,7 @@
 						PlaceholderText="Invalid"
 						ItemsSource="{x:Bind Controller.uConversion_ItemsSource}"
 						SelectedItem="{x:Bind Controller.uConversion_SelectedItem}"
-						SelectionChanged="{x:Bind Controller.uConversion_SelectionChanged}"
-						/>
+						SelectionChanged="{x:Bind Controller.uConversion_SelectionChanged}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -47,22 +42,19 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.StorageOptical}"
-			Title="Path"
-			>
+			Title="Path">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uPath_LostFocus}"
-						Text="{x:Bind Controller.uPath_Text}"
-						/>
+						Text="{x:Bind Controller.uPath_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

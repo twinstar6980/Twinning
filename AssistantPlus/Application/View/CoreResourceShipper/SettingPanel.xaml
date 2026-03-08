@@ -10,27 +10,23 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.CoreResourceShipper.SettingPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.CoreResourceShipper.SettingPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		>
+		Spacing="2">
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Shuffle}"
-			Title="Parallel Forward"
-			>
+			Title="Parallel Forward">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -38,8 +34,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uParallelForwardToggle_IsChecked}"
 						Click="{x:Bind Controller.uParallelForwardToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -47,15 +42,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Filter}"
-			Title="Enable Filter"
-			>
+			Title="Enable Filter">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -63,8 +56,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uEnableFilterToggle_IsChecked}"
 						Click="{x:Bind Controller.uEnableFilterToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -72,15 +64,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.MapLayers}"
-			Title="Enable Batch"
-			>
+			Title="Enable Batch">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -88,8 +78,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uEnableBatchToggle_IsChecked}"
 						Click="{x:Bind Controller.uEnableBatchToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

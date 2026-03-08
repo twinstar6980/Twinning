@@ -10,12 +10,10 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.DummyResourcePropertyPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.DummyResourcePropertyPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		/>
+		Spacing="2" />
 </local:CustomControl>

@@ -10,43 +10,37 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.PackageSettingPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.PackageSettingPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		>
+		Spacing="2">
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.DialShape2}"
-			Title="Version"
-			>
+			Title="Version">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ComboBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						ItemsSource="{x:Bind Controller.uVersionNumber_ItemsSource}"
 						SelectedItem="{x:Bind Controller.uVersionNumber_SelectedItem}"
-						SelectionChanged="{x:Bind Controller.uVersionNumber_SelectionChanged}"
-						/>
+						SelectionChanged="{x:Bind Controller.uVersionNumber_SelectionChanged}" />
 					<ComboBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						ItemsSource="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_ItemsSource}"
 						SelectedItem="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_SelectedItem}"
-						SelectionChanged="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_SelectionChanged}"
-						/>
+						SelectionChanged="{x:Bind Controller.uVersionExtendedTextureInformationForPvz2Cn_SelectionChanged}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -54,21 +48,18 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.BackToWindow}"
-			Title="Compression"
-			>
+			Title="Compression">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Vertical"
-					Spacing="8"
-					>
+					Spacing="8">
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<ToggleButton
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
@@ -76,8 +67,7 @@
 							HorizontalContentAlignment="Left"
 							IsChecked="{x:Bind Controller.uCompressionGeneral_IsChecked}"
 							Click="{x:Bind Controller.uCompressionGeneral_Click}"
-							Content="General"
-							/>
+							Content="General" />
 						<ToggleButton
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
@@ -85,8 +75,7 @@
 							HorizontalContentAlignment="Left"
 							IsChecked="{x:Bind Controller.uCompressionTexture_IsChecked}"
 							Click="{x:Bind Controller.uCompressionTexture_Click}"
-							Content="Texture"
-							/>
+							Content="Texture" />
 					</my:Stack>
 					<TextBox
 						HorizontalAlignment="Stretch"
@@ -95,8 +84,7 @@
 						TextWrapping="Wrap"
 						AcceptsReturn="True"
 						PlaceholderText="Filter"
-						Text="{x:Bind Controller.uCompressionFilter_Text}"
-						/>
+						Text="{x:Bind Controller.uCompressionFilter_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -104,29 +92,25 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.BulletedList}"
-			Title="Manifest"
-			>
+			Title="Manifest">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Vertical"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ComboBox
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						ItemsSource="{x:Bind Controller.uManifestType_ItemsSource}"
 						SelectedIndex="{x:Bind Controller.uManifestType_SelectedIndex}"
-						SelectionChanged="{x:Bind Controller.uManifestType_SelectionChanged}"
-						/>
+						SelectionChanged="{x:Bind Controller.uManifestType_SelectionChanged}" />
 					<TextBox
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						LostFocus="{x:Bind Controller.uManifestSuffix_LostFocus}"
 						PlaceholderText="Suffix"
-						Text="{x:Bind Controller.uManifestSuffix_Text}"
-						/>
+						Text="{x:Bind Controller.uManifestSuffix_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -134,15 +118,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Tag}"
-			Title="Category"
-			>
+			Title="Category">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -151,8 +133,7 @@
 						TextWrapping="Wrap"
 						AcceptsReturn="True"
 						PlaceholderText="Resolution"
-						Text="{x:Bind Controller.uCategoryResolution_Text}"
-						/>
+						Text="{x:Bind Controller.uCategoryResolution_Text}" />
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -161,8 +142,7 @@
 						TextWrapping="Wrap"
 						AcceptsReturn="True"
 						PlaceholderText="Locale"
-						Text="{x:Bind Controller.uCategoryLocale_Text}"
-						/>
+						Text="{x:Bind Controller.uCategoryLocale_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

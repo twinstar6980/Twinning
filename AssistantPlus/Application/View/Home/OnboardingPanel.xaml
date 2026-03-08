@@ -10,41 +10,35 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.Home.OnboardingPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.Home.OnboardingPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="8"
-		>
+		Spacing="8">
 		<my:Stack
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Orientation="Horizontal"
-			Spacing="8"
-			>
+			Spacing="8">
 			<Button
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Click="{x:Bind Controller.uImportSetting_Click}"
-				Content="Import Setting"
-				/>
+				Content="Import Setting" />
 		</my:Stack>
 		<my:Stack
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Orientation="Horizontal"
-			Spacing="8"
-			>
+			Spacing="8">
 			<Button
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Click="{x:Bind Controller.uQuickSetup_Click}"
-				Content="Quick Setup"
-				/>
+				Content="Quick Setup" />
 		</my:Stack>
 	</my:Stack>
 </local:CustomControl>

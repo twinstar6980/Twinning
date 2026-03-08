@@ -10,27 +10,23 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapAnimationViewer.SettingPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapAnimationViewer.SettingPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		>
+		Spacing="2">
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Touch}"
-			Title="Immediate Select"
-			>
+			Title="Immediate Select">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -38,8 +34,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uImmediateSelectToggle_IsChecked}"
 						Click="{x:Bind Controller.uImmediateSelectToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -47,15 +42,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.RightArrowKeyTime2}"
-			Title="Automatic Play"
-			>
+			Title="Automatic Play">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -63,8 +56,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uAutomaticPlayToggle_IsChecked}"
 						Click="{x:Bind Controller.uAutomaticPlayToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -72,15 +64,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.RepeatAll}"
-			Title="Repeat Play"
-			>
+			Title="Repeat Play">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -88,8 +78,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uRepeatPlayToggle_IsChecked}"
 						Click="{x:Bind Controller.uRepeatPlayToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -97,15 +86,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Pinned}"
-			Title="Keep Speed"
-			>
+			Title="Keep Speed">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -113,8 +100,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uKeepSpeedToggle_IsChecked}"
 						Click="{x:Bind Controller.uKeepSpeedToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -122,15 +108,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.FitPage}"
-			Title="Show Boundary"
-			>
+			Title="Show Boundary">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ToggleButton
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -138,8 +122,7 @@
 						HorizontalContentAlignment="Left"
 						IsChecked="{x:Bind Controller.uShowBoundaryToggle_IsChecked}"
 						Click="{x:Bind Controller.uShowBoundaryToggle_Click}"
-						Content="Enable"
-						/>
+						Content="Enable" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -147,22 +130,19 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Filter}"
-			Title="Image Filter Rule"
-			>
+			Title="Image Filter Rule">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uImageFilterRuleText_LostFocus}"
-						Text="{x:Bind Controller.uImageFilterRuleText_Text}"
-						/>
+						Text="{x:Bind Controller.uImageFilterRuleText_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -170,22 +150,19 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Filter}"
-			Title="Sprite Filter Rule"
-			>
+			Title="Sprite Filter Rule">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uSpriteFilterRuleText_LostFocus}"
-						Text="{x:Bind Controller.uSpriteFilterRuleText_Text}"
-						/>
+						Text="{x:Bind Controller.uSpriteFilterRuleText_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

@@ -10,14 +10,12 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.VariableListPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.VariableListPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="8"
-		>
+		Spacing="8">
 		<ListView
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
@@ -28,8 +26,7 @@
 			CanDragItems="True"
 			CanReorderItems="True"
 			DragItemsCompleted="{x:Bind Controller.uList_DragItemsCompleted}"
-			ItemsSource="{x:Bind Controller.uList_ItemsSource}"
-			>
+			ItemsSource="{x:Bind Controller.uList_ItemsSource}">
 			<ListView.ItemTemplate>
 				<DataTemplate x:DataType="localViewPopcapPackageBuilder:VariableListPanelItemController">
 					<my:Stack
@@ -37,29 +34,25 @@
 						VerticalAlignment="Stretch"
 						Height="48"
 						Orientation="Horizontal"
-						Spacing="12"
-						>
+						Spacing="12">
 						<TextBox
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							LostFocus="{x:Bind uName_LostFocus}"
-							Text="{x:Bind uName_Text}"
-							/>
+							Text="{x:Bind uName_Text}" />
 						<TextBox
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							LostFocus="{x:Bind uValue_LostFocus}"
-							Text="{x:Bind uValue_Text}"
-							/>
+							Text="{x:Bind uValue_Text}" />
 						<Button
 							ToolTipService.ToolTip="Remove"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Click="{x:Bind uRemove_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}" />
 					</my:Stack>
 				</DataTemplate>
 			</ListView.ItemTemplate>
@@ -69,20 +62,17 @@
 			VerticalAlignment="Stretch"
 			Padding="12,0"
 			Orientation="Horizontal"
-			Spacing="12"
-			>
+			Spacing="12">
 			<my:Box
 				my:Stack.Weight="1"
 				HorizontalAlignment="Stretch"
-				VerticalAlignment="Center"
-				/>
+				VerticalAlignment="Center" />
 			<Button
 				ToolTipService.ToolTip="Append"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Center"
 				Click="{x:Bind Controller.uAppend_Click}"
-				Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}"
-				/>
+				Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Add}}" />
 		</my:Stack>
 	</my:Stack>
 </local:CustomControl>

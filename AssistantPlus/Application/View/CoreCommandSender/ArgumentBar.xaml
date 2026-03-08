@@ -10,36 +10,31 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.CoreCommandSender.ArgumentBar"
-	>
+	x:Class="Twinning.AssistantPlus.View.CoreCommandSender.ArgumentBar">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Horizontal"
-		Spacing="8"
-		>
+		Spacing="8">
 		<Button
 			ToolTipService.ToolTip="{x:Bind Controller.uLabel_ToolTip}"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			HorizontalContentAlignment="Stretch"
 			Width="208"
-			Style="{x:Bind Controller.uLabel_Style}"
-			>
+			Style="{x:Bind Controller.uLabel_Style}">
 			<TextBlock
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Style="{StaticResource BodyStrongTextBlockStyle}"
 				TextWrapping="NoWrap"
-				Text="{x:Bind Controller.uLabelText_Text}"
-				/>
+				Text="{x:Bind Controller.uLabelText_Text}" />
 		</Button>
 		<ContentPresenter
 			x:Name="uAction"
 			my:Stack.Weight="1"
 			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			/>
+			VerticalAlignment="Stretch" />
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="TypeStateGroup">
 				<VisualState x:Name="NullState">
@@ -50,14 +45,12 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<Button
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
-										IsEnabled="False"
-										/>
+										IsEnabled="False" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>
@@ -71,32 +64,28 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										LostFocus="{x:Bind Controller.uBooleanValue_LostFocus}"
 										PlaceholderText="Boolean"
-										Text="{x:Bind Controller.uBooleanValue_Text}"
-										/>
+										Text="{x:Bind Controller.uBooleanValue_Text}" />
 									<ToggleButton
 										ToolTipService.ToolTip="No"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										IsChecked="{x:Bind Controller.uBooleanValueNo_IsChecked}"
 										Click="{x:Bind Controller.uBooleanValueNo_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RemoveFrom}}"
-										/>
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RemoveFrom}}" />
 									<ToggleButton
 										ToolTipService.ToolTip="Yes"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										IsChecked="{x:Bind Controller.uBooleanValueYes_IsChecked}"
 										Click="{x:Bind Controller.uBooleanValueYes_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Completed}}"
-										/>
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Completed}}" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>
@@ -110,8 +99,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<NumberBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -119,8 +107,7 @@
 										LostFocus="{x:Bind Controller.uIntegerValue_LostFocus}"
 										NumberFormatter="{x:Bind Controller.uIntegerValue_NumberFormatter}"
 										PlaceholderText="Integer"
-										Value="{x:Bind Controller.uIntegerValue_Value}"
-										/>
+										Value="{x:Bind Controller.uIntegerValue_Value}" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>
@@ -134,8 +121,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<NumberBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -143,8 +129,7 @@
 										LostFocus="{x:Bind Controller.uFloaterValue_LostFocus}"
 										NumberFormatter="{x:Bind Controller.uFloaterValue_NumberFormatter}"
 										PlaceholderText="Floater"
-										Value="{x:Bind Controller.uFloaterValue_Value}"
-										/>
+										Value="{x:Bind Controller.uFloaterValue_Value}" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>
@@ -158,8 +143,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<NumberBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -167,37 +151,31 @@
 										LostFocus="{x:Bind Controller.uSizeCount_LostFocus}"
 										NumberFormatter="{x:Bind Controller.uSizeCount_NumberFormatter}"
 										PlaceholderText="Size"
-										Value="{x:Bind Controller.uSizeCount_Value}"
-										/>
+										Value="{x:Bind Controller.uSizeCount_Value}" />
 									<Button
 										ToolTipService.ToolTip="Exponent"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										Width="44"
-										Content="{x:Bind Controller.uSizeExponent_Content}"
-										>
+										Content="{x:Bind Controller.uSizeExponent_Content}">
 										<Button.Flyout>
 											<MenuFlyout Placement="BottomEdgeAlignedRight">
 												<MenuFlyoutItem
 													Tag="0"
 													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
-													Text="B"
-													/>
+													Text="B" />
 												<MenuFlyoutItem
 													Tag="1"
 													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
-													Text="K"
-													/>
+													Text="K" />
 												<MenuFlyoutItem
 													Tag="2"
 													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
-													Text="M"
-													/>
+													Text="M" />
 												<MenuFlyoutItem
 													Tag="3"
 													Click="{x:Bind Controller.uSizeExponentMenu_Click}"
-													Text="G"
-													/>
+													Text="G" />
 											</MenuFlyout>
 										</Button.Flyout>
 									</Button>
@@ -214,16 +192,14 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										LostFocus="{x:Bind Controller.uStringValue_LostFocus}"
 										PlaceholderText="String"
-										Text="{x:Bind Controller.uStringValue_Text}"
-										/>
+										Text="{x:Bind Controller.uStringValue_Text}" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>
@@ -237,8 +213,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<TextBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -248,34 +223,29 @@
 										Drop="{x:Bind Controller.uPathContent_Drop}"
 										LostFocus="{x:Bind Controller.uPathContent_LostFocus}"
 										PlaceholderText="Path"
-										Text="{x:Bind Controller.uPathContent_Text}"
-										/>
+										Text="{x:Bind Controller.uPathContent_Text}" />
 									<Button
 										ToolTipService.ToolTip="Pick"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}"
-										>
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.OpenInNewWindow}}">
 										<Button.Flyout>
 											<MenuFlyout Placement="BottomEdgeAlignedRight">
 												<MenuFlyoutItem
 													Tag="LoadFile"
 													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Document}}"
-													Text="Load File"
-													/>
+													Text="Load File" />
 												<MenuFlyoutItem
 													Tag="LoadDirectory"
 													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Folder}}"
-													Text="Load Directory"
-													/>
+													Text="Load Directory" />
 												<MenuFlyoutItem
 													Tag="SaveFile"
 													Click="{x:Bind Controller.uPathPickMenu_Click}"
 													Icon="{community:FontIcon Glyph={StaticResource FluentIconGlyph.Save}}"
-													Text="Save File"
-													/>
+													Text="Save File" />
 											</MenuFlyout>
 										</Button.Flyout>
 									</Button>
@@ -292,8 +262,7 @@
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Stretch"
 									Orientation="Horizontal"
-									Spacing="8"
-									>
+									Spacing="8">
 									<ComboBox
 										my:Stack.Weight="1"
 										HorizontalAlignment="Stretch"
@@ -302,15 +271,13 @@
 										PlaceholderText="Enumeration"
 										ItemsSource="{x:Bind Controller.uEnumerationItem_ItemsSource}"
 										SelectedIndex="{x:Bind Controller.uEnumerationItem_SelectedIndex}"
-										SelectionChanged="{x:Bind Controller.uEnumerationItem_SelectionChanged}"
-										/>
+										SelectionChanged="{x:Bind Controller.uEnumerationItem_SelectionChanged}" />
 									<Button
 										ToolTipService.ToolTip="Reset"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
 										Click="{x:Bind Controller.uEnumerationItemNull_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.UpdateRestore}}"
-										/>
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.UpdateRestore}}" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>

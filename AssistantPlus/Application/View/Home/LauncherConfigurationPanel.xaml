@@ -10,34 +10,29 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.Home.LauncherConfigurationPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.Home.LauncherConfigurationPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="2"
-		>
+		Spacing="2">
 		<my:SettingItem
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Characters}"
-			Title="Title"
-			>
+			Title="Title">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						LostFocus="{x:Bind Controller.uTitleText_LostFocus}"
-						Text="{x:Bind Controller.uTitleText_Text}"
-						/>
+						Text="{x:Bind Controller.uTitleText_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -45,23 +40,20 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.Tag}"
-			Title="Type"
-			>
+			Title="Type">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<ComboBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Top"
 						ItemsSource="{x:Bind Controller.uTypeSelect_ItemsSource}"
 						SelectedIndex="{x:Bind Controller.uTypeSelect_SelectedIndex}"
-						SelectionChanged="{x:Bind Controller.uTypeSelect_SelectionChanged}"
-						/>
+						SelectionChanged="{x:Bind Controller.uTypeSelect_SelectionChanged}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -69,15 +61,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.BulletedList}"
-			Title="Option"
-			>
+			Title="Option">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -85,8 +75,7 @@
 						LostFocus="{x:Bind Controller.uOptionText_LostFocus}"
 						TextWrapping="Wrap"
 						AcceptsReturn="True"
-						Text="{x:Bind Controller.uOptionText_Text}"
-						/>
+						Text="{x:Bind Controller.uOptionText_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>
@@ -94,15 +83,13 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
 			Icon="{StaticResource FluentIconGlyph.LightningBolt}"
-			Title="Command"
-			>
+			Title="Command">
 			<my:SettingItem.Action>
 				<my:Stack
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal"
-					Spacing="8"
-					>
+					Spacing="8">
 					<TextBox
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
@@ -110,8 +97,7 @@
 						LostFocus="{x:Bind Controller.uCommandText_LostFocus}"
 						TextWrapping="Wrap"
 						AcceptsReturn="True"
-						Text="{x:Bind Controller.uCommandText_Text}"
-						/>
+						Text="{x:Bind Controller.uCommandText_Text}" />
 				</my:Stack>
 			</my:SettingItem.Action>
 		</my:SettingItem>

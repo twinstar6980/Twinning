@@ -10,13 +10,11 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.CoreCommandSender.ArgumentPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.CoreCommandSender.ArgumentPanel">
 	<ItemsRepeater
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
-		ItemsSource="{x:Bind Controller.uList_ItemsSource}"
-		>
+		ItemsSource="{x:Bind Controller.uList_ItemsSource}">
 		<ItemsRepeater.Layout>
 			<StackLayout Orientation="Vertical" Spacing="8" />
 		</ItemsRepeater.Layout>
@@ -30,8 +28,7 @@
 					Option="{x:Bind uValue_Option}"
 					Value="{x:Bind uValue_Value}"
 					Batch="{x:Bind uValue_Batch}"
-					Stamp="{x:Bind uValue_Stamp}"
-					/>
+					Stamp="{x:Bind uValue_Stamp}" />
 			</DataTemplate>
 		</ItemsRepeater.ItemTemplate>
 	</ItemsRepeater>

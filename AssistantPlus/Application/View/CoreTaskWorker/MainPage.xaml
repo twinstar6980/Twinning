@@ -13,16 +13,14 @@
 	x:Class="Twinning.AssistantPlus.View.CoreTaskWorker.MainPage"
 	AllowDrop="True"
 	DragOver="{x:Bind Controller.uPage_DragOver}"
-	Drop="{x:Bind Controller.uPage_Drop}"
-	>
+	Drop="{x:Bind Controller.uPage_Drop}">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		MinWidth="480"
 		Padding="4"
 		Orientation="Horizontal"
-		Spacing="4"
-		>
+		Spacing="4">
 		<my:Stack
 			x:Name="uSessionPanel"
 			x:FieldModifier="public"
@@ -32,46 +30,39 @@
 			MinWidth="472"
 			Padding="0,-4,0,0"
 			Orientation="Vertical"
-			Spacing="0"
-			>
+			Spacing="0">
 			<my:HeaderBar
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Icon="{StaticResource FluentIconGlyph.ChatBubbles}"
-				Title="Session"
-				>
+				Title="Session">
 				<my:HeaderBar.Action>
 					<my:Stack
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Orientation="Horizontal"
-						Spacing="8"
-						>
+						Spacing="8">
 						<Button
 							ToolTipService.ToolTip="Additional Argument"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
-							Click="{x:Bind Controller.uAdditionalArgument_Click}"
-							>
+							Click="{x:Bind Controller.uAdditionalArgument_Click}">
 							<my:Stack
 								HorizontalAlignment="Stretch"
 								VerticalAlignment="Stretch"
 								Orientation="Horizontal"
-								Spacing="8"
-								>
+								Spacing="8">
 								<TextBlock
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
 									Style="{StaticResource BodyTextBlockStyle}"
 									TextWrapping="NoWrap"
-									Text="{x:Bind Controller.uAdditionalArgumentCount_Text}"
-									/>
+									Text="{x:Bind Controller.uAdditionalArgumentCount_Text}" />
 								<FontIcon
 									HorizontalAlignment="Stretch"
 									VerticalAlignment="Center"
 									FontSize="{StaticResource MediumIconSize}"
-									Glyph="{StaticResource FluentIconGlyph.Attach}"
-									/>
+									Glyph="{StaticResource FluentIconGlyph.Attach}" />
 							</my:Stack>
 						</Button>
 						<ToggleButton
@@ -80,8 +71,7 @@
 							VerticalAlignment="Center"
 							IsChecked="{x:Bind Controller.uAutomaticScroll_IsChecked}"
 							Click="{x:Bind Controller.uAutomaticScroll_Click}"
-							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ScrollUpDown}}"
-							/>
+							Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ScrollUpDown}}" />
 					</my:Stack>
 				</my:HeaderBar.Action>
 			</my:HeaderBar>
@@ -95,14 +85,12 @@
 				HorizontalScrollMode="Disabled"
 				HorizontalScrollBarVisibility="Disabled"
 				VerticalScrollMode="Enabled"
-				VerticalScrollBarVisibility="Visible"
-				>
+				VerticalScrollBarVisibility="Visible">
 				<ItemsRepeater
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Margin="16,12"
-					ItemsSource="{x:Bind Controller.uMessageList_ItemsSource}"
-					>
+					ItemsSource="{x:Bind Controller.uMessageList_ItemsSource}">
 					<ItemsRepeater.Layout>
 						<StackLayout Orientation="Vertical" Spacing="12" />
 					</ItemsRepeater.Layout>
@@ -114,8 +102,7 @@
 								Type="{x:Bind uRoot_Type}"
 								Title="{x:Bind uRoot_Title}"
 								Description="{x:Bind uRoot_Message}"
-								Stamp="{x:Bind uRoot_Stamp}"
-								/>
+								Stamp="{x:Bind uRoot_Stamp}" />
 						</DataTemplate>
 					</ItemsRepeater.ItemTemplate>
 				</ItemsRepeater>
@@ -126,13 +113,11 @@
 				ProgressValue="0"
 				ProgressIndeterminate="{x:Bind Controller.uProgress_ProgressIndeterminate}"
 				ProgressPaused="{x:Bind Controller.uProgress_ProgressPaused}"
-				ProgressError="False"
-				/>
+				ProgressError="False" />
 			<my:Box
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Padding="16,8,16,4"
-				>
+				Padding="16,8,16,4">
 				<localViewCoreTaskWorker:SubmissionBar
 					x:Name="uSubmissionBar"
 					x:FieldModifier="public"
@@ -146,16 +131,14 @@
 					History="{x:Bind Controller.uSubmissionBar_History}"
 					Value="{x:Bind Controller.uSubmissionBar_Value}"
 					ValueSubmitted="{x:Bind Controller.uSubmissionBar_ValueSubmitted}"
-					Stamp="{x:Bind Controller.uSubmissionBar_Stamp}"
-					/>
+					Stamp="{x:Bind Controller.uSubmissionBar_Stamp}" />
 				<Button
 					my:Stack.Weight="1"
 					Visibility="{x:Bind Controller.uLaunch_Visibility}"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
 					Click="{x:Bind Controller.uLaunch_Click}"
-					Content="Launch"
-					/>
+					Content="Launch" />
 			</my:Box>
 		</my:Stack>
 	</my:Stack>

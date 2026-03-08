@@ -11,24 +11,20 @@
 	x:DefaultBindMode="OneWay"
 	x:Class="Twinning.AssistantPlus.View.PopcapAnimationViewer.SpriteControl"
 	Width="0"
-	Height="0"
-	>
+	Height="0">
 	<my:Box
 		HorizontalAlignment="Stretch"
-		VerticalAlignment="Stretch"
-		>
+		VerticalAlignment="Stretch">
 		<my:Box
 			x:Name="uBackground"
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-			/>
+			Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
 		<ContentPresenter
 			x:Name="uCanvas"
 			x:FieldModifier="public"
 			HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			/>
+			VerticalAlignment="Stretch" />
 	</my:Box>
 </UserControl>

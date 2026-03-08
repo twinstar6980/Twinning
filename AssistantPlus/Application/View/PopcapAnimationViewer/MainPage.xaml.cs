@@ -770,8 +770,10 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			await this.Load(animationFile);
 			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
-				imageFilter == null ? null : this.Animation.Image.Select((value, index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
-				spriteFilter == null ? null : this.Animation.Sprite.Select((value, index) => (Boolean?)!spriteFilter.Contains(index)).ToList()
+				imageFilter == null ? null
+					: this.Animation.Image.Select((value, index) => (Boolean?)!imageFilter.Contains(index)).ToList(),
+				spriteFilter == null ? null
+					: this.Animation.Sprite.Select((value, index) => (Boolean?)!spriteFilter.Contains(index)).ToList()
 			);
 			if (imageFilter == null && spriteFilter == null) {
 				await this.ChangeElementFilterByRule();
@@ -1339,7 +1341,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public String uActiveFrameRangeLabel__ItemNameOfAll { get; } = "whole\0";
+		private readonly String uActiveFrameRangeLabel_mItemNameOfAll = "whole\0";
 
 		public Boolean uActiveFrameRangeLabel_IsEnabled {
 			get {
@@ -1355,7 +1357,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Activated) {
 					return [];
 				}
-				return [..this.ActiveFrameLabel.Select((value) => value.Item1), this.uActiveFrameRangeLabel__ItemNameOfAll];
+				return [..this.ActiveFrameLabel.Select((value) => value.Item1), this.uActiveFrameRangeLabel_mItemNameOfAll];
 			}
 		}
 
@@ -1365,7 +1367,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					return null;
 				}
 				var result = this.ActiveFrameLabel.Find((value) => value.Item2 == this.ActiveFrameRange)?.Item1;
-				return result ?? (this.ActiveFrameRange.Begin == 0 && this.ActiveFrameRange.End == this.ActiveSprite.AsNotNull().Frame.Count - 1 ? this.uActiveFrameRangeLabel__ItemNameOfAll : null);
+				return result ?? (this.ActiveFrameRange.Begin == 0 && this.ActiveFrameRange.End == this.ActiveSprite.AsNotNull().Frame.Count - 1 ? this.uActiveFrameRangeLabel_mItemNameOfAll : null);
 			}
 		}
 
@@ -1385,7 +1387,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				Begin = 0,
 				End = this.ActiveSprite.AsNotNull().Frame.Count - 1,
 			};
-			if (newLabel != this.uActiveFrameRangeLabel__ItemNameOfAll) {
+			if (newLabel != this.uActiveFrameRangeLabel_mItemNameOfAll) {
 				newRange = this.ActiveFrameLabel.Find((value) => value.Item1 == newLabel).AsNotNull().Item2;
 			}
 			if (newRange != this.ActiveFrameRange) {
@@ -1502,7 +1504,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			}
 			if (Floater.IsFinite(args.NewValue) && args.NewValue != 0.0) {
 				AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
-				if (this.uActiveProgress__Changeable) {
+				if (this.uActiveProgress_mChangeable) {
 					this.View.uSprite.CurrentTime = TimeSpan.FromSeconds(args.NewValue - 1.0);
 				}
 			}
@@ -1511,9 +1513,9 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public Boolean uActiveProgress__Changeable = false;
+		private Boolean uActiveProgress_mChangeable = false;
 
-		public Boolean uActiveProgress__ChangingWhenPlaying = false;
+		private Boolean uActiveProgress_mChangingWhenPlaying = false;
 
 		public async void uActiveProgress_PointerPressed(
 			Object                 sender,
@@ -1524,9 +1526,9 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				return;
 			}
 			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
-			this.uActiveProgress__Changeable = true;
-			this.uActiveProgress__ChangingWhenPlaying = this.ActiveProgressState.AsNotNull();
-			if (this.uActiveProgress__ChangingWhenPlaying) {
+			this.uActiveProgress_mChangeable = true;
+			this.uActiveProgress_mChangingWhenPlaying = this.ActiveProgressState.AsNotNull();
+			if (this.uActiveProgress_mChangingWhenPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Paused;
 				this.ActiveProgressState = false;
 				this.NotifyPropertyChanged([
@@ -1545,15 +1547,15 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				return;
 			}
 			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
-			if (this.uActiveProgress__ChangingWhenPlaying) {
+			if (this.uActiveProgress_mChangingWhenPlaying) {
 				this.View.uSprite.State = SpriteControl.StateType.Playing;
 				this.ActiveProgressState = true;
 				this.NotifyPropertyChanged([
 					nameof(this.uActiveProgressStateIcon_Glyph),
 				]);
 			}
-			this.uActiveProgress__Changeable = false;
-			this.uActiveProgress__ChangingWhenPlaying = false;
+			this.uActiveProgress_mChangeable = false;
+			this.uActiveProgress_mChangingWhenPlaying = false;
 			return;
 		}
 
@@ -1751,7 +1753,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public String uPlantCustomLayer__ItemNameOfNone { get; } = "none\0";
+		private readonly String uPlantCustomLayer_mItemNameOfNone = "none\0";
 
 		public Boolean uPlantCustomLayer_IsEnabled {
 			get {
@@ -1767,7 +1769,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
 					return [];
 				}
-				return [..this.PlantCustomLayerName.Select((value) => value["custom_".Length..]), this.uPlantCustomLayer__ItemNameOfNone];
+				return [..this.PlantCustomLayerName.Select((value) => value["custom_".Length..]), this.uPlantCustomLayer_mItemNameOfNone];
 			}
 		}
 
@@ -1778,7 +1780,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.PlantCustomLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
 				return selectedItem.Count switch {
-					0 => this.uPlantCustomLayer__ItemNameOfNone,
+					0 => this.uPlantCustomLayer_mItemNameOfNone,
 					1 => selectedItem[0].Name.AsNotNull()["custom_".Length..],
 					_ => null,
 				};
@@ -1819,7 +1821,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public String uZombieStateLayer__ItemNameOfNone { get; } = "none\0";
+		private readonly String uZombieStateLayer_mItemNameOfNone = "none\0";
 
 		public Boolean uZombieStateLayer_IsEnabled {
 			get {
@@ -1835,7 +1837,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
 					return [];
 				}
-				return [..this.ZombieStateLayerName, this.uZombieStateLayer__ItemNameOfNone];
+				return [..this.ZombieStateLayerName, this.uZombieStateLayer_mItemNameOfNone];
 			}
 		}
 
@@ -1846,7 +1848,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
 				return selectedItem.Count switch {
-					0 => this.uZombieStateLayer__ItemNameOfNone,
+					0 => this.uZombieStateLayer_mItemNameOfNone,
 					1 => selectedItem[0].Name.AsNotNull(),
 					_ => null,
 				};

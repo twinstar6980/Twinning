@@ -195,7 +195,7 @@ namespace Twinning.AssistantPlus {
 			PopcapAnimationModel.Image       image
 		) {
 			var visual = new ImageVisual() {
-				Canvas = new () { },
+				Canvas = new () {},
 			};
 			var textureData = texture.GetValueOrDefault(image.Name);
 			visual.Canvas = new () {
@@ -275,9 +275,9 @@ namespace Twinning.AssistantPlus {
 						Matrix = new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
 					};
 					layer.Canvas.Opacity = 0.0;
-					layer.Visibility = new () { };
-					layer.Transform = new () { };
-					layer.ColorAlpha = new () { };
+					layer.Visibility = new () {};
+					layer.Transform = new () {};
+					layer.ColorAlpha = new () {};
 					Storyboard.SetTargetProperty(layer.Visibility, "Visibility");
 					Storyboard.SetTargetProperty(layer.Transform, "(Canvas.RenderTransform).(MatrixTransform.Matrix)");
 					Storyboard.SetTargetProperty(layer.ColorAlpha, "Opacity");

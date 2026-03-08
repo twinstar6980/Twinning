@@ -10,14 +10,12 @@
 	xmlns:my="using:Twinning.AssistantPlus.Control"
 	mc:Ignorable="d"
 	x:DefaultBindMode="OneWay"
-	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.PackagePartPanel"
-	>
+	x:Class="Twinning.AssistantPlus.View.PopcapPackageBuilder.PackagePartPanel">
 	<my:Stack
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch"
 		Orientation="Vertical"
-		Spacing="8"
-		>
+		Spacing="8">
 		<ListView
 			x:Name="uList"
 			x:FieldModifier="public"
@@ -28,8 +26,7 @@
 			SelectionMode="Multiple"
 			IsItemClickEnabled="True"
 			ItemsSource="{x:Bind Controller.uList_ItemsSource}"
-			SelectionChanged="{x:Bind Controller.uList_SelectionChanged}"
-			>
+			SelectionChanged="{x:Bind Controller.uList_SelectionChanged}">
 			<ListView.ItemTemplate>
 				<DataTemplate x:DataType="localViewPopcapPackageBuilder:PackagePartPanelItemController">
 					<my:Stack
@@ -37,16 +34,14 @@
 						VerticalAlignment="Stretch"
 						Height="48"
 						Orientation="Horizontal"
-						Spacing="12"
-						>
+						Spacing="12">
 						<TextBlock
 							my:Stack.Weight="1"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Center"
 							Style="{StaticResource BodyTextBlockStyle}"
 							TextWrapping="NoWrap"
-							Text="{x:Bind uName_Text}"
-							/>
+							Text="{x:Bind uName_Text}" />
 					</my:Stack>
 				</DataTemplate>
 			</ListView.ItemTemplate>

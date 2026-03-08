@@ -5,19 +5,19 @@
 - [第三方集成](#第三方集成)
 
 - [自定义脚本](#自定义脚本)
-	
+
 	- [主脚本](#主脚本)
-	
+
 	- [内核接口](#内核接口)
-	
+
 	- [内存操作](#内存操作)
-	
+
 	- [文件系统](#文件系统)
-	
+
 	- [JSON 读写](#JSON-读写)
-	
+
 	- [特殊文件编码解码](#特殊文件编码解码)
-	
+
 	- [内核接口封装](#内核接口封装)
 
 ## 理解运行流程
@@ -25,16 +25,16 @@
 工具采用前后端分离架构，分为三个层级：
 
 * `Kernel` 层：后端，负责数据处理，不会进行任何用户交互；`Kernel` 被分发为面向各平台的本机动态库。
-	
-	> `Kernel` 模块实现了这一层级。
+
+  > `Kernel` 模块实现了这一层级。
 
 * `Shell` 层：前端，负责用户交互，不会进行任何数据处理；`Shell` 被分发为面向各平台的本机应用程序，会加载内核动态库，并以用户提供的脚本作为参数调用内核动态库的接口函数。
-	
-	> `Shell` 、`Assistant` 、`Assistant Plus` 模块实现了这一层级。
+
+  > `Shell` 、`Assistant` 、`Assistant Plus` 模块实现了这一层级。
 
 * `Script` 层：前后端的桥梁，通过调用内核与外壳提供的接口函数进行数据处理与用户交互；`Script` 被分发为不依赖平台的 JavaScript 脚本。
-	
-	> `Script` 模块实现了这一层级。
+
+  > `Script` 模块实现了这一层级。
 
 通过前后端分离的方式，工具能够方便地进行跨平台适配与多客户端集成。
 
@@ -49,8 +49,8 @@
 4. `Kernel` 执行 `Script` ，并将执行结果返回至 `Shell` 。
 
 5. `Shell` 得到返回值，输出给用户，终止程序。
-	
-	>  `Script` 可以调用 `Shell` 提供给 `Kernel` 的回调函数，从而在执行期间与用户交互。
+
+   > `Script` 可以调用 `Shell` 提供给 `Kernel` 的回调函数，从而在执行期间与用户交互。
 
 ## 第三方集成
 
@@ -72,21 +72,21 @@
 
 下面以 [`Shell`](../Shell/shell/bridge) 模块为例介绍应如何集成 `Kernel` ：
 
-1. [`data.cppm`](../Shell/shell/bridge/data.cppm) ：声明 `Kernel` 中的数据类型。
-	
-	> `Kernel` 模块中已经提供了适用于 `C++` 的接口声明 [`interface.hpp`](https://github.com/twinstar6980/Twinning/blob/master/Kernel/kernel/interface/interface.hpp) ，接口需要用户传递 C 式的结构体作为参数值与返回值。
+* [`data.cppm`](../Shell/shell/bridge/data.cppm) ：声明 `Kernel` 中的数据类型。
 
-2. [`proxy.cppm`](../Shell/shell/bridge/proxy.cppm) ：创建一个辅助类，负责接口所需的 C 式结构体的解析与构造。
+  > `Kernel` 模块中已经提供了适用于 `C++` 的接口声明 [`interface.hpp`](https://github.com/twinstar6980/Twinning/blob/master/Kernel/kernel/interface/interface.hpp) ，接口需要用户传递 C 式的结构体作为参数值与返回值。
 
-3. [`service.cppm`](../Shell/shell/bridge/service.cppm) ：声明 `Kernel` 导出的服务类型。
+* [`proxy.cppm`](../Shell/shell/bridge/proxy.cppm) ：创建一个辅助类，负责接口所需的 C 式结构体的解析与构造。
 
-4. [`library.cppm`](../Shell/shell/bridge/library.cppm) ：定义 `Kernel` 库的抽象类，它封装了对 `Kernel` 库的加载与符号获取。
+* [`service.cppm`](../Shell/shell/bridge/service.cppm) ：声明 `Kernel` 导出的服务类型。
 
-5. [`client.cppm`](https://github.com/twinstar6980/Twinning/blob/master/Shell/shell/bridge/client.cppm) ：定义 `Shell` 客户端的抽象类。
-	
-	> [`main_console.cppm`](https://github.com/twinstar6980/Twinning/blob/master/Shell/shell/main_console.cppm) ：实现了对基本的命令行式 `Shell` 客户端的封装。
+* [`library.cppm`](../Shell/shell/bridge/library.cppm) ：定义 `Kernel` 库的抽象类，它封装了对 `Kernel` 库的加载与符号获取。
 
-6. [`launcher.cppm`](../Shell/shell/bridge/launcher.cppm) ：创建一个辅助类，配合 `Library` 与 `Client` 实例调用 `Kernel` 接口。
+* [`client.cppm`](https://github.com/twinstar6980/Twinning/blob/master/Shell/shell/bridge/client.cppm) ：定义 `Shell` 客户端的抽象类。
+
+  > [`main_console.cppm`](https://github.com/twinstar6980/Twinning/blob/master/Shell/shell/main_console.cppm) ：实现了对基本的命令行式 `Shell` 客户端的封装。
+
+* [`launcher.cppm`](../Shell/shell/bridge/launcher.cppm) ：创建一个辅助类，配合 `Library` 与 `Client` 实例调用 `Kernel` 接口。
 
 ## 自定义脚本
 
@@ -305,12 +305,13 @@ export function decode_fs(
 	KernelX.JSON.write_fs(definition_file, definition.get_json(version_c));
 	return;
 }
+
 // 解码BNK文件
 decode_fs(
 	'C:/sample.bnk',
 	'C:/sample.bnk.bundle/definition.json',
 	'C:/sample.bnk.bundle/embedded_media',
-	{ number: 140n },
+	{number: 140n},
 );
 ```
 
