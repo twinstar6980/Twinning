@@ -9,7 +9,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	function get_program_file_path(
 		platform: Platform,
 	): string {
-		var path = '';
+		let path = '';
 		if (platform === 'windows_intel32') {
 			path = 'GameAssembly.dll';
 		}
@@ -25,7 +25,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	function get_metadata_file_path(
 		platform: Platform,
 	): string {
-		var path = '';
+		let path = '';
 		if (platform === 'windows_intel32') {
 			path = 'KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat';
 		}
@@ -488,7 +488,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		enable_debug_mode: boolean,
 	): void {
 		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
-			throw new Error(`unsupported system, this function only avaliable for windows or linux or macintosh`);
+			throw new Error(`unsupported system, this function only available for windows or linux or macintosh`);
 		}
 		modify_program(target_directory, disable_record_encryption, enable_debug_mode);
 		return;

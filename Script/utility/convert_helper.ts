@@ -248,10 +248,10 @@ namespace Twinning.Script.ConvertHelper {
 
 	export function split_string_by_line_feed(
 		source: string,
-		ignore_last_if_empry: boolean,
+		ignore_last_if_empty: boolean,
 	): Array<string> {
 		let destination = source.split('\n');
-		if (ignore_last_if_empry) {
+		if (ignore_last_if_empty) {
 			if (destination.length > 0 && destination[destination.length - 1].length === 0) {
 				destination.pop();
 			}

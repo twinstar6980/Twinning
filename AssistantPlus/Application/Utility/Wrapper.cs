@@ -56,7 +56,7 @@ namespace Twinning.AssistantPlus.Utility {
 	}
 
 	public record WrapperData {
-		public Object? Value = default!;
+		public Object? Value { get; set; } = default!;
 	}
 
 }

@@ -101,7 +101,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 		path: string;
 	};
 
-	export type SpecialPopfxPesourceProperty = SpecialResourcePropertyBase & {
+	export type SpecialPopfxResourceProperty = SpecialResourcePropertyBase & {
 		path: string;
 	};
 
@@ -113,7 +113,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 		path: string;
 	};
 
-	export type ResourceProperty = DummyResourceProperty | GeneralResourceProperty | TextureResourceProperty | SpecialRtonResourceProperty | SpecialPtxResourceProperty | SpecialPamResourceProperty | SpecialPopfxPesourceProperty | SpecialWemResourceProperty | SpecialBnkResourceProperty;
+	export type ResourceProperty = DummyResourceProperty | GeneralResourceProperty | TextureResourceProperty | SpecialRtonResourceProperty | SpecialPtxResourceProperty | SpecialPamResourceProperty | SpecialPopfxResourceProperty | SpecialWemResourceProperty | SpecialBnkResourceProperty;
 
 	// ----------------
 

@@ -252,7 +252,7 @@ namespace Twinning.AssistantPlus.Utility {
 				result = Directory.EnumerateFileSystemEntries(target, pattern, option);
 			}
 			var targetFullPath = new DirectoryInfo(target).FullName;
-			return result!.Select((value) => StorageHelper.Regularize(value[(targetFullPath.Length + 1)..])).Order().ToList();
+			return result.Select((value) => StorageHelper.Regularize(value[(targetFullPath.Length + 1)..])).Order().ToList();
 		}
 
 		#endregion

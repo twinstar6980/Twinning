@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.Control {
 			nameof(Panel.Padding),
 			typeof(Thickness),
 			typeof(Panel),
-			new (new Thickness(0.0), (o, e) => { o.As<Panel>().InvalidateMeasure(); })
+			new (new Thickness(0.0), (o, _) => o.As<Panel>().InvalidateMeasure())
 		);
 
 		public Thickness Padding {

@@ -113,7 +113,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 		for (let x_DOMLayer of x_DOMLayer_list) {
 			let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
 			let x_DOMFrame_list = Xml.find_child_element(x_frames, 'DOMFrame');
-			let colse_current_model_if_need = () => {
+			let close_current_model_if_need = () => {
 				if (model !== null) {
 					let target_frame = frame_list[Number(model.frame_start + model.frame_duration)];
 					target_frame.remove.push({
@@ -129,7 +129,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 				let color: Color;
 				let x_elements = Xml.find_child_element_unique_or_none(x_DOMFrame, 'elements');
 				if (x_elements === null) {
-					colse_current_model_if_need();
+					close_current_model_if_need();
 					continue;
 				}
 				let x_DOMSymbolInstance = Xml.find_child_element_unique_or_none(x_elements, 'DOMSymbolInstance');
@@ -194,7 +194,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 					source_rectangle: null,
 				});
 			}
-			colse_current_model_if_need();
+			close_current_model_if_need();
 		}
 		frame_list.pop();
 		return {

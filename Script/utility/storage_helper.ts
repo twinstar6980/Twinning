@@ -132,9 +132,6 @@ namespace Twinning.Script.StorageHelper {
 		/^\/(pagefile.sys)$/,
 		/^\/(vfcompat.dll)$/,
 		/^\/()$/,
-		/^\/()$/,
-		/^\/()$/,
-		/^\/()$/,
 	];
 
 	export function is_dangerous(

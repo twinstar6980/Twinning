@@ -11,35 +11,35 @@ using Colors = Microsoft.UI.Colors;
 namespace Twinning.AssistantPlus {
 
 	public record SettingData {
-		public String                                  Version                      = default!;
-		public CustomThemeBackdrop                     ThemeBackdrop                = default!;
-		public CustomThemeMode                         ThemeMode                    = default!;
-		public Boolean                                 ThemeColorState              = default!;
-		public Integer                                 ThemeColorLight              = default!;
-		public Integer                                 ThemeColorDark               = default!;
-		public Boolean                                 WindowPositionState          = default!;
-		public Integer                                 WindowPositionX              = default!;
-		public Integer                                 WindowPositionY              = default!;
-		public Boolean                                 WindowSizeState              = default!;
-		public Integer                                 WindowSizeWidth              = default!;
-		public Integer                                 WindowSizeHeight             = default!;
-		public Dictionary<String, String>              StoragePickerHistoryLocation = default!;
-		public ModuleType                              ForwarderDefaultTarget       = default!;
-		public Boolean                                 ForwarderImmediateJump       = default!;
-		public String                                  ModuleConfigurationDirectory = default!;
-		public ModuleLauncherSetting                   ModuleLauncher               = default!;
-		public View.CoreTaskWorker.Setting             CoreTaskWorker               = default!;
-		public View.CoreCommandSender.Setting          CoreCommandSender            = default!;
-		public View.CoreResourceShipper.Setting        CoreResourceShipper          = default!;
-		public View.PopcapAnimationViewer.Setting      PopcapAnimationViewer        = default!;
-		public View.PopcapReflectionDescriptor.Setting PopcapReflectionDescriptor   = default!;
-		public View.PopcapPackageBuilder.Setting       PopcapPackageBuilder         = default!;
+		public String                                  Version                      { get; set; } = default!;
+		public CustomThemeBackdrop                     ThemeBackdrop                { get; set; } = default!;
+		public CustomThemeMode                         ThemeMode                    { get; set; } = default!;
+		public Boolean                                 ThemeColorState              { get; set; } = default!;
+		public Integer                                 ThemeColorLight              { get; set; } = default!;
+		public Integer                                 ThemeColorDark               { get; set; } = default!;
+		public Boolean                                 WindowPositionState          { get; set; } = default!;
+		public Integer                                 WindowPositionX              { get; set; } = default!;
+		public Integer                                 WindowPositionY              { get; set; } = default!;
+		public Boolean                                 WindowSizeState              { get; set; } = default!;
+		public Integer                                 WindowSizeWidth              { get; set; } = default!;
+		public Integer                                 WindowSizeHeight             { get; set; } = default!;
+		public Dictionary<String, String>              StoragePickerHistoryLocation { get; set; } = default!;
+		public ModuleType                              ForwarderDefaultTarget       { get; set; } = default!;
+		public Boolean                                 ForwarderImmediateJump       { get; set; } = default!;
+		public String                                  ModuleConfigurationDirectory { get; set; } = default!;
+		public ModuleLauncherSetting                   ModuleLauncher               { get; set; } = default!;
+		public View.CoreTaskWorker.Setting             CoreTaskWorker               { get; set; } = default!;
+		public View.CoreCommandSender.Setting          CoreCommandSender            { get; set; } = default!;
+		public View.CoreResourceShipper.Setting        CoreResourceShipper          { get; set; } = default!;
+		public View.PopcapAnimationViewer.Setting      PopcapAnimationViewer        { get; set; } = default!;
+		public View.PopcapReflectionDescriptor.Setting PopcapReflectionDescriptor   { get; set; } = default!;
+		public View.PopcapPackageBuilder.Setting       PopcapPackageBuilder         { get; set; } = default!;
 	}
 
 	public record SettingState {
-		public CustomThemeBackdrop?                            ThemeBackdrop                   = default!;
-		public CustomThemeMode?                                ThemeMode                       = default!;
-		public List<List<View.CoreTaskWorker.ValueExpression>> CoreTaskWorkerSubmissionHistory = default!;
+		public CustomThemeBackdrop?                            ThemeBackdrop                   { get; set; } = default!;
+		public CustomThemeMode?                                ThemeMode                       { get; set; } = default!;
+		public List<List<View.CoreTaskWorker.ValueExpression>> CoreTaskWorkerSubmissionHistory { get; set; } = default!;
 	}
 
 	public class SettingProvider {

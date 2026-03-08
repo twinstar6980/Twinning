@@ -45,7 +45,7 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 		switch (source_version) {
 			case 'text': {
 				if (ConvertHelper.check_string_data_maybe_utf16(source_data)) {
-					throw new Error(`unsupport charset UTF-16`);
+					throw new Error(`unsupported charset UTF-16`);
 				}
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
 				let key_regexp = /^\[.+\]$/gm;

@@ -124,26 +124,26 @@ namespace Twinning.AssistantPlus {
 		#region visualize
 
 		public record ImageVisual {
-			public Canvas Canvas = default!;
+			public Canvas Canvas { get; set; } = default!;
 		}
 
 		public record SpriteVisual {
-			public Canvas     Canvas     = default!;
-			public Storyboard Storyboard = default!;
+			public Canvas     Canvas     { get; set; } = default!;
+			public Storyboard Storyboard { get; set; } = default!;
 		}
 
 		public record FrameRange {
-			public Size Begin = default!;
-			public Size End   = default!;
+			public Size Begin { get; set; } = default!;
+			public Size End   { get; set; } = default!;
 		}
 
 		private record VisualLayer {
-			public Canvas                        Canvas     = default!;
-			public Storyboard                    Storyboard = default!;
-			public ObjectAnimationUsingKeyFrames Visibility = default!;
-			public ObjectAnimationUsingKeyFrames Transform  = default!;
-			public ObjectAnimationUsingKeyFrames ColorAlpha = default!;
-			public Boolean                       IsFirst    = default!;
+			public Canvas                        Canvas     { get; set; } = default!;
+			public Storyboard                    Storyboard { get; set; } = default!;
+			public ObjectAnimationUsingKeyFrames Visibility { get; set; } = default!;
+			public ObjectAnimationUsingKeyFrames Transform  { get; set; } = default!;
+			public ObjectAnimationUsingKeyFrames ColorAlpha { get; set; } = default!;
+			public Boolean                       IsFirst    { get; set; } = default!;
 		}
 
 		// ----------------

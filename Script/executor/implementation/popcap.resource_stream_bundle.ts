@@ -32,7 +32,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					}),
 					typical_argument_integer({
 						identifier: 'version_extended_texture_information_for_pvz2cn',
-						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
 						condition: (argument: {version_number: bigint}) => ([4n].includes(argument.version_number) ? null : 0n),
@@ -123,7 +123,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					}),
 					typical_argument_integer({
 						identifier: 'version_extended_texture_information_for_pvz2cn',
-						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
 						condition: (argument: {version_number: bigint}) => ([4n].includes(argument.version_number) ? null : 0n),

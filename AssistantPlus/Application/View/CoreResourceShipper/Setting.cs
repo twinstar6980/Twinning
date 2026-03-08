@@ -7,9 +7,9 @@ using Twinning.AssistantPlus.Utility;
 namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 	public record Setting {
-		public Boolean ParallelForward = default!;
-		public Boolean EnableFilter    = default!;
-		public Boolean EnableBatch     = default!;
+		public Boolean ParallelForward { get; set; } = default!;
+		public Boolean EnableFilter    { get; set; } = default!;
+		public Boolean EnableBatch     { get; set; } = default!;
 	}
 
 }

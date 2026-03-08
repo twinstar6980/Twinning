@@ -115,21 +115,21 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 				if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path' || package_setting.manifest.type === 'external_newton') {
 					KernelX.Json.write_fs_js(`${package_bundle_directory}/manifest.json`, null);
 					let manifest_group_name = `__ManifestGroup__${package_setting.manifest.suffix}`;
-					let manifesr_resource_path = `properties/resources${package_setting.manifest.suffix}`;
+					let manifest_resource_path = `properties/resources${package_setting.manifest.suffix}`;
 					if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path') {
-						manifesr_resource_path += '.rton';
+						manifest_resource_path += '.rton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, package_setting.manifest.type === 'external_rton_with_array_path');
 						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true});
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
 						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
-						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.stream_view());
+						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifest_resource_path}`, stream.stream_view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {
-						manifesr_resource_path += '.newton';
+						manifest_resource_path += '.newton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, false);
 						let stream = new ByteStreamView(buffer.view().value);
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
-						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifesr_resource_path}`, stream.sub(0, stream.p()));
+						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifest_resource_path}`, stream.sub(0, stream.p()));
 					}
 					KernelX.Storage.remove_if(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
 					package_definition.group.push({
@@ -145,7 +145,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 								compression: package_compression_none,
 								resource: [
 									{
-										path: manifesr_resource_path,
+										path: manifest_resource_path,
 										additional: {
 											type: 'general',
 											value: {

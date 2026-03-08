@@ -7,25 +7,25 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity : FlutterActivity() {
 
-	private val customMethodChannel: CustomMethodChannel = CustomMethodChannel(this)
+  private val customMethodChannel: CustomMethodChannel = CustomMethodChannel(this)
 
-	public override fun configureFlutterEngine(
-		flutterEngine: FlutterEngine,
-	): Unit {
-		super.configureFlutterEngine(flutterEngine)
-		GeneratedPluginRegistrant.registerWith(flutterEngine)
-		this.customMethodChannel.register_onConfigureFlutterEngine(flutterEngine)
-		return
-	}
+  public override fun configureFlutterEngine(
+    flutterEngine: FlutterEngine,
+  ): Unit {
+    super.configureFlutterEngine(flutterEngine)
+    GeneratedPluginRegistrant.registerWith(flutterEngine)
+    this.customMethodChannel.register_onConfigureFlutterEngine(flutterEngine)
+    return
+  }
 
-	public override fun onActivityResult(
-		requestCode: Int,
-		resultCode: Int,
-		data: Intent?,
-	): Unit {
-		super.onActivityResult(requestCode, resultCode, data)
-		this.customMethodChannel.register_onActivityResult(requestCode, resultCode, data)
-		return
-	}
+  public override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    data: Intent?,
+  ): Unit {
+    super.onActivityResult(requestCode, resultCode, data)
+    this.customMethodChannel.register_onActivityResult(requestCode, resultCode, data)
+    return
+  }
 
 }

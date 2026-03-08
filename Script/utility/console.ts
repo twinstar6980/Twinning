@@ -152,7 +152,7 @@ namespace Twinning.Script.Console {
 	// #region input
 
 	function common_input<TValue>(
-		inputer: () => string,
+		reader: () => string,
 		echoer: (value: string) => void,
 		converter: (value: string) => string | [null | TValue],
 		nullable: boolean,
@@ -169,7 +169,7 @@ namespace Twinning.Script.Console {
 				initial = undefined;
 			}
 			else {
-				input = inputer();
+				input = reader();
 				echoer(input);
 				let convert_result = converter(input);
 				if (CheckHelper.is_string(convert_result)) {
@@ -197,7 +197,7 @@ namespace Twinning.Script.Console {
 
 	function basic_common_input<TValue>(
 		leading: string,
-		messager: () => void,
+		messenger: () => void,
 		converter: (value: string) => string | [null | TValue],
 		nullable: null | boolean,
 		checker: null | CheckHelper.Checker<TValue>,
@@ -208,7 +208,7 @@ namespace Twinning.Script.Console {
 			() => {
 				if (first_input) {
 					first_input = false;
-					messager();
+					messenger();
 				}
 				basic_set_message_text_attribute('input');
 				basic_common_output(leading, true, 0, true);
@@ -227,7 +227,7 @@ namespace Twinning.Script.Console {
 	}
 
 	function assistant_common_input<TValue>(
-		inputer: () => string,
+		reader: () => string,
 		leading: string,
 		echoer: (value: string) => string,
 		converter: (value: string) => string | [null | TValue],
@@ -236,7 +236,7 @@ namespace Twinning.Script.Console {
 		initial: undefined | null | TValue,
 	): null | TValue {
 		return common_input(
-			inputer,
+			reader,
 			(value) => {
 				assistant_common_output('input', leading, [echoer(value)]);
 				return;

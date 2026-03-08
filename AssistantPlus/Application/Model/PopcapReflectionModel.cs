@@ -25,91 +25,95 @@ namespace Twinning.AssistantPlus {
 		}
 
 		public record CompositeType {
-			public PrimitiveType  Primitive = default!;
-			public CompositeType? Element   = default!;
-			public String?        Class     = default!;
+			public PrimitiveType  Primitive { get; set; } = default!;
+			public CompositeType? Element   { get; set; } = default!;
+			public String?        Class     { get; set; } = default!;
 		}
 
 		// ----------------
 
 		public record FixedValue {
-			public Object Value = default!;
+			public Object Value { get; set; } = default!;
 		}
 
 		public record NamedValue : FixedValue {
-			public String Name = default!;
+			public String Name { get; set; } = default!;
 		}
 
 		public record ExtraValue : NamedValue {
-			public CompositeType Type = default!;
+			public CompositeType Type { get; set; } = default!;
 		}
 
 		// ----------------
 
 		public record FixedObject {
-			public List<List<FixedValue?>> Property      = default!;
-			public List<ExtraValue>        ExtraProperty = default!;
+			public List<List<FixedValue?>> Property      { get; set; } = default!;
+			public List<ExtraValue>        ExtraProperty { get; set; } = default!;
 		}
 
 		public record AddressedFixedObject : FixedObject {
-			public String? Alias = default!;
-			public String  Class = default!;
+			public String? Alias { get; set; } = default!;
+			public String  Class { get; set; } = default!;
 		}
 
 		// ----------------
 
 		public record ValueDescriptor {
-			public String Value       = default!;
-			public String Description = default!;
+			public String Value       { get; set; } = default!;
+			public String Description { get; set; } = default!;
 		}
 
 		public record EnumerationDescriptor {
-			public String                Name        = default!;
-			public List<ValueDescriptor> Value       = default!;
-			public String                Description = default!;
+			public String                Name        { get; set; } = default!;
+			public List<ValueDescriptor> Value       { get; set; } = default!;
+			public String                Description { get; set; } = default!;
 		}
 
 		public record PropertyDescriptor {
-			public String        Name        = default!;
-			public CompositeType Type        = default!;
-			public String        Description = default!;
+			public String        Name        { get; set; } = default!;
+			public CompositeType Type        { get; set; } = default!;
+			public String        Description { get; set; } = default!;
 		}
 
 		public record ObjectDescriptor {
-			public String                   Name        = default!;
-			public List<PropertyDescriptor> Property    = default!;
-			public List<ObjectDescriptor>   Derived     = default!;
-			public String                   Description = default!;
+			public String                   Name        { get; set; } = default!;
+			public List<PropertyDescriptor> Property    { get; set; } = default!;
+			public List<ObjectDescriptor>   Derived     { get; set; } = default!;
+			public String                   Description { get; set; } = default!;
 		}
 
 		// ----------------
 
 		public record DescriptorArchive {
-			public List<EnumerationDescriptor> Enumeration = default!;
-			public List<ObjectDescriptor>      Object      = default!;
+			public List<EnumerationDescriptor> Enumeration { get; set; } = default!;
+			public List<ObjectDescriptor>      Object      { get; set; } = default!;
 		}
 
 		public record DescriptorMap {
-			public Dictionary<String, EnumerationDescriptor>  Enumeration = default!;
-			public Dictionary<String, List<ObjectDescriptor>> Object      = default!;
+			public Dictionary<String, EnumerationDescriptor>  Enumeration { get; set; } = default!;
+			public Dictionary<String, List<ObjectDescriptor>> Object      { get; set; } = default!;
 		}
 
 		// ----------------
 
+		// ReSharper disable InconsistentNaming
+
 		public record DataObject {
 			[JsonOptional()]
-			public String? uid = default!;
+			public String? uid { get; set; } = default!;
 			[JsonOptional()]
-			public List<String>? aliases = default!;
-			public String     objclass = default!;
-			public JsonObject objdata  = default!;
+			public List<String>? aliases  { get; set; } = default!;
+			public String        objclass { get; set; } = default!;
+			public JsonObject    objdata  { get; set; } = default!;
 		}
 
 		public record DataArchive {
 			[JsonOptional()]
-			public Integer? version = default!;
-			public List<DataObject> objects = default!;
+			public Integer?         version { get; set; } = default!;
+			public List<DataObject> objects { get; set; } = default!;
 		}
+
+		// ReSharper restore InconsistentNaming
 
 		#endregion
 

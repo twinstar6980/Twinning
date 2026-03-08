@@ -2053,9 +2053,9 @@ namespace Twinning.Script.KernelX {
 
 				export const VersionNumberE = [1n, 3n, 4n] as VersionNumber[];
 
-				export type VersionaExtendedTextureInformationForPvz2cn = typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value.extended_texture_information_for_pvz2cn;
+				export type VersionExtendedTextureInformationForPvz2cn = typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value.extended_texture_information_for_pvz2cn;
 
-				export const VersionaExtendedTextureInformationForPvz2cnE = [0n, 1n, 2n, 3n] as VersionaExtendedTextureInformationForPvz2cn[];
+				export const VersionExtendedTextureInformationForPvz2cnE = [0n, 1n, 2n, 3n] as VersionExtendedTextureInformationForPvz2cn[];
 
 				// ----------------
 

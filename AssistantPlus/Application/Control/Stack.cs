@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus.Control {
 			nameof(Stack.Orientation),
 			typeof(Orientation),
 			typeof(Stack),
-			new (Orientation.Horizontal, (o, e) => { o.As<Stack>().InvalidateMeasure(); })
+			new (Orientation.Horizontal, (o, _) => o.As<Stack>().InvalidateMeasure())
 		);
 
 		public Orientation Orientation {
@@ -37,7 +37,7 @@ namespace Twinning.AssistantPlus.Control {
 			nameof(Stack.Spacing),
 			typeof(Floater),
 			typeof(Stack),
-			new (0.0, (o, e) => { o.As<Stack>().InvalidateMeasure(); })
+			new (0.0, (o, _) => o.As<Stack>().InvalidateMeasure())
 		);
 
 		public Floater Spacing {
@@ -51,7 +51,7 @@ namespace Twinning.AssistantPlus.Control {
 			"Weight",
 			typeof(Floater),
 			typeof(Stack),
-			new (Floater.NaN, (o, e) => { o.As<FrameworkElement>().Parent?.As<Stack>()?.InvalidateMeasure(); })
+			new (Floater.NaN, (o, _) => o.As<FrameworkElement>().Parent?.As<Stack>().InvalidateMeasure())
 		);
 
 		public static Floater GetWeight(

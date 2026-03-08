@@ -179,7 +179,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 
 	// #endregion
 
-	// #region veriable
+	// #region variable
 
 	export function merge_variable_list(
 		parent_list: Array<Variable>,

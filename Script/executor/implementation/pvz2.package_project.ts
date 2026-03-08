@@ -230,7 +230,7 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.PackageProject {
 					}),
 					typical_argument_integer({
 						identifier: 'package_version_extended_texture_information_for_pvz2cn',
-						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionaExtendedTextureInformationForPvz2cnE,
+						option: KernelX.Tool.Popcap.ResourceStreamBundle.VersionExtendedTextureInformationForPvz2cnE,
 						checker: null,
 						automatic: null,
 						condition: (argument: {package_version_number: bigint}) => ([4n].includes(argument.package_version_number) ? null : 0n),

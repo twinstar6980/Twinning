@@ -191,7 +191,10 @@ namespace Twinning.AssistantPlus.Utility {
 		public static Integer MakeColorToInteger(
 			Color value
 		) {
-			return (value.A.CastPrimitive<Integer>() << 24) | (value.R.CastPrimitive<Integer>() << 16) | (value.G.CastPrimitive<Integer>() << 8) | (value.B.CastPrimitive<Integer>() << 0);
+			return (value.A.CastPrimitive<Integer>() << 24)
+				| (value.R.CastPrimitive<Integer>() << 16)
+				| (value.G.CastPrimitive<Integer>() << 8)
+				| (value.B.CastPrimitive<Integer>() << 0);
 		}
 
 		public static Color ParseColorFromInteger(

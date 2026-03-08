@@ -93,12 +93,7 @@ namespace Twinning.AssistantPlus.Utility {
 		) {
 			destination.Append('"');
 			foreach (var element in source) {
-				if (element == '/') {
-					destination.Append('\\');
-				}
-				else {
-					destination.Append(element);
-				}
+				destination.Append(element == '/' ? '\\' : element);
 			}
 			destination.Append('"');
 			return;

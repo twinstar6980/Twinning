@@ -9,19 +9,19 @@ using System.Text.Json.Serialization;
 namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 	public record PackageVersion {
-		public Integer Number                              = default!;
-		public Integer ExtendedTextureInformationForPvz2Cn = default!;
+		public Integer Number                              { get; set; } = default!;
+		public Integer ExtendedTextureInformationForPvz2Cn { get; set; } = default!;
 	}
 
 	public record PackageCompression {
-		public Boolean      General = default!;
-		public Boolean      Texture = default!;
-		public List<String> Filter  = default!;
+		public Boolean      General { get; set; } = default!;
+		public Boolean      Texture { get; set; } = default!;
+		public List<String> Filter  { get; set; } = default!;
 	}
 
 	public record PackageCategory {
-		public List<Integer> Resolution = default!;
-		public List<String>  Locale     = default!;
+		public List<Integer> Resolution { get; set; } = default!;
+		public List<String>  Locale     { get; set; } = default!;
 	}
 
 	public enum PackageManifestType {
@@ -32,13 +32,13 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 	}
 
 	public record PackageManifest {
-		public PackageManifestType Type   = default!;
-		public String              Suffix = default!;
+		public PackageManifestType Type   { get; set; } = default!;
+		public String              Suffix { get; set; } = default!;
 	}
 
 	public record Variable {
-		public String Name  = default!;
-		public String Value = default!;
+		public String Name  { get; set; } = default!;
+		public String Value { get; set; } = default!;
 	}
 
 	public enum ResourceType {
@@ -52,117 +52,117 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 	}
 
 	public record ResourceCategory {
-		public Integer? Resolution = default!;
-		public String?  Locale     = default!;
+		public Integer? Resolution { get; set; } = default!;
+		public String?  Locale     { get; set; } = default!;
 	}
 
 	public record DummyResourceProperty {
 	}
 
 	public record GeneralResourceProperty {
-		public String Path = default!;
-		public String Type = default!;
+		public String Path { get; set; } = default!;
+		public String Type { get; set; } = default!;
 	}
 
 	public record TextureResourcePropertySpriteResource {
-		public String        Identifier = default!;
-		public String        Path       = default!;
-		public List<Integer> Position   = default!;
-		public List<Integer> Size       = default!;
-		public List<Integer> Offset     = default!;
-		public List<Integer> Separate   = default!;
+		public String        Identifier { get; set; } = default!;
+		public String        Path       { get; set; } = default!;
+		public List<Integer> Position   { get; set; } = default!;
+		public List<Integer> Size       { get; set; } = default!;
+		public List<Integer> Offset     { get; set; } = default!;
+		public List<Integer> Separate   { get; set; } = default!;
 	}
 
 	public record TextureResourceProperty {
-		public String                                      Path                = default!;
-		public Integer                                     Format              = default!;
-		public Integer                                     Pitch               = default!;
-		public Integer                                     AdditionalByteCount = default!;
-		public List<Integer>                               Size                = default!;
-		public List<TextureResourcePropertySpriteResource> Sprite              = default!;
+		public String                                      Path                { get; set; } = default!;
+		public Integer                                     Format              { get; set; } = default!;
+		public Integer                                     Pitch               { get; set; } = default!;
+		public Integer                                     AdditionalByteCount { get; set; } = default!;
+		public List<Integer>                               Size                { get; set; } = default!;
+		public List<TextureResourcePropertySpriteResource> Sprite              { get; set; } = default!;
 	}
 
 	public record SpecialRtonResourceProperty {
-		public String Conversion = default!;
-		public String Path       = default!;
+		public String Conversion { get; set; } = default!;
+		public String Path       { get; set; } = default!;
 	}
 
 	public record SpecialPtxResourcePropertySpriteResource {
-		public String        Source     = default!;
-		public String        Identifier = default!;
-		public String        Path       = default!;
-		public List<Integer> Offset     = default!;
-		public List<Integer> Separate   = default!;
+		public String        Source     { get; set; } = default!;
+		public String        Identifier { get; set; } = default!;
+		public String        Path       { get; set; } = default!;
+		public List<Integer> Offset     { get; set; } = default!;
+		public List<Integer> Separate   { get; set; } = default!;
 	}
 
 	public record SpecialPtxResourceProperty {
-		public String                                         Conversion = default!;
-		public String                                         Path       = default!;
-		public Integer                                        Resolution = default!;
-		public List<SpecialPtxResourcePropertySpriteResource> Sprite     = default!;
+		public String                                         Conversion { get; set; } = default!;
+		public String                                         Path       { get; set; } = default!;
+		public Integer                                        Resolution { get; set; } = default!;
+		public List<SpecialPtxResourcePropertySpriteResource> Sprite     { get; set; } = default!;
 	}
 
 	public record SpecialPamResourceProperty {
-		public String Conversion = default!;
-		public String Path       = default!;
+		public String Conversion { get; set; } = default!;
+		public String Path       { get; set; } = default!;
 	}
 
 	public record SpecialPopfxResourceProperty {
-		public String Conversion = default!;
-		public String Path       = default!;
+		public String Conversion { get; set; } = default!;
+		public String Path       { get; set; } = default!;
 	}
 
 	public record SpecialWemResourceProperty {
-		public String Conversion = default!;
-		public String Path       = default!;
+		public String Conversion { get; set; } = default!;
+		public String Path       { get; set; } = default!;
 	}
 
 	public record SpecialBnkResourceProperty {
-		public String Conversion = default!;
-		public String Path       = default!;
+		public String Conversion { get; set; } = default!;
+		public String Path       { get; set; } = default!;
 	}
 
 	public record ResourceSetting {
-		public ResourceCategory Category = default!;
-		public ResourceType     Type     = default!;
-		public JsonNode         Property = default!;
-		public List<Variable>   Variable = default!;
+		public ResourceCategory Category { get; set; } = default!;
+		public ResourceType     Type     { get; set; } = default!;
+		public JsonNode         Property { get; set; } = default!;
+		public List<Variable>   Variable { get; set; } = default!;
 	}
 
 	public record GroupSetting {
-		public List<Variable> Variable = default!;
+		public List<Variable> Variable { get; set; } = default!;
 	}
 
 	public record PartSetting {
-		public List<Variable> Variable = default!;
+		public List<Variable> Variable { get; set; } = default!;
 	}
 
 	public record PackageConversionItem {
-		public String Name = default!;
+		public String Name { get; set; } = default!;
 		[JsonExtensionData()]
-		public Dictionary<String, Object> AdditionalData = default!;
+		public Dictionary<String, Object> AdditionalData { get; set; } = default!;
 	}
 
 	public record PackageConversion {
-		public List<PackageConversionItem> Rton = default!;
-		public List<PackageConversionItem> Ptx  = default!;
-		public List<PackageConversionItem> Pam  = default!;
-		public List<PackageConversionItem> Wem  = default!;
+		public List<PackageConversionItem> Rton { get; set; } = default!;
+		public List<PackageConversionItem> Ptx  { get; set; } = default!;
+		public List<PackageConversionItem> Pam  { get; set; } = default!;
+		public List<PackageConversionItem> Wem  { get; set; } = default!;
 	}
 
 	public record PackageSetting {
-		public String             Name        = default!;
-		public List<String>       Part        = default!;
-		public PackageVersion     Version     = default!;
-		public PackageCompression Compression = default!;
-		public PackageManifest    Manifest    = default!;
-		public PackageCategory    Category    = default!;
-		public PackageConversion  Conversion  = default!;
-		public List<Variable>     Variable    = default!;
+		public String             Name        { get; set; } = default!;
+		public List<String>       Part        { get; set; } = default!;
+		public PackageVersion     Version     { get; set; } = default!;
+		public PackageCompression Compression { get; set; } = default!;
+		public PackageManifest    Manifest    { get; set; } = default!;
+		public PackageCategory    Category    { get; set; } = default!;
+		public PackageConversion  Conversion  { get; set; } = default!;
+		public List<Variable>     Variable    { get; set; } = default!;
 	}
 
 	public record ProjectSetting {
-		public List<PackageSetting> Package = default!;
+		public List<PackageSetting> Package { get; set; } = default!;
 	}
 
 }

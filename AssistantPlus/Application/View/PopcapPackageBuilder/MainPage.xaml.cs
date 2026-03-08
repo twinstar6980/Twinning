@@ -137,9 +137,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		#region action
 
-		public static String DataViewFormatForGroup = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(PopcapPackageBuilder)}.Group";
+		public const String DataViewFormatForGroup = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(PopcapPackageBuilder)}.Group";
 
-		public static String DataViewFormatForResource = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(PopcapPackageBuilder)}.Resource";
+		public const String DataViewFormatForResource = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(PopcapPackageBuilder)}.Resource";
 
 		// ----------------
 

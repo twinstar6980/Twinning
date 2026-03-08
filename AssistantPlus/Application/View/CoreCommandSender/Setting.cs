@@ -7,7 +7,7 @@ using Twinning.AssistantPlus.Utility;
 namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 	public record Setting {
-		public Boolean ParallelForward = default!;
+		public Boolean ParallelForward { get; set; } = default!;
 	}
 
 }

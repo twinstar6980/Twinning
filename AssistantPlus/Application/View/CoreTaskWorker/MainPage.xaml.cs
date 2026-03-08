@@ -456,15 +456,15 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		#region data
 
-		public MainPageController Host = default!;
+		public MainPageController Host { get; init; } = default!;
 
 		// ----------------
 
-		public MessageType Type = default!;
+		public MessageType Type { get; set; } = default!;
 
-		public String Title = default!;
+		public String Title { get; set; } = default!;
 
-		public List<String> Description = default!;
+		public List<String> Description { get; set; } = default!;
 
 		#endregion
 

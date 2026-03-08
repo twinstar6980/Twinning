@@ -284,7 +284,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			return `Z:${raw}`;
 		}
 		throw new Error();
-	};
+	}
 
 	// #endregion
 
@@ -296,7 +296,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		format: Format,
 	): void {
 		if (!KernelX.is_windows && !KernelX.is_macintosh) {
-			throw new Error(`unsupported system, this function only avaliable for windows or macintosh`);
+			throw new Error(`unsupported system, this function only available for windows or macintosh`);
 		}
 		let wwise_program_name: string = undefined!;
 		if (KernelX.is_windows) {

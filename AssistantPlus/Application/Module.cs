@@ -21,14 +21,14 @@ namespace Twinning.AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
-		public ModuleType                        Type                  = default!;
-		public String                            Identifier            = default!;
-		public String                            Name                  = default!;
-		public String                            Icon                  = default!;
-		public Type                              MainPage              = default!;
-		public Func<UIElement>                   SettingPanel          = default!;
-		public Func<List<String>, List<String>?> GenerateForwardOption = default!;
-		public Tuple<Integer, Integer>           StandardSize          = default!;
+		public ModuleType                        Type                  { get; set; } = default!;
+		public String                            Identifier            { get; set; } = default!;
+		public String                            Name                  { get; set; } = default!;
+		public String                            Icon                  { get; set; } = default!;
+		public Type                              MainPage              { get; set; } = default!;
+		public Func<UIElement>                   SettingPanel          { get; set; } = default!;
+		public Func<List<String>, List<String>?> GenerateForwardOption { get; set; } = default!;
+		public Tuple<Integer, Integer>           StandardSize          { get; set; } = default!;
 	}
 
 	#endregion
@@ -36,10 +36,10 @@ namespace Twinning.AssistantPlus {
 	#region launcher
 
 	public record ModuleLauncherConfiguration {
-		public String       Title   = default!;
-		public ModuleType   Type    = default!;
-		public List<String> Option  = default!;
-		public List<String> Command = default!;
+		public String       Title   { get; set; } = default!;
+		public ModuleType   Type    { get; set; } = default!;
+		public List<String> Option  { get; set; } = default!;
+		public List<String> Command { get; set; } = default!;
 	}
 
 	// ----------------
@@ -51,9 +51,9 @@ namespace Twinning.AssistantPlus {
 	}
 
 	public record ModuleLauncherSetting {
-		public List<ModuleLauncherConfiguration> Module = default!;
-		public List<ModuleLauncherConfiguration> Pinned = default!;
-		public List<ModuleLauncherConfiguration> Recent = default!;
+		public List<ModuleLauncherConfiguration> Module { get; set; } = default!;
+		public List<ModuleLauncherConfiguration> Pinned { get; set; } = default!;
+		public List<ModuleLauncherConfiguration> Recent { get; set; } = default!;
 	}
 
 	#endregion
@@ -65,7 +65,7 @@ namespace Twinning.AssistantPlus {
 		private static readonly List<ModuleInformation> Information = [
 			new () {
 				Type = ModuleType.CoreTaskWorker,
-				Identifier = "core_task_worker",
+				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.CoreTaskWorker),
 				Name = "Task Worker",
 				Icon = FluentIconGlyph.ProvisioningPackage,
 				MainPage = typeof(View.CoreTaskWorker.MainPage),
@@ -79,7 +79,7 @@ namespace Twinning.AssistantPlus {
 			},
 			new () {
 				Type = ModuleType.CoreCommandSender,
-				Identifier = "core_command_sender",
+				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.CoreCommandSender),
 				Name = "Command Sender",
 				Icon = FluentIconGlyph.Send,
 				MainPage = typeof(View.CoreCommandSender.MainPage),
@@ -93,7 +93,7 @@ namespace Twinning.AssistantPlus {
 			},
 			new () {
 				Type = ModuleType.CoreResourceShipper,
-				Identifier = "core_resource_shipper",
+				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.CoreResourceShipper),
 				Name = "Resource Shipper",
 				Icon = FluentIconGlyph.Share,
 				MainPage = typeof(View.CoreResourceShipper.MainPage),
@@ -112,7 +112,7 @@ namespace Twinning.AssistantPlus {
 			},
 			new () {
 				Type = ModuleType.PopcapAnimationViewer,
-				Identifier = "popcap_animation_viewer",
+				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.PopcapAnimationViewer),
 				Name = "PopCap Animation Viewer",
 				Icon = FluentIconGlyph.HomeGroup,
 				MainPage = typeof(View.PopcapAnimationViewer.MainPage),
@@ -139,7 +139,7 @@ namespace Twinning.AssistantPlus {
 			},
 			new () {
 				Type = ModuleType.PopcapReflectionDescriptor,
-				Identifier = "popcap_reflection_descriptor",
+				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.PopcapReflectionDescriptor),
 				Name = "PopCap Reflection Descriptor",
 				Icon = FluentIconGlyph.Library,
 				MainPage = typeof(View.PopcapReflectionDescriptor.MainPage),
@@ -162,7 +162,7 @@ namespace Twinning.AssistantPlus {
 			},
 			new () {
 				Type = ModuleType.PopcapPackageBuilder,
-				Identifier = "popcap_package_builder",
+				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.PopcapPackageBuilder),
 				Name = "PopCap Package Builder",
 				Icon = FluentIconGlyph.DialShape3,
 				MainPage = typeof(View.PopcapPackageBuilder.MainPage),

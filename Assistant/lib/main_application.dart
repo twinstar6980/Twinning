@@ -164,33 +164,36 @@ class MainApplication {
     var setting = Provider.of<SettingProvider>(this._setting.state.applicationNavigatorKey.currentContext!, listen: false);
     var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
     var targetType = forwardOption[setting.data.forwarderDefaultTarget.index] != null ? setting.data.forwarderDefaultTarget : null;
-    var canContinue = (setting.data.forwarderImmediateJump && targetType != null) || (await StyledModalDialogExtension.show<Boolean>(this._setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
-      title: 'Forward',
-      contentBuilder: (context, setStateForPanel) => [
-        ...ModuleType.values.map((item) => StyledListTile.standardTight(
-          enabled: forwardOption[item.index] != null,
-          leading: StyledRadio.standard(
+    var canContinue = setting.data.forwarderImmediateJump && targetType != null;
+    if (!canContinue) {
+      canContinue = await StyledModalDialogExtension.show<Boolean>(this._setting.state.applicationNavigatorKey.currentContext!, StyledModalDialog.standard(
+        title: 'Forward',
+        contentBuilder: (context, setStateForPanel) => [
+          ...ModuleType.values.map((item) => StyledListTile.standardTight(
             enabled: forwardOption[item.index] != null,
-            value: targetType == item,
-            onChanged: (context) async {
-              targetType = item;
-              await refreshState(setStateForPanel);
-            },
+            leading: StyledRadio.standard(
+              enabled: forwardOption[item.index] != null,
+              value: targetType == item,
+              onChanged: (context) async {
+                targetType = item;
+                await refreshState(setStateForPanel);
+              },
+            ),
+            content: StyledText.inherit(ModuleHelper.query(item).name),
+          )),
+        ],
+        actionBuilder: (context) => [
+          StyledButton.text(
+            content: StyledText.inherit('Cancel'),
+            onPressed: (context) => Navigator.pop(context, false),
           ),
-          content: StyledText.inherit(ModuleHelper.query(item).name),
-        )),
-      ],
-      actionBuilder: (context) => [
-        StyledButton.text(
-          content: StyledText.inherit('Cancel'),
-          onPressed: (context) => Navigator.pop(context, false),
-        ),
-        StyledButton.text(
-          content: StyledText.inherit('Continue'),
-          onPressed: (context) => Navigator.pop(context, true),
-        ),
-      ],
-    )) ?? false);
+          StyledButton.text(
+            content: StyledText.inherit('Continue'),
+            onPressed: (context) => Navigator.pop(context, true),
+          ),
+        ],
+      )) ?? false;
+    }
     if (canContinue && targetType != null) {
       await this._handleLaunch(ModuleHelper.query(targetType!).name, targetType!, forwardOption[targetType!.index]!);
     }

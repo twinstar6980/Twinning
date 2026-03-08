@@ -228,22 +228,25 @@ namespace Twinning.AssistantPlus {
 		) {
 			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
 			var targetType = forwardOption[this.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? this.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
-			var canContinue = (this.Setting.Data.ForwarderImmediateJump && targetType != null) || (await ControlHelper.ShowDialogAsAutomatic(this.MainWindow.Content.As<FrameworkElement>(), "Forward", new ItemsRepeater() {
-				HorizontalAlignment = HorizontalAlignment.Stretch,
-				VerticalAlignment = VerticalAlignment.Stretch,
-				ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {
+			var canContinue = this.Setting.Data.ForwarderImmediateJump && targetType != null;
+			if (!canContinue) {
+				canContinue = await ControlHelper.ShowDialogAsAutomatic(this.MainWindow.Content.As<FrameworkElement>(), "Forward", new ItemsRepeater() {
 					HorizontalAlignment = HorizontalAlignment.Stretch,
 					VerticalAlignment = VerticalAlignment.Stretch,
-					IsEnabled = forwardOption[item.CastPrimitive<Size>()] != null,
-					IsChecked = item == targetType,
-					Content = ModuleHelper.Query(item).Name,
-				}.SelfAlso((it) => {
-					it.Click += async (_, _) => {
-						targetType = item;
-						return;
-					};
-				})).ToList(),
-			}, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary);
+					ItemsSource = Enum.GetValues<ModuleType>().Select((item) => new RadioButton() {
+						HorizontalAlignment = HorizontalAlignment.Stretch,
+						VerticalAlignment = VerticalAlignment.Stretch,
+						IsEnabled = forwardOption[item.CastPrimitive<Size>()] != null,
+						IsChecked = item == targetType,
+						Content = ModuleHelper.Query(item).Name,
+					}.SelfAlso((it) => {
+						it.Click += async (_, _) => {
+							targetType = item;
+							return;
+						};
+					})).ToList(),
+				}, new ("Cancel", "Continue", null)) == ContentDialogResult.Primary;
+			}
 			if (canContinue && targetType != null) {
 				await this.HandleLaunch(ModuleHelper.Query(targetType.AsNotNull()).Name, targetType.AsNotNull(), forwardOption[targetType.AsNotNull().CastPrimitive<Size>()].AsNotNull());
 			}

@@ -7,13 +7,13 @@ using Twinning.AssistantPlus.Utility;
 namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 	public record Setting {
-		public Boolean ImmediateSelect  = default!;
-		public Boolean AutomaticPlay    = default!;
-		public Boolean RepeatPlay       = default!;
-		public Boolean KeepSpeed        = default!;
-		public Boolean ShowBoundary     = default!;
-		public String  ImageFilterRule  = default!;
-		public String  SpriteFilterRule = default!;
+		public Boolean ImmediateSelect  { get; set; } = default!;
+		public Boolean AutomaticPlay    { get; set; } = default!;
+		public Boolean RepeatPlay       { get; set; } = default!;
+		public Boolean KeepSpeed        { get; set; } = default!;
+		public Boolean ShowBoundary     { get; set; } = default!;
+		public String  ImageFilterRule  { get; set; } = default!;
+		public String  SpriteFilterRule { get; set; } = default!;
 	}
 
 }

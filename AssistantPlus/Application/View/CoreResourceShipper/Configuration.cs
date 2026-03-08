@@ -7,8 +7,8 @@ using Twinning.AssistantPlus.Utility;
 namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 	public record PresetConfiguration {
-		public String                     Name     = default!;
-		public Dictionary<String, Object> Argument = default!;
+		public String                     Name     { get; set; } = default!;
+		public Dictionary<String, Object> Argument { get; set; } = default!;
 	}
 
 	public enum FilterType {
@@ -18,27 +18,27 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 	}
 
 	public record FilterConfiguration {
-		public FilterType Type = default!;
-		public String     Name = default!;
+		public FilterType Type { get; set; } = default!;
+		public String     Name { get; set; } = default!;
 	}
 
 	public record OptionConfiguration {
-		public String                     Name   = default!;
-		public String                     Icon   = default!;
-		public FilterConfiguration?       Filter = default!;
-		public Boolean                    Batch  = default!;
-		public String?                    Method = default!;
-		public List<PresetConfiguration?> Preset = default!;
+		public String                     Name   { get; set; } = default!;
+		public String                     Icon   { get; set; } = default!;
+		public FilterConfiguration?       Filter { get; set; } = default!;
+		public Boolean                    Batch  { get; set; } = default!;
+		public String?                    Method { get; set; } = default!;
+		public List<PresetConfiguration?> Preset { get; set; } = default!;
 	}
 
 	public record OptionGroupConfiguration {
-		public String                    Name = default!;
-		public String                    Icon = default!;
-		public List<OptionConfiguration> Item = default!;
+		public String                    Name { get; set; } = default!;
+		public String                    Icon { get; set; } = default!;
+		public List<OptionConfiguration> Item { get; set; } = default!;
 	}
 
 	public record Configuration {
-		public List<OptionGroupConfiguration> Option = default!;
+		public List<OptionGroupConfiguration> Option { get; set; } = default!;
 	}
 
 }

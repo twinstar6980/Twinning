@@ -7,7 +7,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		raw_file: string,
 	): Format {
 		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
-			throw new Error(`unsupported system, this function only avaliable for windows or linux or macintosh`);
+			throw new Error(`unsupported system, this function only available for windows or linux or macintosh`);
 		}
 		let ripe_file_fallback_temporary: null | string = null;
 		let ripe_file_fallback = ripe_file;
