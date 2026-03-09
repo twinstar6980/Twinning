@@ -48,7 +48,7 @@ namespace Twinning.AssistantPlus {
 
 		public SettingData Data { get; private set; }
 
-		public SettingState State { get; private set; }
+		public SettingState State { get; }
 
 		// ----------------
 
@@ -179,7 +179,7 @@ namespace Twinning.AssistantPlus {
 			if (apply) {
 				await this.Apply();
 			}
-			await JsonHelper.SerializeFile<SettingData>(file, this.Data);
+			await JsonHelper.SerializeFile(file, this.Data);
 			return;
 		}
 

@@ -158,6 +158,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 					nameof(this.uAdditionalArgumentCount_Text),
 				]);
 			}
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if (optionImmediateLaunch != null) {
 				if (optionImmediateLaunch.AsNotNull()) {
 					_ = this.LaunchSession().SelfLet(ExceptionHelper.WrapTask);

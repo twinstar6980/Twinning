@@ -63,13 +63,6 @@ namespace Twinning.AssistantPlus.View.Home {
 			return;
 		}
 
-		public async Task RemovePage(
-			Page content
-		) {
-			await this.Controller.RemovePage(content);
-			return;
-		}
-
 		#endregion
 
 	}

@@ -67,7 +67,9 @@ namespace Twinning::Kernel::Interface {
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wmissing-variable-declarations"
 
+	// @formatter:off
 	__attribute__((visibility("default")))
+	// @formatter:on
 	extern "C++" Service service = Service{
 		.executor = nullptr,
 		.initialize = []() {
