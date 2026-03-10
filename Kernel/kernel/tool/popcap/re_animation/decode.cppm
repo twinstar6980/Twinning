@@ -11,12 +11,12 @@ import twinning.kernel.tool.common.byte_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Decode :
-		Common<version>,
+		Common<t_version>,
 		CommonByteStreamExchangeForInput {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
@@ -50,18 +50,18 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
-				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				}
 			}
 			for (auto & value : value_list) {
-				if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 					exchange_string_block<IntegerU32>(data, value.image);
 				}
-				if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile()}, {})) {
 					exchange_integer_fixed<IntegerU32>(data, value.image);
 				}
-				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_string_block<IntegerU32>(data, value.image_path);
 					exchange_string_block<IntegerU32>(data, value.image_another);
 					exchange_string_block<IntegerU32>(data, value.image_path_another);
@@ -81,11 +81,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			for (auto & value : value_list) {
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
-				if constexpr (check_version(version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {
 					exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				}
 				exchange_list_size(data, value.transform, &exchange_size_fixed<IntegerOfPlatform>);
-				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				}
 			}
@@ -97,8 +97,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		}
 
 		inline static auto exchange_animation(
-			InputByteStreamView &            data,
-			typename Definition::Animation & value
+			InputByteStreamView &   data,
+			Definition::Animation & value
 		) -> Void {
 			auto ignored = Integer{0_i};
 			exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
@@ -112,8 +112,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &            data,
-			typename Definition::Animation & definition
+			InputByteStreamView &   data,
+			Definition::Animation & definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			exchange_animation(data, definition);
@@ -123,8 +123,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
-			typename Definition::Animation & definition
+			InputByteStreamView &   data_,
+			Definition::Animation & definition
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

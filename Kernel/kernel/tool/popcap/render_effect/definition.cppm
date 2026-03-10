@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.render_effect.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Definition {
 
 		#pragma region block
 
-		template <typename = None>
-		struct Block1_;
+		M_nested_template_declaration(Block1);
 
-		using Block1 = Block1_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1}))
 		M_record_of_map(
-			M_wrap(Block1_<_>),
+			M_nested_template_definition_name(Block1),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -33,14 +30,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block2_;
+		M_nested_template_declaration(Block2);
 
-		using Block2 = Block2_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1, 2}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1, 2}))
 		M_record_of_map(
-			M_wrap(Block2_<_>),
+			M_nested_template_definition_name(Block2),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -48,9 +42,9 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {1}, {2}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {2}))
 		M_record_of_map(
-			M_wrap(Block2_<_>),
+			M_nested_template_definition_name(Block2),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -59,14 +53,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block3_;
+		M_nested_template_declaration(Block3);
 
-		using Block3 = Block3_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1}))
 		M_record_of_map(
-			M_wrap(Block3_<_>),
+			M_nested_template_definition_name(Block3),
 			M_wrap(
 				(Integer) unknown_2,
 				(String) string,
@@ -75,14 +66,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block4_;
+		M_nested_template_declaration(Block4);
 
-		using Block4 = Block4_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1}))
 		M_record_of_map(
-			M_wrap(Block4_<_>),
+			M_nested_template_definition_name(Block4),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -94,14 +82,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block5_;
+		M_nested_template_declaration(Block5);
 
-		using Block5 = Block5_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1}))
 		M_record_of_map(
-			M_wrap(Block5_<_>),
+			M_nested_template_definition_name(Block5),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -115,14 +100,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block6_;
+		M_nested_template_declaration(Block6);
 
-		using Block6 = Block6_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1}))
 		M_record_of_map(
-			M_wrap(Block6_<_>),
+			M_nested_template_definition_name(Block6),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -134,14 +116,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block7_;
+		M_nested_template_declaration(Block7);
 
-		using Block7 = Block7_<>;
-
-		template <typename _> requires (check_version(version, {1}, {3}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {3}))
 		M_record_of_map(
-			M_wrap(Block7_<_>),
+			M_nested_template_definition_name(Block7),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -150,14 +129,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Block8_;
+		M_nested_template_declaration(Block8);
 
-		using Block8 = Block8_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1, 3}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1, 3}))
 		M_record_of_map(
-			M_wrap(Block8_<_>),
+			M_nested_template_definition_name(Block8),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -165,9 +141,9 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {1}, {3}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {3}))
 		M_record_of_map(
-			M_wrap(Block8_<_>),
+			M_nested_template_definition_name(Block8),
 			M_wrap(
 				(Integer) unknown_1,
 				(Integer) unknown_2,
@@ -181,14 +157,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		#pragma region effect
 
-		template <typename = None>
-		struct Effect_;
+		M_nested_template_declaration(Effect);
 
-		using Effect = Effect_<>;
-
-		template <typename _> requires (check_version(version, {1}, {1, 3}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {1, 3}))
 		M_record_of_map(
-			M_wrap(Effect_<_>),
+			M_nested_template_definition_name(Effect),
 			M_wrap(
 				(List<Block1>) block_1,
 				(List<Block2>) block_2,
@@ -200,9 +173,9 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {1}, {3}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {3}))
 		M_record_of_map(
-			M_wrap(Effect_<_>),
+			M_nested_template_definition_name(Effect),
 			M_wrap(
 				(List<Block1>) block_1,
 				(List<Block2>) block_2,

@@ -16,6 +16,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 	struct Common {
 
+		// ReSharper disable CppInconsistentNaming
+
 		class TinyXml2Printer :
 			public Third::tinyxml2::XMLPrinter {
 
@@ -53,6 +55,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			bool                                       _restrictedEntityFlag[64];
 			TinyXml2DynArrayImitator<char, 20>         _buffer;
 		};
+
+		// ReSharper restore CppInconsistentNaming
 
 		// NOTE: EXPLAIN: maybe failed if api changed
 		static_assert(sizeof(TinyXml2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));

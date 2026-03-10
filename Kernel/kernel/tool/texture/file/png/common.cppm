@@ -15,7 +15,6 @@ export namespace Twinning::Kernel::Tool::Texture::File::Png {
 			Third::libpng::$png_const_charp error_message
 		) -> Void {
 			throw UnnamedException{mss("libpng: {}"_sf(error_message))};
-			return;
 		}
 
 		inline static auto png_warning(

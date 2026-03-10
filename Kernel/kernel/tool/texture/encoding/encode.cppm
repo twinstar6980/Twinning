@@ -15,33 +15,33 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 		// ----------------
 
-		template <auto format> requires
+		template <auto t_format> requires
 			CategoryConstraint<>
-			&& (IsSameOf<format, Format>)
+			&& (IsSameOf<t_format, Format>)
 		inline static auto process_pixel(
 			OutputByteStreamView & data,
 			Image::Pixel const &   pixel
 		) -> Void {
-			if constexpr (format == Format::Constant::a_8()) {
+			if constexpr (t_format == Format::Constant::a_8()) {
 				data.write(
 					(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 8_sz)) << 0_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::rgb_332()) {
+			if constexpr (t_format == Format::Constant::rgb_332()) {
 				data.write(
 					(cbox<IntegerU8>(Image::compress_color(pixel.blue, 3_sz)) << 0_sz) |
 					(cbox<IntegerU8>(Image::compress_color(pixel.green, 3_sz)) << 3_sz) |
 					(cbox<IntegerU8>(Image::compress_color(pixel.red, 2_sz)) << 6_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::rgb_565()) {
+			if constexpr (t_format == Format::Constant::rgb_565()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(pixel.blue, 5_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.green, 6_sz)) << 5_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.red, 5_sz)) << 11_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::rgba_5551()) {
+			if constexpr (t_format == Format::Constant::rgba_5551()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(pixel.alpha, 1_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.blue, 5_sz)) << 1_sz) |
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 					(cbox<IntegerU16>(Image::compress_color(pixel.red, 5_sz)) << 11_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::rgba_4444()) {
+			if constexpr (t_format == Format::Constant::rgba_4444()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(pixel.alpha, 4_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.blue, 4_sz)) << 4_sz) |
@@ -57,7 +57,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 					(cbox<IntegerU16>(Image::compress_color(pixel.red, 4_sz)) << 12_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::rgba_8888()) {
+			if constexpr (t_format == Format::Constant::rgba_8888()) {
 				data.write(
 					(cbox<IntegerU32>(Image::compress_color(pixel.alpha, 8_sz)) << 0_sz) |
 					(cbox<IntegerU32>(Image::compress_color(pixel.blue, 8_sz)) << 8_sz) |
@@ -65,7 +65,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 					(cbox<IntegerU32>(Image::compress_color(pixel.red, 8_sz)) << 24_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::argb_1555()) {
+			if constexpr (t_format == Format::Constant::argb_1555()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(pixel.blue, 5_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.green, 5_sz)) << 5_sz) |
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 					(cbox<IntegerU16>(Image::compress_color(pixel.alpha, 1_sz)) << 15_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::argb_4444()) {
+			if constexpr (t_format == Format::Constant::argb_4444()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(pixel.blue, 4_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.green, 4_sz)) << 4_sz) |
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 					(cbox<IntegerU16>(Image::compress_color(pixel.alpha, 4_sz)) << 12_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::argb_8888()) {
+			if constexpr (t_format == Format::Constant::argb_8888()) {
 				data.write(
 					(cbox<IntegerU32>(Image::compress_color(pixel.blue, 8_sz)) << 0_sz) |
 					(cbox<IntegerU32>(Image::compress_color(pixel.green, 8_sz)) << 8_sz) |
@@ -89,41 +89,41 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 					(cbox<IntegerU32>(Image::compress_color(pixel.alpha, 8_sz)) << 24_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::l_8()) {
+			if constexpr (t_format == Format::Constant::l_8()) {
 				data.write(
 					(cbox<IntegerU8>(Image::compress_color(convert_luminance_from_rgb(pixel.red, pixel.green, pixel.blue), 8_sz)) << 0_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::la_44()) {
+			if constexpr (t_format == Format::Constant::la_44()) {
 				data.write(
 					(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 4_sz)) << 0_sz) |
 					(cbox<IntegerU8>(Image::compress_color(convert_luminance_from_rgb(pixel.red, pixel.green, pixel.blue), 4_sz)) << 4_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::la_88()) {
+			if constexpr (t_format == Format::Constant::la_88()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(pixel.alpha, 8_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(convert_luminance_from_rgb(pixel.red, pixel.green, pixel.blue), 8_sz)) << 8_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::al_44()) {
+			if constexpr (t_format == Format::Constant::al_44()) {
 				data.write(
 					(cbox<IntegerU8>(Image::compress_color(convert_luminance_from_rgb(pixel.red, pixel.green, pixel.blue), 4_sz)) << 0_sz) |
 					(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 4_sz)) << 4_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::al_88()) {
+			if constexpr (t_format == Format::Constant::al_88()) {
 				data.write(
 					(cbox<IntegerU16>(Image::compress_color(convert_luminance_from_rgb(pixel.red, pixel.green, pixel.blue), 8_sz)) << 0_sz) |
 					(cbox<IntegerU16>(Image::compress_color(pixel.alpha, 8_sz)) << 8_sz)
 				);
 			}
-			if constexpr (format == Format::Constant::rgb_888_o()) {
+			if constexpr (t_format == Format::Constant::rgb_888_o()) {
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
 			}
-			if constexpr (format == Format::Constant::rgba_8888_o()) {
+			if constexpr (t_format == Format::Constant::rgba_8888_o()) {
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
@@ -134,16 +134,16 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 		// ----------------
 
-		template <auto format> requires
+		template <auto t_format> requires
 			CategoryConstraint<>
-			&& (IsSameOf<format, Format>)
+			&& (IsSameOf<t_format, Format>)
 		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
 		) -> Void {
 			for (auto & row : image.data()) {
 				for (auto & pixel : row) {
-					process_pixel<format>(data, pixel);
+					process_pixel<t_format>(data, pixel);
 				}
 			}
 			return;
@@ -156,8 +156,8 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		) -> Void {
 			Generalization::match<FormatPackage>(
 				format,
-				[&] <auto index, auto format>(ValuePackage<index>, ValuePackage<format>) {
-					process_image<format>(data, image);
+				[&] <auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
+					process_image<t_format>(data, image);
 				}
 			);
 			return;

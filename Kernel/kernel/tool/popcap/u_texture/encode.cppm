@@ -13,11 +13,11 @@ import twinning.kernel.tool.texture.encoding.encode;
 
 export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Encode :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -59,15 +59,15 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_view = VariableByteListView{};
 			auto texture_data_container = ByteArray{};
-			if constexpr (check_version(version, {false})) {
+			if constexpr (check_version(t_version, {false})) {
 				texture_data_view = data.forward_view(texture_data_size);
 			}
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
 			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, format);
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				auto texture_data_stream = InputByteStreamView{texture_data_container};
 				Data::Compression::Deflate::Compress::process(texture_data_stream, data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 			}
@@ -91,10 +91,10 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			data_size_bound += bs_static_size<Header>();
 			auto texture_data_size = image_size.area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_size_bound = Size{};
-			if constexpr (check_version(version, {false})) {
+			if constexpr (check_version(t_version, {false})) {
 				texture_data_size_bound = texture_data_size;
 			}
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_sz, 9_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			}
 			data_size_bound += texture_data_size_bound;

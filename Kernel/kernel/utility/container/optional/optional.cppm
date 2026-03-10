@@ -49,13 +49,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsValid<ValueObject>>
-			&& (IsSame<AsPure<ValueObject>, Value>)
+		template <typename TValueObject> requires
+			CategoryConstraint<IsValid<TValueObject>>
+			&& (IsSame<AsPure<TValueObject>, Value>)
 		explicit constexpr Optional(
-			ValueObject && value
+			TValueObject && value
 		) :
-			m_value{as_forward<ValueObject>(value)} {
+			m_value{as_forward<TValueObject>(value)} {
 			return;
 		}
 
@@ -88,13 +88,13 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Value, Argument && ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Value, TArgument && ...>)
 		constexpr auto set(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Value & {
-			thiz.m_value.emplace(as_forward<Argument>(argument) ...);
+			thiz.m_value.emplace(as_forward<TArgument>(argument) ...);
 			return thiz.m_value.value();
 		}
 
@@ -131,22 +131,22 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Value, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
+	template <typename TValue, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TValue> && IsValid<TArgument ...>>
 	inline constexpr auto make_optional(
-		Argument && ... argument
-	) -> Optional<Value> {
-		auto result = Optional<Value>{};
-		result.set(as_forward<Argument>(argument) ...);
+		TArgument && ... argument
+	) -> Optional<TValue> {
+		auto result = Optional<TValue>{};
+		result.set(as_forward<TArgument>(argument) ...);
 		return result;
 	}
 
-	template <typename Value> requires
-		CategoryConstraint<IsValid<Value>>
+	template <typename TValue> requires
+		CategoryConstraint<IsValid<TValue>>
 	inline constexpr auto make_optional_of(
-		Value && value
-	) -> Optional<AsPure<Value>> {
-		return Optional<AsPure<Value>>{as_forward<Value>(value)};
+		TValue && value
+	) -> Optional<AsPure<TValue>> {
+		return Optional<AsPure<TValue>>{as_forward<TValue>(value)};
 	}
 
 	#pragma endregion

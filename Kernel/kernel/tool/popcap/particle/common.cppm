@@ -9,33 +9,33 @@ import twinning.kernel.tool.popcap.particle.definition;
 
 export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Common {
 
-		using Definition = Definition<version>;
+		using Definition = Definition<t_version>;
 
 		// ----------------
 
 		using MagicMarker = IntegerU32;
 
 		inline static constexpr auto k_magic_marker = [] {
-			if constexpr (check_version(version, {VersionPlatform::Constant::desktop()}, {false})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::desktop()}, {false})) {
 				return MagicMarker{0x411F994D_iu32};
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {false})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile()}, {false})) {
 				return MagicMarker{0x411F994D_iu32};
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {true})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile()}, {true})) {
 				return MagicMarker{0xE09295E9_iu32};
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {false})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {false})) {
 				return MagicMarker{0x00000000_iu32};
 			}
 		}();
 
 		// ----------------
 
-		using IntegerOfPlatform = AsSwitch<!version.variant_64.value, IntegerU32, IntegerU64>;
+		using IntegerOfPlatform = AsSwitch<!t_version.variant_64.value, IntegerU32, IntegerU64>;
 
 		// ----------------
 

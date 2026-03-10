@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Image {
 
 	template <typename TColor> requires
 		CategoryConstraint<IsPureInstance<TColor>>
-	struct BasicPixelRGBA {
+	struct BasicPixelRgba {
 
 		using Color = TColor;
 
@@ -32,8 +32,8 @@ export namespace Twinning::Kernel::Image {
 		// ----------------
 
 		inline friend constexpr auto operator ==(
-			BasicPixelRGBA const & thix,
-			BasicPixelRGBA const & that
+			BasicPixelRgba const & thix,
+			BasicPixelRgba const & that
 		) -> bool = default;
 
 	};

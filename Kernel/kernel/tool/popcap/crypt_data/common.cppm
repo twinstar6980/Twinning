@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.crypt_data.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
-	template <auto version> requires (check_version(version))
+	template <auto t_version> requires (check_version(t_version))
 	struct Common {
 
 		using MagicMarker = StaticByteArray<11_sz>;

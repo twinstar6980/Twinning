@@ -91,16 +91,16 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It>
-	concept IsEnumerationBox = IsTemplateInstanceOfT<It, EnumerationBox>;
+	template <typename TIt>
+	concept IsEnumerationBox = IsTemplateInstanceOfTt<TIt, EnumerationBox>;
 
 	#pragma endregion
 
 	#pragma region alias
 
-	template <typename Value> requires
+	template <typename TValue> requires
 		AutomaticConstraint
-	using Enumeration = EnumerationBox<Value>;
+	using Enumeration = EnumerationBox<TValue>;
 
 	#pragma endregion
 

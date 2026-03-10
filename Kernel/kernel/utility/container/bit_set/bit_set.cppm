@@ -173,15 +173,15 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <auto begin, auto size> requires
+		template <auto t_sub_begin, auto t_sub_size> requires
 			CategoryConstraint<>
-			&& (IsSameOf<begin, Size> && IsSameOf<size, Size>)
-			&& (begin + size <= t_size)
+			&& (IsSameOf<t_sub_begin, Size> && IsSameOf<t_sub_size, Size>)
+			&& (t_sub_begin + t_sub_size <= t_size)
 		auto sub(
-		) -> BitSet<size> {
-			auto result = BitSet<size>{};
-			for (auto & index : SizeRange{size}) {
-				result.set(index, thiz.get(begin + index));
+		) -> BitSet<t_sub_size> {
+			auto result = BitSet<t_sub_size>{};
+			for (auto & index : SizeRange{t_sub_size}) {
+				result.set(index, thiz.get(t_sub_begin + index));
 			}
 			return result;
 		}
@@ -190,24 +190,24 @@ export namespace Twinning::Kernel {
 
 		#pragma region from & to with integer
 
-		template <typename TargetInteger = BoundedInteger> requires
+		template <typename TTargetInteger = BoundedInteger> requires
 			AutomaticConstraint
-			&& (IsSame<TargetInteger, BoundedInteger>)
-			&& (!IsVoid<TargetInteger>)
+			&& (IsSame<TTargetInteger, BoundedInteger>)
+			&& (!IsVoid<TTargetInteger>)
 		auto from_integer(
-			TargetInteger const & value
+			TTargetInteger const & value
 		) -> Void {
 			thiz.m_data = std::bitset<t_size.value>{value.value};
 			return;
 		}
 
-		template <typename TargetInteger = BoundedInteger> requires
+		template <typename TTargetInteger = BoundedInteger> requires
 			AutomaticConstraint
-			&& (IsSame<TargetInteger, BoundedInteger>)
-			&& (!IsVoid<TargetInteger>)
+			&& (IsSame<TTargetInteger, BoundedInteger>)
+			&& (!IsVoid<TTargetInteger>)
 		auto to_integer(
-		) const -> TargetInteger {
-			return mbox<TargetInteger>(thiz.m_data.to_ullong());
+		) const -> TTargetInteger {
+			return mbox<TTargetInteger>(thiz.m_data.to_ullong());
 		}
 
 		#pragma endregion

@@ -15,86 +15,86 @@ export namespace Twinning::Kernel::Trait::Generalization {
 
 	#pragma region utility
 
-	template <typename ... Package, typename Executor> requires
-		CategoryConstraint<IsPureInstance<Package ...> && IsPureInstance<Executor>>
-		&& ((IsTypePackage<Package> || IsValuePackage<Package>) && ...)
-		&& ((Package::size == AsSelect<1_ixz, Package ..., TypePackage<>>::size) && ...)
-		&& (IsGenericCallable<Executor>)
+	template <typename ... TPackage, typename TExecutor> requires
+		CategoryConstraint<IsPureInstance<TPackage ...> && IsPureInstance<TExecutor>>
+		&& ((IsTypePackage<TPackage> || IsValuePackage<TPackage>) && ...)
+		&& ((TPackage::size == AsSelect<1_ixz, TPackage ..., TypePackage<>>::size) && ...)
+		&& (IsGenericCallable<TExecutor>)
 	inline constexpr auto each(
-		Executor const & executor
+		TExecutor const & executor
 	) -> Void {
-		auto iterate = [&] <auto element_index>(
-			ValuePackage<element_index>
+		auto iterate = [&] <auto t_element_index>(
+			ValuePackage<t_element_index>
 		) {
 			executor(
-				ValuePackage<element_index>{},
-				[] <typename CurrentPackage>(CurrentPackage) {
-					if constexpr (IsTypePackage<CurrentPackage>) {
-						return TypePackage<typename CurrentPackage::template Element<element_index>>{};
+				ValuePackage<t_element_index>{},
+				[] <typename TCurrentPackage>(TCurrentPackage) {
+					if constexpr (IsTypePackage<TCurrentPackage>) {
+						return TypePackage<typename TCurrentPackage::template Element<t_element_index>>{};
 					}
 					else {
-						return ValuePackage<CurrentPackage::template element<element_index>>{};
+						return ValuePackage<TCurrentPackage::template element<t_element_index>>{};
 					}
-				}(Package{}) ...
+				}(TPackage{}) ...
 			);
 		};
-		[&] <auto ... element_index>(
-			ValuePackage<element_index ...>
+		[&] <auto ... t_element_index>(
+			ValuePackage<t_element_index ...>
 		) {
-				(iterate(ValuePackage<element_index>{}), ...);
-			}(AsValuePackageOfIndex<AsSelect<1_ixz, Package ..., TypePackage<>>::size>{});
+				(iterate(ValuePackage<t_element_index>{}), ...);
+			}(AsValuePackageOfIndex<AsSelect<1_ixz, TPackage ..., TypePackage<>>::size>{});
 		return;
 	}
 
-	template <typename ... Package, typename Executor, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Package ...> && IsPureInstance<Executor> && IsValid<Argument ...>>
-		&& ((IsTypePackage<Package> || IsValuePackage<Package>) && ...)
-		&& ((Package::size == sizeof...(Argument)) && ...)
-		&& (IsGenericCallable<Executor>)
+	template <typename ... TPackage, typename TExecutor, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TPackage ...> && IsPureInstance<TExecutor> && IsValid<TArgument ...>>
+		&& ((IsTypePackage<TPackage> || IsValuePackage<TPackage>) && ...)
+		&& ((TPackage::size == sizeof...(TArgument)) && ...)
+		&& (IsGenericCallable<TExecutor>)
 	inline constexpr auto each_with(
-		Executor const & executor,
-		Argument && ...  argument
+		TExecutor const & executor,
+		TArgument && ...  argument
 	) -> Void {
-		auto iterate = [&] <auto element_index, typename CurrentArgument>(
-			ValuePackage<element_index>,
-			CurrentArgument && current_argument
+		auto iterate = [&] <auto t_element_index, typename TCurrentArgument>(
+			ValuePackage<t_element_index>,
+			TCurrentArgument && current_argument
 		) {
 			executor(
-				ValuePackage<element_index>{},
-				[] <typename CurrentPackage>(CurrentPackage) {
-					if constexpr (IsTypePackage<CurrentPackage>) {
-						return TypePackage<typename CurrentPackage::template Element<element_index>>{};
+				ValuePackage<t_element_index>{},
+				[] <typename TCurrentPackage>(TCurrentPackage) {
+					if constexpr (IsTypePackage<TCurrentPackage>) {
+						return TypePackage<typename TCurrentPackage::template Element<t_element_index>>{};
 					}
 					else {
-						return ValuePackage<CurrentPackage::template element<element_index>>{};
+						return ValuePackage<TCurrentPackage::template element<t_element_index>>{};
 					}
-				}(Package{}) ...,
-				as_forward<CurrentArgument>(current_argument)
+				}(TPackage{}) ...,
+				as_forward<TCurrentArgument>(current_argument)
 			);
 		};
-		[&] <auto ... element_index>(
-			ValuePackage<element_index ...>
+		[&] <auto ... t_element_index>(
+			ValuePackage<t_element_index ...>
 		) {
-				(iterate(ValuePackage<element_index>{}, as_forward<Argument>(argument)), ...);
-			}(AsValuePackageOfIndex<sizeof...(Argument)>{});
+				(iterate(ValuePackage<t_element_index>{}, as_forward<TArgument>(argument)), ...);
+			}(AsValuePackageOfIndex<sizeof...(TArgument)>{});
 		return;
 	}
 
 	// ----------------
 
-	template <typename Package, typename Condition, typename Executor> requires
-		CategoryConstraint<IsPureInstance<Package> && IsPureInstance<Condition> && IsPureInstance<Executor>>
-		&& (IsValuePackage<Package>)
-		&& (IsGenericCallable<Executor>)
+	template <typename TPackage, typename TCondition, typename TExecutor> requires
+		CategoryConstraint<IsPureInstance<TPackage> && IsPureInstance<TCondition> && IsPureInstance<TExecutor>>
+		&& (IsValuePackage<TPackage>)
+		&& (IsGenericCallable<TExecutor>)
 	inline constexpr auto match(
-		Condition const & condition,
-		Executor const &  executor
+		TCondition const & condition,
+		TExecutor const &  executor
 	) -> Void {
 		auto has_case = false;
-		each<Package>(
-			[&] <auto index, auto element>(ValuePackage<index>, ValuePackage<element>) {
-				if (element == condition) {
-					executor(ValuePackage<index>{}, ValuePackage<element>{});
+		each<TPackage>(
+			[&] <auto t_index, auto t_element>(ValuePackage<t_index>, ValuePackage<t_element>) {
+				if (t_element == condition) {
+					executor(ValuePackage<t_index>{}, ValuePackage<t_element>{});
 					has_case = true;
 				}
 			}

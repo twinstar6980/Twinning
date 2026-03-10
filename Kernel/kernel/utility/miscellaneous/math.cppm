@@ -12,13 +12,13 @@ export namespace Twinning::Kernel::Math {
 
 	#pragma region check
 
-	template <typename Value> requires
-		CategoryConstraint<IsPureInstance<Value>>
-		&& (IsNumberBox<Value>)
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsNumberBox<TValue>)
 	inline constexpr auto between(
-		Value const & value,
-		Value const & minimum_limit,
-		Value const & maximum_limit
+		TValue const & value,
+		TValue const & minimum_limit,
+		TValue const & maximum_limit
 	) -> Boolean {
 		return minimum_limit <= value && value <= maximum_limit;
 	}
@@ -27,34 +27,34 @@ export namespace Twinning::Kernel::Math {
 
 	#pragma region rounding
 
-	template <typename Result, typename Value> requires
-		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
-		&& (IsNumberBox<Result>)
-		&& (IsFloaterBox<Value>)
+	template <typename TResult, typename TValue> requires
+		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TValue>>
+		&& (IsNumberBox<TResult>)
+		&& (IsFloaterBox<TValue>)
 	inline constexpr auto floor(
-		Value const & value
-	) -> Result {
-		return mbox<Result>(std::floor(value.value));
+		TValue const & value
+	) -> TResult {
+		return mbox<TResult>(std::floor(value.value));
 	}
 
-	template <typename Result, typename Value> requires
-		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
-		&& (IsNumberBox<Result>)
-		&& (IsFloaterBox<Value>)
+	template <typename TResult, typename TValue> requires
+		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TValue>>
+		&& (IsNumberBox<TResult>)
+		&& (IsFloaterBox<TValue>)
 	inline constexpr auto round(
-		Value const & value
-	) -> Result {
-		return mbox<Result>(std::round(value.value));
+		TValue const & value
+	) -> TResult {
+		return mbox<TResult>(std::round(value.value));
 	}
 
-	template <typename Result, typename Value> requires
-		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Value>>
-		&& (IsNumberBox<Result>)
-		&& (IsFloaterBox<Value>)
+	template <typename TResult, typename TValue> requires
+		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TValue>>
+		&& (IsNumberBox<TResult>)
+		&& (IsFloaterBox<TValue>)
 	inline constexpr auto ceil(
-		Value const & value
-	) -> Result {
-		return mbox<Result>(std::ceil(value.value));
+		TValue const & value
+	) -> TResult {
+		return mbox<TResult>(std::ceil(value.value));
 	}
 
 	#pragma endregion

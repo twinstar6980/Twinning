@@ -11,11 +11,11 @@ import twinning.kernel.tool.data.compression.deflate.uncompress;
 
 export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Uncompress :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			Size const &           window_bits
 		) -> Void {
 			ripe.read_constant(k_magic_marker);
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				ripe.read_constant(0x00000000_iu32);
 			}
 			auto header = Header{};
@@ -52,7 +52,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			raw_size = k_none_size;
 			auto ripe_stream = InputByteStreamView{ripe};
 			ripe_stream.read_constant(k_magic_marker);
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				ripe_stream.read_constant(0x00000000_iu32);
 			}
 			auto header = Header{};

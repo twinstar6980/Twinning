@@ -19,8 +19,8 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It>
-	concept IsCharacterBox = IsTemplateInstanceOfT<It, CharacterBox>;
+	template <typename TIt>
+	concept IsCharacterBox = IsTemplateInstanceOfTt<TIt, CharacterBox>;
 
 	#pragma endregion
 

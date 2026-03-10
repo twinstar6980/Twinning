@@ -1,5 +1,7 @@
 module;
 
+// ReSharper disable IdentifierTypo CppInconsistentNaming
+
 #if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 
 #pragma clang diagnostic push

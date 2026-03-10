@@ -13,8 +13,8 @@ export namespace Twinning::Kernel::JavaScript {
 	#pragma region type
 
 	// NOTE: INTERFACE
-	// - static auto from ( This & thix, That && that, Option && ...option ) -> Void;
-	// - static auto to   ( This & thix, That && that, Option && ...option ) -> Void;
+	// - static auto from ( TThis & thix, TThat && that, TOption && ...option ) -> Void;
+	// - static auto to   ( TThis & thix, TThat && that, TOption && ...option ) -> Void;
 	template <typename TThat>
 	struct ValueAdapter;
 

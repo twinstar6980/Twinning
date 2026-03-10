@@ -15,9 +15,9 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	template <auto constant> requires
+	template <auto t_constant> requires
 		AutomaticConstraint
-	using StringView = BasicStringView<Character, constant>;
+	using StringView = BasicStringView<Character, t_constant>;
 
 	using VariableStringView = VariableBasicStringView<Character>;
 
@@ -105,41 +105,41 @@ export namespace Twinning::Kernel {
 
 	#pragma region literal
 
-	template <StaticString string> requires
+	template <StaticString t_string> requires
 		NoneConstraint
 	inline constexpr auto operator ""_sv(
 	) -> ConstantStringView {
-		return string.view();
+		return t_string.view();
 	}
 
-	template <StaticString string> requires
+	template <StaticString t_string> requires
 		NoneConstraint
 	inline constexpr auto operator ""_sl(
 	) -> Size {
-		return string.view().size();
+		return t_string.view().size();
 	}
 
-	template <StaticString string> requires
+	template <StaticString t_string> requires
 		NoneConstraint
 	inline constexpr auto operator ""_sh(
 	) -> IntegerU64 {
-		return string.view().hash();
+		return t_string.view().hash();
 	}
 
-	template <StaticString string> requires
+	template <StaticString t_string> requires
 		NoneConstraint
 	inline auto operator ""_s(
 	) -> String {
-		return String{string.view()};
+		return String{t_string.view()};
 	}
 
 	// ----------------
 
-	template <StaticString string> requires
+	template <StaticString t_string> requires
 		NoneConstraint
 	inline constexpr auto operator ""_shz(
 	) -> ZIntegerU64 {
-		return operator ""_sh<string>().value;
+		return operator ""_sh<t_string>().value;
 	}
 
 	#pragma endregion

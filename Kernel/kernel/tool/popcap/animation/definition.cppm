@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.animation.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Definition {
 
 		#pragma region transform
 
-		template <typename = None>
-		struct TranslateTransform_;
+		M_nested_template_declaration(TranslateTransform);
 
-		using TranslateTransform = TranslateTransform_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_list(
-			M_wrap(TranslateTransform_<_>),
+			M_nested_template_definition_name(TranslateTransform),
 			M_wrap(
 				(Floater) x,
 				(Floater) y,
@@ -29,14 +26,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct RotateTranslateTransform_;
+		M_nested_template_declaration(RotateTranslateTransform);
 
-		using RotateTranslateTransform = RotateTranslateTransform_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_list(
-			M_wrap(RotateTranslateTransform_<_>),
+			M_nested_template_definition_name(RotateTranslateTransform),
 			M_wrap(
 				(Floater) angle,
 				(Floater) x,
@@ -46,14 +40,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct MatrixTranslateTransform_;
+		M_nested_template_declaration(MatrixTranslateTransform);
 
-		using MatrixTranslateTransform = MatrixTranslateTransform_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_list(
-			M_wrap(MatrixTranslateTransform_<_>),
+			M_nested_template_definition_name(MatrixTranslateTransform),
 			M_wrap(
 				(Floater) a,
 				(Floater) b,
@@ -67,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 		// ----------------
 
 		using VariantTransform = decltype([] {
-			if constexpr (check_version(version, {1})) {
+			if constexpr (check_version(t_version, {1})) {
 				using Type = ListRecordVariant<TranslateTransform, RotateTranslateTransform, MatrixTranslateTransform>;
 				return declare<Type>();
 			}
@@ -77,14 +68,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		#pragma region color
 
-		template <typename = None>
-		struct Color_;
+		M_nested_template_declaration(Color);
 
-		using Color = Color_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_list(
-			M_wrap(Color_<_>),
+			M_nested_template_definition_name(Color),
 			M_wrap(
 				(Floater) red,
 				(Floater) green,
@@ -97,14 +85,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		#pragma region rectangle
 
-		template <typename = None>
-		struct Rectangle_;
+		M_nested_template_declaration(Rectangle);
 
-		using Rectangle = Rectangle_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Rectangle_<_>),
+			M_nested_template_definition_name(Rectangle),
 			M_wrap(
 				(Position2<Floater>) position,
 				(Size2<Floater>) size,
@@ -115,14 +100,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		#pragma region frame
 
-		template <typename = None>
-		struct Command_;
+		M_nested_template_declaration(Command);
 
-		using Command = Command_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_list(
-			M_wrap(Command_<_>),
+			M_nested_template_definition_name(Command),
 			M_wrap(
 				(String) command,
 				(String) argument,
@@ -131,14 +113,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct LayerRemove_;
+		M_nested_template_declaration(LayerRemove);
 
-		using LayerRemove = LayerRemove_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerRemove_<_>),
+			M_nested_template_definition_name(LayerRemove),
 			M_wrap(
 				(Integer) index,
 			),
@@ -146,14 +125,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct LayerAppend_;
+		M_nested_template_declaration(LayerAppend);
 
-		using LayerAppend = LayerAppend_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerAppend_<_>),
+			M_nested_template_definition_name(LayerAppend),
 			M_wrap(
 				(Integer) index,
 				(Optional<String>) name,
@@ -167,14 +143,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct LayerChange_;
+		M_nested_template_declaration(LayerChange);
 
-		using LayerChange = LayerChange_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerChange_<_>),
+			M_nested_template_definition_name(LayerChange),
 			M_wrap(
 				(Integer) index,
 				(VariantTransform) transform,
@@ -186,14 +159,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct Frame_;
+		M_nested_template_declaration(Frame);
 
-		using Frame = Frame_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Frame_<_>),
+			M_nested_template_definition_name(Frame),
 			M_wrap(
 				(Optional<String>) label,
 				(Boolean) stop,
@@ -208,14 +178,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		#pragma region sprite
 
-		template <typename = None>
-		struct WorkArea_;
+		M_nested_template_declaration(WorkArea);
 
-		using WorkArea = WorkArea_<>;
-
-		template <typename _> requires (check_version(version, {5}))
+		M_nested_template_definition_check(check_version(t_version, {5}))
 		M_record_of_list(
-			M_wrap(WorkArea_<_>),
+			M_nested_template_definition_name(WorkArea),
 			M_wrap(
 				(Integer) start,
 				(Integer) duration,
@@ -224,22 +191,19 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		// ----------------
 
-		template <typename = None>
-		struct Sprite_;
+		M_nested_template_declaration(Sprite);
 
-		using Sprite = Sprite_<>;
-
-		template <typename _> requires (check_version(version, {1, 4}))
+		M_nested_template_definition_check(check_version(t_version, {1, 4}))
 		M_record_of_map(
-			M_wrap(Sprite_<_>),
+			M_nested_template_definition_name(Sprite),
 			M_wrap(
 				(List<Frame>) frame,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4, 5}))
+		M_nested_template_definition_check(check_version(t_version, {4, 5}))
 		M_record_of_map(
-			M_wrap(Sprite_<_>),
+			M_nested_template_definition_name(Sprite),
 			M_wrap(
 				(String) name,
 				(Floater) frame_rate,
@@ -247,9 +211,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {5}))
+		M_nested_template_definition_check(check_version(t_version, {5}))
 		M_record_of_map(
-			M_wrap(Sprite_<_>),
+			M_nested_template_definition_name(Sprite),
 			M_wrap(
 				(String) name,
 				(Floater) frame_rate,
@@ -262,32 +226,29 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		#pragma region image
 
-		template <typename = None>
-		struct Image_;
+		M_nested_template_declaration(Image);
 
-		using Image = Image_<>;
-
-		template <typename _> requires (check_version(version, {1, 2}))
+		M_nested_template_definition_check(check_version(t_version, {1, 2}))
 		M_record_of_map(
-			M_wrap(Image_<_>),
+			M_nested_template_definition_name(Image),
 			M_wrap(
 				(String) name,
 				(RotateTranslateTransform) transform,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {2, 4}))
+		M_nested_template_definition_check(check_version(t_version, {2, 4}))
 		M_record_of_map(
-			M_wrap(Image_<_>),
+			M_nested_template_definition_name(Image),
 			M_wrap(
 				(String) name,
 				(MatrixTranslateTransform) transform,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4}))
+		M_nested_template_definition_check(check_version(t_version, {4}))
 		M_record_of_map(
-			M_wrap(Image_<_>),
+			M_nested_template_definition_name(Image),
 			M_wrap(
 				(String) name,
 				(Size2<Integer>) size,
@@ -299,14 +260,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 
 		#pragma region animation
 
-		template <typename = None>
-		struct Animation_;
+		M_nested_template_declaration(Animation);
 
-		using Animation = Animation_<>;
-
-		template <typename _> requires (check_version(version, {1, 4}))
+		M_nested_template_definition_check(check_version(t_version, {1, 4}))
 		M_record_of_map(
-			M_wrap(Animation_<_>),
+			M_nested_template_definition_name(Animation),
 			M_wrap(
 				(Integer) frame_rate,
 				(Position2<Floater>) position,
@@ -317,9 +275,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4}))
+		M_nested_template_definition_check(check_version(t_version, {4}))
 		M_record_of_map(
-			M_wrap(Animation_<_>),
+			M_nested_template_definition_name(Animation),
 			M_wrap(
 				(Integer) frame_rate,
 				(Position2<Floater>) position,

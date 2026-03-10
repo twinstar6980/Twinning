@@ -1,6 +1,6 @@
 module;
 
-// NOTE: EXPLAIN: T = typename, V = auto, M = template, N = ...
+// NOTE: EXPLAIN: t = typename, v = auto, m = template, n = ...
 
 #include "kernel/common.hpp"
 
@@ -12,134 +12,134 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 
-	template <typename It, template <typename> typename Template>
-	concept IsTemplateInstanceOfT =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename> typename TTemplate>
+	concept IsTemplateInstanceOfTt =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1>(Template<T1> & it) {
-				}(declare<It &>())
+				[] <typename T1>(TTemplate<T1> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename, typename> typename Template>
-	concept IsTemplateInstanceOfTT =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename, typename> typename TTemplate>
+	concept IsTemplateInstanceOfTtt =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1, typename T2>(Template<T1, T2> & it) {
-				}(declare<It &>())
+				[] <typename T1, typename T2>(TTemplate<T1, T2> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename, typename, auto> typename Template>
-	concept IsTemplateInstanceOfTTV =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename, typename, auto> typename TTemplate>
+	concept IsTemplateInstanceOfTttv =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1, typename T2, auto t_3>(Template<T1, T2, t_3> & it) {
-				}(declare<It &>())
+				[] <typename T1, typename T2, auto t_3>(TTemplate<T1, T2, t_3> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <auto> typename Template>
-	concept IsTemplateInstanceOfV =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <auto> typename TTemplate>
+	concept IsTemplateInstanceOfTv =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <auto t_1>(Template<t_1> & it) {
-				}(declare<It &>())
+				[] <auto t_1>(TTemplate<t_1> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <auto, auto> typename Template>
-	concept IsTemplateInstanceOfVV =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <auto, auto> typename TTemplate>
+	concept IsTemplateInstanceOfTvv =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <auto t_1, auto t_2>(Template<t_1, t_2> & it) {
-				}(declare<It &>())
+				[] <auto t_1, auto t_2>(TTemplate<t_1, t_2> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <auto, auto, auto, auto> typename Template>
-	concept IsTemplateInstanceOfVVVV =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <auto, auto, auto, auto> typename TTemplate>
+	concept IsTemplateInstanceOfTvvvv =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <auto t_1, auto t_2, auto t_3, auto t_4>(Template<t_1, t_2, t_3, t_4> & it) {
-				}(declare<It &>())
+				[] <auto t_1, auto t_2, auto t_3, auto t_4>(TTemplate<t_1, t_2, t_3, t_4> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename, auto> typename Template>
-	concept IsTemplateInstanceOfTV =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename, auto> typename TTemplate>
+	concept IsTemplateInstanceOfTtv =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1, auto t_2>(Template<T1, t_2> & it) {
-				}(declare<It &>())
+				[] <typename T1, auto t_2>(TTemplate<T1, t_2> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename, auto, template <typename, auto> typename> typename Template>
-	concept IsTemplateInstanceOfTVMTVM =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename, auto, template <typename, auto> typename> typename TTemplate>
+	concept IsTemplateInstanceOfTtvmtvm =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1, auto t_2, template <typename, auto> typename TM3>(Template<T1, t_2, TM3> & it) {
-				}(declare<It &>())
+				[] <typename T1, auto t_2, template <typename, auto> typename TM3>(TTemplate<T1, t_2, TM3> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename ...> typename Template>
-	concept IsTemplateInstanceOfNT =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename ...> typename TTemplate>
+	concept IsTemplateInstanceOfTnt =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename ... T1>(Template<T1 ...> & it) {
-				}(declare<It &>())
+				[] <typename ... T1>(TTemplate<T1 ...> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <auto ...> typename Template>
-	concept IsTemplateInstanceOfNV =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <auto ...> typename TTemplate>
+	concept IsTemplateInstanceOfTnv =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <auto ... t_1>(Template<t_1 ...> & it) {
-				}(declare<It &>())
+				[] <auto ... t_1>(TTemplate<t_1 ...> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename, typename ...> typename Template>
-	concept IsTemplateInstanceOfTNT =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename, typename ...> typename TTemplate>
+	concept IsTemplateInstanceOfTtnt =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1, typename ... T2>(Template<T1, T2 ...> & it) {
-				}(declare<It &>())
+				[] <typename T1, typename ... T2>(TTemplate<T1, T2 ...> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;
 
-	template <typename It, template <typename, auto, typename, typename ...> typename Template>
-	concept IsTemplateInstanceOfTVTNT =
-		CategoryConstraint<IsPureInstance<It>>
+	template <typename TIt, template <typename, auto, typename, typename ...> typename TTemplate>
+	concept IsTemplateInstanceOfTtvtnt =
+		CategoryConstraint<IsPureInstance<TIt>>
 		&& (requires {
 			{
-				[] <typename T1, auto t_2, typename T3, typename ... T4>(Template<T1, t_2, T3, T4 ...> & it) {
-				}(declare<It &>())
+				[] <typename T1, auto t_2, typename T3, typename ... T4>(TTemplate<T1, t_2, T3, T4 ...> & it) {
+				}(declare<TIt &>())
 			};
 		})
 		;

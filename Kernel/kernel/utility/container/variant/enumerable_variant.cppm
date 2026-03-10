@@ -77,46 +77,46 @@ export namespace Twinning::Kernel {
 
 		#pragma region value of type
 
-		template <auto type> requires
+		template <auto t_type> requires
 			CategoryConstraint<>
-			&& (IsSameOf<type, Enumeration>)
-			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
+			&& (IsSameOf<t_type, Enumeration>)
+			&& (static_cast<ZSize>(t_type.value) < sizeof...(TValue))
 		constexpr auto is_of_type(
 		) const -> Boolean {
-			return thiz.template is<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
+			return thiz.template is<AsSelect<static_cast<ZSize>(t_type.value), TValue ...>>();
 		}
 
 		// ----------------
 
-		template <auto type, typename ... Argument> requires
+		template <auto t_type, typename ... TArgument> requires
 			CategoryConstraint<>
-			&& (IsSameOf<type, Enumeration>)
-			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
-			&& (IsConstructible<AsSelect<static_cast<ZSize>(type.value), TValue ...>, Argument && ...>)
+			&& (IsSameOf<t_type, Enumeration>)
+			&& (static_cast<ZSize>(t_type.value) < sizeof...(TValue))
+			&& (IsConstructible<AsSelect<static_cast<ZSize>(t_type.value), TValue ...>, TArgument && ...>)
 		constexpr auto set_of_type(
-			Argument && ... argument
-		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
-			return thiz.template set<AsSelect<static_cast<ZSize>(type.value), TValue ...>>(as_forward<Argument>(argument) ...);
+			TArgument && ... argument
+		) -> AsSelect<static_cast<ZSize>(t_type.value), TValue ...> & {
+			return thiz.template set<AsSelect<static_cast<ZSize>(t_type.value), TValue ...>>(as_forward<TArgument>(argument) ...);
 		}
 
 		// ----------------
 
-		template <auto type> requires
+		template <auto t_type> requires
 			CategoryConstraint<>
-			&& (IsSameOf<type, Enumeration>)
-			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
+			&& (IsSameOf<t_type, Enumeration>)
+			&& (static_cast<ZSize>(t_type.value) < sizeof...(TValue))
 		constexpr auto get_of_type(
-		) -> AsSelect<static_cast<ZSize>(type.value), TValue ...> & {
-			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
+		) -> AsSelect<static_cast<ZSize>(t_type.value), TValue ...> & {
+			return thiz.template get<AsSelect<static_cast<ZSize>(t_type.value), TValue ...>>();
 		}
 
-		template <auto type> requires
+		template <auto t_type> requires
 			CategoryConstraint<>
-			&& (IsSameOf<type, Enumeration>)
-			&& (static_cast<ZSize>(type.value) < sizeof...(TValue))
+			&& (IsSameOf<t_type, Enumeration>)
+			&& (static_cast<ZSize>(t_type.value) < sizeof...(TValue))
 		constexpr auto get_of_type(
-		) const -> AsSelect<static_cast<ZSize>(type.value), TValue ...> const & {
-			return thiz.template get<AsSelect<static_cast<ZSize>(type.value), TValue ...>>();
+		) const -> AsSelect<static_cast<ZSize>(t_type.value), TValue ...> const & {
+			return thiz.template get<AsSelect<static_cast<ZSize>(t_type.value), TValue ...>>();
 		}
 
 		#pragma endregion

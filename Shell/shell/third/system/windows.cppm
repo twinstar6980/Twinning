@@ -1,5 +1,7 @@
 module;
 
+// ReSharper disable IdentifierTypo CppInconsistentNaming
+
 #if defined M_system_windows
 
 #pragma clang diagnostic push

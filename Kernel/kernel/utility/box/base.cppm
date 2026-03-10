@@ -12,10 +12,10 @@ export namespace Twinning::Kernel {
 
 	#pragma region value
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBaseBoxValue =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsBuiltinFundamental<It> || IsBuiltinPointer<It> || IsBuiltinEnumeration<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsBuiltinFundamental<TIt> || IsBuiltinPointer<TIt> || IsBuiltinEnumeration<TIt>)
 		;
 
 	#pragma endregion
@@ -85,35 +85,35 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It>
-	concept IsBaseBox = IsTemplateInstanceOfT<It, BaseBox>;
+	template <typename TIt>
+	concept IsBaseBox = IsTemplateInstanceOfTt<TIt, BaseBox>;
 
 	#pragma endregion
 
 	#pragma region utility
 
 	// NOTE: ALIAS: make_box
-	template <typename Box, typename Value> requires
-		CategoryConstraint<IsPureInstance<Box> && IsPureInstance<Value>>
-		&& (IsBaseBox<Box>)
-		&& (IsBaseBoxValue<Value>)
+	template <typename TBox, typename TValue> requires
+		CategoryConstraint<IsPureInstance<TBox> && IsPureInstance<TValue>>
+		&& (IsBaseBox<TBox>)
+		&& (IsBaseBoxValue<TValue>)
 	inline constexpr auto mbox(
-		Value const & value
-	) -> Box {
-		return Box{static_cast<typename Box::Value>(value)};
+		TValue const & value
+	) -> TBox {
+		return TBox{static_cast<TBox::Value>(value)};
 	}
 
 	// ----------------
 
 	// NOTE: ALIAS: cast_box
-	template <typename Destination, typename Source> requires
-		CategoryConstraint<IsPureInstance<Destination> && IsPureInstance<Source>>
-		&& (IsBaseBox<Destination>)
-		&& (IsBaseBox<Source>)
+	template <typename TDestination, typename TSource> requires
+		CategoryConstraint<IsPureInstance<TDestination> && IsPureInstance<TSource>>
+		&& (IsBaseBox<TDestination>)
+		&& (IsBaseBox<TSource>)
 	inline constexpr auto cbox(
-		Source const & source
-	) -> Destination {
-		return Destination{static_cast<typename Destination::Value>(source.value)};
+		TSource const & source
+	) -> TDestination {
+		return TDestination{static_cast<TDestination::Value>(source.value)};
 	}
 
 	#pragma endregion

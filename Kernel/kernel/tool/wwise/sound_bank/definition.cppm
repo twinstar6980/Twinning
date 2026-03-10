@@ -8,7 +8,7 @@ import twinning.kernel.tool.wwise.sound_bank.version;
 
 export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Definition {
 
 		#pragma region identifier
@@ -19,21 +19,21 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region value
 
-		template <typename Value>
+		template <typename TValue>
 		M_record_of_list(
 			M_wrap(RegularValue),
 			M_wrap(
-				(Value) value,
+				(TValue) value,
 			),
 		);
 
-		template <typename Value>
+		template <typename TValue>
 		M_record_of_list(
 			M_wrap(RandomizableValue),
 			M_wrap(
-				(Value) value,
-				(Value) minimum_value,
-				(Value) maximum_value,
+				(TValue) value,
+				(TValue) minimum_value,
+				(TValue) maximum_value,
 			),
 		);
 
@@ -41,14 +41,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region common
 
-		template <typename = None>
-		struct Curve_;
+		M_nested_template_declaration(Curve);
 
-		using Curve = Curve_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(Curve_<_>),
+			M_nested_template_definition_name(Curve),
 			M_wrap(
 				constant,
 				linear,
@@ -65,14 +62,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct TimePoint_;
+		M_nested_template_declaration(TimePoint);
 
-		using TimePoint = TimePoint_<>;
-
-		template <typename _> requires (check_version(version, {72, 140}))
+		M_nested_template_definition_check(check_version(t_version, {72, 140}))
 		M_enumeration(
-			M_wrap(TimePoint_<_>),
+			M_nested_template_definition_name(TimePoint),
 			M_wrap(
 				immediate,
 				next_grid,
@@ -85,9 +79,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_enumeration(
-			M_wrap(TimePoint_<_>),
+			M_nested_template_definition_name(TimePoint),
 			M_wrap(
 				immediate,
 				next_grid,
@@ -105,14 +99,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region coordinate
 
-		template <typename = None>
-		struct CoordinateMode_;
+		M_nested_template_declaration(CoordinateMode);
 
-		using CoordinateMode = CoordinateMode_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(CoordinateMode_<_>),
+			M_nested_template_definition_name(CoordinateMode),
 			M_wrap(
 				linear,
 				scaled,
@@ -122,14 +113,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct CoordinatePoint_;
+		M_nested_template_declaration(CoordinatePoint);
 
-		using CoordinatePoint = CoordinatePoint_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(CoordinatePoint_<_>),
+			M_nested_template_definition_name(CoordinatePoint),
 			M_wrap(
 				(Position2<Floater>) position,
 				(Curve) curve,
@@ -138,14 +126,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct CoordinateIdentifierPoint_;
+		M_nested_template_declaration(CoordinateIdentifierPoint);
 
-		using CoordinateIdentifierPoint = CoordinateIdentifierPoint_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(CoordinateIdentifierPoint_<_>),
+			M_nested_template_definition_name(CoordinateIdentifierPoint),
 			M_wrap(
 				(Position2<Floater, Identifier>) position,
 				(Curve) curve,
@@ -156,14 +141,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region property
 
-		template <typename = None>
-		struct PropertyCategory_;
+		M_nested_template_declaration(PropertyCategory);
 
-		using PropertyCategory = PropertyCategory_<>;
-
-		template <typename _> requires (check_version(version, {72, 145}))
+		M_nested_template_definition_check(check_version(t_version, {72, 145}))
 		M_enumeration(
-			M_wrap(PropertyCategory_<_>),
+			M_nested_template_definition_name(PropertyCategory),
 			M_wrap(
 				unidirectional,
 				bidirectional,
@@ -172,9 +154,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {145}))
+		M_nested_template_definition_check(check_version(t_version, {145}))
 		M_enumeration(
-			M_wrap(PropertyCategory_<_>),
+			M_nested_template_definition_name(PropertyCategory),
 			M_wrap(
 				unidirectional,
 				bidirectional,
@@ -188,14 +170,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region parameter
 
-		template <typename = None>
-		struct ParameterCategory_;
+		M_nested_template_declaration(ParameterCategory);
 
-		using ParameterCategory = ParameterCategory_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(ParameterCategory_<_>),
+			M_nested_template_definition_name(ParameterCategory),
 			M_wrap(
 				game_parameter,
 				midi_parameter,
@@ -205,22 +184,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct Parameter_;
+		M_nested_template_declaration(Parameter);
 
-		using Parameter = Parameter_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_list(
-			M_wrap(Parameter_<_>),
+			M_nested_template_definition_name(Parameter),
 			M_wrap(
 				(Identifier) identifier,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_list(
-			M_wrap(Parameter_<_>),
+			M_nested_template_definition_name(Parameter),
 			M_wrap(
 				(Identifier) identifier,
 				(ParameterCategory) category,
@@ -231,14 +207,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region real time parameter control setting
 
-		template <typename = None>
-		struct RealTimeParameterControlSettingItem_;
+		M_nested_template_declaration(RealTimeParameterControlSettingItem);
 
-		using RealTimeParameterControlSettingItem = RealTimeParameterControlSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(RealTimeParameterControlSettingItem_<_>),
+			M_nested_template_definition_name(RealTimeParameterControlSettingItem),
 			M_wrap(
 				(Integer) type,
 				(Parameter) parameter,
@@ -248,9 +221,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(RealTimeParameterControlSettingItem_<_>),
+			M_nested_template_definition_name(RealTimeParameterControlSettingItem),
 			M_wrap(
 				(Integer) type,
 				(Parameter) parameter,
@@ -263,14 +236,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct RealTimeParameterControlSetting_;
+		M_nested_template_declaration(RealTimeParameterControlSetting);
 
-		using RealTimeParameterControlSetting = RealTimeParameterControlSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(RealTimeParameterControlSetting_<_>),
+			M_nested_template_definition_name(RealTimeParameterControlSetting),
 			M_wrap(
 				(List<RealTimeParameterControlSettingItem>) item,
 			),
@@ -280,23 +250,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region state setting
 
-		template <typename = None>
-		struct StateSettingAttribute_;
+		M_nested_template_declaration(StateSettingAttribute);
 
-		using StateSettingAttribute = StateSettingAttribute_<>;
-
-		template <typename _> requires (check_version(version, {125, 128}))
+		M_nested_template_definition_check(check_version(t_version, {125, 128}))
 		M_record_of_map(
-			M_wrap(StateSettingAttribute_<_>),
+			M_nested_template_definition_name(StateSettingAttribute),
 			M_wrap(
 				(Integer) type,
 				(PropertyCategory) category,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(StateSettingAttribute_<_>),
+			M_nested_template_definition_name(StateSettingAttribute),
 			M_wrap(
 				(Integer) type,
 				(PropertyCategory) category,
@@ -306,14 +273,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct StateSettingApplyItem_;
+		M_nested_template_declaration(StateSettingApplyItem);
 
-		using StateSettingApplyItem = StateSettingApplyItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(StateSettingApplyItem_<_>),
+			M_nested_template_definition_name(StateSettingApplyItem),
 			M_wrap(
 				(Identifier) target,
 				(Identifier) setting,
@@ -322,14 +286,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct StateSettingItem_;
+		M_nested_template_declaration(StateSettingItem);
 
-		using StateSettingItem = StateSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(StateSettingItem_<_>),
+			M_nested_template_definition_name(StateSettingItem),
 			M_wrap(
 				(Identifier) group,
 				(TimePoint) change_occur_at,
@@ -339,22 +300,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct StateSetting_;
+		M_nested_template_declaration(StateSetting);
 
-		using StateSetting = StateSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 125}))
+		M_nested_template_definition_check(check_version(t_version, {72, 125}))
 		M_record_of_map(
-			M_wrap(StateSetting_<_>),
+			M_nested_template_definition_name(StateSetting),
 			M_wrap(
 				(List<StateSettingItem>) item,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {125}))
+		M_nested_template_definition_check(check_version(t_version, {125}))
 		M_record_of_map(
-			M_wrap(StateSetting_<_>),
+			M_nested_template_definition_name(StateSetting),
 			M_wrap(
 				(List<StateSettingAttribute>) attribute,
 				(List<StateSettingItem>) item,
@@ -365,14 +323,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio play setting
 
-		template <typename = None>
-		struct AudioPlayType_;
+		M_nested_template_declaration(AudioPlayType);
 
-		using AudioPlayType = AudioPlayType_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlayType_<_>),
+			M_nested_template_definition_name(AudioPlayType),
 			M_wrap(
 				sequence,
 				random,
@@ -381,14 +336,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayMode_;
+		M_nested_template_declaration(AudioPlayMode);
 
-		using AudioPlayMode = AudioPlayMode_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlayMode_<_>),
+			M_nested_template_definition_name(AudioPlayMode),
 			M_wrap(
 				step,
 				continuous,
@@ -399,14 +351,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region voice setting
 
-		template <typename = None>
-		struct BusVoiceSetting_;
+		M_nested_template_declaration(BusVoiceSetting);
 
-		using BusVoiceSetting = BusVoiceSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(BusVoiceSetting_<_>),
+			M_nested_template_definition_name(BusVoiceSetting),
 			M_wrap(
 				(RegularValue<Floater>) volume,
 				(RegularValue<Floater>) pitch,
@@ -414,9 +363,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(BusVoiceSetting_<_>),
+			M_nested_template_definition_name(BusVoiceSetting),
 			M_wrap(
 				(RegularValue<Floater>) volume,
 				(RegularValue<Floater>) pitch,
@@ -427,14 +376,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioVoice_;
+		M_nested_template_declaration(AudioVoice);
 
-		using AudioVoice = AudioVoice_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AudioVoice_<_>),
+			M_nested_template_definition_name(AudioVoice),
 			M_wrap(
 				(RandomizableValue<Floater>) volume,
 				(RandomizableValue<Floater>) pitch,
@@ -442,9 +388,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(AudioVoice_<_>),
+			M_nested_template_definition_name(AudioVoice),
 			M_wrap(
 				(RandomizableValue<Floater>) volume,
 				(RandomizableValue<Floater>) pitch,
@@ -457,14 +403,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region voice volume setting
 
-		template <typename = None>
-		struct BusVoiceVolumeGainSetting_;
+		M_nested_template_declaration(BusVoiceVolumeGainSetting);
 
-		using BusVoiceVolumeGainSetting = BusVoiceVolumeGainSetting_<>;
-
-		template <typename _> requires (check_version(version, {125}))
+		M_nested_template_definition_check(check_version(t_version, {125}))
 		M_record_of_map(
-			M_wrap(BusVoiceVolumeGainSetting_<_>),
+			M_nested_template_definition_name(BusVoiceVolumeGainSetting),
 			M_wrap(
 				(RegularValue<Floater>) make_up,
 			),
@@ -472,23 +415,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioVoiceVolumeGainSetting_;
+		M_nested_template_declaration(AudioVoiceVolumeGainSetting);
 
-		using AudioVoiceVolumeGainSetting = AudioVoiceVolumeGainSetting_<>;
-
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(AudioVoiceVolumeGainSetting_<_>),
+			M_nested_template_definition_name(AudioVoiceVolumeGainSetting),
 			M_wrap(
 				(Boolean) normalization,
 				(RegularValue<Floater>) make_up,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(AudioVoiceVolumeGainSetting_<_>),
+			M_nested_template_definition_name(AudioVoiceVolumeGainSetting),
 			M_wrap(
 				(Boolean) normalization,
 				(RandomizableValue<Floater>) make_up,
@@ -499,14 +439,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region bus setting
 
-		template <typename = None>
-		struct BusBusSetting_;
+		M_nested_template_declaration(BusBusSetting);
 
-		using BusBusSetting = BusBusSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(BusBusSetting_<_>),
+			M_nested_template_definition_name(BusBusSetting),
 			M_wrap(
 				(RegularValue<Floater>) volume,
 			),
@@ -514,14 +451,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct BusOutputBusSetting_;
+		M_nested_template_declaration(BusOutputBusSetting);
 
-		using BusOutputBusSetting = BusOutputBusSetting_<>;
-
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(BusOutputBusSetting_<_>),
+			M_nested_template_definition_name(BusOutputBusSetting),
 			M_wrap(
 				(RegularValue<Floater>) volume,
 				(RegularValue<Floater>) low_pass_filter,
@@ -531,14 +465,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioOutputBusSetting_;
+		M_nested_template_declaration(AudioOutputBusSetting);
 
-		using AudioOutputBusSetting = AudioOutputBusSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AudioOutputBusSetting_<_>),
+			M_nested_template_definition_name(AudioOutputBusSetting),
 			M_wrap(
 				(Identifier) bus,
 				(RegularValue<Floater>) volume,
@@ -546,9 +477,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(AudioOutputBusSetting_<_>),
+			M_nested_template_definition_name(AudioOutputBusSetting),
 			M_wrap(
 				(Identifier) bus,
 				(RegularValue<Floater>) volume,
@@ -561,23 +492,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio auxiliary send setting
 
-		template <typename = None>
-		struct AudioGameDefinedAuxiliarySendSetting_;
+		M_nested_template_declaration(AudioGameDefinedAuxiliarySendSetting);
 
-		using AudioGameDefinedAuxiliarySendSetting = AudioGameDefinedAuxiliarySendSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 128}))
+		M_nested_template_definition_check(check_version(t_version, {72, 128}))
 		M_record_of_map(
-			M_wrap(AudioGameDefinedAuxiliarySendSetting_<_>),
+			M_nested_template_definition_name(AudioGameDefinedAuxiliarySendSetting),
 			M_wrap(
 				(Boolean) enable,
 				(RegularValue<Floater>) volume,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(AudioGameDefinedAuxiliarySendSetting_<_>),
+			M_nested_template_definition_name(AudioGameDefinedAuxiliarySendSetting),
 			M_wrap(
 				(Boolean) enable,
 				(RegularValue<Floater>) volume,
@@ -588,23 +516,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioUserDefinedAuxiliarySendSettingItem_;
+		M_nested_template_declaration(AudioUserDefinedAuxiliarySendSettingItem);
 
-		using AudioUserDefinedAuxiliarySendSettingItem = AudioUserDefinedAuxiliarySendSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72, 128}))
+		M_nested_template_definition_check(check_version(t_version, {72, 128}))
 		M_record_of_map(
-			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
+			M_nested_template_definition_name(AudioUserDefinedAuxiliarySendSettingItem),
 			M_wrap(
 				(Identifier) bus,
 				(RegularValue<Floater>) volume,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(AudioUserDefinedAuxiliarySendSettingItem_<_>),
+			M_nested_template_definition_name(AudioUserDefinedAuxiliarySendSettingItem),
 			M_wrap(
 				(Identifier) bus,
 				(RegularValue<Floater>) volume,
@@ -615,14 +540,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioUserDefinedAuxiliarySendSetting_;
+		M_nested_template_declaration(AudioUserDefinedAuxiliarySendSetting);
 
-		using AudioUserDefinedAuxiliarySendSetting = AudioUserDefinedAuxiliarySendSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioUserDefinedAuxiliarySendSetting_<_>),
+			M_nested_template_definition_name(AudioUserDefinedAuxiliarySendSetting),
 			M_wrap(
 				(Boolean) enable,
 				(AudioUserDefinedAuxiliarySendSettingItem) item_1,
@@ -634,14 +556,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioEarlyReflectionAuxiliarySendSetting_;
+		M_nested_template_declaration(AudioEarlyReflectionAuxiliarySendSetting);
 
-		using AudioEarlyReflectionAuxiliarySendSetting = AudioEarlyReflectionAuxiliarySendSetting_<>;
-
-		template <typename _> requires (check_version(version, {135}))
+		M_nested_template_definition_check(check_version(t_version, {135}))
 		M_record_of_map(
-			M_wrap(AudioEarlyReflectionAuxiliarySendSetting_<_>),
+			M_nested_template_definition_name(AudioEarlyReflectionAuxiliarySendSetting),
 			M_wrap(
 				(Identifier) bus,
 				(RegularValue<Floater>) volume,
@@ -650,23 +569,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioAuxiliarySendSetting_;
+		M_nested_template_declaration(AudioAuxiliarySendSetting);
 
-		using AudioAuxiliarySendSetting = AudioAuxiliarySendSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 135}))
+		M_nested_template_definition_check(check_version(t_version, {72, 135}))
 		M_record_of_map(
-			M_wrap(AudioAuxiliarySendSetting_<_>),
+			M_nested_template_definition_name(AudioAuxiliarySendSetting),
 			M_wrap(
 				(AudioGameDefinedAuxiliarySendSetting) game_defined,
 				(AudioUserDefinedAuxiliarySendSetting) user_defined,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135}))
+		M_nested_template_definition_check(check_version(t_version, {135}))
 		M_record_of_map(
-			M_wrap(AudioAuxiliarySendSetting_<_>),
+			M_nested_template_definition_name(AudioAuxiliarySendSetting),
 			M_wrap(
 				(AudioGameDefinedAuxiliarySendSetting) game_defined,
 				(AudioUserDefinedAuxiliarySendSetting) user_defined,
@@ -678,14 +594,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio effect setting
 
-		template <typename = None>
-		struct AudioEffectSettingItem_;
+		M_nested_template_declaration(AudioEffectSettingItem);
 
-		using AudioEffectSettingItem = AudioEffectSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72, 150}))
+		M_nested_template_definition_check(check_version(t_version, {72, 150}))
 		M_record_of_map(
-			M_wrap(AudioEffectSettingItem_<_>),
+			M_nested_template_definition_name(AudioEffectSettingItem),
 			M_wrap(
 				(Integer) index,
 				(Identifier) identifier,
@@ -694,9 +607,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(AudioEffectSettingItem_<_>),
+			M_nested_template_definition_name(AudioEffectSettingItem),
 			M_wrap(
 				(Integer) index,
 				(Identifier) identifier,
@@ -707,23 +620,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioEffectSetting_;
+		M_nested_template_declaration(AudioEffectSetting);
 
-		using AudioEffectSetting = AudioEffectSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 150}))
+		M_nested_template_definition_check(check_version(t_version, {72, 150}))
 		M_record_of_map(
-			M_wrap(AudioEffectSetting_<_>),
+			M_nested_template_definition_name(AudioEffectSetting),
 			M_wrap(
 				(Tuple<Boolean, Boolean, Boolean, Boolean, Boolean>) bypass,
 				(List<AudioEffectSettingItem>) item,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(AudioEffectSetting_<_>),
+			M_nested_template_definition_name(AudioEffectSetting),
 			M_wrap(
 				(Boolean) bypass,
 				(List<AudioEffectSettingItem>) item,
@@ -734,14 +644,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio metadata setting
 
-		template <typename = None>
-		struct AudioMetadataSettingItem_;
+		M_nested_template_declaration(AudioMetadataSettingItem);
 
-		using AudioMetadataSettingItem = AudioMetadataSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AudioMetadataSettingItem_<_>),
+			M_nested_template_definition_name(AudioMetadataSettingItem),
 			M_wrap(
 				(Integer) index,
 				(Identifier) identifier,
@@ -751,14 +658,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioMetadataSetting_;
+		M_nested_template_declaration(AudioMetadataSetting);
 
-		using AudioMetadataSetting = AudioMetadataSetting_<>;
-
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AudioMetadataSetting_<_>),
+			M_nested_template_definition_name(AudioMetadataSetting),
 			M_wrap(
 				(List<AudioMetadataSettingItem>) item,
 			),
@@ -768,23 +672,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio positioning setting
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint);
 
-		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint = AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint),
 			M_wrap(
 				(Position2<Floater>) position,
 				(Integer) duration,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomationPoint),
 			M_wrap(
 				(Position3<Floater>) position,
 				(Integer) duration,
@@ -793,14 +694,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint);
 
-		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint = AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_list(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint),
 			M_wrap(
 				(Integer) begin,
 				(Integer) count,
@@ -809,23 +707,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange);
 
-		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange = AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_list(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange),
 			M_wrap(
 				(Floater) left_right,
 				(Floater) front_back,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_list(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange),
 			M_wrap(
 				(Floater) left_right,
 				(Floater) front_back,
@@ -835,14 +730,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSourceAutomationPath_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSourceAutomationPath);
 
-		using AudioPositioningSettingListenerRoutingPositionSourceAutomationPath = AudioPositioningSettingListenerRoutingPositionSourceAutomationPath_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomationPath_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomationPath),
 			M_wrap(
 				(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathPoint) point,
 				(AudioPositioningSettingListenerRoutingPositionSourceAutomationPathRandomRange) random_range,
@@ -851,14 +743,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSourceAutomation_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSourceAutomation);
 
-		using AudioPositioningSettingListenerRoutingPositionSourceAutomation = AudioPositioningSettingListenerRoutingPositionSourceAutomation_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceAutomation_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceAutomation),
 			M_wrap(
 				(AudioPlayType) play_type,
 				(AudioPlayMode) play_mode,
@@ -872,23 +761,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSourceMode_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSourceMode);
 
-		using AudioPositioningSettingListenerRoutingPositionSourceMode = AudioPositioningSettingListenerRoutingPositionSourceMode_<>;
-
-		template <typename _> requires (check_version(version, {72, 132}))
+		M_nested_template_definition_check(check_version(t_version, {72, 132}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceMode_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceMode),
 			M_wrap(
 				user_defined,
 				game_defined,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132}))
+		M_nested_template_definition_check(check_version(t_version, {132}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSourceMode_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSourceMode),
 			M_wrap(
 				emitter,
 				emitter_with_automation,
@@ -898,14 +784,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingPositionSource_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingPositionSource);
 
-		using AudioPositioningSettingListenerRoutingPositionSource = AudioPositioningSettingListenerRoutingPositionSource_<>;
-
-		template <typename _> requires (check_version(version, {72, 132}))
+		M_nested_template_definition_check(check_version(t_version, {72, 132}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSource_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSource),
 			M_wrap(
 				(AudioPositioningSettingListenerRoutingPositionSourceMode) mode,
 				(Boolean) hold_listener_orientation,
@@ -914,9 +797,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132, 140}))
+		M_nested_template_definition_check(check_version(t_version, {132, 140}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSource_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSource),
 			M_wrap(
 				(AudioPositioningSettingListenerRoutingPositionSourceMode) mode,
 				(Boolean) hold_listener_orientation,
@@ -925,9 +808,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingPositionSource_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingPositionSource),
 			M_wrap(
 				(AudioPositioningSettingListenerRoutingPositionSourceMode) mode,
 				(Boolean) hold_listener_orientation,
@@ -939,22 +822,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingAttenuation_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingAttenuation);
 
-		using AudioPositioningSettingListenerRoutingAttenuation = AudioPositioningSettingListenerRoutingAttenuation_<>;
-
-		template <typename _> requires (check_version(version, {72, 134}))
+		M_nested_template_definition_check(check_version(t_version, {72, 134}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingAttenuation_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingAttenuation),
 			M_wrap(
 				(Identifier) identifier,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {134}))
+		M_nested_template_definition_check(check_version(t_version, {134}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRoutingAttenuation_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingAttenuation),
 			M_wrap(
 				(Boolean) enable,
 				(Identifier) identifier,
@@ -963,14 +843,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRoutingSpatialization_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRoutingSpatialization);
 
-		using AudioPositioningSettingListenerRoutingSpatialization = AudioPositioningSettingListenerRoutingSpatialization_<>;
-
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingListenerRoutingSpatialization_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRoutingSpatialization),
 			M_wrap(
 				none,
 				position,
@@ -980,14 +857,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingListenerRouting_;
+		M_nested_template_declaration(AudioPositioningSettingListenerRouting);
 
-		using AudioPositioningSettingListenerRouting = AudioPositioningSettingListenerRouting_<>;
-
-		template <typename _> requires (check_version(version, {72, 128}))
+		M_nested_template_definition_check(check_version(t_version, {72, 128}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRouting_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRouting),
 			M_wrap(
 				(Boolean) spatialization,
 				(AudioPositioningSettingListenerRoutingAttenuation) attenuation,
@@ -995,9 +869,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 132}))
+		M_nested_template_definition_check(check_version(t_version, {128, 132}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRouting_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRouting),
 			M_wrap(
 				(AudioPositioningSettingListenerRoutingSpatialization) spatialization,
 				(AudioPositioningSettingListenerRoutingAttenuation) attenuation,
@@ -1005,9 +879,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132}))
+		M_nested_template_definition_check(check_version(t_version, {132}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingListenerRouting_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingListenerRouting),
 			M_wrap(
 				(Boolean) enable,
 				(AudioPositioningSettingListenerRoutingSpatialization) spatialization,
@@ -1019,23 +893,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingSpeakerPanningMode_;
+		M_nested_template_declaration(AudioPositioningSettingSpeakerPanningMode);
 
-		using AudioPositioningSettingSpeakerPanningMode = AudioPositioningSettingSpeakerPanningMode_<>;
-
-		template <typename _> requires (check_version(version, {132, 140}))
+		M_nested_template_definition_check(check_version(t_version, {132, 140}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingSpeakerPanningMode_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingSpeakerPanningMode),
 			M_wrap(
 				direct_assignment,
 				balance_fade,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingSpeakerPanningMode_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingSpeakerPanningMode),
 			M_wrap(
 				direct_assignment,
 				balance_fade,
@@ -1045,32 +916,29 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingSpeakerPanning_;
+		M_nested_template_declaration(AudioPositioningSettingSpeakerPanning);
 
-		using AudioPositioningSettingSpeakerPanning = AudioPositioningSettingSpeakerPanning_<>;
-
-		template <typename _> requires (check_version(version, {72, 132}))
+		M_nested_template_definition_check(check_version(t_version, {72, 132}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingSpeakerPanning),
 			M_wrap(
 				(Boolean) enable,
 				(Position2<Floater>) position,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132, 140}))
+		M_nested_template_definition_check(check_version(t_version, {132, 140}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingSpeakerPanning),
 			M_wrap(
 				(AudioPositioningSettingSpeakerPanningMode) mode,
 				(Position2<Floater>) position,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSettingSpeakerPanning_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingSpeakerPanning),
 			M_wrap(
 				(AudioPositioningSettingSpeakerPanningMode) mode,
 				(Position3<Floater>) position,
@@ -1079,14 +947,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSettingType_;
+		M_nested_template_declaration(AudioPositioningSettingType);
 
-		using AudioPositioningSettingType = AudioPositioningSettingType_<>;
-
-		template <typename _> requires (check_version(version, {72, 132}))
+		M_nested_template_definition_check(check_version(t_version, {72, 132}))
 		M_enumeration(
-			M_wrap(AudioPositioningSettingType_<_>),
+			M_nested_template_definition_name(AudioPositioningSettingType),
 			M_wrap(
 				two_dimension,
 				three_dimension,
@@ -1095,14 +960,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPositioningSetting_;
+		M_nested_template_declaration(AudioPositioningSetting);
 
-		using AudioPositioningSetting = AudioPositioningSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 125}))
+		M_nested_template_definition_check(check_version(t_version, {72, 125}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSetting_<_>),
+			M_nested_template_definition_name(AudioPositioningSetting),
 			M_wrap(
 				(AudioPositioningSettingType) type,
 				(RegularValue<Floater>) center_percent,
@@ -1111,9 +973,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {125, 132}))
+		M_nested_template_definition_check(check_version(t_version, {125, 132}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSetting_<_>),
+			M_nested_template_definition_name(AudioPositioningSetting),
 			M_wrap(
 				(Boolean) enable,
 				(AudioPositioningSettingType) type,
@@ -1123,9 +985,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132}))
+		M_nested_template_definition_check(check_version(t_version, {132}))
 		M_record_of_map(
-			M_wrap(AudioPositioningSetting_<_>),
+			M_nested_template_definition_name(AudioPositioningSetting),
 			M_wrap(
 				(RegularValue<Floater>) center_percent,
 				(AudioPositioningSettingSpeakerPanning) speaker_panning,
@@ -1137,14 +999,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio motion setting
 
-		template <typename = None>
-		struct AudioMotionSetting_;
+		M_nested_template_declaration(AudioMotionSetting);
 
-		using AudioMotionSetting = AudioMotionSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 128}))
+		M_nested_template_definition_check(check_version(t_version, {72, 128}))
 		M_record_of_map(
-			M_wrap(AudioMotionSetting_<_>),
+			M_nested_template_definition_name(AudioMotionSetting),
 			M_wrap(
 				(RandomizableValue<Floater>) volume_offset,
 				(RandomizableValue<Floater>) low_pass_filter,
@@ -1155,14 +1014,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio mixer setting
 
-		template <typename = None>
-		struct AudioMixerSetting_;
+		M_nested_template_declaration(AudioMixerSetting);
 
-		using AudioMixerSetting = AudioMixerSetting_<>;
-
-		template <typename _> requires (check_version(version, {112, 150}))
+		M_nested_template_definition_check(check_version(t_version, {112, 150}))
 		M_record_of_map(
-			M_wrap(AudioMixerSetting_<_>),
+			M_nested_template_definition_name(AudioMixerSetting),
 			M_wrap(
 				(Identifier) identifier,
 			),
@@ -1172,14 +1028,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region bus auto ducking setting
 
-		template <typename = None>
-		struct BusAutomaticDuckingSettingBusTarget_;
+		M_nested_template_declaration(BusAutomaticDuckingSettingBusTarget);
 
-		using BusAutomaticDuckingSettingBusTarget = BusAutomaticDuckingSettingBusTarget_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(BusAutomaticDuckingSettingBusTarget_<_>),
+			M_nested_template_definition_name(BusAutomaticDuckingSettingBusTarget),
 			M_wrap(
 				voice_volume,
 				bus_volume,
@@ -1188,14 +1041,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct BusAutomaticDuckingSettingBus_;
+		M_nested_template_declaration(BusAutomaticDuckingSettingBus);
 
-		using BusAutomaticDuckingSettingBus = BusAutomaticDuckingSettingBus_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(BusAutomaticDuckingSettingBus_<_>),
+			M_nested_template_definition_name(BusAutomaticDuckingSettingBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Floater) volume,
@@ -1208,14 +1058,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct BusAutomaticDuckingSetting_;
+		M_nested_template_declaration(BusAutomaticDuckingSetting);
 
-		using BusAutomaticDuckingSetting = BusAutomaticDuckingSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(BusAutomaticDuckingSetting_<_>),
+			M_nested_template_definition_name(BusAutomaticDuckingSetting),
 			M_wrap(
 				(Integer) recovery_time,
 				(Floater) maximum_ducking_volume,
@@ -1227,14 +1074,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region music transition setting
 
-		template <typename = None>
-		struct MusicTransitionSettingJumpMode_;
+		M_nested_template_declaration(MusicTransitionSettingJumpMode);
 
-		using MusicTransitionSettingJumpMode = MusicTransitionSettingJumpMode_<>;
-
-		template <typename _> requires (check_version(version, {134}))
+		M_nested_template_definition_check(check_version(t_version, {134}))
 		M_enumeration(
-			M_wrap(MusicTransitionSettingJumpMode_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingJumpMode),
 			M_wrap(
 				start,
 				specific,
@@ -1245,14 +1089,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSettingSynchronizeMode_;
+		M_nested_template_declaration(MusicTransitionSettingSynchronizeMode);
 
-		using MusicTransitionSettingSynchronizeMode = MusicTransitionSettingSynchronizeMode_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(MusicTransitionSettingSynchronizeMode_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingSynchronizeMode),
 			M_wrap(
 				entry_cue,
 				random_cue,
@@ -1263,14 +1104,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSettingItemFade_;
+		M_nested_template_declaration(MusicTransitionSettingItemFade);
 
-		using MusicTransitionSettingItemFade = MusicTransitionSettingItemFade_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSettingItemFade_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingItemFade),
 			M_wrap(
 				(Integer) time,
 				(Integer) curve,
@@ -1280,14 +1118,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSettingItemSource_;
+		M_nested_template_declaration(MusicTransitionSettingItemSource);
 
-		using MusicTransitionSettingItemSource = MusicTransitionSettingItemSource_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSettingItemSource_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingItemSource),
 			M_wrap(
 				(Identifier) identifier,
 				(TimePoint) exit_source_at,
@@ -1299,14 +1134,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSettingItemDestination_;
+		M_nested_template_declaration(MusicTransitionSettingItemDestination);
 
-		using MusicTransitionSettingItemDestination = MusicTransitionSettingItemDestination_<>;
-
-		template <typename _> requires (check_version(version, {72, 134}))
+		M_nested_template_definition_check(check_version(t_version, {72, 134}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSettingItemDestination_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingItemDestination),
 			M_wrap(
 				(Identifier) identifier,
 				(MusicTransitionSettingSynchronizeMode) synchronize_to,
@@ -1317,9 +1149,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {134}))
+		M_nested_template_definition_check(check_version(t_version, {134}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSettingItemDestination_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingItemDestination),
 			M_wrap(
 				(Identifier) identifier,
 				(MusicTransitionSettingJumpMode) jump_to,
@@ -1333,14 +1165,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSettingItemSegment_;
+		M_nested_template_declaration(MusicTransitionSettingItemSegment);
 
-		using MusicTransitionSettingItemSegment = MusicTransitionSettingItemSegment_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSettingItemSegment_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingItemSegment),
 			M_wrap(
 				(Boolean) enable,
 				(Identifier) identifier,
@@ -1353,14 +1182,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSettingItem_;
+		M_nested_template_declaration(MusicTransitionSettingItem);
 
-		using MusicTransitionSettingItem = MusicTransitionSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSettingItem_<_>),
+			M_nested_template_definition_name(MusicTransitionSettingItem),
 			M_wrap(
 				(Identifier) u1,
 				(MusicTransitionSettingItemSource) source,
@@ -1371,14 +1197,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTransitionSetting_;
+		M_nested_template_declaration(MusicTransitionSetting);
 
-		using MusicTransitionSetting = MusicTransitionSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTransitionSetting_<_>),
+			M_nested_template_definition_name(MusicTransitionSetting),
 			M_wrap(
 				(List<MusicTransitionSettingItem>) item,
 			),
@@ -1388,14 +1211,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region music track transition setting
 
-		template <typename = None>
-		struct MusicTrackTransitionSettingItemSource_;
+		M_nested_template_declaration(MusicTrackTransitionSettingItemSource);
 
-		using MusicTrackTransitionSettingItemSource = MusicTrackTransitionSettingItemSource_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicTrackTransitionSettingItemSource_<_>),
+			M_nested_template_definition_name(MusicTrackTransitionSettingItemSource),
 			M_wrap(
 				(TimePoint) exit_source_at,
 				(Identifier) exit_source_at_custom_cue_match,
@@ -1405,14 +1225,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackTransitionSettingItemDestination_;
+		M_nested_template_declaration(MusicTrackTransitionSettingItemDestination);
 
-		using MusicTrackTransitionSettingItemDestination = MusicTrackTransitionSettingItemDestination_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicTrackTransitionSettingItemDestination_<_>),
+			M_nested_template_definition_name(MusicTrackTransitionSettingItemDestination),
 			M_wrap(
 				(MusicTransitionSettingItemFade) fade_in,
 			),
@@ -1420,14 +1237,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackTransitionSetting_;
+		M_nested_template_declaration(MusicTrackTransitionSetting);
 
-		using MusicTrackTransitionSetting = MusicTrackTransitionSetting_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicTrackTransitionSetting_<_>),
+			M_nested_template_definition_name(MusicTrackTransitionSetting),
 			M_wrap(
 				(Identifier) switcher,
 				(MusicTrackTransitionSettingItemSource) source,
@@ -1439,14 +1253,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region music stinger setting
 
-		template <typename = None>
-		struct MusicStingerSettingItem_;
+		M_nested_template_declaration(MusicStingerSettingItem);
 
-		using MusicStingerSettingItem = MusicStingerSettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicStingerSettingItem_<_>),
+			M_nested_template_definition_name(MusicStingerSettingItem),
 			M_wrap(
 				(Identifier) trigger,
 				(Identifier) segment_to_play,
@@ -1459,14 +1270,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicStingerSetting_;
+		M_nested_template_declaration(MusicStingerSetting);
 
-		using MusicStingerSetting = MusicStingerSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicStingerSetting_<_>),
+			M_nested_template_definition_name(MusicStingerSetting),
 			M_wrap(
 				(List<MusicStingerSettingItem>) item,
 			),
@@ -1476,14 +1284,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region bus hdr setting
 
-		template <typename = None>
-		struct BusHdrSettingDynamicReleaseMode_;
+		M_nested_template_declaration(BusHdrSettingDynamicReleaseMode);
 
-		using BusHdrSettingDynamicReleaseMode = BusHdrSettingDynamicReleaseMode_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_enumeration(
-			M_wrap(BusHdrSettingDynamicReleaseMode_<_>),
+			M_nested_template_definition_name(BusHdrSettingDynamicReleaseMode),
 			M_wrap(
 				linear,
 				exponential,
@@ -1492,14 +1297,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct BusHdrSettingWindowTopOutputGameParameter_;
+		M_nested_template_declaration(BusHdrSettingWindowTopOutputGameParameter);
 
-		using BusHdrSettingWindowTopOutputGameParameter = BusHdrSettingWindowTopOutputGameParameter_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(BusHdrSettingWindowTopOutputGameParameter_<_>),
+			M_nested_template_definition_name(BusHdrSettingWindowTopOutputGameParameter),
 			M_wrap(
 				(Identifier) identifier,
 				(Floater) minimum,
@@ -1509,14 +1311,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct BusHdrSettingDynamic_;
+		M_nested_template_declaration(BusHdrSettingDynamic);
 
-		using BusHdrSettingDynamic = BusHdrSettingDynamic_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(BusHdrSettingDynamic_<_>),
+			M_nested_template_definition_name(BusHdrSettingDynamic),
 			M_wrap(
 				(Floater) threshold,
 				(Floater) ratio,
@@ -1527,14 +1326,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct BusHdrSetting_;
+		M_nested_template_declaration(BusHdrSetting);
 
-		using BusHdrSetting = BusHdrSetting_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(BusHdrSetting_<_>),
+			M_nested_template_definition_name(BusHdrSetting),
 			M_wrap(
 				(Boolean) enable,
 				(Boolean) u1,
@@ -1547,14 +1343,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio hdr setting
 
-		template <typename = None>
-		struct AudioHdrSettingEnvelopeTracking_;
+		M_nested_template_declaration(AudioHdrSettingEnvelopeTracking);
 
-		using AudioHdrSettingEnvelopeTracking = AudioHdrSettingEnvelopeTracking_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(AudioHdrSettingEnvelopeTracking_<_>),
+			M_nested_template_definition_name(AudioHdrSettingEnvelopeTracking),
 			M_wrap(
 				(Boolean) enable,
 				(Floater) active_range,
@@ -1563,14 +1356,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioHdrSetting_;
+		M_nested_template_declaration(AudioHdrSetting);
 
-		using AudioHdrSetting = AudioHdrSetting_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(AudioHdrSetting_<_>),
+			M_nested_template_definition_name(AudioHdrSetting),
 			M_wrap(
 				(AudioHdrSettingEnvelopeTracking) envelope_tracking,
 			),
@@ -1580,14 +1370,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region sound midi setting
 
-		template <typename = None>
-		struct SoundMidiSettingEventPlayOn_;
+		M_nested_template_declaration(SoundMidiSettingEventPlayOn);
 
-		using SoundMidiSettingEventPlayOn = SoundMidiSettingEventPlayOn_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(SoundMidiSettingEventPlayOn_<_>),
+			M_nested_template_definition_name(SoundMidiSettingEventPlayOn),
 			M_wrap(
 				note_on,
 				note_off,
@@ -1596,14 +1383,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundMidiSettingEvent_;
+		M_nested_template_declaration(SoundMidiSettingEvent);
 
-		using SoundMidiSettingEvent = SoundMidiSettingEvent_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMidiSettingEvent_<_>),
+			M_nested_template_definition_name(SoundMidiSettingEvent),
 			M_wrap(
 				(SoundMidiSettingEventPlayOn) play_on,
 				(Boolean) break_on_note_off,
@@ -1612,14 +1396,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundMidiSettingNoteTracking_;
+		M_nested_template_declaration(SoundMidiSettingNoteTracking);
 
-		using SoundMidiSettingNoteTracking = SoundMidiSettingNoteTracking_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMidiSettingNoteTracking_<_>),
+			M_nested_template_definition_name(SoundMidiSettingNoteTracking),
 			M_wrap(
 				(Boolean) enable,
 				(Integer) root_note,
@@ -1628,14 +1409,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundMidiSettingTransformation_;
+		M_nested_template_declaration(SoundMidiSettingTransformation);
 
-		using SoundMidiSettingTransformation = SoundMidiSettingTransformation_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMidiSettingTransformation_<_>),
+			M_nested_template_definition_name(SoundMidiSettingTransformation),
 			M_wrap(
 				(RegularValue<Integer>) transposition,
 				(RegularValue<Integer>) velocity_offset,
@@ -1644,14 +1422,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundMidiSettingFilter_;
+		M_nested_template_declaration(SoundMidiSettingFilter);
 
-		using SoundMidiSettingFilter = SoundMidiSettingFilter_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMidiSettingFilter_<_>),
+			M_nested_template_definition_name(SoundMidiSettingFilter),
 			M_wrap(
 				(Integer) key_range_minimum,
 				(Integer) key_range_maximum,
@@ -1663,14 +1438,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundMidiSetting_;
+		M_nested_template_declaration(SoundMidiSetting);
 
-		using SoundMidiSetting = SoundMidiSetting_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(SoundMidiSetting_<_>),
+			M_nested_template_definition_name(SoundMidiSetting),
 			M_wrap(
 				(SoundMidiSettingEvent) event,
 				(SoundMidiSettingNoteTracking) note_tracking,
@@ -1683,14 +1455,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region music midi setting
 
-		template <typename = None>
-		struct MusicMidiSettingTarget_;
+		M_nested_template_declaration(MusicMidiSettingTarget);
 
-		using MusicMidiSettingTarget = MusicMidiSettingTarget_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicMidiSettingTarget_<_>),
+			M_nested_template_definition_name(MusicMidiSettingTarget),
 			M_wrap(
 				(Identifier) identifier,
 			),
@@ -1698,14 +1467,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicMidiSettingClipTempoSource_;
+		M_nested_template_declaration(MusicMidiSettingClipTempoSource);
 
-		using MusicMidiSettingClipTempoSource = MusicMidiSettingClipTempoSource_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(MusicMidiSettingClipTempoSource_<_>),
+			M_nested_template_definition_name(MusicMidiSettingClipTempoSource),
 			M_wrap(
 				hierarchy,
 				file,
@@ -1714,14 +1480,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicMidiSettingClipTempo_;
+		M_nested_template_declaration(MusicMidiSettingClipTempo);
 
-		using MusicMidiSettingClipTempo = MusicMidiSettingClipTempo_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicMidiSettingClipTempo_<_>),
+			M_nested_template_definition_name(MusicMidiSettingClipTempo),
 			M_wrap(
 				(MusicMidiSettingClipTempoSource) source,
 			),
@@ -1729,14 +1492,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicMidiSetting_;
+		M_nested_template_declaration(MusicMidiSetting);
 
-		using MusicMidiSetting = MusicMidiSetting_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicMidiSetting_<_>),
+			M_nested_template_definition_name(MusicMidiSetting),
 			M_wrap(
 				(MusicMidiSettingTarget) target,
 				(MusicMidiSettingClipTempo) clip_tempo,
@@ -1747,14 +1507,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio playback limit setting
 
-		template <typename = None>
-		struct AudioPlaybackLimitSettingScope_;
+		M_nested_template_declaration(AudioPlaybackLimitSettingScope);
 
-		using AudioPlaybackLimitSettingScope = AudioPlaybackLimitSettingScope_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlaybackLimitSettingScope_<_>),
+			M_nested_template_definition_name(AudioPlaybackLimitSettingScope),
 			M_wrap(
 				per_game_object,
 				globally,
@@ -1763,14 +1520,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlaybackLimitSettingWhenPriorityIsEqual_;
+		M_nested_template_declaration(AudioPlaybackLimitSettingWhenPriorityIsEqual);
 
-		using AudioPlaybackLimitSettingWhenPriorityIsEqual = AudioPlaybackLimitSettingWhenPriorityIsEqual_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlaybackLimitSettingWhenPriorityIsEqual_<_>),
+			M_nested_template_definition_name(AudioPlaybackLimitSettingWhenPriorityIsEqual),
 			M_wrap(
 				discard_oldest_instance,
 				discard_newest_instance,
@@ -1779,14 +1533,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlaybackLimitSettingWhenLimitIsReached_;
+		M_nested_template_declaration(AudioPlaybackLimitSettingWhenLimitIsReached);
 
-		using AudioPlaybackLimitSettingWhenLimitIsReached = AudioPlaybackLimitSettingWhenLimitIsReached_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlaybackLimitSettingWhenLimitIsReached_<_>),
+			M_nested_template_definition_name(AudioPlaybackLimitSettingWhenLimitIsReached),
 			M_wrap(
 				kill_voice,
 				use_virtual_voice_setting,
@@ -1795,14 +1546,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlaybackLimitSetting_;
+		M_nested_template_declaration(AudioPlaybackLimitSetting);
 
-		using AudioPlaybackLimitSetting = AudioPlaybackLimitSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlaybackLimitSetting_<_>),
+			M_nested_template_definition_name(AudioPlaybackLimitSetting),
 			M_wrap(
 				(RegularValue<Integer>) value,
 				(AudioPlaybackLimitSettingScope) scope,
@@ -1815,14 +1563,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio virtual voice setting
 
-		template <typename = None>
-		struct AudioVirtualVoiceSettingBehavior_;
+		M_nested_template_declaration(AudioVirtualVoiceSettingBehavior);
 
-		using AudioVirtualVoiceSettingBehavior = AudioVirtualVoiceSettingBehavior_<>;
-
-		template <typename _> requires (check_version(version, {72, 140}))
+		M_nested_template_definition_check(check_version(t_version, {72, 140}))
 		M_enumeration(
-			M_wrap(AudioVirtualVoiceSettingBehavior_<_>),
+			M_nested_template_definition_name(AudioVirtualVoiceSettingBehavior),
 			M_wrap(
 				continue_to_play,
 				kill_voice,
@@ -1830,9 +1575,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_enumeration(
-			M_wrap(AudioVirtualVoiceSettingBehavior_<_>),
+			M_nested_template_definition_name(AudioVirtualVoiceSettingBehavior),
 			M_wrap(
 				continue_to_play,
 				kill_voice,
@@ -1843,14 +1588,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioVirtualVoiceSettingOnReturnToPhysical_;
+		M_nested_template_declaration(AudioVirtualVoiceSettingOnReturnToPhysical);
 
-		using AudioVirtualVoiceSettingOnReturnToPhysical = AudioVirtualVoiceSettingOnReturnToPhysical_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioVirtualVoiceSettingOnReturnToPhysical_<_>),
+			M_nested_template_definition_name(AudioVirtualVoiceSettingOnReturnToPhysical),
 			M_wrap(
 				play_from_beginning,
 				play_from_elapsed_time,
@@ -1860,14 +1602,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioVirtualVoiceSetting_;
+		M_nested_template_declaration(AudioVirtualVoiceSetting);
 
-		using AudioVirtualVoiceSetting = AudioVirtualVoiceSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioVirtualVoiceSetting_<_>),
+			M_nested_template_definition_name(AudioVirtualVoiceSetting),
 			M_wrap(
 				(AudioVirtualVoiceSettingBehavior) behavior,
 				(AudioVirtualVoiceSettingOnReturnToPhysical) on_return_to_physical,
@@ -1878,14 +1617,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio playback priority setting
 
-		template <typename = None>
-		struct AudioPlaybackPrioritySetting_;
+		M_nested_template_declaration(AudioPlaybackPrioritySetting);
 
-		using AudioPlaybackPrioritySetting = AudioPlaybackPrioritySetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlaybackPrioritySetting_<_>),
+			M_nested_template_definition_name(AudioPlaybackPrioritySetting),
 			M_wrap(
 				(RegularValue<Floater>) value,
 				(Boolean) use_distance_factor,
@@ -1897,14 +1633,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio time setting
 
-		template <typename = None>
-		struct AudioTimeSettingSignature_;
+		M_nested_template_declaration(AudioTimeSettingSignature);
 
-		using AudioTimeSettingSignature = AudioTimeSettingSignature_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_list(
-			M_wrap(AudioTimeSettingSignature_<_>),
+			M_nested_template_definition_name(AudioTimeSettingSignature),
 			M_wrap(
 				(Integer) first,
 				(Integer) second,
@@ -1913,14 +1646,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioTimeSetting_;
+		M_nested_template_declaration(AudioTimeSetting);
 
-		using AudioTimeSetting = AudioTimeSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioTimeSetting_<_>),
+			M_nested_template_definition_name(AudioTimeSetting),
 			M_wrap(
 				(Floater) time,
 				(Floater) offset,
@@ -1933,14 +1663,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio switcher
 
-		template <typename = None>
-		struct AudioSwitcherSetting_;
+		M_nested_template_declaration(AudioSwitcherSetting);
 
-		using AudioSwitcherSetting = AudioSwitcherSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioSwitcherSetting_<_>),
+			M_nested_template_definition_name(AudioSwitcherSetting),
 			M_wrap(
 				(Boolean) is_state,
 				(Identifier) group,
@@ -1952,14 +1679,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio association
 
-		template <typename = None>
-		struct AudioAssociationSettingMode_;
+		M_nested_template_declaration(AudioAssociationSettingMode);
 
-		using AudioAssociationSettingMode = AudioAssociationSettingMode_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioAssociationSettingMode_<_>),
+			M_nested_template_definition_name(AudioAssociationSettingMode),
 			M_wrap(
 				best_match,
 				weighted,
@@ -1968,22 +1692,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioAssociationSettingArgument_;
+		M_nested_template_declaration(AudioAssociationSettingArgument);
 
-		using AudioAssociationSettingArgument = AudioAssociationSettingArgument_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AudioAssociationSettingArgument_<_>),
+			M_nested_template_definition_name(AudioAssociationSettingArgument),
 			M_wrap(
 				(Identifier) identifier,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(AudioAssociationSettingArgument_<_>),
+			M_nested_template_definition_name(AudioAssociationSettingArgument),
 			M_wrap(
 				(Identifier) identifier,
 				(Boolean) is_state,
@@ -1992,14 +1713,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioAssociationSettingPath_;
+		M_nested_template_declaration(AudioAssociationSettingPath);
 
-		using AudioAssociationSettingPath = AudioAssociationSettingPath_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioAssociationSettingPath_<_>),
+			M_nested_template_definition_name(AudioAssociationSettingPath),
 			M_wrap(
 				(Identifier) u1,
 				(Identifier) object,
@@ -2010,14 +1728,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioAssociationSetting_;
+		M_nested_template_declaration(AudioAssociationSetting);
 
-		using AudioAssociationSetting = AudioAssociationSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AudioAssociationSetting_<_>),
+			M_nested_template_definition_name(AudioAssociationSetting),
 			M_wrap(
 				(Integer) probability,
 				(AudioAssociationSettingMode) mode,
@@ -2026,9 +1741,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(AudioAssociationSetting_<_>),
+			M_nested_template_definition_name(AudioAssociationSetting),
 			M_wrap(
 				(AudioAssociationSettingMode) mode,
 				(List<AudioAssociationSettingArgument>) argument,
@@ -2040,14 +1755,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio source
 
-		template <typename = None>
-		struct AudioSourceType_;
+		M_nested_template_declaration(AudioSourceType);
 
-		using AudioSourceType = AudioSourceType_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioSourceType_<_>),
+			M_nested_template_definition_name(AudioSourceType),
 			M_wrap(
 				embedded,
 				streamed,
@@ -2057,14 +1769,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioSourceSetting_;
+		M_nested_template_declaration(AudioSourceSetting);
 
-		using AudioSourceSetting = AudioSourceSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AudioSourceSetting_<_>),
+			M_nested_template_definition_name(AudioSourceSetting),
 			M_wrap(
 				(Identifier) plug_in,
 				(AudioSourceType) type,
@@ -2076,9 +1785,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 113}))
+		M_nested_template_definition_check(check_version(t_version, {112, 113}))
 		M_record_of_map(
-			M_wrap(AudioSourceSetting_<_>),
+			M_nested_template_definition_name(AudioSourceSetting),
 			M_wrap(
 				(Identifier) plug_in,
 				(AudioSourceType) type,
@@ -2091,9 +1800,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {113}))
+		M_nested_template_definition_check(check_version(t_version, {113}))
 		M_record_of_map(
-			M_wrap(AudioSourceSetting_<_>),
+			M_nested_template_definition_name(AudioSourceSetting),
 			M_wrap(
 				(Identifier) plug_in,
 				(AudioSourceType) type,
@@ -2108,14 +1817,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio play type setting
 
-		template <typename = None>
-		struct AudioPlayTypeRandomType_;
+		M_nested_template_declaration(AudioPlayTypeRandomType);
 
-		using AudioPlayTypeRandomType = AudioPlayTypeRandomType_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlayTypeRandomType_<_>),
+			M_nested_template_definition_name(AudioPlayTypeRandomType),
 			M_wrap(
 				standard,
 				shuffle,
@@ -2124,14 +1830,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayTypeRandomSetting_;
+		M_nested_template_declaration(AudioPlayTypeRandomSetting);
 
-		using AudioPlayTypeRandomSetting = AudioPlayTypeRandomSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlayTypeRandomSetting_<_>),
+			M_nested_template_definition_name(AudioPlayTypeRandomSetting),
 			M_wrap(
 				(AudioPlayTypeRandomType) type,
 				(Integer) avoid_repeat,
@@ -2140,14 +1843,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayTypeSequenceAtEndOfPlaylist_;
+		M_nested_template_declaration(AudioPlayTypeSequenceAtEndOfPlaylist);
 
-		using AudioPlayTypeSequenceAtEndOfPlaylist = AudioPlayTypeSequenceAtEndOfPlaylist_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlayTypeSequenceAtEndOfPlaylist_<_>),
+			M_nested_template_definition_name(AudioPlayTypeSequenceAtEndOfPlaylist),
 			M_wrap(
 				restart,
 				play_in_reserve_order,
@@ -2156,14 +1856,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayTypeSequenceSetting_;
+		M_nested_template_declaration(AudioPlayTypeSequenceSetting);
 
-		using AudioPlayTypeSequenceSetting = AudioPlayTypeSequenceSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlayTypeSequenceSetting_<_>),
+			M_nested_template_definition_name(AudioPlayTypeSequenceSetting),
 			M_wrap(
 				(AudioPlayTypeSequenceAtEndOfPlaylist) at_end_of_playlist,
 			),
@@ -2171,14 +1868,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayTypeSetting_;
+		M_nested_template_declaration(AudioPlayTypeSetting);
 
-		using AudioPlayTypeSetting = AudioPlayTypeSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlayTypeSetting_<_>),
+			M_nested_template_definition_name(AudioPlayTypeSetting),
 			M_wrap(
 				(AudioPlayTypeRandomSetting) random,
 				(AudioPlayTypeSequenceSetting) sequence,
@@ -2189,28 +1883,22 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio play mode setting
 
-		template <typename = None>
-		struct AudioPlayModeStepSetting_;
+		M_nested_template_declaration(AudioPlayModeStepSetting);
 
-		using AudioPlayModeStepSetting = AudioPlayModeStepSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlayModeStepSetting_<_>),
+			M_nested_template_definition_name(AudioPlayModeStepSetting),
 			M_wrap(
 			),
 		);
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayModeContinuousTransitionType_;
+		M_nested_template_declaration(AudioPlayModeContinuousTransitionType);
 
-		using AudioPlayModeContinuousTransitionType = AudioPlayModeContinuousTransitionType_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(AudioPlayModeContinuousTransitionType_<_>),
+			M_nested_template_definition_name(AudioPlayModeContinuousTransitionType),
 			M_wrap(
 				none,
 				xfade_amp,
@@ -2223,14 +1911,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayModeContinuousSetting_;
+		M_nested_template_declaration(AudioPlayModeContinuousSetting);
 
-		using AudioPlayModeContinuousSetting = AudioPlayModeContinuousSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AudioPlayModeContinuousSetting_<_>),
+			M_nested_template_definition_name(AudioPlayModeContinuousSetting),
 			M_wrap(
 				(Boolean) always_reset_playlist,
 				(RegularValue<Integer>) loop,
@@ -2239,9 +1924,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(AudioPlayModeContinuousSetting_<_>),
+			M_nested_template_definition_name(AudioPlayModeContinuousSetting),
 			M_wrap(
 				(Boolean) always_reset_playlist,
 				(RandomizableValue<Integer>) loop,
@@ -2252,14 +1937,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioPlayModeSetting_;
+		M_nested_template_declaration(AudioPlayModeSetting);
 
-		using AudioPlayModeSetting = AudioPlayModeSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AudioPlayModeSetting_<_>),
+			M_nested_template_definition_name(AudioPlayModeSetting),
 			M_wrap(
 				(AudioPlayModeStepSetting) step,
 				(AudioPlayModeContinuousSetting) continuous,
@@ -2270,14 +1952,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region unknown hierarchy
 
-		template <typename = None>
-		struct UnknownHierarchy_;
+		M_nested_template_declaration(UnknownHierarchy);
 
-		using UnknownHierarchy = UnknownHierarchy_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(UnknownHierarchy_<_>),
+			M_nested_template_definition_name(UnknownHierarchy),
 			M_wrap(
 				(Integer) type,
 				(ByteList) data,
@@ -2288,14 +1967,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region state group
 
-		template <typename = None>
-		struct StateGroupCustomTransition_;
+		M_nested_template_declaration(StateGroupCustomTransition);
 
-		using StateGroupCustomTransition = StateGroupCustomTransition_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(StateGroupCustomTransition_<_>),
+			M_nested_template_definition_name(StateGroupCustomTransition),
 			M_wrap(
 				(Identifier) from,
 				(Identifier) to,
@@ -2305,14 +1981,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct StateGroup_;
+		M_nested_template_declaration(StateGroup);
 
-		using StateGroup = StateGroup_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(StateGroup_<_>),
+			M_nested_template_definition_name(StateGroup),
 			M_wrap(
 				(Identifier) identifier,
 				(Integer) default_transition,
@@ -2324,14 +1997,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region switch group
 
-		template <typename = None>
-		struct SwitchGroup_;
+		M_nested_template_declaration(SwitchGroup);
 
-		using SwitchGroup = SwitchGroup_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SwitchGroup_<_>),
+			M_nested_template_definition_name(SwitchGroup),
 			M_wrap(
 				(Identifier) identifier,
 				(Parameter) parameter,
@@ -2343,14 +2013,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region game parameter
 
-		template <typename = None>
-		struct GameParameterBindToBuiltInParameterMode_;
+		M_nested_template_declaration(GameParameterBindToBuiltInParameterMode);
 
-		using GameParameterBindToBuiltInParameterMode = GameParameterBindToBuiltInParameterMode_<>;
-
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_enumeration(
-			M_wrap(GameParameterBindToBuiltInParameterMode_<_>),
+			M_nested_template_definition_name(GameParameterBindToBuiltInParameterMode),
 			M_wrap(
 				none,
 				distance,
@@ -2362,9 +2029,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_enumeration(
-			M_wrap(GameParameterBindToBuiltInParameterMode_<_>),
+			M_nested_template_definition_name(GameParameterBindToBuiltInParameterMode),
 			M_wrap(
 				none,
 				distance,
@@ -2380,14 +2047,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct GameParameterInterpolationMode_;
+		M_nested_template_declaration(GameParameterInterpolationMode);
 
-		using GameParameterInterpolationMode = GameParameterInterpolationMode_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(GameParameterInterpolationMode_<_>),
+			M_nested_template_definition_name(GameParameterInterpolationMode),
 			M_wrap(
 				none,
 				slew_rate,
@@ -2397,23 +2061,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct GameParameter_;
+		M_nested_template_declaration(GameParameter);
 
-		using GameParameter = GameParameter_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(GameParameter_<_>),
+			M_nested_template_definition_name(GameParameter),
 			M_wrap(
 				(Identifier) identifier,
 				(Floater) range_default,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(GameParameter_<_>),
+			M_nested_template_definition_name(GameParameter),
 			M_wrap(
 				(Identifier) identifier,
 				(Floater) range_default,
@@ -2428,14 +2089,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region game synchronization u1
 
-		template <typename = None>
-		struct GameSynchronizationU1_;
+		M_nested_template_declaration(GameSynchronizationU1);
 
-		using GameSynchronizationU1 = GameSynchronizationU1_<>;
-
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(GameSynchronizationU1_<_>),
+			M_nested_template_definition_name(GameSynchronizationU1),
 			M_wrap(
 				(Identifier) identifier,
 				(Floater) u1,
@@ -2451,14 +2109,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region stateful property setting
 
-		template <typename = None>
-		struct StatefulPropertySettingItem_;
+		M_nested_template_declaration(StatefulPropertySettingItem);
 
-		using StatefulPropertySettingItem = StatefulPropertySettingItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(StatefulPropertySettingItem_<_>),
+			M_nested_template_definition_name(StatefulPropertySettingItem),
 			M_wrap(
 				(Integer) type,
 				(Floater) value,
@@ -2467,14 +2122,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct StatefulPropertySetting_;
+		M_nested_template_declaration(StatefulPropertySetting);
 
-		using StatefulPropertySetting = StatefulPropertySetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(StatefulPropertySetting_<_>),
+			M_nested_template_definition_name(StatefulPropertySetting),
 			M_wrap(
 				(Identifier) identifier,
 				(List<StatefulPropertySettingItem>) value,
@@ -2485,17 +2137,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region event action
 
-		template <auto = version> requires (check_version(version, {}))
-		struct EventActionProperty_ {
+		M_nested_template_declaration(EventActionProperty);
 
-			template <typename = None>
-			struct ValueApplyMode_;
+		M_nested_template_definition(EventActionProperty) {
 
-			using ValueApplyMode = ValueApplyMode_<>;
+			M_nested_template_declaration(ValueApplyMode);
 
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_enumeration(
-				M_wrap(ValueApplyMode_<_>),
+				M_nested_template_definition_name(ValueApplyMode),
 				M_wrap(
 					absolute,
 					relative,
@@ -2504,14 +2154,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SeekType_;
+			M_nested_template_declaration(SeekType);
 
-			using SeekType = SeekType_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_enumeration(
-				M_wrap(SeekType_<_>),
+				M_nested_template_definition_name(SeekType),
 				M_wrap(
 					time,
 					percent,
@@ -2520,14 +2167,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct PlayAudio_;
+			M_nested_template_declaration(PlayAudio);
 
-			using PlayAudio = PlayAudio_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(PlayAudio_<_>),
+				M_nested_template_definition_name(PlayAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2539,14 +2183,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct StopAudio_;
+			M_nested_template_declaration(StopAudio);
 
-			using StopAudio = StopAudio_<>;
-
-			template <typename _> requires (check_version(version, {72, 125}))
+			M_nested_template_definition_check(check_version(t_version, {72, 125}))
 			M_record_of_map(
-				M_wrap(StopAudio_<_>),
+				M_nested_template_definition_name(StopAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2554,9 +2195,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				),
 			);
 
-			template <typename _> requires (check_version(version, {125}))
+			M_nested_template_definition_check(check_version(t_version, {125}))
 			M_record_of_map(
-				M_wrap(StopAudio_<_>),
+				M_nested_template_definition_name(StopAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2568,14 +2209,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct PauseAudio_;
+			M_nested_template_declaration(PauseAudio);
 
-			using PauseAudio = PauseAudio_<>;
-
-			template <typename _> requires (check_version(version, {72, 125}))
+			M_nested_template_definition_check(check_version(t_version, {72, 125}))
 			M_record_of_map(
-				M_wrap(PauseAudio_<_>),
+				M_nested_template_definition_name(PauseAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2584,9 +2222,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				),
 			);
 
-			template <typename _> requires (check_version(version, {125}))
+			M_nested_template_definition_check(check_version(t_version, {125}))
 			M_record_of_map(
-				M_wrap(PauseAudio_<_>),
+				M_nested_template_definition_name(PauseAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2599,14 +2237,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct ResumeAudio_;
+			M_nested_template_declaration(ResumeAudio);
 
-			using ResumeAudio = ResumeAudio_<>;
-
-			template <typename _> requires (check_version(version, {72, 125}))
+			M_nested_template_definition_check(check_version(t_version, {72, 125}))
 			M_record_of_map(
-				M_wrap(ResumeAudio_<_>),
+				M_nested_template_definition_name(ResumeAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2615,9 +2250,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				),
 			);
 
-			template <typename _> requires (check_version(version, {125}))
+			M_nested_template_definition_check(check_version(t_version, {125}))
 			M_record_of_map(
-				M_wrap(ResumeAudio_<_>),
+				M_nested_template_definition_name(ResumeAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(RandomizableValue<Integer>) fade_time,
@@ -2630,14 +2265,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct BreakAudio_;
+			M_nested_template_declaration(BreakAudio);
 
-			using BreakAudio = BreakAudio_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(BreakAudio_<_>),
+				M_nested_template_definition_name(BreakAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 				),
@@ -2645,14 +2277,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SeekAudio_;
+			M_nested_template_declaration(SeekAudio);
 
-			using SeekAudio = SeekAudio_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SeekAudio_<_>),
+				M_nested_template_definition_name(SeekAudio),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(SeekType) seek_type,
@@ -2663,14 +2292,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct PostEvent_;
+			M_nested_template_declaration(PostEvent);
 
-			using PostEvent = PostEvent_<>;
-
-			template <typename _> requires (check_version(version, {113}))
+			M_nested_template_definition_check(check_version(t_version, {113}))
 			M_record_of_map(
-				M_wrap(PostEvent_<_>),
+				M_nested_template_definition_name(PostEvent),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 				),
@@ -2678,14 +2304,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetBusVolume_;
+			M_nested_template_declaration(SetBusVolume);
 
-			using SetBusVolume = SetBusVolume_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetBusVolume_<_>),
+				M_nested_template_definition_name(SetBusVolume),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2698,14 +2321,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetVoiceVolume_;
+			M_nested_template_declaration(SetVoiceVolume);
 
-			using SetVoiceVolume = SetVoiceVolume_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetVoiceVolume_<_>),
+				M_nested_template_definition_name(SetVoiceVolume),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2718,14 +2338,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetVolumePitch_;
+			M_nested_template_declaration(SetVolumePitch);
 
-			using SetVolumePitch = SetVolumePitch_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetVolumePitch_<_>),
+				M_nested_template_definition_name(SetVolumePitch),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2738,14 +2355,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetVolumeLowPassFilter_;
+			M_nested_template_declaration(SetVolumeLowPassFilter);
 
-			using SetVolumeLowPassFilter = SetVolumeLowPassFilter_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetVolumeLowPassFilter_<_>),
+				M_nested_template_definition_name(SetVolumeLowPassFilter),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2758,14 +2372,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetVolumeHighPassFilter_;
+			M_nested_template_declaration(SetVolumeHighPassFilter);
 
-			using SetVolumeHighPassFilter = SetVolumeHighPassFilter_<>;
-
-			template <typename _> requires (check_version(version, {112}))
+			M_nested_template_definition_check(check_version(t_version, {112}))
 			M_record_of_map(
-				M_wrap(SetVolumeHighPassFilter_<_>),
+				M_nested_template_definition_name(SetVolumeHighPassFilter),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2778,14 +2389,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetMute_;
+			M_nested_template_declaration(SetMute);
 
-			using SetMute = SetMute_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetMute_<_>),
+				M_nested_template_definition_name(SetMute),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2796,14 +2404,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetGameParameter_;
+			M_nested_template_declaration(SetGameParameter);
 
-			using SetGameParameter = SetGameParameter_<>;
-
-			template <typename _> requires (check_version(version, {72, 112}))
+			M_nested_template_definition_check(check_version(t_version, {72, 112}))
 			M_record_of_map(
-				M_wrap(SetGameParameter_<_>),
+				M_nested_template_definition_name(SetGameParameter),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2814,9 +2419,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				),
 			);
 
-			template <typename _> requires (check_version(version, {112}))
+			M_nested_template_definition_check(check_version(t_version, {112}))
 			M_record_of_map(
-				M_wrap(SetGameParameter_<_>),
+				M_nested_template_definition_name(SetGameParameter),
 				M_wrap(
 					(Boolean) reset,
 					(RandomizableValue<Integer>) delay,
@@ -2830,14 +2435,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetStateAvailability_;
+			M_nested_template_declaration(SetStateAvailability);
 
-			using SetStateAvailability = SetStateAvailability_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetStateAvailability_<_>),
+				M_nested_template_definition_name(SetStateAvailability),
 				M_wrap(
 					(Boolean) enable,
 					(RandomizableValue<Integer>) delay,
@@ -2846,14 +2448,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct ActivateState_;
+			M_nested_template_declaration(ActivateState);
 
-			using ActivateState = ActivateState_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(ActivateState_<_>),
+				M_nested_template_definition_name(ActivateState),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(Identifier) group,
@@ -2863,14 +2462,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct ActivateSwitch_;
+			M_nested_template_declaration(ActivateSwitch);
 
-			using ActivateSwitch = ActivateSwitch_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(ActivateSwitch_<_>),
+				M_nested_template_definition_name(ActivateSwitch),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 					(Identifier) group,
@@ -2880,14 +2476,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct ActivateTrigger_;
+			M_nested_template_declaration(ActivateTrigger);
 
-			using ActivateTrigger = ActivateTrigger_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(ActivateTrigger_<_>),
+				M_nested_template_definition_name(ActivateTrigger),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 				),
@@ -2895,14 +2488,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct SetBypassEffect_;
+			M_nested_template_declaration(SetBypassEffect);
 
-			using SetBypassEffect = SetBypassEffect_<>;
-
-			template <typename _> requires (check_version(version, {72}))
+			M_nested_template_definition_check(check_version(t_version, {72}))
 			M_record_of_map(
-				M_wrap(SetBypassEffect_<_>),
+				M_nested_template_definition_name(SetBypassEffect),
 				M_wrap(
 					(Boolean) reset,
 					(Boolean) enable,
@@ -2913,14 +2503,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct ReleaseEnvelope_;
+			M_nested_template_declaration(ReleaseEnvelope);
 
-			using ReleaseEnvelope = ReleaseEnvelope_<>;
-
-			template <typename _> requires (check_version(version, {112}))
+			M_nested_template_definition_check(check_version(t_version, {112}))
 			M_record_of_map(
-				M_wrap(ReleaseEnvelope_<_>),
+				M_nested_template_definition_name(ReleaseEnvelope),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 				),
@@ -2928,14 +2515,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct ResetPlaylist_;
+			M_nested_template_declaration(ResetPlaylist);
 
-			using ResetPlaylist = ResetPlaylist_<>;
-
-			template <typename _> requires (check_version(version, {113}))
+			M_nested_template_definition_check(check_version(t_version, {113}))
 			M_record_of_map(
-				M_wrap(ResetPlaylist_<_>),
+				M_nested_template_definition_name(ResetPlaylist),
 				M_wrap(
 					(RandomizableValue<Integer>) delay,
 				),
@@ -2943,14 +2527,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 			// ----------------
 
-			template <typename = None>
-			struct Type_;
+			M_nested_template_declaration(Type);
 
-			using Type = Type_<>;
-
-			template <typename _> requires (check_version(version, {72, 112}))
+			M_nested_template_definition_check(check_version(t_version, {72, 112}))
 			M_enumeration(
-				M_wrap(Type_<_>),
+				M_nested_template_definition_name(Type),
 				M_wrap(
 					play_audio,
 					stop_audio,
@@ -2972,9 +2553,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				),
 			);
 
-			template <typename _> requires (check_version(version, {112, 113}))
+			M_nested_template_definition_check(check_version(t_version, {112, 113}))
 			M_enumeration(
-				M_wrap(Type_<_>),
+				M_nested_template_definition_name(Type),
 				M_wrap(
 					play_audio,
 					stop_audio,
@@ -2998,9 +2579,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				),
 			);
 
-			template <typename _> requires (check_version(version, {113}))
+			M_nested_template_definition_check(check_version(t_version, {113}))
 			M_enumeration(
-				M_wrap(Type_<_>),
+				M_nested_template_definition_name(Type),
 				M_wrap(
 					play_audio,
 					stop_audio,
@@ -3029,7 +2610,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			// ----------------
 
 			using Item = decltype([] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					using Type = EnumerableVariant<
 						Type,
 						PlayAudio,
@@ -3052,7 +2633,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112, 113})) {
+				if constexpr (check_version(t_version, {112, 113})) {
 					using Type = EnumerableVariant<
 						Type,
 						PlayAudio,
@@ -3077,7 +2658,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {113})) {
+				if constexpr (check_version(t_version, {113})) {
 					using Type = EnumerableVariant<
 						Type,
 						PlayAudio,
@@ -3108,18 +2689,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		};
 
-		using EventActionProperty = EventActionProperty_<>;
-
 		// ----------------
 
-		template <typename = None>
-		struct EventActionMode_;
+		M_nested_template_declaration(EventActionMode);
 
-		using EventActionMode = EventActionMode_<>;
-
-		template <typename _> requires (check_version(version, {72, 125}))
+		M_nested_template_definition_check(check_version(t_version, {72, 125}))
 		M_enumeration(
-			M_wrap(EventActionMode_<_>),
+			M_nested_template_definition_name(EventActionMode),
 			M_wrap(
 				none,
 				one,
@@ -3128,9 +2704,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {125}))
+		M_nested_template_definition_check(check_version(t_version, {125}))
 		M_enumeration(
-			M_wrap(EventActionMode_<_>),
+			M_nested_template_definition_name(EventActionMode),
 			M_wrap(
 				none,
 				one,
@@ -3140,14 +2716,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct EventActionScope_;
+		M_nested_template_declaration(EventActionScope);
 
-		using EventActionScope = EventActionScope_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(EventActionScope_<_>),
+			M_nested_template_definition_name(EventActionScope),
 			M_wrap(
 				global,
 				game_object,
@@ -3156,14 +2729,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct EventActionException_;
+		M_nested_template_declaration(EventActionException);
 
-		using EventActionException = EventActionException_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(EventActionException_<_>),
+			M_nested_template_definition_name(EventActionException),
 			M_wrap(
 				(Identifier) identifier,
 				(Boolean) u1,
@@ -3172,14 +2742,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct EventAction_;
+		M_nested_template_declaration(EventAction);
 
-		using EventAction = EventAction_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(EventAction_<_>),
+			M_nested_template_definition_name(EventAction),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) target,
@@ -3195,14 +2762,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region event
 
-		template <typename = None>
-		struct Event_;
+		M_nested_template_declaration(Event);
 
-		using Event = Event_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(Event_<_>),
+			M_nested_template_definition_name(Event),
 			M_wrap(
 				(Identifier) identifier,
 				(List<Identifier>) child,
@@ -3213,23 +2777,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region dialogue event
 
-		template <typename = None>
-		struct DialogueEvent_;
+		M_nested_template_declaration(DialogueEvent);
 
-		using DialogueEvent = DialogueEvent_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(DialogueEvent_<_>),
+			M_nested_template_definition_name(DialogueEvent),
 			M_wrap(
 				(Identifier) identifier,
 				(AudioAssociationSetting) association,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(DialogueEvent_<_>),
+			M_nested_template_definition_name(DialogueEvent),
 			M_wrap(
 				(Identifier) identifier,
 				(Integer) probability,
@@ -3241,14 +2802,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region attenuation
 
-		template <typename = None>
-		struct AttenuationCurve_;
+		M_nested_template_declaration(AttenuationCurve);
 
-		using AttenuationCurve = AttenuationCurve_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(AttenuationCurve_<_>),
+			M_nested_template_definition_name(AttenuationCurve),
 			M_wrap(
 				(CoordinateMode) mode,
 				(List<CoordinatePoint>) point,
@@ -3257,14 +2815,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AttenuationApplySetting_;
+		M_nested_template_declaration(AttenuationApplySetting);
 
-		using AttenuationApplySetting = AttenuationApplySetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AttenuationApplySetting_<_>),
+			M_nested_template_definition_name(AttenuationApplySetting),
 			M_wrap(
 				(Integer) output_bus_volume,
 				(Integer) auxiliary_send_volume,
@@ -3273,9 +2828,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(AttenuationApplySetting_<_>),
+			M_nested_template_definition_name(AttenuationApplySetting),
 			M_wrap(
 				(Integer) output_bus_volume,
 				(Integer) game_defined_auxiliary_send_volume,
@@ -3285,9 +2840,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 145}))
+		M_nested_template_definition_check(check_version(t_version, {112, 145}))
 		M_record_of_map(
-			M_wrap(AttenuationApplySetting_<_>),
+			M_nested_template_definition_name(AttenuationApplySetting),
 			M_wrap(
 				(Integer) output_bus_volume,
 				(Integer) game_defined_auxiliary_send_volume,
@@ -3299,9 +2854,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {145}))
+		M_nested_template_definition_check(check_version(t_version, {145}))
 		M_record_of_map(
-			M_wrap(AttenuationApplySetting_<_>),
+			M_nested_template_definition_name(AttenuationApplySetting),
 			M_wrap(
 				(Integer) distance_output_bus_volume,
 				(Integer) distance_game_defined_auxiliary_send_volume,
@@ -3327,14 +2882,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AttenuationCone_;
+		M_nested_template_declaration(AttenuationCone);
 
-		using AttenuationCone = AttenuationCone_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(AttenuationCone_<_>),
+			M_nested_template_definition_name(AttenuationCone),
 			M_wrap(
 				(Boolean) enable,
 				(Floater) inner_angle,
@@ -3344,9 +2896,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(AttenuationCone_<_>),
+			M_nested_template_definition_name(AttenuationCone),
 			M_wrap(
 				(Boolean) enable,
 				(Floater) inner_angle,
@@ -3359,14 +2911,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct Attenuation_;
+		M_nested_template_declaration(Attenuation);
 
-		using Attenuation = Attenuation_<>;
-
-		template <typename _> requires (check_version(version, {72, 140}))
+		M_nested_template_definition_check(check_version(t_version, {72, 140}))
 		M_record_of_map(
-			M_wrap(Attenuation_<_>),
+			M_nested_template_definition_name(Attenuation),
 			M_wrap(
 				(Identifier) identifier,
 				(AttenuationApplySetting) apply,
@@ -3376,9 +2925,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(Attenuation_<_>),
+			M_nested_template_definition_name(Attenuation),
 			M_wrap(
 				(Identifier) identifier,
 				(AttenuationApplySetting) apply,
@@ -3393,14 +2942,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region modulator
 
-		template <typename = None>
-		struct ModulatorScope_;
+		M_nested_template_declaration(ModulatorScope);
 
-		using ModulatorScope = ModulatorScope_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(ModulatorScope_<_>),
+			M_nested_template_definition_name(ModulatorScope),
 			M_wrap(
 				voice,
 				note_or_event,
@@ -3411,14 +2957,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct ModulatorTriggerOn_;
+		M_nested_template_declaration(ModulatorTriggerOn);
 
-		using ModulatorTriggerOn = ModulatorTriggerOn_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(ModulatorTriggerOn_<_>),
+			M_nested_template_definition_name(ModulatorTriggerOn),
 			M_wrap(
 				play,
 				note_off,
@@ -3427,14 +2970,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct ModulatorWaveform_;
+		M_nested_template_declaration(ModulatorWaveform);
 
-		using ModulatorWaveform = ModulatorWaveform_<>;
-
-		template <typename _> requires (check_version(version, {112, 125}))
+		M_nested_template_definition_check(check_version(t_version, {112, 125}))
 		M_enumeration(
-			M_wrap(ModulatorWaveform_<_>),
+			M_nested_template_definition_name(ModulatorWaveform),
 			M_wrap(
 				sine,
 				triangle,
@@ -3444,9 +2984,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {125}))
+		M_nested_template_definition_check(check_version(t_version, {125}))
 		M_enumeration(
-			M_wrap(ModulatorWaveform_<_>),
+			M_nested_template_definition_name(ModulatorWaveform),
 			M_wrap(
 				sine,
 				triangle,
@@ -3459,14 +2999,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct LowFrequencyOscillatorModulator_;
+		M_nested_template_declaration(LowFrequencyOscillatorModulator);
 
-		using LowFrequencyOscillatorModulator = LowFrequencyOscillatorModulator_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(LowFrequencyOscillatorModulator_<_>),
+			M_nested_template_definition_name(LowFrequencyOscillatorModulator),
 			M_wrap(
 				(Identifier) identifier,
 				(RandomizableValue<Floater>) depth,
@@ -3483,14 +3020,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct EnvelopeModulator_;
+		M_nested_template_declaration(EnvelopeModulator);
 
-		using EnvelopeModulator = EnvelopeModulator_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(EnvelopeModulator_<_>),
+			M_nested_template_definition_name(EnvelopeModulator),
 			M_wrap(
 				(Identifier) identifier,
 				(RandomizableValue<Floater>) attack_time,
@@ -3508,14 +3042,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct TimeModulator_;
+		M_nested_template_declaration(TimeModulator);
 
-		using TimeModulator = TimeModulator_<>;
-
-		template <typename _> requires (check_version(version, {132}))
+		M_nested_template_definition_check(check_version(t_version, {132}))
 		M_record_of_map(
-			M_wrap(TimeModulator_<_>),
+			M_nested_template_definition_name(TimeModulator),
 			M_wrap(
 				(Identifier) identifier,
 				(RandomizableValue<Floater>) initial_delay,
@@ -3533,23 +3064,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region effect
 
-		template <typename = None>
-		struct EffectU1_;
+		M_nested_template_declaration(EffectU1);
 
-		using EffectU1 = EffectU1_<>;
-
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(EffectU1_<_>),
+			M_nested_template_definition_name(EffectU1),
 			M_wrap(
 				(Integer) type,
 				(Floater) value,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(EffectU1_<_>),
+			M_nested_template_definition_name(EffectU1),
 			M_wrap(
 				(Integer) type,
 				(CoordinateMode) mode,
@@ -3559,14 +3087,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct Effect_;
+		M_nested_template_declaration(Effect);
 
-		using Effect = Effect_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(Effect_<_>),
+			M_nested_template_definition_name(Effect),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3575,9 +3100,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(Effect_<_>),
+			M_nested_template_definition_name(Effect),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3587,9 +3112,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(Effect_<_>),
+			M_nested_template_definition_name(Effect),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3602,14 +3127,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct Source_;
+		M_nested_template_declaration(Source);
 
-		using Source = Source_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(Source_<_>),
+			M_nested_template_definition_name(Source),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3618,9 +3140,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(Source_<_>),
+			M_nested_template_definition_name(Source),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3630,9 +3152,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128}))
+		M_nested_template_definition_check(check_version(t_version, {128}))
 		M_record_of_map(
-			M_wrap(Source_<_>),
+			M_nested_template_definition_name(Source),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3645,14 +3167,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioDevice_;
+		M_nested_template_declaration(AudioDevice);
 
-		using AudioDevice = AudioDevice_<>;
-
-		template <typename _> requires (check_version(version, {128, 140}))
+		M_nested_template_definition_check(check_version(t_version, {128, 140}))
 		M_record_of_map(
-			M_wrap(AudioDevice_<_>),
+			M_nested_template_definition_name(AudioDevice),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3663,9 +3182,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AudioDevice_<_>),
+			M_nested_template_definition_name(AudioDevice),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
@@ -3681,14 +3200,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region audio bus
 
-		template <typename = None>
-		struct AudioBusMuteForBackgroundMusic_;
+		M_nested_template_declaration(AudioBusMuteForBackgroundMusic);
 
-		using AudioBusMuteForBackgroundMusic = AudioBusMuteForBackgroundMusic_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(AudioBusMuteForBackgroundMusic_<_>),
+			M_nested_template_definition_name(AudioBusMuteForBackgroundMusic),
 			M_wrap(
 				(Boolean) enable,
 			),
@@ -3696,14 +3212,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioBusConfiguration_;
+		M_nested_template_declaration(AudioBusConfiguration);
 
-		using AudioBusConfiguration = AudioBusConfiguration_<>;
-
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(AudioBusConfiguration_<_>),
+			M_nested_template_definition_name(AudioBusConfiguration),
 			M_wrap(
 				(Integer) u1,
 			),
@@ -3711,14 +3224,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioBus_;
+		M_nested_template_declaration(AudioBus);
 
-		using AudioBus = AudioBus_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AudioBus_<_>),
+			M_nested_template_definition_name(AudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3733,9 +3243,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(AudioBus_<_>),
+			M_nested_template_definition_name(AudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3754,9 +3264,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 125}))
+		M_nested_template_definition_check(check_version(t_version, {112, 125}))
 		M_record_of_map(
-			M_wrap(AudioBus_<_>),
+			M_nested_template_definition_name(AudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3777,9 +3287,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {125, 128}))
+		M_nested_template_definition_check(check_version(t_version, {125, 128}))
 		M_record_of_map(
-			M_wrap(AudioBus_<_>),
+			M_nested_template_definition_name(AudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3801,9 +3311,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 140}))
+		M_nested_template_definition_check(check_version(t_version, {128, 140}))
 		M_record_of_map(
-			M_wrap(AudioBus_<_>),
+			M_nested_template_definition_name(AudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3827,9 +3337,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AudioBus_<_>),
+			M_nested_template_definition_name(AudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3856,14 +3366,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AuxiliaryAudioBus_;
+		M_nested_template_declaration(AuxiliaryAudioBus);
 
-		using AuxiliaryAudioBus = AuxiliaryAudioBus_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(AuxiliaryAudioBus_<_>),
+			M_nested_template_definition_name(AuxiliaryAudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3878,9 +3385,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(AuxiliaryAudioBus_<_>),
+			M_nested_template_definition_name(AuxiliaryAudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3899,9 +3406,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 125}))
+		M_nested_template_definition_check(check_version(t_version, {112, 125}))
 		M_record_of_map(
-			M_wrap(AuxiliaryAudioBus_<_>),
+			M_nested_template_definition_name(AuxiliaryAudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3922,9 +3429,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {125, 128}))
+		M_nested_template_definition_check(check_version(t_version, {125, 128}))
 		M_record_of_map(
-			M_wrap(AuxiliaryAudioBus_<_>),
+			M_nested_template_definition_name(AuxiliaryAudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3946,9 +3453,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 140}))
+		M_nested_template_definition_check(check_version(t_version, {128, 140}))
 		M_record_of_map(
-			M_wrap(AuxiliaryAudioBus_<_>),
+			M_nested_template_definition_name(AuxiliaryAudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -3972,9 +3479,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(AuxiliaryAudioBus_<_>),
+			M_nested_template_definition_name(AuxiliaryAudioBus),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4003,22 +3510,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region sound
 
-		template <typename = None>
-		struct SoundPlaybackSetting_;
+		M_nested_template_declaration(SoundPlaybackSetting);
 
-		using SoundPlaybackSetting = SoundPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundPlaybackSetting),
 			M_wrap(
 				(RandomizableValue<Integer>) loop,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(SoundPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundPlaybackSetting),
 			M_wrap(
 				(RandomizableValue<Floater>) initial_delay,
 				(RandomizableValue<Integer>) loop,
@@ -4027,14 +3531,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct Sound_;
+		M_nested_template_declaration(Sound);
 
-		using Sound = Sound_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4061,9 +3562,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4094,9 +3595,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4132,9 +3633,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4169,9 +3670,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4207,9 +3708,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4247,9 +3748,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(Sound_<_>),
+			M_nested_template_definition_name(Sound),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4287,14 +3788,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundPlaylistContainerScope_;
+		M_nested_template_declaration(SoundPlaylistContainerScope);
 
-		using SoundPlaylistContainerScope = SoundPlaylistContainerScope_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(SoundPlaylistContainerScope_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainerScope),
 			M_wrap(
 				game_object,
 				global,
@@ -4303,14 +3801,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundPlaylistContainerPlaylistItem_;
+		M_nested_template_declaration(SoundPlaylistContainerPlaylistItem);
 
-		using SoundPlaylistContainerPlaylistItem = SoundPlaylistContainerPlaylistItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainerPlaylistItem_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainerPlaylistItem),
 			M_wrap(
 				(Identifier) item,
 				(Integer) weight,
@@ -4319,14 +3814,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundPlaylistContainerPlaybackSetting_;
+		M_nested_template_declaration(SoundPlaylistContainerPlaybackSetting);
 
-		using SoundPlaylistContainerPlaybackSetting = SoundPlaylistContainerPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainerPlaybackSetting),
 			M_wrap(
 				(SoundPlaylistContainerScope) scope,
 				(AudioPlayType) type,
@@ -4337,9 +3829,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainerPlaybackSetting),
 			M_wrap(
 				(RandomizableValue<Floater>) initial_delay,
 				(SoundPlaylistContainerScope) scope,
@@ -4353,14 +3845,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundPlaylistContainer_;
+		M_nested_template_declaration(SoundPlaylistContainer);
 
-		using SoundPlaylistContainer = SoundPlaylistContainer_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4387,9 +3876,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4420,9 +3909,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4458,9 +3947,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4495,9 +3984,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4533,9 +4022,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4573,9 +4062,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(SoundPlaylistContainer_<_>),
+			M_nested_template_definition_name(SoundPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4613,14 +4102,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundSwitchContainerObjectAttributeItem_;
+		M_nested_template_declaration(SoundSwitchContainerObjectAttributeItem);
 
-		using SoundSwitchContainerObjectAttributeItem = SoundSwitchContainerObjectAttributeItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainerObjectAttributeItem_<_>),
+			M_nested_template_definition_name(SoundSwitchContainerObjectAttributeItem),
 			M_wrap(
 				(Identifier) identifier,
 				(Boolean) play_first_only,
@@ -4633,14 +4119,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundSwitchContainerObjectAssignItem_;
+		M_nested_template_declaration(SoundSwitchContainerObjectAssignItem);
 
-		using SoundSwitchContainerObjectAssignItem = SoundSwitchContainerObjectAssignItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainerObjectAssignItem_<_>),
+			M_nested_template_definition_name(SoundSwitchContainerObjectAssignItem),
 			M_wrap(
 				(Identifier) item,
 				(List<Identifier>) object,
@@ -4649,14 +4132,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundSwitchContainerPlaybackSetting_;
+		M_nested_template_declaration(SoundSwitchContainerPlaybackSetting);
 
-		using SoundSwitchContainerPlaybackSetting = SoundSwitchContainerPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundSwitchContainerPlaybackSetting),
 			M_wrap(
 				(AudioPlayMode) mode,
 				(AudioSwitcherSetting) switcher,
@@ -4665,9 +4145,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundSwitchContainerPlaybackSetting),
 			M_wrap(
 				(RandomizableValue<Floater>) initial_delay,
 				(AudioPlayMode) mode,
@@ -4679,14 +4159,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundSwitchContainer_;
+		M_nested_template_declaration(SoundSwitchContainer);
 
-		using SoundSwitchContainer = SoundSwitchContainer_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4713,9 +4190,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4746,9 +4223,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4784,9 +4261,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4821,9 +4298,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4859,9 +4336,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4899,9 +4376,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(SoundSwitchContainer_<_>),
+			M_nested_template_definition_name(SoundSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -4939,14 +4416,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundBlendContainerTrackChildItem_;
+		M_nested_template_declaration(SoundBlendContainerTrackChildItem);
 
-		using SoundBlendContainerTrackChildItem = SoundBlendContainerTrackChildItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainerTrackChildItem_<_>),
+			M_nested_template_definition_name(SoundBlendContainerTrackChildItem),
 			M_wrap(
 				(Identifier) identifier,
 				(List<CoordinatePoint>) point,
@@ -4955,14 +4429,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundBlendContainerTrackItem_;
+		M_nested_template_declaration(SoundBlendContainerTrackItem);
 
-		using SoundBlendContainerTrackItem = SoundBlendContainerTrackItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainerTrackItem_<_>),
+			M_nested_template_definition_name(SoundBlendContainerTrackItem),
 			M_wrap(
 				(Identifier) identifier,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
@@ -4973,31 +4444,28 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundBlendContainerPlaybackSetting_;
+		M_nested_template_declaration(SoundBlendContainerPlaybackSetting);
 
-		using SoundBlendContainerPlaybackSetting = SoundBlendContainerPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundBlendContainerPlaybackSetting),
 			M_wrap(
 				(List<SoundBlendContainerTrackItem>) track,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 120}))
+		M_nested_template_definition_check(check_version(t_version, {88, 120}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundBlendContainerPlaybackSetting),
 			M_wrap(
 				(RandomizableValue<Floater>) initial_delay,
 				(List<SoundBlendContainerTrackItem>) track,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {120}))
+		M_nested_template_definition_check(check_version(t_version, {120}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(SoundBlendContainerPlaybackSetting),
 			M_wrap(
 				(RandomizableValue<Floater>) initial_delay,
 				(AudioPlayMode) mode,
@@ -5007,14 +4475,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct SoundBlendContainer_;
+		M_nested_template_declaration(SoundBlendContainer);
 
-		using SoundBlendContainer = SoundBlendContainer_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5041,9 +4506,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5074,9 +4539,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5112,9 +4577,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5149,9 +4614,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5187,9 +4652,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5227,9 +4692,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(SoundBlendContainer_<_>),
+			M_nested_template_definition_name(SoundBlendContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5267,28 +4732,22 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct ActorMixerPlaybackSetting_;
+		M_nested_template_declaration(ActorMixerPlaybackSetting);
 
-		using ActorMixerPlaybackSetting = ActorMixerPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(ActorMixerPlaybackSetting_<_>),
+			M_nested_template_definition_name(ActorMixerPlaybackSetting),
 			M_wrap(
 			),
 		);
 
 		// ----------------
 
-		template <typename = None>
-		struct ActorMixer_;
+		M_nested_template_declaration(ActorMixer);
 
-		using ActorMixer = ActorMixer_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5315,9 +4774,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5348,9 +4807,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5386,9 +4845,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5423,9 +4882,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5461,9 +4920,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5501,9 +4960,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(ActorMixer_<_>),
+			M_nested_template_definition_name(ActorMixer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5543,14 +5002,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region music
 
-		template <typename = None>
-		struct MusicTrackTrackType_;
+		M_nested_template_declaration(MusicTrackTrackType);
 
-		using MusicTrackTrackType = MusicTrackTrackType_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_enumeration(
-			M_wrap(MusicTrackTrackType_<_>),
+			M_nested_template_definition_name(MusicTrackTrackType),
 			M_wrap(
 				normal,
 				random_step,
@@ -5558,9 +5014,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(MusicTrackTrackType_<_>),
+			M_nested_template_definition_name(MusicTrackTrackType),
 			M_wrap(
 				normal,
 				random_step,
@@ -5571,14 +5027,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackClipCurveItemType_;
+		M_nested_template_declaration(MusicTrackClipCurveItemType);
 
-		using MusicTrackClipCurveItemType = MusicTrackClipCurveItemType_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_enumeration(
-			M_wrap(MusicTrackClipCurveItemType_<_>),
+			M_nested_template_definition_name(MusicTrackClipCurveItemType),
 			M_wrap(
 				voice_volume,
 				voice_low_pass_filter,
@@ -5587,9 +5040,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(MusicTrackClipCurveItemType_<_>),
+			M_nested_template_definition_name(MusicTrackClipCurveItemType),
 			M_wrap(
 				voice_volume,
 				voice_low_pass_filter,
@@ -5601,14 +5054,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackClipCurveItem_;
+		M_nested_template_declaration(MusicTrackClipCurveItem);
 
-		using MusicTrackClipCurveItem = MusicTrackClipCurveItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTrackClipCurveItem_<_>),
+			M_nested_template_definition_name(MusicTrackClipCurveItem),
 			M_wrap(
 				(Integer) index,
 				(MusicTrackClipCurveItemType) type,
@@ -5618,14 +5068,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackClipItem_;
+		M_nested_template_declaration(MusicTrackClipItem);
 
-		using MusicTrackClipItem = MusicTrackClipItem_<>;
-
-		template <typename _> requires (check_version(version, {72, 140}))
+		M_nested_template_definition_check(check_version(t_version, {72, 140}))
 		M_record_of_map(
-			M_wrap(MusicTrackClipItem_<_>),
+			M_nested_template_definition_name(MusicTrackClipItem),
 			M_wrap(
 				(Integer) u1,
 				(Identifier) source,
@@ -5636,9 +5083,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(MusicTrackClipItem_<_>),
+			M_nested_template_definition_name(MusicTrackClipItem),
 			M_wrap(
 				(Integer) u1,
 				(Identifier) source,
@@ -5652,14 +5099,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackClip_;
+		M_nested_template_declaration(MusicTrackClip);
 
-		using MusicTrackClip = MusicTrackClip_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTrackClip_<_>),
+			M_nested_template_definition_name(MusicTrackClip),
 			M_wrap(
 				(Integer) u1,
 				(List<MusicTrackClipItem>) item,
@@ -5669,23 +5113,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackPlaybackSetting_;
+		M_nested_template_declaration(MusicTrackPlaybackSetting);
 
-		using MusicTrackPlaybackSetting = MusicTrackPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(MusicTrackPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicTrackPlaybackSetting),
 			M_wrap(
 				(MusicTrackClip) clip,
 				(MusicTrackTrackType) type,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicTrackPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicTrackPlaybackSetting),
 			M_wrap(
 				(MusicTrackClip) clip,
 				(MusicTrackTrackType) type,
@@ -5696,14 +5137,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrackStream_;
+		M_nested_template_declaration(MusicTrackStream);
 
-		using MusicTrackStream = MusicTrackStream_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicTrackStream_<_>),
+			M_nested_template_definition_name(MusicTrackStream),
 			M_wrap(
 				(Integer) look_ahead_time,
 			),
@@ -5711,14 +5149,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicTrack_;
+		M_nested_template_declaration(MusicTrack);
 
-		using MusicTrack = MusicTrack_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5746,9 +5181,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5780,9 +5215,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5819,9 +5254,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5857,9 +5292,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5896,9 +5331,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5937,9 +5372,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(MusicTrack_<_>),
+			M_nested_template_definition_name(MusicTrack),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -5978,14 +5413,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSegmentCueItem_;
+		M_nested_template_declaration(MusicSegmentCueItem);
 
-		using MusicSegmentCueItem = MusicSegmentCueItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicSegmentCueItem_<_>),
+			M_nested_template_definition_name(MusicSegmentCueItem),
 			M_wrap(
 				(Identifier) name,
 				(Floater) time,
@@ -5994,14 +5426,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSegmentCue_;
+		M_nested_template_declaration(MusicSegmentCue);
 
-		using MusicSegmentCue = MusicSegmentCue_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicSegmentCue_<_>),
+			M_nested_template_definition_name(MusicSegmentCue),
 			M_wrap(
 				(List<MusicSegmentCueItem>) item,
 			),
@@ -6009,23 +5438,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSegmentPlaybackSetting_;
+		M_nested_template_declaration(MusicSegmentPlaybackSetting);
 
-		using MusicSegmentPlaybackSetting = MusicSegmentPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(MusicSegmentPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicSegmentPlaybackSetting),
 			M_wrap(
 				(Floater) duration,
 				(MusicSegmentCue) cue,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicSegmentPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicSegmentPlaybackSetting),
 			M_wrap(
 				(RegularValue<Floater>) speed,
 				(Floater) duration,
@@ -6035,14 +5461,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSegment_;
+		M_nested_template_declaration(MusicSegment);
 
-		using MusicSegment = MusicSegment_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6072,9 +5495,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6108,9 +5531,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6149,9 +5572,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6189,9 +5612,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6230,9 +5653,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6273,9 +5696,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(MusicSegment_<_>),
+			M_nested_template_definition_name(MusicSegment),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6316,14 +5739,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicPlaylistContainerPlaylistItem_;
+		M_nested_template_declaration(MusicPlaylistContainerPlaylistItem);
 
-		using MusicPlaylistContainerPlaylistItem = MusicPlaylistContainerPlaylistItem_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainerPlaylistItem_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainerPlaylistItem),
 			M_wrap(
 				(Identifier) u1,
 				(Boolean) group,
@@ -6339,22 +5759,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicPlaylistContainerPlaybackSetting_;
+		M_nested_template_declaration(MusicPlaylistContainerPlaybackSetting);
 
-		using MusicPlaylistContainerPlaybackSetting = MusicPlaylistContainerPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainerPlaybackSetting),
 			M_wrap(
 				(List<MusicPlaylistContainerPlaylistItem>) playlist,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainerPlaybackSetting),
 			M_wrap(
 				(RegularValue<Floater>) speed,
 				(List<MusicPlaylistContainerPlaylistItem>) playlist,
@@ -6363,14 +5780,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicPlaylistContainer_;
+		M_nested_template_declaration(MusicPlaylistContainer);
 
-		using MusicPlaylistContainer = MusicPlaylistContainer_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6401,9 +5815,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6438,9 +5852,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6480,9 +5894,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6521,9 +5935,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6563,9 +5977,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6607,9 +6021,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(MusicPlaylistContainer_<_>),
+			M_nested_template_definition_name(MusicPlaylistContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6651,14 +6065,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSwitchContainerAssociationItem_;
+		M_nested_template_declaration(MusicSwitchContainerAssociationItem);
 
-		using MusicSwitchContainerAssociationItem = MusicSwitchContainerAssociationItem_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainerAssociationItem_<_>),
+			M_nested_template_definition_name(MusicSwitchContainerAssociationItem),
 			M_wrap(
 				(Identifier) item,
 				(Identifier) child,
@@ -6667,14 +6078,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSwitchContainerPlaybackSetting_;
+		M_nested_template_declaration(MusicSwitchContainerPlaybackSetting);
 
-		using MusicSwitchContainerPlaybackSetting = MusicSwitchContainerPlaybackSetting_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicSwitchContainerPlaybackSetting),
 			M_wrap(
 				(Boolean) continue_playing_on_switch_change,
 				(AudioSwitcherSetting) switcher,
@@ -6682,9 +6090,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88}))
+		M_nested_template_definition_check(check_version(t_version, {88}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainerPlaybackSetting_<_>),
+			M_nested_template_definition_name(MusicSwitchContainerPlaybackSetting),
 			M_wrap(
 				(RegularValue<Floater>) speed,
 				(Boolean) continue_playing_on_switch_change,
@@ -6694,14 +6102,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct MusicSwitchContainer_;
+		M_nested_template_declaration(MusicSwitchContainer);
 
-		using MusicSwitchContainer = MusicSwitchContainer_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6732,9 +6137,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6769,9 +6174,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6811,9 +6216,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 135}))
+		M_nested_template_definition_check(check_version(t_version, {128, 135}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6852,9 +6257,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6894,9 +6299,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6938,9 +6343,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_record_of_map(
-			M_wrap(MusicSwitchContainer_<_>),
+			M_nested_template_definition_name(MusicSwitchContainer),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) parent,
@@ -6984,14 +6389,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region hierarchy
 
-		template <typename = None>
-		struct HierarchyType_;
+		M_nested_template_declaration(HierarchyType);
 
-		using HierarchyType = HierarchyType_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_enumeration(
-			M_wrap(HierarchyType_<_>),
+			M_nested_template_definition_name(HierarchyType),
 			M_wrap(
 				unknown,
 				stateful_property_setting,
@@ -7015,9 +6417,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_enumeration(
-			M_wrap(HierarchyType_<_>),
+			M_nested_template_definition_name(HierarchyType),
 			M_wrap(
 				unknown,
 				stateful_property_setting,
@@ -7043,9 +6445,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 132}))
+		M_nested_template_definition_check(check_version(t_version, {128, 132}))
 		M_enumeration(
-			M_wrap(HierarchyType_<_>),
+			M_nested_template_definition_name(HierarchyType),
 			M_wrap(
 				unknown,
 				stateful_property_setting,
@@ -7072,9 +6474,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132}))
+		M_nested_template_definition_check(check_version(t_version, {132}))
 		M_enumeration(
-			M_wrap(HierarchyType_<_>),
+			M_nested_template_definition_name(HierarchyType),
 			M_wrap(
 				unknown,
 				stateful_property_setting,
@@ -7105,7 +6507,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		// ----------------
 
 		using Hierarchy = decltype([] {
-			if constexpr (check_version(version, {72, 112})) {
+			if constexpr (check_version(t_version, {72, 112})) {
 				using Type = EnumerableVariant<
 					HierarchyType,
 					UnknownHierarchy,
@@ -7130,7 +6532,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				>;
 				return declare<Type>();
 			}
-			if constexpr (check_version(version, {112, 128})) {
+			if constexpr (check_version(t_version, {112, 128})) {
 				using Type = EnumerableVariant<
 					HierarchyType,
 					UnknownHierarchy,
@@ -7157,7 +6559,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				>;
 				return declare<Type>();
 			}
-			if constexpr (check_version(version, {128, 132})) {
+			if constexpr (check_version(t_version, {128, 132})) {
 				using Type = EnumerableVariant<
 					HierarchyType,
 					UnknownHierarchy,
@@ -7185,7 +6587,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				>;
 				return declare<Type>();
 			}
-			if constexpr (check_version(version, {132})) {
+			if constexpr (check_version(t_version, {132})) {
 				using Type = EnumerableVariant<
 					HierarchyType,
 					UnknownHierarchy,
@@ -7220,14 +6622,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region reference
 
-		template <typename = None>
-		struct SoundBankReference_;
+		M_nested_template_declaration(SoundBankReference);
 
-		using SoundBankReference = SoundBankReference_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundBankReference_<_>),
+			M_nested_template_definition_name(SoundBankReference),
 			M_wrap(
 				(Identifier) identifier,
 				(String) name,
@@ -7236,14 +6635,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct PlugInReference_;
+		M_nested_template_declaration(PlugInReference);
 
-		using PlugInReference = PlugInReference_<>;
-
-		template <typename _> requires (check_version(version, {118}))
+		M_nested_template_definition_check(check_version(t_version, {118}))
 		M_record_of_map(
-			M_wrap(PlugInReference_<_>),
+			M_nested_template_definition_name(PlugInReference),
 			M_wrap(
 				(Identifier) identifier,
 				(String) library,
@@ -7254,14 +6650,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region game synchronization
 
-		template <typename = None>
-		struct GameSynchronization_;
+		M_nested_template_declaration(GameSynchronization);
 
-		using GameSynchronization = GameSynchronization_<>;
-
-		template <typename _> requires (check_version(version, {72, 140}))
+		M_nested_template_definition_check(check_version(t_version, {72, 140}))
 		M_record_of_map(
-			M_wrap(GameSynchronization_<_>),
+			M_nested_template_definition_name(GameSynchronization),
 			M_wrap(
 				(List<StateGroup>) state_group,
 				(List<SwitchGroup>) switch_group,
@@ -7269,9 +6662,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140}))
+		M_nested_template_definition_check(check_version(t_version, {140}))
 		M_record_of_map(
-			M_wrap(GameSynchronization_<_>),
+			M_nested_template_definition_name(GameSynchronization),
 			M_wrap(
 				(List<StateGroup>) state_group,
 				(List<SwitchGroup>) switch_group,
@@ -7284,14 +6677,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region setting
 
-		template <typename = None>
-		struct VoiceFilterBehavior_;
+		M_nested_template_declaration(VoiceFilterBehavior);
 
-		using VoiceFilterBehavior = VoiceFilterBehavior_<>;
-
-		template <typename _> requires (check_version(version, {145}))
+		M_nested_template_definition_check(check_version(t_version, {145}))
 		M_enumeration(
-			M_wrap(VoiceFilterBehavior_<_>),
+			M_nested_template_definition_name(VoiceFilterBehavior),
 			M_wrap(
 				sum_all_value,
 				use_highest_value,
@@ -7300,14 +6690,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct ObstructionSetting_;
+		M_nested_template_declaration(ObstructionSetting);
 
-		using ObstructionSetting = ObstructionSetting_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(ObstructionSetting_<_>),
+			M_nested_template_definition_name(ObstructionSetting),
 			M_wrap(
 				(Boolean) enable,
 				(CoordinateMode) mode,
@@ -7317,23 +6704,20 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct ObstructionSettingBundle_;
+		M_nested_template_declaration(ObstructionSettingBundle);
 
-		using ObstructionSettingBundle = ObstructionSettingBundle_<>;
-
-		template <typename _> requires (check_version(version, {72, 112}))
+		M_nested_template_definition_check(check_version(t_version, {72, 112}))
 		M_record_of_map(
-			M_wrap(ObstructionSettingBundle_<_>),
+			M_nested_template_definition_name(ObstructionSettingBundle),
 			M_wrap(
 				(ObstructionSetting) volume,
 				(ObstructionSetting) low_pass_filter,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_record_of_map(
-			M_wrap(ObstructionSettingBundle_<_>),
+			M_nested_template_definition_name(ObstructionSettingBundle),
 			M_wrap(
 				(ObstructionSetting) volume,
 				(ObstructionSetting) low_pass_filter,
@@ -7343,14 +6727,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct Setting_;
+		M_nested_template_declaration(Setting);
 
-		using Setting = Setting_<>;
-
-		template <typename _> requires (check_version(version, {72, 113}))
+		M_nested_template_definition_check(check_version(t_version, {72, 113}))
 		M_record_of_map(
-			M_wrap(Setting_<_>),
+			M_nested_template_definition_name(Setting),
 			M_wrap(
 				(Floater) volume_threshold,
 				(Integer) maximum_voice_instance,
@@ -7359,9 +6740,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {113, 118}))
+		M_nested_template_definition_check(check_version(t_version, {113, 118}))
 		M_record_of_map(
-			M_wrap(Setting_<_>),
+			M_nested_template_definition_name(Setting),
 			M_wrap(
 				(String) platform,
 				(Floater) volume_threshold,
@@ -7371,9 +6752,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {118, 145}))
+		M_nested_template_definition_check(check_version(t_version, {118, 145}))
 		M_record_of_map(
-			M_wrap(Setting_<_>),
+			M_nested_template_definition_name(Setting),
 			M_wrap(
 				(String) platform,
 				(Floater) volume_threshold,
@@ -7384,9 +6765,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {145}))
+		M_nested_template_definition_check(check_version(t_version, {145}))
 		M_record_of_map(
-			M_wrap(Setting_<_>),
+			M_nested_template_definition_name(Setting),
 			M_wrap(
 				(String) platform,
 				(VoiceFilterBehavior) voice_filter_behavior,
@@ -7402,14 +6783,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		#pragma region sound bank
 
-		template <typename = None>
-		struct SoundBank_;
+		M_nested_template_declaration(SoundBank);
 
-		using SoundBank = SoundBank_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_record_of_map(
-			M_wrap(SoundBank_<_>),
+			M_nested_template_definition_name(SoundBank),
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) language,

@@ -11,20 +11,20 @@ import twinning.kernel.tool.common.byte_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
-	template <auto version> requires (check_version(version))
+	template <auto t_version> requires (check_version(t_version))
 	struct Decode :
-		Common<version>,
+		Common<t_version>,
 		CommonByteStreamExchangeForInput {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
 		// ----------------
 
 		inline static auto exchange_character_item(
-			InputByteStreamView &                data,
-			typename Definition::CharacterItem & value
+			InputByteStreamView &       data,
+			Definition::CharacterItem & value
 		) -> Void {
 			exchange_unicode_fixed<Character16>(data, value.index);
 			exchange_unicode_fixed<Character16>(data, value.value);
@@ -32,8 +32,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_kerning(
-			InputByteStreamView &              data,
-			typename Definition::FontKerning & value
+			InputByteStreamView &     data,
+			Definition::FontKerning & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU16>(data, value.offset);
 			exchange_unicode_fixed<Character16>(data, value.index);
@@ -41,8 +41,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_character(
-			InputByteStreamView &                data,
-			typename Definition::FontCharacter & value
+			InputByteStreamView &       data,
+			Definition::FontCharacter & value
 		) -> Void {
 			exchange_unicode_fixed<Character16>(data, value.index);
 			exchange_integer_fixed<IntegerS32>(data, value.image_rect_x);
@@ -59,8 +59,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_layer(
-			InputByteStreamView &            data,
-			typename Definition::FontLayer & value
+			InputByteStreamView &   data,
+			Definition::FontLayer & value
 		) -> Void {
 			exchange_string_block<IntegerU32>(data, value.name);
 			exchange_list(data, value.tag_require, &exchange_size_fixed<IntegerU32>, &exchange_string_block<IntegerU32>);
@@ -93,8 +93,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_widget(
-			InputByteStreamView &             data,
-			typename Definition::FontWidget & value
+			InputByteStreamView &    data,
+			Definition::FontWidget & value
 		) -> Void {
 			exchange_integer_fixed<IntegerS32>(data, value.ascent);
 			exchange_integer_fixed<IntegerS32>(data, value.ascent_padding);
@@ -117,8 +117,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &             data,
-			typename Definition::FontWidget & definition
+			InputByteStreamView &    data,
+			Definition::FontWidget & definition
 		) -> Void {
 			exchange_font_widget(data, definition);
 			return;
@@ -127,8 +127,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &             data_,
-			typename Definition::FontWidget & definition
+			InputByteStreamView &    data_,
+			Definition::FontWidget & definition
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

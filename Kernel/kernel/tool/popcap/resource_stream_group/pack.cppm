@@ -14,30 +14,30 @@ import twinning.kernel.tool.data.compression.deflate.compress;
 
 export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Pack :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
 		// ----------------
 
 		inline static auto process_package(
-			OutputByteStreamView &               data,
-			typename Definition::Package const & definition,
-			Path const &                         resource_directory
+			OutputByteStreamView &      data,
+			Definition::Package const & definition,
+			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
-			data.write_constant(cbox<Structure::VersionNumber>(version.number));
+			data.write_constant(cbox<Structure::VersionNumber>(t_version.number));
 			struct {
 				OutputByteStreamView header{};
 				OutputByteStreamView resource_information{};
 				Size                 resource_information_offset{};
 			} information_data = {};
 			{
-				auto information_structure = Structure::Information<version>{};
+				auto information_structure = Structure::Information<t_version>{};
 				information_structure.resource_information.allocate_full(definition.resource.size());
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
@@ -45,12 +45,12 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					resource_information_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
-							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::general;
+							resource_information_structure.value.type = Structure::ResourceTypeFlag<t_version>::general;
 							resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::general()>();
 							break;
 						}
 						case ResourceType::Constant::texture().value: {
-							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::texture;
+							resource_information_structure.value.type = Structure::ResourceTypeFlag<t_version>::texture;
 							resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::texture()>();
 							break;
 						}
@@ -67,11 +67,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				};
 				data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
 			}
-			auto information_structure = Structure::Information<version>{};
-			if constexpr (check_version(version, {1, 3})) {
+			auto information_structure = Structure::Information<t_version>{};
+			if constexpr (check_version(t_version, {1, 3})) {
 				information_structure.header.unknown_1 = 1_iu32;
 			}
-			if constexpr (check_version(version, {3})) {
+			if constexpr (check_version(t_version, {3})) {
 				information_structure.header.unknown_1 = 0_iu32;
 			}
 			information_structure.header.information_section_size = cbox<IntegerU32>(data.position());
@@ -124,13 +124,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
-							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::general;
+							resource_information_structure.value.type = Structure::ResourceTypeFlag<t_version>::general;
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::general()>();
 							break;
 						}
 						case ResourceType::Constant::texture().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
-							resource_information_structure.value.type = Structure::ResourceTypeFlag<version>::texture;
+							resource_information_structure.value.type = Structure::ResourceTypeFlag<t_version>::texture;
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::texture()>();
 							resource_additional_information_structure.index = cbox<IntegerU32>(resource_additional_definition.index);
 							resource_additional_information_structure.size_width = cbox<IntegerU32>(resource_additional_definition.size.width);
@@ -178,9 +178,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &               data_,
-			typename Definition::Package const & definition,
-			Path const &                         resource_directory
+			OutputByteStreamView &      data_,
+			Definition::Package const & definition,
+			Path const &                resource_directory
 		) -> Void {
 			M_use_zps_of(data);
 			return process_package(data, definition, resource_directory);

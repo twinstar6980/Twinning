@@ -189,9 +189,9 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region class
 
-		template <auto finalizer> requires
+		template <auto t_finalizer> requires
 			CategoryConstraint<>
-			&& (IsSameOf<finalizer, ClassFinalizer>)
+			&& (IsSameOf<t_finalizer, ClassFinalizer>)
 		auto register_class(
 			Integer &      identifier,
 			String const & name
@@ -315,10 +315,10 @@ export namespace Twinning::Kernel::JavaScript {
 		auto new_value(
 		) -> Value;
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsValid<ValueObject>>
+		template <typename TValueObject> requires
+			CategoryConstraint<IsValid<TValueObject>>
 		auto new_value(
-			ValueObject && value
+			TValueObject && value
 		) -> Value;
 
 		#pragma endregion
@@ -431,15 +431,15 @@ export namespace Twinning::Kernel::JavaScript {
 			return result;
 		}
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		inline static auto new_instance_of(
 			ZPointer<Third::quickjs_ng::$JSContext> const & context,
-			That &&                                         that,
-			Option && ...                                   option
+			TThat &&                                        that,
+			TOption && ...                                  option
 		) -> Value {
 			auto result = new_instance(context);
-			result.from(as_forward<That>(that), as_forward<Option>(option) ...);
+			result.from(as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return result;
 		}
 
@@ -582,12 +582,12 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz.new_instance(thiz._context());
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto new_value(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Value {
-			return thiz.new_instance_of(thiz._context(), as_forward<Argument>(argument) ...);
+			return thiz.new_instance_of(thiz._context(), as_forward<TArgument>(argument) ...);
 		}
 
 		#pragma endregion
@@ -808,9 +808,9 @@ export namespace Twinning::Kernel::JavaScript {
 			);
 		}
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsSameOf<function, NativeFunction>)
+			&& (IsSameOf<t_function, NativeFunction>)
 		auto set_object_of_native_function(
 			String const &  name,
 			Boolean const & is_constructor
@@ -1145,38 +1145,38 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region from & to by adapter
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto from(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) -> Void {
 			assert_test(thiz.m_context.has());
 			thiz.set_uninitialized();
-			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			ValueAdapter<AsPure<TThat>>::from(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto to(
-			That &&       that,
-			Option && ... option
-		) -> That && {
+			TThat &&       that,
+			TOption && ... option
+		) -> TThat && {
 			assert_test(thiz.m_context.has());
-			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
-			return as_forward<That>(that);
+			ValueAdapter<AsPure<TThat>>::to(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
+			return as_forward<TThat>(that);
 		}
 
 		// ----------------
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
 		auto to_of(
-			Option && ... option
-		) -> That {
-			auto that = That{};
-			thiz.to(that, as_forward<Option>(option) ...);
+			TOption && ... option
+		) -> TThat {
+			auto that = TThat{};
+			thiz.to(that, as_forward<TOption>(option) ...);
 			return that;
 		}
 
@@ -1244,24 +1244,24 @@ export namespace Twinning::Kernel::JavaScript {
 
 		// ----------------
 
-		template <auto finalizer> requires
+		template <auto t_finalizer> requires
 			CategoryConstraint<>
-			&& (IsSameOf<finalizer, ClassFinalizer>)
+			&& (IsSameOf<t_finalizer, ClassFinalizer>)
 		inline auto proxy_class_finalizer(
 			Third::quickjs_ng::$JSRuntime * rt,
 			Third::quickjs_ng::$JSValue     obj
 		) -> void {
 			auto runtime = Runtime::new_reference(rt);
 			auto object = Value::new_orphan(obj);
-			finalizer(runtime, object);
+			t_finalizer(runtime, object);
 			return;
 		}
 
 		// ----------------
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsSameOf<function, NativeFunction>)
+			&& (IsSameOf<t_function, NativeFunction>)
 		inline auto proxy_native_function(
 			Third::quickjs_ng::$JSContext * ctx,
 			Third::quickjs_ng::$JSValue     this_val,
@@ -1281,7 +1281,7 @@ export namespace Twinning::Kernel::JavaScript {
 					argument[mbox<Size>(index)] = Value::new_reference(ctx, argv[index]);
 				}
 				auto result = Value::new_instance(ctx);
-				function(context, object, argument, result);
+				t_function(context, object, argument, result);
 				result_value = result._release_value();
 			}
 			#if defined M_build_release
@@ -1419,9 +1419,9 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	template <auto finalizer> requires
+	template <auto t_finalizer> requires
 		CategoryConstraint<>
-		&& (IsSameOf<finalizer, ClassFinalizer>)
+		&& (IsSameOf<t_finalizer, ClassFinalizer>)
 	inline auto Runtime::register_class(
 		Integer &      identifier,
 		String const & name
@@ -1429,7 +1429,7 @@ export namespace Twinning::Kernel::JavaScript {
 		auto name_null_terminated = make_null_terminated_string(name);
 		auto definition = Third::quickjs_ng::$JSClassDef{
 			.class_name = cast_pointer<char>(name_null_terminated.begin()).value,
-			.finalizer = &Detail::proxy_class_finalizer<finalizer>,
+			.finalizer = &Detail::proxy_class_finalizer<t_finalizer>,
 			.gc_mark = nullptr,
 			.call = nullptr,
 			.exotic = nullptr,
@@ -1449,12 +1449,12 @@ export namespace Twinning::Kernel::JavaScript {
 		return Value::new_instance_of(thiz._context());
 	}
 
-	template <typename ValueObject> requires
-		CategoryConstraint<IsValid<ValueObject>>
+	template <typename TValueObject> requires
+		CategoryConstraint<IsValid<TValueObject>>
 	inline auto Context::new_value(
-		ValueObject && value
+		TValueObject && value
 	) -> Value {
-		return Value::new_instance_of(thiz._context(), as_forward<ValueObject>(value));
+		return Value::new_instance_of(thiz._context(), as_forward<TValueObject>(value));
 	}
 
 	// ----------------
@@ -1516,9 +1516,9 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	template <auto function> requires
+	template <auto t_function> requires
 		CategoryConstraint<>
-		&& (IsSameOf<function, NativeFunction>)
+		&& (IsSameOf<t_function, NativeFunction>)
 	inline auto Value::set_object_of_native_function(
 		String const &  name,
 		Boolean const & is_constructor
@@ -1526,7 +1526,7 @@ export namespace Twinning::Kernel::JavaScript {
 		return thiz._rebind_value(
 			Third::quickjs_ng::$JS_NewCFunction2(
 				thiz._context(),
-				&Detail::proxy_native_function<function>,
+				&Detail::proxy_native_function<t_function>,
 				cast_pointer<char>(make_null_terminated_string(name).begin()).value,
 				0,
 				!is_constructor ? (Third::quickjs_ng::$JS_CFUNC_generic) : (Third::quickjs_ng::$JS_CFUNC_constructor),

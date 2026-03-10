@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	template <auto t_name, auto t_value> requires
 		CategoryConstraint<>
-		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
+		&& (IsTemplateInstanceOfTv<decltype(t_name), String>)
 	struct Field {
 
 		inline static constexpr auto name = t_name;
@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	template <auto t_name, auto t_value, auto t_is_static, auto t_is_function> requires
 		CategoryConstraint<>
-		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
+		&& (IsTemplateInstanceOfTv<decltype(t_name), String>)
 		&& (IsSameOf<t_is_static, ZBoolean>)
 		&& (IsSameOf<t_is_function, ZBoolean>)
 		&& ((t_is_static && IsBuiltinPointer<decltype(t_value)>) || (!t_is_static && IsBuiltinMemberPointer<decltype(t_value)>))
@@ -50,13 +50,13 @@ export namespace Twinning::Kernel::Trait::Reflection {
 			return *(Field<t_name, t_value>::value);
 		}
 
-		template <typename Class> requires
+		template <typename TClass> requires
 			AutomaticConstraint // TODO: check type
 		inline static constexpr auto value_of(
-			Class && thix
+			TClass && thix
 		) -> auto && requires
 			(!is_static) {
-			return as_forward<Class>(thix).*(Field<t_name, t_value>::value);
+			return as_forward<TClass>(thix).*(Field<t_name, t_value>::value);
 		}
 
 	};
@@ -85,7 +85,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	template <auto t_name, auto t_value> requires
 		CategoryConstraint<>
-		&& (IsTemplateInstanceOfV<decltype(t_name), String>)
+		&& (IsTemplateInstanceOfTv<decltype(t_name), String>)
 	struct EnumerationField :
 		Field<t_name, t_value> {
 

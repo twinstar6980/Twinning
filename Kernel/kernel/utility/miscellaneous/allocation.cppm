@@ -15,20 +15,20 @@ export namespace Twinning::Kernel {
 
 	#pragma region single allocate
 
-	template <typename It, typename ... Argument> requires
-		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
-		&& (IsConstructible<AsPure<It>, Argument && ...>)
+	template <typename TIt, typename ... TArgument> requires
+		CategoryConstraint<IsInstance<TIt> && IsValid<TArgument ...>>
+		&& (IsConstructible<AsPure<TIt>, TArgument && ...>)
 	inline constexpr auto allocate_instance(
-		Argument && ... argument
-	) -> Pointer<It> {
-		auto pointer = make_pointer(new It{as_forward<Argument>(argument) ...});
+		TArgument && ... argument
+	) -> Pointer<TIt> {
+		auto pointer = make_pointer(new TIt{as_forward<TArgument>(argument) ...});
 		return pointer;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsInstance<TIt>>
 	inline constexpr auto free_instance(
-		Pointer<It> & pointer
+		Pointer<TIt> & pointer
 	) -> Void {
 		delete pointer.value;
 		pointer = k_null_pointer;
@@ -39,25 +39,25 @@ export namespace Twinning::Kernel {
 
 	#pragma region array allocate
 
-	template <typename It, typename ... Argument> requires
-		CategoryConstraint<IsInstance<It> && IsPureInstance<Argument ...>>
-		&& (IsDefaultConstructible<AsPure<It>>)
-		&& (IsConstructible<AsPure<It>, Argument const & ...>)
+	template <typename TIt, typename ... TArgument> requires
+		CategoryConstraint<IsInstance<TIt> && IsPureInstance<TArgument ...>>
+		&& (IsDefaultConstructible<AsPure<TIt>>)
+		&& (IsConstructible<AsPure<TIt>, TArgument const & ...>)
 	inline constexpr auto allocate_instance_array(
-		Size const &         size,
-		Argument const & ... argument
-	) -> Pointer<It> {
-		auto pointer = make_pointer(new It[size.value]{});
-		if constexpr (sizeof...(Argument) != 0_szz) {
+		Size const &          size,
+		TArgument const & ... argument
+	) -> Pointer<TIt> {
+		auto pointer = make_pointer(new TIt[size.value]{});
+		if constexpr (sizeof...(TArgument) != 0_szz) {
 			Range::restruct(Range::make_range_n(pointer, size), argument ...);
 		}
 		return pointer;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsInstance<TIt>>
 	inline constexpr auto free_instance_array(
-		Pointer<It> & pointer
+		Pointer<TIt> & pointer
 	) -> Void {
 		delete[] pointer.value;
 		pointer = k_null_pointer;

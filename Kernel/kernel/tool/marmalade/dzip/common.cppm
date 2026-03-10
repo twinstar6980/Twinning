@@ -10,10 +10,10 @@ import twinning.kernel.tool.marmalade.dzip.structure;
 
 export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
-		using Definition = Definition<version>;
+		using Definition = Definition<t_version>;
 
 	};
 

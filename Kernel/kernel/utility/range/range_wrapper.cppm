@@ -127,45 +127,45 @@ export namespace Twinning::Kernel::Range {
 
 	#pragma region utility
 
-	template <typename Iterator> requires
-		CategoryConstraint<IsPureInstance<Iterator>>
-		&& (IsIterator<Iterator>)
+	template <typename TIterator> requires
+		CategoryConstraint<IsPureInstance<TIterator>>
+		&& (IsIterator<TIterator>)
 	inline constexpr auto make_range(
-		Iterator const & begin,
-		Iterator const & end
-	) -> RangeWrapper<Iterator> {
+		TIterator const & begin,
+		TIterator const & end
+	) -> RangeWrapper<TIterator> {
 		return RangeWrapper{begin, end};
 	}
 
-	template <typename Iterator> requires
-		CategoryConstraint<IsPureInstance<Iterator>>
-		&& (IsIterator<Iterator>)
+	template <typename TIterator> requires
+		CategoryConstraint<IsPureInstance<TIterator>>
+		&& (IsIterator<TIterator>)
 	inline constexpr auto make_range_n(
-		Iterator const & begin,
-		Size const &     size
-	) -> RangeWrapper<Iterator> {
+		TIterator const & begin,
+		Size const &      size
+	) -> RangeWrapper<TIterator> {
 		return make_range(begin, begin + size);
 	}
 
-	template <typename Range> requires
-		CategoryConstraint<IsValid<Range>>
-		&& (IsRange<AsPure<Range>>)
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
 	inline constexpr auto make_range_of(
-		Range && range
+		TRange && range
 	) -> auto {
 		return make_range(range.begin(), range.end());
 	}
 
 	// ----------------
 
-	template <typename Iterator> requires
-		CategoryConstraint<IsPureInstance<Iterator>>
-		&& (IsIterator<Iterator>)
+	template <typename TIterator> requires
+		CategoryConstraint<IsPureInstance<TIterator>>
+		&& (IsIterator<TIterator>)
 	inline constexpr auto make_reverse_range(
-		Iterator const & end,
-		Iterator const & begin
+		TIterator const & end,
+		TIterator const & begin
 	) -> auto {
-		if constexpr (IsPointerBox<Iterator>) {
+		if constexpr (IsPointerBox<TIterator>) {
 			return make_range(std::make_reverse_iterator(end.value), std::make_reverse_iterator(begin.value));
 		}
 		else {
@@ -173,35 +173,35 @@ export namespace Twinning::Kernel::Range {
 		}
 	}
 
-	template <typename Iterator> requires
-		CategoryConstraint<IsPureInstance<Iterator>>
-		&& (IsIterator<Iterator>)
+	template <typename TIterator> requires
+		CategoryConstraint<IsPureInstance<TIterator>>
+		&& (IsIterator<TIterator>)
 	inline constexpr auto make_reverse_range_n(
-		Iterator const & end,
-		Size const &     size
+		TIterator const & end,
+		Size const &      size
 	) -> auto {
 		return make_reverse_range(end, end - size);
 	}
 
-	template <typename Range> requires
-		CategoryConstraint<IsValid<Range>>
-		&& (IsRange<AsPure<Range>>)
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
 	inline constexpr auto make_reverse_range_of(
-		Range && range
+		TRange && range
 	) -> auto {
 		return make_reverse_range(range.end(), range.begin());
 	}
 
 	// ----------------
 
-	template <typename Iterator> requires
-		CategoryConstraint<IsPureInstance<Iterator>>
-		&& (IsIterator<Iterator>)
+	template <typename TIterator> requires
+		CategoryConstraint<IsPureInstance<TIterator>>
+		&& (IsIterator<TIterator>)
 	inline constexpr auto make_moveable_range(
-		Iterator const & begin,
-		Iterator const & end
+		TIterator const & begin,
+		TIterator const & end
 	) -> auto {
-		if constexpr (IsPointerBox<Iterator>) {
+		if constexpr (IsPointerBox<TIterator>) {
 			return make_range(std::make_move_iterator(begin.value), std::make_move_iterator(end.value));
 		}
 		else {
@@ -209,21 +209,21 @@ export namespace Twinning::Kernel::Range {
 		}
 	}
 
-	template <typename Iterator> requires
-		CategoryConstraint<IsPureInstance<Iterator>>
-		&& (IsIterator<Iterator>)
+	template <typename TIterator> requires
+		CategoryConstraint<IsPureInstance<TIterator>>
+		&& (IsIterator<TIterator>)
 	inline constexpr auto make_moveable_range_n(
-		Iterator const & begin,
-		Size const &     size
+		TIterator const & begin,
+		Size const &      size
 	) -> auto {
 		return make_moveable_range(begin, begin + size);
 	}
 
-	template <typename Range> requires
-		CategoryConstraint<IsValid<Range>>
-		&& (IsRange<AsPure<Range>>)
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
 	inline constexpr auto make_moveable_range_of(
-		Range && range
+		TRange && range
 	) -> auto {
 		return make_moveable_range(range.begin(), range.end());
 	}

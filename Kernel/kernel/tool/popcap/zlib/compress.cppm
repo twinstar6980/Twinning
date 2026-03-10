@@ -11,11 +11,11 @@ import twinning.kernel.tool.data.compression.deflate.compress;
 
 export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Compress :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			Data::Compression::Deflate::Strategy const & strategy
 		) -> Void {
 			ripe.write_constant(k_magic_marker);
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				ripe.write_constant(0x00000000_iu32);
 			}
 			auto header = Header{};
@@ -56,7 +56,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		) -> Void {
 			ripe_size_bound = k_none_size;
 			ripe_size_bound += bs_static_size<MagicMarker>();
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				ripe_size_bound += bs_static_size<IntegerU32>();
 			}
 			ripe_size_bound += bs_static_size<Header>();

@@ -510,40 +510,40 @@ export namespace Twinning::Kernel {
 
 		#pragma region assign
 
-		template <typename RangeObject> requires
-			CategoryConstraint<IsValid<RangeObject>>
-			&& (IsRange<AsPure<RangeObject>>)
+		template <typename TRangeObject> requires
+			CategoryConstraint<IsValid<TRangeObject>>
+			&& (IsRange<AsPure<TRangeObject>>)
 		auto assign(
-			RangeObject && range
+			TRangeObject && range
 		) -> Void {
-			thiz.allocate_full(Range::size(as_forward<RangeObject>(range)));
-			Range::assign_from(thiz, as_forward<RangeObject>(range));
+			thiz.allocate_full(Range::size(as_forward<TRangeObject>(range)));
+			Range::assign_from(thiz, as_forward<TRangeObject>(range));
 			return;
 		}
 
-		template <typename RangeObject, typename Transformer> requires
-			CategoryConstraint<IsValid<RangeObject> && IsPureInstance<Transformer>>
-			&& (IsRange<AsPure<RangeObject>>)
-			&& (IsGenericCallable<Transformer>)
+		template <typename TRangeObject, typename TTransformer> requires
+			CategoryConstraint<IsValid<TRangeObject> && IsPureInstance<TTransformer>>
+			&& (IsRange<AsPure<TRangeObject>>)
+			&& (IsGenericCallable<TTransformer>)
 		auto assign(
-			RangeObject &&      range,
-			Transformer const & transformer
+			TRangeObject &&      range,
+			TTransformer const & transformer
 		) -> Void {
-			thiz.allocate_full(Range::size(as_forward<RangeObject>(range)));
-			Range::assign_from(thiz, as_forward<RangeObject>(range), transformer);
+			thiz.allocate_full(Range::size(as_forward<TRangeObject>(range)));
+			Range::assign_from(thiz, as_forward<TRangeObject>(range), transformer);
 			return;
 		}
 
-		template <typename RangeObject, typename Converter> requires
-			CategoryConstraint<IsValid<RangeObject> && IsPureInstance<Converter>>
-			&& (IsRange<AsPure<RangeObject>>)
-			&& (IsGenericCallable<Converter>)
+		template <typename TRangeObject, typename TConverter> requires
+			CategoryConstraint<IsValid<TRangeObject> && IsPureInstance<TConverter>>
+			&& (IsRange<AsPure<TRangeObject>>)
+			&& (IsGenericCallable<TConverter>)
 		auto convert(
-			RangeObject &&    range,
-			Converter const & converter
+			TRangeObject &&    range,
+			TConverter const & converter
 		) -> Void {
-			thiz.allocate_full(Range::size(as_forward<RangeObject>(range)));
-			Range::convert_from(thiz, as_forward<RangeObject>(range), converter);
+			thiz.allocate_full(Range::size(as_forward<TRangeObject>(range)));
+			Range::convert_from(thiz, as_forward<TRangeObject>(range), converter);
 			return;
 		}
 
@@ -551,69 +551,69 @@ export namespace Twinning::Kernel {
 
 		#pragma region insert
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Element, Argument && ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Element, TArgument && ...>)
 		auto insert(
-			Size const &    position,
-			Argument && ... argument
+			Size const &     position,
+			TArgument && ... argument
 		) -> VariableElement & {
 			thiz.insert_space(position, 1_sz);
-			restruct(thiz.at(position), as_forward<Argument>(argument) ...);
+			restruct(thiz.at(position), as_forward<TArgument>(argument) ...);
 			return thiz.at(position);
 		}
 
-		template <typename RangeObject> requires
-			CategoryConstraint<IsValid<RangeObject>>
-			&& (IsRange<AsPure<RangeObject>>)
+		template <typename TRangeObject> requires
+			CategoryConstraint<IsValid<TRangeObject>>
+			&& (IsRange<AsPure<TRangeObject>>)
 		auto insert_list(
-			Size const &   position,
-			RangeObject && range
+			Size const &    position,
+			TRangeObject && range
 		) -> Void {
-			auto size = Range::size(as_forward<RangeObject>(range));
+			auto size = Range::size(as_forward<TRangeObject>(range));
 			thiz.insert_space(position, size);
-			Range::restruct_from(thiz.sub(position, size), as_forward<RangeObject>(range));
+			Range::restruct_from(thiz.sub(position, size), as_forward<TRangeObject>(range));
 			return;
 		}
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Element, Argument && ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Element, TArgument && ...>)
 		auto prepend(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> VariableElement & {
-			return thiz.insert(thiz.begin_index(), as_forward<Argument>(argument) ...);
+			return thiz.insert(thiz.begin_index(), as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename RangeObject> requires
-			CategoryConstraint<IsValid<RangeObject>>
-			&& (IsRange<AsPure<RangeObject>>)
+		template <typename TRangeObject> requires
+			CategoryConstraint<IsValid<TRangeObject>>
+			&& (IsRange<AsPure<TRangeObject>>)
 		auto prepend_list(
-			RangeObject && range
+			TRangeObject && range
 		) -> Void {
-			return thiz.insert_list(thiz.begin_index(), as_forward<RangeObject>(range));
+			return thiz.insert_list(thiz.begin_index(), as_forward<TRangeObject>(range));
 		}
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Element, Argument && ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Element, TArgument && ...>)
 		auto append(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> VariableElement & {
-			return thiz.insert(thiz.end_index(), as_forward<Argument>(argument) ...);
+			return thiz.insert(thiz.end_index(), as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename RangeObject> requires
-			CategoryConstraint<IsValid<RangeObject>>
-			&& (IsRange<AsPure<RangeObject>>)
+		template <typename TRangeObject> requires
+			CategoryConstraint<IsValid<TRangeObject>>
+			&& (IsRange<AsPure<TRangeObject>>)
 		auto append_list(
-			RangeObject && range
+			TRangeObject && range
 		) -> Void {
-			return thiz.insert_list(thiz.end_index(), as_forward<RangeObject>(range));
+			return thiz.insert_list(thiz.end_index(), as_forward<TRangeObject>(range));
 		}
 
 		#pragma endregion
@@ -711,19 +711,19 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Element, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument ...>>
-		&& (IsConstructible<Element, Argument &&> && ...)
+	template <typename TElement, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TElement> && IsValid<TArgument ...>>
+		&& (IsConstructible<TElement, TArgument &&> && ...)
 	inline auto make_list(
-		Argument && ... argument
-	) -> List<Element> {
-		auto result = List<Element>{mbox<Size>(sizeof...(Argument))};
+		TArgument && ... argument
+	) -> List<TElement> {
+		auto result = List<TElement>{mbox<Size>(sizeof...(TArgument))};
 		result.expand_size_to_full();
 		Generalization::each_with<>(
-			[&] <auto index, typename CurrentArgument>(ValuePackage<index>, CurrentArgument && current_argument) {
-				restruct(result.at(mbox<Size>(index)), as_forward<CurrentArgument>(current_argument));
+			[&] <auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
+				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
-			as_forward<Argument>(argument) ...
+			as_forward<TArgument>(argument) ...
 		);
 		return result;
 	}

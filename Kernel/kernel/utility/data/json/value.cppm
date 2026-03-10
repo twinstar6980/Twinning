@@ -191,52 +191,52 @@ export namespace Twinning::Kernel::Json {
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_null(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Null & {
-			return thiz.set<Null>(as_forward<Argument>(argument) ...);
+			return thiz.set<Null>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_boolean(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Boolean & {
-			return thiz.set<Boolean>(as_forward<Argument>(argument) ...);
+			return thiz.set<Boolean>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_number(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Number & {
-			return thiz.set<Number>(as_forward<Argument>(argument) ...);
+			return thiz.set<Number>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_string(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> String & {
-			return thiz.set<String>(as_forward<Argument>(argument) ...);
+			return thiz.set<String>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_array(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Array & {
-			return thiz.set<Array>(as_forward<Argument>(argument) ...);
+			return thiz.set<Array>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_object(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Object & {
-			return thiz.set<Object>(as_forward<Argument>(argument) ...);
+			return thiz.set<Object>(as_forward<TArgument>(argument) ...);
 		}
 
 		// ----------------
@@ -307,35 +307,35 @@ export namespace Twinning::Kernel::Json {
 
 		#pragma region from & to by adapter
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto from(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) -> Void {
-			ValueAdapter<AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			ValueAdapter<AsPure<TThat>>::from(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto to(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) const -> Void {
-			ValueAdapter<AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			ValueAdapter<AsPure<TThat>>::to(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
 		// ----------------
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
 		auto to_of(
-			Option && ... option
-		) const -> That {
-			auto that = That{};
-			thiz.to(that, as_forward<Option>(option) ...);
+			TOption && ... option
+		) const -> TThat {
+			auto that = TThat{};
+			thiz.to(that, as_forward<TOption>(option) ...);
 			return that;
 		}
 

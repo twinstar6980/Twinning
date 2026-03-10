@@ -11,177 +11,177 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 
-	template <typename Derived, typename Base>
+	template <typename TDerived, typename TBase>
 	concept IsDerivedFrom =
-		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
-		&& (std::is_base_of_v<Base, Derived> && std::is_convertible_v<Derived &, Base &>)
+		CategoryConstraint<IsPureInstance<TDerived> && IsPureInstance<TBase>>
+		&& (std::is_base_of_v<TBase, TDerived> && std::is_convertible_v<TDerived &, TBase &>)
 		;
 
 	// ----------------
 
-	template <typename It, typename ... Argument>
+	template <typename TIt, typename ... TArgument>
 	concept IsConstructible =
-		CategoryConstraint<IsPureInstance<It> && IsValid<Argument ...>>
-		&& (std::is_constructible_v<It, Argument ...>)
+		CategoryConstraint<IsPureInstance<TIt> && IsValid<TArgument ...>>
+		&& (std::is_constructible_v<TIt, TArgument ...>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsDefaultConstructible =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_default_constructible_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_default_constructible_v<TIt>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsCopyConstructible =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_copy_constructible_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_copy_constructible_v<TIt>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsMoveConstructible =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_move_constructible_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_move_constructible_v<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsDestructible =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_destructible_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_destructible_v<TIt>)
 		;
 
 	// ----------------
 
-	template <typename To, typename From>
+	template <typename TTo, typename TFrom>
 	concept IsAssignable =
-		CategoryConstraint<IsValid<To> && IsValid<From>>
-		&& (std::is_assignable_v<To, From>)
+		CategoryConstraint<IsValid<TTo> && IsValid<TFrom>>
+		&& (std::is_assignable_v<TTo, TFrom>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsCopyAssignable =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_copy_assignable_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_copy_assignable_v<TIt>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsMoveAssignable =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_move_assignable_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_move_assignable_v<TIt>)
 		;
 
 	// ----------------
 
-	template <typename From, typename To>
+	template <typename TFrom, typename TTo>
 	concept IsConvertible =
-		CategoryConstraint<IsValid<From> && IsValid<To>>
-		&& (std::is_convertible_v<From, To>)
+		CategoryConstraint<IsValid<TFrom> && IsValid<TTo>>
+		&& (std::is_convertible_v<TFrom, TTo>)
 		;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename Base, typename Derived> requires
-		CategoryConstraint<IsPureInstance<Base> && IsPureInstance<Derived>>
-		&& (IsDerivedFrom<Derived, Base>)
+	template <typename TBase, typename TDerived> requires
+		CategoryConstraint<IsPureInstance<TBase> && IsPureInstance<TDerived>>
+		&& (IsDerivedFrom<TDerived, TBase>)
 	inline constexpr auto up_cast(
-		Derived & it
-	) -> Base & {
-		return static_cast<Base &>(it);
+		TDerived & it
+	) -> TBase & {
+		return static_cast<TBase &>(it);
 	}
 
-	template <typename Base, typename Derived> requires
-		CategoryConstraint<IsPureInstance<Base> && IsPureInstance<Derived>>
-		&& (IsDerivedFrom<Derived, Base>)
+	template <typename TBase, typename TDerived> requires
+		CategoryConstraint<IsPureInstance<TBase> && IsPureInstance<TDerived>>
+		&& (IsDerivedFrom<TDerived, TBase>)
 	inline constexpr auto up_cast(
-		Derived const & it
-	) -> Base const & {
-		return static_cast<Base const &>(it);
+		TDerived const & it
+	) -> TBase const & {
+		return static_cast<TBase const &>(it);
 	}
 
-	template <typename Base, typename Derived> requires
-		CategoryConstraint<IsPureInstance<Base> && IsPureInstance<Derived>>
-		&& (IsDerivedFrom<Derived, Base>)
+	template <typename TBase, typename TDerived> requires
+		CategoryConstraint<IsPureInstance<TBase> && IsPureInstance<TDerived>>
+		&& (IsDerivedFrom<TDerived, TBase>)
 	inline constexpr auto up_cast(
-		Derived && it
-	) -> Base && {
-		return static_cast<Base &&>(it);
+		TDerived && it
+	) -> TBase && {
+		return static_cast<TBase &&>(it);
 	}
 
 	// ----------------
 
-	template <typename Derived, typename Base> requires
-		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
-		&& (IsDerivedFrom<Derived, Base>)
+	template <typename TDerived, typename TBase> requires
+		CategoryConstraint<IsPureInstance<TDerived> && IsPureInstance<TBase>>
+		&& (IsDerivedFrom<TDerived, TBase>)
 	inline constexpr auto down_cast(
-		Base & it
-	) -> Derived & {
-		return static_cast<Derived &>(it);
+		TBase & it
+	) -> TDerived & {
+		return static_cast<TDerived &>(it);
 	}
 
-	template <typename Derived, typename Base> requires
-		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
-		&& (IsDerivedFrom<Derived, Base>)
+	template <typename TDerived, typename TBase> requires
+		CategoryConstraint<IsPureInstance<TDerived> && IsPureInstance<TBase>>
+		&& (IsDerivedFrom<TDerived, TBase>)
 	inline constexpr auto down_cast(
-		Base const & it
-	) -> Derived const & {
-		return static_cast<Derived const &>(it);
+		TBase const & it
+	) -> TDerived const & {
+		return static_cast<TDerived const &>(it);
 	}
 
-	template <typename Derived, typename Base> requires
-		CategoryConstraint<IsPureInstance<Derived> && IsPureInstance<Base>>
-		&& (IsDerivedFrom<Derived, Base>)
+	template <typename TDerived, typename TBase> requires
+		CategoryConstraint<IsPureInstance<TDerived> && IsPureInstance<TBase>>
+		&& (IsDerivedFrom<TDerived, TBase>)
 	inline constexpr auto down_cast(
-		Base && it
-	) -> Derived && {
-		return static_cast<Derived &&>(it);
+		TBase && it
+	) -> TDerived && {
+		return static_cast<TDerived &&>(it);
 	}
 
 	// ----------------
 
 	// TODO: maybe bug, use assignment instead of constructor if in consteval context
-	template <typename It, typename ... Argument> requires
-		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
-		&& (IsConstructible<AsPure<It>, Argument && ...>)
+	template <typename TIt, typename ... TArgument> requires
+		CategoryConstraint<IsInstance<TIt> && IsValid<TArgument ...>>
+		&& (IsConstructible<AsPure<TIt>, TArgument && ...>)
 	inline constexpr auto construct(
-		It &            it,
-		Argument && ... argument
+		TIt &            it,
+		TArgument && ... argument
 	) -> Void {
-		if (std::is_constant_evaluated()) {
-			it = AsUnmakeConstant<It>{as_forward<Argument>(argument) ...};
+		if consteval {
+			it = AsUnmakeConstant<TIt>{as_forward<TArgument>(argument) ...};
 		}
 		else {
-			new(&as_variable(it)) AsUnmakeConstant<It>{as_forward<Argument>(argument) ...};
+			new(&as_variable(it)) AsUnmakeConstant<TIt>{as_forward<TArgument>(argument) ...};
 		}
 		return;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
-		&& (IsDestructible<AsPure<It>>)
+	template <typename TIt> requires
+		CategoryConstraint<IsInstance<TIt>>
+		&& (IsDestructible<AsPure<TIt>>)
 	inline constexpr auto destruct(
-		It & it
+		TIt & it
 	) -> Void {
-		if (std::is_constant_evaluated()) {
+		if consteval {
 		}
 		else {
-			it.~It();
+			it.~TIt();
 		}
 		return;
 	}
 
-	template <typename It, typename ... Argument> requires
-		CategoryConstraint<IsInstance<It> && IsValid<Argument ...>>
-		&& (IsConstructible<AsPure<It>, Argument && ...>)
-		&& (IsDestructible<AsPure<It>>)
+	template <typename TIt, typename ... TArgument> requires
+		CategoryConstraint<IsInstance<TIt> && IsValid<TArgument ...>>
+		&& (IsConstructible<AsPure<TIt>, TArgument && ...>)
+		&& (IsDestructible<AsPure<TIt>>)
 	inline constexpr auto restruct(
-		It &            it,
-		Argument && ... argument
+		TIt &            it,
+		TArgument && ... argument
 	) -> Void {
 		destruct(it);
-		construct(it, as_forward<Argument>(argument) ...);
+		construct(it, as_forward<TArgument>(argument) ...);
 		return;
 	}
 

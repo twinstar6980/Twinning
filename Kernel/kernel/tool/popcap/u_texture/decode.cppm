@@ -13,11 +13,11 @@ import twinning.kernel.tool.texture.encoding.decode;
 
 export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Decode :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -69,14 +69,14 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
 			auto texture_data_view = ConstantByteListView{};
 			auto texture_data_container = ByteArray{};
-			if constexpr (check_version(version, {false})) {
+			if constexpr (check_version(t_version, {false})) {
 				texture_data_view = data.forward_view(texture_data_size);
 			}
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
-			if constexpr (check_version(version, {true})) {
+			if constexpr (check_version(t_version, {true})) {
 				auto texture_data_stream = OutputByteStreamView{texture_data_container};
 				Data::Compression::Deflate::Uncompress::process(data, texture_data_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(texture_data_stream.full());

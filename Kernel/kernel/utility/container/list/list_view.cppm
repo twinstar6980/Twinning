@@ -255,13 +255,13 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	template <typename Element> requires
+	template <typename TElement> requires
 		AutomaticConstraint
-	using VariableListView = ListView<Element, k_false>;
+	using VariableListView = ListView<TElement, k_false>;
 
-	template <typename Element> requires
+	template <typename TElement> requires
 		AutomaticConstraint
-	using ConstantListView = ListView<Element, k_true>;
+	using ConstantListView = ListView<TElement, k_true>;
 
 	#pragma endregion
 

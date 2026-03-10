@@ -107,28 +107,28 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto operator [](
-			KeyObject const & key
+			TKeyObject const & key
 		) -> VariableValue & {
 			return thiz.query(key).value;
 		}
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto operator [](
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> ConstantValue & {
 			return thiz.query(key).value;
 		}
 
 		// ----------------
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto operator ()(
-			KeyObject const & key
+			TKeyObject const & key
 		) -> VariableValue & {
 			return thiz.query_force(key).value;
 		}
@@ -227,54 +227,54 @@ export namespace Twinning::Kernel {
 
 		#pragma region element of key
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto find_key(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> Optional<Size> {
 			return thiz.as_view().find_key(key);
 		}
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto has_key(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> Boolean {
 			return thiz.as_view().has_key(key);
 		}
 
 		// ----------------
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto query(
-			KeyObject const & key
+			TKeyObject const & key
 		) -> VariableElement & {
 			return thiz.as_view().query(key);
 		}
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto query_if(
-			KeyObject const & key
+			TKeyObject const & key
 		) -> VariableOptionalView<Element> {
 			return thiz.as_view().query_if(key);
 		}
 
 		// ----------------
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto query(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> ConstantElement & {
 			return thiz.as_view().query(key);
 		}
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto query_if(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> ConstantOptionalView<Element> {
 			return thiz.as_view().query_if(key);
 		}
@@ -423,10 +423,10 @@ export namespace Twinning::Kernel {
 
 		#pragma region element force of key
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		auto query_force(
-			KeyObject const & key
+			TKeyObject const & key
 		) -> VariableElement & {
 			auto index = thiz.find_key(key);
 			return index.has() ? (thiz.at(index.get())) : (thiz.append(key, Value{}));
@@ -453,19 +453,19 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Key, typename Value, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Key> && IsPureInstance<Value> && IsValid<Argument ...>>
-		&& (IsConstructible<KeyValuePair<Key, Value>, Argument &&> && ...)
+	template <typename TKey, typename TValue, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TKey> && IsPureInstance<TValue> && IsValid<TArgument ...>>
+		&& (IsConstructible<KeyValuePair<TKey, TValue>, TArgument &&> && ...)
 	inline auto make_map(
-		Argument && ... argument
-	) -> Map<Key, Value> {
-		auto result = Map<Key, Value>{mbox<Size>(sizeof...(Argument))};
+		TArgument && ... argument
+	) -> Map<TKey, TValue> {
+		auto result = Map<TKey, TValue>{mbox<Size>(sizeof...(TArgument))};
 		result.expand_size_to_full();
 		Generalization::each_with<>(
-			[&] <auto index, typename CurrentArgument>(ValuePackage<index>, CurrentArgument && current_argument) {
-				restruct(result.at(mbox<Size>(index)), as_forward<CurrentArgument>(current_argument));
+			[&] <auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
+				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
-			as_forward<Argument>(argument) ...
+			as_forward<TArgument>(argument) ...
 		);
 		return result;
 	}

@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.sexy_texture.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
 		using MagicMarker = StaticByteArray<8_sz>;

@@ -57,11 +57,11 @@ export namespace Twinning::Kernel::Thread {
 
 		#pragma region control
 
-		template <typename Executor> requires
-			CategoryConstraint<IsPureInstance<Executor>>
-			&& (IsCallable<Executor> && CallableTrait<Executor>::Argument::size == 0_szz)
+		template <typename TExecutor> requires
+			CategoryConstraint<IsPureInstance<TExecutor>>
+			&& (IsCallable<TExecutor> && CallableTrait<TExecutor>::Argument::size == 0_szz)
 		auto run(
-			Executor const & executor
+			TExecutor const & executor
 		) -> Void {
 			assert_test(!thiz.joinable());
 			thiz.m_thread = std::thread{executor};

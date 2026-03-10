@@ -63,19 +63,19 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename TargetObject = Target> requires
-			CategoryConstraint<IsInstance<TargetObject>>
+		template <typename TTargetObject = Target> requires
+			CategoryConstraint<IsInstance<TTargetObject>>
 		constexpr auto operator *(
-		) const -> TargetObject & {
-			return thiz.template dereference<TargetObject>();
+		) const -> TTargetObject & {
+			return thiz.template dereference<TTargetObject>();
 		}
 
-		template <typename TargetObject = Target> requires
-			CategoryConstraint<IsInstance<TargetObject>>
+		template <typename TTargetObject = Target> requires
+			CategoryConstraint<IsInstance<TTargetObject>>
 		constexpr auto operator [](
 			Size const & index
-		) const -> TargetObject & {
-			return thiz.template dereference<TargetObject>(index);
+		) const -> TTargetObject & {
+			return thiz.template dereference<TTargetObject>(index);
 		}
 
 		// ----------------
@@ -94,19 +94,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region dereference
 
-		template <typename TargetObject = Target> requires
-			CategoryConstraint<IsInstance<TargetObject>>
+		template <typename TTargetObject = Target> requires
+			CategoryConstraint<IsInstance<TTargetObject>>
 		constexpr auto dereference(
-		) const -> TargetObject & {
-			return *static_cast<ZPointer<TargetObject>>(thiz.value);
+		) const -> TTargetObject & {
+			return *static_cast<ZPointer<TTargetObject>>(thiz.value);
 		}
 
-		template <typename TargetObject = Target> requires
-			CategoryConstraint<IsInstance<TargetObject>>
+		template <typename TTargetObject = Target> requires
+			CategoryConstraint<IsInstance<TTargetObject>>
 		constexpr auto dereference(
 			Size const & index
-		) const -> TargetObject & {
-			return *static_cast<ZPointer<TargetObject>>(thiz.value + index.value);
+		) const -> TTargetObject & {
+			return *static_cast<ZPointer<TTargetObject>>(thiz.value + index.value);
 		}
 
 		#pragma endregion
@@ -115,163 +115,163 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It>
-	concept IsPointerBox = IsTemplateInstanceOfT<It, PointerBox>;
+	template <typename TIt>
+	concept IsPointerBox = IsTemplateInstanceOfTt<TIt, PointerBox>;
 
 	#pragma endregion
 
 	#pragma region operator
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator ==(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value == that.value;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator <(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value < that.value;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator >(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value > that.value;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator <=(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value <= that.value;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator >=(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value >= that.value;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator +(
-		It const &   thix,
+		TIt const &  thix,
 		Size const & size
-	) -> It {
-		return It{thix.value + size.value};
+	) -> TIt {
+		return TIt{thix.value + size.value};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator -(
-		It const &   thix,
+		TIt const &  thix,
 		Size const & size
-	) -> It {
-		return It{thix.value - size.value};
+	) -> TIt {
+		return TIt{thix.value - size.value};
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator +=(
-		It &         thix,
+		TIt &        thix,
 		Size const & size
-	) -> It & {
+	) -> TIt & {
 		thix.value += size;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator -=(
-		It &         thix,
+		TIt &        thix,
 		Size const & size
-	) -> It & {
+	) -> TIt & {
 		thix.value -= size;
 		return thix;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator ++(
-		It & thix
-	) -> It & {
+		TIt & thix
+	) -> TIt & {
 		++thix.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator --(
-		It & thix
-	) -> It & {
+		TIt & thix
+	) -> TIt & {
 		--thix.value;
 		return thix;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator ++(
-		It & thix,
+		TIt & thix,
 		int
-	) -> It {
-		return It{thix.value++};
+	) -> TIt {
+		return TIt{thix.value++};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator --(
-		It & thix,
+		TIt & thix,
 		int
-	) -> It {
-		return It{thix.value--};
+	) -> TIt {
+		return TIt{thix.value--};
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator -(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> SSize {
 		return mbox<SSize>(thix.value - that.value);
 	}
@@ -280,75 +280,75 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Target> requires
-		CategoryConstraint<IsPointable<Target>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
 	inline constexpr auto make_pointer(
-		ZPointer<Target> const & value
-	) -> PointerBox<Target> {
-		return PointerBox<Target>{value};
+		ZPointer<TTarget> const & value
+	) -> PointerBox<TTarget> {
+		return PointerBox<TTarget>{value};
 	}
 
-	template <typename Target> requires
-		CategoryConstraint<IsPointable<Target>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
 	inline constexpr auto make_pointer_of(
-		Target & value
-	) -> PointerBox<Target> {
-		return PointerBox<Target>{&value};
+		TTarget & value
+	) -> PointerBox<TTarget> {
+		return PointerBox<TTarget>{&value};
 	}
 
 	// ----------------
 
-	template <typename DestinationTarget, typename SourceTarget> requires
-		CategoryConstraint<IsPure<DestinationTarget> && IsPointable<SourceTarget>>
+	template <typename TDestinationTarget, typename TSourceTarget> requires
+		CategoryConstraint<IsPure<TDestinationTarget> && IsPointable<TSourceTarget>>
 	inline auto cast_pointer(
-		PointerBox<SourceTarget> const & source
-	) -> PointerBox<AsConstantIf<DestinationTarget, IsConstantInstance<SourceTarget>>> {
-		return self_cast<PointerBox<AsConstantIf<DestinationTarget, IsConstantInstance<SourceTarget>>>>(source);
+		PointerBox<TSourceTarget> const & source
+	) -> PointerBox<AsConstantIf<TDestinationTarget, IsConstantInstance<TSourceTarget>>> {
+		return self_cast<PointerBox<AsConstantIf<TDestinationTarget, IsConstantInstance<TSourceTarget>>>>(source);
 	}
 
 	// ----------------
 
-	template <typename Target> requires
-		CategoryConstraint<IsPointable<Target>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
 	inline auto as_variable_pointer(
-		PointerBox<Target> & it
-	) -> PointerBox<AsUnmakeConstant<Target>> & {
-		return self_cast<PointerBox<AsUnmakeConstant<Target>>>(it);
+		PointerBox<TTarget> & it
+	) -> PointerBox<AsUnmakeConstant<TTarget>> & {
+		return self_cast<PointerBox<AsUnmakeConstant<TTarget>>>(it);
 	}
 
-	template <typename Target> requires
-		CategoryConstraint<IsPointable<Target>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
 	inline auto as_variable_pointer(
-		PointerBox<Target> const & it
-	) -> PointerBox<AsUnmakeConstant<Target>> const & {
-		return self_cast<PointerBox<AsUnmakeConstant<Target>>>(it);
+		PointerBox<TTarget> const & it
+	) -> PointerBox<AsUnmakeConstant<TTarget>> const & {
+		return self_cast<PointerBox<AsUnmakeConstant<TTarget>>>(it);
 	}
 
 	// ----------------
 
-	template <typename Target> requires
-		CategoryConstraint<IsPointable<Target>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
 	inline auto as_constant_pointer(
-		PointerBox<Target> & it
-	) -> PointerBox<AsMakeConstant<Target>> & {
-		return self_cast<PointerBox<AsMakeConstant<Target>>>(it);
+		PointerBox<TTarget> & it
+	) -> PointerBox<AsMakeConstant<TTarget>> & {
+		return self_cast<PointerBox<AsMakeConstant<TTarget>>>(it);
 	}
 
-	template <typename Target> requires
-		CategoryConstraint<IsPointable<Target>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
 	inline auto as_constant_pointer(
-		PointerBox<Target> const & it
-	) -> PointerBox<AsMakeConstant<Target>> const & {
-		return self_cast<PointerBox<AsMakeConstant<Target>>>(it);
+		PointerBox<TTarget> const & it
+	) -> PointerBox<AsMakeConstant<TTarget>> const & {
+		return self_cast<PointerBox<AsMakeConstant<TTarget>>>(it);
 	}
 
 	#pragma endregion
 
 	#pragma region alias
 
-	template <typename Target> requires
+	template <typename TTarget> requires
 		AutomaticConstraint
-	using Pointer = PointerBox<Target>;
+	using Pointer = PointerBox<TTarget>;
 
 	#pragma endregion
 

@@ -16,13 +16,13 @@ export namespace Twinning::Kernel {
 
 	#pragma region function
 
-	template <typename ... Argument> requires
-		CategoryConstraint<IsValid<Argument ...>>
+	template <typename ... TArgument> requires
+		CategoryConstraint<IsValid<TArgument ...>>
 	inline auto format_string(
 		ConstantStringView const & format,
-		Argument && ...            argument
+		TArgument && ...           argument
 	) -> String {
-		return make_string(std::format(std::runtime_format(make_std_string_view(format)), as_forward<Argument>(argument) ...));
+		return make_string(std::format(std::runtime_format(make_std_string_view(format)), as_forward<TArgument>(argument) ...));
 	}
 
 	#pragma endregion
@@ -81,12 +81,12 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto operator ()(
-			Argument && ... argument
+			TArgument && ... argument
 		) const -> String {
-			return format_string(thiz.m_format, as_forward<Argument>(argument) ...);
+			return format_string(thiz.m_format, as_forward<TArgument>(argument) ...);
 		}
 
 		#pragma endregion
@@ -97,11 +97,11 @@ export namespace Twinning::Kernel {
 
 	#pragma region literal
 
-	template <StaticString string> requires
+	template <StaticString t_string> requires
 		NoneConstraint
 	inline constexpr auto operator ""_sf(
 	) -> StringFormatter {
-		return StringFormatter{string.view()};
+		return StringFormatter{t_string.view()};
 	}
 
 	#pragma endregion

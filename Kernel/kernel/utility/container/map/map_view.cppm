@@ -86,10 +86,10 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		constexpr auto operator [](
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> QualifyValue & {
 			return thiz.query(key).value;
 		}
@@ -172,10 +172,10 @@ export namespace Twinning::Kernel {
 
 		#pragma region element of key
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		constexpr auto find_key(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> Optional<Size> {
 			return Range::find_index_if(
 				thiz,
@@ -185,30 +185,30 @@ export namespace Twinning::Kernel {
 			);
 		}
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		constexpr auto has_key(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> Boolean {
 			return thiz.find_key(key).has();
 		}
 
 		// ----------------
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		constexpr auto query(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> QualifyElement & {
 			auto index = thiz.find_key(key);
 			assert_test(index.has());
 			return thiz.at(index.get());
 		}
 
-		template <typename KeyObject> requires
-			CategoryConstraint<IsPureInstance<KeyObject>>
+		template <typename TKeyObject> requires
+			CategoryConstraint<IsPureInstance<TKeyObject>>
 		constexpr auto query_if(
-			KeyObject const & key
+			TKeyObject const & key
 		) const -> OptionalView<Element, constant> {
 			auto index = thiz.find_key(key);
 			return !index.has() ? (k_null_optional) : (OptionalView<Element, constant>{thiz.at(index.get())});
@@ -261,13 +261,13 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	template <typename Key, typename Value> requires
+	template <typename TKey, typename TValue> requires
 		AutomaticConstraint
-	using VariableMapView = MapView<Key, Value, k_false>;
+	using VariableMapView = MapView<TKey, TValue, k_false>;
 
-	template <typename Key, typename Value> requires
+	template <typename TKey, typename TValue> requires
 		AutomaticConstraint
-	using ConstantMapView = MapView<Key, Value, k_true>;
+	using ConstantMapView = MapView<TKey, TValue, k_true>;
 
 	#pragma endregion
 

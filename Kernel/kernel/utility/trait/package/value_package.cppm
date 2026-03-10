@@ -18,29 +18,29 @@ export namespace Twinning::Kernel::Trait {
 
 		inline static constexpr auto size = ZSize{sizeof...(t_element)};
 
-		template <auto index> requires
+		template <auto t_index> requires
 			CategoryConstraint<>
-			&& (IsSameOf<index, ZSize>)
-			&& (index < size)
-		using Element = AsSelect<index, decltype(t_element) ...>;
+			&& (IsSameOf<t_index, ZSize>)
+			&& (t_index < size)
+		using Element = AsSelect<t_index, decltype(t_element) ...>;
 
-		template <auto index> requires
+		template <auto t_index> requires
 			CategoryConstraint<>
-			&& (IsSameOf<index, ZSize>)
-			&& (index < size)
-		inline static constexpr auto element = t_element...[index];
+			&& (IsSameOf<t_index, ZSize>)
+			&& (t_index < size)
+		inline static constexpr auto element = t_element...[t_index];
 
-		template <typename Value> requires
+		template <typename TValue> requires
 			CategoryConstraint<>
 		inline static constexpr auto has(
-			Value const & value
+			TValue const & value
 		) -> ZBoolean {
 			auto result = false;
 			auto iterate =
-				[&] <typename CurrentValue>(
-				CurrentValue current_value
+				[&] <typename TCurrentValue>(
+				TCurrentValue current_value
 			) {
-				if constexpr (IsSame<CurrentValue, Value>) {
+				if constexpr (IsSame<TCurrentValue, TValue>) {
 					if (current_value == value) {
 						result = true;
 					}
@@ -54,72 +54,72 @@ export namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	template <typename It>
-	concept IsValuePackage = IsTemplateInstanceOfNV<It, ValuePackage>;
+	template <typename TIt>
+	concept IsValuePackage = IsTemplateInstanceOfTnv<TIt, ValuePackage>;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename Package, auto begin, auto size> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package> && IsSameOf<begin, ZSize> && IsSameOf<size, ZSize>)
-		&& (begin + size <= Package::size)
+	template <typename TPackage, auto t_begin, auto t_size> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsValuePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_size, ZSize>)
+		&& (t_begin + t_size <= TPackage::size)
 	using AsValuePackageSub = decltype(
-		[] <ZSize ... index>(
-		std::index_sequence<index ...>
-	) -> ValuePackage<Package::template value<begin + index> ...> {
+		[] <ZSize ... t_index>(
+		std::index_sequence<t_index ...>
+	) -> ValuePackage<TPackage::template value<t_begin + t_index> ...> {
 			return {};
-		}(std::make_index_sequence<size>{})
+		}(std::make_index_sequence<t_size>{})
 	);
 
-	template <typename Package, auto size> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package> && IsSameOf<size, ZSize>)
-		&& (size <= Package::size)
-	using AsValuePackageRemoveHead = AsValuePackageSub<Package, size, Package::size - size>;
+	template <typename TPackage, auto t_size> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsValuePackage<TPackage> && IsSameOf<t_size, ZSize>)
+		&& (t_size <= TPackage::size)
+	using AsValuePackageRemoveHead = AsValuePackageSub<TPackage, t_size, TPackage::size - t_size>;
 
-	template <typename Package, auto size> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package> && IsSameOf<size, ZSize>)
-		&& (size <= Package::size)
-	using AsValuePackageRemoveTail = AsValuePackageSub<Package, 1_ixz, Package::size - size>;
+	template <typename TPackage, auto t_size> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsValuePackage<TPackage> && IsSameOf<t_size, ZSize>)
+		&& (t_size <= TPackage::size)
+	using AsValuePackageRemoveTail = AsValuePackageSub<TPackage, 1_ixz, TPackage::size - t_size>;
 
 	// ----------------
 
-	template <typename Package1, typename Package2> requires
-		CategoryConstraint<IsPureInstance<Package1> && IsPureInstance<Package2>>
-		&& (IsValuePackage<Package1> && IsValuePackage<Package2>)
+	template <typename TPackage1, typename TPackage2> requires
+		CategoryConstraint<IsPureInstance<TPackage1> && IsPureInstance<TPackage2>>
+		&& (IsValuePackage<TPackage1> && IsValuePackage<TPackage2>)
 	using AsValuePackageConcat = decltype(
-		[] <auto ... index_1, auto ... index_2>(
-		std::index_sequence<index_1 ...>,
-		std::index_sequence<index_2 ...>
-	) -> ValuePackage<Package1::template value<index_1> ..., Package2::template value<index_2> ...> {
+		[] <auto ... t_index_1, auto ... t_index_2>(
+		std::index_sequence<t_index_1 ...>,
+		std::index_sequence<t_index_2 ...>
+	) -> ValuePackage<TPackage1::template value<t_index_1> ..., TPackage2::template value<t_index_2> ...> {
 			return {};
-		}(std::make_index_sequence<Package1::size>{}, std::make_index_sequence<Package2::size>{})
+		}(std::make_index_sequence<TPackage1::size>{}, std::make_index_sequence<TPackage2::size>{})
 	);
 
-	template <typename Package, auto ... element> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package>)
-	using AsValuePackagePrepend = AsValuePackageConcat<ValuePackage<element ...>, Package>;
+	template <typename TPackage, auto ... t_element> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsValuePackage<TPackage>)
+	using AsValuePackagePrepend = AsValuePackageConcat<ValuePackage<t_element ...>, TPackage>;
 
-	template <typename Package, auto ... element> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsValuePackage<Package>)
-	using AsValuePackageAppend = AsValuePackageConcat<Package, ValuePackage<element ...>>;
+	template <typename TPackage, auto ... t_element> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsValuePackage<TPackage>)
+	using AsValuePackageAppend = AsValuePackageConcat<TPackage, ValuePackage<t_element ...>>;
 
 	// ----------------
 
-	template <auto size> requires
+	template <auto t_size> requires
 		CategoryConstraint<>
-		&& (IsSameOf<size, ZSize>)
+		&& (IsSameOf<t_size, ZSize>)
 	using AsValuePackageOfIndex = decltype(
-		[] <auto ... index>(
-		std::index_sequence<index ...>
-	) -> ValuePackage<index ...> {
+		[] <auto ... t_index>(
+		std::index_sequence<t_index ...>
+	) -> ValuePackage<t_index ...> {
 			return {};
-		}(std::make_index_sequence<size>{})
+		}(std::make_index_sequence<t_size>{})
 	);
 
 	#pragma endregion

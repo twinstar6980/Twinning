@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.u_texture.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
 		using MagicMarker = StaticByteArray<2_sz>;

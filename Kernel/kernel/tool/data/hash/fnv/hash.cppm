@@ -15,31 +15,31 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 
 		// ----------------
 
-		template <auto mode, auto bit_count> requires
+		template <auto t_mode, auto t_bit_count> requires
 			CategoryConstraint<>
-			&& (IsSameOf<mode, Mode>)
-			&& (IsSameOf<bit_count, BitCount>)
+			&& (IsSameOf<t_mode, Mode>)
+			&& (IsSameOf<t_bit_count, BitCount>)
 		inline static auto process_whole_integer(
-			ConstantByteListView const &           data,
-			typename Parameter<bit_count>::Value & value
+			ConstantByteListView const &    data,
+			Parameter<t_bit_count>::Value & value
 		) -> Void {
-			using Parameter = Parameter<bit_count>;
-			if constexpr (mode == Mode::Constant::m_0()) {
+			using Parameter = Parameter<t_bit_count>;
+			if constexpr (t_mode == Mode::Constant::m_0()) {
 				value = mbox<typename Parameter::Value>(0);
 			}
-			if constexpr (mode == Mode::Constant::m_1() || mode == Mode::Constant::m_1a()) {
+			if constexpr (t_mode == Mode::Constant::m_1() || t_mode == Mode::Constant::m_1a()) {
 				value = Parameter::offset;
 			}
 			for (auto & element : data) {
-				if constexpr (mode == Mode::Constant::m_0()) {
+				if constexpr (t_mode == Mode::Constant::m_0()) {
 					value *= Parameter::prime;
 					value ^= cbox<typename Parameter::Value>(element);
 				}
-				if constexpr (mode == Mode::Constant::m_1()) {
+				if constexpr (t_mode == Mode::Constant::m_1()) {
 					value *= Parameter::prime;
 					value ^= cbox<typename Parameter::Value>(element);
 				}
-				if constexpr (mode == Mode::Constant::m_1a()) {
+				if constexpr (t_mode == Mode::Constant::m_1a()) {
 					value ^= cbox<typename Parameter::Value>(element);
 					value *= Parameter::prime;
 				}
@@ -59,17 +59,16 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 				Mode::Constant::m_1a()
 			>>(
 				mode,
-				[&] <auto index, auto mode>(ValuePackage<index>, ValuePackage<mode>) {
+				[&] <auto t_mode_index, auto t_mode>(ValuePackage<t_mode_index>, ValuePackage<t_mode>) {
 					Generalization::match<ValuePackage<
 						BitCount::Constant::b_32(),
 						BitCount::Constant::b_64()
 					>>(
 						bit_count,
-						// NOTE: COMPILER: error if use same name
-						[&] <auto index_, auto bit_count_>(ValuePackage<index_>, ValuePackage<bit_count_>) {
-							auto value_integer = typename Parameter<bit_count_>::Value{};
-							process_whole_integer<mode, bit_count_>(data, value_integer);
-							value.allocate(k_type_size<typename Parameter<bit_count_>::Value>);
+						[&] <auto t_bit_count_index, auto t_bit_count>(ValuePackage<t_bit_count_index>, ValuePackage<t_bit_count>) {
+							auto value_integer = typename Parameter<t_bit_count>::Value{};
+							process_whole_integer<t_mode, t_bit_count>(data, value_integer);
+							value.allocate(k_type_size<typename Parameter<t_bit_count>::Value>);
 							OutputByteStreamView{value}.write(value_integer);
 						}
 					);

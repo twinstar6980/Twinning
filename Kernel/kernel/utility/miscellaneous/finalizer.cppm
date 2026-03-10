@@ -77,24 +77,24 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename FinalizerAction> requires
-		CategoryConstraint<IsPureInstance<FinalizerAction>>
-		&& (IsInvocable<FinalizerAction>)
+	template <typename TFinalizer> requires
+		CategoryConstraint<IsPureInstance<TFinalizer>>
+		&& (IsInvocable<TFinalizer>)
 	inline constexpr auto make_finalizer(
-		FinalizerAction const & finalizer
-	) -> Finalizer<FinalizerAction> {
-		return Finalizer<FinalizerAction>{finalizer};
+		TFinalizer const & finalizer
+	) -> Finalizer<TFinalizer> {
+		return Finalizer<TFinalizer>{finalizer};
 	}
 
-	template <typename InitializerAction, typename FinalizerAction> requires
-		CategoryConstraint<IsPureInstance<InitializerAction> && IsPureInstance<FinalizerAction>>
-		&& (IsInvocable<InitializerAction> && IsInvocable<FinalizerAction>)
+	template <typename TInitializer, typename TFinalizer> requires
+		CategoryConstraint<IsPureInstance<TInitializer> && IsPureInstance<TFinalizer>>
+		&& (IsInvocable<TInitializer> && IsInvocable<TFinalizer>)
 	inline constexpr auto make_finalizer(
-		InitializerAction const & initializer,
-		FinalizerAction const &   finalizer
-	) -> Finalizer<FinalizerAction> {
+		TInitializer const & initializer,
+		TFinalizer const &   finalizer
+	) -> Finalizer<TFinalizer> {
 		initializer();
-		return Finalizer<FinalizerAction>{finalizer};
+		return Finalizer<TFinalizer>{finalizer};
 	}
 
 	#pragma endregion

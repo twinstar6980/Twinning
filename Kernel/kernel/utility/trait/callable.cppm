@@ -15,27 +15,27 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region type
 
-	template <typename Result, typename ... Argument> requires
-		CategoryConstraint<IsAnything<Result> && IsValid<Argument ...>>
-	using AsGlobalFunction = ZPointer<Result (Argument ...)>;
+	template <typename TResult, typename ... TArgument> requires
+		CategoryConstraint<IsAnything<TResult> && IsValid<TArgument ...>>
+	using AsGlobalFunction = ZPointer<TResult (TArgument ...)>;
 
-	template <typename Class, typename Result, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-	using AsVariableMemberFunction = ZMemberPointer<Class, Result (Argument ...)>;
+	template <typename TClass, typename TResult, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TClass> && IsAnything<TResult> && IsValid<TArgument ...>>
+	using AsVariableMemberFunction = ZMemberPointer<TClass, TResult (TArgument ...)>;
 
-	template <typename Class, typename Result, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-	using AsConstantMemberFunction = ZMemberPointer<Class, Result (Argument ...) const>;
+	template <typename TClass, typename TResult, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TClass> && IsAnything<TResult> && IsValid<TArgument ...>>
+	using AsConstantMemberFunction = ZMemberPointer<TClass, TResult (TArgument ...) const>;
 
-	template <typename Class, auto constant, typename Result, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Class> && IsAnything<Result> && IsValid<Argument ...>>
-		&& (IsSameOf<constant, ZBoolean>)
-	using AsMemberFunction = AsSwitch<!constant, AsVariableMemberFunction<Class, Result, Argument ...>, AsConstantMemberFunction<Class, Result, Argument ...>>;
+	template <typename TClass, auto t_constant, typename TResult, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TClass> && IsAnything<TResult> && IsValid<TArgument ...>>
+		&& (IsSameOf<t_constant, ZBoolean>)
+	using AsMemberFunction = AsSwitch<!t_constant, AsVariableMemberFunction<TClass, TResult, TArgument ...>, AsConstantMemberFunction<TClass, TResult, TArgument ...>>;
 
-	template <typename Class> requires
-		CategoryConstraint<IsPureInstance<Class>>
-		&& (requires { { &Class::operator () }; })
-	using AsCallableClass = Class;
+	template <typename TClass> requires
+		CategoryConstraint<IsPureInstance<TClass>>
+		&& (requires { { &TClass::operator () }; })
+	using AsCallableClass = TClass;
 
 	#pragma endregion
 
@@ -84,9 +84,9 @@ export namespace Twinning::Kernel::Trait {
 
 		// ----------------
 
-		using Argument = typename CallableTrait<decltype(&TClass::operator ())>::Argument;
+		using Argument = CallableTrait<decltype(&TClass::operator ())>::Argument;
 
-		using Result = typename CallableTrait<decltype(&TClass::operator ())>::Result;
+		using Result = CallableTrait<decltype(&TClass::operator ())>::Result;
 
 	};
 
@@ -124,58 +124,58 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 
-	template <typename Callable, typename ... Argument>
+	template <typename TCallable, typename ... TArgument>
 	concept IsInvocable =
-		CategoryConstraint<IsPureInstance<Callable> && IsValid<Argument ...>>
-		&& (std::is_invocable_v<Callable, Argument ...>)
+		CategoryConstraint<IsPureInstance<TCallable> && IsValid<TArgument ...>>
+		&& (std::is_invocable_v<TCallable, TArgument ...>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsCallable =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (requires { typename CallableTrait<It>::Result; })
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (requires { typename CallableTrait<TIt>::Result; })
 		;
 
 	// NOTE: EXPLAIN: just a name, generic callable object can not test
-	template <typename It>
+	template <typename TIt>
 	concept IsGenericCallable =
-		CategoryConstraint<IsPureInstance<It>>
+		CategoryConstraint<IsPureInstance<TIt>>
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsGlobalFunction =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsTemplateInstanceOfTNT<CallableTrait<It>, GlobalFunctionTrait>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsTemplateInstanceOfTtnt<CallableTrait<TIt>, GlobalFunctionTrait>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsMemberFunction =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsTemplateInstanceOfTVTNT<CallableTrait<It>, MemberFunctionTrait>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsTemplateInstanceOfTtvtnt<CallableTrait<TIt>, MemberFunctionTrait>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsCallableClass =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsTemplateInstanceOfT<CallableTrait<It>, CallableClassTrait>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsTemplateInstanceOfTt<CallableTrait<TIt>, CallableClassTrait>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsFunction =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsGlobalFunction<It> || IsMemberFunction<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsGlobalFunction<TIt> || IsMemberFunction<TIt>)
 		;
 
 	#pragma endregion
 
 	#pragma region miscellaneous
 
-	template <auto it> requires
+	template <auto t_it> requires
 		CategoryConstraint<>
-		&& (IsCallable<decltype(it)>)
-	using CallableTraitOf = CallableTrait<decltype(it)>;
+		&& (IsCallable<decltype(t_it)>)
+	using CallableTraitOf = CallableTrait<decltype(t_it)>;
 
 	#pragma endregion
 
@@ -183,85 +183,85 @@ export namespace Twinning::Kernel::Trait {
 
 	namespace Detail {
 
-		template <auto function, typename ... ProxyArgument> requires
+		template <auto t_function, typename ... TProxyArgument> requires
 			NoneConstraint
 		inline auto proxy_global_function(
-			ProxyArgument ... argument
-		) -> typename CallableTraitOf<function>::Result {
-			return function(as_forward<ProxyArgument>(argument) ...);
+			TProxyArgument ... argument
+		) -> CallableTraitOf<t_function>::Result {
+			return t_function(as_forward<TProxyArgument>(argument) ...);
 		}
 
-		template <auto function, typename ... ProxyArgument, auto ... argument_index> requires
+		template <auto t_function, typename ... TProxyArgument, auto ... t_argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_proxy_global_function(
-			ValuePackage<argument_index ...>
+			ValuePackage<t_argument_index ...>
 		) -> auto {
-			return &proxy_global_function<function, AsSwitch<!IsVoid<typename TypePackage<ProxyArgument ...>::template Element<argument_index>>, typename TypePackage<ProxyArgument ...>::template Element<argument_index>, typename CallableTraitOf<function>::Argument::template Element<argument_index>> ...>;
+			return &proxy_global_function<t_function, AsSwitch<!IsVoid<typename TypePackage<TProxyArgument ...>::template Element<t_argument_index>>, typename TypePackage<TProxyArgument ...>::template Element<t_argument_index>, typename CallableTraitOf<t_function>::Argument::template Element<t_argument_index>> ...>;
 		}
 
 	}
 
-	template <auto function, typename ... ProxyArgument> requires
-		CategoryConstraint<IsValid<ProxyArgument ...>>
-		&& (IsGlobalFunction<decltype(function)>)
-		&& (sizeof...(ProxyArgument) == CallableTraitOf<function>::Argument::size)
-	inline constexpr auto & proxy_global_function = *Detail::make_proxy_global_function<function, ProxyArgument ...>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	template <auto t_function, typename ... TProxyArgument> requires
+		CategoryConstraint<IsValid<TProxyArgument ...>>
+		&& (IsGlobalFunction<decltype(t_function)>)
+		&& (sizeof...(TProxyArgument) == CallableTraitOf<t_function>::Argument::size)
+	inline constexpr auto & proxy_global_function = *Detail::make_proxy_global_function<t_function, TProxyArgument ...>(AsValuePackageOfIndex<CallableTraitOf<t_function>::Argument::size>{});
 
 	// ----------------
 
 	namespace Detail {
 
-		template <auto function, typename Object, auto constant, typename Result, typename ... Argument> requires
+		template <auto t_function, typename TObject, auto t_constant, typename TResult, typename ... TArgument> requires
 			NoneConstraint
 		inline auto normalized_member_function(
-			AsConstantIf<Object, constant> & object,
-			Argument ...                     argument
-		) -> Result {
-			return (object.*function)(as_forward<Argument>(argument) ...);
+			AsConstantIf<TObject, t_constant> & object,
+			TArgument ...                       argument
+		) -> TResult {
+			return (object.*t_function)(as_forward<TArgument>(argument) ...);
 		}
 
-		template <auto function, typename Object, auto ... argument_index> requires
+		template <auto t_function, typename TObject, auto ... t_argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_normalized_member_function(
-			ValuePackage<argument_index ...>
+			ValuePackage<t_argument_index ...>
 		) -> auto {
-			return &normalized_member_function<function, Object, CallableTraitOf<function>::constant, typename CallableTraitOf<function>::Result, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
+			return &normalized_member_function<t_function, TObject, CallableTraitOf<t_function>::constant, typename CallableTraitOf<t_function>::Result, typename CallableTraitOf<t_function>::Argument::template Element<t_argument_index> ...>;
 		}
 
 	}
 
-	template <auto function, typename Class = typename CallableTraitOf<function>::Class> requires
-		CategoryConstraint<IsPureInstance<Class>>
-		&& (IsMemberFunction<decltype(function)>)
-		&& (IsDerivedFrom<Class, typename CallableTraitOf<function>::Class>)
-	inline constexpr auto & normalized_member_function = *Detail::make_normalized_member_function<function, Class>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+	template <auto t_function, typename TClass = CallableTraitOf<t_function>::Class> requires
+		CategoryConstraint<IsPureInstance<TClass>>
+		&& (IsMemberFunction<decltype(t_function)>)
+		&& (IsDerivedFrom<TClass, typename CallableTraitOf<t_function>::Class>)
+	inline constexpr auto & normalized_member_function = *Detail::make_normalized_member_function<t_function, TClass>(AsValuePackageOfIndex<CallableTraitOf<t_function>::Argument::size>{});
 
 	// ----------------
 
 	namespace Detail {
 
-		template <auto lambda, typename Result, typename ... Argument> requires
+		template <auto t_lambda, typename TResult, typename ... TArgument> requires
 			NoneConstraint
 		inline auto normalized_lambda(
-			Argument ... argument
-		) -> Result {
-			return lambda(as_forward<Argument>(argument) ...);
+			TArgument ... argument
+		) -> TResult {
+			return t_lambda(as_forward<TArgument>(argument) ...);
 		}
 
-		template <auto lambda, auto ... argument_index> requires
+		template <auto t_lambda, auto ... t_argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_normalized_lambda(
-			ValuePackage<argument_index ...>
+			ValuePackage<t_argument_index ...>
 		) -> auto {
-			return &normalized_lambda<lambda, typename CallableTraitOf<lambda>::Result, typename CallableTraitOf<lambda>::Argument::template Element<argument_index> ...>;
+			return &normalized_lambda<t_lambda, typename CallableTraitOf<t_lambda>::Result, typename CallableTraitOf<t_lambda>::Argument::template Element<t_argument_index> ...>;
 		}
 
 	}
 
-	template <auto lambda> requires
+	template <auto t_lambda> requires
 		CategoryConstraint<>
-		&& (IsCallableClass<decltype(lambda)>)
-	inline constexpr auto & normalized_lambda = *Detail::make_normalized_lambda<lambda>(AsValuePackageOfIndex<CallableTraitOf<lambda>::Argument::size>{});
+		&& (IsCallableClass<decltype(t_lambda)>)
+	inline constexpr auto & normalized_lambda = *Detail::make_normalized_lambda<t_lambda>(AsValuePackageOfIndex<CallableTraitOf<t_lambda>::Argument::size>{});
 
 	#pragma endregion
 

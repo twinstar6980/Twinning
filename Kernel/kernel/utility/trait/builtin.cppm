@@ -10,116 +10,116 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region fundamental
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinVoid =
-		CategoryConstraint<IsPure<It>>
-		&& (IsSame<It, void>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsSame<TIt, void>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinBoolean =
-		CategoryConstraint<IsPure<It>>
-		&& (IsSame<It, bool>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsSame<TIt, bool>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinUnsignedInteger =
-		CategoryConstraint<IsPure<It>>
-		&& (IsSame<It, unsigned char, unsigned short int, unsigned int, unsigned long int, unsigned long long int>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsSame<TIt, unsigned char, unsigned short int, unsigned int, unsigned long int, unsigned long long int>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinSignedInteger =
-		CategoryConstraint<IsPure<It>>
-		&& (IsSame<It, signed char, signed short int, signed int, signed long int, signed long long int>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsSame<TIt, signed char, signed short int, signed int, signed long int, signed long long int>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinInteger =
-		CategoryConstraint<IsPure<It>>
-		&& (IsBuiltinUnsignedInteger<It> || IsBuiltinSignedInteger<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsBuiltinUnsignedInteger<TIt> || IsBuiltinSignedInteger<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinSignedFloater =
-		CategoryConstraint<IsPure<It>>
-		&& (IsSame<It, float, double, long double>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsSame<TIt, float, double, long double>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinFloater =
-		CategoryConstraint<IsPure<It>>
-		&& (IsBuiltinSignedFloater<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsBuiltinSignedFloater<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinNumber =
-		CategoryConstraint<IsPure<It>>
-		&& (IsBuiltinInteger<It> || IsBuiltinFloater<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsBuiltinInteger<TIt> || IsBuiltinFloater<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinCharacter =
-		CategoryConstraint<IsPure<It>>
-		&& (IsSame<It, char, wchar_t, char8_t, char16_t, char32_t>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsSame<TIt, char, wchar_t, char8_t, char16_t, char32_t>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinArithmetic =
-		CategoryConstraint<IsPure<It>>
-		&& (IsBuiltinBoolean<It> || IsBuiltinNumber<It> || IsBuiltinCharacter<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsBuiltinBoolean<TIt> || IsBuiltinNumber<TIt> || IsBuiltinCharacter<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinFundamental =
-		CategoryConstraint<IsPure<It>>
-		&& (IsBuiltinVoid<It> || IsBuiltinArithmetic<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (IsBuiltinVoid<TIt> || IsBuiltinArithmetic<TIt>)
 		;
 
 	#pragma endregion
 
 	#pragma region compound
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinEnumeration =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (std::is_enum_v<It>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (std::is_enum_v<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinPointer =
-		CategoryConstraint<IsPure<It>>
-		&& (std::is_pointer_v<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (std::is_pointer_v<TIt>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinMemberPointer =
-		CategoryConstraint<IsPure<It>>
-		&& (std::is_member_pointer_v<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (std::is_member_pointer_v<TIt>)
 		;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsBuiltinArray =
-		CategoryConstraint<IsPure<It>>
-		&& (std::is_array_v<It>)
+		CategoryConstraint<IsPure<TIt>>
+		&& (std::is_array_v<TIt>)
 		;
 
 	#pragma endregion

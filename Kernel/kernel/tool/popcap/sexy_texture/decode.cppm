@@ -13,11 +13,11 @@ import twinning.kernel.tool.texture.encoding.decode;
 
 export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Decode :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			Image::VariableImageView const & image
 		) -> Void {
 			data.read_constant(k_magic_marker);
-			data.read_constant(cbox<VersionNumber>(version.number));
+			data.read_constant(cbox<VersionNumber>(t_version.number));
 			auto header = Header{};
 			data.read(header);
 			assert_test(image.size() == Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)});
@@ -134,7 +134,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		) -> Void {
 			auto data_stream = InputByteStreamView{data};
 			data_stream.read_constant(k_magic_marker);
-			data_stream.read_constant(cbox<VersionNumber>(version.number));
+			data_stream.read_constant(cbox<VersionNumber>(t_version.number));
 			auto header = Header{};
 			data_stream.read(header);
 			image_size = Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)};

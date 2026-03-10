@@ -105,10 +105,10 @@ export namespace Twinning::Shell {
 
 		// ----------------
 
-		template <typename Symbol>
+		template <typename TSymbol>
 		auto lookup(
 			std::string_view const & name
-		) -> Symbol * {
+		) -> TSymbol * {
 			assert_test(thiz.state());
 			auto address = std::add_pointer_t<void>{};
 			#if defined M_system_windows
@@ -120,7 +120,7 @@ export namespace Twinning::Shell {
 			if (address == nullptr) {
 				throw std::runtime_error{std::format("Exception: can not lookup symbol '{}'", name)};
 			}
-			return static_cast<Symbol *>(address);
+			return static_cast<TSymbol *>(address);
 		}
 
 		#pragma endregion

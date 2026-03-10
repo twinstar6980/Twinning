@@ -89,10 +89,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 		inline constexpr auto k_block_size = Size{bs_static_size<IntegerU32>()};
 
-		template <typename Value> requires
-			CategoryConstraint<IsPureInstance<Value>>
+		template <typename TValue> requires
+			CategoryConstraint<IsPureInstance<TValue>>
 		inline auto adjust_sequence(
-			Map<String, Value> & map
+			Map<String, TValue> & map
 		) -> Void {
 			Range::each(
 				map,
@@ -112,10 +112,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 		// ----------------
 
-		template <typename Value> requires
-			CategoryConstraint<IsPureInstance<Value>>
+		template <typename TValue> requires
+			CategoryConstraint<IsPureInstance<TValue>>
 		inline auto compute_ripe_size(
-			Map<String, Value> const & map
+			Map<String, TValue> const & map
 		) -> Size {
 			struct WorkOption {
 				Size inherit_length{};
@@ -160,11 +160,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			return block_count * k_block_size;
 		}
 
-		template <typename Value> requires
-			CategoryConstraint<IsPureInstance<Value>>
+		template <typename TValue> requires
+			CategoryConstraint<IsPureInstance<TValue>>
 		inline auto encode(
-			Map<String, Value> const & map,
-			OutputByteStreamView &     data
+			Map<String, TValue> const & map,
+			OutputByteStreamView &      data
 		) -> Void {
 			auto stream = AccessByteStreamView{data.reserve_view()};
 			struct WorkOption {
@@ -220,10 +220,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			return;
 		}
 
-		template <typename Value> requires
-			CategoryConstraint<IsPureInstance<Value>>
+		template <typename TValue> requires
+			CategoryConstraint<IsPureInstance<TValue>>
 		inline auto decode(
-			Map<String, Value> &  map,
+			Map<String, TValue> & map,
 			InputByteStreamView & data
 		) -> Void {
 			auto stream = InputByteStreamView{data.reserve_view()};

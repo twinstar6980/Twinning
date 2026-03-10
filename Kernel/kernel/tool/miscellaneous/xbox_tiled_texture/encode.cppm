@@ -17,10 +17,10 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 
 		// ----------------
 
-		template <auto format> requires
+		template <auto t_format> requires
 			CategoryConstraint<>
-			&& (IsSameOf<format, Texture::Encoding::Format>)
-			&& (Texture::Encoding::FormatPackage::has(format))
+			&& (IsSameOf<t_format, Texture::Encoding::Format>)
+			&& (Texture::Encoding::FormatPackage::has(t_format))
 		inline static auto process_image(
 			OutputByteStreamView &           data,
 			Image::ConstantImageView const & image
@@ -28,15 +28,15 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 			auto image_size = image.size();
 			auto block_height = image_size.width / k_block_width;
 			auto chunk_height = image_size.height / k_chunk_width;
-			auto data_view = data.forward_view(image_size.area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>);
+			auto data_view = data.forward_view(image_size.area() * Texture::Encoding::bpp_of(t_format) / k_type_bit_count<Byte>);
 			for (auto & block_y : SizeRange{chunk_height}) {
 				for (auto & block_x : SizeRange{k_chunk_width}) {
 					auto image_row = InputStreamView<Image::Pixel>{image[block_y * k_chunk_width + block_x]};
 					for (auto & block_row : SizeRange{block_height}) {
 						auto position = (block_y * block_height + block_row) * (k_block_width * k_chunk_width) + (block_x * k_block_width);
-						auto block_data = OutputByteStreamView{data_view.sub(position * bpp_of(format) / k_type_bit_count<Byte>, k_block_width * bpp_of(format) / k_type_bit_count<Byte>)};
+						auto block_data = OutputByteStreamView{data_view.sub(position * bpp_of(t_format) / k_type_bit_count<Byte>, k_block_width * bpp_of(t_format) / k_type_bit_count<Byte>)};
 						for (auto & block_column : SizeRange{k_block_width}) {
-							Texture::Encoding::Encode::process_pixel<format>(block_data, image_row.next());
+							Texture::Encoding::Encode::process_pixel<t_format>(block_data, image_row.next());
 						}
 					}
 				}
@@ -51,8 +51,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 		) -> Void {
 			Generalization::match<Texture::Encoding::FormatPackage>(
 				format,
-				[&] <auto index, auto format>(ValuePackage<index>, ValuePackage<format>) {
-					process_image<format>(data, image);
+				[&] <auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
+					process_image<t_format>(data, image);
 				}
 			);
 			return;

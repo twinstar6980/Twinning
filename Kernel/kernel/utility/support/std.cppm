@@ -48,12 +48,12 @@ export {
 	template <>
 	struct std::formatter<Twinning::Kernel::ConstantStringView> :
 		std::formatter<std::string_view> {
-		template <typename Context> requires
+		template <typename TContext> requires
 			Twinning::Kernel::NoneConstraint
 		auto format(
 			Twinning::Kernel::ConstantStringView const & value,
-			Context &                                    context
-		) const -> typename Context::iterator {
+			TContext &                                   context
+		) const -> TContext::iterator {
 			return std::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}
 	};
@@ -61,12 +61,12 @@ export {
 	template <>
 	struct std::formatter<Twinning::Kernel::VariableStringView> :
 		std::formatter<std::string_view> {
-		template <typename Context> requires
+		template <typename TContext> requires
 			Twinning::Kernel::NoneConstraint
 		auto format(
 			Twinning::Kernel::VariableStringView const & value,
-			Context &                                    context
-		) const -> typename Context::iterator {
+			TContext &                                   context
+		) const -> TContext::iterator {
 			return std::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}
 	};
@@ -74,12 +74,12 @@ export {
 	template <>
 	struct std::formatter<Twinning::Kernel::String> :
 		std::formatter<std::string_view> {
-		template <typename Context> requires
+		template <typename TContext> requires
 			Twinning::Kernel::NoneConstraint
 		auto format(
 			Twinning::Kernel::String const & value,
-			Context &                        context
-		) const -> typename Context::iterator {
+			TContext &                       context
+		) const -> TContext::iterator {
 			return std::formatter<std::string_view>::format(Twinning::Kernel::make_std_string_view(value), context);
 		}
 	};
@@ -89,12 +89,12 @@ export {
 	template <>
 	struct std::formatter<Twinning::Kernel::Storage::Path> :
 		std::formatter<Twinning::Kernel::String> {
-		template <typename Context> requires
+		template <typename TContext> requires
 			Twinning::Kernel::NoneConstraint
 		auto format(
 			Twinning::Kernel::Storage::Path const & value,
-			Context &                               context
-		) const -> typename Context::iterator {
+			TContext &                              context
+		) const -> TContext::iterator {
 			return std::formatter<Twinning::Kernel::String>::format(value.to_string(), context);
 		}
 	};
@@ -107,12 +107,12 @@ export {
 		&& (Twinning::Kernel::IsBaseBox<TType>)
 	struct std::formatter<TType> :
 		std::formatter<typename TType::Value> {
-		template <typename Context> requires
+		template <typename TContext> requires
 			Twinning::Kernel::NoneConstraint
 		auto format(
 			TType const & value,
-			Context &     context
-		) const -> typename Context::iterator {
+			TContext &    context
+		) const -> TContext::iterator {
 			return std::formatter<typename TType::Value>::format(value.value, context);
 		}
 	};

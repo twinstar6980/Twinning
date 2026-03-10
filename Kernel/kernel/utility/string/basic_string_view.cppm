@@ -195,25 +195,25 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	template <typename Element> requires
+	template <typename TElement> requires
 		AutomaticConstraint
-	using VariableBasicStringView = BasicStringView<Element, k_false>;
+	using VariableBasicStringView = BasicStringView<TElement, k_false>;
 
-	template <typename Element> requires
+	template <typename TElement> requires
 		AutomaticConstraint
-	using ConstantBasicStringView = BasicStringView<Element, k_true>;
+	using ConstantBasicStringView = BasicStringView<TElement, k_true>;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename Element> requires
-		CategoryConstraint<IsInstance<Element>>
-		&& (IsCharacterBox<AsPure<Element>>)
+	template <typename TElement> requires
+		CategoryConstraint<IsInstance<TElement>>
+		&& (IsCharacterBox<AsPure<TElement>>)
 	inline auto null_terminated_string_size_of(
-		Pointer<Element> const & string
+		Pointer<TElement> const & string
 	) -> Size {
-		return mbox<Size>(std::char_traits<typename AsPure<Element>::Value>::length(cast_pointer<typename AsPure<Element>::Value>(string).value));
+		return mbox<Size>(std::char_traits<typename AsPure<TElement>::Value>::length(cast_pointer<typename AsPure<TElement>::Value>(string).value));
 	}
 
 	#pragma endregion

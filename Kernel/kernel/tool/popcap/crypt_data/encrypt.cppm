@@ -11,11 +11,11 @@ import twinning.kernel.tool.data.encryption.exor.encrypt;
 
 export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 
-	template <auto version> requires (check_version(version))
+	template <auto t_version> requires (check_version(t_version))
 	struct Encrypt :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 

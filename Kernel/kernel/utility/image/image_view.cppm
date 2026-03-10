@@ -195,13 +195,13 @@ export namespace Twinning::Kernel::Image {
 
 	#pragma region alias
 
-	template <typename Pixel> requires
+	template <typename TPixel> requires
 		AutomaticConstraint
-	using VariableBasicImageView = BasicImageView<Pixel, k_false>;
+	using VariableBasicImageView = BasicImageView<TPixel, k_false>;
 
-	template <typename Pixel> requires
+	template <typename TPixel> requires
 		AutomaticConstraint
-	using ConstantBasicImageView = BasicImageView<Pixel, k_true>;
+	using ConstantBasicImageView = BasicImageView<TPixel, k_true>;
 
 	#pragma endregion
 

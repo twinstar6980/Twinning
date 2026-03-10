@@ -11,11 +11,11 @@ import twinning.kernel.third.mscharconv;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Encode :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -77,11 +77,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		) -> Void {
 			if (!native_string_index.has()) {
 				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
-				if constexpr (check_version(version, {}, {false})) {
+				if constexpr (check_version(t_version, {}, {false})) {
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(value)));
 					StringParser::write_eascii_string(self_cast<OutputCharacterStreamView>(data), value, as_left(Size{}));
 				}
-				if constexpr (check_version(version, {}, {true})) {
+				if constexpr (check_version(t_version, {}, {true})) {
 					ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(value.size()));
 					StringParser::write_utf8_string(self_cast<OutputCharacterStreamView>(data), value.as_view(), as_left(Size{}));
 				}
@@ -94,11 +94,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				else {
 					native_string_index.get()[value] = mbox<Size>(native_string_index.get().size());
 					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
-					if constexpr (check_version(version, {}, {false})) {
+					if constexpr (check_version(t_version, {}, {false})) {
 						ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(value)));
 						StringParser::write_eascii_string(self_cast<OutputCharacterStreamView>(data), value, as_left(Size{}));
 					}
-					if constexpr (check_version(version, {}, {true})) {
+					if constexpr (check_version(t_version, {}, {true})) {
 						ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(value.size()));
 						StringParser::write_utf8_string(self_cast<OutputCharacterStreamView>(data), value.as_view(), as_left(Size{}));
 					}
@@ -254,7 +254,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			}
 			process_value(data, definition.get_object(), native_string_index, enable_reference);
 			data.write_constant(k_done_marker);
-			version_data.write_constant(cbox<VersionNumber>(version.number));
+			version_data.write_constant(cbox<VersionNumber>(t_version.number));
 			return;
 		}
 

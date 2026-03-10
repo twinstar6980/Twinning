@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.trail.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Definition {
 
 		#pragma region track node
 
-		template <typename = None>
-		struct TrackNode_;
+		M_nested_template_declaration(TrackNode);
 
-		using TrackNode = TrackNode_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(TrackNode_<_>),
+			M_nested_template_definition_name(TrackNode),
 			M_wrap(
 				(Floater) time,
 				(Floater) low_value,
@@ -34,14 +31,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 		#pragma region trail
 
-		template <typename = None>
-		struct Trail_;
+		M_nested_template_declaration(Trail);
 
-		using Trail = Trail_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop()}, {}))
 		M_record_of_map(
-			M_wrap(Trail_<_>),
+			M_nested_template_definition_name(Trail),
 			M_wrap(
 				(Integer) maximum_point,
 				(Floater) minimum_point_distance,
@@ -55,9 +49,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::mobile()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::mobile()}, {}))
 		M_record_of_map(
-			M_wrap(Trail_<_>),
+			M_nested_template_definition_name(Trail),
 			M_wrap(
 				(Integer) maximum_point,
 				(Floater) minimum_point_distance,
@@ -71,9 +65,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Trail_<_>),
+			M_nested_template_definition_name(Trail),
 			M_wrap(
 				(Integer) maximum_point,
 				(Floater) minimum_point_distance,

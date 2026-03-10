@@ -9,10 +9,10 @@ import twinning.kernel.tool.wwise.sound_bank.definition;
 
 export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
-		using Definition = Definition<version>;
+		using Definition = Definition<t_version>;
 
 		// ----------------
 
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		struct IdentifierWrapper {
 
-			typename Definition::Identifier value{};
+			Definition::Identifier value{};
 
 		};
 
@@ -66,32 +66,29 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		using CommonPropertyValue = Variant<Boolean, Integer, Floater, Enumerated, IdentifierWrapper>;
 
-		template <typename Type> requires
+		template <typename TType> requires
 			CategoryConstraint<>
-			&& (IsPureInstance<Type>)
+			&& (IsPureInstance<TType>)
 		struct CommonPropertyMap {
 
-			Map<Type, Tuple<CommonPropertyValue>> regular{};
+			Map<TType, Tuple<CommonPropertyValue>> regular{};
 
-			Map<Type, Tuple<CommonPropertyValue, CommonPropertyValue>> randomizer{};
+			Map<TType, Tuple<CommonPropertyValue, CommonPropertyValue>> randomizer{};
 
 		};
 
 		// ----------------
 
-		template <typename Value>
+		template <typename TValue>
 		struct EnumerationAttribute;
 
 		#pragma region enumeration attribute of common property type
 
-		template <typename = None>
-		struct EventActionCommonPropertyType_;
+		M_nested_template_declaration(EventActionCommonPropertyType);
 
-		using EventActionCommonPropertyType = EventActionCommonPropertyType_<>;
-
-		template <typename _> requires (check_version(version, {72}))
+		M_nested_template_definition_check(check_version(t_version, {72}))
 		M_enumeration(
-			M_wrap(EventActionCommonPropertyType_<_>),
+			M_nested_template_definition_name(EventActionCommonPropertyType),
 			M_wrap(
 				delay,
 				fade_time,
@@ -102,7 +99,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<EventActionCommonPropertyType> {
 			using Attribute = decltype([] {
-				if constexpr (check_version(version, {72, 118})) {
+				if constexpr (check_version(t_version, {72, 118})) {
 					using Type = TypePackage<
 						// delay
 						TypePackage<ValuePackage<14_e>, TypePackage<Integer>, ValuePackage<0_i>>,
@@ -113,7 +110,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {118, 150})) {
+				if constexpr (check_version(t_version, {118, 150})) {
 					using Type = TypePackage<
 						// delay
 						TypePackage<ValuePackage<15_e>, TypePackage<Integer>, ValuePackage<0_i>>,
@@ -124,7 +121,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {150})) {
+				if constexpr (check_version(t_version, {150})) {
 					using Type = TypePackage<
 						// delay
 						TypePackage<ValuePackage<57_e>, TypePackage<Integer>, ValuePackage<0_i>>,
@@ -140,14 +137,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct ModulatorCommonPropertyType_;
+		M_nested_template_declaration(ModulatorCommonPropertyType);
 
-		using ModulatorCommonPropertyType = ModulatorCommonPropertyType_<>;
-
-		template <typename _> requires (check_version(version, {112}))
+		M_nested_template_definition_check(check_version(t_version, {112}))
 		M_enumeration(
-			M_wrap(ModulatorCommonPropertyType_<_>),
+			M_nested_template_definition_name(ModulatorCommonPropertyType),
 			M_wrap(
 				scope,
 				trigger_on,
@@ -175,7 +169,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<ModulatorCommonPropertyType> {
 			using Attribute = decltype([] {
-				if constexpr (check_version(version, {112, 150})) {
+				if constexpr (check_version(t_version, {112, 150})) {
 					using Type = TypePackage<
 						// scope,
 						TypePackage<ValuePackage<0_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
@@ -220,7 +214,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {150})) {
+				if constexpr (check_version(t_version, {150})) {
 					using Type = TypePackage<
 						// scope,
 						TypePackage<ValuePackage<0_e>, TypePackage<Enumerated>, ValuePackage<0_e>>,
@@ -270,14 +264,11 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		// ----------------
 
-		template <typename = None>
-		struct AudioCommonPropertyType_;
+		M_nested_template_declaration(AudioCommonPropertyType);
 
-		using AudioCommonPropertyType = AudioCommonPropertyType_<>;
-
-		template <typename _> requires (check_version(version, {72, 88}))
+		M_nested_template_definition_check(check_version(t_version, {72, 88}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -301,9 +292,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {88, 112}))
+		M_nested_template_definition_check(check_version(t_version, {88, 112}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -336,9 +327,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {112, 128}))
+		M_nested_template_definition_check(check_version(t_version, {112, 128}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -386,9 +377,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {128, 132}))
+		M_nested_template_definition_check(check_version(t_version, {128, 132}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -444,9 +435,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {132, 135}))
+		M_nested_template_definition_check(check_version(t_version, {132, 135}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -504,9 +495,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {135, 140}))
+		M_nested_template_definition_check(check_version(t_version, {135, 140}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -565,9 +556,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {140, 150}))
+		M_nested_template_definition_check(check_version(t_version, {140, 150}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -627,9 +618,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {150}))
+		M_nested_template_definition_check(check_version(t_version, {150}))
 		M_enumeration(
-			M_wrap(AudioCommonPropertyType_<_>),
+			M_nested_template_definition_name(AudioCommonPropertyType),
 			M_wrap(
 				bus_volume,
 				output_bus_volume,
@@ -691,7 +682,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<AudioCommonPropertyType> {
 			using Attribute = decltype([] {
-				if constexpr (check_version(version, {72, 88})) {
+				if constexpr (check_version(t_version, {72, 88})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -734,7 +725,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {88, 112})) {
+				if constexpr (check_version(t_version, {88, 112})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -795,7 +786,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112, 118})) {
+				if constexpr (check_version(t_version, {112, 118})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -886,7 +877,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {118, 128})) {
+				if constexpr (check_version(t_version, {118, 128})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -977,7 +968,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {128, 132})) {
+				if constexpr (check_version(t_version, {128, 132})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -1084,7 +1075,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {132, 135})) {
+				if constexpr (check_version(t_version, {132, 135})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -1195,7 +1186,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {135, 140})) {
+				if constexpr (check_version(t_version, {135, 140})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -1308,7 +1299,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {140, 150})) {
+				if constexpr (check_version(t_version, {140, 150})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<5_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -1423,7 +1414,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {150})) {
+				if constexpr (check_version(t_version, {150})) {
 					using Type = TypePackage<
 						// bus_volume,
 						TypePackage<ValuePackage<4_e>, TypePackage<Floater>, ValuePackage<0.0_f>>,
@@ -1546,13 +1537,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::Curve> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 4_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// constant,
 						9_e,
@@ -1585,16 +1576,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::TimePoint> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 140})) {
+				if constexpr (check_version(t_version, {72, 140})) {
 					return 3_sz;
 				}
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(t_version, {140})) {
 					return 4_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 140})) {
+				if constexpr (check_version(t_version, {72, 140})) {
 					using Type = ValuePackage<
 						// immediate,
 						0_e,
@@ -1615,7 +1606,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(t_version, {140})) {
 					using Type = ValuePackage<
 						// immediate,
 						0_e,
@@ -1646,13 +1637,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::CoordinateMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// linear,
 						0_e,
@@ -1671,19 +1662,19 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::PropertyCategory> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 128})) {
+				if constexpr (check_version(t_version, {72, 128})) {
 					return 2_sz;
 				}
-				if constexpr (check_version(version, {128, 145})) {
+				if constexpr (check_version(t_version, {128, 145})) {
 					return 3_sz;
 				}
-				if constexpr (check_version(version, {145})) {
+				if constexpr (check_version(t_version, {145})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 128})) {
+				if constexpr (check_version(t_version, {72, 128})) {
 					using Type = ValuePackage<
 						// unidirectional,
 						0_e,
@@ -1696,7 +1687,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {128, 145})) {
+				if constexpr (check_version(t_version, {128, 145})) {
 					using Type = ValuePackage<
 						// unidirectional,
 						1_e,
@@ -1709,7 +1700,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {145})) {
+				if constexpr (check_version(t_version, {145})) {
 					using Type = ValuePackage<
 						// unidirectional,
 						1_e,
@@ -1732,16 +1723,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::ParameterCategory> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112, 145})) {
+				if constexpr (check_version(t_version, {112, 145})) {
 					return 2_sz;
 				}
-				if constexpr (check_version(version, {145})) {
+				if constexpr (check_version(t_version, {145})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112, 145})) {
+				if constexpr (check_version(t_version, {112, 145})) {
 					using Type = ValuePackage<
 						// game_parameter,
 						0_e,
@@ -1752,7 +1743,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {145})) {
+				if constexpr (check_version(t_version, {145})) {
 					using Type = ValuePackage<
 						// game_parameter,
 						0_e,
@@ -1771,13 +1762,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlayType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// sequence,
 						0_e,
@@ -1794,13 +1785,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlayMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// step,
 						0_e,
@@ -1817,16 +1808,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPositioningSettingListenerRoutingPositionSourceMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 132})) {
+				if constexpr (check_version(t_version, {72, 132})) {
 					return 2_sz;
 				}
-				if constexpr (check_version(version, {132})) {
+				if constexpr (check_version(t_version, {132})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 132})) {
+				if constexpr (check_version(t_version, {72, 132})) {
 					using Type = ValuePackage<
 						// user_defined,
 						0_e,
@@ -1835,7 +1826,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {132})) {
+				if constexpr (check_version(t_version, {132})) {
 					using Type = ValuePackage<
 						// emitter,
 						0_e,
@@ -1854,13 +1845,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPositioningSettingListenerRoutingSpatialization> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {128})) {
+				if constexpr (check_version(t_version, {128})) {
 					return 3_sz; // NOTE: EXPLAIN: use 3 byte even only need 2 byte
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {128})) {
+				if constexpr (check_version(t_version, {128})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -1879,16 +1870,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPositioningSettingSpeakerPanningMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {132, 140})) {
+				if constexpr (check_version(t_version, {132, 140})) {
 					return 2_sz;
 				}
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(t_version, {140})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {132, 140})) {
+				if constexpr (check_version(t_version, {132, 140})) {
 					using Type = ValuePackage<
 						// direct_assignment,
 						0_e,
@@ -1897,7 +1888,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(t_version, {140})) {
 					using Type = ValuePackage<
 						// direct_assignment,
 						0_e,
@@ -1916,13 +1907,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPositioningSettingType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 132})) {
+				if constexpr (check_version(t_version, {72, 132})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 132})) {
+				if constexpr (check_version(t_version, {72, 132})) {
 					using Type = ValuePackage<
 						// two_dimension,
 						0_e,
@@ -1939,16 +1930,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::BusAutomaticDuckingSettingBusTarget> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					return 3_sz;
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					using Type = ValuePackage<
 						// voice_volume,
 						0_e,
@@ -1957,7 +1948,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// voice_volume,
 						0_e,
@@ -1974,13 +1965,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::MusicTransitionSettingJumpMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {134})) {
+				if constexpr (check_version(t_version, {134})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {134})) {
+				if constexpr (check_version(t_version, {134})) {
 					using Type = ValuePackage<
 						// start,
 						0_e,
@@ -2001,13 +1992,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::MusicTransitionSettingSynchronizeMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// entry_cue,
 						0_e,
@@ -2028,13 +2019,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::BusHdrSettingDynamicReleaseMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {88})) {
+				if constexpr (check_version(t_version, {88})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {88})) {
+				if constexpr (check_version(t_version, {88})) {
 					using Type = ValuePackage<
 						// linear,
 						0_e,
@@ -2051,13 +2042,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::SoundMidiSettingEventPlayOn> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// note_on,
 						0_e,
@@ -2074,13 +2065,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::MusicMidiSettingClipTempoSource> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// hierarchy,
 						0_e,
@@ -2097,13 +2088,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlaybackLimitSettingScope> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// per_game_object,
 						0_e,
@@ -2120,13 +2111,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlaybackLimitSettingWhenPriorityIsEqual> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// discard_oldest_instance,
 						0_e,
@@ -2143,13 +2134,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlaybackLimitSettingWhenLimitIsReached> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// kill_voice,
 						0_e,
@@ -2166,13 +2157,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioVirtualVoiceSettingBehavior> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 140})) {
+				if constexpr (check_version(t_version, {72, 140})) {
 					using Type = ValuePackage<
 						// continue_to_play,
 						0_e,
@@ -2183,7 +2174,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {140})) {
+				if constexpr (check_version(t_version, {140})) {
 					using Type = ValuePackage<
 						// continue_to_play,
 						0_e,
@@ -2204,13 +2195,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioVirtualVoiceSettingOnReturnToPhysical> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// play_from_beginning,
 						0_e,
@@ -2229,13 +2220,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioAssociationSettingMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// best_match,
 						0_e,
@@ -2252,16 +2243,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioSourceType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					return 2_sz;
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					using Type = ValuePackage<
 						// embedded,
 						0_e,
@@ -2272,7 +2263,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// embedded,
 						0_e,
@@ -2291,13 +2282,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlayTypeRandomType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// standard,
 						0_e,
@@ -2314,13 +2305,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlayTypeSequenceAtEndOfPlaylist> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// restart,
 						0_e,
@@ -2337,13 +2328,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::AudioPlayModeContinuousTransitionType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -2368,16 +2359,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::GameParameterBindToBuiltInParameterMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112, 128})) {
+				if constexpr (check_version(t_version, {112, 128})) {
 					return 3_sz;
 				}
-				if constexpr (check_version(version, {128})) {
+				if constexpr (check_version(t_version, {128})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112, 128})) {
+				if constexpr (check_version(t_version, {112, 128})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -2396,7 +2387,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {128})) {
+				if constexpr (check_version(t_version, {128})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -2428,13 +2419,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::GameParameterInterpolationMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -2453,13 +2444,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::EventActionProperty::ValueApplyMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// absolute,
 						1_e,
@@ -2476,13 +2467,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::EventActionProperty::SeekType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// time,
 						0_e,
@@ -2499,16 +2490,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::EventActionMode> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 125})) {
+				if constexpr (check_version(t_version, {72, 125})) {
 					return 3_sz;
 				}
-				if constexpr (check_version(version, {125})) {
+				if constexpr (check_version(t_version, {125})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 125})) {
+				if constexpr (check_version(t_version, {72, 125})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -2521,7 +2512,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {125})) {
+				if constexpr (check_version(t_version, {125})) {
 					using Type = ValuePackage<
 						// none,
 						0_e,
@@ -2540,13 +2531,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::EventActionScope> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// global,
 						0_e,
@@ -2563,13 +2554,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::ModulatorScope> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// voice,
 						0_e,
@@ -2590,13 +2581,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::ModulatorTriggerOn> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// play,
 						0_e,
@@ -2613,13 +2604,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::ModulatorWaveform> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {112, 125})) {
+				if constexpr (check_version(t_version, {112, 125})) {
 					using Type = ValuePackage<
 						// sine,
 						0_e,
@@ -2634,7 +2625,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {125})) {
+				if constexpr (check_version(t_version, {125})) {
 					using Type = ValuePackage<
 						// sine,
 						0_e,
@@ -2659,13 +2650,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::SoundPlaylistContainerScope> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					using Type = ValuePackage<
 						// game_object,
 						0_e,
@@ -2682,16 +2673,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::MusicTrackTrackType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					return 2_sz;
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					using Type = ValuePackage<
 						// normal,
 						0_e,
@@ -2702,7 +2693,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// normal,
 						0_e,
@@ -2723,16 +2714,16 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::MusicTrackClipCurveItemType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					return 3_sz;
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					return 3_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					using Type = ValuePackage<
 						// voice_volume,
 						0_e,
@@ -2745,7 +2736,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112})) {
+				if constexpr (check_version(t_version, {112})) {
 					using Type = ValuePackage<
 						// voice_volume,
 						0_e,
@@ -2768,13 +2759,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::HierarchyType> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {72})) {
+				if constexpr (check_version(t_version, {72})) {
 					return 8_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {72, 112})) {
+				if constexpr (check_version(t_version, {72, 112})) {
 					using Type = ValuePackage<
 						// unknown,
 						~0_e,
@@ -2817,7 +2808,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {112, 128})) {
+				if constexpr (check_version(t_version, {112, 128})) {
 					using Type = ValuePackage<
 						// unknown,
 						~0_e,
@@ -2864,7 +2855,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {128, 132})) {
+				if constexpr (check_version(t_version, {128, 132})) {
 					using Type = ValuePackage<
 						// unknown,
 						~0_e,
@@ -2913,7 +2904,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					>;
 					return declare<Type>();
 				}
-				if constexpr (check_version(version, {132})) {
+				if constexpr (check_version(t_version, {132})) {
 					using Type = ValuePackage<
 						// unknown,
 						~0_e,
@@ -2972,13 +2963,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		template <>
 		struct EnumerationAttribute<typename Definition::VoiceFilterBehavior> {
 			inline static constexpr auto size = Size{[] {
-				if constexpr (check_version(version, {145})) {
+				if constexpr (check_version(t_version, {145})) {
 					return 1_sz;
 				}
 				return k_none_size;
 			}()};
 			using Index = decltype([] {
-				if constexpr (check_version(version, {145})) {
+				if constexpr (check_version(t_version, {145})) {
 					using Type = ValuePackage<
 						// sum_all_value,
 						0_e,

@@ -13,32 +13,32 @@ import twinning.kernel.tool.data.compression.deflate.uncompress;
 
 export namespace Twinning::Kernel::Tool::Popcap::Package {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Unpack :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
 		// ----------------
 
 		inline static auto process_package(
-			InputByteStreamView &          data,
-			typename Definition::Package & definition,
-			Optional<Path> const &         resource_directory
+			InputByteStreamView &  data,
+			Definition::Package &  definition,
+			Optional<Path> const & resource_directory
 		) -> Void {
 			data.read_constant(Structure::k_magic_marker);
-			data.read_constant(cbox<Structure::VersionNumber>(version.number));
-			auto information_structure = Structure::Information<version>{};
+			data.read_constant(cbox<Structure::VersionNumber>(t_version.number));
+			auto information_structure = Structure::Information<t_version>{};
 			{
 				information_structure.resource_information.allocate(k_none_size);
 				while (k_true) {
 					auto flag = data.read_of<IntegerU8>();
-					if (flag == Structure::ResourceInformationListStateFlag<version>::done) {
+					if (flag == Structure::ResourceInformationListStateFlag<t_version>::done) {
 						break;
 					}
-					if (flag == Structure::ResourceInformationListStateFlag<version>::next) {
+					if (flag == Structure::ResourceInformationListStateFlag<t_version>::next) {
 						information_structure.resource_information.append();
 						data.read(information_structure.resource_information.last());
 						continue;
@@ -53,12 +53,12 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				resource_definition.path = Path{resource_information_structure.path.value};
 				resource_definition.time = cbox<Integer>(resource_information_structure.time);
 				auto resource_data = data.forward_view(cbox<Size>(resource_information_structure.size));
-				if constexpr (check_version(version, {}, {false})) {
+				if constexpr (check_version(t_version, {}, {false})) {
 					if (resource_directory.has()) {
 						Storage::write_file(resource_directory.get() / resource_definition.path, resource_data);
 					}
 				}
-				if constexpr (check_version(version, {}, {true})) {
+				if constexpr (check_version(t_version, {}, {true})) {
 					auto resource_data_original = ByteArray{cbox<Size>(resource_information_structure.size_original)};
 					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_data_original_stream = OutputByteStreamView{resource_data_original};
@@ -75,9 +75,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &          data_,
-			typename Definition::Package & definition,
-			Optional<Path> const &         resource_directory
+			InputByteStreamView &  data_,
+			Definition::Package &  definition,
+			Optional<Path> const & resource_directory
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

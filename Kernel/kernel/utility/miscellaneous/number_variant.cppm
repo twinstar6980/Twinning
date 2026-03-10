@@ -81,20 +81,20 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		constexpr auto set_integer(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Integer & {
-			return thiz.set<Integer>(as_forward<Argument>(argument) ...);
+			return thiz.set<Integer>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		constexpr auto set_floater(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Floater & {
-			return thiz.set<Floater>(as_forward<Argument>(argument) ...);
+			return thiz.set<Floater>(as_forward<TArgument>(argument) ...);
 		}
 
 		// ----------------

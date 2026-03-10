@@ -10,277 +10,277 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsAnything =
 		CustomConstraint
 		;
 
 	// ----------------
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsVoid =
 		CustomConstraint
-		&& (IsAnything<It ...>)
-		&& (std::is_void_v<It> && ...)
+		&& (IsAnything<TIt ...>)
+		&& (std::is_void_v<TIt> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsValid =
 		CustomConstraint
-		&& (IsAnything<It ...>)
-		&& (!std::is_void_v<It> && ...)
+		&& (IsAnything<TIt ...>)
+		&& (!std::is_void_v<TIt> && ...)
 		;
 
 	// ----------------
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsInstance =
 		CustomConstraint
-		&& (IsValid<It ...>)
-		&& (!std::is_reference_v<It> && ...)
+		&& (IsValid<TIt ...>)
+		&& (!std::is_reference_v<TIt> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsVariableInstance =
 		CustomConstraint
-		&& (IsInstance<It ...>)
-		&& (!std::is_const_v<It> && ...)
+		&& (IsInstance<TIt ...>)
+		&& (!std::is_const_v<TIt> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsConstantInstance =
 		CustomConstraint
-		&& (IsInstance<It ...>)
-		&& (std::is_const_v<It> && ...)
+		&& (IsInstance<TIt ...>)
+		&& (std::is_const_v<TIt> && ...)
 		;
 
 	// ----------------
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsReference =
 		CustomConstraint
-		&& (IsValid<It ...>)
-		&& (std::is_reference_v<It> && ...)
+		&& (IsValid<TIt ...>)
+		&& (std::is_reference_v<TIt> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsLeftReference =
 		CustomConstraint
-		&& (IsReference<It ...>)
-		&& (std::is_lvalue_reference_v<It> && ...)
+		&& (IsReference<TIt ...>)
+		&& (std::is_lvalue_reference_v<TIt> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsRightReference =
 		CustomConstraint
-		&& (IsReference<It ...>)
-		&& (std::is_rvalue_reference_v<It> && ...)
+		&& (IsReference<TIt ...>)
+		&& (std::is_rvalue_reference_v<TIt> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsVariableReference =
 		CustomConstraint
-		&& (IsLeftReference<It ...>)
-		&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
+		&& (IsLeftReference<TIt ...>)
+		&& (!std::is_const_v<std::remove_reference_t<TIt>> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsConstantReference =
 		CustomConstraint
-		&& (IsLeftReference<It ...>)
-		&& (!std::is_const_v<std::remove_reference_t<It>> && ...)
+		&& (IsLeftReference<TIt ...>)
+		&& (!std::is_const_v<std::remove_reference_t<TIt>> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsMoveableReference =
 		CustomConstraint
-		&& (IsRightReference<It ...>)
+		&& (IsRightReference<TIt ...>)
 		;
 
 	// ----------------
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsPure =
 		CustomConstraint
-		&& (IsAnything<It ...>)
-		&& (std::is_same_v<It, std::remove_cvref_t<It>> && ...)
+		&& (IsAnything<TIt ...>)
+		&& (std::is_same_v<TIt, std::remove_cvref_t<TIt>> && ...)
 		;
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsPureInstance =
 		CustomConstraint
-		&& (IsPure<It ...>)
-		&& (IsInstance<It> && ...)
+		&& (IsPure<TIt ...>)
+		&& (IsInstance<TIt> && ...)
 		;
 
 	// ----------------
 
-	template <typename ... It>
+	template <typename ... TIt>
 	concept IsPointable =
 		CustomConstraint
-		&& (IsAnything<It ...>)
-		&& (!IsReference<It> && ...)
+		&& (IsAnything<TIt ...>)
+		&& (!IsReference<TIt> && ...)
 		;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename It, typename ... Alternative>
+	template <typename TIt, typename ... TAlternative>
 	concept IsSame =
-		CategoryConstraint<IsAnything<It> && IsAnything<Alternative ...>>
-		&& (std::is_same_v<It, Alternative> || ...)
+		CategoryConstraint<IsAnything<TIt> && IsAnything<TAlternative ...>>
+		&& (std::is_same_v<TIt, TAlternative> || ...)
 		;
 
-	template <auto it, typename ... Alternative>
+	template <auto t_it, typename ... TAlternative>
 	concept IsSameOf =
-		CategoryConstraint<IsAnything<Alternative ...>>
-		&& (std::is_same_v<std::remove_cv_t<decltype(it)>, Alternative> || ...)
+		CategoryConstraint<IsAnything<TAlternative ...>>
+		&& (std::is_same_v<std::remove_cv_t<decltype(t_it)>, TAlternative> || ...)
 		;
 
 	// ----------------
 
-	template <auto index, typename ... Alternative> requires
-		CategoryConstraint<IsAnything<Alternative ...>>
-		&& (IsSameOf<index, ZSize>)
-		&& (index < sizeof...(Alternative))
-	using AsSelect = std::tuple_element_t<index, std::tuple<Alternative ...>>;
+	template <auto t_index, typename ... TAlternative> requires
+		CategoryConstraint<IsAnything<TAlternative ...>>
+		&& (IsSameOf<t_index, ZSize>)
+		&& (t_index < sizeof...(TAlternative))
+	using AsSelect = std::tuple_element_t<t_index, std::tuple<TAlternative ...>>;
 
-	template <auto condition, typename TrulyAlternative, typename FalsyAlternative> requires
-		CategoryConstraint<IsAnything<TrulyAlternative> && IsAnything<FalsyAlternative>>
-		&& (IsSameOf<condition, ZBoolean>)
-	using AsSwitch = std::conditional_t<condition, TrulyAlternative, FalsyAlternative>;
+	template <auto t_condition, typename TTrulyAlternative, typename TFalsyAlternative> requires
+		CategoryConstraint<IsAnything<TTrulyAlternative> && IsAnything<TFalsyAlternative>>
+		&& (IsSameOf<t_condition, ZBoolean>)
+	using AsSwitch = std::conditional_t<t_condition, TTrulyAlternative, TFalsyAlternative>;
 
 	#pragma endregion
 
 	#pragma region qualification
 
-	template <typename It> requires
-		CategoryConstraint<IsAnything<It>>
-	using AsMakeConstant = std::add_const_t<It>;
+	template <typename TIt> requires
+		CategoryConstraint<IsAnything<TIt>>
+	using AsMakeConstant = std::add_const_t<TIt>;
 
-	template <typename It> requires
-		CategoryConstraint<IsAnything<It>>
-	using AsUnmakeConstant = std::remove_const_t<It>;
-
-	// ----------------
-
-	template <typename It> requires
-		CategoryConstraint<IsAnything<It>>
-	using AsMakeLeftReference = std::add_lvalue_reference_t<It>;
-
-	template <typename It> requires
-		CategoryConstraint<IsAnything<It>>
-	using AsMakeRightReference = std::add_rvalue_reference_t<It>;
-
-	template <typename It> requires
-		CategoryConstraint<IsAnything<It>>
-	using AsUnmakeReference = std::remove_reference_t<It>;
+	template <typename TIt> requires
+		CategoryConstraint<IsAnything<TIt>>
+	using AsUnmakeConstant = std::remove_const_t<TIt>;
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsAnything<It>>
-	using AsPure = std::remove_cvref_t<It>;
+	template <typename TIt> requires
+		CategoryConstraint<IsAnything<TIt>>
+	using AsMakeLeftReference = std::add_lvalue_reference_t<TIt>;
+
+	template <typename TIt> requires
+		CategoryConstraint<IsAnything<TIt>>
+	using AsMakeRightReference = std::add_rvalue_reference_t<TIt>;
+
+	template <typename TIt> requires
+		CategoryConstraint<IsAnything<TIt>>
+	using AsUnmakeReference = std::remove_reference_t<TIt>;
+
+	// ----------------
+
+	template <typename TIt> requires
+		CategoryConstraint<IsAnything<TIt>>
+	using AsPure = std::remove_cvref_t<TIt>;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename It> requires
-		CategoryConstraint<IsValid<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsValid<TIt>>
 	inline constexpr auto as_left(
-		It && it
-	) -> AsUnmakeReference<It> & {
-		return static_cast<AsUnmakeReference<It> &>(it);
+		TIt && it
+	) -> AsUnmakeReference<TIt> & {
+		return static_cast<AsUnmakeReference<TIt> &>(it);
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsValid<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsValid<TIt>>
 	inline constexpr auto as_right(
-		It && it
-	) -> AsUnmakeReference<It> && {
-		return static_cast<AsUnmakeReference<It> &&>(it);
+		TIt && it
+	) -> AsUnmakeReference<TIt> && {
+		return static_cast<AsUnmakeReference<TIt> &&>(it);
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsInstance<TIt>>
 	inline constexpr auto as_variable(
-		It & it
-	) -> AsPure<It> & {
-		return const_cast<AsPure<It> &>(it);
+		TIt & it
+	) -> AsPure<TIt> & {
+		return const_cast<AsPure<TIt> &>(it);
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsInstance<TIt>>
 	inline constexpr auto as_constant(
-		It & it
-	) -> AsPure<It> const & {
-		return static_cast<AsPure<It> const &>(it);
+		TIt & it
+	) -> AsPure<TIt> const & {
+		return static_cast<AsPure<TIt> const &>(it);
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsInstance<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsInstance<TIt>>
 	inline constexpr auto as_moveable(
-		It & it
-	) -> AsPure<It> && {
-		return static_cast<AsPure<It> &&>(it);
+		TIt & it
+	) -> AsPure<TIt> && {
+		return static_cast<AsPure<TIt> &&>(it);
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsValid<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsValid<TIt>>
 	inline constexpr auto as_forward(
-		AsUnmakeReference<It> & it
-	) -> It && {
-		return static_cast<It &&>(it);
+		AsUnmakeReference<TIt> & it
+	) -> TIt && {
+		return static_cast<TIt &&>(it);
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsValid<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsValid<TIt>>
 	inline constexpr auto as_forward(
-		AsUnmakeReference<It> && it
-	) -> It && {
-		return static_cast<It &&>(it);
+		AsUnmakeReference<TIt> && it
+	) -> TIt && {
+		return static_cast<TIt &&>(it);
 	}
 
 	// ----------------
 
-	template <typename That, typename It> requires
-		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
+	template <typename TThat, typename TIt> requires
+		CategoryConstraint<IsPureInstance<TThat> && IsPureInstance<TIt>>
 	inline auto self_cast(
-		It & it
-	) -> That & {
-		return reinterpret_cast<That &>(it);
+		TIt & it
+	) -> TThat & {
+		return reinterpret_cast<TThat &>(it);
 	}
 
-	template <typename That, typename It> requires
-		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
+	template <typename TThat, typename TIt> requires
+		CategoryConstraint<IsPureInstance<TThat> && IsPureInstance<TIt>>
 	inline auto self_cast(
-		It const & it
-	) -> That const & {
-		return reinterpret_cast<That const &>(it);
+		TIt const & it
+	) -> TThat const & {
+		return reinterpret_cast<TThat const &>(it);
 	}
 
-	template <typename That, typename It> requires
-		CategoryConstraint<IsPureInstance<That> && IsPureInstance<It>>
+	template <typename TThat, typename TIt> requires
+		CategoryConstraint<IsPureInstance<TThat> && IsPureInstance<TIt>>
 	inline auto self_cast(
-		It && it
-	) -> That && {
-		return reinterpret_cast<That &&>(it);
+		TIt && it
+	) -> TThat && {
+		return reinterpret_cast<TThat &&>(it);
 	}
 
 	#pragma endregion
 
 	#pragma region miscellaneous
 
-	template <typename It, auto condition> requires
-		CategoryConstraint<IsAnything<It>>
-		&& (IsSameOf<condition, ZBoolean>)
-	using AsConstantIf = AsSwitch<condition, AsMakeConstant<It>, It>;
+	template <typename TIt, auto t_condition> requires
+		CategoryConstraint<IsAnything<TIt>>
+		&& (IsSameOf<t_condition, ZBoolean>)
+	using AsConstantIf = AsSwitch<t_condition, AsMakeConstant<TIt>, TIt>;
 
 	#pragma endregion
 

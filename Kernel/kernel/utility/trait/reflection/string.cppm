@@ -37,14 +37,14 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	#pragma region utility
 
-	template <auto size> requires
+	template <auto t_size> requires
 		CategoryConstraint<>
-		&& (IsSameOf<size, ZSize>)
+		&& (IsSameOf<t_size, ZSize>)
 	inline constexpr auto make_string(
-		ZArray<ZCharacter, size> const & source
-	) -> String<size - 1_szz> {
-		auto result = String<size - 1_szz>{};
-		for (auto index = 1_ixz; index < size; ++index) {
+		ZArray<ZCharacter, t_size> const & source
+	) -> String<t_size - 1_szz> {
+		auto result = String<t_size - 1_szz>{};
+		for (auto index = 1_ixz; index < t_size; ++index) {
 			result.data[index] = source[index];
 		}
 		return result;

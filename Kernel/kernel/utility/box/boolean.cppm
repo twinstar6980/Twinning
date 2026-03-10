@@ -82,32 +82,32 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It>
-	concept IsBooleanBox = IsTemplateInstanceOfT<It, BooleanBox>;
+	template <typename TIt>
+	concept IsBooleanBox = IsTemplateInstanceOfTt<TIt, BooleanBox>;
 
 	#pragma endregion
 
 	#pragma region operator
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsBooleanBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsBooleanBox<TIt>)
 	inline constexpr auto operator ==(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value == that.value;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsBooleanBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsBooleanBox<TIt>)
 	inline constexpr auto operator !(
-		It const & thix
-	) -> It {
-		return It{!thix.value};
+		TIt const & thix
+	) -> TIt {
+		return TIt{!thix.value};
 	}
 
 	#pragma endregion

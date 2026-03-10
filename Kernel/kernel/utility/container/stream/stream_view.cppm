@@ -35,9 +35,9 @@ export namespace Twinning::Kernel {
 
 		using ListView = TMListView<Element, mbox<Boolean>(t_mode == StreamMode::Constant::input())>;
 
-		using QualifyElement = typename ListView::QualifyElement;
+		using QualifyElement = ListView::QualifyElement;
 
-		using QualifyIterator = typename ListView::QualifyIterator;
+		using QualifyIterator = ListView::QualifyIterator;
 
 	protected:
 
@@ -391,17 +391,17 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	template <typename Element, template <typename, auto> typename ListView = ListView> requires
+	template <typename TElement, template <typename, auto> typename TListView = ListView> requires
 		AutomaticConstraint
-	using AccessStreamView = StreamView<Element, StreamMode::Constant::access(), ListView>;
+	using AccessStreamView = StreamView<TElement, StreamMode::Constant::access(), TListView>;
 
-	template <typename Element, template <typename, auto> typename ListView = ListView> requires
+	template <typename TElement, template <typename, auto> typename TListView = ListView> requires
 		AutomaticConstraint
-	using InputStreamView = StreamView<Element, StreamMode::Constant::input(), ListView>;
+	using InputStreamView = StreamView<TElement, StreamMode::Constant::input(), TListView>;
 
-	template <typename Element, template <typename, auto> typename ListView = ListView> requires
+	template <typename TElement, template <typename, auto> typename TListView = ListView> requires
 		AutomaticConstraint
-	using OutputStreamView = StreamView<Element, StreamMode::Constant::output(), ListView>;
+	using OutputStreamView = StreamView<TElement, StreamMode::Constant::output(), TListView>;
 
 	#pragma endregion
 

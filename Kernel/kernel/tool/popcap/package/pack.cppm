@@ -13,28 +13,28 @@ import twinning.kernel.tool.data.compression.deflate.compress;
 
 export namespace Twinning::Kernel::Tool::Popcap::Package {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Pack :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
 		// ----------------
 
 		inline static auto process_package(
-			OutputByteStreamView &               data,
-			typename Definition::Package const & definition,
-			Path const &                         resource_directory
+			OutputByteStreamView &      data,
+			Definition::Package const & definition,
+			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
-			data.write_constant(cbox<Structure::VersionNumber>(version.number));
+			data.write_constant(cbox<Structure::VersionNumber>(t_version.number));
 			struct {
 				OutputByteStreamView resource_information{};
 			} information_data = {};
 			{
-				auto information_structure = Structure::Information<version>{};
+				auto information_structure = Structure::Information<t_version>{};
 				information_structure.resource_information.allocate_full(definition.resource.size());
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
@@ -46,16 +46,16 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 						[&] {
 							auto size = k_none_size;
 							for (auto & element : information_structure.resource_information) {
-								size += bs_size(Structure::ResourceInformationListStateFlag<version>::next);
+								size += bs_size(Structure::ResourceInformationListStateFlag<t_version>::next);
 								size += bs_size(element);
 							}
-							size += bs_size(Structure::ResourceInformationListStateFlag<version>::done);
+							size += bs_size(Structure::ResourceInformationListStateFlag<t_version>::done);
 							return size;
 						}()
 					)
 				};
 			}
-			auto information_structure = Structure::Information<version>{};
+			auto information_structure = Structure::Information<t_version>{};
 			information_structure.resource_information.allocate_full(definition.resource.size());
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
@@ -63,11 +63,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				auto   resource_path = resource_directory / resource_definition.path;
 				resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::k_path_separator_windows)};
 				resource_information_structure.time = cbox<IntegerU64>(resource_definition.time);
-				if constexpr (check_version(version, {}, {false})) {
+				if constexpr (check_version(t_version, {}, {false})) {
 					auto resource_size = Storage::read_file_stream(resource_path, data);
 					resource_information_structure.size = cbox<IntegerU32>(resource_size);
 				}
-				if constexpr (check_version(version, {}, {true})) {
+				if constexpr (check_version(t_version, {}, {true})) {
 					auto resource_data = Storage::read_file(resource_path);
 					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_offset = data.position();
@@ -78,10 +78,10 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 			}
 			{
 				for (auto & element : information_structure.resource_information) {
-					information_data.resource_information.write(Structure::ResourceInformationListStateFlag<version>::next);
+					information_data.resource_information.write(Structure::ResourceInformationListStateFlag<t_version>::next);
 					information_data.resource_information.write(element);
 				}
-				information_data.resource_information.write(Structure::ResourceInformationListStateFlag<version>::done);
+				information_data.resource_information.write(Structure::ResourceInformationListStateFlag<t_version>::done);
 			}
 			return;
 		}
@@ -89,9 +89,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &               data_,
-			typename Definition::Package const & definition,
-			Path const &                         resource_directory
+			OutputByteStreamView &      data_,
+			Definition::Package const & definition,
+			Path const &                resource_directory
 		) -> Void {
 			M_use_zps_of(data);
 			return process_package(data, definition, resource_directory);

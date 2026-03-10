@@ -9,33 +9,27 @@ import twinning.kernel.tool.popcap.resource_stream_bundle.shared;
 
 export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Definition {
 
 		#pragma region resource
 
-		template <typename = None>
-		struct GeneralResourceAdditional_;
+		M_nested_template_declaration(GeneralResourceAdditional);
 
-		using GeneralResourceAdditional = GeneralResourceAdditional_<>;
-
-		template <typename _> requires (check_version(version, {1}, {}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {}))
 		M_record_of_map(
-			M_wrap(GeneralResourceAdditional_<_>),
+			M_nested_template_definition_name(GeneralResourceAdditional),
 			M_wrap(
 			),
 		);
 
 		// ----------------
 
-		template <typename = None>
-		struct TextureResourceAdditional_;
+		M_nested_template_declaration(TextureResourceAdditional);
 
-		using TextureResourceAdditional = TextureResourceAdditional_<>;
-
-		template <typename _> requires (check_version(version, {1}, {0, 1}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {0, 1}))
 		M_record_of_map(
-			M_wrap(TextureResourceAdditional_<_>),
+			M_nested_template_definition_name(TextureResourceAdditional),
 			M_wrap(
 				(Size2<Integer>) size,
 				(Integer) format,
@@ -43,9 +37,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4}, {1, 2}))
+		M_nested_template_definition_check(check_version(t_version, {4}, {1, 2}))
 		M_record_of_map(
-			M_wrap(TextureResourceAdditional_<_>),
+			M_nested_template_definition_name(TextureResourceAdditional),
 			M_wrap(
 				(Size2<Integer>) size,
 				(Integer) format,
@@ -54,9 +48,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {4}, {2}))
+		M_nested_template_definition_check(check_version(t_version, {4}, {2}))
 		M_record_of_map(
-			M_wrap(TextureResourceAdditional_<_>),
+			M_nested_template_definition_name(TextureResourceAdditional),
 			M_wrap(
 				(Size2<Integer>) size,
 				(Integer) format,
@@ -68,14 +62,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		template <typename = None>
-		struct Resource_;
+		M_nested_template_declaration(Resource);
 
-		using Resource = Resource_<>;
-
-		template <typename _> requires (check_version(version, {1}, {}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {}))
 		M_record_of_map(
-			M_wrap(Resource_<_>),
+			M_nested_template_definition_name(Resource),
 			M_wrap(
 				(Path) path,
 				(EnumerableVariant<ResourceType, GeneralResourceAdditional, TextureResourceAdditional>) additional,
@@ -86,22 +77,19 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		#pragma region group
 
-		template <typename = None>
-		struct SubgroupCategory_;
+		M_nested_template_declaration(SubgroupCategory);
 
-		using SubgroupCategory = SubgroupCategory_<>;
-
-		template <typename _> requires (check_version(version, {1, 3}, {}))
+		M_nested_template_definition_check(check_version(t_version, {1, 3}, {}))
 		M_record_of_map(
-			M_wrap(SubgroupCategory_<_>),
+			M_nested_template_definition_name(SubgroupCategory),
 			M_wrap(
 				(Optional<Integer>) resolution,
 			),
 		);
 
-		template <typename _> requires (check_version(version, {3}, {}))
+		M_nested_template_definition_check(check_version(t_version, {3}, {}))
 		M_record_of_map(
-			M_wrap(SubgroupCategory_<_>),
+			M_nested_template_definition_name(SubgroupCategory),
 			M_wrap(
 				(Optional<Integer>) resolution,
 				(Optional<String>) locale,
@@ -110,14 +98,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		template <typename = None>
-		struct Subgroup_;
+		M_nested_template_declaration(Subgroup);
 
-		using Subgroup = Subgroup_<>;
-
-		template <typename _> requires (check_version(version, {1}, {}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {}))
 		M_record_of_map(
-			M_wrap(Subgroup_<_>),
+			M_nested_template_definition_name(Subgroup),
 			M_wrap(
 				(String) identifier,
 				(SubgroupCategory) category,
@@ -128,14 +113,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		// ----------------
 
-		template <typename = None>
-		struct Group_;
+		M_nested_template_declaration(Group);
 
-		using Group = Group_<>;
-
-		template <typename _> requires (check_version(version, {1}, {}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {}))
 		M_record_of_map(
-			M_wrap(Group_<_>),
+			M_nested_template_definition_name(Group),
 			M_wrap(
 				(String) identifier,
 				(Boolean) composite,
@@ -147,14 +129,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		#pragma region package
 
-		template <typename = None>
-		struct Package_;
+		M_nested_template_declaration(Package);
 
-		using Package = Package_<>;
-
-		template <typename _> requires (check_version(version, {1}, {}))
+		M_nested_template_definition_check(check_version(t_version, {1}, {}))
 		M_record_of_map(
-			M_wrap(Package_<_>),
+			M_nested_template_definition_name(Package),
 			M_wrap(
 				(List<Group>) group,
 			),

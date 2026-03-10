@@ -162,7 +162,6 @@ export namespace Twinning::Shell::Bridge {
 		) :
 			value{[](auto &, auto &, auto &) -> auto {
 				throw std::runtime_error{std::format("UnimplementedException")};
-				return;
 			}} {
 			return;
 		}

@@ -11,12 +11,12 @@ import twinning.kernel.tool.common.byte_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Encode :
-		Common<version>,
+		Common<t_version>,
 		CommonByteStreamExchangeForOutput {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		) -> Void {
 			auto ignored = Integer{0_i};
 			exchange_list_size(data, value_list, &exchange_size_fixed<IntegerU32>);
-			if constexpr (check_version(version, {}, {true})) {
+			if constexpr (check_version(t_version, {}, {true})) {
 				exchange_integer_fixed<IntegerU32>(data, ignored);
 			}
 			exchange_raw_constant(data, cbox<IntegerU32>(k_emitter_data_size));
@@ -102,13 +102,13 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 				}
 			}
 			for (auto & value : value_list) {
-				if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 					exchange_string_block<IntegerU32>(data, value.image);
 				}
-				if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile()}, {})) {
 					exchange_integer_fixed<IntegerU32>(data, value.image);
 				}
-				if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
+				if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
 					exchange_string_block<IntegerU32>(data, value.image_path);
 				}
 				exchange_string_block<IntegerU32>(data, value.name);
@@ -158,8 +158,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		}
 
 		inline static auto exchange_particle(
-			OutputByteStreamView &                data,
-			typename Definition::Particle const & value
+			OutputByteStreamView &       data,
+			Definition::Particle const & value
 		) -> Void {
 			auto ignored = Integer{0_i};
 			exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
@@ -170,8 +170,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &                data,
-			typename Definition::Particle const & definition
+			OutputByteStreamView &       data,
+			Definition::Particle const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
 			exchange_particle(data, definition);
@@ -181,8 +181,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &                data_,
-			typename Definition::Particle const & definition
+			OutputByteStreamView &       data_,
+			Definition::Particle const & definition
 		) -> Void {
 			M_use_zps_of(data);
 			return process_whole(data, definition);

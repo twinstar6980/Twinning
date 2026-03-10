@@ -33,388 +33,388 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It>
-	concept IsNumberBox = IsTemplateInstanceOfT<It, NumberBox>;
+	template <typename TIt>
+	concept IsNumberBox = IsTemplateInstanceOfTt<TIt, NumberBox>;
 
-	template <typename It>
-	concept IsIntegerBox = IsTemplateInstanceOfT<It, IntegerBox>;
+	template <typename TIt>
+	concept IsIntegerBox = IsTemplateInstanceOfTt<TIt, IntegerBox>;
 
-	template <typename It>
-	concept IsFloaterBox = IsTemplateInstanceOfT<It, FloaterBox>;
+	template <typename TIt>
+	concept IsFloaterBox = IsTemplateInstanceOfTt<TIt, FloaterBox>;
 
-	template <typename It>
-	concept IsSizeBox = IsTemplateInstanceOfT<It, SizeBox>;
+	template <typename TIt>
+	concept IsSizeBox = IsTemplateInstanceOfTt<TIt, SizeBox>;
 
 	// ----------------
 
-	template <typename It>
+	template <typename TIt>
 	concept IsUnsignedIntegerBox =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
-		&& (IsBuiltinUnsignedInteger<typename It::Value>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
+		&& (IsBuiltinUnsignedInteger<typename TIt::Value>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsSignedIntegerBox =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
-		&& (IsBuiltinSignedInteger<typename It::Value>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
+		&& (IsBuiltinSignedInteger<typename TIt::Value>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsSignedFloaterBox =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsFloaterBox<It>)
-		&& (IsBuiltinSignedFloater<typename It::Value>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsFloaterBox<TIt>)
+		&& (IsBuiltinSignedFloater<typename TIt::Value>)
 		;
 
 	#pragma endregion
 
 	#pragma region operator
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator ==(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value == that.value;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator <(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value < that.value;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator >(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value > that.value;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator <=(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value <= that.value;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator >=(
-		It const & thix,
-		It const & that
+		TIt const & thix,
+		TIt const & that
 	) -> bool {
 		return thix.value >= that.value;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsSignedIntegerBox<It> || IsSignedFloaterBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsSignedIntegerBox<TIt> || IsSignedFloaterBox<TIt>)
 	inline constexpr auto operator +(
-		It const & thix
-	) -> It {
-		return It{+thix.value};
+		TIt const & thix
+	) -> TIt {
+		return TIt{+thix.value};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsSignedIntegerBox<It> || IsSignedFloaterBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsSignedIntegerBox<TIt> || IsSignedFloaterBox<TIt>)
 	inline constexpr auto operator -(
-		It const & thix
-	) -> It {
-		return It{-thix.value};
+		TIt const & thix
+	) -> TIt {
+		return TIt{-thix.value};
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator +(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value + that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value + that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator -(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value - that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value - that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator *(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value * that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value * that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator /(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value / that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value / that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator %(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value % that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value % that.value)};
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator +=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value += that.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator -=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value -= that.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator *=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value *= that.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsNumberBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
 	inline constexpr auto operator /=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value /= that.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator %=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value %= that.value;
 		return thix;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator ++(
-		It & thix
-	) -> It & {
+		TIt & thix
+	) -> TIt & {
 		++thix.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator --(
-		It & thix
-	) -> It & {
+		TIt & thix
+	) -> TIt & {
 		--thix.value;
 		return thix;
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator ++(
-		It & thix,
+		TIt & thix,
 		int
-	) -> It {
-		return It{thix.value++};
+	) -> TIt {
+		return TIt{thix.value++};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator --(
-		It & thix,
+		TIt & thix,
 		int
-	) -> It {
-		return It{thix.value--};
+	) -> TIt {
+		return TIt{thix.value--};
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator ~(
-		It const & thix
-	) -> It {
-		return It{static_cast<typename It::Value>(~thix.value)};
+		TIt const & thix
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(~thix.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator |(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value | that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value | that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator &(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value & that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value & that.value)};
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator ^(
-		It const & thix,
-		It const & that
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value ^ that.value)};
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value ^ that.value)};
 	}
 
-	template <typename It, typename Size> requires
-		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
-		&& (IsIntegerBox<It>)
-		&& (IsSizeBox<Size>)
+	template <typename TIt, typename TSize> requires
+		CategoryConstraint<IsPureInstance<TIt> && IsPureInstance<TSize>>
+		&& (IsIntegerBox<TIt>)
+		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator <<(
-		It const &   thix,
-		Size const & size
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value << size.value)};
+		TIt const &   thix,
+		TSize const & size
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value << size.value)};
 	}
 
-	template <typename It, typename Size> requires
-		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
-		&& (IsIntegerBox<It>)
-		&& (IsSizeBox<Size>)
+	template <typename TIt, typename TSize> requires
+		CategoryConstraint<IsPureInstance<TIt> && IsPureInstance<TSize>>
+		&& (IsIntegerBox<TIt>)
+		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator >>(
-		It const &   thix,
-		Size const & size
-	) -> It {
-		return It{static_cast<typename It::Value>(thix.value >> size.value)};
+		TIt const &   thix,
+		TSize const & size
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value >> size.value)};
 	}
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator |=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value |= that.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator &=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value &= that.value;
 		return thix;
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline constexpr auto operator ^=(
-		It &       thix,
-		It const & that
-	) -> It & {
+		TIt &       thix,
+		TIt const & that
+	) -> TIt & {
 		thix.value ^= that.value;
 		return thix;
 	}
 
-	template <typename It, typename Size> requires
-		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
-		&& (IsIntegerBox<It>)
-		&& (IsSizeBox<Size>)
+	template <typename TIt, typename TSize> requires
+		CategoryConstraint<IsPureInstance<TIt> && IsPureInstance<TSize>>
+		&& (IsIntegerBox<TIt>)
+		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator <<=(
-		It &         thix,
-		Size const & size
-	) -> It & {
+		TIt &         thix,
+		TSize const & size
+	) -> TIt & {
 		thix.value <<= size.value;
 		return thix;
 	}
 
-	template <typename It, typename Size> requires
-		CategoryConstraint<IsPureInstance<It> && IsPureInstance<Size>>
-		&& (IsIntegerBox<It>)
-		&& (IsSizeBox<Size>)
+	template <typename TIt, typename TSize> requires
+		CategoryConstraint<IsPureInstance<TIt> && IsPureInstance<TSize>>
+		&& (IsIntegerBox<TIt>)
+		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator >>=(
-		It &         thix,
-		Size const & size
-	) -> It & {
+		TIt &         thix,
+		TSize const & size
+	) -> TIt & {
 		thix.value >>= size.value;
 		return thix;
 	}
@@ -591,13 +591,13 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-	inline constexpr auto k_type_size = Size{mbox<Size>(sizeof(It))};
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+	inline constexpr auto k_type_size = Size{mbox<Size>(sizeof(TIt))};
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-	inline constexpr auto k_type_bit_count = Size{k_type_size<It> * 8_sz};
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+	inline constexpr auto k_type_bit_count = Size{k_type_size<TIt> * 8_sz};
 
 	#pragma endregion
 

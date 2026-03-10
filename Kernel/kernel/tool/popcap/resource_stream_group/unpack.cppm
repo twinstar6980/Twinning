@@ -14,30 +14,30 @@ import twinning.kernel.tool.data.compression.deflate.uncompress;
 
 export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Unpack :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
 		// ----------------
 
 		inline static auto process_package(
-			InputByteStreamView &          data,
-			typename Definition::Package & definition,
-			Optional<Path> const &         resource_directory
+			InputByteStreamView &  data,
+			Definition::Package &  definition,
+			Optional<Path> const & resource_directory
 		) -> Void {
 			data.read_constant(Structure::k_magic_marker);
-			data.read_constant(cbox<Structure::VersionNumber>(version.number));
-			auto information_structure = Structure::Information<version>{};
+			data.read_constant(cbox<Structure::VersionNumber>(t_version.number));
+			auto information_structure = Structure::Information<t_version>{};
 			{
 				data.read(information_structure.header);
-				if constexpr (check_version(version, {1, 3})) {
+				if constexpr (check_version(t_version, {1, 3})) {
 					assert_test(information_structure.header.unknown_1 == 1_iu32);
 				}
-				if constexpr (check_version(version, {3})) {
+				if constexpr (check_version(t_version, {3})) {
 					assert_test(information_structure.header.unknown_1 == 0_iu32);
 				}
 				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
@@ -129,9 +129,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &          data_,
-			typename Definition::Package & definition,
-			Optional<Path> const &         resource_directory
+			InputByteStreamView &  data_,
+			Definition::Package &  definition,
+			Optional<Path> const & resource_directory
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

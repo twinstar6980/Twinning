@@ -40,54 +40,54 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion bit
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIntegerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIntegerBox<TIt>)
 	inline auto clip_bit(
-		It const &   it,
+		TIt const &  it,
 		Size const & begin,
 		Size const & size
-	) -> It {
-		return (it >> begin) & ~(~mbox<It>(0) << size);
+	) -> TIt {
+		return (it >> begin) & ~(~mbox<TIt>(0) << size);
 	}
 
-	template <typename It> requires
-		CategoryConstraint<IsBaseBox<It>>
+	template <typename TIt> requires
+		CategoryConstraint<IsBaseBox<TIt>>
 	inline auto reverse_endian(
-		It const & it
-	) -> It {
-		if constexpr (k_type_size<It> == 1_sz) {
+		TIt const & it
+	) -> TIt {
+		if constexpr (k_type_size<TIt> == 1_sz) {
 			return it;
 		}
 		else {
 			auto forward = cast_pointer<ZByte>(make_pointer_of(it));
-			auto backward = StaticArray<ZByte, k_type_size<It>>{};
-			for (auto & index : SizeRange{k_type_size<It>}) {
-				backward[index] = forward[k_type_size<It> - 1_sz - index];
+			auto backward = StaticArray<ZByte, k_type_size<TIt>>{};
+			for (auto & index : SizeRange{k_type_size<TIt>}) {
+				backward[index] = forward[k_type_size<TIt> - 1_sz - index];
 			}
-			return cast_pointer<It>(backward.begin()).dereference();
+			return cast_pointer<TIt>(backward.begin()).dereference();
 		}
 	}
 
 	#pragma region view cast
 
-	template <typename SourceElement, auto constant> requires
-		CategoryConstraint<IsPureInstance<SourceElement>>
-		&& (IsSameOf<constant, Boolean>)
+	template <typename TSourceElement, auto t_constant> requires
+		CategoryConstraint<IsPureInstance<TSourceElement>>
+		&& (IsSameOf<t_constant, Boolean>)
 	inline auto to_byte_view(
-		ListView<SourceElement, constant> const & source
-	) -> ByteListView<constant> {
-		return ByteListView<constant>{cast_pointer<Byte>(source.begin()), source.size() * k_type_size<AsPure<SourceElement>>};
+		ListView<TSourceElement, t_constant> const & source
+	) -> ByteListView<t_constant> {
+		return ByteListView<t_constant>{cast_pointer<Byte>(source.begin()), source.size() * k_type_size<AsPure<TSourceElement>>};
 	}
 
-	template <typename DestinationElement, template <typename, auto> typename DestinationView = ListView, auto constant> requires
-		CategoryConstraint<IsPureInstance<DestinationElement>>
-		&& (IsSameOf<constant, Boolean>)
+	template <typename TDestinationElement, template <typename, auto> typename TDestinationView = ListView, auto t_constant> requires
+		CategoryConstraint<IsPureInstance<TDestinationElement>>
+		&& (IsSameOf<t_constant, Boolean>)
 	inline auto from_byte_view(
-		ByteListView<constant> const & source
-	) -> DestinationView<DestinationElement, constant> {
-		assert_test(is_padded_size(source.size(), k_type_size<DestinationElement>));
-		return DestinationView<DestinationElement, constant>{cast_pointer<DestinationElement>(source.begin()), source.size() / k_type_size<DestinationElement>};
+		ByteListView<t_constant> const & source
+	) -> TDestinationView<TDestinationElement, t_constant> {
+		assert_test(is_padded_size(source.size(), k_type_size<TDestinationElement>));
+		return TDestinationView<TDestinationElement, t_constant>{cast_pointer<TDestinationElement>(source.begin()), source.size() / k_type_size<TDestinationElement>};
 	}
 
 	#pragma endregion

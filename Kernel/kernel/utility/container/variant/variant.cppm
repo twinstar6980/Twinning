@@ -50,13 +50,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsValid<ValueObject>>
-			&& (IsSame<AsPure<ValueObject>, TValue ...>)
+		template <typename TValueObject> requires
+			CategoryConstraint<IsValid<TValueObject>>
+			&& (IsSame<AsPure<TValueObject>, TValue ...>)
 		explicit constexpr Variant(
-			ValueObject && value
+			TValueObject && value
 		) :
-			m_value{as_forward<ValueObject>(value)} {
+			m_value{as_forward<TValueObject>(value)} {
 			return;
 		}
 
@@ -76,45 +76,45 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsPureInstance<ValueObject>>
-			&& (IsSame<ValueObject, TValue ...>)
+		template <typename TValueObject> requires
+			CategoryConstraint<IsPureInstance<TValueObject>>
+			&& (IsSame<TValueObject, TValue ...>)
 		constexpr auto is(
 		) const -> Boolean {
-			return std::holds_alternative<ValueObject>(thiz.m_value);
+			return std::holds_alternative<TValueObject>(thiz.m_value);
 		}
 
 		// ----------------
 
-		template <typename ValueObject, typename ... Argument> requires
-			CategoryConstraint<IsPureInstance<ValueObject> && IsValid<Argument ...>>
-			&& (IsSame<ValueObject, TValue ...>)
-			&& (IsConstructible<ValueObject, Argument && ...>)
+		template <typename TValueObject, typename ... TArgument> requires
+			CategoryConstraint<IsPureInstance<TValueObject> && IsValid<TArgument ...>>
+			&& (IsSame<TValueObject, TValue ...>)
+			&& (IsConstructible<TValueObject, TArgument && ...>)
 		constexpr auto set(
-			Argument && ... argument
-		) -> ValueObject & {
-			thiz.m_value.template emplace<ValueObject>(as_forward<Argument>(argument) ...);
-			return std::get<ValueObject>(thiz.m_value);
+			TArgument && ... argument
+		) -> TValueObject & {
+			thiz.m_value.template emplace<TValueObject>(as_forward<TArgument>(argument) ...);
+			return std::get<TValueObject>(thiz.m_value);
 		}
 
 		// ----------------
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsPureInstance<ValueObject>>
-			&& (IsSame<ValueObject, TValue ...>)
+		template <typename TValueObject> requires
+			CategoryConstraint<IsPureInstance<TValueObject>>
+			&& (IsSame<TValueObject, TValue ...>)
 		constexpr auto get(
-		) -> ValueObject & {
-			assert_test(thiz.template is<ValueObject>());
-			return std::get<ValueObject>(thiz.m_value);
+		) -> TValueObject & {
+			assert_test(thiz.template is<TValueObject>());
+			return std::get<TValueObject>(thiz.m_value);
 		}
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsPureInstance<ValueObject>>
-			&& (IsSame<ValueObject, TValue ...>)
+		template <typename TValueObject> requires
+			CategoryConstraint<IsPureInstance<TValueObject>>
+			&& (IsSame<TValueObject, TValue ...>)
 		constexpr auto get(
-		) const -> ValueObject const & {
-			assert_test(thiz.template is<ValueObject>());
-			return std::get<ValueObject>(thiz.m_value);
+		) const -> TValueObject const & {
+			assert_test(thiz.template is<TValueObject>());
+			return std::get<TValueObject>(thiz.m_value);
 		}
 
 		#pragma endregion
@@ -130,46 +130,46 @@ export namespace Twinning::Kernel {
 
 		#pragma region value of index
 
-		template <auto index> requires
+		template <auto t_index> requires
 			CategoryConstraint<>
-			&& (IsSameOf<index, Size>)
-			&& (index.value < sizeof...(TValue))
+			&& (IsSameOf<t_index, Size>)
+			&& (t_index.value < sizeof...(TValue))
 		constexpr auto is_of_index(
 		) const -> Boolean {
-			return thiz.template is<AsSelect<index.value, TValue ...>>();
+			return thiz.template is<AsSelect<t_index.value, TValue ...>>();
 		}
 
 		// ----------------
 
-		template <auto index, typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsSameOf<index, Size>)
-			&& (index.value < sizeof...(TValue))
-			&& (IsConstructible<AsSelect<index.value, TValue ...>, Argument && ...>)
+		template <auto t_index, typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsSameOf<t_index, Size>)
+			&& (t_index.value < sizeof...(TValue))
+			&& (IsConstructible<AsSelect<t_index.value, TValue ...>, TArgument && ...>)
 		constexpr auto set_of_index(
-			Argument && ... argument
-		) -> AsSelect<index.value, TValue ...> & {
-			return thiz.template set<AsSelect<index.value, TValue ...>>(as_forward<Argument>(argument) ...);
+			TArgument && ... argument
+		) -> AsSelect<t_index.value, TValue ...> & {
+			return thiz.template set<AsSelect<t_index.value, TValue ...>>(as_forward<TArgument>(argument) ...);
 		}
 
 		// ----------------
 
-		template <auto index> requires
+		template <auto t_index> requires
 			CategoryConstraint<>
-			&& (IsSameOf<index, Size>)
-			&& (index.value < sizeof...(TValue))
+			&& (IsSameOf<t_index, Size>)
+			&& (t_index.value < sizeof...(TValue))
 		constexpr auto get_of_index(
-		) -> AsSelect<index.value, TValue ...> & {
-			return thiz.template get<AsSelect<index.value, TValue ...>>();
+		) -> AsSelect<t_index.value, TValue ...> & {
+			return thiz.template get<AsSelect<t_index.value, TValue ...>>();
 		}
 
-		template <auto index> requires
+		template <auto t_index> requires
 			CategoryConstraint<>
-			&& (IsSameOf<index, Size>)
-			&& (index.value < sizeof...(TValue))
+			&& (IsSameOf<t_index, Size>)
+			&& (t_index.value < sizeof...(TValue))
 		constexpr auto get_of_index(
-		) const -> AsSelect<index.value, TValue ...> const & {
-			return thiz.template get<AsSelect<index.value, TValue ...>>();
+		) const -> AsSelect<t_index.value, TValue ...> const & {
+			return thiz.template get<AsSelect<t_index.value, TValue ...>>();
 		}
 
 		#pragma endregion
@@ -191,22 +191,22 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename ActiveValue, typename ... Value, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<ActiveValue> && IsPureInstance<Value ...> && IsValid<Argument ...>>
+	template <typename TActiveValue, typename ... TValue, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TActiveValue> && IsPureInstance<TValue ...> && IsValid<TArgument ...>>
 	inline constexpr auto make_variant(
-		Argument && ... argument
-	) -> Variant<Value ...> {
-		auto result = Variant<Value ...>{};
-		result.template set<ActiveValue>(as_forward<Argument>(argument) ...);
+		TArgument && ... argument
+	) -> Variant<TValue ...> {
+		auto result = Variant<TValue ...>{};
+		result.template set<TActiveValue>(as_forward<TArgument>(argument) ...);
 		return result;
 	}
 
-	template <typename ActiveValue, typename ... Value> requires
-		CategoryConstraint<IsValid<ActiveValue> && IsPureInstance<Value ...>>
+	template <typename TActiveValue, typename ... TValue> requires
+		CategoryConstraint<IsValid<TActiveValue> && IsPureInstance<TValue ...>>
 	inline constexpr auto make_variant_of(
-		ActiveValue && value
-	) -> Variant<AsPure<Value> ...> {
-		return Variant<AsPure<Value> ...>{as_forward<ActiveValue>(value)};
+		TActiveValue && value
+	) -> Variant<AsPure<TValue> ...> {
+		return Variant<AsPure<TValue> ...>{as_forward<TActiveValue>(value)};
 	}
 
 	#pragma endregion

@@ -10,17 +10,17 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region concept
 
-	template <typename It>
+	template <typename TIt>
 	concept IsIterator =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsValid<decltype(*declare<It>())>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsValid<decltype(*declare<TIt>())>)
 		;
 
-	template <typename It>
+	template <typename TIt>
 	concept IsRange =
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsIterator<decltype(declare<It>().begin())>)
-		&& (IsIterator<decltype(declare<It>().end())>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsIterator<decltype(declare<TIt>().begin())>)
+		&& (IsIterator<decltype(declare<TIt>().end())>)
 		;
 
 	#pragma endregion

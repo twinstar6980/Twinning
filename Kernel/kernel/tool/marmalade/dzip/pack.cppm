@@ -17,20 +17,20 @@ import twinning.kernel.tool.data.compression.lzma.compress;
 
 export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Pack :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
 		// ----------------
 
 		inline static auto process_package(
-			OutputByteStreamView &               data,
-			typename Definition::Package const & definition,
-			Path const &                         resource_directory
+			OutputByteStreamView &      data,
+			Definition::Package const & definition,
+			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
 			struct {
@@ -43,7 +43,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				OutputByteStreamView archive_resource_information{};
 			} information_data = {};
 			{
-				auto information_structure = Structure::Information<version>{};
+				auto information_structure = Structure::Information<t_version>{};
 				information_structure.resource_file.allocate(definition.resource.size());
 				information_structure.resource_directory.allocate(definition.resource.size() + 1_sz);
 				information_structure.resource_information.allocate_full(definition.resource.size());
@@ -107,8 +107,8 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					data.forward_view(bs_size(information_structure.archive_resource_information))
 				};
 			}
-			auto information_structure = Structure::Information<version>{};
-			information_structure.archive_setting.version = cbox<Structure::VersionNumber>(version.number);
+			auto information_structure = Structure::Information<t_version>{};
+			information_structure.archive_setting.version = cbox<Structure::VersionNumber>(t_version.number);
 			information_structure.resource_file.allocate(definition.resource.size());
 			information_structure.resource_directory.allocate(definition.resource.size() + 1_sz);
 			information_structure.resource_information.allocate_full(definition.resource.size());
@@ -134,22 +134,22 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					resource_information_structure.chunk_index[chunk_index] = cbox<IntegerU16>(global_chunk_index);
 					auto & chunk_definition = resource_definition.chunk[chunk_index];
 					auto & chunk_information_structure = information_structure.chunk_information.append();
-					auto   chunk_flag = BitSet<Structure::ChunkFlag<version>::k_count>{};
+					auto   chunk_flag = BitSet<Structure::ChunkFlag<t_version>::k_count>{};
 					switch (chunk_definition.flag.hash().value) {
 						case "zlib"_shz: {
-							chunk_flag.set(Structure::ChunkFlag<version>::zlib);
+							chunk_flag.set(Structure::ChunkFlag<t_version>::zlib);
 							break;
 						}
 						case "zerod_out"_shz: {
-							chunk_flag.set(Structure::ChunkFlag<version>::zerod_out);
+							chunk_flag.set(Structure::ChunkFlag<t_version>::zerod_out);
 							break;
 						}
 						case "copy_coded"_shz: {
-							chunk_flag.set(Structure::ChunkFlag<version>::copy_coded);
+							chunk_flag.set(Structure::ChunkFlag<t_version>::copy_coded);
 							break;
 						}
 						case "lzma"_shz: {
-							chunk_flag.set(Structure::ChunkFlag<version>::lzma);
+							chunk_flag.set(Structure::ChunkFlag<t_version>::lzma);
 							break;
 						}
 						default: {
@@ -160,51 +160,51 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					auto chunk_size_uncompressed = Size{};
 					auto chunk_size_compressed = Size{};
 					chunk_information_structure.offset = cbox<IntegerU32>(data.position());
-					if (chunk_flag.get(Structure::ChunkFlag<version>::combuf)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::combuf)) {
 						throw UnimplementedException{};
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::unused_2)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::unused_2)) {
 						throw UnimplementedException{};
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::dzip)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::dzip)) {
 						throw UnimplementedException{};
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::zlib)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zlib)) {
 						auto chunk_data = Storage::read_file(resource_path);
 						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
 						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::bzip2)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {
 						auto chunk_data = Storage::read_file(resource_path);
 						Data::Compression::Bzip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 0_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::mp3)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::mp3)) {
 						throw UnimplementedException{};
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::jpeg)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::jpeg)) {
 						throw UnimplementedException{};
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::zerod_out)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zerod_out)) {
 						throw UnimplementedException{};
 						// TODO
 						// chunk_size_uncompressed = ;
 						// chunk_size_compressed = k_none_size;
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::copy_coded)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::copy_coded)) {
 						chunk_size_uncompressed = Storage::read_file_stream(resource_path, data);
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::lzma)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::lzma)) {
 						auto chunk_data = Storage::read_file(resource_path);
 						Data::Compression::Lzma::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
-					if (chunk_flag.get(Structure::ChunkFlag<version>::random_access)) {
+					if (chunk_flag.get(Structure::ChunkFlag<t_version>::random_access)) {
 						throw UnimplementedException{};
 					}
 					chunk_information_structure.size_compressed = cbox<IntegerU32>(chunk_size_compressed);
@@ -239,9 +239,9 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &               data_,
-			typename Definition::Package const & definition,
-			Path const &                         resource_directory
+			OutputByteStreamView &      data_,
+			Definition::Package const & definition,
+			Path const &                resource_directory
 		) -> Void {
 			M_use_zps_of(data);
 			return process_package(data, definition, resource_directory);

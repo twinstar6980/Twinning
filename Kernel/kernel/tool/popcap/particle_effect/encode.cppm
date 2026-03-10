@@ -11,12 +11,12 @@ import twinning.kernel.tool.common.byte_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Encode :
-		Common<version>,
+		Common<t_version>,
 		CommonByteStreamExchangeForOutput {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
@@ -36,13 +36,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			return;
 		}
 
-		template <typename Element, typename ElementParser> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<ElementParser>>
-			&& (IsGenericCallable<ElementParser>)
+		template <typename TElement, typename TElementParser> requires
+			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementParser>>
+			&& (IsGenericCallable<TElementParser>)
 		inline static auto exchange_list(
 			OutputByteStreamView & data,
-			List<Element> const &  value,
-			ElementParser const &  element_parser,
+			List<TElement> const & value,
+			TElementParser const & element_parser,
 			Size const &           size,
 			Size const &           actual_size
 		) -> Void {
@@ -52,26 +52,26 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			return;
 		}
 
-		template <typename Element, typename ElementParser> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<ElementParser>>
-			&& (IsGenericCallable<ElementParser>)
+		template <typename TElement, typename TElementParser> requires
+			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementParser>>
+			&& (IsGenericCallable<TElementParser>)
 		inline static auto exchange_list(
 			OutputByteStreamView & data,
-			List<Element> const &  value,
-			ElementParser const &  element_parser,
+			List<TElement> const & value,
+			TElementParser const & element_parser,
 			Size const &           size
 		) -> Void {
 			exchange_list(data, value, element_parser, size, size);
 			return;
 		}
 
-		template <typename Element, typename ElementParser> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<ElementParser>>
-			&& (IsGenericCallable<ElementParser>)
+		template <typename TElement, typename TElementParser> requires
+			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementParser>>
+			&& (IsGenericCallable<TElementParser>)
 		inline static auto exchange_list(
 			OutputByteStreamView & data,
-			List<Element> const &  value,
-			ElementParser const &  element_parser
+			List<TElement> const & value,
+			TElementParser const & element_parser
 		) -> Void {
 			auto size = value.size();
 			exchange_size_fixed<IntegerU16>(data, size);
@@ -82,8 +82,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process_value_1(
-			OutputByteStreamView &              data,
-			typename Definition::Value1 const & value
+			OutputByteStreamView &     data,
+			Definition::Value1 const & value
 		) -> Void {
 			auto count = value.point.size();
 			auto flag = BitSet<5_sz>{};
@@ -155,8 +155,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_value_2(
-			OutputByteStreamView &              data,
-			typename Definition::Value2 const & value
+			OutputByteStreamView &     data,
+			Definition::Value2 const & value
 		) -> Void {
 			auto count = value.point.size();
 			exchange_size_fixed<IntegerU16>(data, count);
@@ -183,8 +183,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_value_2_simple(
-			OutputByteStreamView &              data,
-			typename Definition::Value2 const & value
+			OutputByteStreamView &     data,
+			Definition::Value2 const & value
 		) -> Void {
 			exchange_floater_fixed<FloaterS32>(data, value.unknown_1);
 			exchange_floater_fixed<FloaterS32>(data, value.unknown_2);
@@ -203,8 +203,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process_texture(
-			OutputByteStreamView &               data,
-			typename Definition::Texture const & value
+			OutputByteStreamView &      data,
+			Definition::Texture const & value
 		) -> Void {
 			exchange_string(data, value.name);
 			exchange_integer_fixed<IntegerS16>(data, value.cell);
@@ -215,8 +215,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_emitter(
-			OutputByteStreamView &               data,
-			typename Definition::Emitter const & value
+			OutputByteStreamView &      data,
+			Definition::Emitter const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerS32>(data, value.unknown_1);
 			exchange_string(data, value.name);
@@ -315,8 +315,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_layer(
-			OutputByteStreamView &             data,
-			typename Definition::Layer const & value
+			OutputByteStreamView &    data,
+			Definition::Layer const & value
 		) -> Void {
 			exchange_string(data, value.name);
 			exchange_list(
@@ -433,8 +433,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_effect(
-			OutputByteStreamView &              data,
-			typename Definition::Effect const & value
+			OutputByteStreamView &     data,
+			Definition::Effect const & value
 		) -> Void {
 			exchange_string(data, value.note);
 			exchange_list(data, value.texture, &process_texture);
@@ -469,11 +469,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &              data,
-			typename Definition::Effect const & definition
+			OutputByteStreamView &     data,
+			Definition::Effect const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
-			data.write_constant(cbox<VersionNumber>(version.number));
+			data.write_constant(cbox<VersionNumber>(t_version.number));
 			process_effect(data, definition);
 			return;
 		}
@@ -481,8 +481,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &              data_,
-			typename Definition::Effect const & definition
+			OutputByteStreamView &     data_,
+			Definition::Effect const & definition
 		) -> Void {
 			M_use_zps_of(data);
 			return process_whole(data, definition);

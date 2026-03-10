@@ -142,28 +142,28 @@ export namespace Twinning::Kernel::Xml {
 
 		// ----------------
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_element(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Element & {
-			return thiz.set<Element>(as_forward<Argument>(argument) ...);
+			return thiz.set<Element>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_text(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Text & {
-			return thiz.set<Text>(as_forward<Argument>(argument) ...);
+			return thiz.set<Text>(as_forward<TArgument>(argument) ...);
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
 		auto set_comment(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Comment & {
-			return thiz.set<Comment>(as_forward<Argument>(argument) ...);
+			return thiz.set<Comment>(as_forward<TArgument>(argument) ...);
 		}
 
 		// ----------------

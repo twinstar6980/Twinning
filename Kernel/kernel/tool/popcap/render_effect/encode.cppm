@@ -11,12 +11,12 @@ import twinning.kernel.tool.common.byte_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Encode :
-		Common<version>,
+		Common<t_version>,
 		CommonByteStreamExchangeForOutput {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
@@ -29,8 +29,8 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		// ----------------
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block1 const & value
+			OutputByteStreamView &     data,
+			Definition::Block1 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
@@ -42,12 +42,12 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block2 const & value
+			OutputByteStreamView &     data,
+			Definition::Block2 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
-			if constexpr (check_version(version, {}, {1, 2})) {
+			if constexpr (check_version(t_version, {}, {1, 2})) {
 				exchange_integer_fixed<IntegerU32>(data, value.unknown_3);
 			}
 			return;
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		inline static auto exchange_block(
 			OutputByteStreamView &                             data,
-			typename Definition::Block3 const &                value,
+			Definition::Block3 const &                         value,
 			VariableOptionalView<OutputByteStreamView> const & string_chunk_data
 		) -> Void {
 			auto string_offset = k_begin_index;
@@ -71,8 +71,8 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block4 const & value
+			OutputByteStreamView &     data,
+			Definition::Block4 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
@@ -83,8 +83,8 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block5 const & value
+			OutputByteStreamView &     data,
+			Definition::Block5 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
@@ -97,8 +97,8 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block6 const & value
+			OutputByteStreamView &     data,
+			Definition::Block6 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
@@ -109,10 +109,10 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block7 const & value
+			OutputByteStreamView &     data,
+			Definition::Block7 const & value
 		) -> Void {
-			if constexpr (check_version(version, {}, {3})) {
+			if constexpr (check_version(t_version, {}, {3})) {
 				exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 				exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
 			}
@@ -120,12 +120,12 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &              data,
-			typename Definition::Block8 const & value
+			OutputByteStreamView &     data,
+			Definition::Block8 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
-			if constexpr (check_version(version, {}, {3})) {
+			if constexpr (check_version(t_version, {}, {3})) {
 				exchange_integer_fixed<IntegerU32>(data, value.unknown_4);
 				exchange_integer_fixed<IntegerU32>(data, value.unknown_5);
 			}
@@ -135,76 +135,76 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 		// ----------------
 
-		template <typename Block, typename ... ExtraArgument> requires
-			CategoryConstraint<IsPureInstance<Block> && IsValid<ExtraArgument ...>>
+		template <typename TBlock, typename ... TExtraArgument> requires
+			CategoryConstraint<IsPureInstance<TBlock> && IsValid<TExtraArgument ...>>
 		inline static auto exchange_section(
 			OutputByteStreamView & section_information_data,
 			OutputByteStreamView & section_data,
-			List<Block> const &    section_value,
+			List<TBlock> const &   section_value,
 			Size const &           section_index,
 			Size const &           block_size_constant,
-			ExtraArgument && ...   extra_argument
+			TExtraArgument && ...  extra_argument
 		) -> Void {
 			section_information_data.set_position(bs_static_size<List<IntegerU32>>(3_sz) * section_index);
 			exchange_size_fixed<IntegerU32>(section_information_data, section_value.size());
 			exchange_size_fixed<IntegerU32>(section_information_data, section_data.position());
 			exchange_size_fixed<IntegerU32>(section_information_data, block_size_constant);
 			for (auto & value : section_value) {
-				exchange_block(section_data, value, as_forward<ExtraArgument>(extra_argument) ...);
+				exchange_block(section_data, value, as_forward<TExtraArgument>(extra_argument) ...);
 			}
 			return;
 		}
 
 		inline static auto exchange_effect(
-			OutputByteStreamView &              data,
-			typename Definition::Effect const & value
+			OutputByteStreamView &     data,
+			Definition::Effect const & value
 		) -> Void {
 			auto section_count = k_none_size;
-			if constexpr (check_version(version, {}, {1, 3})) {
+			if constexpr (check_version(t_version, {}, {1, 3})) {
 				section_count = 7_sz;
 			}
-			if constexpr (check_version(version, {}, {3})) {
+			if constexpr (check_version(t_version, {}, {3})) {
 				section_count = 8_sz;
 			}
 			auto section_information_data = OutputByteStreamView{data.forward_view(bs_static_size<List<IntegerU32>>(3_sz) * section_count)};
 			auto string_chunk_offset_data = OutputByteStreamView{data.forward_view(bs_static_size<IntegerU32>())};
 			auto section_list_data = OutputByteStreamView{data.view(), data.position()};
-			if constexpr (check_version(version, {}, {1})) {
+			if constexpr (check_version(t_version, {}, {1})) {
 				exchange_section(section_information_data, section_list_data, value.block_1, 1_ix, bs_static_size<List<IntegerU32>>(6_sz));
 			}
-			if constexpr (check_version(version, {}, {1})) {
+			if constexpr (check_version(t_version, {}, {1})) {
 				exchange_section(section_information_data, section_list_data, value.block_5, 5_ix, bs_static_size<List<IntegerU32>>(7_sz));
 			}
-			if constexpr (check_version(version, {}, {1})) {
+			if constexpr (check_version(t_version, {}, {1})) {
 				exchange_section(section_information_data, section_list_data, value.block_6, 6_ix, bs_static_size<List<IntegerU32>>(5_sz));
 			}
-			if constexpr (check_version(version, {}, {1, 2})) {
+			if constexpr (check_version(t_version, {}, {1, 2})) {
 				exchange_section(section_information_data, section_list_data, value.block_2, 2_ix, bs_static_size<List<IntegerU32>>(3_sz));
 			}
-			if constexpr (check_version(version, {}, {2})) {
+			if constexpr (check_version(t_version, {}, {2})) {
 				exchange_section(section_information_data, section_list_data, value.block_2, 2_ix, bs_static_size<List<IntegerU32>>(2_sz));
 			}
 			auto section_information_offset_3 = section_information_data.position();
 			auto section_list_offset_3 = section_list_data.position();
-			if constexpr (check_version(version, {}, {1})) {
+			if constexpr (check_version(t_version, {}, {1})) {
 				exchange_section(section_information_data, section_list_data, value.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VariableOptionalView<OutputByteStreamView>{});
 			}
-			if constexpr (check_version(version, {}, {1})) {
+			if constexpr (check_version(t_version, {}, {1})) {
 				exchange_section(section_information_data, section_list_data, value.block_4, 4_ix, bs_static_size<List<IntegerU32>>(5_sz));
 			}
-			if constexpr (check_version(version, {}, {3})) {
+			if constexpr (check_version(t_version, {}, {3})) {
 				exchange_section(section_information_data, section_list_data, value.block_7, 7_ix, bs_static_size<List<IntegerU32>>(2_sz));
 			}
-			if constexpr (check_version(version, {}, {1, 3})) {
+			if constexpr (check_version(t_version, {}, {1, 3})) {
 				exchange_section(section_information_data, section_list_data, value.block_8, 7_ix, bs_static_size<List<IntegerU32>>(3_sz));
 			}
-			if constexpr (check_version(version, {}, {3})) {
+			if constexpr (check_version(t_version, {}, {3})) {
 				exchange_section(section_information_data, section_list_data, value.block_8, 8_ix, bs_static_size<List<IntegerU32>>(5_sz));
 			}
 			data.set_position(section_list_data.position());
 			exchange_size_fixed<IntegerU32>(string_chunk_offset_data, data.position());
 			auto string_chunk_data = OutputByteStreamView{data.reserve_view()};
-			if constexpr (check_version(version, {}, {1})) {
+			if constexpr (check_version(t_version, {}, {1})) {
 				section_information_data.set_position(section_information_offset_3);
 				section_list_data.set_position(section_list_offset_3);
 				exchange_section(section_information_data, section_list_data, value.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VariableOptionalView<OutputByteStreamView>{string_chunk_data});
@@ -216,11 +216,11 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &              data,
-			typename Definition::Effect const & definition
+			OutputByteStreamView &     data,
+			Definition::Effect const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
-			data.write_constant(cbox<VersionNumber>(version.number));
+			data.write_constant(cbox<VersionNumber>(t_version.number));
 			exchange_effect(data, definition);
 			return;
 		}
@@ -228,8 +228,8 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &              data_,
-			typename Definition::Effect const & definition
+			OutputByteStreamView &     data_,
+			Definition::Effect const & definition
 		) -> Void {
 			M_use_zps_of(data);
 			return process_whole(data, definition);

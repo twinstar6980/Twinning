@@ -7,7 +7,7 @@ module;
 #include <winrt/windows.applicationmodel.h>
 #include "./common.hpp"
 
-#define ForwarderExplorerCommandClassFactory_UUID "BE4A1760-1939-4240-BB82-7199B184B702"
+#define M_forwarder_explorer_command_class_factory_uuid "BE4A1760-1939-4240-BB82-7199B184B702"
 
 export module twinning.assistant_plus.forwarder.forwarder_explorer_command;
 
@@ -33,6 +33,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 		#pragma endregion
 
 		#pragma region implement IExplorerCommand
+
+		// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
 
 		virtual IFACEMETHODIMP GetTitle(
 			IShellItemArray * psiItemArray,
@@ -105,7 +107,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 						throw std::runtime_error{"selection item is not file-system object"};
 					}
 					resource.emplace_back(thiz.get_file_long_path(std::wstring{item_name}));
-					std::replace(resource.back().begin(), resource.back().end(), L'\\', L'/');
+					std::ranges::replace(resource.back(), L'\\', L'/');
 					CoTaskMemFree(item_name);
 				}
 				thiz.forward_resource(resource);
@@ -129,6 +131,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			*ppEnum = nullptr;
 			return E_NOTIMPL;
 		}
+
+		// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
 
 		#pragma endregion
 
@@ -287,7 +291,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 	// ----------------
 
-	class __declspec(uuid(ForwarderExplorerCommandClassFactory_UUID)) ForwarderExplorerCommandClassFactory :
+	class __declspec(uuid(M_forwarder_explorer_command_class_factory_uuid)) ForwarderExplorerCommandClassFactory :
 		public winrt::implements<ForwarderExplorerCommandClassFactory, IClassFactory> {
 
 	public:
@@ -303,6 +307,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 		#pragma endregion
 
 		#pragma region implement IClassFactory
+
+		// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
 
 		virtual IFACEMETHODIMP CreateInstance(
 			IUnknown * pUnkOuter,
@@ -328,6 +334,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			}
 			return S_OK;
 		}
+
+		// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
 
 		#pragma endregion
 

@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.particle.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Definition {
 
 		#pragma region track node
 
-		template <typename = None>
-		struct TrackNode_;
+		M_nested_template_declaration(TrackNode);
 
-		using TrackNode = TrackNode_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(TrackNode_<_>),
+			M_nested_template_definition_name(TrackNode),
 			M_wrap(
 				(Floater) time,
 				(Floater) low_value,
@@ -34,14 +31,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 		#pragma region field
 
-		template <typename = None>
-		struct Field_;
+		M_nested_template_declaration(Field);
 
-		using Field = Field_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Field_<_>),
+			M_nested_template_definition_name(Field),
 			M_wrap(
 				(Integer) type,
 				(List<TrackNode>) offset_x,
@@ -53,14 +47,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 		#pragma region emitter
 
-		template <typename = None>
-		struct Emitter_;
+		M_nested_template_declaration(Emitter);
 
-		using Emitter = Emitter_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop()}, {}))
 		M_record_of_map(
-			M_wrap(Emitter_<_>),
+			M_nested_template_definition_name(Emitter),
 			M_wrap(
 				(String) name,
 				(String) image,
@@ -114,9 +105,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::mobile()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::mobile()}, {}))
 		M_record_of_map(
-			M_wrap(Emitter_<_>),
+			M_nested_template_definition_name(Emitter),
 			M_wrap(
 				(String) name,
 				(Integer) image,
@@ -170,9 +161,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Emitter_<_>),
+			M_nested_template_definition_name(Emitter),
 			M_wrap(
 				(String) name,
 				(String) image,
@@ -231,14 +222,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 		#pragma region particle
 
-		template <typename = None>
-		struct Particle_;
+		M_nested_template_declaration(Particle);
 
-		using Particle = Particle_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Particle_<_>),
+			M_nested_template_definition_name(Particle),
 			M_wrap(
 				(List<Emitter>) emitter,
 			),

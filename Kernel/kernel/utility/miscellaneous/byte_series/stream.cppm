@@ -96,64 +96,64 @@ export namespace Twinning::Kernel {
 
 		#pragma region write & read by adapter
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto write(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
-			ByteStreamAdapter<AsPure<That>>::write(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			ByteStreamAdapter<AsPure<TThat>>::write(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto read(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
-			ByteStreamAdapter<AsPure<That>>::read(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			ByteStreamAdapter<AsPure<TThat>>::read(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
 		// ----------------
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto write_constant(
-			That const &  that,
-			Option && ... option
+			TThat const &  that,
+			TOption && ... option
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
-			thiz.write(that, as_forward<Option>(option) ...);
+			thiz.write(that, as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto read_constant(
-			That const &  that,
-			Option && ... option
+			TThat const &  that,
+			TOption && ... option
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
-			auto temporary_that = That{};
-			thiz.read(temporary_that, as_forward<Option>(option) ...);
+			auto temporary_that = TThat{};
+			thiz.read(temporary_that, as_forward<TOption>(option) ...);
 			assert_test(temporary_that == that);
 			return;
 		}
 
 		// ----------------
 
-		template <typename That = Byte, typename ... Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
+		template <typename TThat = Byte, typename ... TOption> requires
+			CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
 		auto read_of(
-			Option && ... option
-		) -> That requires
+			TOption && ... option
+		) -> TThat requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
-			auto that = That{};
-			thiz.read(that, as_forward<Option>(option) ...);
+			auto that = TThat{};
+			thiz.read(that, as_forward<TOption>(option) ...);
 			return that;
 		}
 
@@ -181,21 +181,21 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename That, typename ... Option> requires
-		CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
+	template <typename TThat, typename ... TOption> requires
+		CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
 	inline constexpr auto bs_static_size(
-		Option && ... option
+		TOption && ... option
 	) -> Size {
-		return ByteStreamAdapter<That>::static_size(as_forward<Option>(option) ...);
+		return ByteStreamAdapter<TThat>::static_size(as_forward<TOption>(option) ...);
 	}
 
-	template <typename That, typename ... Option> requires
-		CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
+	template <typename TThat, typename ... TOption> requires
+		CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
 	inline constexpr auto bs_size(
-		That const &  that,
-		Option && ... option
+		TThat const &  that,
+		TOption && ... option
 	) -> Size {
-		return ByteStreamAdapter<That>::size(that, as_forward<Option>(option) ...);
+		return ByteStreamAdapter<TThat>::size(that, as_forward<TOption>(option) ...);
 	}
 
 	#pragma endregion

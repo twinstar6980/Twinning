@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.zlib.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
 		using MagicMarker = IntegerU32;
@@ -17,7 +17,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 
 		// ----------------
 
-		using IntegerOfPlatform = AsSwitch<!version.variant_64.value, IntegerU32, IntegerU64>;
+		using IntegerOfPlatform = AsSwitch<!t_version.variant_64.value, IntegerU32, IntegerU64>;
 
 		// ----------------
 

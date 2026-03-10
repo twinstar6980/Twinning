@@ -15,11 +15,11 @@ import twinning.kernel.tool.data.differentiation.vcdiff.decode;
 
 export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Decode :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			Boolean const &        use_raw_packet
 		) -> Void {
 			patch.read_constant(k_magic_marker);
-			patch.read_constant(cbox<VersionNumber>(version.number));
+			patch.read_constant(cbox<VersionNumber>(t_version.number));
 			auto package_information = PackageInformation{};
 			patch.read(package_information);
 			auto packet_count = cbox<Size>(package_information.packet_count);

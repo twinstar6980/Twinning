@@ -162,7 +162,6 @@ export namespace Twinning::Kernel::Interface {
 		) :
 			value{[](auto &, auto &, auto &) -> auto {
 				throw UnimplementedException{};
-				return;
 			}} {
 			return;
 		}

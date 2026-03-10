@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.character_font_widget_2.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
-	template <auto version> requires (check_version(version))
+	template <auto t_version> requires (check_version(t_version))
 	struct Definition {
 
 		#pragma region character item
 
-		template <typename = None>
-		struct CharacterItem_;
+		M_nested_template_declaration(CharacterItem);
 
-		using CharacterItem = CharacterItem_<>;
-
-		template <typename _> requires (check_version(version))
+		M_nested_template_definition_check(check_version(t_version))
 		M_record_of_map(
-			M_wrap(CharacterItem_<_>),
+			M_nested_template_definition_name(CharacterItem),
 			M_wrap(
 				(Unicode) index,
 				(Unicode) value,
@@ -31,14 +28,11 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		#pragma region font kerning
 
-		template <typename = None>
-		struct FontKerning_;
+		M_nested_template_declaration(FontKerning);
 
-		using FontKerning = FontKerning_<>;
-
-		template <typename _> requires (check_version(version))
+		M_nested_template_definition_check(check_version(t_version))
 		M_record_of_map(
-			M_wrap(FontKerning_<_>),
+			M_nested_template_definition_name(FontKerning),
 			M_wrap(
 				(Unicode) index,
 				(Integer) offset,
@@ -49,14 +43,11 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		#pragma region font character
 
-		template <typename = None>
-		struct FontCharacter_;
+		M_nested_template_declaration(FontCharacter);
 
-		using FontCharacter = FontCharacter_<>;
-
-		template <typename _> requires (check_version(version))
+		M_nested_template_definition_check(check_version(t_version))
 		M_record_of_map(
-			M_wrap(FontCharacter_<_>),
+			M_nested_template_definition_name(FontCharacter),
 			M_wrap(
 				(Unicode) index,
 				(Integer) image_rect_x,
@@ -76,14 +67,11 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		#pragma region font layer
 
-		template <typename = None>
-		struct FontLayer_;
+		M_nested_template_declaration(FontLayer);
 
-		using FontLayer = FontLayer_<>;
-
-		template <typename _> requires (check_version(version))
+		M_nested_template_definition_check(check_version(t_version))
 		M_record_of_map(
-			M_wrap(FontLayer_<_>),
+			M_nested_template_definition_name(FontLayer),
 			M_wrap(
 				(String) name,
 				(List<String>) tag_require,
@@ -119,14 +107,11 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 		#pragma region font widget
 
-		template <typename = None>
-		struct FontWidget_;
+		M_nested_template_declaration(FontWidget);
 
-		using FontWidget = FontWidget_<>;
-
-		template <typename _> requires (check_version(version))
+		M_nested_template_definition_check(check_version(t_version))
 		M_record_of_map(
-			M_wrap(FontWidget_<_>),
+			M_nested_template_definition_name(FontWidget),
 			M_wrap(
 				(Integer) ascent,
 				(Integer) ascent_padding,

@@ -18,81 +18,81 @@ export namespace Twinning::Kernel::Trait {
 
 		inline static constexpr auto size = ZSize{sizeof...(TElement)};
 
-		template <auto index> requires
+		template <auto t_index> requires
 			CategoryConstraint<>
-			&& (IsSameOf<index, ZSize>)
-			&& (index < size)
-		using Element = AsSelect<index, TElement ...>;
+			&& (IsSameOf<t_index, ZSize>)
+			&& (t_index < size)
+		using Element = AsSelect<t_index, TElement ...>;
 
 	};
 
 	// ----------------
 
-	template <typename It>
-	concept IsTypePackage = IsTemplateInstanceOfNT<It, TypePackage>;
+	template <typename TIt>
+	concept IsTypePackage = IsTemplateInstanceOfTnt<TIt, TypePackage>;
 
 	#pragma endregion
 
 	#pragma region utility
 
-	template <typename Package, auto begin, auto size> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsTypePackage<Package> && IsSameOf<begin, ZSize> && IsSameOf<size, ZSize>)
-		&& (begin + size <= Package::size)
+	template <typename TPackage, auto t_begin, auto t_size> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsTypePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_size, ZSize>)
+		&& (t_begin + t_size <= TPackage::size)
 	using AsTypePackageSub = decltype(
-		[] <auto ... index>(
-		std::index_sequence<index ...>
-	) -> TypePackage<typename Package::template Element<begin + index> ...> {
+		[] <auto ... t_index>(
+		std::index_sequence<t_index ...>
+	) -> TypePackage<typename TPackage::template Element<t_begin + t_index> ...> {
 			return {};
-		}(std::make_index_sequence<size>{})
+		}(std::make_index_sequence<t_size>{})
 	);
 
-	template <typename Package, auto size> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsTypePackage<Package> && IsSameOf<size, ZSize>)
-		&& (size <= Package::size)
-	using AsTypePackageRemoveHead = AsTypePackageSub<Package, size, Package::size - size>;
+	template <typename TPackage, auto t_size> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsTypePackage<TPackage> && IsSameOf<t_size, ZSize>)
+		&& (t_size <= TPackage::size)
+	using AsTypePackageRemoveHead = AsTypePackageSub<TPackage, t_size, TPackage::size - t_size>;
 
-	template <typename Package, auto size> requires
-		CategoryConstraint<IsPureInstance<Package>>
-		&& (IsTypePackage<Package> && IsSameOf<size, ZSize>)
-		&& (size <= Package::size)
-	using AsTypePackageRemoveTail = AsTypePackageSub<Package, 1_ixz, Package::size - size>;
+	template <typename TPackage, auto t_size> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsTypePackage<TPackage> && IsSameOf<t_size, ZSize>)
+		&& (t_size <= TPackage::size)
+	using AsTypePackageRemoveTail = AsTypePackageSub<TPackage, 1_ixz, TPackage::size - t_size>;
 
 	// ----------------
 
-	template <typename Package1, typename Package2> requires
-		CategoryConstraint<IsPureInstance<Package1> && IsPureInstance<Package2>>
-		&& (IsTypePackage<Package1> && IsTypePackage<Package2>)
+	template <typename TPackage1, typename TPackage2> requires
+		CategoryConstraint<IsPureInstance<TPackage1> && IsPureInstance<TPackage2>>
+		&& (IsTypePackage<TPackage1> && IsTypePackage<TPackage2>)
 	using AsTypePackageConcat = decltype(
-		[] <auto ... index_1, auto ... index_2>(
-		std::index_sequence<index_1 ...>,
-		std::index_sequence<index_2 ...>
-	) -> TypePackage<typename Package1::template Element<index_1> ..., typename Package2::template Element<index_2> ...> {
+		[] <auto ... t_index_1, auto ... t_index_2>(
+		std::index_sequence<t_index_1 ...>,
+		std::index_sequence<t_index_2 ...>
+	) -> TypePackage<typename TPackage1::template Element<t_index_1> ..., typename TPackage2::template Element<t_index_2> ...> {
 			return {};
-		}(std::make_index_sequence<Package1::size>{}, std::make_index_sequence<Package2::size>{})
+		}(std::make_index_sequence<TPackage1::size>{}, std::make_index_sequence<TPackage2::size>{})
 	);
 
-	template <typename Package, typename ... Element> requires
-		CategoryConstraint<IsPureInstance<Package> && IsAnything<Element ...>>
-		&& (IsTypePackage<Package>)
-	using AsTypePackagePrepend = AsTypePackageConcat<TypePackage<Element ...>, Package>;
+	template <typename TPackage, typename ... TElement> requires
+		CategoryConstraint<IsPureInstance<TPackage> && IsAnything<TElement ...>>
+		&& (IsTypePackage<TPackage>)
+	using AsTypePackagePrepend = AsTypePackageConcat<TypePackage<TElement ...>, TPackage>;
 
-	template <typename Package, typename ... Element> requires
-		CategoryConstraint<IsPureInstance<Package> && IsAnything<Element ...>>
-		&& (IsTypePackage<Package>)
-	using AsTypePackageAppend = AsTypePackageConcat<Package, TypePackage<Element ...>>;
+	template <typename TPackage, typename ... TElement> requires
+		CategoryConstraint<IsPureInstance<TPackage> && IsAnything<TElement ...>>
+		&& (IsTypePackage<TPackage>)
+	using AsTypePackageAppend = AsTypePackageConcat<TPackage, TypePackage<TElement ...>>;
 
 	// ----------------
 
-	template <typename Package, template <typename ...> typename Transformer> requires
-		CategoryConstraint<IsPureInstance<Package>>
+	template <typename TPackage, template <typename ...> typename TTransformer> requires
+		CategoryConstraint<IsPureInstance<TPackage>>
 	using AsTypePackageTransform = decltype([] {
-		return [&] <auto ... index>(
-			std::index_sequence<index ...>
-		) -> Transformer<typename Package::template Element<index> ...> {
-				return declare<Transformer<typename Package::template Element<index> ...>>();
-			}(std::make_index_sequence<Package::size>{});
+		return [&] <auto ... t_index>(
+			std::index_sequence<t_index ...>
+		) -> TTransformer<typename TPackage::template Element<t_index> ...> {
+				return declare<TTransformer<typename TPackage::template Element<t_index> ...>>();
+			}(std::make_index_sequence<TPackage::size>{});
 	}());
 
 	#pragma endregion

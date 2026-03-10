@@ -10,12 +10,12 @@ import twinning.kernel.tool.common.byte_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Decode :
-		Common<version>,
+		Common<t_version>,
 		CommonByteStreamExchangeForInput {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
@@ -43,28 +43,28 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		}
 
 		inline static auto exchange_trail(
-			InputByteStreamView &        data,
-			typename Definition::Trail & value
+			InputByteStreamView & data,
+			Definition::Trail &   value
 		) -> Void {
 			auto ignored = Integer{0_i};
 			exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 			exchange_integer_fixed<IntegerU32>(data, value.maximum_point);
 			exchange_floater_fixed<FloaterS32>(data, value.minimum_point_distance);
 			exchange_integer_fixed<IntegerU32>(data, value.flag);
-			if constexpr (check_version(version, {}, {true})) {
+			if constexpr (check_version(t_version, {}, {true})) {
 				exchange_integer_fixed<IntegerU32>(data, ignored);
 			}
 			for (auto & index : SizeRange{5_sz}) {
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::television()}, {})) {
 				exchange_string_block<IntegerU32>(data, value.image);
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::mobile()}, {})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile()}, {})) {
 				exchange_integer_fixed<IntegerU32>(data, value.image);
 			}
-			if constexpr (check_version(version, {VersionPlatform::Constant::television()}, {})) {
+			if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
 				exchange_string_block<IntegerU32>(data, value.image_resource);
 			}
 			exchange_track_node_list(data, value.width_over_length);
@@ -78,8 +78,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &        data,
-			typename Definition::Trail & value
+			InputByteStreamView & data,
+			Definition::Trail &   value
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			exchange_trail(data, value);
@@ -89,8 +89,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &        data_,
-			typename Definition::Trail & value
+			InputByteStreamView & data_,
+			Definition::Trail &   value
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(value);

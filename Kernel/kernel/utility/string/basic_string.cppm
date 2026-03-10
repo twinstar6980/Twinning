@@ -214,35 +214,35 @@ export namespace Twinning::Kernel {
 
 		#pragma region from & to by adapter
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto from(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) -> Void {
-			BasicStringAdapter<Element, AsPure<That>>::from(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			BasicStringAdapter<Element, AsPure<TThat>>::from(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsValid<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
 		auto to(
-			That &&       that,
-			Option && ... option
+			TThat &&       that,
+			TOption && ... option
 		) const -> Void {
-			BasicStringAdapter<Element, AsPure<That>>::to(thiz, as_forward<That>(that), as_forward<Option>(option) ...);
+			BasicStringAdapter<Element, AsPure<TThat>>::to(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
 			return;
 		}
 
 		// ----------------
 
-		template <typename That, typename ... Option> requires
-			CategoryConstraint<IsPureInstance<That> && IsValid<Option ...>>
+		template <typename TThat, typename ... TOption> requires
+			CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
 		auto to_of(
-			Option && ... option
-		) const -> That {
-			auto that = That{};
-			thiz.to(that, as_forward<Option>(option) ...);
+			TOption && ... option
+		) const -> TThat {
+			auto that = TThat{};
+			thiz.to(that, as_forward<TOption>(option) ...);
 			return that;
 		}
 
@@ -288,32 +288,32 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Source> requires
-		CategoryConstraint<IsPureInstance<Source>>
-		&& (IsConvertible<Source, BasicStringView<typename Source::Element, k_true> const &>)
+	template <typename TSource> requires
+		CategoryConstraint<IsPureInstance<TSource>>
+		&& (IsConvertible<TSource, BasicStringView<typename TSource::Element, k_true> const &>)
 	inline auto make_null_terminated_string(
-		Source const & source
-	) -> BasicString<typename Source::Element> {
-		auto result = BasicString<typename Source::Element>{source.size() + 1_sz};
+		TSource const & source
+	) -> BasicString<typename TSource::Element> {
+		auto result = BasicString<typename TSource::Element>{source.size() + 1_sz};
 		result.expand_size_to_full();
 		Range::assign_from(result.head(source.size()), source);
-		result.last() = mbox<typename Source::Element>('\0');
+		result.last() = mbox<typename TSource::Element>('\0');
 		result.shrink_size(1_sz);
 		return result;
 	}
 
 	// ----------------
 
-	template <typename Result, typename Source, typename Separator> requires
-		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
-		&& (IsTemplateInstanceOfT<Result, BasicString>)
-		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
-		&& (IsRange<Separator>)
+	template <typename TResult, typename TSource, typename TSeparator> requires
+		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TSource> && IsPureInstance<TSeparator>>
+		&& (IsTemplateInstanceOfTt<TResult, BasicString>)
+		&& (IsConvertible<TSource, ConstantListView<typename TSource::Element> const &>)
+		&& (IsRange<TSeparator>)
 	inline auto split_string(
-		Source const &    source,
-		Separator const & separator
-	) -> List<Result> {
-		auto result = List<Result>{};
+		TSource const &    source,
+		TSeparator const & separator
+	) -> List<TResult> {
+		auto result = List<TResult>{};
 		if (!source.empty()) {
 			result.allocate_full(Range::count_many(source, separator) + 1_sz);
 			auto sub_count = k_none_size;
@@ -339,11 +339,11 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename Source> requires
-		CategoryConstraint<IsPureInstance<Source>>
-		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
+	template <typename TSource> requires
+		CategoryConstraint<IsPureInstance<TSource>>
+		&& (IsConvertible<TSource, ConstantListView<typename TSource::Element> const &>)
 	inline auto compute_catenate_string_size(
-		Source const & source
+		TSource const & source
 	) -> Size {
 		auto size = k_none_size;
 		if (!source.empty()) {
@@ -355,15 +355,15 @@ export namespace Twinning::Kernel {
 		return size;
 	}
 
-	template <typename Result, typename Source, typename Separator> requires
-		CategoryConstraint<IsPureInstance<Result> && IsPureInstance<Source> && IsPureInstance<Separator>>
-		&& (IsTemplateInstanceOfT<Result, BasicString>)
-		&& (IsConvertible<Source, ConstantListView<typename Source::Element> const &>)
+	template <typename TResult, typename TSource, typename TSeparator> requires
+		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TSource> && IsPureInstance<TSeparator>>
+		&& (IsTemplateInstanceOfTt<TResult, BasicString>)
+		&& (IsConvertible<TSource, ConstantListView<typename TSource::Element> const &>)
 	inline auto catenate_string(
-		Source const &    source,
-		Separator const & separator
-	) -> Result {
-		auto result = Result{compute_catenate_string_size(source)};
+		TSource const &    source,
+		TSeparator const & separator
+	) -> TResult {
+		auto result = TResult{compute_catenate_string_size(source)};
 		if (!source.empty()) {
 			for (auto & element : source.head(source.size() - 1_sz)) {
 				result.append_list(element);

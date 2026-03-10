@@ -46,7 +46,7 @@ export namespace Twinning::Kernel::Executor {
 
 		// ----------------
 
-		Context(
+		explicit Context(
 			Interface::ExecutorProxy const & callback
 		) :
 			m_runtime{JavaScript::Runtime::new_instance()},
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Executor {
 			return;
 		}
 
-		Context(
+		explicit Context(
 			JavaScript::Runtime &            runtime,
 			Interface::ExecutorProxy const & callback
 		) :
@@ -157,7 +157,7 @@ export namespace Twinning::Kernel::Executor {
 			auto locker = Thread::Locker{JavaScript::g_mutex};
 			thread.run(
 				[&, executor] mutable {
-					auto locker = Thread::Locker{JavaScript::g_mutex};
+					auto inner_locker = Thread::Locker{JavaScript::g_mutex};
 					JavaScript::Value::new_reference(thiz.m_context._context(), executor._value()).call(make_list<JavaScript::Value>());
 					executor.set_undefined();
 					thiz.m_busy = k_false;

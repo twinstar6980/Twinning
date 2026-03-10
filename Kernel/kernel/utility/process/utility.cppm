@@ -241,9 +241,9 @@ export namespace Twinning::Kernel::Process {
 	// for Windows, the complete 32-bit exit code can always be obtained
 	// for POSIX, although the standard states that the waitid function should obtain the full exit code, this is not actually the case in Linux and Macintosh
 	// the following are the number of return bits that can be obtained in each system
-	// Windows   : all 32 bit
-	// Linux     : low 08 bit
-	// Macintosh : low 24 bit
+	// Windows   : all 32-bit
+	// Linux     : low 08-bit
+	// Macintosh : low 24-bit
 	inline auto run_process(
 		Path const &           program,
 		List<String> const &   argument,

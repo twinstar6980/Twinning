@@ -541,7 +541,7 @@ export namespace Twinning::Kernel {
 
 		using That = TType;
 
-		using FieldPackage = typename TType::Reflection::MemberVariable;
+		using FieldPackage = TType::Reflection::MemberVariable;
 
 		// ----------------
 
@@ -549,8 +549,8 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			auto result = k_none_size;
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
-					result += bs_static_size<AsPure<decltype(Field::value_of(declare<That const &>()))>>();
+				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+					result += bs_static_size<AsPure<decltype(TField::value_of(declare<That const &>()))>>();
 				}
 			);
 			return result;
@@ -561,8 +561,8 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			auto result = k_none_size;
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
-					result += bs_size(Field::value_of(that));
+				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+					result += bs_size(TField::value_of(that));
 				}
 			);
 			return result;
@@ -573,8 +573,8 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
-					thix.write(Field::value_of(that));
+				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+					thix.write(TField::value_of(that));
 				}
 			);
 			return;
@@ -585,8 +585,8 @@ export namespace Twinning::Kernel {
 			That &      that
 		) -> Void {
 			Generalization::each<FieldPackage>(
-				[&] <auto index, typename Field>(ValuePackage<index>, TypePackage<Field>) {
-					thix.read(Field::value_of(that));
+				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+					thix.read(TField::value_of(that));
 				}
 			);
 			return;

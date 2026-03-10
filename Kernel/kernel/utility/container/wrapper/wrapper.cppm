@@ -48,13 +48,13 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		template <typename ValueObject> requires
-			CategoryConstraint<IsValid<ValueObject>>
-			&& (IsSame<AsPure<ValueObject>, Value>)
+		template <typename TValueObject> requires
+			CategoryConstraint<IsValid<TValueObject>>
+			&& (IsSame<AsPure<TValueObject>, Value>)
 		explicit constexpr Wrapper(
-			ValueObject && value
+			TValueObject && value
 		) :
-			m_value{as_forward<ValueObject>(value)} {
+			m_value{as_forward<TValueObject>(value)} {
 			return;
 		}
 
@@ -74,13 +74,13 @@ export namespace Twinning::Kernel {
 
 		#pragma region value
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Value, Argument && ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Value, TArgument && ...>)
 		constexpr auto set(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> Value & {
-			restruct(thiz.m_value, as_forward<Argument>(argument) ...);
+			restruct(thiz.m_value, as_forward<TArgument>(argument) ...);
 			return thiz.m_value;
 		}
 
@@ -115,22 +115,22 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Value, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Value> && IsValid<Argument ...>>
+	template <typename TValue, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TValue> && IsValid<TArgument ...>>
 	inline constexpr auto make_wrapper(
-		Argument && ... argument
-	) -> Wrapper<Value> {
-		auto result = Wrapper<Value>{};
-		result.set(as_forward<Argument>(argument) ...);
+		TArgument && ... argument
+	) -> Wrapper<TValue> {
+		auto result = Wrapper<TValue>{};
+		result.set(as_forward<TArgument>(argument) ...);
 		return result;
 	}
 
-	template <typename Value> requires
-		CategoryConstraint<IsValid<Value>>
+	template <typename TValue> requires
+		CategoryConstraint<IsValid<TValue>>
 	inline constexpr auto make_wrapper_of(
-		Value && value
-	) -> Wrapper<AsPure<Value>> {
-		return Wrapper<AsPure<Value>>{as_forward<Value>(value)};
+		TValue && value
+	) -> Wrapper<AsPure<TValue>> {
+		return Wrapper<AsPure<TValue>>{as_forward<TValue>(value)};
 	}
 
 	#pragma endregion

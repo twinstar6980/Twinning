@@ -2,7 +2,7 @@
 
 #pragma region version
 
-#define M_version "106"
+#define M_version "107"
 
 #pragma endregion
 
@@ -221,6 +221,25 @@
 #define assert_fail(_expression)\
 	throw AssertionException{_expression};\
 	static_assert(true)
+
+#pragma endregion
+
+#pragma region nested
+
+#define M_nested_template_declaration(_name)\
+	template <typename = None>\
+	struct _name##_;\
+	using _name = _name##_<>
+
+#define M_nested_template_definition(_name)\
+	template <typename __> requires (true)\
+	struct _name##_<__>
+
+#define M_nested_template_definition_check(_condition)\
+	template <typename _> requires (_condition)
+
+#define M_nested_template_definition_name(_name)\
+	_name##_<_>
 
 #pragma endregion
 

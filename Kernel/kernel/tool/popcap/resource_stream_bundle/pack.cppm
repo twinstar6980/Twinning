@@ -19,11 +19,11 @@ import twinning.kernel.tool.popcap.resource_stream_group.unpack;
 
 export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Pack :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::Definition;
 
@@ -51,14 +51,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process_package_manifest(
-			OutputByteStreamView &             data,
-			Structure::Header<version> &       header_structure,
-			typename Manifest::Package const & manifest
+			OutputByteStreamView &         data,
+			Structure::Header<t_version> & header_structure,
+			Manifest::Package const &      manifest
 		) -> Void {
 			auto resource_manifest_information_data_size = k_none_size;
 			auto string_manifest_information_data_size = k_none_size;
-			auto group_manifest_information_structure_list = List<Structure::GroupManifestInformation<version>>{};
-			auto resource_detail_manifest_information_structure_list = List<Structure::ResourceDetailManifestInformation<version>>{};
+			auto group_manifest_information_structure_list = List<Structure::GroupManifestInformation<t_version>>{};
+			auto resource_detail_manifest_information_structure_list = List<Structure::ResourceDetailManifestInformation<t_version>>{};
 			auto string_map = std::unordered_map<String, Size>{};
 			auto string_list = List<String>{};
 			auto set_string = [&](
@@ -85,12 +85,12 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				auto & group_manifest_information_structure = group_manifest_information_structure_list[group_index];
 				group_manifest_information_structure.identifier_offset = set_string(make_standard_group_identifier(group_manifest.identifier, group_manifest.composite));
 				group_manifest_information_structure.subgroup_count = cbox<IntegerU32>(group_manifest.subgroup.size());
-				group_manifest_information_structure.subgroup_information_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupBasicManifestInformation<version>>());
+				group_manifest_information_structure.subgroup_information_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupBasicManifestInformation<t_version>>());
 				group_manifest_information_structure.subgroup_information.allocate_full(group_manifest.subgroup.size());
 				for (auto & subgroup_index : SizeRange{group_manifest.subgroup.size()}) {
 					auto & subgroup_manifest = group_manifest.subgroup[subgroup_index];
 					auto & subgroup_manifest_information_structure = group_manifest_information_structure.subgroup_information[subgroup_index];
-					if constexpr (check_version(version, {1}, {})) {
+					if constexpr (check_version(t_version, {1}, {})) {
 						if (!subgroup_manifest.category.resolution.has()) {
 							subgroup_manifest_information_structure.resolution = 0x00000000_iu32;
 						}
@@ -98,7 +98,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							subgroup_manifest_information_structure.resolution = cbox<IntegerU32>(subgroup_manifest.category.resolution.get());
 						}
 					}
-					if constexpr (check_version(version, {3}, {})) {
+					if constexpr (check_version(t_version, {3}, {})) {
 						if (!subgroup_manifest.category.locale.has()) {
 							subgroup_manifest_information_structure.locale = 0x00000000_iu32;
 						}
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						resource_manifest_information_structure.detail_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
 						resource_detail_manifest_information_structure.identifier_offset = set_string(resource_manifest.identifier);
 						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.to_string(CharacterType::k_path_separator_windows));
-						resource_detail_manifest_information_structure.header_size = cbox<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<version>>());
+						resource_detail_manifest_information_structure.header_size = cbox<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<t_version>>());
 						resource_detail_manifest_information_structure.type = cbox<IntegerU16>(resource_manifest.type);
 						if (resource_detail_manifest_information_structure.type == 0_iu16) {
 							auto & resource_image_property_detail_manifest_information_structure = resource_detail_manifest_information_structure.image_property_information.set();
@@ -145,16 +145,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							}
 						}
 						resource_detail_manifest_information_structure.property_information_count = cbox<IntegerU32>(resource_detail_manifest_information_structure.property_information.size());
-						resource_manifest_information_data_size += bs_static_size<Structure::ResourceBasicDetailManifestInformation<version>>();
+						resource_manifest_information_data_size += bs_static_size<Structure::ResourceBasicDetailManifestInformation<t_version>>();
 						if (resource_detail_manifest_information_structure.image_property_information.has()) {
 							resource_detail_manifest_information_structure.image_property_information_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
-							resource_manifest_information_data_size += bs_static_size<Structure::ResourceImagePropertyDetailManifestInformation<version>>();
+							resource_manifest_information_data_size += bs_static_size<Structure::ResourceImagePropertyDetailManifestInformation<t_version>>();
 						}
 						else {
 							resource_detail_manifest_information_structure.image_property_information_offset = 0_iu32;
 						}
 						resource_detail_manifest_information_structure.property_information_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
-						resource_manifest_information_data_size += bs_static_size<List<Structure::ResourcePropertyDetailManifestInformation<version>>>(resource_detail_manifest_information_structure.property_information.size());
+						resource_manifest_information_data_size += bs_static_size<List<Structure::ResourcePropertyDetailManifestInformation<t_version>>>(resource_detail_manifest_information_structure.property_information.size());
 					}
 				}
 			}
@@ -172,15 +172,15 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		inline static auto process_package(
 			OutputByteStreamView &                       data,
-			typename Definition::Package const &         definition,
+			Definition::Package const &                  definition,
 			Optional<typename Manifest::Package> const & manifest,
 			Path const &                                 resource_directory,
 			Optional<Path> const &                       packet_file,
 			Optional<Path> const &                       new_packet_file
 		) -> Void {
-			constexpr auto packet_version = ResourceStreamGroup::Version{.number = version.number};
+			constexpr auto packet_version = ResourceStreamGroup::Version{.number = t_version.number};
 			data.write_constant(Structure::k_magic_marker);
-			data.write_constant(cbox<Structure::VersionNumber>(version.number));
+			data.write_constant(cbox<Structure::VersionNumber>(t_version.number));
 			struct {
 				OutputByteStreamView header{};
 				Size                 group_identifier_offset{};
@@ -199,7 +199,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				OutputByteStreamView texture_resource_information{};
 			} information_data = {};
 			{
-				auto information_structure = Structure::Information<version>{};
+				auto information_structure = Structure::Information<t_version>{};
 				auto global_group_count = k_none_size;
 				auto global_subgroup_count = k_none_size;
 				auto global_resource_count = k_none_size;
@@ -305,11 +305,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					data.forward_view(bs_size(information_structure.texture_resource_information))
 				};
 			}
-			auto information_structure = Structure::Information<version>{};
-			if constexpr (check_version(version, {1, 3}, {})) {
+			auto information_structure = Structure::Information<t_version>{};
+			if constexpr (check_version(t_version, {1, 3}, {})) {
 				information_structure.header.unknown_1 = 1_iu32;
 			}
-			if constexpr (check_version(version, {3}, {})) {
+			if constexpr (check_version(t_version, {3}, {})) {
 				information_structure.header.unknown_1 = 0_iu32;
 			}
 			auto global_group_count = k_none_size;
@@ -343,19 +343,19 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			information_structure.header.subgroup_identifier_section_offset = cbox<IntegerU32>(information_data.subgroup_identifier_offset);
 			information_structure.header.subgroup_information_section_block_count = cbox<IntegerU32>(global_subgroup_count);
 			information_structure.header.subgroup_information_section_offset = cbox<IntegerU32>(information_data.subgroup_information_offset);
-			information_structure.header.subgroup_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupInformation<version>>());
+			information_structure.header.subgroup_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupInformation<t_version>>());
 			information_structure.header.group_information_section_block_count = cbox<IntegerU32>(global_group_count);
 			information_structure.header.group_information_section_offset = cbox<IntegerU32>(information_data.group_information_offset);
-			information_structure.header.group_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::GroupInformation<version>>());
+			information_structure.header.group_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::GroupInformation<t_version>>());
 			information_structure.header.group_identifier_section_size = cbox<IntegerU32>(information_data.group_identifier.size());
 			information_structure.header.group_identifier_section_offset = cbox<IntegerU32>(information_data.group_identifier_offset);
 			information_structure.header.pool_information_section_block_count = cbox<IntegerU32>(global_subgroup_count);
 			information_structure.header.pool_information_section_offset = cbox<IntegerU32>(information_data.pool_information_offset);
-			information_structure.header.pool_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::PoolInformation<version>>());
+			information_structure.header.pool_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::PoolInformation<t_version>>());
 			information_structure.header.texture_resource_information_section_block_count = cbox<IntegerU32>(global_texture_resource_count);
 			information_structure.header.texture_resource_information_section_offset = cbox<IntegerU32>(information_data.texture_resource_information_offset);
-			information_structure.header.texture_resource_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::TextureResourceInformation<version>>());
-			if constexpr (check_version(version, {4}, {})) {
+			information_structure.header.texture_resource_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::TextureResourceInformation<t_version>>());
+			if constexpr (check_version(t_version, {4}, {})) {
 				data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
 				information_structure.header.information_without_manifest_section_size = cbox<IntegerU32>(data.position());
 			}
@@ -398,7 +398,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					auto & pool_information_structure = information_structure.pool_information[global_subgroup_index];
 					auto   packet_package_definition = typename ResourceStreamGroup::Definition<packet_version>::Package{};
 					simple_subgroup_information_structure.index = cbox<IntegerU32>(global_subgroup_index);
-					if constexpr (check_version(version, {1}, {})) {
+					if constexpr (check_version(t_version, {1}, {})) {
 						if (!subgroup_definition.category.resolution.has()) {
 							simple_subgroup_information_structure.resolution = 0x00000000_iu32;
 						}
@@ -406,7 +406,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							simple_subgroup_information_structure.resolution = cbox<IntegerU32>(subgroup_definition.category.resolution.get());
 						}
 					}
-					if constexpr (check_version(version, {3}, {})) {
+					if constexpr (check_version(t_version, {3}, {})) {
 						if (!subgroup_definition.category.locale.has()) {
 							simple_subgroup_information_structure.locale = 0x00000000_iu32;
 						}
@@ -452,10 +452,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 								texture_information_structure.size_height = cbox<IntegerU32>(resource_additional_definition.size.height);
 								texture_information_structure.pitch = cbox<IntegerU32>(resource_additional_definition.pitch);
 								texture_information_structure.format = cbox<IntegerU32>(resource_additional_definition.format);
-								if constexpr (check_version(version, {4}, {1})) {
+								if constexpr (check_version(t_version, {4}, {1})) {
 									texture_information_structure.additional_byte_count = cbox<IntegerU32>(resource_additional_definition.additional_byte_count);
 								}
-								if constexpr (check_version(version, {4}, {2})) {
+								if constexpr (check_version(t_version, {4}, {2})) {
 									texture_information_structure.scale = cbox<IntegerU32>(resource_additional_definition.scale);
 								}
 								packet_resource_additional_definition.index = cbox<Integer>(texture_resource_count);
@@ -503,11 +503,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					subgroup_information_structure.texture_resource_data_section_size_pool = 0_iu32;
 					pool_information_structure.texture_resource_data_section_offset = packet_header_structure.general_resource_data_section_offset + packet_header_structure.general_resource_data_section_size_original;
 					pool_information_structure.texture_resource_data_section_size = packet_header_structure.texture_resource_data_section_size_original;
-					if constexpr (check_version(version, {1, 3}, {})) {
+					if constexpr (check_version(t_version, {1, 3}, {})) {
 						pool_information_structure.texture_resource_begin = cbox<IntegerU32>(texture_resource_begin);
 						pool_information_structure.texture_resource_count = cbox<IntegerU32>(texture_resource_count);
 					}
-					if constexpr (check_version(version, {3}, {})) {
+					if constexpr (check_version(t_version, {3}, {})) {
 						subgroup_information_structure.texture_resource_begin = cbox<IntegerU32>(texture_resource_begin);
 						subgroup_information_structure.texture_resource_count = cbox<IntegerU32>(texture_resource_count);
 						pool_information_structure.texture_resource_begin = 0_iu32;
@@ -538,7 +538,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 
 		inline static auto process(
 			OutputByteStreamView &                       data_,
-			typename Definition::Package const &         definition,
+			Definition::Package const &                  definition,
 			Optional<typename Manifest::Package> const & manifest,
 			Path const &                                 resource_directory,
 			Optional<Path> const &                       packet_file,

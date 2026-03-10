@@ -16,7 +16,7 @@ import twinning.kernel.tool.data.compression.deflate.uncompress;
 
 export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
 		using MagicMarker = IntegerU32;

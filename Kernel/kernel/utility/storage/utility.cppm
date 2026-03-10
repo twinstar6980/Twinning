@@ -261,10 +261,10 @@ export namespace Twinning::Kernel::Storage {
 
 		#pragma region directory
 
-		template <auto allow_file, auto allow_directory> requires
+		template <auto t_allow_file, auto t_allow_directory> requires
 			CategoryConstraint<>
-			&& (IsSameOf<allow_file, Boolean>)
-			&& (IsSameOf<allow_directory, Boolean>)
+			&& (IsSameOf<t_allow_file, Boolean>)
+			&& (IsSameOf<t_allow_directory, Boolean>)
 		inline auto count_directory(
 			Path const &           target,
 			Optional<Size> const & depth,
@@ -278,28 +278,28 @@ export namespace Twinning::Kernel::Storage {
 				for (auto & item : std::filesystem::directory_iterator{make_std_path(target)}) {
 					auto item_type = get_type(item.status().type());
 					auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
-					if constexpr (allow_file) {
+					if constexpr (t_allow_file) {
 						if (item_type == ObjectType::Constant::file()) {
 							++result;
 						}
 					}
-					if constexpr (allow_directory) {
+					if constexpr (t_allow_directory) {
 						if (item_type == ObjectType::Constant::directory()) {
 							++result;
 						}
 					}
 					if (item_type == ObjectType::Constant::directory()) {
-						result += count_directory<allow_file, allow_directory>(target / item_name, depth, current_depth + k_next_index);
+						result += count_directory<t_allow_file, t_allow_directory>(target / item_name, depth, current_depth + k_next_index);
 					}
 				}
 			}
 			return result;
 		}
 
-		template <auto allow_file, auto allow_directory> requires
+		template <auto t_allow_file, auto t_allow_directory> requires
 			CategoryConstraint<>
-			&& (IsSameOf<allow_file, Boolean>)
-			&& (IsSameOf<allow_directory, Boolean>)
+			&& (IsSameOf<t_allow_file, Boolean>)
+			&& (IsSameOf<t_allow_directory, Boolean>)
 		inline auto list_directory(
 			Path const &           target,
 			Optional<Size> const & depth,
@@ -309,25 +309,25 @@ export namespace Twinning::Kernel::Storage {
 		) -> Void {
 			if (current_depth == k_begin_index) {
 				assert_test(exist_directory(target));
-				result.allocate(count_directory<allow_file, allow_directory>(target, depth, k_begin_index));
+				result.allocate(count_directory<t_allow_file, t_allow_directory>(target, depth, k_begin_index));
 			}
 			if (!depth.has() || current_depth < depth.get()) {
 				for (auto & item : std::filesystem::directory_iterator{make_std_path(target)}) {
 					auto item_type = get_type(item.status().type());
 					auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
 					auto item_path = current_target / item_name;
-					if constexpr (allow_file) {
+					if constexpr (t_allow_file) {
 						if (item_type == ObjectType::Constant::file()) {
 							result.append(item_path);
 						}
 					}
-					if constexpr (allow_directory) {
+					if constexpr (t_allow_directory) {
 						if (item_type == ObjectType::Constant::directory()) {
 							result.append(item_path);
 						}
 					}
 					if (item_type == ObjectType::Constant::directory()) {
-						list_directory<allow_file, allow_directory>(target / item_name, depth, result, item_path, current_depth + k_next_index);
+						list_directory<t_allow_file, t_allow_directory>(target / item_name, depth, result, item_path, current_depth + k_next_index);
 					}
 				}
 			}

@@ -134,13 +134,13 @@ export namespace Twinning::Kernel::JavaScript {
 			return NativeValueHandler{make_pointer_of(value), k_false};
 		}
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Value, Argument && ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Value, TArgument && ...>)
 		inline static auto new_instance_allocate(
-			Argument && ... argument
+			TArgument && ... argument
 		) -> NativeValueHandler {
-			return new_instance(*allocate_instance<Value>(as_forward<Argument>(argument) ...));
+			return new_instance(*allocate_instance<Value>(as_forward<TArgument>(argument) ...));
 		}
 
 		#pragma endregion
@@ -149,8 +149,8 @@ export namespace Twinning::Kernel::JavaScript {
 
 	// ----------------
 
-	template <typename It>
-	concept IsNativeValueHandler = IsTemplateInstanceOfT<It, NativeValueHandler>;
+	template <typename TIt>
+	concept IsNativeValueHandler = IsTemplateInstanceOfTt<TIt, NativeValueHandler>;
 
 	#pragma endregion
 
@@ -158,139 +158,139 @@ export namespace Twinning::Kernel::JavaScript {
 
 	namespace Detail {
 
-		template <auto function, typename ... Argument> requires
+		template <auto t_function, typename ... TArgument> requires
 			NoneConstraint
 		inline auto call_native_function_wrapper_inner(
-			Argument && ... argument
-		) -> typename CallableTraitOf<function>::Result {
+			TArgument && ... argument
+		) -> CallableTraitOf<t_function>::Result {
 			auto unlocker = Thread::Unlocker{g_mutex};
-			return function(as_forward<Argument>(argument) ...);
+			return t_function(as_forward<TArgument>(argument) ...);
 		}
 
-		template <auto function, auto forward_object> requires
+		template <auto t_function, auto t_forward_object> requires
 			NoneConstraint
 		inline auto call_native_function_wrapper(
 			Context &     context,
 			Value &       object,
 			List<Value> & argument
-		) -> typename CallableTraitOf<function>::Result {
-			return [&] <auto ... index>(ValuePackage<index ...>) -> typename CallableTraitOf<function>::Result {
-				if constexpr (!forward_object) {
-					using Argument = typename CallableTraitOf<function>::Argument;
-					return call_native_function_wrapper_inner<function>(
-						as_forward<typename Argument::template Element<index>>(argument[mbox<Size>(index)].template to_of<AsPure<typename Argument::template Element<index>>>()) ...
+		) -> CallableTraitOf<t_function>::Result {
+			return [&] <auto ... t_index>(ValuePackage<t_index ...>) -> CallableTraitOf<t_function>::Result {
+				if constexpr (!t_forward_object) {
+					using Argument = CallableTraitOf<t_function>::Argument;
+					return call_native_function_wrapper_inner<t_function>(
+						as_forward<typename Argument::template Element<t_index>>(argument[mbox<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
 					);
 				}
 				else {
-					using Class = AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>;
-					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<function>::Argument, 1_szz>;
-					return call_native_function_wrapper_inner<function>(
+					using Class = AsPure<typename CallableTraitOf<t_function>::Argument::template Element<1_ixz>>;
+					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<t_function>::Argument, 1_szz>;
+					return call_native_function_wrapper_inner<t_function>(
 						as_left(object.to_of<Class>()),
-						as_forward<typename Argument::template Element<index>>(argument[mbox<Size>(index)].template to_of<AsPure<typename Argument::template Element<index>>>()) ...
+						as_forward<typename Argument::template Element<t_index>>(argument[mbox<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
 					);
 				}
-			}(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size - (!forward_object ? (0) : (1))>{});
+			}(AsValuePackageOfIndex<CallableTraitOf<t_function>::Argument::size - (!t_forward_object ? (0) : (1))>{});
 		}
 
-		template <auto function, auto forward_object> requires
+		template <auto t_function, auto t_forward_object> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameOf<forward_object, Boolean>)
+			&& (IsGlobalFunction<decltype(t_function)>)
+			&& (IsSameOf<t_forward_object, Boolean>)
 		inline auto proxy_native_function_wrapper(
 			Context &     context,
 			Value &       object,
 			List<Value> & argument,
 			Value &       result
 		) -> Void {
-			if constexpr (IsVoid<typename CallableTraitOf<function>::Result>) {
-				call_native_function_wrapper<function, forward_object>(context, object, argument);
+			if constexpr (IsVoid<typename CallableTraitOf<t_function>::Result>) {
+				call_native_function_wrapper<t_function, t_forward_object>(context, object, argument);
 				result.set_undefined();
 			}
 			else {
-				result.from(call_native_function_wrapper<function, forward_object>(context, object, argument));
+				result.from(call_native_function_wrapper<t_function, t_forward_object>(context, object, argument));
 			}
 			return;
 		}
 
-		template <auto function, auto forward_object> requires
+		template <auto t_function, auto t_forward_object> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSameOf<forward_object, Boolean>)
+			&& (IsGlobalFunction<decltype(t_function)>)
+			&& (IsSameOf<t_forward_object, Boolean>)
 		inline constexpr auto make_proxy_native_function_wrapper(
 		) -> auto {
-			return &proxy_native_function_wrapper<function, forward_object>;
+			return &proxy_native_function_wrapper<t_function, t_forward_object>;
 		}
 
 	}
 
-	template <auto function, auto forward_object> requires
+	template <auto t_function, auto t_forward_object> requires
 		CategoryConstraint<>
-		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsSameOf<forward_object, Boolean>)
-	inline constexpr auto & proxy_native_function_wrapper = *Detail::make_proxy_native_function_wrapper<function, forward_object>();
+		&& (IsGlobalFunction<decltype(t_function)>)
+		&& (IsSameOf<t_forward_object, Boolean>)
+	inline constexpr auto & proxy_native_function_wrapper = *Detail::make_proxy_native_function_wrapper<t_function, t_forward_object>();
 
 	// ----------------
 
 	namespace Detail {
 
-		template <auto function, typename ... Argument> requires
+		template <auto t_function, typename ... TArgument> requires
 			NoneConstraint
 		inline auto proxy_native_function_by_handler(
-			NativeValueHandler<AsPure<Argument>> & ... argument
+			NativeValueHandler<AsPure<TArgument>> & ... argument
 		) -> auto {
-			using Result = typename CallableTraitOf<function>::Result;
+			using Result = CallableTraitOf<t_function>::Result;
 			if constexpr (IsVoid<Result>) {
-				return function(as_forward<Argument>(argument.value()) ...);
+				return t_function(as_forward<TArgument>(argument.value()) ...);
 			}
 			else if constexpr (IsInstance<Result>) {
-				return NativeValueHandler<Result>::new_instance_allocate(function(as_forward<Argument>(argument.value()) ...));
+				return NativeValueHandler<Result>::new_instance_allocate(t_function(as_forward<TArgument>(argument.value()) ...));
 			}
 			else {
-				return NativeValueHandler<AsPure<Result>>::new_reference(function(as_forward<Argument>(argument.value()) ...));
+				return NativeValueHandler<AsPure<Result>>::new_reference(t_function(as_forward<TArgument>(argument.value()) ...));
 			}
 		}
 
-		template <auto function, auto ... argument_index> requires
+		template <auto t_function, auto ... t_argument_index> requires
 			NoneConstraint
 		inline constexpr auto make_proxy_native_function_by_handler(
-			ValuePackage<argument_index ...>
+			ValuePackage<t_argument_index ...>
 		) -> auto {
-			return &proxy_native_function_by_handler<function, typename CallableTraitOf<function>::Argument::template Element<argument_index> ...>;
+			return &proxy_native_function_by_handler<t_function, typename CallableTraitOf<t_function>::Argument::template Element<t_argument_index> ...>;
 		}
 
 	}
 
-	template <auto function> requires
+	template <auto t_function> requires
 		CategoryConstraint<>
-		&& (IsGlobalFunction<decltype(function)>)
-		&& (IsVoid<typename CallableTraitOf<function>::Result> || IsInstance<typename CallableTraitOf<function>::Result> || IsVariableReference<typename CallableTraitOf<function>::Result>)
-	inline constexpr auto & proxy_native_function_by_handler = *Detail::make_proxy_native_function_by_handler<function>(AsValuePackageOfIndex<CallableTraitOf<function>::Argument::size>{});
+		&& (IsGlobalFunction<decltype(t_function)>)
+		&& (IsVoid<typename CallableTraitOf<t_function>::Result> || IsInstance<typename CallableTraitOf<t_function>::Result> || IsVariableReference<typename CallableTraitOf<t_function>::Result>)
+	inline constexpr auto & proxy_native_function_by_handler = *Detail::make_proxy_native_function_by_handler<t_function>(AsValuePackageOfIndex<CallableTraitOf<t_function>::Argument::size>{});
 
 	// ----------------
 
 	namespace Detail {
 
-		template <typename Type, typename ... Argument> requires
+		template <typename TType, typename ... TArgument> requires
 			NoneConstraint
 		inline constexpr auto proxy_native_function_allocate_by_handler(
-			NativeValueHandler<AsPure<Argument>> & ... argument
-		) -> NativeValueHandler<Type> {
-			return NativeValueHandler<Type>::new_instance_allocate(as_forward<Argument>(argument.value()) ...);
+			NativeValueHandler<AsPure<TArgument>> & ... argument
+		) -> NativeValueHandler<TType> {
+			return NativeValueHandler<TType>::new_instance_allocate(as_forward<TArgument>(argument.value()) ...);
 		}
 
-		template <typename Type, typename ... Argument> requires
+		template <typename TType, typename ... TArgument> requires
 			NoneConstraint
 		inline constexpr auto make_proxy_native_function_allocate_by_handler(
 		) -> auto {
-			return &proxy_native_function_allocate_by_handler<Type, Argument ...>;
+			return &proxy_native_function_allocate_by_handler<TType, TArgument ...>;
 		}
 
 	}
 
-	template <typename Type, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Type> && IsValid<Argument ...>>
-		&& (IsConstructible<Type, Argument && ...>)
-	inline constexpr auto & proxy_native_function_allocate_by_handler = *Detail::make_proxy_native_function_allocate_by_handler<Type, Argument ...>();
+	template <typename TType, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TType> && IsValid<TArgument ...>>
+		&& (IsConstructible<TType, TArgument && ...>)
+	inline constexpr auto & proxy_native_function_allocate_by_handler = *Detail::make_proxy_native_function_allocate_by_handler<TType, TArgument ...>();
 
 	// ----------------
 
@@ -324,19 +324,19 @@ export namespace Twinning::Kernel::JavaScript {
 
 		inline constexpr auto k_invalid_native_class_identifier = Integer{0};
 
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
+		template <typename TClass> requires
+			CategoryConstraint<IsPureInstance<TClass>>
 		inline auto g_native_class_identifier = Integer{0};
 
 		// ----------------
 
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
+		template <typename TClass> requires
+			CategoryConstraint<IsPureInstance<TClass>>
 		inline auto free_native_class(
 			Runtime & rt,
 			Value &   obj
 		) -> Void {
-			delete static_cast<NativeValueHandler<Class> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), static_cast<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<Class>.value)));
+			delete static_cast<NativeValueHandler<TClass> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), static_cast<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>.value)));
 			return;
 		}
 
@@ -429,13 +429,13 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region constructor
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
+			&& (IsGlobalFunction<decltype(t_function)>)
+			&& (IsSame<typename CallableTraitOf<t_function>::Result, NativeValueHandler<Class>>)
 		auto set_constructor(
 		) -> NativeClassBuilder & {
-			thiz.m_constructor = thiz.m_proto.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::constructor()>{thiz.whole_name()});
+			thiz.m_constructor = thiz.m_proto.new_value(NativeFunctionWrapper<t_function, NativeFunctionWrapperType::Constant::constructor()>{thiz.whole_name()});
 			Third::quickjs_ng::$JS_SetConstructor(thiz.m_constructor._context(), thiz.m_constructor._value(), thiz.m_proto._value());
 			thiz.m_parent.define_object_property(
 				thiz.m_name,
@@ -444,16 +444,16 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz;
 		}
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSame<typename CallableTraitOf<function>::Result, NativeValueHandler<Class>>)
+			&& (IsGlobalFunction<decltype(t_function)>)
+			&& (IsSame<typename CallableTraitOf<t_function>::Result, NativeValueHandler<Class>>)
 		auto add_constructor(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
 				name,
-				thiz.m_constructor.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name})
+				thiz.m_constructor.new_value(NativeFunctionWrapper<t_function, NativeFunctionWrapperType::Constant::function()>{name})
 			);
 			return thiz;
 		}
@@ -462,29 +462,29 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region function
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
+			&& (IsGlobalFunction<decltype(t_function)>)
 		auto add_static_function(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_constructor.define_object_property(
 				name,
-				thiz.m_constructor.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name})
+				thiz.m_constructor.new_value(NativeFunctionWrapper<t_function, NativeFunctionWrapperType::Constant::function()>{name})
 			);
 			return thiz;
 		}
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>>)
+			&& (IsGlobalFunction<decltype(t_function)>)
+			&& (IsSame<AsPure<typename CallableTraitOf<t_function>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>>)
 		auto add_member_function(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
-				thiz.m_proto.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::method()>{name})
+				thiz.m_proto.new_value(NativeFunctionWrapper<t_function, NativeFunctionWrapperType::Constant::method()>{name})
 			);
 			return thiz;
 		}
@@ -493,33 +493,33 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region getter & setter
 
-		template <auto getter, auto setter> requires
+		template <auto t_getter, auto t_setter> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(getter)>)
-			&& (IsGlobalFunction<decltype(setter)>)
-			&& (CallableTraitOf<getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<getter>::Result>)
-			&& (CallableTraitOf<setter>::Argument::size == 2_szz && IsSame<AsPure<typename CallableTraitOf<setter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && IsVoid<typename CallableTraitOf<setter>::Result>)
+			&& (IsGlobalFunction<decltype(t_getter)>)
+			&& (IsGlobalFunction<decltype(t_setter)>)
+			&& (CallableTraitOf<t_getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<t_getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<t_getter>::Result>)
+			&& (CallableTraitOf<t_setter>::Argument::size == 2_szz && IsSame<AsPure<typename CallableTraitOf<t_setter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && IsVoid<typename CallableTraitOf<t_setter>::Result>)
 		auto add_getter_setter(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
-				thiz.m_proto.new_value(NativeFunctionWrapper<getter, NativeFunctionWrapperType::Constant::method()>{name}),
-				thiz.m_proto.new_value(NativeFunctionWrapper<setter, NativeFunctionWrapperType::Constant::method()>{name})
+				thiz.m_proto.new_value(NativeFunctionWrapper<t_getter, NativeFunctionWrapperType::Constant::method()>{name}),
+				thiz.m_proto.new_value(NativeFunctionWrapper<t_setter, NativeFunctionWrapperType::Constant::method()>{name})
 			);
 			return thiz;
 		}
 
-		template <auto getter> requires
+		template <auto t_getter> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(getter)>)
-			&& (CallableTraitOf<getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<getter>::Result>)
+			&& (IsGlobalFunction<decltype(t_getter)>)
+			&& (CallableTraitOf<t_getter>::Argument::size == 1_szz && IsSame<AsPure<typename CallableTraitOf<t_getter>::Argument::template Element<1_ixz>>, NativeValueHandler<Class>> && !IsVoid<typename CallableTraitOf<t_getter>::Result>)
 		auto add_getter(
 			String const & name
 		) -> NativeClassBuilder & {
 			thiz.m_proto.define_object_property(
 				name,
-				thiz.m_proto.new_value(NativeFunctionWrapper<getter, NativeFunctionWrapperType::Constant::method()>{name}),
+				thiz.m_proto.new_value(NativeFunctionWrapper<t_getter, NativeFunctionWrapperType::Constant::method()>{name}),
 				[&] {
 					auto it = thiz.m_proto.new_value();
 					it.set_undefined();
@@ -533,34 +533,34 @@ export namespace Twinning::Kernel::JavaScript {
 
 		#pragma region by proxy
 
-		template <typename ... Argument> requires
-			CategoryConstraint<IsValid<Argument ...>>
-			&& (IsConstructible<Class, Argument ...>)
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Class, TArgument ...>)
 		auto add_constructor_allocate_proxy(
 			String const & name
 		) -> NativeClassBuilder & {
-			return thiz.template add_constructor<&proxy_native_function_allocate_by_handler<Class, Argument ...>>(name);
+			return thiz.template add_constructor<&proxy_native_function_allocate_by_handler<Class, TArgument ...>>(name);
 		}
 
 		// ----------------
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
+			&& (IsGlobalFunction<decltype(t_function)>)
 		auto add_static_function_proxy(
 			String const & name
 		) -> NativeClassBuilder & {
-			return thiz.template add_static_function<&proxy_native_function_by_handler<function>>(name);
+			return thiz.template add_static_function<&proxy_native_function_by_handler<t_function>>(name);
 		}
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
-			&& (IsSame<AsPure<typename CallableTraitOf<function>::Argument::template Element<1_ixz>>, Class>)
+			&& (IsGlobalFunction<decltype(t_function)>)
+			&& (IsSame<AsPure<typename CallableTraitOf<t_function>::Argument::template Element<1_ixz>>, Class>)
 		auto add_member_function_proxy(
 			String const & name
 		) -> NativeClassBuilder & {
-			return thiz.template add_member_function<&proxy_native_function_by_handler<function>>(name);
+			return thiz.template add_member_function<&proxy_native_function_by_handler<t_function>>(name);
 		}
 
 		#pragma endregion
@@ -648,12 +648,12 @@ export namespace Twinning::Kernel::JavaScript {
 			return NativeSpaceBuilder{make_optional_of(thiz.whole_name()), name, thiz.m_object};
 		}
 
-		template <typename Class> requires
-			CategoryConstraint<IsPureInstance<Class>>
+		template <typename TClass> requires
+			CategoryConstraint<IsPureInstance<TClass>>
 		auto add_class(
 			String const & name
-		) -> NativeClassBuilder<Class> {
-			return NativeClassBuilder<Class>{make_optional_of(thiz.whole_name()), name, thiz.m_object};
+		) -> NativeClassBuilder<TClass> {
+			return NativeClassBuilder<TClass>{make_optional_of(thiz.whole_name()), name, thiz.m_object};
 		}
 
 		auto add_variable(
@@ -664,24 +664,24 @@ export namespace Twinning::Kernel::JavaScript {
 			return thiz;
 		}
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
+			&& (IsGlobalFunction<decltype(t_function)>)
 		auto add_function(
 			String const & name
 		) -> NativeSpaceBuilder & {
-			return thiz.add_variable(name, thiz.m_object.new_value(NativeFunctionWrapper<function, NativeFunctionWrapperType::Constant::function()>{name}));
+			return thiz.add_variable(name, thiz.m_object.new_value(NativeFunctionWrapper<t_function, NativeFunctionWrapperType::Constant::function()>{name}));
 		}
 
 		// ----------------
 
-		template <auto function> requires
+		template <auto t_function> requires
 			CategoryConstraint<>
-			&& (IsGlobalFunction<decltype(function)>)
+			&& (IsGlobalFunction<decltype(t_function)>)
 		auto add_function_proxy(
 			String const & name
 		) -> NativeSpaceBuilder & {
-			return thiz.add_function<&proxy_native_function_by_handler<function>>(name);
+			return thiz.add_function<&proxy_native_function_by_handler<t_function>>(name);
 		}
 
 		#pragma endregion

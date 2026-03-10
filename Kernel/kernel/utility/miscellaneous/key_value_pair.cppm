@@ -31,15 +31,15 @@ export namespace Twinning::Kernel {
 		implicit constexpr KeyValuePair(
 		) = default;
 
-		template <typename KeyObject, typename ValueObject> requires
-			CategoryConstraint<IsValid<KeyObject> && IsValid<ValueObject>>
-			&& (IsConstructible<Key, KeyObject &&> && IsConstructible<Value, ValueObject &&>)
+		template <typename TKeyObject, typename TValueObject> requires
+			CategoryConstraint<IsValid<TKeyObject> && IsValid<TValueObject>>
+			&& (IsConstructible<Key, TKeyObject &&> && IsConstructible<Value, TValueObject &&>)
 		explicit constexpr KeyValuePair(
-			KeyObject &&   key,
-			ValueObject && value
+			TKeyObject &&   key,
+			TValueObject && value
 		) :
-			key{as_forward<KeyObject>(key)},
-			value{as_forward<ValueObject>(value)} {
+			key{as_forward<TKeyObject>(key)},
+			value{as_forward<TValueObject>(value)} {
 		}
 
 		// ----------------

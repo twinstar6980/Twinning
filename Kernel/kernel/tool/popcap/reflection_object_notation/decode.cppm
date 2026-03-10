@@ -10,11 +10,11 @@ import twinning.kernel.tool.common.protocol_buffer_variable_length_integer;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Decode :
-		Common<version> {
+		Common<t_version> {
 
-		using Common = Common<version>;
+		using Common = Common<t_version>;
 
 		using typename Common::MagicMarker;
 
@@ -163,10 +163,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				case TypeIdentifier::Value::string_native: {
 					auto   size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
-					if constexpr (check_version(version, {}, {false})) {
+					if constexpr (check_version(t_version, {}, {false})) {
 						StringParser::read_eascii_string(self_cast<InputCharacterStreamView>(data), content, size);
 					}
-					if constexpr (check_version(version, {}, {true})) {
+					if constexpr (check_version(t_version, {}, {true})) {
 						auto content_view = ConstantStringView{};
 						StringParser::read_utf8_string_by_size(self_cast<InputCharacterStreamView>(data), content_view, as_left(Size{}), size);
 						content = content_view;
@@ -176,10 +176,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				case TypeIdentifier::Value::string_native_indexing: {
 					auto   size = cbox<Size>(ProtocolBufferVariableLengthInteger::decode_u32(data));
 					auto & content = value.set_string();
-					if constexpr (check_version(version, {}, {false})) {
+					if constexpr (check_version(t_version, {}, {false})) {
 						StringParser::read_eascii_string(self_cast<InputCharacterStreamView>(data), content, size);
 					}
-					if constexpr (check_version(version, {}, {true})) {
+					if constexpr (check_version(t_version, {}, {true})) {
 						auto content_view = ConstantStringView{};
 						StringParser::read_utf8_string_by_size(self_cast<InputCharacterStreamView>(data), content_view, as_left(Size{}), size);
 						content = content_view;
@@ -314,7 +314,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			Json::Value &         definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
-			data.read_constant(cbox<VersionNumber>(version.number));
+			data.read_constant(cbox<VersionNumber>(t_version.number));
 			auto native_string_upper_bound = k_none_size;
 			auto unicode_string_upper_bound = k_none_size;
 			for (auto & element : data.reserve_view()) {

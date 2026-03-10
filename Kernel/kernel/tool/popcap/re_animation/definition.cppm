@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.re_animation.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Definition {
 
 		#pragma region transform
 
-		template <typename = None>
-		struct Transform_;
+		M_nested_template_declaration(Transform);
 
-		using Transform = Transform_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop()}, {}))
 		M_record_of_map(
-			M_wrap(Transform_<_>),
+			M_nested_template_definition_name(Transform),
 			M_wrap(
 				(Floater) x,
 				(Floater) y,
@@ -36,9 +33,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::mobile()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::mobile()}, {}))
 		M_record_of_map(
-			M_wrap(Transform_<_>),
+			M_nested_template_definition_name(Transform),
 			M_wrap(
 				(Floater) x,
 				(Floater) y,
@@ -54,9 +51,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			),
 		);
 
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Transform_<_>),
+			M_nested_template_definition_name(Transform),
 			M_wrap(
 				(Floater) x,
 				(Floater) y,
@@ -79,14 +76,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 		#pragma region track
 
-		template <typename = None>
-		struct Track_;
+		M_nested_template_declaration(Track);
 
-		using Track = Track_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Track_<_>),
+			M_nested_template_definition_name(Track),
 			M_wrap(
 				(String) name,
 				(List<Transform>) transform,
@@ -97,14 +91,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 		#pragma region animation
 
-		template <typename = None>
-		struct Animation_;
+		M_nested_template_declaration(Animation);
 
-		using Animation = Animation_<>;
-
-		template <typename _> requires (check_version(version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
+		M_nested_template_definition_check(check_version(t_version, {VersionPlatform::Constant::desktop(), VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {}))
 		M_record_of_map(
-			M_wrap(Animation_<_>),
+			M_nested_template_definition_name(Animation),
 			M_wrap(
 				(Floater) frame_rate,
 				(List<Track>) track,

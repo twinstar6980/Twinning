@@ -11,6 +11,8 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region constraint comment
 
+	// ReSharper disable CppInconsistentNaming
+
 	inline constexpr auto NoneConstraint = true;
 
 	inline constexpr auto CustomConstraint = true;
@@ -19,11 +21,13 @@ export namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	template <auto condition = true>
+	template <auto t_condition = true>
 	concept CategoryConstraint =
 		CustomConstraint
-		&& (condition)
+		&& (t_condition)
 		;
+
+	// ReSharper restore CppInconsistentNaming
 
 	#pragma endregion
 
@@ -35,10 +39,10 @@ export namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	template <typename It> requires
+	template <typename TIt> requires
 		NoneConstraint
 	inline constexpr auto declare(
-	) -> It {
+	) -> TIt {
 		throw UnreachableException{};
 	}
 

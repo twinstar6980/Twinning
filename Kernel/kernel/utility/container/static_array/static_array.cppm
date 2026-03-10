@@ -291,18 +291,18 @@ export namespace Twinning::Kernel {
 
 	#pragma region utility
 
-	template <typename Element, typename ... Argument> requires
-		CategoryConstraint<IsPureInstance<Element> && IsValid<Argument ...>>
-		&& (IsConstructible<Element, Argument &&> && ...)
+	template <typename TElement, typename ... TArgument> requires
+		CategoryConstraint<IsPureInstance<TElement> && IsValid<TArgument ...>>
+		&& (IsConstructible<TElement, TArgument &&> && ...)
 	inline constexpr auto make_static_array(
-		Argument && ... argument
-	) -> StaticArray<Element, mbox<Size>(sizeof...(Argument))> {
-		auto result = StaticArray<Element, mbox<Size>(sizeof...(Argument))>{};
+		TArgument && ... argument
+	) -> StaticArray<TElement, mbox<Size>(sizeof...(TArgument))> {
+		auto result = StaticArray<TElement, mbox<Size>(sizeof...(TArgument))>{};
 		Generalization::each_with<>(
-			[&] <auto index, typename CurrentArgument>(ValuePackage<index>, CurrentArgument && current_argument) {
-				restruct(result.at(mbox<Size>(index)), as_forward<CurrentArgument>(current_argument));
+			[&] <auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
+				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
-			as_forward<Argument>(argument) ...
+			as_forward<TArgument>(argument) ...
 		);
 		return result;
 	}

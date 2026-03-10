@@ -18,11 +18,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		template <typename It> requires
-			CategoryConstraint<IsPureInstance<It>>
-			&& (IsPointerBox<It>)
-		implicit constexpr operator It() const {
-			return It{static_cast<ZPointer<typename It::Target>>(nullptr)};
+		template <typename TIt> requires
+			CategoryConstraint<IsPureInstance<TIt>>
+			&& (IsPointerBox<TIt>)
+		implicit constexpr operator TIt() const {
+			return TIt{static_cast<ZPointer<typename TIt::Target>>(nullptr)};
 		}
 
 		#pragma endregion
@@ -42,11 +42,11 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename It> requires
-		CategoryConstraint<IsPureInstance<It>>
-		&& (IsPointerBox<It>)
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsPointerBox<TIt>)
 	inline constexpr auto operator ==(
-		It const &             thix,
+		TIt const &            thix,
 		NullPointerBox const & that
 	) -> bool {
 		return thix.value == nullptr;

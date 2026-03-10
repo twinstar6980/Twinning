@@ -1,5 +1,7 @@
 module;
 
+// ReSharper disable IdentifierTypo CppInconsistentNaming
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 

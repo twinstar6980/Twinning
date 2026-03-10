@@ -17,13 +17,13 @@ export namespace Twinning::Kernel::Tool {
 
 		using ExchangeableByteStreamView = InputByteStreamView;
 
-		template <typename Type> requires
-			CategoryConstraint<IsPureInstance<Type>>
-		using ExchangeableValue = Type;
+		template <typename TType> requires
+			CategoryConstraint<IsPureInstance<TType>>
+		using ExchangeableValue = TType;
 
-		template <typename Type> requires
-			CategoryConstraint<IsPureInstance<Type>>
-		using ExchangeableConstantValue = Type const;
+		template <typename TType> requires
+			CategoryConstraint<IsPureInstance<TType>>
+		using ExchangeableConstantValue = TType const;
 
 	};
 
@@ -32,13 +32,13 @@ export namespace Twinning::Kernel::Tool {
 
 		using ExchangeableByteStreamView = OutputByteStreamView;
 
-		template <typename Type> requires
-			CategoryConstraint<IsPureInstance<Type>>
-		using ExchangeableValue = Type const;
+		template <typename TType> requires
+			CategoryConstraint<IsPureInstance<TType>>
+		using ExchangeableValue = TType const;
 
-		template <typename Type> requires
-			CategoryConstraint<IsPureInstance<Type>>
-		using ExchangeableConstantValue = Type const;
+		template <typename TType> requires
+			CategoryConstraint<IsPureInstance<TType>>
+		using ExchangeableConstantValue = TType const;
 
 	};
 
@@ -50,27 +50,27 @@ export namespace Twinning::Kernel::Tool {
 
 		#pragma region alias
 
-		using ExchangeableByteStreamView = typename CommonByteStreamExchangeBase<t_mode>::ExchangeableByteStreamView;
+		using ExchangeableByteStreamView = CommonByteStreamExchangeBase<t_mode>::ExchangeableByteStreamView;
 
-		template <typename Type> requires
-			CategoryConstraint<IsPureInstance<Type>>
-		using ExchangeableValue = typename CommonByteStreamExchangeBase<t_mode>::template ExchangeableValue<Type>;
+		template <typename TType> requires
+			CategoryConstraint<IsPureInstance<TType>>
+		using ExchangeableValue = CommonByteStreamExchangeBase<t_mode>::template ExchangeableValue<TType>;
 
-		template <typename Type> requires
-			CategoryConstraint<IsPureInstance<Type>>
-		using ExchangeableConstantValue = typename CommonByteStreamExchangeBase<t_mode>::template ExchangeableConstantValue<Type>;
+		template <typename TType> requires
+			CategoryConstraint<IsPureInstance<TType>>
+		using ExchangeableConstantValue = CommonByteStreamExchangeBase<t_mode>::template ExchangeableConstantValue<TType>;
 
 		#pragma endregion
 
 		#pragma region base
 
-		template <typename Value, typename Exchanger> requires
-			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<Exchanger>>
-			&& (IsGenericCallable<Exchanger>)
+		template <typename TValue, typename TExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue> && IsPureInstance<TExchanger>>
+			&& (IsGenericCallable<TExchanger>)
 		inline static auto exchange(
 			ExchangeableByteStreamView & data,
-			ExchangeableValue<Value> &   value,
-			Exchanger const &            exchanger
+			ExchangeableValue<TValue> &  value,
+			TExchanger const &           exchanger
 		) -> Void {
 			exchanger(data, value);
 			return;
@@ -78,99 +78,99 @@ export namespace Twinning::Kernel::Tool {
 
 		// ----------------
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_boolean(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Boolean> & value,
-			ValueExchanger const &       value_exchanger
+			TValueExchanger const &      value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_integer(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Integer> & value,
-			ValueExchanger const &       value_exchanger
+			TValueExchanger const &      value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_floater(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Floater> & value,
-			ValueExchanger const &       value_exchanger
+			TValueExchanger const &      value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_size(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Size> &    value,
-			ValueExchanger const &       value_exchanger
+			TValueExchanger const &      value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_character(
 			ExchangeableByteStreamView &   data,
 			ExchangeableValue<Character> & value,
-			ValueExchanger const &         value_exchanger
+			TValueExchanger const &        value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_unicode(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Unicode> & value,
-			ValueExchanger const &       value_exchanger
+			TValueExchanger const &      value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_enumerated(
 			ExchangeableByteStreamView &    data,
 			ExchangeableValue<Enumerated> & value,
-			ValueExchanger const &          value_exchanger
+			TValueExchanger const &         value_exchanger
 		) -> Void {
 			value_exchanger(data, value);
 			return;
 		}
 
-		template <typename SizeExchanger, typename ContentExchanger> requires
-			CategoryConstraint<IsPureInstance<SizeExchanger> && IsPureInstance<ContentExchanger>>
-			&& (IsGenericCallable<SizeExchanger>)
-			&& (IsGenericCallable<ContentExchanger>)
+		template <typename TSizeExchanger, typename TContentExchanger> requires
+			CategoryConstraint<IsPureInstance<TSizeExchanger> && IsPureInstance<TContentExchanger>>
+			&& (IsGenericCallable<TSizeExchanger>)
+			&& (IsGenericCallable<TContentExchanger>)
 		inline static auto exchange_string(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<String> &  value,
-			SizeExchanger const &        size_exchanger,
-			ContentExchanger const &     content_exchanger
+			TSizeExchanger const &       size_exchanger,
+			TContentExchanger const &    content_exchanger
 		) -> Void {
 			auto value_size = Size{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
@@ -186,13 +186,13 @@ export namespace Twinning::Kernel::Tool {
 
 		// ----------------
 
-		template <typename Value, typename StateExchanger> requires
-			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<StateExchanger>>
-			&& (IsGenericCallable<StateExchanger>)
+		template <typename TValue, typename TStateExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue> && IsPureInstance<TStateExchanger>>
+			&& (IsGenericCallable<TStateExchanger>)
 		inline static auto exchange_optional_state(
-			ExchangeableByteStreamView &         data,
-			ExchangeableValue<Optional<Value>> & value,
-			StateExchanger const &               state_exchanger
+			ExchangeableByteStreamView &          data,
+			ExchangeableValue<Optional<TValue>> & value,
+			TStateExchanger const &               state_exchanger
 		) -> Void {
 			auto value_state = Boolean{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
@@ -211,13 +211,13 @@ export namespace Twinning::Kernel::Tool {
 			return;
 		}
 
-		template <typename Value, typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValue, typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue> && IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_optional_value(
-			ExchangeableByteStreamView &         data,
-			ExchangeableValue<Optional<Value>> & value,
-			ValueExchanger const &               value_exchanger
+			ExchangeableByteStreamView &          data,
+			ExchangeableValue<Optional<TValue>> & value,
+			TValueExchanger const &               value_exchanger
 		) -> Void {
 			if (value.has()) {
 				value_exchanger(data, value.get());
@@ -225,15 +225,15 @@ export namespace Twinning::Kernel::Tool {
 			return;
 		}
 
-		template <typename Value, typename StateExchanger, typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<Value> && IsPureInstance<StateExchanger> && IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<StateExchanger>)
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename TValue, typename TStateExchanger, typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue> && IsPureInstance<TStateExchanger> && IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TStateExchanger>)
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_optional(
-			ExchangeableByteStreamView &         data,
-			ExchangeableValue<Optional<Value>> & value,
-			StateExchanger const &               state_exchanger,
-			ValueExchanger const &               value_exchanger
+			ExchangeableByteStreamView &          data,
+			ExchangeableValue<Optional<TValue>> & value,
+			TStateExchanger const &               state_exchanger,
+			TValueExchanger const &               value_exchanger
 		) -> Void {
 			exchange_optional_state(data, value, state_exchanger);
 			exchange_optional_value(data, value, value_exchanger);
@@ -242,13 +242,13 @@ export namespace Twinning::Kernel::Tool {
 
 		// ----------------
 
-		template <typename ... Value, typename IndexExchanger> requires
-			CategoryConstraint<IsPureInstance<Value ...> && IsPureInstance<IndexExchanger>>
-			&& (IsGenericCallable<IndexExchanger>)
+		template <typename ... TValue, typename TIndexExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue ...> && IsPureInstance<TIndexExchanger>>
+			&& (IsGenericCallable<TIndexExchanger>)
 		inline static auto exchange_variant_index(
-			ExchangeableByteStreamView &            data,
-			ExchangeableValue<Variant<Value ...>> & value,
-			IndexExchanger const &                  index_exchanger
+			ExchangeableByteStreamView &             data,
+			ExchangeableValue<Variant<TValue ...>> & value,
+			TIndexExchanger const &                  index_exchanger
 		) -> Void {
 			auto value_index = Size{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
@@ -262,32 +262,32 @@ export namespace Twinning::Kernel::Tool {
 			return;
 		}
 
-		template <typename ... Value, typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<Value ...> && IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename ... TValue, typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue ...> && IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_variant_value(
-			ExchangeableByteStreamView &            data,
-			ExchangeableValue<Variant<Value ...>> & value,
-			ValueExchanger const &                  value_exchanger
+			ExchangeableByteStreamView &             data,
+			ExchangeableValue<Variant<TValue ...>> & value,
+			TValueExchanger const &                  value_exchanger
 		) -> Void {
-			Generalization::match<AsValuePackageOfIndex<sizeof...(Value)>>(
+			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				value.index().value,
-				[&] <auto index, auto value_index>(ValuePackage<index>, ValuePackage<value_index>) {
-					value_exchanger(data, value.template get_of_index<mbox<Size>(value_index)>());
+				[&] <auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
+					value_exchanger(data, value.template get_of_index<mbox<Size>(t_value_index)>());
 				}
 			);
 			return;
 		}
 
-		template <typename ... Value, typename IndexExchanger, typename ValueExchanger> requires
-			CategoryConstraint<IsPureInstance<Value ...> && IsPureInstance<IndexExchanger> && IsPureInstance<ValueExchanger>>
-			&& (IsGenericCallable<IndexExchanger>)
-			&& (IsGenericCallable<ValueExchanger>)
+		template <typename ... TValue, typename TIndexExchanger, typename TValueExchanger> requires
+			CategoryConstraint<IsPureInstance<TValue ...> && IsPureInstance<TIndexExchanger> && IsPureInstance<TValueExchanger>>
+			&& (IsGenericCallable<TIndexExchanger>)
+			&& (IsGenericCallable<TValueExchanger>)
 		inline static auto exchange_variant(
-			ExchangeableByteStreamView &            data,
-			ExchangeableValue<Variant<Value ...>> & value,
-			IndexExchanger const &                  index_exchanger,
-			ValueExchanger const &                  value_exchanger
+			ExchangeableByteStreamView &             data,
+			ExchangeableValue<Variant<TValue ...>> & value,
+			TIndexExchanger const &                  index_exchanger,
+			TValueExchanger const &                  value_exchanger
 		) -> Void {
 			exchange_variant_index(data, value, index_exchanger);
 			exchange_variant_value(data, value, value_exchanger);
@@ -296,13 +296,13 @@ export namespace Twinning::Kernel::Tool {
 
 		// ----------------
 
-		template <typename Element, typename SizeExchanger> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<SizeExchanger>>
-			&& (IsGenericCallable<SizeExchanger>)
+		template <typename TElement, typename TSizeExchanger> requires
+			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TSizeExchanger>>
+			&& (IsGenericCallable<TSizeExchanger>)
 		inline static auto exchange_list_size(
-			ExchangeableByteStreamView &       data,
-			ExchangeableValue<List<Element>> & value,
-			SizeExchanger const &              size_exchanger
+			ExchangeableByteStreamView &        data,
+			ExchangeableValue<List<TElement>> & value,
+			TSizeExchanger const &              size_exchanger
 		) -> Void {
 			auto value_size = Size{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
@@ -316,13 +316,13 @@ export namespace Twinning::Kernel::Tool {
 			return;
 		}
 
-		template <typename Element, typename ... ElementExchanger> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<ElementExchanger ...>>
-			&& (IsGenericCallable<ElementExchanger> && ...)
+		template <typename TElement, typename ... TElementExchanger> requires
+			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementExchanger ...>>
+			&& (IsGenericCallable<TElementExchanger> && ...)
 		inline static auto exchange_list_element(
-			ExchangeableByteStreamView &       data,
-			ExchangeableValue<List<Element>> & value,
-			ElementExchanger const & ...       element_exchanger
+			ExchangeableByteStreamView &        data,
+			ExchangeableValue<List<TElement>> & value,
+			TElementExchanger const & ...       element_exchanger
 		) -> Void {
 			Generalization::each_with<>(
 				[&](auto, auto & current_element_parser) {
@@ -335,15 +335,15 @@ export namespace Twinning::Kernel::Tool {
 			return;
 		}
 
-		template <typename Element, typename SizeExchanger, typename ... ElementExchanger> requires
-			CategoryConstraint<IsPureInstance<Element> && IsPureInstance<SizeExchanger> && IsPureInstance<ElementExchanger ...>>
-			&& (IsGenericCallable<SizeExchanger>)
-			&& (IsGenericCallable<ElementExchanger> && ...)
+		template <typename TElement, typename TSizeExchanger, typename ... TElementExchanger> requires
+			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TSizeExchanger> && IsPureInstance<TElementExchanger ...>>
+			&& (IsGenericCallable<TSizeExchanger>)
+			&& (IsGenericCallable<TElementExchanger> && ...)
 		inline static auto exchange_list(
-			ExchangeableByteStreamView &       data,
-			ExchangeableValue<List<Element>> & value,
-			SizeExchanger const &              size_exchanger,
-			ElementExchanger const & ...       element_exchanger
+			ExchangeableByteStreamView &        data,
+			ExchangeableValue<List<TElement>> & value,
+			TSizeExchanger const &              size_exchanger,
+			TElementExchanger const & ...       element_exchanger
 		) -> Void {
 			exchange_list_size(data, value, size_exchanger);
 			exchange_list_element(data, value, element_exchanger ...);
@@ -352,13 +352,13 @@ export namespace Twinning::Kernel::Tool {
 
 		// ----------------
 
-		template <typename SizeExchanger> requires
-			CategoryConstraint<IsPureInstance<SizeExchanger>>
-			&& (IsGenericCallable<SizeExchanger>)
+		template <typename TSizeExchanger> requires
+			CategoryConstraint<IsPureInstance<TSizeExchanger>>
+			&& (IsGenericCallable<TSizeExchanger>)
 		inline static auto exchange_data(
 			ExchangeableByteStreamView &  data,
 			ExchangeableValue<ByteList> & value,
-			SizeExchanger const &         size_exchanger
+			TSizeExchanger const &        size_exchanger
 		) -> Void {
 			auto value_size = Size{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
@@ -378,11 +378,11 @@ export namespace Twinning::Kernel::Tool {
 
 		#pragma region special
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
 		inline static auto exchange_raw(
-			ExchangeableByteStreamView &  data,
-			ExchangeableValue<RawValue> & value
+			ExchangeableByteStreamView &   data,
+			ExchangeableValue<TRawValue> & value
 		) -> Void {
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				data.read(value);
@@ -393,11 +393,11 @@ export namespace Twinning::Kernel::Tool {
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
 		inline static auto exchange_raw_constant(
-			ExchangeableByteStreamView &          data,
-			ExchangeableConstantValue<RawValue> & value
+			ExchangeableByteStreamView &           data,
+			ExchangeableConstantValue<TRawValue> & value
 		) -> Void {
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				data.read_constant(value);
@@ -410,147 +410,147 @@ export namespace Twinning::Kernel::Tool {
 
 		// ----------------
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsBooleanBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsBooleanBox<TRawValue>)
 		inline static auto exchange_boolean_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Boolean> & value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Boolean>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsIntegerBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsIntegerBox<TRawValue>)
 		inline static auto exchange_integer_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Integer> & value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Integer>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsFloaterBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsFloaterBox<TRawValue>)
 		inline static auto exchange_floater_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Floater> & value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Floater>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsIntegerBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsIntegerBox<TRawValue>)
 		inline static auto exchange_size_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Size> &    value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Size>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsCharacterBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsCharacterBox<TRawValue>)
 		inline static auto exchange_character_fixed(
 			ExchangeableByteStreamView &   data,
 			ExchangeableValue<Character> & value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Character>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsCharacterBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsCharacterBox<TRawValue>)
 		inline static auto exchange_unicode_fixed(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<Unicode> & value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Unicode>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawValue> requires
-			CategoryConstraint<IsPureInstance<RawValue>>
-			&& (IsIntegerBox<RawValue>)
+		template <typename TRawValue> requires
+			CategoryConstraint<IsPureInstance<TRawValue>>
+			&& (IsIntegerBox<TRawValue>)
 		inline static auto exchange_enumerated_fixed(
 			ExchangeableByteStreamView &    data,
 			ExchangeableValue<Enumerated> & value
 		) -> Void {
-			auto raw_value = RawValue{};
+			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
 				value = cbox<Enumerated>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<RawValue>(value);
+				raw_value = cbox<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
 		}
 
-		template <typename RawSizeValue> requires
-			CategoryConstraint<IsPure<RawSizeValue>>
-			&& (IsVoid<RawSizeValue> || IsIntegerBox<RawSizeValue>)
+		template <typename TRawSizeValue> requires
+			CategoryConstraint<IsPure<TRawSizeValue>>
+			&& (IsVoid<TRawSizeValue> || IsIntegerBox<TRawSizeValue>)
 		inline static auto exchange_string_block(
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<String> &  value
 		) -> Void {
-			exchange_raw(data, self_cast<StringBlock<RawSizeValue>>(value));
+			exchange_raw(data, self_cast<StringBlock<TRawSizeValue>>(value));
 			return;
 		}
 

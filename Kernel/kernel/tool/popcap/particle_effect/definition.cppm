@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.particle_effect.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
-	template <auto version> requires (check_version(version, {}))
+	template <auto t_version> requires (check_version(t_version, {}))
 	struct Definition {
 
 		#pragma region value
 
-		template <typename = None>
-		struct Color_;
+		M_nested_template_declaration(Color);
 
-		using Color = Color_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_list(
-			M_wrap(Color_<_>),
+			M_nested_template_definition_name(Color),
 			M_wrap(
 				(Integer) red,
 				(Integer) green,
@@ -30,14 +27,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Value1Point_;
+		M_nested_template_declaration(Value1Point);
 
-		using Value1Point = Value1Point_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Value1Point_<_>),
+			M_nested_template_definition_name(Value1Point),
 			M_wrap(
 				(Floater) time,
 				(Floater) value,
@@ -47,14 +41,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Value1_;
+		M_nested_template_declaration(Value1);
 
-		using Value1 = Value1_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Value1_<_>),
+			M_nested_template_definition_name(Value1),
 			M_wrap(
 				(Boolean) control,
 				(List<Value1Point>) point,
@@ -63,14 +54,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Value2Point_;
+		M_nested_template_declaration(Value2Point);
 
-		using Value2Point = Value2Point_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Value2Point_<_>),
+			M_nested_template_definition_name(Value2Point),
 			M_wrap(
 				(Integer) time,
 				(Position2<Floater>) value,
@@ -80,14 +68,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Value2_;
+		M_nested_template_declaration(Value2);
 
-		using Value2 = Value2_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Value2_<_>),
+			M_nested_template_definition_name(Value2),
 			M_wrap(
 				(Floater) unknown_1,
 				(Floater) unknown_2,
@@ -98,14 +83,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct ColorPoint_;
+		M_nested_template_declaration(ColorPoint);
 
-		using ColorPoint = ColorPoint_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(ColorPoint_<_>),
+			M_nested_template_definition_name(ColorPoint),
 			M_wrap(
 				(Floater) time,
 				(Color) value,
@@ -114,14 +96,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct AlphaPoint_;
+		M_nested_template_declaration(AlphaPoint);
 
-		using AlphaPoint = AlphaPoint_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(AlphaPoint_<_>),
+			M_nested_template_definition_name(AlphaPoint),
 			M_wrap(
 				(Floater) time,
 				(Integer) value,
@@ -132,14 +111,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		#pragma region texture
 
-		template <typename = None>
-		struct Texture_;
+		M_nested_template_declaration(Texture);
 
-		using Texture = Texture_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Texture_<_>),
+			M_nested_template_definition_name(Texture),
 			M_wrap(
 				(String) name,
 				(String) path,
@@ -153,14 +129,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		#pragma region emitter
 
-		template <typename = None>
-		struct EmitterParticle_;
+		M_nested_template_declaration(EmitterParticle);
 
-		using EmitterParticle = EmitterParticle_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(EmitterParticle_<_>),
+			M_nested_template_definition_name(EmitterParticle),
 			M_wrap(
 				(String) name,
 				(Integer) texture,
@@ -223,14 +196,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Emitter_;
+		M_nested_template_declaration(Emitter);
 
-		using Emitter = Emitter_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Emitter_<_>),
+			M_nested_template_definition_name(Emitter),
 			M_wrap(
 				(String) name,
 				(Boolean) keep_in_order,
@@ -249,14 +219,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		#pragma region layer
 
-		template <typename = None>
-		struct LayerEmitter_;
+		M_nested_template_declaration(LayerEmitter);
 
-		using LayerEmitter = LayerEmitter_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerEmitter_<_>),
+			M_nested_template_definition_name(LayerEmitter),
 			M_wrap(
 				(String) name,
 				(Integer) type,
@@ -308,14 +275,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct LayerDeflector_;
+		M_nested_template_declaration(LayerDeflector);
 
-		using LayerDeflector = LayerDeflector_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerDeflector_<_>),
+			M_nested_template_definition_name(LayerDeflector),
 			M_wrap(
 				(String) name,
 				(Integer) bounce,
@@ -331,14 +295,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct LayerBlocker_;
+		M_nested_template_declaration(LayerBlocker);
 
-		using LayerBlocker = LayerBlocker_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerBlocker_<_>),
+			M_nested_template_definition_name(LayerBlocker),
 			M_wrap(
 				(String) name,
 				(Value2) position,
@@ -355,14 +316,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct LayerForce_;
+		M_nested_template_declaration(LayerForce);
 
-		using LayerForce = LayerForce_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(LayerForce_<_>),
+			M_nested_template_definition_name(LayerForce),
 			M_wrap(
 				(String) name,
 				(Boolean) visible,
@@ -379,14 +337,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		template <typename = None>
-		struct Layer_;
+		M_nested_template_declaration(Layer);
 
-		using Layer = Layer_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Layer_<_>),
+			M_nested_template_definition_name(Layer),
 			M_wrap(
 				(String) name,
 				(List<LayerEmitter>) emitter,
@@ -407,14 +362,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		#pragma region effect
 
-		template <typename = None>
-		struct Effect_;
+		M_nested_template_declaration(Effect);
 
-		using Effect = Effect_<>;
-
-		template <typename _> requires (check_version(version, {1}))
+		M_nested_template_definition_check(check_version(t_version, {1}))
 		M_record_of_map(
-			M_wrap(Effect_<_>),
+			M_nested_template_definition_name(Effect),
 			M_wrap(
 				(String) note,
 				(Size2<Integer>) size,

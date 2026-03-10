@@ -8,19 +8,16 @@ import twinning.kernel.tool.popcap.package.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::Package {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Definition {
 
 		#pragma region resource
 
-		template <typename = None>
-		struct Resource_;
+		M_nested_template_declaration(Resource);
 
-		using Resource = Resource_<>;
-
-		template <typename _> requires (check_version(version, {0}, {}))
+		M_nested_template_definition_check(check_version(t_version, {0}, {}))
 		M_record_of_map(
-			M_wrap(Resource_<_>),
+			M_nested_template_definition_name(Resource),
 			M_wrap(
 				(Path) path,
 				(Integer) time,
@@ -31,14 +28,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 
 		#pragma region package
 
-		template <typename = None>
-		struct Package_;
+		M_nested_template_declaration(Package);
 
-		using Package = Package_<>;
-
-		template <typename _> requires (check_version(version, {0}, {}))
+		M_nested_template_definition_check(check_version(t_version, {0}, {}))
 		M_record_of_map(
-			M_wrap(Package_<_>),
+			M_nested_template_definition_name(Package),
 			M_wrap(
 				(List<Resource>) resource,
 			),

@@ -8,7 +8,7 @@ import twinning.kernel.tool.popcap.reflection_object_notation.version;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
-	template <auto version> requires (check_version(version, {}, {}))
+	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Common {
 
 		using MagicMarker = StaticByteArray<4_sz>;
@@ -79,6 +79,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				// object
 				object_begin = 0x85,
 				object_end   = 0xFF,
+				// ReSharper disable CppInconsistentNaming
 				// TODO: never appeared in known rton file
 				_string_literal_star         = 0x02,
 				_string_binary_blob          = 0x87,
@@ -95,6 +96,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				_string_native_x3            = 0xBA,
 				_string_binary_blob_x1       = 0xBB,
 				_boolean_x1                  = 0xBC,
+				// ReSharper restore CppInconsistentNaming
 			};
 		};
 

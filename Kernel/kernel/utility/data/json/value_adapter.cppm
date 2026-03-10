@@ -13,8 +13,8 @@ export namespace Twinning::Kernel::Json {
 	#pragma region type
 
 	// NOTE: INTERFACE
-	// - static auto from ( This       & thix, That && that, Option && ...option ) -> Void;
-	// - static auto to   ( This const & thix, That && that, Option && ...option ) -> Void;
+	// - static auto from ( TThis       & thix, TThat && that, TOption && ...option ) -> Void;
+	// - static auto to   ( TThis const & thix, TThat && that, TOption && ...option ) -> Void;
 	template <typename TThat>
 	struct ValueAdapter;
 

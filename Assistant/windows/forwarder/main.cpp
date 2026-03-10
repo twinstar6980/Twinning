@@ -9,21 +9,14 @@ using Twinning::Assistant::Forwarder::ForwarderExplorerCommandClassFactory;
 
 #pragma region main
 
+// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
 STDAPI_(BOOL) DllMain(
 	HINSTANCE hinstDLL,
 	DWORD     fdwReason,
 	LPVOID    lpvReserved
 ) {
 	return TRUE;
-}
-
-STDAPI DllCanUnloadNow(
-) {
-	if (winrt::get_module_lock()) {
-		return S_FALSE;
-	}
-	winrt::clear_factory_cache();
-	return S_OK;
 }
 
 STDAPI DllGetClassObject(
@@ -48,5 +41,16 @@ STDAPI DllGetClassObject(
 		return winrt::to_hresult();
 	}
 }
+
+STDAPI DllCanUnloadNow(
+) {
+	if (winrt::get_module_lock()) {
+		return S_FALSE;
+	}
+	winrt::clear_factory_cache();
+	return S_OK;
+}
+
+// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
 
 #pragma endregion

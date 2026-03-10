@@ -68,16 +68,16 @@ export namespace Twinning::Kernel {
 
 	#pragma region compound
 
-	template <typename Target>
-	using ZPointer = Target (*);
+	template <typename TTarget>
+	using ZPointer = TTarget (*);
 
-	template <typename Class, typename Target>
-	using ZMemberPointer = Target (Class::*);
+	template <typename TClass, typename TTarget>
+	using ZMemberPointer = TTarget (TClass::*);
 
 	// ----------------
 
-	template <typename Element, auto size>
-	using ZArray = Element[size];
+	template <typename TElement, auto t_size>
+	using ZArray = TElement[t_size];
 
 	#pragma endregion
 
@@ -149,10 +149,10 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	template <typename Element>
+	template <typename TElement>
 	inline constexpr auto make_initializer_list(
-		std::initializer_list<Element> value
-	) -> std::initializer_list<Element> {
+		std::initializer_list<TElement> value
+	) -> std::initializer_list<TElement> {
 		return value;
 	}
 

@@ -21,7 +21,7 @@ export namespace Twinning::Kernel::Image {
 
 	// ----------------
 
-	using Pixel = BasicPixelRGBA<Color>;
+	using Pixel = BasicPixelRgba<Color>;
 
 	// ----------------
 
