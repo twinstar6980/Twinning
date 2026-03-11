@@ -8,7 +8,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 		let value = 0n;
 		for (let shift_count = 0n; shift_count < 64n; shift_count += 7n) {
 			let byte = data.u8();
-			if ((byte & 0b10000000n) != 0b00000000n) {
+			if ((byte & 0b10000000n) !== 0b00000000n) {
 				value |= (byte & 0b01111111n) << shift_count;
 			}
 			else {
@@ -61,7 +61,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 		while (extra_size > 0) {
 			--extra_size;
 			current = data.u8();
-			if ((current & 0b11000000n) != 0b10000000n) {
+			if ((current & 0b11000000n) !== 0b10000000n) {
 				throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 extra character`);
 			}
 			value = value << 6n | (current & 0b00111111n);
@@ -355,7 +355,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 				let size = read_pb_varint_unsigned(data);
 				while (true) {
 					let value_type_identifier = data.u8();
-					if (value_type_identifier == 0xFEn) {
+					if (value_type_identifier === 0xFEn) {
 						break;
 					}
 					let element_value = process_unit(data, native_string_index, unicode_string_index, value_type_identifier, version);
@@ -370,7 +370,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 				value = {};
 				while (true) {
 					let key_type_identifier = data.u8();
-					if (key_type_identifier == 0xFFn) {
+					if (key_type_identifier === 0xFFn) {
 						break;
 					}
 					let member_key = process_unit(data, native_string_index, unicode_string_index, key_type_identifier, version);

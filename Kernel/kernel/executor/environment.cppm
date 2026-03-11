@@ -197,7 +197,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			builder.template add_constructor_allocate_proxy<TClass const &>("copy"_s);
 		}
 		if constexpr (t_flag * GenericClassDefinitionFlag::value_constructor) {
-			// NOTE: EXPLAIN: static value(it: typeof T.Value) : T;
+			// NOTE: EXPLAIN: static value(it: typeof T.Value): T;
 			builder.template add_constructor<
 				&normalized_lambda<
 					[](
