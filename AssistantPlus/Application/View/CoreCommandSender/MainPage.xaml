@@ -262,13 +262,13 @@
 										DragStarting="{x:Bind uMove_DragStarting}"
 										DragOver="{x:Bind uMove_DragOver}"
 										Drop="{x:Bind uMove_Drop}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Move}}" />
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.ScrollUpDown}}" />
 									<Button
 										ToolTipService.ToolTip="Remove"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"
 										Click="{x:Bind uRemove_Click}"
-										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Remove}}" />
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.RemoveFrom}}" />
 								</my:Stack>
 								<my:Divider />
 								<localViewCoreCommandSender:ArgumentPanel
