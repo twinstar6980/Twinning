@@ -61,9 +61,9 @@ namespace Twinning.AssistantPlus {
 		) {
 			try {
 				var argument = Environment.GetCommandLineArgs()[1..];
-				ExceptionHelper.Initialize(this);
-				ExceptionHelper.Listen(async (exception) => {
-					_ = this.HandleException(exception, this.MainWindow);
+				await ApplicationExceptionManager.Instance.Initialize(this);
+				await ApplicationExceptionManager.Instance.Listen(async (exception) => {
+					await this.HandleException(exception, this.MainWindow);
 					return;
 				});
 				var needShowOnboarding = false;
@@ -74,8 +74,8 @@ namespace Twinning.AssistantPlus {
 					needShowOnboarding = true;
 				}
 				await this.Setting.Save(apply: false);
-				ApplicationNotificationManager.Instance.Initialize();
-				ApplicationJumpListManager.Instance.Initialize();
+				await ApplicationNotificationManager.Instance.Initialize();
+				await ApplicationJumpListManager.Instance.Initialize();
 				this.MainWindow = new ();
 				if (this.Setting.Data.WindowSizeState) {
 					WindowHelper.SetSize(this.MainWindow, this.Setting.Data.WindowSizeWidth.CastPrimitive<Size>(), this.Setting.Data.WindowSizeHeight.CastPrimitive<Size>());
@@ -91,7 +91,7 @@ namespace Twinning.AssistantPlus {
 						if (needShowOnboarding) {
 							await this.MainWindow.ShowOnboarding();
 						}
-						ApplicationNotificationManager.Instance.Listen(async () => {
+						await ApplicationNotificationManager.Instance.Listen(async () => {
 							WindowHelper.SetAsForeground(this.MainWindow);
 							return;
 						});
@@ -105,7 +105,7 @@ namespace Twinning.AssistantPlus {
 							await this.MainWindow.ShowLauncher();
 						}
 					});
-				}).SelfLet(ExceptionHelper.WrapTask);
+				}).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 				await this.Setting.Apply();
 				WindowHelper.Activate(this.MainWindow);
 			}
@@ -167,7 +167,7 @@ namespace Twinning.AssistantPlus {
 								Style = window.Content.As<FrameworkElement>().FindResource("BodyTextBlockStyle").As<Style>(),
 								IsTextSelectionEnabled = true,
 								TextWrapping = TextWrapping.Wrap,
-								Text = ExceptionHelper.GenerateMessage(exception),
+								Text = ConvertHelper.GenerateExceptionMessage(exception),
 							}, null);
 						});
 					});

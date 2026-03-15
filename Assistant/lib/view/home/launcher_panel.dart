@@ -85,7 +85,7 @@ class LauncherPanel extends StatelessWidget {
                 await StyledFullDialogExtension.show<Void>(context, StyledFullDialog.standard(
                   title: 'Module Setting',
                   contentBuilder: (context, setStateForPanel) => [
-                    ModuleHelper.query(item.type).settingPanel(context),
+                    ModuleHelper.query(item.type).buildSettingPanel(context),
                   ],
                 ));
               },

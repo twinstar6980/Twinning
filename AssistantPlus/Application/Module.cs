@@ -25,8 +25,8 @@ namespace Twinning.AssistantPlus {
 		public String                            Identifier            { get; set; } = default!;
 		public String                            Name                  { get; set; } = default!;
 		public String                            Icon                  { get; set; } = default!;
-		public Type                              MainPage              { get; set; } = default!;
-		public Func<UIElement>                   SettingPanel          { get; set; } = default!;
+		public Func<Type>                        GetMainPage           { get; set; } = default!;
+		public Func<UIElement>                   BuildSettingPanel     { get; set; } = default!;
 		public Func<List<String>, List<String>?> GenerateForwardOption { get; set; } = default!;
 		public Tuple<Integer, Integer>           StandardSize          { get; set; } = default!;
 	}
@@ -68,8 +68,8 @@ namespace Twinning.AssistantPlus {
 				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.CoreTaskWorker),
 				Name = "Task Worker",
 				Icon = FluentIconGlyph.ProvisioningPackage,
-				MainPage = typeof(View.CoreTaskWorker.MainPage),
-				SettingPanel = () => new View.CoreTaskWorker.SettingPanel() {
+				GetMainPage = () => typeof(View.CoreTaskWorker.MainPage),
+				BuildSettingPanel = () => new View.CoreTaskWorker.SettingPanel() {
 					Data = App.Instance.Setting.Data.CoreTaskWorker,
 				},
 				GenerateForwardOption = (resource) => {
@@ -82,8 +82,8 @@ namespace Twinning.AssistantPlus {
 				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.CoreCommandSender),
 				Name = "Command Sender",
 				Icon = FluentIconGlyph.Send,
-				MainPage = typeof(View.CoreCommandSender.MainPage),
-				SettingPanel = () => new View.CoreCommandSender.SettingPanel() {
+				GetMainPage = () => typeof(View.CoreCommandSender.MainPage),
+				BuildSettingPanel = () => new View.CoreCommandSender.SettingPanel() {
 					Data = App.Instance.Setting.Data.CoreCommandSender,
 				},
 				GenerateForwardOption = (resource) => {
@@ -96,8 +96,8 @@ namespace Twinning.AssistantPlus {
 				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.CoreResourceShipper),
 				Name = "Resource Shipper",
 				Icon = FluentIconGlyph.Share,
-				MainPage = typeof(View.CoreResourceShipper.MainPage),
-				SettingPanel = () => new View.CoreResourceShipper.SettingPanel() {
+				GetMainPage = () => typeof(View.CoreResourceShipper.MainPage),
+				BuildSettingPanel = () => new View.CoreResourceShipper.SettingPanel() {
 					Data = App.Instance.Setting.Data.CoreResourceShipper,
 				},
 				GenerateForwardOption = (resource) => {
@@ -115,8 +115,8 @@ namespace Twinning.AssistantPlus {
 				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.PopcapAnimationViewer),
 				Name = "PopCap Animation Viewer",
 				Icon = FluentIconGlyph.HomeGroup,
-				MainPage = typeof(View.PopcapAnimationViewer.MainPage),
-				SettingPanel = () => new View.PopcapAnimationViewer.SettingPanel() {
+				GetMainPage = () => typeof(View.PopcapAnimationViewer.MainPage),
+				BuildSettingPanel = () => new View.PopcapAnimationViewer.SettingPanel() {
 					Data = App.Instance.Setting.Data.PopcapAnimationViewer,
 				},
 				GenerateForwardOption = (resource) => {
@@ -142,8 +142,8 @@ namespace Twinning.AssistantPlus {
 				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.PopcapReflectionDescriptor),
 				Name = "PopCap Reflection Descriptor",
 				Icon = FluentIconGlyph.Library,
-				MainPage = typeof(View.PopcapReflectionDescriptor.MainPage),
-				SettingPanel = () => new View.PopcapReflectionDescriptor.SettingPanel() {
+				GetMainPage = () => typeof(View.PopcapReflectionDescriptor.MainPage),
+				BuildSettingPanel = () => new View.PopcapReflectionDescriptor.SettingPanel() {
 					Data = App.Instance.Setting.Data.PopcapReflectionDescriptor,
 				},
 				GenerateForwardOption = (resource) => {
@@ -165,8 +165,8 @@ namespace Twinning.AssistantPlus {
 				Identifier = ConvertHelper.MakeEnumerationToStringOfSnakeCase(ModuleType.PopcapPackageBuilder),
 				Name = "PopCap Package Builder",
 				Icon = FluentIconGlyph.DialShape3,
-				MainPage = typeof(View.PopcapPackageBuilder.MainPage),
-				SettingPanel = () => new View.PopcapPackageBuilder.SettingPanel() {
+				GetMainPage = () => typeof(View.PopcapPackageBuilder.MainPage),
+				BuildSettingPanel = () => new View.PopcapPackageBuilder.SettingPanel() {
 					Data = App.Instance.Setting.Data.PopcapPackageBuilder,
 				},
 				GenerateForwardOption = (resource) => {

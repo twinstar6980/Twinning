@@ -440,6 +440,7 @@
 						my:Stack.Weight="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
+						Loaded="{x:Bind Controller.uActiveProgress_Loaded}"
 						IsEnabled="{x:Bind Controller.uActiveProgress_IsEnabled}"
 						StepFrequency="1"
 						Minimum="{x:Bind Controller.uActiveProgress_Minimum}"

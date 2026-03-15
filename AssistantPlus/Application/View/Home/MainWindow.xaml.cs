@@ -119,7 +119,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					},
 				],
 			};
-			frame.NavigateToType(model.MainPage, null, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
+			frame.NavigateToType(model.GetMainPage(), null, new () { IsNavigationStackEnabled = false, TransitionInfoOverride = new DrillInNavigationTransitionInfo() });
 			frame.Content.As<Page>().Tag = configuration.Option;
 			this.uTab_TabItemsSource.Add(new () { Host = this, Title = configuration.Title, Type = configuration.Type, Frame = frame });
 			this.NotifyPropertyChanged([
@@ -218,15 +218,15 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public async Task ShowOnboarding(
 		) {
-			var hideDialogWrapper = new Wrapper<Action>();
+			var hideDialog = new Wrapper<Func<Task>>();
 			await ControlHelper.ShowDialogAsAutomatic(this.View.Content.As<FrameworkElement>(), "Onboarding", new OnboardingPanel() {
 				Stamp = UniqueStamp.Create(),
 			}.SelfAlso((it) => {
 				it.PanelExit += async () => {
-					hideDialogWrapper.Value!();
+					await hideDialog.Value.AsNotNull()();
 					return;
 				};
-			}), null, hideDialogWrapper);
+			}), null, doHide: hideDialog);
 			return;
 		}
 

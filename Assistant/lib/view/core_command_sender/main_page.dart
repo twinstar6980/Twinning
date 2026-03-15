@@ -200,9 +200,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           controller: this._commandListScrollController,
           itemCount: this._command.length,
           itemBuilder: (context, index) => BoxContainer.of(
+            key: ObjectKey(this._command[index]),
             padding: .fromLTRB(0, 6, 0, 6),
             child: CommandPanel(
               key: ObjectKey(this._command[index]),
+              orderIndex: index,
               groupConfiguration: this._command[index].groupConfiguration,
               itemConfiguration: this._command[index].itemConfiguration,
               batch: this._command[index].batch,
@@ -216,6 +218,14 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
               },
             ),
           ),
+          onReorder: (oldIndex, newIndex) async {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            var item = this._command.removeAt(oldIndex);
+            this._command.insert(newIndex, item);
+            await refreshState(this.setState);
+          },
         ).withStyledScrollBar(
           controller: this._commandListScrollController,
         ).withFlexExpanded(),

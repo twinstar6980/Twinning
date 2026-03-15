@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/utility/exception_helper.dart';
+import '/utility/convert_helper.dart';
 import '/bridge/data.dart';
 import '/bridge/proxy.dart';
 import '/bridge/service.dart';
@@ -111,7 +111,7 @@ class Launcher {
             MessageProxy.construct(callbackException, .new([]));
           }
           catch (e, s) {
-            MessageProxy.construct(callbackException, .new([ExceptionHelper.generateMessage(e, s)]));
+            MessageProxy.construct(callbackException, .new([ConvertHelper.generateExceptionMessage(e, s)]));
             MessageProxy.construct(callbackResult, .new([]));
           }
           callbackState.value = true;

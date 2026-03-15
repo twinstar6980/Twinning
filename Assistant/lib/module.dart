@@ -38,8 +38,8 @@ class ModuleInformation {
   String                                                                     identifier;
   String                                                                     name;
   IconData                                                                   icon;
-  Widget Function(Object setting, Object configuration, List<String> option) mainPage;
-  Widget Function(BuildContext context)                                      settingPanel;
+  Widget Function(Object setting, Object configuration, List<String> option) buildMainPage;
+  Widget Function(BuildContext context)                                      buildSettingPanel;
   Object Function(BuildContext context)                                      querySetting;
   Object Function(Object json)                                               parseConfiguration;
   Future<List<String>?> Function(List<String> resource)                      generateForwardOption;
@@ -48,8 +48,8 @@ class ModuleInformation {
     required this.identifier,
     required this.name,
     required this.icon,
-    required this.mainPage,
-    required this.settingPanel,
+    required this.buildMainPage,
+    required this.buildSettingPanel,
     required this.querySetting,
     required this.parseConfiguration,
     required this.generateForwardOption,
@@ -96,13 +96,13 @@ class ModuleHelper {
       identifier: ModuleType.coreTaskWorker.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Task Worker',
       icon: IconSet.rule_settings,
-      mainPage: (setting, configuration, option) => core_task_worker.MainPage(
+      buildMainPage: (setting, configuration, option) => core_task_worker.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => core_task_worker.SettingPanel(
+      buildSettingPanel: (context) => core_task_worker.SettingPanel(
         data: Provider.of<SettingProvider>(context, listen: false).data.coreTaskWorker,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
@@ -117,13 +117,13 @@ class ModuleHelper {
       identifier: ModuleType.coreCommandSender.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Command Sender',
       icon: IconSet.send,
-      mainPage: (setting, configuration, option) => core_command_sender.MainPage(
+      buildMainPage: (setting, configuration, option) => core_command_sender.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => core_command_sender.SettingPanel(
+      buildSettingPanel: (context) => core_command_sender.SettingPanel(
         data: Provider.of<SettingProvider>(context, listen: false).data.coreCommandSender,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
@@ -138,13 +138,13 @@ class ModuleHelper {
       identifier: ModuleType.coreResourceShipper.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
-      mainPage: (setting, configuration, option) => core_resource_shipper.MainPage(
+      buildMainPage: (setting, configuration, option) => core_resource_shipper.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => core_resource_shipper.SettingPanel(
+      buildSettingPanel: (context) => core_resource_shipper.SettingPanel(
         data: Provider.of<SettingProvider>(context, listen: false).data.coreResourceShipper,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
@@ -164,13 +164,13 @@ class ModuleHelper {
       identifier: ModuleType.popcapAnimationViewer.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Animation Viewer',
       icon: IconSet.thread_unread,
-      mainPage: (setting, configuration, option) => popcap_animation_viewer.MainPage(
+      buildMainPage: (setting, configuration, option) => popcap_animation_viewer.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => popcap_animation_viewer.SettingPanel(
+      buildSettingPanel: (context) => popcap_animation_viewer.SettingPanel(
         data: Provider.of<SettingProvider>(context, listen: false).data.popcapAnimationViewer,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),
@@ -198,13 +198,13 @@ class ModuleHelper {
       identifier: ModuleType.kairosoftGameManager.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Kairosoft Game Manager',
       icon: IconSet.history_edu,
-      mainPage: (setting, configuration, option) => kairosoft_game_manager.MainPage(
+      buildMainPage: (setting, configuration, option) => kairosoft_game_manager.MainPage(
         key: GlobalKey(),
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
       ),
-      settingPanel: (context) => kairosoft_game_manager.SettingPanel(
+      buildSettingPanel: (context) => kairosoft_game_manager.SettingPanel(
         data: Provider.of<SettingProvider>(context, listen: false).data.kairosoftGameManager,
         onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
       ),

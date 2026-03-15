@@ -21,10 +21,10 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();
-			ControlHelper.PostTask(this, async () => {
+			_ = ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(this.Tag.As<List<String>>());
-			}).SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			return;
 		}
 
@@ -161,7 +161,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if (optionImmediateLaunch != null) {
 				if (optionImmediateLaunch.AsNotNull()) {
-					_ = this.LaunchSession().SelfLet(ExceptionHelper.WrapTask);
+					_ = this.LaunchSession().SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 				}
 			}
 			return;
@@ -198,7 +198,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				_ = this.View.DispatcherQueue.EnqueueAsync(async () => {
 					await Task.Delay(40);
 					this.View.uMessageListScrollViewer.ChangeView(null, this.View.uMessageListScrollViewer.ScrollableHeight, null, true);
-				}).SelfLet(ExceptionHelper.WrapTask);
+				}).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			}
 			return;
 		}
@@ -285,7 +285,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				await this.SendMessage(MessageType.Success, "SUCCEEDED", result.AsNotNull());
 			}
 			else {
-				await this.SendMessage(MessageType.Error, "FAILED", [ExceptionHelper.GenerateMessage(exception)]);
+				await this.SendMessage(MessageType.Error, "FAILED", [ConvertHelper.GenerateExceptionMessage(exception)]);
 			}
 			this.SessionRunning = false;
 			this.NotifyPropertyChanged([
@@ -390,7 +390,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			_ = this.LaunchSession().SelfLet(ExceptionHelper.WrapTask);
+			_ = this.LaunchSession().SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			return;
 		}
 
@@ -678,7 +678,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			String title,
 			String description
 		) {
-			ApplicationNotificationManager.Instance.Push(title, description);
+			await ApplicationNotificationManager.Instance.Push(title, description);
 			return new ();
 		}
 

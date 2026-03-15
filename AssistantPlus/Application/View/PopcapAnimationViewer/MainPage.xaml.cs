@@ -26,10 +26,10 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();
-			ControlHelper.PostTask(this, async () => {
+			_ = ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(this.Tag.As<List<String>>());
-			}).SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			return;
 		}
 
@@ -142,8 +142,6 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			this.View.uSprite.HoldEnd = true;
 			this.View.uSprite.RepeatPlay = true;
 			this.View.uSprite.ShowBoundary = this.ShowBoundary;
-			this.View.uActiveProgress.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(this.uActiveProgress_PointerPressed), true);
-			this.View.uActiveProgress.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(this.uActiveProgress_PointerReleased), true);
 			return;
 		}
 
@@ -1517,6 +1515,21 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		private Boolean uActiveProgress_mChangingWhenPlaying = false;
 
+		private Boolean uActiveProgress_mLoadedDone { get; set; } = false;
+
+		public async void uActiveProgress_Loaded(
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Slider>();
+			if (!this.uActiveProgress_mLoadedDone) {
+				this.uActiveProgress_mLoadedDone = true;
+				senders.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(this.uActiveProgress_PointerPressed), true);
+				senders.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(this.uActiveProgress_PointerReleased), true);
+			}
+			return;
+		}
+
 		public async void uActiveProgress_PointerPressed(
 			Object                 sender,
 			PointerRoutedEventArgs args
@@ -1525,6 +1538,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
+			Debug.WriteLine($"pressed");
 			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			this.uActiveProgress_mChangeable = true;
 			this.uActiveProgress_mChangingWhenPlaying = this.ActiveProgressState.AsNotNull();

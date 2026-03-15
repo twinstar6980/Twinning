@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/utility/exception_helper.dart';
+import '/utility/convert_helper.dart';
 import '/bridge/data.dart';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
@@ -186,7 +186,7 @@ class ExecutorProxy {
         MessageProxy.construct(exception, .new([]));
       }
       catch (e, s) {
-        MessageProxy.construct(exception, .new([ExceptionHelper.generateMessage(e, s)]));
+        MessageProxy.construct(exception, .new([ConvertHelper.generateExceptionMessage(e, s)]));
         MessageProxy.construct(result, .new([]));
       }
       return null as Void;

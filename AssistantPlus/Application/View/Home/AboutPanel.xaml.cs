@@ -363,7 +363,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uSettingForwarderExtension_IsChecked {
 			get {
-				return ApplicationExtensionManager.Instance.CheckForwarder();
+				return ApplicationExtensionManager.Instance.CheckForwarder().Result;
 			}
 		}
 
@@ -372,7 +372,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			ApplicationExtensionManager.Instance.ToggleForwarder(!ApplicationExtensionManager.Instance.CheckForwarder());
+			await ApplicationExtensionManager.Instance.ToggleForwarder(!await ApplicationExtensionManager.Instance.CheckForwarder());
 			this.NotifyPropertyChanged([
 				nameof(this.uSettingForwarderExtension_IsChecked),
 				nameof(this.uSettingForwarderExtension_Content),
@@ -382,7 +382,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public String uSettingForwarderExtension_Content {
 			get {
-				return !ApplicationExtensionManager.Instance.CheckForwarder() ? "Disabled" : "Enabled";
+				return !ApplicationExtensionManager.Instance.CheckForwarder().Result ? "Disabled" : "Enabled";
 			}
 		}
 

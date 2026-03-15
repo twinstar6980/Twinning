@@ -30,7 +30,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region utility
 
-		public void Initialize(
+		public async Task Initialize(
 		) {
 			AssertTest(!this.mInitialized);
 			this.mInitialized = true;

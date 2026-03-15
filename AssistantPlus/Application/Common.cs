@@ -164,6 +164,17 @@ public static class CommonUtility {
 
 	// ----------------
 
+	public static void Move<TValue>(
+		this List<TValue> self,
+		Size              oldIndex,
+		Size              newIndex
+	) {
+		var item = self[oldIndex];
+		self.RemoveAt(oldIndex);
+		self.Insert(newIndex, item);
+		return;
+	}
+
 	public static ObservableCollection<TValue> ToObservableCollection<TValue>(
 		this IEnumerable<TValue> self
 	) {

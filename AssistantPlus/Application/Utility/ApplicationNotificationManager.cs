@@ -34,7 +34,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region utility
 
-		public void Initialize(
+		public async Task Initialize(
 		) {
 			AssertTest(!this.mInitialized);
 			if (!AppNotificationManager.IsSupported()) {
@@ -56,7 +56,7 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		public void Listen(
+		public async Task Listen(
 			Action? handler
 		) {
 			AssertTest(this.mInitialized);
@@ -66,7 +66,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		// ----------------
 
-		public void Push(
+		public async Task Push(
 			String title,
 			String description
 		) {

@@ -2,11 +2,11 @@ import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
 import '/application.dart';
-import '/utility/exception_helper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
+import '/utility/application_exception_manager.dart';
 import '/utility/application_notification_manager.dart';
 import '/utility/application_link_manager.dart';
 import '/utility/system_ui_helper.dart';
@@ -45,9 +45,9 @@ class MainApplication {
   ) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      ExceptionHelper.initialize();
-      ExceptionHelper.listen((exception, stack) async {
-        this._handleException(exception, stack);
+      await ApplicationExceptionManager.instance.initialize();
+      await ApplicationExceptionManager.instance.listen((exception, stack) async {
+        await this._handleException(exception, stack);
         return;
       });
       var needShowOnboarding = false;
@@ -126,7 +126,7 @@ class MainApplication {
             contentBuilder: (context, setStateForPanel) => [
               FlexContainer.horizontal([
                 StyledText.custom(
-                  ExceptionHelper.generateMessage(exception, stack),
+                  ConvertHelper.generateExceptionMessage(exception, stack),
                   overflow: .clip,
                 ).withSelectableArea(
                 ).withFlexExpanded(),

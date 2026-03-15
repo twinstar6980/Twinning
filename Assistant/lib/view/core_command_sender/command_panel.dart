@@ -13,6 +13,7 @@ class CommandPanel extends StatelessWidget {
 
   const CommandPanel({
     super.key,
+    required this.orderIndex,
     required this.groupConfiguration,
     required this.itemConfiguration,
     required this.batch,
@@ -24,6 +25,7 @@ class CommandPanel extends StatelessWidget {
 
   // ----------------
 
+  final Integer                         orderIndex;
   final MethodGroupConfiguration        groupConfiguration;
   final MethodConfiguration             itemConfiguration;
   final Wrapper<Boolean>                batch;
@@ -58,8 +60,17 @@ class CommandPanel extends StatelessWidget {
             ),
             Gap.horizontal(4),
             StyledIconButton.standard(
+              tooltip: 'Move',
+              icon: IconView.of(IconSet.swap_vert),
+              onPressed: (context) async {
+              },
+            ).withReorderableItemContainer(
+              index: this.orderIndex,
+            ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
               tooltip: 'Remove',
-              icon: IconView.of(IconSet.remove),
+              icon: IconView.of(IconSet.clear_all),
               onPressed: (context) async {
                 if (this.argument.every((value) => value.value == null) || await MoreModalDialogExtension.showForConfirm(context)) {
                   this.onRemove();

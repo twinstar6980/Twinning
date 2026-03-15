@@ -667,15 +667,17 @@ class ListContainer extends StatelessWidget {
     required this.controller,
     required this.itemCount,
     required this.itemBuilder,
+    required this.onReorder,
   });
 
   const ListContainer.of({
-    Key?                                                           key = null,
-    Boolean                                                        shrink = false,
-    EdgeInsetsGeometry?                                            padding = null,
-    ScrollController?                                              controller = null,
-    required Integer                                               itemCount,
-    required Widget? Function(BuildContext context, Integer index) itemBuilder,
+    Key?                                                          key = null,
+    Boolean                                                       shrink = false,
+    EdgeInsetsGeometry?                                           padding = null,
+    ScrollController?                                             controller = null,
+    required Integer                                              itemCount,
+    required Widget Function(BuildContext context, Integer index) itemBuilder,
+    Void Function(Integer newIndex, Integer oldIndex)?            onReorder = null,
   }) : this._(
     key: key,
     shrink: shrink,
@@ -683,27 +685,87 @@ class ListContainer extends StatelessWidget {
     controller: controller,
     itemCount: itemCount,
     itemBuilder: itemBuilder,
+    onReorder: onReorder,
   );
 
   // ----------------
 
-  final Boolean                                               shrink;
-  final EdgeInsetsGeometry?                                   padding;
-  final ScrollController?                                     controller;
-  final Integer                                               itemCount;
-  final Widget? Function(BuildContext context, Integer index) itemBuilder;
+  final Boolean                                              shrink;
+  final EdgeInsetsGeometry?                                  padding;
+  final ScrollController?                                    controller;
+  final Integer                                              itemCount;
+  final Widget Function(BuildContext context, Integer index) itemBuilder;
+  final Void Function(Integer newIndex, Integer oldIndex)?   onReorder;
 
   // ----------------
 
   @override
   build(context) {
-    return ListView.builder(
-      shrinkWrap: this.shrink,
-      physics: !this.shrink ? null : NeverScrollableScrollPhysics(),
-      padding: this.padding,
-      controller: this.controller,
-      itemCount: this.itemCount,
-      itemBuilder: this.itemBuilder,
+    return this.onReorder == null
+      ? ListView.builder(
+        shrinkWrap: this.shrink,
+        physics: !this.shrink ? null : NeverScrollableScrollPhysics(),
+        padding: this.padding,
+        controller: this.controller,
+        itemCount: this.itemCount,
+        itemBuilder: this.itemBuilder,
+      )
+      : ReorderableList(
+        shrinkWrap: this.shrink,
+        physics: !this.shrink ? null : NeverScrollableScrollPhysics(),
+        padding: this.padding,
+        controller: this.controller,
+        itemCount: this.itemCount,
+        itemBuilder: this.itemBuilder,
+        onReorder: this.onReorder!,
+      );
+  }
+
+}
+
+class ReorderableItemContainer extends StatelessWidget {
+
+  const ReorderableItemContainer._({
+    super.key,
+    required this.index,
+    required this.child,
+  });
+
+  const ReorderableItemContainer.of({
+    Key?             key = null,
+    required Integer index,
+    required Widget  child,
+  }) : this._(
+    key: key,
+    index: index,
+    child: child,
+  );
+
+  // ----------------
+
+  final Integer index;
+  final Widget  child;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return ReorderableDragStartListener(
+      index: this.index,
+      child: this.child,
+    );
+  }
+
+}
+
+extension ReorderableItemContainerExtension on Widget {
+
+  ReorderableItemContainer withReorderableItemContainer({
+    required Integer index,
+  }) {
+    return .of(
+      index: index,
+      child: this,
     );
   }
 

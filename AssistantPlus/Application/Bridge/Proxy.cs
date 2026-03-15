@@ -200,7 +200,7 @@ namespace Twinning.AssistantPlus.Bridge {
 					MessageProxy.Construct(exception, new ([]));
 				}
 				catch (Exception e) {
-					MessageProxy.Construct(exception, new ([ExceptionHelper.GenerateMessage(e)]));
+					MessageProxy.Construct(exception, new ([ConvertHelper.GenerateExceptionMessage(e)]));
 					MessageProxy.Construct(result, new ([]));
 				}
 				return;

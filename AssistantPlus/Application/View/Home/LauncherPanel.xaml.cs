@@ -260,7 +260,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			var senders = sender.As<Button>();
 			AssertTest(this.Category == ModuleLauncherCategory.Module);
 			this.Host.PanelExit();
-			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", ModuleHelper.Query(this.Configuration.Type).SettingPanel(), null);
+			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Module Setting", ModuleHelper.Query(this.Configuration.Type).BuildSettingPanel(), null);
 			await App.Instance.Setting.Save();
 			this.Host.PanelEnter();
 			return;

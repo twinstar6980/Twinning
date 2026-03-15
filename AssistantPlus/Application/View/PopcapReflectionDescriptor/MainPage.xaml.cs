@@ -20,10 +20,10 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();
-			ControlHelper.PostTask(this, async () => {
+			_ = ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(this.Tag.As<List<String>>());
-			}).SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			return;
 		}
 

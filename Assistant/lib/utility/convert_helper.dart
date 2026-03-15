@@ -3,10 +3,29 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:decimal/decimal.dart' as lib;
+import 'package:stack_trace/stack_trace.dart' as lib;
 
 // ----------------
 
 class ConvertHelper {
+
+  // #region exception
+
+  static String generateExceptionMessage(
+    Object      exception,
+    StackTrace? stack,
+  ) {
+    var result = '${exception}';
+    if (stack != null) {
+      var trace = lib.Trace.from(stack);
+      for (var frame in trace.frames) {
+        result += '\n@ ${frame.library.selfLet((it) => it.startsWith('package:assistant') ? it.substring('package:'.length) : it)}:${frame.line ?? '?'}:${frame.column ?? '?'} ${frame.member ?? '?'}';
+      }
+    }
+    return result;
+  }
+
+  // #endregion
 
   // #region enumeration
 

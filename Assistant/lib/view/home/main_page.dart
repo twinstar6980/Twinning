@@ -46,7 +46,7 @@ class _MainPageState extends State<MainPage> {
     this._pageList.add((
       title: configuration.title,
       type: configuration.type,
-      page: ModuleHelper.query(configuration.type).mainPage(
+      page: ModuleHelper.query(configuration.type).buildMainPage(
         moduleSetting,
         moduleConfiguration,
         configuration.option,

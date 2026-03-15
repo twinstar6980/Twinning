@@ -253,6 +253,17 @@
 										Click="{x:Bind uForward_Click}"
 										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Send}}" />
 									<Button
+										ToolTipService.ToolTip="Move"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Bottom"
+										Loaded="{x:Bind uMove_Loaded}"
+										CanDrag="True"
+										AllowDrop="True"
+										DragStarting="{x:Bind uMove_DragStarting}"
+										DragOver="{x:Bind uMove_DragOver}"
+										Drop="{x:Bind uMove_Drop}"
+										Content="{community:FontIcon FontSize={StaticResource MediumIconSize}, Glyph={StaticResource FluentIconGlyph.Move}}" />
+									<Button
 										ToolTipService.ToolTip="Remove"
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Bottom"

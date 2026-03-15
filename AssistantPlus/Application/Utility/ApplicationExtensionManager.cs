@@ -26,13 +26,13 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region utility
 
-		public Boolean CheckForwarder(
+		public async Task<Boolean> CheckForwarder(
 		) {
 			var stateFile = $"{App.Instance.SharedDirectory}/forwarder";
 			return StorageHelper.Exist(stateFile);
 		}
 
-		public void ToggleForwarder(
+		public async Task ToggleForwarder(
 			Boolean state
 		) {
 			var stateFile = $"{App.Instance.SharedDirectory}/forwarder";

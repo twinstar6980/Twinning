@@ -23,7 +23,7 @@ namespace Twinning.AssistantPlus {
 			nameof(CustomControl.Stamp),
 			typeof(UniqueStamp),
 			typeof(CustomControl),
-			new (UniqueStamp.Default, (o, _) => o.As<CustomControl>().StampUpdate().SelfLet(ExceptionHelper.WrapTask))
+			new (UniqueStamp.Default, (o, _) => o.As<CustomControl>().StampUpdate().SelfLet(ApplicationExceptionManager.Instance.WrapTask))
 		);
 
 		public UniqueStamp Stamp {

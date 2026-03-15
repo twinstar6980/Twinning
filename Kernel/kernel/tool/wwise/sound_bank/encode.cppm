@@ -147,18 +147,18 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::BusVoiceSetting const &          value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::voice_volume()>(map, value.volume);
+				convert_common_property_as_regular<Cptc::voice_volume()>(map, value.volume);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::voice_pitch()>(map, value.pitch);
+				convert_common_property_as_regular<Cptc::voice_pitch()>(map, value.pitch);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::voice_low_pass_filter()>(map, value.low_pass_filter);
+				convert_common_property_as_regular<Cptc::voice_low_pass_filter()>(map, value.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property_as_regular<Cptp::voice_high_pass_filter()>(map, value.high_pass_filter);
+				convert_common_property_as_regular<Cptc::voice_high_pass_filter()>(map, value.high_pass_filter);
 			}
 			return;
 		}
@@ -167,18 +167,18 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioVoice const &               value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_randomizable<Cptp::voice_volume()>(map, value.volume);
+				convert_common_property_as_randomizable<Cptc::voice_volume()>(map, value.volume);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_randomizable<Cptp::voice_pitch()>(map, value.pitch);
+				convert_common_property_as_randomizable<Cptc::voice_pitch()>(map, value.pitch);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_randomizable<Cptp::voice_low_pass_filter()>(map, value.low_pass_filter);
+				convert_common_property_as_randomizable<Cptc::voice_low_pass_filter()>(map, value.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property_as_randomizable<Cptp::voice_high_pass_filter()>(map, value.high_pass_filter);
+				convert_common_property_as_randomizable<Cptc::voice_high_pass_filter()>(map, value.high_pass_filter);
 			}
 			return;
 		}
@@ -187,9 +187,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
 			Definition::BusVoiceVolumeGainSetting const & value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {125})) {
-				convert_common_property_as_regular<Cptp::voice_volume_make_up_gain()>(map, value.make_up);
+				convert_common_property_as_regular<Cptc::voice_volume_make_up_gain()>(map, value.make_up);
 			}
 			return;
 		}
@@ -198,12 +198,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> &    map,
 			Definition::AudioVoiceVolumeGainSetting const & value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {88, 112})) {
-				convert_common_property_as_regular<Cptp::voice_volume_make_up_gain()>(map, value.make_up);
+				convert_common_property_as_regular<Cptc::voice_volume_make_up_gain()>(map, value.make_up);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property_as_randomizable<Cptp::voice_volume_make_up_gain()>(map, value.make_up);
+				convert_common_property_as_randomizable<Cptc::voice_volume_make_up_gain()>(map, value.make_up);
 			}
 			return;
 		}
@@ -212,9 +212,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::BusBusSetting const &            value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::bus_volume()>(map, value.volume);
+				convert_common_property_as_regular<Cptc::bus_volume()>(map, value.volume);
 			}
 			return;
 		}
@@ -223,15 +223,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::BusOutputBusSetting const &      value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::output_bus_volume()>(map, value.volume);
+				convert_common_property_as_regular<Cptc::output_bus_volume()>(map, value.volume);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::output_bus_low_pass_filter()>(map, value.low_pass_filter);
+				convert_common_property_as_regular<Cptc::output_bus_low_pass_filter()>(map, value.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::output_bus_high_pass_filter()>(map, value.high_pass_filter);
+				convert_common_property_as_regular<Cptc::output_bus_high_pass_filter()>(map, value.high_pass_filter);
 			}
 			return;
 		}
@@ -240,15 +240,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioOutputBusSetting const &    value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::output_bus_volume()>(map, value.volume);
+				convert_common_property_as_regular<Cptc::output_bus_volume()>(map, value.volume);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::output_bus_low_pass_filter()>(map, value.low_pass_filter);
+				convert_common_property_as_regular<Cptc::output_bus_low_pass_filter()>(map, value.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property_as_regular<Cptp::output_bus_high_pass_filter()>(map, value.high_pass_filter);
+				convert_common_property_as_regular<Cptc::output_bus_high_pass_filter()>(map, value.high_pass_filter);
 			}
 			return;
 		}
@@ -257,54 +257,54 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
 			Definition::AudioAuxiliarySendSetting const & value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::game_defined_auxiliary_send_volume()>(map, value.game_defined.volume);
+				convert_common_property_as_regular<Cptc::game_defined_auxiliary_send_volume()>(map, value.game_defined.volume);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::game_defined_auxiliary_send_low_pass_filter()>(map, value.game_defined.low_pass_filter);
+				convert_common_property_as_regular<Cptc::game_defined_auxiliary_send_low_pass_filter()>(map, value.game_defined.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::game_defined_auxiliary_send_high_pass_filter()>(map, value.game_defined.high_pass_filter);
-			}
-			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_volume_0()>(map, value.user_defined.item_1.volume);
-			}
-			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_low_pass_filter_0()>(map, value.user_defined.item_1.low_pass_filter);
-			}
-			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_high_pass_filter_0()>(map, value.user_defined.item_1.high_pass_filter);
+				convert_common_property_as_regular<Cptc::game_defined_auxiliary_send_high_pass_filter()>(map, value.game_defined.high_pass_filter);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_volume_1()>(map, value.user_defined.item_2.volume);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_volume_0()>(map, value.user_defined.item_1.volume);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_low_pass_filter_1()>(map, value.user_defined.item_2.low_pass_filter);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_low_pass_filter_0()>(map, value.user_defined.item_1.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_high_pass_filter_1()>(map, value.user_defined.item_2.high_pass_filter);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_high_pass_filter_0()>(map, value.user_defined.item_1.high_pass_filter);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_volume_2()>(map, value.user_defined.item_3.volume);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_volume_1()>(map, value.user_defined.item_2.volume);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_low_pass_filter_2()>(map, value.user_defined.item_3.low_pass_filter);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_low_pass_filter_1()>(map, value.user_defined.item_2.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_high_pass_filter_2()>(map, value.user_defined.item_3.high_pass_filter);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_high_pass_filter_1()>(map, value.user_defined.item_2.high_pass_filter);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_volume_3()>(map, value.user_defined.item_4.volume);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_volume_2()>(map, value.user_defined.item_3.volume);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_low_pass_filter_3()>(map, value.user_defined.item_4.low_pass_filter);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_low_pass_filter_2()>(map, value.user_defined.item_3.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {128})) {
-				convert_common_property_as_regular<Cptp::user_defined_auxiliary_send_high_pass_filter_3()>(map, value.user_defined.item_4.high_pass_filter);
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_high_pass_filter_2()>(map, value.user_defined.item_3.high_pass_filter);
+			}
+			if constexpr (check_version(t_version, {72})) {
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_volume_3()>(map, value.user_defined.item_4.volume);
+			}
+			if constexpr (check_version(t_version, {128})) {
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_low_pass_filter_3()>(map, value.user_defined.item_4.low_pass_filter);
+			}
+			if constexpr (check_version(t_version, {128})) {
+				convert_common_property_as_regular<Cptc::user_defined_auxiliary_send_high_pass_filter_3()>(map, value.user_defined.item_4.high_pass_filter);
 			}
 			if constexpr (check_version(t_version, {135})) {
-				convert_common_property_as_regular<Cptp::early_reflection_auxiliary_send_volume()>(map, value.early_reflection.volume);
+				convert_common_property_as_regular<Cptc::early_reflection_auxiliary_send_volume()>(map, value.early_reflection.volume);
 			}
 			return;
 		}
@@ -313,24 +313,24 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioPositioningSetting const &  value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::positioning_center_percent()>(map, value.center_percent);
+				convert_common_property_as_regular<Cptc::positioning_center_percent()>(map, value.center_percent);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property<Cptp::positioning_speaker_panning_x()>(map, value.speaker_panning.position.x);
+				convert_common_property<Cptc::positioning_speaker_panning_x()>(map, value.speaker_panning.position.x);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property<Cptp::positioning_speaker_panning_y()>(map, value.speaker_panning.position.y);
+				convert_common_property<Cptc::positioning_speaker_panning_y()>(map, value.speaker_panning.position.y);
 			}
 			if constexpr (check_version(t_version, {140})) {
-				convert_common_property<Cptp::positioning_speaker_panning_z()>(map, value.speaker_panning.position.z);
+				convert_common_property<Cptc::positioning_speaker_panning_z()>(map, value.speaker_panning.position.z);
 			}
 			if constexpr (check_version(t_version, {132})) {
-				convert_common_property_as_regular<Cptp::positioning_listener_routing_speaker_panning_division_spatialization_mix()>(map, value.listener_routing.speaker_panning_divsion_spatialization_mix);
+				convert_common_property_as_regular<Cptc::positioning_listener_routing_speaker_panning_division_spatialization_mix()>(map, value.listener_routing.speaker_panning_divsion_spatialization_mix);
 			}
 			if constexpr (check_version(t_version, {132})) {
-				convert_common_property<Cptp::positioning_listener_routing_attenuation_identifier()>(map, value.listener_routing.attenuation.identifier);
+				convert_common_property<Cptc::positioning_listener_routing_attenuation_identifier()>(map, value.listener_routing.attenuation.identifier);
 			}
 			return;
 		}
@@ -339,24 +339,24 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::BusHdrSetting const &            value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_threshold()>(map, value.dynamic.threshold);
+				convert_common_property<Cptc::hdr_threshold()>(map, value.dynamic.threshold);
 			}
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_ratio()>(map, value.dynamic.ratio);
+				convert_common_property<Cptc::hdr_ratio()>(map, value.dynamic.ratio);
 			}
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_release_time()>(map, value.dynamic.release_time);
+				convert_common_property<Cptc::hdr_release_time()>(map, value.dynamic.release_time);
 			}
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_window_tap_output_game_parameter_identifier()>(map, value.window_top_output_game_parameter.identifier);
+				convert_common_property<Cptc::hdr_window_tap_output_game_parameter_identifier()>(map, value.window_top_output_game_parameter.identifier);
 			}
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_window_tap_output_game_parameter_minimum()>(map, value.window_top_output_game_parameter.minimum);
+				convert_common_property<Cptc::hdr_window_tap_output_game_parameter_minimum()>(map, value.window_top_output_game_parameter.minimum);
 			}
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_window_tap_output_game_parameter_maximum()>(map, value.window_top_output_game_parameter.maximum);
+				convert_common_property<Cptc::hdr_window_tap_output_game_parameter_maximum()>(map, value.window_top_output_game_parameter.maximum);
 			}
 			return;
 		}
@@ -365,9 +365,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioHdrSetting const &          value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {88})) {
-				convert_common_property<Cptp::hdr_envelope_tracking_active_range()>(map, value.envelope_tracking.active_range);
+				convert_common_property<Cptc::hdr_envelope_tracking_active_range()>(map, value.envelope_tracking.active_range);
 			}
 			return;
 		}
@@ -376,33 +376,33 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::SoundMidiSetting const &         value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_event_play_on()>(map, value.event.play_on);
+				convert_common_property<Cptc::midi_event_play_on()>(map, value.event.play_on);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_note_tracking_root_note()>(map, value.note_tracking.root_note);
+				convert_common_property<Cptc::midi_note_tracking_root_note()>(map, value.note_tracking.root_note);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property_as_regular<Cptp::midi_transformation_transposition()>(map, value.transformation.transposition);
+				convert_common_property_as_regular<Cptc::midi_transformation_transposition()>(map, value.transformation.transposition);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property_as_regular<Cptp::midi_transformation_velocity_offset()>(map, value.transformation.velocity_offset);
+				convert_common_property_as_regular<Cptc::midi_transformation_velocity_offset()>(map, value.transformation.velocity_offset);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_filter_key_range_minimum()>(map, value.filter.key_range_minimum);
+				convert_common_property<Cptc::midi_filter_key_range_minimum()>(map, value.filter.key_range_minimum);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_filter_key_range_maximum()>(map, value.filter.key_range_maximum);
+				convert_common_property<Cptc::midi_filter_key_range_maximum()>(map, value.filter.key_range_maximum);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_filter_velocity_minimum()>(map, value.filter.velocity_minimum);
+				convert_common_property<Cptc::midi_filter_velocity_minimum()>(map, value.filter.velocity_minimum);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_filter_velocity_maximum()>(map, value.filter.velocity_maximum);
+				convert_common_property<Cptc::midi_filter_velocity_maximum()>(map, value.filter.velocity_maximum);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_filter_channel()>(map, value.filter.channel);
+				convert_common_property<Cptc::midi_filter_channel()>(map, value.filter.channel);
 			}
 			return;
 		}
@@ -411,12 +411,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::MusicMidiSetting const &         value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_target_identifier()>(map, value.target.identifier);
+				convert_common_property<Cptc::midi_target_identifier()>(map, value.target.identifier);
 			}
 			if constexpr (check_version(t_version, {112})) {
-				convert_common_property<Cptp::midi_clip_tempo_source()>(map, value.clip_tempo.source);
+				convert_common_property<Cptc::midi_clip_tempo_source()>(map, value.clip_tempo.source);
 			}
 			return;
 		}
@@ -425,7 +425,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> &  map,
 			Definition::AudioPlaybackLimitSetting const & value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			return;
 		}
 
@@ -433,7 +433,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioVirtualVoiceSetting const & value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			return;
 		}
 
@@ -441,12 +441,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> &     map,
 			Definition::AudioPlaybackPrioritySetting const & value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::playback_priority_value()>(map, value.value);
+				convert_common_property_as_regular<Cptc::playback_priority_value()>(map, value.value);
 			}
 			if constexpr (check_version(t_version, {72})) {
-				convert_common_property_as_regular<Cptp::playback_priority_offset_at_maximum_distance()>(map, value.offset_at_maximum_distance);
+				convert_common_property_as_regular<Cptc::playback_priority_offset_at_maximum_distance()>(map, value.offset_at_maximum_distance);
 			}
 			return;
 		}
@@ -455,12 +455,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioMotionSetting const &       value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {72, 128})) {
-				convert_common_property_as_randomizable<Cptp::motion_low_pass_filter()>(map, value.low_pass_filter);
+				convert_common_property_as_randomizable<Cptc::motion_low_pass_filter()>(map, value.low_pass_filter);
 			}
 			if constexpr (check_version(t_version, {72, 128})) {
-				convert_common_property_as_randomizable<Cptp::motion_volume_offset()>(map, value.volume_offset);
+				convert_common_property_as_randomizable<Cptc::motion_volume_offset()>(map, value.volume_offset);
 			}
 			return;
 		}
@@ -469,9 +469,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CommonPropertyMap<AudioCommonPropertyType> & map,
 			Definition::AudioMixerSetting const &        value
 		) -> Void {
-			using Cptp = AudioCommonPropertyType::Constant;
+			using Cptc = AudioCommonPropertyType::Constant;
 			if constexpr (check_version(t_version, {112, 150})) {
-				convert_common_property<Cptp::mixer_identifier()>(map, value.identifier);
+				convert_common_property<Cptc::mixer_identifier()>(map, value.identifier);
 			}
 			return;
 		}
@@ -2637,15 +2637,15 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property<Cptp::probability()>(common_property, property_value.probability);
+									convert_common_property<Cptc::probability()>(common_property, property_value.probability);
 								}
 							}
 						);
@@ -2671,12 +2671,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -2707,12 +2707,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -2749,12 +2749,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -2791,9 +2791,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -2810,9 +2810,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -2850,9 +2850,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {113})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -2869,12 +2869,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -2909,12 +2909,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -2949,12 +2949,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -2989,12 +2989,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -3029,12 +3029,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {112})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {112})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -3069,12 +3069,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -3097,12 +3097,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::fade_time()>(common_property, property_value.fade_time);
+									convert_common_property_as_randomizable<Cptc::fade_time()>(common_property, property_value.fade_time);
 								}
 							}
 						);
@@ -3140,9 +3140,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3159,9 +3159,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3184,9 +3184,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3209,9 +3209,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3228,9 +3228,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {72})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3266,9 +3266,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {112})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3285,9 +3285,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data,
 							k_true,
 							[&](auto & common_property) {
-								using Cptp = EventActionCommonPropertyType::Constant;
+								using Cptc = EventActionCommonPropertyType::Constant;
 								if constexpr (check_version(t_version, {113})) {
-									convert_common_property_as_randomizable<Cptp::delay()>(common_property, property_value.delay);
+									convert_common_property_as_randomizable<Cptc::delay()>(common_property, property_value.delay);
 								}
 							}
 						);
@@ -3459,30 +3459,30 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = ModulatorCommonPropertyType::Constant;
+						using Cptc = ModulatorCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::depth()>(common_property, value.depth);
+							convert_common_property_as_randomizable<Cptc::depth()>(common_property, value.depth);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::frequency()>(common_property, value.frequency);
+							convert_common_property_as_randomizable<Cptc::frequency()>(common_property, value.frequency);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property<Cptp::waveform()>(common_property, value.waveform);
+							convert_common_property<Cptc::waveform()>(common_property, value.waveform);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::smoothing()>(common_property, value.smoothing);
+							convert_common_property_as_randomizable<Cptc::smoothing()>(common_property, value.smoothing);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::pulse_width_modulation()>(common_property, value.pulse_width_modulation);
+							convert_common_property_as_randomizable<Cptc::pulse_width_modulation()>(common_property, value.pulse_width_modulation);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::attack()>(common_property, value.attack);
+							convert_common_property_as_randomizable<Cptc::attack()>(common_property, value.attack);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::initial_phase_offset()>(common_property, value.initial_phase_offset);
+							convert_common_property_as_randomizable<Cptc::initial_phase_offset()>(common_property, value.initial_phase_offset);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property<Cptp::scope()>(common_property, value.scope);
+							convert_common_property<Cptc::scope()>(common_property, value.scope);
 						}
 					}
 				);
@@ -3503,33 +3503,33 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = ModulatorCommonPropertyType::Constant;
+						using Cptc = ModulatorCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::attack_time()>(common_property, value.attack_time);
+							convert_common_property_as_randomizable<Cptc::attack_time()>(common_property, value.attack_time);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::attack_curve()>(common_property, value.attack_curve);
+							convert_common_property_as_randomizable<Cptc::attack_curve()>(common_property, value.attack_curve);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::decay_time()>(common_property, value.decay_time);
+							convert_common_property_as_randomizable<Cptc::decay_time()>(common_property, value.decay_time);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::sustain_level()>(common_property, value.sustain_level);
+							convert_common_property_as_randomizable<Cptc::sustain_level()>(common_property, value.sustain_level);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::release_time()>(common_property, value.release_time);
+							convert_common_property_as_randomizable<Cptc::release_time()>(common_property, value.release_time);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property<Cptp::scope()>(common_property, value.scope);
+							convert_common_property<Cptc::scope()>(common_property, value.scope);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property<Cptp::trigger_on()>(common_property, value.trigger_on);
+							convert_common_property<Cptc::trigger_on()>(common_property, value.trigger_on);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_randomizable<Cptp::sustain_time()>(common_property, value.sustain_time);
+							convert_common_property_as_randomizable<Cptc::sustain_time()>(common_property, value.sustain_time);
 						}
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property<Cptp::stop_playback()>(common_property, value.stop_playback_after_release);
+							convert_common_property<Cptc::stop_playback()>(common_property, value.stop_playback_after_release);
 						}
 					}
 				);
@@ -3550,27 +3550,27 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = ModulatorCommonPropertyType::Constant;
+						using Cptc = ModulatorCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property_as_randomizable<Cptp::initial_delay()>(common_property, value.initial_delay);
+							convert_common_property_as_randomizable<Cptc::initial_delay()>(common_property, value.initial_delay);
 						}
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property_as_regular<Cptp::duration()>(common_property, value.duration);
+							convert_common_property_as_regular<Cptc::duration()>(common_property, value.duration);
 						}
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property_as_randomizable<Cptp::loop()>(common_property, value.loop);
+							convert_common_property_as_randomizable<Cptc::loop()>(common_property, value.loop);
 						}
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property_as_randomizable<Cptp::playback_rate()>(common_property, value.playback_rate);
+							convert_common_property_as_randomizable<Cptc::playback_rate()>(common_property, value.playback_rate);
 						}
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property<Cptp::scope()>(common_property, value.scope);
+							convert_common_property<Cptc::scope()>(common_property, value.scope);
 						}
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property<Cptp::trigger_on()>(common_property, value.trigger_on);
+							convert_common_property<Cptc::trigger_on()>(common_property, value.trigger_on);
 						}
 						if constexpr (check_version(t_version, {132})) {
-							convert_common_property<Cptp::stop_playback()>(common_property, value.stop_playback_at_end);
+							convert_common_property<Cptc::stop_playback()>(common_property, value.stop_playback_at_end);
 						}
 					}
 				);
@@ -3666,7 +3666,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_false,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
 						}
@@ -3799,12 +3799,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {88})) {
-							convert_common_property_as_randomizable<Cptp::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
+							convert_common_property_as_randomizable<Cptc::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(t_version, {72})) {
-							convert_common_property_as_randomizable<Cptp::playback_loop()>(common_property, value.playback_setting.loop);
+							convert_common_property_as_randomizable<Cptc::playback_loop()>(common_property, value.playback_setting.loop);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -3900,9 +3900,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {88})) {
-							convert_common_property_as_randomizable<Cptp::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
+							convert_common_property_as_randomizable<Cptc::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4007,9 +4007,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {88})) {
-							convert_common_property_as_randomizable<Cptp::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
+							convert_common_property_as_randomizable<Cptc::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4120,9 +4120,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {88})) {
-							convert_common_property_as_randomizable<Cptp::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
+							convert_common_property_as_randomizable<Cptc::playback_initial_delay()>(common_property, value.playback_setting.initial_delay);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4227,7 +4227,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
 						}
@@ -4331,7 +4331,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
 						}
@@ -4438,9 +4438,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_regular<Cptp::playback_speed()>(common_property, value.playback_setting.speed);
+							convert_common_property_as_regular<Cptc::playback_speed()>(common_property, value.playback_setting.speed);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4551,9 +4551,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_regular<Cptp::playback_speed()>(common_property, value.playback_setting.speed);
+							convert_common_property_as_regular<Cptc::playback_speed()>(common_property, value.playback_setting.speed);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);
@@ -4664,9 +4664,9 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					data,
 					k_true,
 					[&](auto & common_property) {
-						using Cptp = AudioCommonPropertyType::Constant;
+						using Cptc = AudioCommonPropertyType::Constant;
 						if constexpr (check_version(t_version, {112})) {
-							convert_common_property_as_regular<Cptp::playback_speed()>(common_property, value.playback_setting.speed);
+							convert_common_property_as_regular<Cptc::playback_speed()>(common_property, value.playback_setting.speed);
 						}
 						if constexpr (check_version(t_version, {72})) {
 							load_common_property(common_property, value.voice);

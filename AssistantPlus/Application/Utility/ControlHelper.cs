@@ -42,12 +42,12 @@ namespace Twinning.AssistantPlus.Utility {
 					semaphore.Release();
 					ControlHelper.Dialog.RemoveAt(index - 1);
 					if (index > 1) {
-						_ = ControlHelper.Dialog[^1].ShowAsync().AsTask().SelfLet(ExceptionHelper.WrapTask);
+						_ = ControlHelper.Dialog[^1].ShowAsync().AsTask().SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 					}
 				}
 				return;
 			};
-			_ = item.ShowAsync().AsTask().SelfLet(ExceptionHelper.WrapTask);
+			_ = item.ShowAsync().AsTask().SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			await semaphore.WaitAsync();
 			return result;
 		}
@@ -68,7 +68,8 @@ namespace Twinning.AssistantPlus.Utility {
 			String                            title,
 			Object?                           content,
 			Tuple<String?, String?, String?>? action,
-			Wrapper<Action>?                  hideWrapper = null
+			Boolean                           scrollable = true,
+			Wrapper<Func<Task>>?              doHide     = null
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
@@ -90,8 +91,8 @@ namespace Twinning.AssistantPlus.Utility {
 						IsTabStop = true,
 						HorizontalScrollMode = ScrollMode.Disabled,
 						HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-						VerticalScrollMode = ScrollMode.Enabled,
-						VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
+						VerticalScrollMode = scrollable ? ScrollMode.Enabled : ScrollMode.Disabled,
+						VerticalScrollBarVisibility = scrollable ? ScrollBarVisibility.Visible : ScrollBarVisibility.Disabled,
 						Content = content,
 					},
 				CloseButtonText = action == null ? "Close" : action.Item1,
@@ -105,11 +106,13 @@ namespace Twinning.AssistantPlus.Utility {
 							? ContentDialogButton.Secondary
 							: ContentDialogButton.Close,
 			};
-			hideWrapper?.Value = async () => {
+			var task = ControlHelper.PushDialog(dialog);
+			doHide?.Value = async () => {
 				dialog.Hide();
+				await task;
 				return;
 			};
-			return await ControlHelper.PushDialog(dialog);
+			return await task;
 		}
 
 		public static async Task<ContentDialogResult> ShowDialogAsFixed(
@@ -117,8 +120,9 @@ namespace Twinning.AssistantPlus.Utility {
 			String                            title,
 			Object?                           content,
 			Tuple<String?, String?, String?>? action,
-			Tuple<Size, Size>?                size        = null,
-			Wrapper<Action>?                  hideWrapper = null
+			Boolean                           scrollable = true,
+			Tuple<Size, Size>?                size       = null,
+			Wrapper<Func<Task>>?              doHide     = null
 		) {
 			var dialog = new ContentDialog() {
 				XamlRoot = root.XamlRoot,
@@ -140,8 +144,8 @@ namespace Twinning.AssistantPlus.Utility {
 						IsTabStop = true,
 						HorizontalScrollMode = ScrollMode.Disabled,
 						HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-						VerticalScrollMode = ScrollMode.Enabled,
-						VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
+						VerticalScrollMode = scrollable ? ScrollMode.Enabled : ScrollMode.Disabled,
+						VerticalScrollBarVisibility = scrollable ? ScrollBarVisibility.Visible : ScrollBarVisibility.Disabled,
 						Content = content,
 					},
 				CloseButtonText = action == null ? "Close" : action.Item1,
@@ -161,11 +165,13 @@ namespace Twinning.AssistantPlus.Utility {
 					new ("ContentDialogMaxHeight", size?.Item2 ?? 640.0),
 				],
 			};
-			hideWrapper?.Value = async () => {
+			var task = ControlHelper.PushDialog(dialog);
+			doHide?.Value = async () => {
 				dialog.Hide();
+				await task;
 				return;
 			};
-			return await ControlHelper.PushDialog(dialog);
+			return await task;
 		}
 
 		// ----------------
@@ -173,7 +179,7 @@ namespace Twinning.AssistantPlus.Utility {
 		public static async Task<Func<Task>> ShowDialogForWait(
 			FrameworkElement root
 		) {
-			var hideWrapper = new Wrapper<Action>();
+			var doHide = new Wrapper<Func<Task>>();
 			var task = ControlHelper.ShowDialogAsAutomatic(
 				root,
 				"Waiting ...",
@@ -183,13 +189,10 @@ namespace Twinning.AssistantPlus.Utility {
 					IsIndeterminate = true,
 				},
 				new ("Hide", null, null),
-				hideWrapper
-			).SelfLet(ExceptionHelper.WrapTask);
-			return async () => {
-				hideWrapper.Value!();
-				await task;
-				return;
-			};
+				false,
+				doHide
+			).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
+			return doHide.Value.AsNotNull();
 		}
 
 		public static async Task<Boolean> ShowDialogForConfirm(

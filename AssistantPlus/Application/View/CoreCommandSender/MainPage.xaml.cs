@@ -3,6 +3,8 @@
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
+using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI.Xaml.Input;
 using FluentIconGlyph = Twinning.AssistantPlus.Control.FluentIconGlyph;
 
 namespace Twinning.AssistantPlus.View.CoreCommandSender {
@@ -20,10 +22,10 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			this.InitializeComponent();
 			this.Controller = new () { View = this };
 			this.Controller.InitializeView();
-			ControlHelper.PostTask(this, async () => {
+			_ = ControlHelper.PostTask(this, async () => {
 				await this.Controller.OpenView();
 				await this.Controller.ApplyOption(this.Tag.As<List<String>>());
-			}).SelfLet(ExceptionHelper.WrapTask);
+			}).SelfLet(ApplicationExceptionManager.Instance.WrapTask);
 			return;
 		}
 
@@ -159,6 +161,10 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 		#endregion
 
 		#region action
+
+		public const String DataViewFormatForCommand = $"{nameof(Twinning)}.{nameof(AssistantPlus)}.{nameof(CoreCommandSender)}.Command";
+
+		// ----------------
 
 		public async Task AppendCommand(
 			String                     method,
@@ -447,6 +453,61 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			var senders = sender.As<Button>();
 			if (this.Argument.All((value) => value.Value == null) || await ControlHelper.ShowDialogForConfirm(this.Host.View, null, null)) {
 				await this.Host.RemoveCommand(this.Host.uCommandList_ItemsSource.IndexOf(this));
+			}
+			return;
+		}
+
+		public async void uMove_Loaded(
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			senders.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(this.uMove_PointerReleased), true);
+			return;
+		}
+
+		public async void uMove_PointerReleased(
+			Object                 sender,
+			PointerRoutedEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			args.Handled = true;
+			await senders.StartDragAsync(args.GetCurrentPoint(senders));
+			return;
+		}
+
+		public async void uMove_DragStarting(
+			Object                sender,
+			DragStartingEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			args.Data.SetData(MainPageController.DataViewFormatForCommand, this.Host.uCommandList_ItemsSource.IndexOf(this));
+			return;
+		}
+
+		public async void uMove_DragOver(
+			Object        sender,
+			DragEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			if (args.DataView.Contains(MainPageController.DataViewFormatForCommand)) {
+				args.AcceptedOperation = DataPackageOperation.Move;
+			}
+			return;
+		}
+
+		public async void uMove_Drop(
+			Object        sender,
+			DragEventArgs args
+		) {
+			var senders = sender.As<Button>();
+			if (args.DataView.Contains(MainPageController.DataViewFormatForCommand)) {
+				args.Handled = true;
+				var oldIndex = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForCommand)).As<Size>();
+				var newIndex = this.Host.uCommandList_ItemsSource.IndexOf(this);
+				Debug.WriteLine($"{oldIndex} -> {newIndex}");
+				this.Host.Command.Move(oldIndex, newIndex);
+				this.Host.uCommandList_ItemsSource.Move(oldIndex, newIndex);
 			}
 			return;
 		}
