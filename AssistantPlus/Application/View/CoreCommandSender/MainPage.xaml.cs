@@ -505,7 +505,6 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				args.Handled = true;
 				var oldIndex = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForCommand)).As<Size>();
 				var newIndex = this.Host.uCommandList_ItemsSource.IndexOf(this);
-				Debug.WriteLine($"{oldIndex} -> {newIndex}");
 				this.Host.Command.Move(oldIndex, newIndex);
 				this.Host.uCommandList_ItemsSource.Move(oldIndex, newIndex);
 			}

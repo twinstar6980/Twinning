@@ -1,5 +1,5 @@
 name: assistant
-version: 155.0.0+155
+version: 156.0.0+156
 publish_to: 'none'
 environment:
   sdk: ^3.11.1
@@ -19,7 +19,7 @@ dependencies:
   provider: 6.1.5+1
   path_provider: 2.1.5
   material_symbols_icons: 4.2906.0
-  single_child_two_dimensional_scroll_view: 0.0.3
+  single_child_two_dimensional_scroll_view: 0.1.0
   super_drag_and_drop: 0.9.1
   dynamic_color: 1.8.1
   window_manager: 0.5.1

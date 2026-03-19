@@ -1538,7 +1538,6 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			if (!this.Activated) {
 				return;
 			}
-			Debug.WriteLine($"pressed");
 			AssertTest(this.View.uSprite.State != SpriteControl.StateType.Idle);
 			this.uActiveProgress_mChangeable = true;
 			this.uActiveProgress_mChangingWhenPlaying = this.ActiveProgressState.AsNotNull();
