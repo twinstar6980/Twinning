@@ -75,7 +75,7 @@ def main(
 			'--plat=macosx',
 			'--arch=arm64',
 			'--toolchain=xcode',
-			'--target_minver=11.5',
+			'--target_minver=13.3',
 			'--cc=clang',
 			'--cxx=clang',
 		])
@@ -122,7 +122,7 @@ def main(
 			'--plat=iphoneos',
 			'--arch=arm64',
 			'--toolchain=xcode',
-			'--target_minver=15.6',
+			'--target_minver=16.3',
 			'--cc=clang',
 			'--cxx=clang',
 		])
