@@ -18,7 +18,7 @@ def main(
 	# build
 	Kernel.BUILD.main(platform)
 	Shell.BUILD.main(platform)
-	Script.BUILD.main('any')
+	Script.BUILD.main('any.any')
 	Assistant.BUILD.main(platform)
 	if check_platform(platform, ['windows.amd64']):
 		AssistantPlus.BUILD.main(platform)
