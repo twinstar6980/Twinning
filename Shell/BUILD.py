@@ -9,11 +9,10 @@ from common.python.utility import *
 def main(
 	platform: str,
 ) -> None:
-	if platform not in ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']:
-		raise RuntimeError(f'invalid platform \'{platform}\'')
+	ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
 	module_directory, module_name = get_project_module(__file__)
 	module_distribution_file = get_project_distribution(f'{platform}.{module_name}')
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_remove(
 			f'{module_distribution_file}',
 		)
@@ -42,7 +41,7 @@ def main(
 			f'{module_distribution_file}',
 			f'{module_directory}/shell/resource/windows/application.manifest',
 		)
-	if platform in ['linux.amd64']:
+	if check_platform(platform, ['linux.amd64']):
 		fs_remove(
 			f'{module_distribution_file}',
 		)
@@ -64,7 +63,7 @@ def main(
 			f'{module_directory}/.build/linux/x86_64/release/shell',
 			f'{module_distribution_file}',
 		)
-	if platform in ['macintosh.arm64']:
+	if check_platform(platform, ['macintosh.arm64']):
 		fs_remove(
 			f'{module_distribution_file}',
 		)
@@ -88,7 +87,7 @@ def main(
 			f'{module_directory}/.build/macosx/arm64/release/shell',
 			f'{module_distribution_file}',
 		)
-	if platform in ['android.arm64']:
+	if check_platform(platform, ['android.arm64']):
 		fs_remove(
 			f'{module_distribution_file}',
 		)
@@ -111,7 +110,7 @@ def main(
 			f'{module_directory}/.build/android/arm64-v8a/release/shell',
 			f'{module_distribution_file}',
 		)
-	if platform in ['iphone.arm64']:
+	if check_platform(platform, ['iphone.arm64']):
 		fs_remove(
 			f'{module_distribution_file}',
 		)
@@ -139,6 +138,7 @@ def main(
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')
+	return
 
 if __name__ == '__main__':
 	main(sys.argv[1])

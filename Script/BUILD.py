@@ -9,11 +9,10 @@ from common.python.utility import *
 def main(
 	platform: str,
 ) -> None:
-	if platform not in ['any']:
-		raise RuntimeError(f'invalid platform \'{platform}\'')
+	ensure_platform(platform, ['any.any'])
 	module_directory, module_name = get_project_module(__file__)
 	module_distribution_file = get_project_distribution(f'{platform}.{module_name}')
-	if platform in ['any']:
+	if check_platform(platform, ['any.any']):
 		module_distribution_file += '.zip'
 		fs_remove(
 			f'{module_distribution_file}',
@@ -32,6 +31,7 @@ def main(
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')
+	return
 
 if __name__ == '__main__':
 	main(sys.argv[1])

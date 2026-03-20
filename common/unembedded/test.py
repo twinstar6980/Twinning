@@ -9,8 +9,7 @@ from common.python.utility import *
 def main(
 	platform: str,
 ) -> None:
-	if platform not in ['windows.amd64', 'linux.amd64', 'macintosh.arm64']:
-		raise RuntimeError(f'invalid platform \'{platform}\'')
+	ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64'])
 	project_directory = f'{get_project()}'
 	test_directory = f'{get_project_local()}/test'
 	fs_create_directory(
@@ -19,7 +18,7 @@ def main(
 	fs_create_directory(
 		f'{test_directory}/temporary',
 	)
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_create_link(
 			f'{test_directory}/library',
 			f'{project_directory}/Assistant/windows/package/Library',
@@ -40,7 +39,7 @@ def main(
 			f'{project_directory}/Shell/.build/windows/x64/release/shell.exe',
 			False,
 		)
-	if platform in ['linux.amd64']:
+	if check_platform(platform, ['linux.amd64']):
 		fs_create_directory(
 			f'{test_directory}/library',
 		)
@@ -59,7 +58,7 @@ def main(
 			f'{project_directory}/Shell/.build/linux/x86_64/release/shell',
 			False,
 		)
-	if platform in ['macintosh.arm64']:
+	if check_platform(platform, ['macintosh.arm64']):
 		fs_create_directory(
 			f'{test_directory}/library',
 		)
@@ -94,6 +93,7 @@ def main(
 		True,
 	)
 	print(f'>> TEST >> {test_directory}')
+	return
 
 if __name__ == '__main__':
 	main(sys.argv[1])

@@ -14,14 +14,13 @@ import AssistantPlus.BUILD
 def main(
 	platform: str,
 ) -> None:
-	if platform not in ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']:
-		raise RuntimeError(f'invalid platform \'{platform}\'')
+	ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
 	# build
 	Kernel.BUILD.main(platform)
 	Shell.BUILD.main(platform)
 	Script.BUILD.main('any')
 	Assistant.BUILD.main(platform)
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		AssistantPlus.BUILD.main(platform)
 	# path
 	project_directory = get_project()
@@ -48,7 +47,7 @@ def main(
 		fs_create_directory(
 			f'{bundle_directory}/library',
 		)
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
 			f'{project_directory}/Assistant/windows/package/Library/libc++.dll',
 			f'{bundle_directory}/library/libc++.dll',
@@ -57,35 +56,35 @@ def main(
 			f'{project_directory}/Assistant/windows/package/Library/libunwind.dll',
 			f'{bundle_directory}/library/libunwind.dll',
 		)
-	if platform in ['android.arm64']:
+	if check_platform(platform, ['android.arm64']):
 		fs_copy(
 			f'{project_directory}/Assistant/android/app/src/main/jniLibs/arm64-v8a/libc++_shared.so',
 			f'{bundle_directory}/library/libc++_shared.so',
 		)
 	# launch
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
 			f'{project_directory}/common/unembedded/launch.cmd',
 			f'{bundle_directory}/launch.cmd',
 		)
-	if platform in ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']:
+	if check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		fs_copy(
 			f'{project_directory}/common/unembedded/launch.sh',
 			f'{bundle_directory}/launch.sh',
 		)
 	# kernel
-	if platform in ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']:
+	if check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.kernel',
 			f'{bundle_directory}/kernel',
 		)
 	# shell
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.shell',
 			f'{bundle_directory}/shell.exe',
 		)
-	if platform in ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']:
+	if check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.shell',
 			f'{bundle_directory}/shell',
@@ -102,33 +101,33 @@ def main(
 			f'{project_directory}/common/unembedded/assistant',
 			f'{bundle_directory}/assistant',
 		)
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.assistant.msix',
 			f'{bundle_directory}/assistant.msix',
 		)
-	if platform in ['linux.amd64']:
+	if check_platform(platform, ['linux.amd64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.assistant.zip',
 			f'{bundle_directory}/assistant.zip',
 		)
-	if platform in ['macintosh.arm64']:
+	if check_platform(platform, ['macintosh.arm64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.assistant.dmg',
 			f'{bundle_directory}/assistant.dmg',
 		)
-	if platform in ['android.arm64']:
+	if check_platform(platform, ['android.arm64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.assistant.apk',
 			f'{bundle_directory}/assistant.apk',
 		)
-	if platform in ['iphone.arm64']:
+	if check_platform(platform, ['iphone.arm64']):
 		fs_copy(
 			f'{distribution_directory}/{platform}.assistant.ipa',
 			f'{bundle_directory}/assistant.ipa',
 		)
 	# assistant_plus
-	if platform in ['windows.amd64']:
+	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
 			f'{project_directory}/common/unembedded/assistant_plus',
 			f'{bundle_directory}/assistant_plus',
@@ -144,6 +143,7 @@ def main(
 		f'{bundle_file}',
 	)
 	print(f'>> BUILD >> {bundle_file}')
+	return
 
 if __name__ == '__main__':
 	main(sys.argv[1])
