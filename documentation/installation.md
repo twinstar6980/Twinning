@@ -12,7 +12,7 @@
 
 工具支持以下平台：
 
-* 操作系统：`Windows 10+` 、`Linux ~` 、`Macintosh 11+` 、`Android 11+` 、`Iphone 15+` 。
+* 操作系统：`Windows 10+` 、`Linux ~` 、`Macintosh 13+` 、`Android 11+` 、`Iphone 16+` 。
 
 * 处理器架构：`AMD64` 、`ARM64` 。
 

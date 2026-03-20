@@ -92,7 +92,7 @@ def main(
 	# script
 	if True:
 		unpack_zip(
-			f'{distribution_directory}/any.script.zip',
+			f'{distribution_directory}/any.any.script.zip',
 			f'{bundle_directory}',
 		)
 	# assistant
