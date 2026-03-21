@@ -19,6 +19,10 @@ def main(
 		)
 		execute_command(module_directory, [
 			'npm',
+			'install',
+		])
+		execute_command(module_directory, [
+			'npm',
 			'run',
 			'build',
 		])

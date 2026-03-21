@@ -82,6 +82,10 @@
 # Environment - Xmake
 /**/xmake.lua                                text eol=lf
 
+# Environment - Node.js
+/**/package.json                             text eol=lf
+/**/tsconfig.json                            text eol=lf
+
 # Environment - Gradle
 /**/gradlew                                  text eol=lf
 /**/gradlew.bat                              text eol=crlf
