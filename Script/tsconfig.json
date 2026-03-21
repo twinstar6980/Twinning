@@ -5,13 +5,12 @@
 			"ES2024",
 		],
 		"module": "es2022",
-		"baseUrl": ".",
 		"paths": {
 			"~/*": [
-				"./*",
+				"./src/*",
 			],
 		},
-		"outDir": "./.build",
+		"outDir": "dist",
 		"declaration": false,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
@@ -20,10 +19,6 @@
 		"newLine": "lf",
 	},
 	"include": [
-		"kernel.d.ts",
-		"./**/*",
-	],
-	"exclude": [
-		"./.build",
+		"src",
 	],
 }

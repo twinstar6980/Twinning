@@ -1,0 +1,13 @@
+{
+	"name": "script",
+	"version": "164.0.0",
+	"scripts": {
+		"build": "tsc"
+	},
+	"dependencies": {
+	},
+	"devDependencies": {
+		"typescript": "5.9.3"
+	},
+	"private": true
+}

@@ -18,16 +18,18 @@ def main(
 			f'{module_distribution_file}',
 		)
 		execute_command(module_directory, [
-			'tsc',
+			'npm',
+			'run',
+			'build',
 		])
 		fs_create_link(
-			f'{module_directory}/.build/configuration',
-			f'{module_directory}/configuration',
+			f'{module_directory}/dist/configuration',
+			f'{module_directory}/src/configuration',
 			False,
 		)
 		pack_zip(
 			'script',
-			f'{module_directory}/.build',
+			f'{module_directory}/dist',
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')

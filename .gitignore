@@ -12,6 +12,10 @@
 # Environment - Xmake
 /**/.xmake
 
+# Environment - Node.js
+/**/package-lock.json
+/**/node_modules
+
 # Environment - Gradle
 /**/.gradle
 
@@ -47,7 +51,7 @@
 /Shell/.project
 
 # Module - Script
-/Script/.build
+/Script/dist
 
 # Module - Assistant
 /Assistant/build
