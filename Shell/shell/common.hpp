@@ -1,11 +1,5 @@
 #pragma once
 
-#pragma region version
-
-#define M_version "71"
-
-#pragma endregion
-
 #pragma region keyword
 
 #define implicit\

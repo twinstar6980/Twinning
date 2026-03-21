@@ -43,5 +43,6 @@ target('third.lzma', function()
 		import('common.xmake.utility')
 		utility.apply_compiler_option_basic(target)
 		utility.apply_compiler_option_warning_disable(target)
+		return
 	end)
 end)

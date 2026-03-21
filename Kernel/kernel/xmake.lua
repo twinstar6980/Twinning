@@ -10,11 +10,11 @@ target('kernel', function()
 	add_files(
 		'./**.cppm',
 		'./**.cpp',
-		m.root .. '/../common/cpp/std.cppm',
+		manifest.root .. '/../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(
-		m.root .. '',
+		manifest.root .. '',
 		{}
 	)
 	add_deps(
@@ -38,5 +38,6 @@ target('kernel', function()
 		utility.apply_condition_definition_basic(target)
 		utility.apply_compiler_option_basic(target)
 		utility.apply_compiler_option_warning_regular(target)
+		return
 	end)
 end)

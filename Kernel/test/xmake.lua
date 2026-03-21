@@ -9,13 +9,13 @@ target('test', function()
 	)
 	add_files(
 		'./**.cpp',
-		m.root .. '/../Shell/shell/**.cppm',
-		m.root .. '/../common/cpp/std.cppm',
+		manifest.root .. '/../Shell/shell/**.cppm',
+		manifest.root .. '/../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(
-		m.root .. '',
-		m.root .. '/../Shell',
+		manifest.root .. '',
+		manifest.root .. '/../Shell',
 		{}
 	)
 	add_deps(
@@ -27,11 +27,12 @@ target('test', function()
 		utility.apply_condition_definition_basic(target)
 		utility.apply_compiler_option_basic(target)
 		utility.apply_compiler_option_warning_regular(target)
+		return
 	end)
 	set_runargs(
-		m.root .. '/../.local/test/kernel',
-		m.root .. '/../.local/test/script/main.js',
-		m.root .. '/../.local/test',
+		manifest.root .. '/../.local/test/kernel',
+		manifest.root .. '/../.local/test/script/main.js',
+		manifest.root .. '/../.local/test',
 		{ private = true }
 	)
 end)

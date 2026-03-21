@@ -43,7 +43,7 @@ target('third.libpng', function()
 		'third.zlib',
 		{}
 	)
-	if m.architecture:is('arm64') then
+	if list_contain(manifest.architecture, 'arm64') then
 		add_defines(
 			'PNG_ARM_NEON_OPT=0',
 			{ public = true }
@@ -53,5 +53,6 @@ target('third.libpng', function()
 		import('common.xmake.utility')
 		utility.apply_compiler_option_basic(target)
 		utility.apply_compiler_option_warning_disable(target)
+		return
 	end)
 end)

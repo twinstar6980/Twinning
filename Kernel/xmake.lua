@@ -1,10 +1,7 @@
-set_project('Kernel')
-
-add_rules('mode.debug', 'mode.release')
-
 add_moduledirs('./..')
 includes('./../common/xmake/utility.lua')
-apply_common_setting()
+
+define_project('Kernel', '111')
 
 includes('./third/mscharconv')
 includes('./third/tinyxml2')

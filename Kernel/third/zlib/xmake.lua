@@ -43,7 +43,7 @@ target('third.zlib', function()
 	add_deps(
 		{}
 	)
-	if m.system:is('linux', 'macintosh', 'android', 'iphone') then
+	if list_contain(manifest.system, 'linux', 'macintosh', 'android', 'iphone') then
 		add_defines(
 			'Z_HAVE_UNISTD_H',
 			{ public = true }
@@ -53,5 +53,6 @@ target('third.zlib', function()
 		import('common.xmake.utility')
 		utility.apply_compiler_option_basic(target)
 		utility.apply_compiler_option_warning_disable(target)
+		return
 	end)
 end)
