@@ -6,31 +6,31 @@ target('third.lzma', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./7zTypes.h',
-		'./7zWindows.h',
-		'./Alloc.h',
-		'./Compiler.h',
-		'./CpuArch.h',
-		'./LzFind.h',
-		'./LzFindMt.h',
-		'./LzHash.h',
-		'./LzmaDec.h',
-		'./LzmaEnc.h',
-		'./LzmaLib.h',
-		'./Precomp.h',
-		'./Threads.h',
+		'7zTypes.h',
+		'7zWindows.h',
+		'Alloc.h',
+		'Compiler.h',
+		'CpuArch.h',
+		'LzFind.h',
+		'LzFindMt.h',
+		'LzHash.h',
+		'LzmaDec.h',
+		'LzmaEnc.h',
+		'LzmaLib.h',
+		'Precomp.h',
+		'Threads.h',
 		{ install = false }
 	)
 	add_files(
-		'./Alloc.c',
-		'./CpuArch.c',
-		'./LzFind.c',
-		'./LzFindMt.c',
-		'./LzFindOpt.c',
-		'./LzmaDec.c',
-		'./LzmaEnc.c',
-		'./LzmaLib.c',
-		'./Threads.c',
+		'Alloc.c',
+		'CpuArch.c',
+		'LzFind.c',
+		'LzFindMt.c',
+		'LzFindOpt.c',
+		'LzmaDec.c',
+		'LzmaEnc.c',
+		'LzmaLib.c',
+		'Threads.c',
 		{}
 	)
 	add_includedirs(

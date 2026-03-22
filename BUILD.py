@@ -24,7 +24,8 @@ def main(
 		AssistantPlus.BUILD.main(platform)
 	# path
 	project_directory = get_project()
-	distribution_directory = get_project_distribution(None)
+	local_directory = get_project_local()
+	distribution_directory = get_project_distribution()
 	bundle_directory = get_project_distribution(f'{platform}.bundle')
 	bundle_file = get_project_distribution(f'{platform}.bundle.zip')
 	# root
@@ -43,33 +44,19 @@ def main(
 		f'{bundle_directory}/temporary',
 	)
 	# library
-	if True:
-		fs_create_directory(
-			f'{bundle_directory}/library',
-		)
-	if check_platform(platform, ['windows.amd64']):
-		fs_copy(
-			f'{project_directory}/Assistant/windows/package/Library/libc++.dll',
-			f'{bundle_directory}/library/libc++.dll',
-		)
-		fs_copy(
-			f'{project_directory}/Assistant/windows/package/Library/libunwind.dll',
-			f'{bundle_directory}/library/libunwind.dll',
-		)
-	if check_platform(platform, ['android.arm64']):
-		fs_copy(
-			f'{project_directory}/Assistant/android/app/src/main/jniLibs/arm64-v8a/libc++_shared.so',
-			f'{bundle_directory}/library/libc++_shared.so',
-		)
+	fs_copy(
+		f'{local_directory}/library/{platform}',
+		f'{bundle_directory}/library',
+	)
 	# launch
 	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
-			f'{project_directory}/common/unembedded/launch.cmd',
+			f'{project_directory}/common/unembedded/script/launch.cmd',
 			f'{bundle_directory}/launch.cmd',
 		)
 	if check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		fs_copy(
-			f'{project_directory}/common/unembedded/launch.sh',
+			f'{project_directory}/common/unembedded/script/launch.sh',
 			f'{bundle_directory}/launch.sh',
 		)
 	# kernel
@@ -98,7 +85,7 @@ def main(
 	# assistant
 	if True:
 		fs_copy(
-			f'{project_directory}/common/unembedded/assistant',
+			f'{project_directory}/common/unembedded/configuration/assistant',
 			f'{bundle_directory}/assistant',
 		)
 	if check_platform(platform, ['windows.amd64']):
@@ -129,7 +116,7 @@ def main(
 	# assistant_plus
 	if check_platform(platform, ['windows.amd64']):
 		fs_copy(
-			f'{project_directory}/common/unembedded/assistant_plus',
+			f'{project_directory}/common/unembedded/configuration/assistant_plus',
 			f'{bundle_directory}/assistant_plus',
 		)
 		fs_copy(

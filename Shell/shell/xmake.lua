@@ -4,12 +4,12 @@ target('shell', function()
 	set_group('source')
 	set_kind('binary')
 	add_headerfiles(
-		'./**.hpp',
+		'**.hpp',
 		{ install = false }
 	)
 	add_files(
-		'./**.cppm',
-		'./**.cpp',
+		'**.cppm',
+		'**.cpp',
 		manifest.root .. '/../common/cpp/std.cppm',
 		{}
 	)

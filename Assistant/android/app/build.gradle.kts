@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -42,3 +44,8 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
+
+project.tasks.named("preBuild").dependsOn(tasks.register<Copy>("myLoadAsset") {
+    from(layout.projectDirectory.dir("../../../.local/library/android.arm64"))
+    into(layout.projectDirectory.dir("src/main/jniLibs/arm64-v8a"))
+})

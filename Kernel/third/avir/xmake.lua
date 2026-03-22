@@ -6,11 +6,11 @@ target('third.avir', function()
 	set_group('source/third')
 	set_kind('headeronly')
 	add_headerfiles(
-		'./avir.h',
-		'./avir_dil.h',
-		'./avir_float4_sse.h',
-		'./avir_float8_avx.h',
-		'./lancir.h',
+		'avir.h',
+		'avir_dil.h',
+		'avir_float4_sse.h',
+		'avir_float8_avx.h',
+		'lancir.h',
 		{ install = false }
 	)
 	add_files(

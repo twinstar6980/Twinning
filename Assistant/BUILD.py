@@ -17,6 +17,9 @@ def main(
 		fs_remove(
 			f'{module_distribution_file}',
 		)
+		setup_common_cpp_library(
+			platform,
+		)
 		execute_command(module_directory, [
 			'flutter',
 			'build',
@@ -36,6 +39,9 @@ def main(
 		module_distribution_file += '.zip'
 		fs_remove(
 			f'{module_distribution_file}',
+		)
+		setup_common_cpp_library(
+			platform,
 		)
 		execute_command(module_directory, [
 			'flutter',
@@ -57,6 +63,9 @@ def main(
 		fs_remove(
 			f'{module_distribution_file}',
 		)
+		setup_common_cpp_library(
+			platform,
+		)
 		execute_command(module_directory, [
 			'flutter',
 			'build',
@@ -73,6 +82,9 @@ def main(
 		module_distribution_file += '.apk'
 		fs_remove(
 			f'{module_distribution_file}',
+		)
+		setup_common_cpp_library(
+			platform,
 		)
 		execute_command(module_directory, [
 			'flutter',
@@ -94,6 +106,9 @@ def main(
 		module_distribution_file += '.ipa'
 		fs_remove(
 			f'{module_distribution_file}',
+		)
+		setup_common_cpp_library(
+			platform,
 		)
 		execute_command(module_directory, [
 			'flutter',

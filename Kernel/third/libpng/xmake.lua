@@ -8,35 +8,35 @@ target('third.libpng', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./png.h',
-		'./pngconf.h',
-		'./pngdebug.h',
-		'./pnginfo.h',
-		'./pnglibconf.h',
-		'./pngpriv.h',
-		'./pngstruct.h',
+		'png.h',
+		'pngconf.h',
+		'pngdebug.h',
+		'pnginfo.h',
+		'pnglibconf.h',
+		'pngpriv.h',
+		'pngstruct.h',
 		{ install = false }
 	)
 	add_files(
-		'./png.c',
-		'./pngerror.c',
-		'./pngget.c',
-		'./pngmem.c',
-		'./pngpread.c',
-		'./pngread.c',
-		'./pngrio.c',
-		'./pngrtran.c',
-		'./pngrutil.c',
-		'./pngset.c',
-		'./pngtrans.c',
-		'./pngwio.c',
-		'./pngwrite.c',
-		'./pngwtran.c',
-		'./pngwutil.c',
+		'png.c',
+		'pngerror.c',
+		'pngget.c',
+		'pngmem.c',
+		'pngpread.c',
+		'pngread.c',
+		'pngrio.c',
+		'pngrtran.c',
+		'pngrutil.c',
+		'pngset.c',
+		'pngtrans.c',
+		'pngwio.c',
+		'pngwrite.c',
+		'pngwtran.c',
+		'pngwutil.c',
 		{}
 	)
 	add_includedirs(
-		'./../zlib',
+		'../zlib',
 		{ public = true }
 	)
 	add_deps(

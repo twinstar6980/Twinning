@@ -6,11 +6,11 @@ target('third.Rijndael', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./Rijndael.h',
+		'Rijndael.h',
 		{ install = false }
 	)
 	add_files(
-		'./Rijndael.cpp',
+		'Rijndael.cpp',
 		{}
 	)
 	add_includedirs(

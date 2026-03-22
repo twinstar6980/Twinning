@@ -47,16 +47,16 @@ export namespace Twinning::Shell::Bridge {
 		#pragma region life
 
 		virtual auto start(
-		) -> void = 0;
+		) -> void = abstract;
 
 		virtual auto finish(
-		) -> void = 0;
+		) -> void = abstract;
 
 		// ----------------
 
 		virtual auto callback(
 			std::vector<std::string> const & argument
-		) -> std::vector<std::string> = 0;
+		) -> std::vector<std::string> = abstract;
 
 		#pragma endregion
 

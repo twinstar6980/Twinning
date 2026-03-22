@@ -1,6 +1,6 @@
-add_moduledirs('./..')
-includes('./../common/xmake/utility.lua')
+add_moduledirs('..')
+includes('../common/xmake/utility.lua')
 
-define_project('Shell', '72')
+define_project('Shell', '73')
 
-includes('./shell')
+includes('shell')

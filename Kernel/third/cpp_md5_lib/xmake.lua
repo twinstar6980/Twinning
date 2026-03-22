@@ -6,15 +6,15 @@ target('third.cpp_md5_lib', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./include/md5.h',
+		'include/md5.h',
 		{ install = false }
 	)
 	add_files(
-		'./src/md5.cpp',
+		'src/md5.cpp',
 		{}
 	)
 	add_includedirs(
-		'./include',
+		'include',
 		{ public = true }
 	)
 	add_deps(

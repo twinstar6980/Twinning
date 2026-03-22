@@ -69,12 +69,12 @@ function define_project(name, version)
 	set_values('manifest', manifest, '')
 	set_project(name)
 	set_version(version)
-	add_rules('mode.debug', 'mode.release')
 	set_policy('check.auto_ignore_flags', false)
 	set_policy('build.warning', true)
 	set_encodings('utf-8')
 	set_languages('c23', 'cxx26')
 	set_symbols('hidden')
+	add_rules('mode.debug', 'mode.release')
 	return
 end
 
@@ -85,12 +85,12 @@ function apply_condition_definition_basic(target)
 	target:add(
 		'defines',
 		'M_version="' .. manifest.version .. '"',
-		'M_system_' .. manifest.system,
 		'M_system="' .. manifest.system .. '"',
-		'M_architecture_' .. manifest.architecture,
+		'M_system_' .. manifest.system,
 		'M_architecture="' .. manifest.architecture .. '"',
-		'M_build_' .. manifest.build,
+		'M_architecture_' .. manifest.architecture,
 		'M_build="' .. manifest.build .. '"',
+		'M_build_' .. manifest.build,
 		{ private = true }
 	)
 	return

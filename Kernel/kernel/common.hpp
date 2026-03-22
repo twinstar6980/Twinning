@@ -5,6 +5,9 @@
 #define implicit\
 	
 
+#define abstract\
+	0
+
 #define thiz\
 	(*this)
 

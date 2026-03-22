@@ -6,20 +6,20 @@ target('third.bzip2', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./bzlib.h',
-		'./bzlib_private.h',
+		'bzlib.h',
+		'bzlib_private.h',
 		{ install = false }
 	)
 	add_files(
-		'./blocksort.c',
-		'./bzip2.c',
-		'./bzip2recover.c',
-		'./bzlib.c',
-		'./compress.c',
-		'./crctable.c',
-		'./decompress.c',
-		'./huffman.c',
-		'./randtable.c',
+		'blocksort.c',
+		'bzip2.c',
+		'bzip2recover.c',
+		'bzlib.c',
+		'compress.c',
+		'crctable.c',
+		'decompress.c',
+		'huffman.c',
+		'randtable.c',
 		{}
 	)
 	add_includedirs(

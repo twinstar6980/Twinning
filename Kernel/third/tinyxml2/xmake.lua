@@ -6,11 +6,11 @@ target('third.tinyxml2', function()
 	set_group('source/third')
 	set_kind('static')
 	add_headerfiles(
-		'./tinyxml2.h',
+		'tinyxml2.h',
 		{ install = false }
 	)
 	add_files(
-		'./tinyxml2.cpp',
+		'tinyxml2.cpp',
 		{}
 	)
 	add_includedirs(

@@ -110,21 +110,36 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
 
 # === Custom ===
 
-# forwarder
-add_subdirectory("forwarder")
-install(FILES "${CMAKE_INSTALL_PREFIX}/../../forwarder/Release/forwarder.dll"
-  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
-  COMPONENT Runtime)
-
-# package
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/package/AppxManifest.xml"
-  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
-  COMPONENT Runtime)
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/package/Asset/"
-  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}/Asset"
-  COMPONENT Runtime)
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/package/Library/"
-  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
-  COMPONENT Runtime)
+# runner
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${INSTALL_BUNDLE_LIB_DIR}")
 include(InstallRequiredSystemLibraries)
+install(
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../.local/library/windows.amd64/"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime
+)
+
+# forwarder
+add_subdirectory("forwarder")
+install(
+  FILES "${INSTALL_BUNDLE_LIB_DIR}/../../forwarder/$<CONFIG>/forwarder.dll"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime
+)
+
+# package
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/package/AppxManifest.xml"
+  "${CMAKE_CURRENT_BINARY_DIR}/package/AppxManifest.xml"
+  @ONLY
+)
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/package/AppxManifest.xml"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime
+)
+install(
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/package/Asset"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime
+)

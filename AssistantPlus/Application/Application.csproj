@@ -47,13 +47,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Asset\Library\libc++.dll">
-      <TargetPath>%(Filename)%(Extension)</TargetPath>
-    </Content>
-    <Content Include="Asset\Library\libunwind.dll">
-      <TargetPath>%(Filename)%(Extension)</TargetPath>
-    </Content>
     <Content Include="$(SolutionDir).build\bin\Forwarder\$(Platform).$(Configuration)\Forwarder.dll">
+      <Link>Asset\Library\%(Filename)%(Extension)</Link>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </Content>
+    <Content Include="$(SolutionDir)..\.local\library\windows.amd64\libc++.dll">
+      <Link>Asset\Library\%(Filename)%(Extension)</Link>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </Content>
+    <Content Include="$(SolutionDir)..\.local\library\windows.amd64\libunwind.dll">
       <Link>Asset\Library\%(Filename)%(Extension)</Link>
       <TargetPath>%(Filename)%(Extension)</TargetPath>
     </Content>

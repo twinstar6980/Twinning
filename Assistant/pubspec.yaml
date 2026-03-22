@@ -1,8 +1,8 @@
 name: assistant
-version: 157.0.0+157
+version: 158.0.0+158
 publish_to: 'none'
 environment:
-  sdk: ^3.11.1
+  sdk: ^3.11.3
 dependencies:
   flutter:
     sdk: flutter

@@ -17,6 +17,9 @@ def main(
 		fs_remove(
 			f'{module_distribution_file}',
 		)
+		setup_common_cpp_library(
+			platform,
+		)
 		execute_command(module_directory, [
 			'MSBuild',
 			'-restore',
