@@ -73,6 +73,9 @@ def main(
 			'--release',
 			'--no-tree-shake-icons',
 		])
+		sign_macintosh_app(
+			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
+		)
 		pack_macintosh_dmg(
 			'Twinning Assistant',
 			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
@@ -116,7 +119,11 @@ def main(
 			'ios',
 			'--release',
 			'--no-tree-shake-icons',
+			'--no-codesign',
 		])
+		sign_iphone_app(
+			f'{module_directory}/build/ios/iphoneos/Runner.app',
+		)
 		pack_iphone_ipa(
 			'Twinning Assistant',
 			f'{module_directory}/build/ios/iphoneos/Runner.app',
