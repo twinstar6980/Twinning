@@ -9,6 +9,11 @@ import subprocess
 
 # ----------------
 
+def fs_resolve(
+	pattern: str,
+) -> list[str]:
+	return glob.glob(pattern)
+
 def fs_copy(
 	source: str,
 	destination: str,
@@ -325,7 +330,7 @@ def setup_common_cpp_library(
 		clang_file = shutil.which('clang')
 		if clang_file == None:
 			raise RuntimeError('can not found clang path')
-		library_directory_list = glob.glob(str(pathlib.Path(clang_file).parent.parent / 'x86_64-w64-mingw32/bin'))
+		library_directory_list = fs_resolve(str(pathlib.Path(clang_file).parent.parent / 'x86_64-w64-mingw32/bin'))
 		if len(library_directory_list) == 0:
 			raise RuntimeError('can not found library directory')
 		library_directory = library_directory_list[0]
@@ -334,7 +339,7 @@ def setup_common_cpp_library(
 		ndk_home = os.environ.get('ANDROID_NDK_HOME')
 		if ndk_home == None:
 			raise RuntimeError('can not found ndk path')
-		library_directory_list = glob.glob(str(pathlib.Path(ndk_home) / 'toolchains/llvm/prebuilt/*/sysroot/usr/lib/aarch64-linux-android'))
+		library_directory_list = fs_resolve(str(pathlib.Path(ndk_home) / 'toolchains/llvm/prebuilt/*/sysroot/usr/lib/aarch64-linux-android'))
 		if len(library_directory_list) == 0:
 			raise RuntimeError('can not found library directory')
 		library_directory = library_directory_list[0]
