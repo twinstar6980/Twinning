@@ -127,8 +127,8 @@ class ExternalToolHelper {
 
   static Future<Void> runApksigner(
     String apkFile,
-    String apkCertificateFile,
-    String apkCertificatePassword,
+    String apkKeystoreFile,
+    String apkKeystorePassword,
   ) async {
     var processResult = await ProcessHelper.runProcess(
       await ProcessHelper.searchProgramEnsure('apksigner', true),
@@ -138,8 +138,8 @@ class ExternalToolHelper {
         '--v2-signing-enabled', 'true',
         '--v3-signing-enabled', 'true',
         '--v4-signing-enabled', 'false',
-        '--ks', '${apkCertificateFile}',
-        '--ks-pass', 'pass:${apkCertificatePassword}',
+        '--ks', '${apkKeystoreFile}',
+        '--ks-pass', 'pass:${apkKeystorePassword}',
         '${apkFile}',
       ],
       null,

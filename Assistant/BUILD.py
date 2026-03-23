@@ -73,7 +73,7 @@ def main(
 			'--release',
 			'--no-tree-shake-icons',
 		])
-		sign_macintosh_app(
+		sign_macintosh_executable(
 			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
 		)
 		pack_macintosh_dmg(
@@ -121,7 +121,7 @@ def main(
 			'--no-tree-shake-icons',
 			'--no-codesign',
 		])
-		sign_iphone_app(
+		sign_iphone_executable(
 			f'{module_directory}/build/ios/iphoneos/Runner.app',
 		)
 		pack_iphone_ipa(

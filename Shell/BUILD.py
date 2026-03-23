@@ -110,6 +110,9 @@ def main(
 			f'{module_directory}/.build/android/arm64-v8a/release/shell',
 			f'{module_distribution_file}',
 		)
+		sign_macintosh_executable(
+			f'{module_distribution_file}',
+		)
 	if check_platform(platform, ['iphone.arm64']):
 		fs_remove(
 			f'{module_distribution_file}',
@@ -134,7 +137,7 @@ def main(
 			f'{module_directory}/.build/iphoneos/arm64/release/shell',
 			f'{module_distribution_file}',
 		)
-		sign_iphone_binary(
+		sign_iphone_executable(
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')

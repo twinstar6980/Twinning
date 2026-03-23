@@ -83,6 +83,9 @@ def main(
 			f'{module_directory}/.build/macosx/arm64/release/libkernel.dylib',
 			f'{module_distribution_file}',
 		)
+		sign_macintosh_executable(
+			f'{module_distribution_file}',
+		)
 	if check_platform(platform, ['android.arm64']):
 		fs_remove(
 			f'{module_distribution_file}',
@@ -130,7 +133,7 @@ def main(
 			f'{module_directory}/.build/iphoneos/arm64/release/libkernel.dylib',
 			f'{module_distribution_file}',
 		)
-		sign_iphone_binary(
+		sign_iphone_executable(
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')

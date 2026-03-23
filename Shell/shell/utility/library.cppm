@@ -81,7 +81,7 @@ export namespace Twinning::Shell {
 			thiz.m_handle = Third::system::posix::$dlopen(path.data(), Third::system::posix::$RTLD_LAZY | Third::system::posix::$RTLD_LOCAL);
 			#endif
 			if (thiz.m_handle == nullptr) {
-				throw std::runtime_error{std::format("Exception: can not open library '{}'", path)};
+				throw std::runtime_error{std::format("Exception: could not open library '{}'", path)};
 			}
 			return;
 		}
@@ -97,7 +97,7 @@ export namespace Twinning::Shell {
 			state = Third::system::posix::$dlclose(thiz.m_handle) == 0;
 			#endif
 			if (state == false) {
-				throw std::runtime_error{std::format("Exception: can not close library")};
+				throw std::runtime_error{std::format("Exception: could not close library")};
 			}
 			thiz.m_handle = nullptr;
 			return;
@@ -118,7 +118,7 @@ export namespace Twinning::Shell {
 			address = Third::system::posix::$dlsym(thiz.m_handle, name.data());
 			#endif
 			if (address == nullptr) {
-				throw std::runtime_error{std::format("Exception: can not lookup symbol '{}'", name)};
+				throw std::runtime_error{std::format("Exception: could not lookup symbol '{}'", name)};
 			}
 			return static_cast<TSymbol *>(address);
 		}
