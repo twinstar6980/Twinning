@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '165';
+	export const k_version = '166';
 
 	// ----------------
 
@@ -229,7 +229,7 @@ namespace Twinning.Script {
 			}
 			let load_timer_begin = Date.now();
 			// parse home path
-			let home_path = argument[0].replaceAll(`\\`, '/');
+			let home_path = argument[0].replaceAll(`\\`, `/`);
 			if (/^\.{1,2}[\/]/.test(home_path)) {
 				home_path = `${get_process_workspace()}/${home_path}`;
 			}
