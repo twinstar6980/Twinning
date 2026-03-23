@@ -87,6 +87,9 @@ def main(
 			f'{module_directory}/.build/macosx/arm64/release/shell',
 			f'{module_distribution_file}',
 		)
+		sign_macintosh_executable(
+			f'{module_distribution_file}',
+		)
 	if check_platform(platform, ['android.arm64']):
 		fs_remove(
 			f'{module_distribution_file}',
@@ -108,9 +111,6 @@ def main(
 		])
 		fs_copy(
 			f'{module_directory}/.build/android/arm64-v8a/release/shell',
-			f'{module_distribution_file}',
-		)
-		sign_macintosh_executable(
 			f'{module_distribution_file}',
 		)
 	if check_platform(platform, ['iphone.arm64']):
