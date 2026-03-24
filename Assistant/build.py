@@ -81,6 +81,9 @@ def main(
 			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
 			f'{module_distribution_file}',
 		)
+		utility.sign_macintosh_executable(
+			f'{module_distribution_file}',
+		)
 	if utility.check_platform(platform, ['android.arm64']):
 		module_distribution_file += '.apk'
 		utility.fs_remove(
