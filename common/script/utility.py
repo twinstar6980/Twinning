@@ -176,6 +176,47 @@ def unpack_zip(
 
 # ----------------
 
+def generate_keystore(
+	target: str,
+	password: str,
+	subject: str,
+) -> None:
+	with tempfile.TemporaryDirectory() as temporary:
+		execute_command(temporary, [
+			'openssl',
+			'genrsa',
+			'-out', f'{temporary}/file.key',
+			f'2048',
+		])
+		execute_command(temporary, [
+			'openssl',
+			'req',
+			'-new',
+			'-x509',
+			'-key', f'{temporary}/file.key',
+			'-out', f'{temporary}/file.crt',
+			'-utf8',
+			'-days', f'365',
+			'-subj', f'{subject}',
+			'-addext', f'basicConstraints=CA:FALSE',
+		])
+		execute_command(temporary, [
+			'openssl',
+			'pkcs12',
+			'-export',
+			'-out', f'{temporary}/file.p12',
+			'-passout', f'pass:{password}',
+			'-inkey', f'{temporary}/file.key',
+			'-in', f'{temporary}/file.crt',
+		])
+		fs_copy(
+			f'{temporary}/file.p12',
+			f'{target}',
+		)
+	return
+
+# ----------------
+
 def strip_windows_binary(
 	target: str,
 ) -> None:
@@ -196,6 +237,24 @@ def apply_windows_manifest(
 			'mt',
 			'-manifest', f'{manifest}',
 			f'-outputresource:{target};#1',
+		])
+	return
+
+def sign_windows_executable(
+	target: str,
+) -> None:
+	with tempfile.TemporaryDirectory() as temporary:
+		keystore_file, keystore_password = get_project_keystore()
+		if keystore_file == None:
+			return
+		execute_command(temporary, [
+			'signtool',
+			'sign',
+			'/q',
+			'/fd', f'SHA256',
+			'/f', f'{keystore_file}',
+			'/p', f'{keystore_password}',
+			f'{target}',
 		])
 	return
 
@@ -236,24 +295,6 @@ def pack_windows_msix(
 			f'{temporary}/{name}.msix',
 			f'{destination}',
 		)
-	return
-
-def sign_windows_msix(
-	target: str,
-) -> None:
-	with tempfile.TemporaryDirectory() as temporary:
-		keystore_file, keystore_password = get_project_keystore()
-		if keystore_file == None:
-			return
-		execute_command(temporary, [
-			'signtool',
-			'sign',
-			'/q',
-			'/fd', f'SHA256',
-			'/f', f'{keystore_file}',
-			'/p', f'{keystore_password}',
-			f'{target}',
-		])
 	return
 
 # ----------------

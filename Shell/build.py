@@ -2,21 +2,21 @@ import os
 import sys
 sys.dont_write_bytecode = True
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.python.utility import *
+import common.script.utility as utility
 
 # ----------------
 
 def main(
 	platform: str,
 ) -> None:
-	ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
-	module_directory, module_name = get_project_module(__file__)
-	module_distribution_file = get_project_distribution(f'{platform}.{module_name}')
-	if check_platform(platform, ['windows.amd64']):
-		fs_remove(
+	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
+	module_directory, module_name = utility.get_project_module(__file__)
+	module_distribution_file = utility.get_project_distribution(f'{platform}.{module_name}')
+	if utility.check_platform(platform, ['windows.amd64']):
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -26,26 +26,29 @@ def main(
 			'--toolchain=mingw[clang]',
 			'--runtimes=c++_shared',
 		])
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'build',
 		])
-		fs_copy(
+		utility.fs_copy(
 			f'{module_directory}/.build/windows/x64/release/shell.exe',
 			f'{module_distribution_file}',
 		)
-		strip_windows_binary(
+		utility.strip_windows_binary(
 			f'{module_distribution_file}',
 		)
-		apply_windows_manifest(
+		utility.apply_windows_manifest(
 			f'{module_distribution_file}',
 			f'{module_directory}/shell/resource/windows/application.manifest',
 		)
-	if check_platform(platform, ['linux.amd64']):
-		fs_remove(
+		utility.sign_windows_executable(
 			f'{module_distribution_file}',
 		)
-		execute_command(module_directory, [
+	if utility.check_platform(platform, ['linux.amd64']):
+		utility.fs_remove(
+			f'{module_distribution_file}',
+		)
+		utility.execute_command(module_directory, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -55,19 +58,19 @@ def main(
 			'--toolchain=clang',
 			'--runtimes=c++_shared',
 		])
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'build',
 		])
-		fs_copy(
+		utility.fs_copy(
 			f'{module_directory}/.build/linux/x86_64/release/shell',
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['macintosh.arm64']):
-		fs_remove(
+	if utility.check_platform(platform, ['macintosh.arm64']):
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -79,22 +82,22 @@ def main(
 			'--cc=clang',
 			'--cxx=clang',
 		])
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'build',
 		])
-		fs_copy(
+		utility.fs_copy(
 			f'{module_directory}/.build/macosx/arm64/release/shell',
 			f'{module_distribution_file}',
 		)
-		sign_macintosh_executable(
+		utility.sign_macintosh_executable(
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['android.arm64']):
-		fs_remove(
+	if utility.check_platform(platform, ['android.arm64']):
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -105,19 +108,19 @@ def main(
 			'--ndk_sdkver=30',
 			'--runtimes=c++_shared',
 		])
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'build',
 		])
-		fs_copy(
+		utility.fs_copy(
 			f'{module_directory}/.build/android/arm64-v8a/release/shell',
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['iphone.arm64']):
-		fs_remove(
+	if utility.check_platform(platform, ['iphone.arm64']):
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -129,15 +132,15 @@ def main(
 			'--cc=clang',
 			'--cxx=clang',
 		])
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'xmake',
 			'build',
 		])
-		fs_copy(
+		utility.fs_copy(
 			f'{module_directory}/.build/iphoneos/arm64/release/shell',
 			f'{module_distribution_file}',
 		)
-		sign_iphone_executable(
+		utility.sign_iphone_executable(
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')

@@ -2,25 +2,25 @@ import os
 import sys
 sys.dont_write_bytecode = True
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.python.utility import *
+import common.script.utility as utility
 
 # ----------------
 
 def main(
 	platform: str,
 ) -> None:
-	ensure_platform(platform, ['windows.amd64'])
-	module_directory, module_name = get_project_module(__file__)
-	module_distribution_file = get_project_distribution(f'{platform}.{module_name}')
-	if check_platform(platform, ['windows.amd64']):
+	utility.ensure_platform(platform, ['windows.amd64'])
+	module_directory, module_name = utility.get_project_module(__file__)
+	module_distribution_file = utility.get_project_distribution(f'{platform}.{module_name}')
+	if utility.check_platform(platform, ['windows.amd64']):
 		module_distribution_file += '.msix'
-		fs_remove(
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		setup_common_cpp_library(
+		utility.setup_common_cpp_library(
 			platform,
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'MSBuild',
 			'-restore',
 			'-verbosity:minimal',
@@ -28,11 +28,11 @@ def main(
 			'-property:Configuration=Release',
 			'-property:GenerateAppxPackageOnBuild=true',
 		])
-		fs_copy(
-			f'{fs_resolve(f'{module_directory}/.build/bin/Application/x64.Release/AppPackages/Application_*_Test/Application_*.msix')[0]}',
+		utility.fs_copy(
+			f'{utility.fs_resolve(f'{module_directory}/.build/bin/Application/x64.Release/AppPackages/Application_*_Test/Application_*.msix')[0]}',
 			f'{module_distribution_file}',
 		)
-		sign_windows_msix(
+		utility.sign_windows_executable(
 			f'{module_distribution_file}',
 		)
 	print(f'>> BUILD >> {module_distribution_file}')

@@ -2,48 +2,48 @@ import os
 import sys
 sys.dont_write_bytecode = True
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.python.utility import *
+import common.script.utility as utility
 
 # ----------------
 
 def main(
 	platform: str,
 ) -> None:
-	ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
-	module_directory, module_name = get_project_module(__file__)
-	module_distribution_file = get_project_distribution(f'{platform}.{module_name}')
-	if check_platform(platform, ['windows.amd64']):
+	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
+	module_directory, module_name = utility.get_project_module(__file__)
+	module_distribution_file = utility.get_project_distribution(f'{platform}.{module_name}')
+	if utility.check_platform(platform, ['windows.amd64']):
 		module_distribution_file += '.msix'
-		fs_remove(
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		setup_common_cpp_library(
+		utility.setup_common_cpp_library(
 			platform,
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'flutter',
 			'build',
 			'windows',
 			'--release',
 			'--no-tree-shake-icons',
 		])
-		pack_windows_msix(
+		utility.pack_windows_msix(
 			'assistant',
 			f'{module_directory}/build/windows/x64/runner/Release',
 			f'{module_distribution_file}',
 		)
-		sign_windows_msix(
+		utility.sign_windows_executable(
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['linux.amd64']):
+	if utility.check_platform(platform, ['linux.amd64']):
 		module_distribution_file += '.zip'
-		fs_remove(
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		setup_common_cpp_library(
+		utility.setup_common_cpp_library(
 			platform,
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'flutter',
 			'build',
 			'linux',
@@ -53,43 +53,43 @@ def main(
 		], {
 			'CXXFLAGS': '-stdlib=libc++',
 		})
-		pack_zip(
+		utility.pack_zip(
 			'assistant',
 			f'{module_directory}/build/linux/x64/release/bundle',
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['macintosh.arm64']):
+	if utility.check_platform(platform, ['macintosh.arm64']):
 		module_distribution_file += '.dmg'
-		fs_remove(
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		setup_common_cpp_library(
+		utility.setup_common_cpp_library(
 			platform,
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'flutter',
 			'build',
 			'macos',
 			'--release',
 			'--no-tree-shake-icons',
 		])
-		sign_macintosh_executable(
+		utility.sign_macintosh_executable(
 			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
 		)
-		pack_macintosh_dmg(
+		utility.pack_macintosh_dmg(
 			'Twinning Assistant',
 			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['android.arm64']):
+	if utility.check_platform(platform, ['android.arm64']):
 		module_distribution_file += '.apk'
-		fs_remove(
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		setup_common_cpp_library(
+		utility.setup_common_cpp_library(
 			platform,
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'flutter',
 			'build',
 			'apk',
@@ -98,22 +98,22 @@ def main(
 			'--target-platform', 'android-arm64',
 			'--split-per-abi',
 		])
-		fs_copy(
+		utility.fs_copy(
 			f'{module_directory}/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk',
 			f'{module_distribution_file}',
 		)
-		sign_android_apk(
+		utility.sign_android_apk(
 			f'{module_distribution_file}',
 		)
-	if check_platform(platform, ['iphone.arm64']):
+	if utility.check_platform(platform, ['iphone.arm64']):
 		module_distribution_file += '.ipa'
-		fs_remove(
+		utility.fs_remove(
 			f'{module_distribution_file}',
 		)
-		setup_common_cpp_library(
+		utility.setup_common_cpp_library(
 			platform,
 		)
-		execute_command(module_directory, [
+		utility.execute_command(module_directory, [
 			'flutter',
 			'build',
 			'ios',
@@ -121,10 +121,10 @@ def main(
 			'--no-tree-shake-icons',
 			'--no-codesign',
 		])
-		sign_iphone_executable(
+		utility.sign_iphone_executable(
 			f'{module_directory}/build/ios/iphoneos/Runner.app',
 		)
-		pack_iphone_ipa(
+		utility.pack_iphone_ipa(
 			'Twinning Assistant',
 			f'{module_directory}/build/ios/iphoneos/Runner.app',
 			f'{module_distribution_file}',
