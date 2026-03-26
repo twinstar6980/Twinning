@@ -1,6 +1,5 @@
 name: assistant
-version: 159.0.0+159
-publish_to: 'none'
+version: 160.0.0+160
 environment:
   sdk: ^3.11.3
 dependencies:

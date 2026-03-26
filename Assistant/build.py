@@ -6,44 +6,44 @@ import common.script.utility as utility
 
 # ----------------
 
-def main(
+def build(
+	source: str,
+	keystore: tuple[str, str] | None,
+	temporary: str,
 	platform: str,
-) -> None:
-	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
-	module_directory, module_name = utility.get_project_module(__file__)
-	module_distribution_file = utility.get_project_distribution(f'{platform}.{module_name}')
+) -> tuple[str, str] | None:
+	destination = None
 	if utility.check_platform(platform, ['windows.amd64']):
-		module_distribution_file += '.msix'
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.setup_common_cpp_library(
+		utility.setup_project_library(
 			platform,
 		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
 			'windows',
 			'--release',
 			'--no-tree-shake-icons',
 		])
+		utility.fs_copy(
+			f'{source}/build/windows/x64/runner/Release',
+			f'{temporary}/artifact',
+		)
 		utility.pack_windows_msix(
-			'assistant',
-			f'{module_directory}/build/windows/x64/runner/Release',
-			f'{module_distribution_file}',
+			f'{temporary}/artifact',
+			f'{temporary}/artifact.msix',
 		)
 		utility.sign_windows_executable(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.msix',
+			f'{temporary}/artifact.msix',
+			'msix',
+			keystore,
 		)
+		destination = ('.msix', f'{temporary}/artifact.msix')
 	if utility.check_platform(platform, ['linux.amd64']):
-		module_distribution_file += '.zip'
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.setup_common_cpp_library(
+		utility.setup_project_library(
 			platform,
 		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
 			'linux',
@@ -53,46 +53,53 @@ def main(
 		], {
 			'CXXFLAGS': '-stdlib=libc++',
 		})
+		utility.fs_copy(
+			f'{source}/build/linux/x64/release/bundle',
+			f'{temporary}/artifact',
+		)
 		utility.pack_zip(
+			f'{temporary}/artifact',
+			f'{temporary}/artifact.zip',
 			'assistant',
-			f'{module_directory}/build/linux/x64/release/bundle',
-			f'{module_distribution_file}',
 		)
+		destination = ('.zip', f'{temporary}/artifact.zip')
 	if utility.check_platform(platform, ['macintosh.arm64']):
-		module_distribution_file += '.dmg'
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.setup_common_cpp_library(
+		utility.setup_project_library(
 			platform,
 		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
 			'macos',
 			'--release',
 			'--no-tree-shake-icons',
 		])
+		utility.fs_copy(
+			f'{source}/build/macos/Build/Products/Release/Runner.app',
+			f'{temporary}/artifact.app',
+			follow_link=True,
+		)
 		utility.sign_macintosh_executable(
-			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
+			f'{temporary}/artifact.app',
+			f'{temporary}/artifact.app',
+			keystore,
 		)
 		utility.pack_macintosh_dmg(
+			f'{temporary}/artifact.app',
+			f'{temporary}/artifact.dmg',
 			'Twinning Assistant',
-			f'{module_directory}/build/macos/Build/Products/Release/Runner.app',
-			f'{module_distribution_file}',
 		)
 		utility.sign_macintosh_executable(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.dmg',
+			f'{temporary}/artifact.dmg',
+			keystore,
 		)
+		destination = ('.dmg', f'{temporary}/artifact.dmg')
 	if utility.check_platform(platform, ['android.arm64']):
-		module_distribution_file += '.apk'
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.setup_common_cpp_library(
+		utility.setup_project_library(
 			platform,
 		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
 			'apk',
@@ -102,21 +109,20 @@ def main(
 			'--split-per-abi',
 		])
 		utility.fs_copy(
-			f'{module_directory}/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk',
-			f'{module_distribution_file}',
+			f'{source}/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk',
+			f'{temporary}/artifact.apk',
 		)
 		utility.sign_android_apk(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.apk',
+			f'{temporary}/artifact.apk',
+			keystore,
 		)
+		destination = ('.apk', f'{temporary}/artifact.apk')
 	if utility.check_platform(platform, ['iphone.arm64']):
-		module_distribution_file += '.ipa'
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.setup_common_cpp_library(
+		utility.setup_project_library(
 			platform,
 		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
 			'ios',
@@ -124,16 +130,23 @@ def main(
 			'--no-tree-shake-icons',
 			'--no-codesign',
 		])
+		utility.fs_copy(
+			f'{source}/build/ios/iphoneos/Runner.app',
+			f'{temporary}/artifact.app',
+			follow_link=True,
+		)
 		utility.sign_iphone_executable(
-			f'{module_directory}/build/ios/iphoneos/Runner.app',
+			f'{temporary}/artifact.app',
+			f'{temporary}/artifact.app',
+			keystore,
 		)
 		utility.pack_iphone_ipa(
+			f'{temporary}/artifact.app',
+			f'{temporary}/artifact.ipa',
 			'Twinning Assistant',
-			f'{module_directory}/build/ios/iphoneos/Runner.app',
-			f'{module_distribution_file}',
 		)
-	print(f'>> BUILD >> {module_distribution_file}')
-	return
+		destination = ('.ipa', f'{temporary}/artifact.ipa')
+	return destination
 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	utility.build_project_module(__file__, build, sys.argv[1])

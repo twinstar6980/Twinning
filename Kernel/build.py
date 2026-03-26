@@ -6,17 +6,15 @@ import common.script.utility as utility
 
 # ----------------
 
-def main(
+def build(
+	source: str,
+	keystore: tuple[str, str] | None,
+	temporary: str,
 	platform: str,
-) -> None:
-	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
-	module_directory, module_name = utility.get_project_module(__file__)
-	module_distribution_file = utility.get_project_distribution(f'{platform}.{module_name}')
+) -> tuple[str, str] | None:
+	destination = None
 	if utility.check_platform(platform, ['windows.amd64']):
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -26,25 +24,27 @@ def main(
 			'--toolchain=mingw[clang]',
 			'--runtimes=c++_shared',
 		])
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'build',
 		])
 		utility.fs_copy(
-			f'{module_directory}/.build/windows/x64/release/kernel.dll',
-			f'{module_distribution_file}',
+			f'{source}/.build/windows/x64/release/kernel.dll',
+			f'{temporary}/artifact.dll',
 		)
 		utility.strip_windows_binary(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.dll',
+			f'{temporary}/artifact.dll',
 		)
 		utility.sign_windows_executable(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.dll',
+			f'{temporary}/artifact.dll',
+			'dll',
+			keystore,
 		)
+		destination = ('', f'{temporary}/artifact.dll')
 	if utility.check_platform(platform, ['linux.amd64']):
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -54,19 +54,17 @@ def main(
 			'--toolchain=clang',
 			'--runtimes=c++_shared',
 		])
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'build',
 		])
 		utility.fs_copy(
-			f'{module_directory}/.build/linux/x86_64/release/libkernel.so',
-			f'{module_distribution_file}',
+			f'{source}/.build/linux/x86_64/release/libkernel.so',
+			f'{temporary}/artifact.so',
 		)
+		destination = ('', f'{temporary}/artifact.so')
 	if utility.check_platform(platform, ['macintosh.arm64']):
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -78,22 +76,26 @@ def main(
 			'--cc=clang',
 			'--cxx=clang',
 		])
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'build',
 		])
 		utility.fs_copy(
-			f'{module_directory}/.build/macosx/arm64/release/libkernel.dylib',
-			f'{module_distribution_file}',
+			f'{source}/.build/macosx/arm64/release/libkernel.dylib',
+			f'{temporary}/artifact.dylib',
 		)
 		utility.sign_macintosh_executable(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.dylib',
+			f'{temporary}/artifact.dylib',
+			keystore,
 		)
+		utility.fs_copy(
+			f'{temporary}/artifact.dylib',
+			f'{destination}',
+		)
+		destination = ('', f'{temporary}/artifact.dylib')
 	if utility.check_platform(platform, ['android.arm64']):
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -104,19 +106,17 @@ def main(
 			'--ndk_sdkver=30',
 			'--runtimes=c++_shared',
 		])
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'build',
 		])
 		utility.fs_copy(
-			f'{module_directory}/.build/android/arm64-v8a/release/libkernel.so',
-			f'{module_distribution_file}',
+			f'{source}/.build/android/arm64-v8a/release/libkernel.so',
+			f'{temporary}/artifact.so',
 		)
+		destination = ('', f'{temporary}/artifact.so')
 	if utility.check_platform(platform, ['iphone.arm64']):
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
 			'--builddir=.build',
@@ -128,19 +128,21 @@ def main(
 			'--cc=clang',
 			'--cxx=clang',
 		])
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'xmake',
 			'build',
 		])
 		utility.fs_copy(
-			f'{module_directory}/.build/iphoneos/arm64/release/libkernel.dylib',
-			f'{module_distribution_file}',
+			f'{source}/.build/iphoneos/arm64/release/libkernel.dylib',
+			f'{temporary}/artifact.dylib',
 		)
 		utility.sign_iphone_executable(
-			f'{module_distribution_file}',
+			f'{temporary}/artifact.dylib',
+			f'{temporary}/artifact.dylib',
+			keystore,
 		)
-	print(f'>> BUILD >> {module_distribution_file}')
-	return
+		destination = ('', f'{temporary}/artifact.dylib')
+	return destination
 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	utility.build_project_module(__file__, build, sys.argv[1])

@@ -11,126 +11,117 @@ import AssistantPlus.build as build_assistant_plus
 
 # ----------------
 
-def main(
+def build(
+	source: str,
+	local: str,
+	distribution: str,
+	keystore: tuple[str, str] | None,
+	temporary: str,
 	platform: str,
-) -> None:
-	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64'])
+) -> tuple[str, str] | None:
+	destination = None
+	if not utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+		return destination
 	# build
-	build_kernel.main(platform)
-	build_shell.main(platform)
-	build_script.main('any.any')
-	build_assistant.main(platform)
+	if utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+		utility.build_project_module(build_kernel.__file__, build_kernel.build, platform)
+		utility.build_project_module(build_shell.__file__, build_shell.build, platform)
+		utility.build_project_module(build_script.__file__, build_script.build, platform)
+		utility.build_project_module(build_assistant.__file__, build_assistant.build, platform)
 	if utility.check_platform(platform, ['windows.amd64']):
-		build_assistant_plus.main(platform)
-	# path
-	project_directory = utility.get_project()
-	local_directory = utility.get_project_local()
-	distribution_directory = utility.get_project_distribution()
-	bundle_directory = utility.get_project_distribution(f'{platform}.bundle')
-	bundle_file = utility.get_project_distribution(f'{platform}.bundle.zip')
+		utility.build_project_module(build_assistant_plus.__file__, build_assistant_plus.build, platform)
 	# root
-	utility.fs_remove(
-		f'{bundle_directory}',
-	)
 	utility.fs_create_directory(
-		f'{bundle_directory}',
+		f'{temporary}/artifact',
 	)
-	# workspace
-	utility.fs_create_directory(
-		f'{bundle_directory}/workspace',
-	)
-	# temporary
-	utility.fs_create_directory(
-		f'{bundle_directory}/temporary',
-	)
-	# library
-	utility.fs_copy(
-		f'{local_directory}/library/{platform}',
-		f'{bundle_directory}/library',
-	)
-	# launch
-	if utility.check_platform(platform, ['windows.amd64']):
-		utility.fs_copy(
-			f'{project_directory}/common/unembedded/script/launch.cmd',
-			f'{bundle_directory}/launch.cmd',
-		)
-	if utility.check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
-		utility.fs_copy(
-			f'{project_directory}/common/unembedded/script/launch.sh',
-			f'{bundle_directory}/launch.sh',
-		)
-	# kernel
+	# module
+	module_distribution_list = {
+		'kernel': {
+			'windows.amd64': '',
+			'linux.amd64': '',
+			'macintosh.arm64': '',
+			'android.arm64': '',
+			'iphone.arm64': '',
+		},
+		'shell': {
+			'windows.amd64': '.exe',
+			'linux.amd64': '',
+			'macintosh.arm64': '',
+			'android.arm64': '',
+			'iphone.arm64': '',
+		},
+		'script': {
+			'windows.amd64': '!.zip',
+			'linux.amd64': '!.zip',
+			'macintosh.arm64': '!.zip',
+			'android.arm64': '!.zip',
+			'iphone.arm64': '!.zip',
+		},
+		'assistant': {
+			'windows.amd64': '.msix',
+			'linux.amd64': '.zip',
+			'macintosh.arm64': '.dmg',
+			'android.arm64': '.apk',
+			'iphone.arm64': '.ipa',
+		},
+		'assistant_plus': {
+			'windows.amd64': '.msix',
+		},
+	}
+	for module_name, module_distribution in module_distribution_list.items():
+		module_distribution_extension = module_distribution.get(platform)
+		if module_distribution_extension == None:
+			continue
+		if module_distribution_extension == '!.zip':
+			utility.unpack_zip(
+				f'{distribution}/{platform}.{module_name}{'.zip'}',
+				f'{temporary}/artifact',
+			)
+		else:
+			utility.fs_copy(
+				f'{distribution}/{platform}.{module_name}{module_distribution.get(platform)}',
+				f'{temporary}/artifact/{module_name}{module_distribution.get(platform)}',
+			)
+	# unembedded
 	if utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		utility.fs_copy(
-			f'{distribution_directory}/{platform}.kernel',
-			f'{bundle_directory}/kernel',
+			f'{source}/common/unembedded/assistant',
+			f'{temporary}/artifact/assistant',
 		)
-	# shell
 	if utility.check_platform(platform, ['windows.amd64']):
 		utility.fs_copy(
-			f'{distribution_directory}/{platform}.shell',
-			f'{bundle_directory}/shell.exe',
+			f'{source}/common/unembedded/assistant_plus',
+			f'{temporary}/artifact/assistant_plus',
+		)
+	if utility.check_platform(platform, ['windows.amd64']):
+		utility.fs_copy(
+			f'{source}/common/unembedded/launch.cmd',
+			f'{temporary}/artifact/launch.cmd',
 		)
 	if utility.check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		utility.fs_copy(
-			f'{distribution_directory}/{platform}.shell',
-			f'{bundle_directory}/shell',
+			f'{source}/common/unembedded/launch.sh',
+			f'{temporary}/artifact/launch.sh',
 		)
-	# script
-	if True:
-		utility.unpack_zip(
-			f'{distribution_directory}/any.any.script.zip',
-			f'{bundle_directory}',
-		)
-	# assistant
-	if True:
-		utility.fs_copy(
-			f'{project_directory}/common/unembedded/configuration/assistant',
-			f'{bundle_directory}/assistant',
-		)
-	if utility.check_platform(platform, ['windows.amd64']):
-		utility.fs_copy(
-			f'{distribution_directory}/{platform}.assistant.msix',
-			f'{bundle_directory}/assistant.msix',
-		)
-	if utility.check_platform(platform, ['linux.amd64']):
-		utility.fs_copy(
-			f'{distribution_directory}/{platform}.assistant.zip',
-			f'{bundle_directory}/assistant.zip',
-		)
-	if utility.check_platform(platform, ['macintosh.arm64']):
-		utility.fs_copy(
-			f'{distribution_directory}/{platform}.assistant.dmg',
-			f'{bundle_directory}/assistant.dmg',
-		)
-	if utility.check_platform(platform, ['android.arm64']):
-		utility.fs_copy(
-			f'{distribution_directory}/{platform}.assistant.apk',
-			f'{bundle_directory}/assistant.apk',
-		)
-	if utility.check_platform(platform, ['iphone.arm64']):
-		utility.fs_copy(
-			f'{distribution_directory}/{platform}.assistant.ipa',
-			f'{bundle_directory}/assistant.ipa',
-		)
-	# assistant_plus
-	if utility.check_platform(platform, ['windows.amd64']):
-		utility.fs_copy(
-			f'{project_directory}/common/unembedded/configuration/assistant_plus',
-			f'{bundle_directory}/assistant_plus',
-		)
-		utility.fs_copy(
-			f'{distribution_directory}/{platform}.assistant_plus.msix',
-			f'{bundle_directory}/assistant_plus.msix',
-		)
-	# done
-	utility.pack_zip(
-		'Twinning',
-		f'{bundle_directory}',
-		f'{bundle_file}',
+	# miscellaneous
+	utility.fs_copy(
+		f'{local}/library/{platform}',
+		f'{temporary}/artifact/library',
 	)
-	print(f'>> BUILD >> {bundle_file}')
-	return
+	utility.fs_create_directory(
+		f'{temporary}/artifact/workspace',
+	)
+	utility.fs_create_directory(
+		f'{temporary}/artifact/temporary',
+	)
+	# bundle
+	utility.pack_zip(
+		f'{temporary}/artifact',
+		f'{temporary}/artifact.zip',
+		'Twinning',
+	)
+	destination = ('.zip', f'{temporary}/artifact.zip')
+	return destination
 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	utility.build_project_bundle(__file__, build, sys.argv[1])

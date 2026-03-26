@@ -6,38 +6,39 @@ import common.script.utility as utility
 
 # ----------------
 
-def main(
+def build(
+	source: str,
+	keystore: tuple[str, str] | None,
+	temporary: str,
 	platform: str,
-) -> None:
-	utility.ensure_platform(platform, ['any.any'])
-	module_directory, module_name = utility.get_project_module(__file__)
-	module_distribution_file = utility.get_project_distribution(f'{platform}.{module_name}')
-	if utility.check_platform(platform, ['any.any']):
-		module_distribution_file += '.zip'
-		utility.fs_remove(
-			f'{module_distribution_file}',
-		)
-		utility.execute_command(module_directory, [
+) -> tuple[str, str] | None:
+	destination = None
+	if utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+		utility.sh_execute_command(source, [
 			'npm',
 			'install',
 		])
-		utility.execute_command(module_directory, [
+		utility.sh_execute_command(source, [
 			'npm',
 			'run',
 			'build',
 		])
 		utility.fs_create_link(
-			f'{module_directory}/dist/configuration',
-			f'{module_directory}/src/configuration',
-			False,
+			f'{source}/dist/configuration',
+			f'{source}/src/configuration',
+			True,
+		)
+		utility.fs_copy(
+			f'{source}/dist',
+			f'{temporary}/artifact',
 		)
 		utility.pack_zip(
-			'script',
-			f'{module_directory}/dist',
-			f'{module_distribution_file}',
+			f'{temporary}/artifact',
+			f'{temporary}/artifact.zip',
+			f'script',
 		)
-	print(f'>> BUILD >> {module_distribution_file}')
-	return
+		destination = ('.zip', f'{temporary}/artifact.zip')
+	return destination
 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	utility.build_project_module(__file__, build, sys.argv[1])
