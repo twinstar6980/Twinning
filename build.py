@@ -75,7 +75,8 @@ def build(
 		if module_distribution_extension == '!.zip':
 			utility.unpack_zip(
 				f'{distribution}/{platform}.{module_name}{'.zip'}',
-				f'{temporary}/artifact',
+				f'{temporary}/artifact/{module_name}',
+				f'{module_name}',
 			)
 		else:
 			utility.fs_copy(
