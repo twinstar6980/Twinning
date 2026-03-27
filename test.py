@@ -6,7 +6,7 @@ import common.script.utility as utility
 
 # ----------------
 
-def main(
+def test(
 	platform: str,
 ) -> None:
 	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64'])
@@ -115,4 +115,4 @@ def main(
 	return
 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	test(sys.argv[1])
