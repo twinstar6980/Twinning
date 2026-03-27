@@ -31,6 +31,7 @@ def build(
 		utility.pack_windows_msix(
 			f'{temporary}/artifact',
 			f'{temporary}/artifact.msix',
+			True,
 		)
 		utility.sign_windows_executable(
 			f'{temporary}/artifact.msix',

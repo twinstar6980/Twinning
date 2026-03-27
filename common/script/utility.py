@@ -299,8 +299,8 @@ def sign_windows_executable(
 				f'{temporary}/package/AppxManifest.xml',
 			)
 			manifest_content = re.sub(
-				r'(Publisher="[^"]*")',
-				f'Publisher="{keystore_subject}"',
+				r'(<Identity\s.*Publisher\s*=\s*")([^"]*)("\s.*\/>)',
+				rf'\1{keystore_subject}\3',
 				manifest_content,
 				re.RegexFlag.MULTILINE,
 			)
@@ -311,6 +311,7 @@ def sign_windows_executable(
 			pack_windows_msix(
 				f'{temporary}/package',
 				f'{temporary}/target.{type}',
+				False,
 			)
 		sh_execute_command(temporary, [
 			'signtool',
@@ -329,6 +330,7 @@ def sign_windows_executable(
 def pack_windows_msix(
 	source: str,
 	destination: str,
+	generate_pri: bool,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
@@ -336,21 +338,22 @@ def pack_windows_msix(
 			f'{temporary}/package',
 			follow_link=True,
 		)
-		sh_execute_command(temporary, [
-			'makepri',
-			'createconfig',
-			'/cf', f'{temporary}/package/priconfig.xml',
-			'/dq', f'en-US',
-			'/o',
-		])
-		sh_execute_command(temporary, [
-			'makepri',
-			'new',
-			'/cf', f'{temporary}/package/priconfig.xml',
-			'/pr', f'{temporary}/package',
-			'/of', f'{temporary}/package/resources.pri',
-			'/o',
-		])
+		if generate_pri:
+			sh_execute_command(temporary, [
+				'makepri',
+				'createconfig',
+				'/cf', f'{temporary}/priconfig.xml',
+				'/dq', f'en-US',
+				'/o',
+			])
+			sh_execute_command(temporary, [
+				'makepri',
+				'new',
+				'/cf', f'{temporary}/priconfig.xml',
+				'/pr', f'{temporary}/package',
+				'/of', f'{temporary}/package/resources.pri',
+				'/o',
+			])
 		sh_execute_command(temporary, [
 			'makeappx',
 			'pack',
