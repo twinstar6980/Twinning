@@ -56,7 +56,7 @@ public static class ApplicationInformation {
 
 	public static readonly String Name = Package.Current.DisplayName;
 
-	public static readonly String Developer = Package.Current.PublisherDisplayName;
+	public static readonly String Developer = "TwinStar";
 
 	public static readonly String Year = "2023-2026";
 
