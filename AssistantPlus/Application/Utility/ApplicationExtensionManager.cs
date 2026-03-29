@@ -29,19 +29,19 @@ namespace Twinning.AssistantPlus.Utility {
 		public async Task<Boolean> CheckForwarder(
 		) {
 			var stateFile = $"{App.Instance.SharedDirectory}/forwarder";
-			return StorageHelper.Exist(stateFile);
+			return await StorageHelper.Exist(stateFile);
 		}
 
 		public async Task ToggleForwarder(
 			Boolean state
 		) {
 			var stateFile = $"{App.Instance.SharedDirectory}/forwarder";
-			var exist = StorageHelper.Exist(stateFile);
+			var exist = await StorageHelper.Exist(stateFile);
 			if (!state && exist) {
-				StorageHelper.Remove(stateFile);
+				await StorageHelper.Remove(stateFile);
 			}
 			if (state && !exist) {
-				StorageHelper.CreateFile(stateFile);
+				await StorageHelper.CreateFile(stateFile);
 			}
 			return;
 		}

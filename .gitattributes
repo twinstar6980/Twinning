@@ -1,4 +1,4 @@
-# Global
+# Common
 /**/*                                        binary
 
 # General - Article
@@ -127,19 +127,5 @@
 /**/*.xib                                    text eol=lf
 /**/*.storyboard                             text eol=lf
 
-# Common
+# Project
 /LICENSE                                     text eol=lf
-
-# Module - Kernel
-/Kernel/third/**                             -text
-
-# Module - Shell
-/Shell/third/**                              -text
-
-# Module - Script
-
-# Module - Assistant
-
-# Module - AssistantPlus
-
-# Miscellaneous

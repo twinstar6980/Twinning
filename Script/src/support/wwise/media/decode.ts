@@ -14,10 +14,10 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (!ripe_file.endsWith('.wem')) {
 			ripe_file_fallback_temporary = HomePath.new_temporary(null, 'directory');
 			ripe_file_fallback = `${ripe_file_fallback_temporary}/sample.wem`;
-			KernelX.Storage.copy(ripe_file, ripe_file_fallback);
+			KernelX.Storage.copy(ripe_file, ripe_file_fallback, false);
 		}
 		let raw_file_directory = StorageHelper.parent(raw_file);
-		if (raw_file_directory !== null) {
+		if (raw_file_directory !== null && !KernelX.Storage.exist_directory(raw_file_directory)) {
 			KernelX.Storage.create_directory(raw_file_directory);
 		}
 		let vgmstream_result = ProcessHelper.run_process(

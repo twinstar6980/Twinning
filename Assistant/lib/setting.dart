@@ -167,6 +167,9 @@ class SettingProvider with ChangeNotifier {
     if (apply) {
       await this.apply();
     }
+    if (!await StorageHelper.existFile(file)) {
+      await StorageHelper.createFile(file);
+    }
     await JsonHelper.serializeFile(file, SettingProvider._makeDataToJson(this.data));
     return;
   }

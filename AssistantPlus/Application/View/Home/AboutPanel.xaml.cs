@@ -571,8 +571,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (StorageHelper.Exist(App.Instance.CacheDirectory)) {
-				StorageHelper.Remove(App.Instance.CacheDirectory);
+			if (await StorageHelper.Exist(App.Instance.CacheDirectory)) {
+				await StorageHelper.Remove(App.Instance.CacheDirectory);
 			}
 			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;

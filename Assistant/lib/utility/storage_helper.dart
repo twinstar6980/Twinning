@@ -4,12 +4,14 @@ import '/utility/application_platform_method.dart';
 import '/widget/export.dart';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:ffi/ffi.dart' as lib;
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as lib;
 import 'package:path_provider/path_provider.dart' as lib;
 import 'package:file_selector/file_selector.dart' as lib;
 import 'package:url_launcher/url_launcher.dart' as lib;
+import 'package:win32/win32.dart' as lib;
 
 // ----------------
 
@@ -20,19 +22,20 @@ class StorageHelper {
   static String regularize(
     String path,
   ) {
-    return StorageHelper.toPosixStyle(path);
-  }
-
-  static String toPosixStyle(
-    String path,
-  ) {
     return path.replaceAll('\\', '/');
   }
 
-  static String toWindowsStyle(
+  static String nativize(
     String path,
   ) {
-    return path.replaceAll('/', '\\');
+    var result = path;
+    if (SystemChecker.isWindows) {
+      result = path.replaceAll('/', '\\');
+    }
+    if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
+      result = path.replaceAll('\\', '/');
+    }
+    return result;
   }
 
   // ----------------
@@ -66,105 +69,194 @@ class StorageHelper {
 
   // #endregion
 
-  // #region exist
-
-  static Future<Boolean> exist(
-    String path,
-  ) async {
-    return await File(path).exists() || await Directory(path).exists();
-  }
-
-  static Future<Boolean> existFile(
-    String path,
-  ) async {
-    return await File(path).exists();
-  }
-
-  static Future<Boolean> existDirectory(
-    String path,
-  ) async {
-    return await Directory(path).exists();
-  }
-
-  // ----------------
-
-  static Boolean existSync(
-    String path,
-  ) {
-    return File(path).existsSync() || Directory(path).existsSync();
-  }
-
-  static Boolean existFileSync(
-    String path,
-  ) {
-    return File(path).existsSync();
-  }
-
-  static Boolean existDirectorySync(
-    String path,
-  ) {
-    return Directory(path).existsSync();
-  }
-
-  // #endregion
-
   // #region basic
 
-  static Future<Void> copy(
-    String source,
-    String destination,
+  static Future<Boolean> exist(
+    String target,
   ) async {
-    assertTest(await StorageHelper.exist(source));
-    if (await StorageHelper.existFile(source)) {
-      await StorageHelper.createFile(destination);
-      await StorageHelper.writeFile(destination, await StorageHelper.readFile(source));
+    if (target.isEmpty) {
+      return false;
     }
-    if (await StorageHelper.existDirectory(source)) {
-      await StorageHelper.createDirectory(destination);
-      await for (var item in Directory(source).list(recursive: true)) {
-        await StorageHelper.copy(item.path, '${destination}/${StorageHelper.name(item.path)}');
+    return await FileSystemEntity.type(target, followLinks: false) != .notFound;
+  }
+
+  static Future<Void> copy(
+    String  target,
+    String  placement,
+    Boolean followLink,
+  ) async {
+    assertTest(await StorageHelper.exist(target));
+    assertTest(!await StorageHelper.exist(placement));
+    if (!await StorageHelper.existDirectory(StorageHelper.parent(placement))) {
+      await StorageHelper.createDirectory(StorageHelper.parent(placement));
+    }
+    var type = await FileSystemEntity.type(target, followLinks: false);
+    if (followLink && type == .link) {
+      var referentType = await FileSystemEntity.type(target, followLinks: true);
+      if (referentType != .notFound) {
+        type = referentType;
       }
+    }
+    if (type == .link) {
+      var referent = await StorageHelper.resolveLink(target);
+      var isDirectory = false;
+      if (SystemChecker.isWindows) {
+        var hTarget = target.toNativeUtf16();
+        var attribute = lib.GetFileAttributes(hTarget);
+        lib.calloc.free(hTarget);
+        isDirectory = attribute != -1 && (attribute & lib.FILE_ATTRIBUTE_DIRECTORY) != 0;
+      }
+      if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
+        isDirectory = false;
+      }
+      await StorageHelper.createLink(placement, referent, isDirectory);
+    }
+    else if (type == .file) {
+      var data = await StorageHelper.readFile(target);
+      await StorageHelper.createFile(placement);
+      await StorageHelper.writeFile(placement, data);
+    }
+    else if (type == .directory) {
+      await StorageHelper.createDirectory(placement);
+      await for (var item in Directory(target).list(recursive: false, followLinks: false)) {
+        var itemName = StorageHelper.name(item.path);
+        await StorageHelper.copy(item.path, '${placement}/${itemName}', followLink);
+      }
+    }
+    else {
+      throw UnsupportedException();
     }
     return;
   }
 
   static Future<Void> rename(
-    String source,
-    String destination,
+    String target,
+    String placement,
   ) async {
-    assertTest(await StorageHelper.exist(source));
-    await StorageHelper.createDirectory(StorageHelper.parent(destination));
-    if (await StorageHelper.existFile(source)) {
-      await File(source).rename(destination);
+    assertTest(await StorageHelper.exist(target));
+    assertTest(!await StorageHelper.exist(placement));
+    if (!await StorageHelper.existDirectory(StorageHelper.parent(placement))) {
+      await StorageHelper.createDirectory(StorageHelper.parent(placement));
     }
-    if (await StorageHelper.existDirectory(source)) {
-      await Directory(source).rename(destination);
+    var type = await FileSystemEntity.type(target, followLinks: false);
+    if (type == .link) {
+      await Link(target).rename(placement);
+    }
+    else if (type == .file) {
+      await File(target).rename(placement);
+    }
+    else if (type == .directory) {
+      await Directory(target).rename(placement);
+    }
+    else {
+      throw UnsupportedException();
     }
     return;
   }
 
   static Future<Void> remove(
-    String source,
+    String target,
   ) async {
-    assertTest(await StorageHelper.exist(source));
-    if (await StorageHelper.existFile(source)) {
-      await File(source).delete(recursive: true);
+    assertTest(await StorageHelper.exist(target));
+    var type = await FileSystemEntity.type(target, followLinks: false);
+    if (type == .link) {
+      await Link(target).delete();
     }
-    if (await StorageHelper.existDirectory(source)) {
-      await Directory(source).delete(recursive: true);
+    else if (type == .file) {
+      await File(target).delete();
+    }
+    else if (type == .directory) {
+      await Directory(target).delete(recursive: true);
+    }
+    else {
+      throw UnsupportedException();
     }
     return;
+  }
+
+  // #endregion
+
+  // #region link
+
+  static Future<Boolean> existLink(
+    String target,
+  ) async {
+    if (target.isEmpty) {
+      return false;
+    }
+    return await FileSystemEntity.type(target, followLinks: false) == .link;
+  }
+
+  static Future<Void> createLink(
+    String  target,
+    String  referent,
+    Boolean isDirectory,
+  ) async {
+    assertTest(!await StorageHelper.exist(target));
+    if (!await StorageHelper.existDirectory(StorageHelper.parent(target))) {
+      await StorageHelper.createDirectory(StorageHelper.parent(target));
+    }
+    if (SystemChecker.isWindows) {
+      var hTarget = target.toNativeUtf16();
+      var hReferent = StorageHelper.nativize(referent).toNativeUtf16();
+      var result = lib.CreateSymbolicLink(hTarget, hReferent, lib.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE | (!isDirectory ? 0 : lib.SYMBOLIC_LINK_FLAG_DIRECTORY));
+      lib.calloc.free(hTarget);
+      lib.calloc.free(hReferent);
+      assertTest(result != 0);
+    }
+    if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
+      await Link(target).create(StorageHelper.nativize(referent), recursive: false);
+    }
+    return;
+  }
+
+  // ----------------
+
+  static Future<String> resolveLink(
+    String target,
+  ) async {
+    assertTest(await StorageHelper.existLink(target));
+    return StorageHelper.regularize(await Link(target).target());
   }
 
   // #endregion
 
   // #region file
 
+  static Future<Boolean> existFile(
+    String target,
+  ) async {
+    if (target.isEmpty) {
+      return false;
+    }
+    return await FileSystemEntity.type(target, followLinks: true) == .file;
+  }
+
+  // TODO: remove
+  static Boolean existFileSync(
+    String target,
+  ) {
+    return FileSystemEntity.typeSync(target, followLinks: true) == .file;
+  }
+
   static Future<Void> createFile(
     String target,
   ) async {
-    await File(target).create(recursive: true);
+    assertTest(!await StorageHelper.exist(target));
+    if (!await StorageHelper.existDirectory(StorageHelper.parent(target))) {
+      await StorageHelper.createDirectory(StorageHelper.parent(target));
+    }
+    await File(target).create(recursive: false);
     return;
+  }
+
+  // ----------------
+
+  static Future<Integer> sizeFile(
+    String target,
+  ) async {
+    assertTest(await StorageHelper.existFile(target));
+    return await File(target).length();
   }
 
   // ----------------
@@ -172,6 +264,7 @@ class StorageHelper {
   static Future<Uint8List> readFile(
     String target,
   ) async {
+    assertTest(await StorageHelper.existFile(target));
     return await File(target).readAsBytes();
   }
 
@@ -179,8 +272,8 @@ class StorageHelper {
     String    target,
     Uint8List data,
   ) async {
-    await StorageHelper.createFile(target);
-    await File(target).writeAsBytes(data, flush: true);
+    assertTest(await StorageHelper.existFile(target));
+    await File(target).writeAsBytes(data, mode: .writeOnly, flush: true);
     return;
   }
 
@@ -189,6 +282,7 @@ class StorageHelper {
   static Future<String> readFileText(
     String target,
   ) async {
+    assertTest(await StorageHelper.existFile(target));
     return await File(target).readAsString();
   }
 
@@ -196,8 +290,8 @@ class StorageHelper {
     String target,
     String text,
   ) async {
-    await StorageHelper.createFile(target);
-    await File(target).writeAsString(text, flush: true);
+    assertTest(await StorageHelper.existFile(target));
+    await File(target).writeAsString(text, mode: .writeOnly, flush: true);
     return;
   }
 
@@ -205,9 +299,26 @@ class StorageHelper {
 
   // #region directory
 
+  static Future<Boolean> existDirectory(
+    String target,
+  ) async {
+    if (target.isEmpty) {
+      return false;
+    }
+    return await FileSystemEntity.type(target, followLinks: true) == .directory;
+  }
+
+  // TODO: remove
+  static Boolean existDirectorySync(
+    String target,
+  ) {
+    return FileSystemEntity.typeSync(target, followLinks: true) == .directory;
+  }
+
   static Future<Void> createDirectory(
     String target,
   ) async {
+    assertTest(!await StorageHelper.exist(target));
     await Directory(target).create(recursive: true);
   }
 
@@ -216,36 +327,46 @@ class StorageHelper {
   static Future<List<String>> listDirectory(
     String   target,
     Integer? depth,
+    Boolean  followLink,
+    Boolean  allowLink,
     Boolean  allowFile,
     Boolean  allowDirectory,
   ) async {
+    assertTest(await StorageHelper.existDirectory(target));
     var result = <String>[];
     Future<Void> iterate(
-      String   target,
-      Integer? depth,
-      Boolean  allowFile,
-      Boolean  allowDirectory,
-      String   currentTarget,
-      Integer  currentDepth,
+      String  currentTarget,
+      String  currentItem,
+      Integer currentDepth,
     ) async {
       if (depth == null || currentDepth < depth) {
-        await for (var item in Directory(target).list(recursive: false, followLinks: false)) {
+        await for (var item in Directory(currentTarget).list(recursive: false, followLinks: false)) {
+          var itemType = await FileSystemEntity.type(item.path, followLinks: false);
           var itemName = StorageHelper.name(item.path);
-          var itemPath = '${currentTarget.isEmpty ? '' : '${currentTarget}/'}${itemName}';
-          if (allowFile && item is File) {
+          var itemPath = '${currentItem.isEmpty ? '' : '${currentItem}/'}${itemName}';
+          if (followLink && itemType == .link) {
+            var referentType = await FileSystemEntity.type(item.path, followLinks: true);
+            if (referentType != .notFound) {
+              itemType = referentType;
+            }
+          }
+          if (allowLink && itemType == .link) {
             result.add(itemPath);
           }
-          if (allowDirectory && item is Directory) {
+          if (allowFile && itemType == .file) {
             result.add(itemPath);
           }
-          if (item is Directory) {
-            await iterate('${target}/${itemName}', depth, allowFile, allowDirectory, itemPath, currentDepth + 1);
+          if (allowDirectory && itemType == .directory) {
+            result.add(itemPath);
+          }
+          if (itemType == .directory) {
+            await iterate('${currentTarget}/${itemName}', itemPath, currentDepth + 1);
           }
         }
       }
       return;
     }
-    await iterate(target, depth, allowFile, allowDirectory, '', 0);
+    await iterate(target, '', 0);
     return result;
   }
 
@@ -294,13 +415,13 @@ class StorageHelper {
     if (SystemChecker.isWindows) {
       locationPath ??= 'C:/';
       if (type == 'load_file') {
-        target = (await lib.openFile(initialDirectory: StorageHelper.toWindowsStyle(locationPath)))?.path;
+        target = (await lib.openFile(initialDirectory: StorageHelper.nativize(locationPath)))?.path;
       }
       if (type == 'load_directory') {
-        target = await lib.getDirectoryPath(initialDirectory: StorageHelper.toWindowsStyle(locationPath));
+        target = await lib.getDirectoryPath(initialDirectory: StorageHelper.nativize(locationPath));
       }
       if (type == 'save_file') {
-        target = (await lib.getSaveLocation(initialDirectory: StorageHelper.toWindowsStyle(locationPath), suggestedName: name))?.path;
+        target = (await lib.getSaveLocation(initialDirectory: StorageHelper.nativize(locationPath), suggestedName: name))?.path;
       }
       if (target != null) {
         target = StorageHelper.regularize(target);

@@ -226,7 +226,7 @@ namespace Twinning.AssistantPlus {
 		public async Task HandleForward(
 			List<String> resource
 		) {
-			var forwardOption = Enum.GetValues<ModuleType>().Select((value) => ModuleHelper.Query(value).GenerateForwardOption(resource)).ToList();
+			var forwardOption = (await Task.WhenAll(Enum.GetValues<ModuleType>().Select(async (value) => await ModuleHelper.Query(value).GenerateForwardOption(resource)))).ToList();
 			var targetType = forwardOption[this.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? this.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
 			var canContinue = this.Setting.Data.ForwarderImmediateJump && targetType != null;
 			if (!canContinue) {

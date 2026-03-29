@@ -484,6 +484,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					if (!use_legacy_packet) {
 						ResourceStreamGroup::Pack<packet_version>::process(packet_data, packet_package_definition, make_formatted_path(resource_directory));
 						if (new_packet_file.has()) {
+							if (!Storage::exist_file(make_formatted_path(new_packet_file.get()))) {
+								Storage::create_file(make_formatted_path(new_packet_file.get()));
+							}
 							Storage::write_file(make_formatted_path(new_packet_file.get()), packet_data.stream_view());
 						}
 						auto legacy_packet_stream = InputByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicMarker>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};

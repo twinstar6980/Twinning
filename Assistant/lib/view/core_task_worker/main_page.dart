@@ -125,7 +125,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       var kernel = await StorageHelper.temporary();
       var library = bridge.Library();
       try {
-        await StorageHelper.copy(this.widget.setting.kernel, kernel);
+        await StorageHelper.copy(this.widget.setting.kernel, kernel, true);
         library.open(kernel);
         result = await bridge.Launcher.launch(this._sessionClient, library, this.widget.setting.script, this.widget.setting.argument + this._additionalArgument);
       }

@@ -186,9 +186,11 @@ class CustomMethodChannel {
     check(sourceUri.scheme == "content")
     val destinationName = this.queryDatabaseOfContentUri<String>(sourceUri, OpenableColumns.DISPLAY_NAME)
     check(destinationName != null)
-    val destination = "${placement}/${destinationName}"
-    if (File(destination).exists()) {
-      check(File(destination).delete())
+    var destination = "${placement}/${destinationName}"
+    var destinationSuffix = 0
+    while (File(destination).exists()) {
+      destinationSuffix += 1
+      destination = "${placement}/${destinationName}.${destinationSuffix}"
     }
     this.host.contentResolver.openInputStream(sourceUri)!!.use { input ->
       FileOutputStream(destination, false).use { output ->

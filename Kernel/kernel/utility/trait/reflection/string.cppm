@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	template <auto t_size> requires
 		CategoryConstraint<>
-		&& (IsSameOf<t_size, ZSize>)
+		&& (IsSameOf<t_size, ZSize, ZSSize>) // NOTE: allow ZSSize to avoid ReSharper error hint
 	inline constexpr auto make_string(
 		ZArray<ZCharacter, t_size> const & source
 	) -> String<t_size - 1_szz> {

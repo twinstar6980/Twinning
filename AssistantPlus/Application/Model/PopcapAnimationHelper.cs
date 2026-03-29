@@ -103,18 +103,18 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static String? CheckAnimationFilePath(
+		public static async Task<String?> CheckAnimationFilePath(
 			String path
 		) {
 			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
 			return !nameRule.IsMatch(path) ? null : path;
 		}
 
-		public static String? CheckAnimationDirectoryPath(
+		public static async Task<String?> CheckAnimationDirectoryPath(
 			String path
 		) {
 			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
-			var animationFile = StorageHelper.ListDirectory(path, 1, true, false);
+			var animationFile = await StorageHelper.ListDirectory(path, 1, true, false, true, false);
 			animationFile = animationFile.Where((it) => nameRule.IsMatch(it)).ToList();
 			return animationFile.Count != 1 ? null : $"{path}/{animationFile[0]}";
 		}
@@ -359,7 +359,7 @@ namespace Twinning.AssistantPlus {
 			var result = new Dictionary<String, BitmapSource>(animation.Image.Count);
 			foreach (var image in animation.Image) {
 				var file = $"{directory}/{PopcapAnimationHelper.ParseImageFileName(image.Name)}.png";
-				if (StorageHelper.ExistFile(file)) {
+				if (await StorageHelper.ExistFile(file)) {
 					var data = await ConvertHelper.ParseBitmapFromBinary(await StorageHelper.ReadFile(file));
 					result.Add(image.Name, data);
 				}

@@ -193,7 +193,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 					return;
 				}
 				var descriptorFile = StorageHelper.GetLongPath(item[0].Path);
-				if (!StorageHelper.ExistFile(descriptorFile)) {
+				if (!await StorageHelper.ExistFile(descriptorFile)) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
 					return;
 				}

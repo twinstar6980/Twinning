@@ -1,5 +1,5 @@
 name: assistant
-version: 160.0.0+160
+version: 161.0.0+161
 environment:
   sdk: ^3.11.3
 dependencies:
@@ -8,7 +8,7 @@ dependencies:
   ffi: 2.2.0
   win32: 5.15.0
   path: 1.9.1
-  async: 2.13.0
+  async: 2.13.1
   collection: 1.19.1
   stack_trace: 1.12.1
   decimal: 3.2.4

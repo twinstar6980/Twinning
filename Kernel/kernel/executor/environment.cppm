@@ -476,28 +476,25 @@ export namespace Twinning::Kernel::Executor::Environment {
 		{
 			auto s_Storage = s_Kernel.add_space("Storage"_s);
 			s_Storage
-				// exist
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist>>("exist"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_file>>("exist_file"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_directory>>("exist_directory"_s)
 				// basic
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist>>("exist"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::copy>>("copy"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::rename>>("rename"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::remove>>("remove"_s)
 				// link
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_link>>("exist_link"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_link>>("create_link"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::parse_link>>("parse_link"_s)
-				// hard link
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_hard_link>>("create_hard_link"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::resolve_link>>("resolve_link"_s)
 				// file
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_file>>("exist_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_file>>("create_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::size_file>>("size_file"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::resize_file>>("resize_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::read_file>>("read_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::write_file>>("write_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::read_file_stream>>("read_file_stream"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::write_file_stream>>("write_file_stream"_s)
 				// directory
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_directory>>("exist_directory"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_directory>>("create_directory"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::list_directory>>("list_directory"_s);
 		}

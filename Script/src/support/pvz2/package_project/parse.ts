@@ -145,7 +145,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 							},
 							variable: [],
 						};
-						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.bin'));
+						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.bin'), false);
 					}
 					if (resource_manifest.additional.type === 'texture') {
 						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', resource_manifest.additional.value.path + '.ptx');
@@ -166,7 +166,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 							},
 							variable: [],
 						};
-						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.ptx'));
+						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.ptx'), false);
 					}
 					assert_test(resource_setting !== null);
 					KernelX.Json.write_fs_js(make_scope_setting_path(resource_directory), resource_setting);

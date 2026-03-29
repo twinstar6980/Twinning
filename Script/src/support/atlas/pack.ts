@@ -45,7 +45,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: string,
 		expand_value: number | 'exponent_of_2',
 	): [AtlasDefinition, Kernel.Image.Image] {
-		let sprite_file_list = KernelX.Storage.list_directory(sprite_directory, null, true, false).filter((value) => (/.+(\.png)/i.test(value))).map((value) => (value.slice(0, -4)));
+		let sprite_file_list = KernelX.Storage.list_directory(sprite_directory, null, true, false, true, false).filter((value) => (/.+(\.png)/i.test(value))).map((value) => (value.slice(0, -4)));
 		let sprite_box = ConvertHelper.record_from_array(sprite_file_list, (index, value) => {
 			let size = KernelX.Image.File.Png.size_fs(`${sprite_directory}/${value}.png`);
 			return [value, {w: Number(size[0]), h: Number(size[1])}];

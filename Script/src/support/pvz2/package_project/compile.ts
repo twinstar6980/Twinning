@@ -71,7 +71,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Compile {
 						KernelX.Storage.create_link(package_resource_file, source_file, false);
 					}
 					else {
-						KernelX.Storage.copy(source_file, package_resource_file);
+						KernelX.Storage.copy(source_file, package_resource_file, false);
 					}
 					resource_state.push({
 						category: resource_setting.category,
@@ -109,7 +109,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Compile {
 						KernelX.Storage.create_link(package_resource_file, source_file, false);
 					}
 					else {
-						KernelX.Storage.copy(source_file, package_resource_file);
+						KernelX.Storage.copy(source_file, package_resource_file, false);
 					}
 					let resource_manifest_additional_sprite: Array<TextureResourcePropertySpriteProperty> = [];
 					for (let sprite_resource_property of resource_property.sprite) {

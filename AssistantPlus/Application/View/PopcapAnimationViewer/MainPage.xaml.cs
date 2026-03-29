@@ -820,11 +820,11 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				}
 				var itemPath = StorageHelper.GetLongPath(item[0].Path);
 				var animationFile = null as String;
-				if (StorageHelper.ExistFile(itemPath)) {
-					animationFile = PopcapAnimationHelper.CheckAnimationFilePath(itemPath);
+				if (await StorageHelper.ExistFile(itemPath)) {
+					animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(itemPath);
 				}
-				if (StorageHelper.ExistDirectory(itemPath)) {
-					animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(itemPath);
+				if (await StorageHelper.ExistDirectory(itemPath)) {
+					animationFile = await PopcapAnimationHelper.CheckAnimationDirectoryPath(itemPath);
 				}
 				if (animationFile == null) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");
@@ -1017,7 +1017,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					var isReloaded = false;
 					var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
 					if (target != null) {
-						target = PopcapAnimationHelper.CheckAnimationDirectoryPath(target);
+						target = await PopcapAnimationHelper.CheckAnimationDirectoryPath(target);
 						if (target == null) {
 							await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "The source directory must contain unique animation file.", "");
 						}
@@ -1515,7 +1515,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		private Boolean uActiveProgress_mChangingWhenPlaying = false;
 
-		private Boolean uActiveProgress_mLoadedDone { get; set; } = false;
+		private Boolean uActiveProgress_mLoadedDone = false;
 
 		public async void uActiveProgress_Loaded(
 			Object          sender,

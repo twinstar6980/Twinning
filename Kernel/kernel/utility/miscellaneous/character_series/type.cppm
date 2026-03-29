@@ -18,11 +18,24 @@ export namespace Twinning::Kernel::CharacterType {
 
 	inline constexpr auto k_escape_slash = Character{'\\'_c};
 
-	inline constexpr auto k_path_separator_generic = Character{'/'_c};
+	inline constexpr auto k_path_separator_poisx = Character{'/'_c};
 
 	inline constexpr auto k_path_separator_windows = Character{'\\'_c};
 
-	inline constexpr auto k_path_separator_set = StaticArray<Character, 2_sz>{{k_path_separator_generic, k_path_separator_windows}};
+	inline constexpr auto k_path_separator_set = StaticArray<Character, 2_sz>{{k_path_separator_poisx, k_path_separator_windows}};
+
+	inline constexpr auto k_path_separator_generic = Character{
+		k_path_separator_poisx,
+	};
+
+	inline constexpr auto k_path_separator_native = Character{
+		#if defined M_system_windows
+		k_path_separator_windows,
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		k_path_separator_poisx,
+		#endif
+	};
 
 	inline constexpr auto k_letter_case_offset = Character{'a'_c - 'A'_c};
 
@@ -61,7 +74,7 @@ export namespace Twinning::Kernel::CharacterType {
 	inline constexpr auto is_path_separator(
 		Character const & character
 	) -> Boolean {
-		return character == k_path_separator_generic || character == k_path_separator_windows;
+		return character == k_path_separator_poisx || character == k_path_separator_windows;
 	}
 
 	#pragma endregion

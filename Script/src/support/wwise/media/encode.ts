@@ -341,7 +341,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			}, []),
 		]));
 		KernelX.Storage.write_file_s(`${wwise_project_directory}/Conversion Settings/Sample Conversion Settings.wwu`, k_sample_conversion_settings);
-		KernelX.Storage.copy(raw_file, `${wwise_project_directory}/Sample.wav`);
+		KernelX.Storage.copy(raw_file, `${wwise_project_directory}/Sample.wav`, false);
 		let platform = ({
 			'pcm': 'Android',
 			'adpcm': 'Android',
@@ -366,7 +366,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		if (wwise_result.code !== 0n) {
 			throw new Error(`execute failed by Wwise`);
 		}
-		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file);
+		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file, false);
 		KernelX.Storage.remove(temporary_directory);
 		return;
 	}

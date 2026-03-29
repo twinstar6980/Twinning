@@ -240,7 +240,7 @@ namespace Twinning.Script.Executor {
 		filter: ['any' | 'file' | 'directory', RegExp],
 		worker: (item: string) => void,
 	): void {
-		let all_item = KernelX.Storage.list_directory(parent, null, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
+		let all_item = KernelX.Storage.list_directory(parent, null, true, false, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
 		let valid_item = g_typical_method_disable_name_filter ? all_item : all_item.filter((value) => (filter[1].test(value)));
 		let failed_item = [] as Array<string>;
 		let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);

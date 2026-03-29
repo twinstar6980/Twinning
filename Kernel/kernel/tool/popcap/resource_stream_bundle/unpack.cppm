@@ -249,6 +249,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					ResourceStreamGroup::Unpack<packet_version>::process(packet_stream, packet_package_definition, !resource_directory.has() ? (k_null_optional) : (make_optional_of(make_formatted_path(resource_directory.get()))));
 					assert_test(packet_stream.full());
 					if (packet_file.has()) {
+						if (!Storage::exist_file(make_formatted_path(packet_file.get()))) {
+							Storage::create_file(make_formatted_path(packet_file.get()));
+						}
 						Storage::write_file(make_formatted_path(packet_file.get()), packet_data);
 					}
 					subgroup_definition.compression = packet_package_definition.compression;

@@ -13,6 +13,9 @@ def test(
 	source = utility.locate_project()
 	local = utility.locate_project_local()
 	test = utility.locate_project_local('test')
+	utility.fs_remove(
+		f'{test}',
+	)
 	utility.fs_create_directory(
 		f'{test}',
 	)

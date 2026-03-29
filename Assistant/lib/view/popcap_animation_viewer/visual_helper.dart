@@ -109,7 +109,7 @@ class VisualHelper {
     String path,
   ) async {
     var nameRule = RegExp(r'(\.pam\.json)$', caseSensitive: false);
-    var animationFile = await StorageHelper.listDirectory(path, 1, true, false);
+    var animationFile = await StorageHelper.listDirectory(path, 1, true, false, true, false);
     animationFile = animationFile.where((it) => nameRule.hasMatch(it)).toList();
     return animationFile.length != 1 ? null : '${path}/${animationFile.first}';
   }

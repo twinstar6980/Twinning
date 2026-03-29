@@ -313,76 +313,66 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Storage.exist(Kernel.Path.value(target)).value;
 		}
 
-		export function exist_file(
-			target: string,
-		): boolean {
-			return Kernel.Storage.exist_file(Kernel.Path.value(target)).value;
-		}
-
-		export function exist_directory(
-			target: string,
-		): boolean {
-			return Kernel.Storage.exist_directory(Kernel.Path.value(target)).value;
-		}
-
-		// ----------------
-
 		export function copy(
-			source: string,
-			destination: string,
+			target: string,
+			placement: string,
+			follow_link: boolean,
 		): void {
-			return Kernel.Storage.copy(Kernel.Path.value(source), Kernel.Path.value(destination));
+			return Kernel.Storage.copy(Kernel.Path.value(target), Kernel.Path.value(placement), Kernel.Boolean.value(follow_link));
 		}
 
 		export function rename(
-			source: string,
-			destination: string,
+			target: string,
+			placement: string,
 		): void {
-			return Kernel.Storage.rename(Kernel.Path.value(source), Kernel.Path.value(destination));
+			return Kernel.Storage.rename(Kernel.Path.value(target), Kernel.Path.value(placement));
 		}
 
 		export function remove(
-			source: string,
+			target: string,
 		): void {
-			return Kernel.Storage.remove(Kernel.Path.value(source));
+			return Kernel.Storage.remove(Kernel.Path.value(target));
 		}
 
 		// extension
 		export function remove_if(
-			source: string,
+			target: string,
 		): void {
-			if (exist(source)) {
-				remove(source);
+			if (exist(target)) {
+				remove(target);
 			}
 			return;
 		}
 
 		// ----------------
 
+		export function exist_link(
+			target: string,
+		): boolean {
+			return Kernel.Storage.exist_link(Kernel.Path.value(target)).value;
+		}
+
 		export function create_link(
 			target: string,
-			object: string,
+			referent: string,
 			is_directory: boolean,
 		): void {
-			return Kernel.Storage.create_link(Kernel.Path.value(target), Kernel.Path.value(object), Kernel.Boolean.value(is_directory));
+			return Kernel.Storage.create_link(Kernel.Path.value(target), Kernel.Path.value(referent), Kernel.Boolean.value(is_directory));
 		}
 
-		export function parse_link(
+		export function resolve_link(
 			target: string,
 		): string {
-			return Kernel.Storage.parse_link(Kernel.Path.value(target)).value;
+			return Kernel.Storage.resolve_link(Kernel.Path.value(target)).value;
 		}
 
 		// ----------------
 
-		export function create_hard_link(
+		export function exist_file(
 			target: string,
-			object: string,
-		): void {
-			return Kernel.Storage.create_hard_link(Kernel.Path.value(target), Kernel.Path.value(object));
+		): boolean {
+			return Kernel.Storage.exist_file(Kernel.Path.value(target)).value;
 		}
-
-		// ----------------
 
 		export function create_file(
 			target: string,
@@ -394,13 +384,6 @@ namespace Twinning.Script.KernelX {
 			target: string,
 		): bigint {
 			return Kernel.Storage.size_file(Kernel.Path.value(target)).value;
-		}
-
-		export function resize_file(
-			target: string,
-			size: bigint,
-		): void {
-			return Kernel.Storage.resize_file(Kernel.Path.value(target), Kernel.Size.value(size));
 		}
 
 		export function read_file(
@@ -423,7 +406,11 @@ namespace Twinning.Script.KernelX {
 			if (data instanceof ArrayBuffer) {
 				data_view = Kernel.ByteListView.value(data);
 			}
-			return Kernel.Storage.write_file(Kernel.Path.value(target), data_view!);
+			let target_path = Kernel.Path.value(target);
+			if (!Kernel.Storage.exist_file(target_path).value) {
+				Kernel.Storage.create_file(target_path);
+			}
+			return Kernel.Storage.write_file(target_path, data_view!);
 		}
 
 		// extension
@@ -447,6 +434,12 @@ namespace Twinning.Script.KernelX {
 
 		// ----------------
 
+		export function exist_directory(
+			target: string,
+		): boolean {
+			return Kernel.Storage.exist_directory(Kernel.Path.value(target)).value;
+		}
+
 		export function create_directory(
 			path: string,
 		): void {
@@ -456,10 +449,12 @@ namespace Twinning.Script.KernelX {
 		export function list_directory(
 			target: string,
 			depth: null | bigint,
+			follow_link: boolean,
+			allow_link: boolean,
 			allow_file: boolean,
 			allow_directory: boolean,
 		): Array<string> {
-			return Kernel.Storage.list_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth), Kernel.Boolean.value(allow_file), Kernel.Boolean.value(allow_directory)).value;
+			return Kernel.Storage.list_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth), Kernel.Boolean.value(follow_link), Kernel.Boolean.value(allow_link), Kernel.Boolean.value(allow_file), Kernel.Boolean.value(allow_directory)).value;
 		}
 
 	}
@@ -913,10 +908,10 @@ namespace Twinning.Script.KernelX {
 					horizontal: boolean,
 					vertical: boolean,
 				): void {
-					let target = KernelX.Image.File.Png.read_fs_of(source_file);
+					let target = Image.File.Png.read_fs_of(source_file);
 					let target_view = target.view();
 					flip(target_view, horizontal, vertical);
-					KernelX.Image.File.Png.write_fs(destination_file, target_view);
+					Image.File.Png.write_fs(destination_file, target_view);
 					return;
 				}
 
@@ -925,12 +920,12 @@ namespace Twinning.Script.KernelX {
 					destination_file: string,
 					size: Image.ImageSize,
 				): void {
-					let source = KernelX.Image.File.Png.read_fs_of(source_file);
+					let source = Image.File.Png.read_fs_of(source_file);
 					let source_view = source.view();
 					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
-					KernelX.Image.File.Png.write_fs(destination_file, destination_view);
+					Image.File.Png.write_fs(destination_file, destination_view);
 					return;
 				}
 
@@ -939,12 +934,12 @@ namespace Twinning.Script.KernelX {
 					destination_file: string,
 					size_rate: number,
 				): void {
-					let source = KernelX.Image.File.Png.read_fs_of(source_file);
+					let source = Image.File.Png.read_fs_of(source_file);
 					let source_view = source.view();
 					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * size_rate)))]));
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
-					KernelX.Image.File.Png.write_fs(destination_file, destination_view);
+					Image.File.Png.write_fs(destination_file, destination_view);
 					return;
 				}
 
@@ -1099,9 +1094,9 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function compute_padded_image_size(
-					origin_size: KernelX.Image.ImageSize,
+					origin_size: Image.ImageSize,
 					format: CompositeFormat,
-				): KernelX.Image.ImageSize {
+				): Image.ImageSize {
 					let compute = (t: bigint) => {
 						let r = 0b1n << 1n;
 						while (r < t) {
@@ -1109,7 +1104,7 @@ namespace Twinning.Script.KernelX {
 						}
 						return r;
 					};
-					let padded_size: KernelX.Image.ImageSize;
+					let padded_size: Image.ImageSize;
 					if (format.includes('etc1')) {
 						padded_size = [compute(origin_size[0]), compute(origin_size[1])];
 					}
@@ -1246,28 +1241,28 @@ namespace Twinning.Script.KernelX {
 					image_file: string,
 					format: CompositeFormat,
 				): void {
-					let image_original = KernelX.Storage.read_file(image_file);
+					let image_original = Storage.read_file(image_file);
 					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
-					let image_size = KernelX.Image.File.Png.size(image_stream.view());
+					let image_size = Image.File.Png.size(image_stream.view());
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
-					KernelX.Image.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					Image.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					let data_size = compute_data_size(image_size_padded, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					encode(data_stream, image_view, format);
-					KernelX.Storage.write_file(data_file, data_stream.stream_view());
+					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
 					data_file: string,
 					image_file: string,
-					image_size: KernelX.Image.ImageSize,
+					image_size: Image.ImageSize,
 					format: CompositeFormat,
 				): void {
-					let data = KernelX.Storage.read_file(data_file);
+					let data = Storage.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
@@ -1276,7 +1271,7 @@ namespace Twinning.Script.KernelX {
 						image_view.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 					}
 					decode(data_stream, image_view, format);
-					KernelX.Image.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					Image.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					return;
 				}
 
@@ -1589,7 +1584,7 @@ namespace Twinning.Script.KernelX {
 					version: typeof Kernel.Tool.Popcap.UTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.UTexture.Version.value(version);
-					let image = KernelX.Image.File.Png.read_fs_of(image_file);
+					let image = Image.File.Png.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
@@ -1613,7 +1608,7 @@ namespace Twinning.Script.KernelX {
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.UTexture.Decode.process(data_stream, image_view, version_c);
-					KernelX.Image.File.Png.write_fs(image_file, image_view);
+					Image.File.Png.write_fs(image_file, image_view);
 					return;
 				}
 
@@ -1651,7 +1646,7 @@ namespace Twinning.Script.KernelX {
 					version: typeof Kernel.Tool.Popcap.SexyTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.SexyTexture.Version.value(version);
-					let image = KernelX.Image.File.Png.read_fs_of(image_file);
+					let image = Image.File.Png.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
@@ -1675,7 +1670,7 @@ namespace Twinning.Script.KernelX {
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.SexyTexture.Decode.process(data_stream, image_view, version_c);
-					KernelX.Image.File.Png.write_fs(image_file, image_view);
+					Image.File.Png.write_fs(image_file, image_view);
 					return;
 				}
 
@@ -2243,7 +2238,7 @@ namespace Twinning.Script.KernelX {
 				export function encode_with_palette(
 					data: Kernel.OutputByteStreamView,
 					image: Kernel.Image.ConstantImageView,
-					palette: KernelX.Image.ColorList,
+					palette: Image.ColorList,
 				): void {
 					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
 					let bit_count = compute_bit_count(palette.length);
@@ -2267,7 +2262,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
 					let index_count = palette_data.u8();
-					let palette: KernelX.Image.ColorList;
+					let palette: Image.ColorList;
 					if (index_count === 0n) {
 						palette = [0b0000n, 0b1111n];
 					}

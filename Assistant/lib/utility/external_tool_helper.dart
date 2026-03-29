@@ -118,7 +118,8 @@ class ExternalToolHelper {
       null,
     );
     assertTest(processResult.code == 0);
-    await StorageHelper.copy(alignedFile, zipFile);
+    await StorageHelper.remove(zipFile);
+    await StorageHelper.copy(alignedFile, zipFile, false);
     await StorageHelper.remove(alignedFile);
     return;
   }

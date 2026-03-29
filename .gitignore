@@ -1,4 +1,4 @@
-# Global
+# Common
 
 # System - Windows
 /**/desktop.ini
@@ -7,7 +7,7 @@
 /**/.DS_Store
 
 # Environment - Git
-/.git
+/**/.git
 
 # Environment - Xmake
 /**/.xmake
@@ -40,45 +40,5 @@
 # Environment - JetBrains
 /**/.idea
 
-# Common
-
-# Module - Kernel
-/Kernel/.build
-/Kernel/.project
-
-# Module - Shell
-/Shell/.build
-/Shell/.project
-
-# Module - Script
-/Script/dist
-
-# Module - Assistant
-/Assistant/build
-/Assistant/.metadata
-/Assistant/windows/flutter/ephemeral
-/Assistant/linux/flutter/ephemeral
-/Assistant/macos/Flutter/ephemeral
-/Assistant/macos/Pods
-/Assistant/macos/Podfile
-/Assistant/macos/Podfile.lock
-/Assistant/android/local.properties
-/Assistant/android/.kotlin
-/Assistant/android/build
-/Assistant/android/app/src/main/jniLibs/arm64-v8a/libc++_shared.so
-/Assistant/ios/Flutter/ephemeral
-/Assistant/ios/Flutter/Generated.xcconfig
-/Assistant/ios/Flutter/flutter_export_environment.sh
-/Assistant/ios/Flutter/Flutter.podspec
-/Assistant/ios/Pods
-/Assistant/ios/Podfile
-/Assistant/ios/Podfile.lock
-/Assistant/ios/.symlinks
-
-# Module - AssistantPlus
-/AssistantPlus/.build
-
-# Miscellaneous
+# Project
 /.local
-
-# git clean -fdx -e /.local -e /.vscode

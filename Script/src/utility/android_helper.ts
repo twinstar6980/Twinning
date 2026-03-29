@@ -59,11 +59,11 @@ namespace Twinning.Script.AndroidHelper {
 	): void {
 		KernelX.Storage.remove_if(local);
 		let local_parent = StorageHelper.parent(local);
-		if (local_parent !== null) {
+		if (local_parent !== null && !KernelX.Storage.exist_directory(local_parent)) {
 			KernelX.Storage.create_directory(local_parent);
 		}
 		if (k_mode === 'native') {
-			fs_copy(remote, local);
+			fs_copy(remote, local, false);
 		}
 		if (k_mode === 'bridge') {
 			run_adb([`pull`, remote, local]);
@@ -82,7 +82,7 @@ namespace Twinning.Script.AndroidHelper {
 			fs_create_directory(remote_parent, null);
 		}
 		if (k_mode === 'native') {
-			fs_copy(local, remote);
+			fs_copy(local, remote, false);
 		}
 		if (k_mode === 'bridge') {
 			if (fs_is_fuse_media_path(remote)) {
@@ -92,7 +92,7 @@ namespace Twinning.Script.AndroidHelper {
 				fs_create_directory(k_temporary_directory, null);
 				let remote_temporary = `${k_temporary_directory}/${StorageHelper.name(local)}`;
 				run_adb([`push`, local, remote_temporary]);
-				fs_copy(remote_temporary, remote);
+				fs_copy(remote_temporary, remote, false);
 				fs_remove(remote_temporary);
 			}
 		}
@@ -146,6 +146,33 @@ namespace Twinning.Script.AndroidHelper {
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
+	export function fs_copy(
+		target: string,
+		placement: string,
+		follow_link: boolean,
+	): void {
+		let shell_result: string;
+		shell_result = shell(`cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target)} ${escape(placement)}`);
+		return;
+	}
+
+	export function fs_rename(
+		target: string,
+		placement: string,
+	): void {
+		let shell_result: string;
+		shell_result = shell(`mv -f ${escape(target)} ${escape(placement)}`);
+		return;
+	}
+
+	export function fs_remove(
+		target: string,
+	): void {
+		let shell_result: string;
+		shell_result = shell(`rm -rf ${escape(target)}`);
+		return;
+	}
+
 	export function fs_exist_file(
 		target: string,
 	): boolean {
@@ -160,32 +187,6 @@ namespace Twinning.Script.AndroidHelper {
 		let shell_result: string;
 		shell_result = shell(`if [ -d ${escape(target)} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
-	}
-
-	export function fs_copy(
-		source: string,
-		destination: string,
-	): void {
-		let shell_result: string;
-		shell_result = shell(`cp -rf ${escape(source)} ${escape(destination)}`);
-		return;
-	}
-
-	export function fs_rename(
-		source: string,
-		destination: string,
-	): void {
-		let shell_result: string;
-		shell_result = shell(`mv -f ${escape(source)} ${escape(destination)}`);
-		return;
-	}
-
-	export function fs_remove(
-		target: string,
-	): void {
-		let shell_result: string;
-		shell_result = shell(`rm -rf ${escape(target)}`);
-		return;
 	}
 
 	export function fs_create_directory(

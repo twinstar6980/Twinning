@@ -261,10 +261,10 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				nameof(this.uProgress_ProgressIndeterminate),
 			]);
 			try {
-				var kernel = StorageHelper.Temporary();
+				var kernel = await StorageHelper.Temporary();
 				var library = new Bridge.Library();
 				try {
-					StorageHelper.Copy(this.Setting.Kernel, kernel);
+					await StorageHelper.Copy(this.Setting.Kernel, kernel, true);
 					library.Open(kernel);
 					result = await Task.Run(() => Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script, [..this.Setting.Argument, ..this.AdditionalArgument]));
 				}
@@ -274,8 +274,8 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				if (library.State()) {
 					library.Close();
 				}
-				if (StorageHelper.Exist(kernel)) {
-					StorageHelper.Remove(kernel);
+				if (await StorageHelper.Exist(kernel)) {
+					await StorageHelper.Remove(kernel);
 				}
 			}
 			catch (Exception e) {

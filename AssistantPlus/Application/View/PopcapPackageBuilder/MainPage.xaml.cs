@@ -289,21 +289,21 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			return $"{parent}/setting.json";
 		}
 
-		public List<String> ListScopeChildName(
+		public async Task<List<String>> ListScopeChildName(
 			String parent
 		) {
 			AssertTest(this.IsLoaded);
-			return StorageHelper.ListDirectory(parent, 1, false, true).Where((value) => !value.StartsWith(".")).ToList();
+			return (await StorageHelper.ListDirectory(parent, 1, true, false, false, true)).Where((value) => !value.StartsWith(".")).ToList();
 		}
 
-		public String FindAvailableScopeChildName(
+		public async Task<String> FindAvailableScopeChildName(
 			String parent,
 			String name
 		) {
 			AssertTest(this.IsLoaded);
 			var index = 0;
 			var nameRequest = name;
-			while (StorageHelper.ExistDirectory($"{parent}/{nameRequest}")) {
+			while (await StorageHelper.ExistDirectory($"{parent}/{nameRequest}")) {
 				index++;
 				nameRequest = $"{name}~{index}";
 			}
@@ -380,7 +380,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.MakeScopeRootPath();
-			AssertTest(StorageHelper.ExistDirectory(projectDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(projectDirectory));
 			this.uPackageList_ItemsSource.Clear();
 			this.uPartList_ItemsSource.Clear();
 			this.uGroupList_ItemsSource.Clear();
@@ -393,7 +393,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				};
 				this.uPackageList_ItemsSource.Add(packageNode);
 			}
-			foreach (var partName in this.ListScopeChildName(projectDirectory)) {
+			foreach (var partName in await this.ListScopeChildName(projectDirectory)) {
 				var partDirectory = this.MakeScopeChildPath(projectDirectory, partName);
 				var partSetting = await JsonHelper.DeserializeFile<PartSetting>(this.MakeScopeSettingPath(partDirectory));
 				var partNode = new MainPagePartItemController() {
@@ -402,7 +402,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					Setting = partSetting,
 					Children = [],
 				};
-				foreach (var groupName in this.ListScopeChildName(partDirectory)) {
+				foreach (var groupName in await this.ListScopeChildName(partDirectory)) {
 					var groupDirectory = this.MakeScopeChildPath(partDirectory, groupName);
 					var groupSetting = await JsonHelper.DeserializeFile<GroupSetting>(this.MakeScopeSettingPath(groupDirectory));
 					var groupNode = new MainPageGroupItemController() {
@@ -412,7 +412,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Parent = partNode,
 						Children = [],
 					};
-					foreach (var resourceName in this.ListScopeChildName(groupDirectory)) {
+					foreach (var resourceName in await this.ListScopeChildName(groupDirectory)) {
 						var resourceDirectory = this.MakeScopeChildPath(groupDirectory, resourceName);
 						var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 						var resourceNode = new MainPageResourceItemController() {
@@ -435,7 +435,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath();
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -567,7 +567,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var partDirectory = this.MakeScopeRootPath(sourcePart);
-			AssertTest(StorageHelper.ExistDirectory(partDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(partDirectory));
 			var partSetting = await JsonHelper.DeserializeFile<PartSetting>(this.MakeScopeSettingPath(partDirectory));
 			var partNode = default(MainPagePartItemController);
 			if (!forRefresh) {
@@ -583,7 +583,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				partNode.Setting = partSetting;
 				partNode.Children.Clear();
 			}
-			foreach (var groupName in this.ListScopeChildName(partDirectory)) {
+			foreach (var groupName in await this.ListScopeChildName(partDirectory)) {
 				var groupDirectory = this.MakeScopeChildPath(partDirectory, groupName);
 				var groupSetting = await JsonHelper.DeserializeFile<GroupSetting>(this.MakeScopeSettingPath(groupDirectory));
 				var groupNode = new MainPageGroupItemController() {
@@ -593,7 +593,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					Parent = partNode,
 					Children = [],
 				};
-				foreach (var resourceName in this.ListScopeChildName(groupDirectory)) {
+				foreach (var resourceName in await this.ListScopeChildName(groupDirectory)) {
 					var resourceDirectory = this.MakeScopeChildPath(groupDirectory, resourceName);
 					var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 					var resourceNode = new MainPageResourceItemController() {
@@ -623,7 +623,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -636,13 +636,14 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		public async Task PartAppend(
 		) {
 			AssertTest(this.IsLoaded);
-			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), "__");
+			var destinationPart = await this.FindAvailableScopeChildName(this.MakeScopeRootPath(), "__");
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new PartSetting() {
 				Variable = [],
 			};
-			StorageHelper.CreateDirectory(destinationDirectory);
+			await StorageHelper.CreateDirectory(destinationDirectory);
+			await StorageHelper.CreateFile(this.MakeScopeSettingPath(destinationDirectory));
 			await JsonHelper.SerializeFile(this.MakeScopeSettingPath(destinationDirectory), destinationSetting);
 			var itemNode = new MainPagePartItemController() {
 				Host = this,
@@ -665,9 +666,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Rename(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			itemNode.Name = destinationPart;
 			itemNode.NotifyPropertyChanged([
@@ -696,8 +697,8 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.Trash(sourceDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			await StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart);
 			this.uPartList_ItemsSource.Remove(itemNode);
 			foreach (var packageNode in this.uPackageList_ItemsSource) {
@@ -714,12 +715,12 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String sourcePart
 		) {
 			AssertTest(this.IsLoaded);
-			var destinationPart = this.FindAvailableScopeChildName(this.MakeScopeRootPath(), sourcePart);
+			var destinationPart = await this.FindAvailableScopeChildName(this.MakeScopeRootPath(), sourcePart);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Copy(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Copy(sourceDirectory, destinationDirectory, false);
 			await this.PartReload(destinationPart, false);
 			return;
 		}
@@ -733,7 +734,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var groupDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
-			AssertTest(StorageHelper.ExistDirectory(groupDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(groupDirectory));
 			var groupSetting = await JsonHelper.DeserializeFile<GroupSetting>(this.MakeScopeSettingPath(groupDirectory));
 			var groupNode = default(MainPageGroupItemController)!;
 			if (!forRefresh) {
@@ -750,7 +751,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				groupNode.Setting = groupSetting;
 				groupNode.Children.Clear();
 			}
-			foreach (var resourceName in this.ListScopeChildName(groupDirectory)) {
+			foreach (var resourceName in await this.ListScopeChildName(groupDirectory)) {
 				var resourceDirectory = this.MakeScopeChildPath(groupDirectory, resourceName);
 				var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 				var resourceNode = new MainPageResourceItemController() {
@@ -779,7 +780,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -793,13 +794,14 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String sourcePart
 		) {
 			AssertTest(this.IsLoaded);
-			var destinationGroup = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), "__");
+			var destinationGroup = await this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), "__");
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new GroupSetting() {
 				Variable = [],
 			};
-			StorageHelper.CreateDirectory(destinationDirectory);
+			await StorageHelper.CreateDirectory(destinationDirectory);
+			await StorageHelper.CreateFile(this.MakeScopeSettingPath(destinationDirectory));
 			await JsonHelper.SerializeFile(this.MakeScopeSettingPath(destinationDirectory), destinationSetting);
 			var parentNode = this.FindScopeNode(sourcePart);
 			var itemNode = new MainPageGroupItemController() {
@@ -828,9 +830,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Rename(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Name = destinationGroup;
 			itemNode.NotifyPropertyChanged([
@@ -853,8 +855,8 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.Trash(sourceDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			await StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged([
@@ -868,12 +870,12 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String sourceGroup
 		) {
 			AssertTest(this.IsLoaded);
-			var destinationGroup = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), sourceGroup);
+			var destinationGroup = await this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart), sourceGroup);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, destinationGroup);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Copy(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Copy(sourceDirectory, destinationDirectory, false);
 			await this.GroupReload(sourcePart, destinationGroup, false);
 			return;
 		}
@@ -889,9 +891,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart, sourceGroup);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Rename(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged([
@@ -915,7 +917,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var resourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
-			AssertTest(StorageHelper.ExistDirectory(resourceDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(resourceDirectory));
 			var resourceSetting = await JsonHelper.DeserializeFile<ResourceSetting>(this.MakeScopeSettingPath(resourceDirectory));
 			var resourceNode = default(MainPageResourceItemController);
 			if (!forRefresh) {
@@ -953,7 +955,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
 			if (!forSetting) {
 				await StorageHelper.Reveal(sourceDirectory);
 			}
@@ -968,9 +970,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String sourceGroup
 		) {
 			AssertTest(this.IsLoaded);
-			var destinationResource = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), "__");
+			var destinationResource = await this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), "__");
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
 			var destinationSetting = new ResourceSetting() {
 				Category = new () {
 					Resolution = null,
@@ -980,7 +982,8 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				Property = new JsonObject(),
 				Variable = [],
 			};
-			StorageHelper.CreateDirectory(destinationDirectory);
+			await StorageHelper.CreateDirectory(destinationDirectory);
+			await StorageHelper.CreateFile(this.MakeScopeSettingPath(destinationDirectory));
 			await JsonHelper.SerializeFile(this.MakeScopeSettingPath(destinationDirectory), destinationSetting);
 			var parentNode = this.FindScopeNode(sourcePart, sourceGroup);
 			var itemNode = new MainPageResourceItemController() {
@@ -1009,9 +1012,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Rename(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Name = destinationResource;
 			itemNode.NotifyPropertyChanged([
@@ -1028,8 +1031,8 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			AssertTest(this.IsLoaded);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			StorageHelper.Trash(sourceDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			await StorageHelper.Trash(sourceDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged([
@@ -1044,12 +1047,12 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String sourceResource
 		) {
 			AssertTest(this.IsLoaded);
-			var destinationResource = this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), sourceResource);
+			var destinationResource = await this.FindAvailableScopeChildName(this.MakeScopeRootPath(sourcePart, sourceGroup), sourceResource);
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, destinationResource);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Copy(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Copy(sourceDirectory, destinationDirectory, false);
 			await this.ResourceReload(sourcePart, sourceGroup, destinationResource, false);
 			return;
 		}
@@ -1067,9 +1070,9 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			}
 			var sourceDirectory = this.MakeScopeRootPath(sourcePart, sourceGroup, sourceResource);
 			var destinationDirectory = this.MakeScopeRootPath(destinationPart, destinationGroup, sourceResource);
-			AssertTest(StorageHelper.ExistDirectory(sourceDirectory));
-			AssertTest(!StorageHelper.ExistDirectory(destinationDirectory));
-			StorageHelper.Rename(sourceDirectory, destinationDirectory);
+			AssertTest(await StorageHelper.ExistDirectory(sourceDirectory));
+			AssertTest(!await StorageHelper.ExistDirectory(destinationDirectory));
+			await StorageHelper.Rename(sourceDirectory, destinationDirectory);
 			var itemNode = this.FindScopeNode(sourcePart, sourceGroup, sourceResource);
 			itemNode.Parent.Children.Remove(itemNode);
 			itemNode.Parent.NotifyPropertyChanged([
@@ -1131,7 +1134,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					return;
 				}
 				var projectDirectory = StorageHelper.GetLongPath(item[0].Path);
-				if (!StorageHelper.ExistDirectory(projectDirectory)) {
+				if (!await StorageHelper.ExistDirectory(projectDirectory)) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
 					return;
 				}
@@ -2596,8 +2599,8 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			var senders = sender.As<MenuFlyoutItem>();
 			AssertTest(this.Host.IsLoaded);
 			var resourceDirectory = this.Host.MakeScopeRootPath(this.Parent.Parent.Name, this.Parent.Name, this.Name);
-			StorageHelper.Trash(resourceDirectory);
-			StorageHelper.CreateDirectory(resourceDirectory);
+			await StorageHelper.Trash(resourceDirectory);
+			await StorageHelper.CreateDirectory(resourceDirectory);
 			this.Setting = new () {
 				Category = this.Setting.Category,
 				Type = default!,
@@ -2617,7 +2620,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Path = "",
 						Type = "",
 					});
-					StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.bin"));
+					await StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.bin"));
 					break;
 				}
 				case "Texture": {
@@ -2630,7 +2633,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Size = [0, 0],
 						Sprite = [],
 					});
-					StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.ptx"));
+					await StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.ptx"));
 					break;
 				}
 				case "SpecialRton": {
@@ -2639,7 +2642,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Conversion = "",
 						Path = "",
 					});
-					StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
+					await StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
 					break;
 				}
 				case "SpecialPtx": {
@@ -2649,7 +2652,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Path = "",
 						Sprite = [],
 					});
-					StorageHelper.CreateDirectory(this.Host.MakeScopeChildPath(resourceDirectory, "source.sprite"));
+					await StorageHelper.CreateDirectory(this.Host.MakeScopeChildPath(resourceDirectory, "source.sprite"));
 					break;
 				}
 				case "SpecialPam": {
@@ -2658,7 +2661,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Conversion = "",
 						Path = "",
 					});
-					StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
+					await StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.json"));
 					break;
 				}
 				case "SpecialWem": {
@@ -2667,11 +2670,12 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 						Conversion = "",
 						Path = "",
 					});
-					StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.wav"));
+					await StorageHelper.CreateFile(this.Host.MakeScopeChildPath(resourceDirectory, "source.wav"));
 					break;
 				}
 				default: throw new UnreachableException();
 			}
+			await StorageHelper.CreateFile(this.Host.MakeScopeSettingPath(resourceDirectory));
 			await this.SaveSetting();
 			this.NotifyPropertyChanged([
 				nameof(this.uTypeIcon_Glyph),

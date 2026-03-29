@@ -375,6 +375,9 @@ class GameProgramHelper {
       onNotify('Warning: the STR instruction for \'MyConfig.DEBUG\'+4 was found at ${(programStream.position - 4).toRadixString(16).padLeft(8, '0')}, but this modification may cause error.');
     }
     onNotify('Phase: save modified program.');
+    if (!await StorageHelper.existFile(programFile)) {
+      await StorageHelper.createFile(programFile);
+    }
     await StorageHelper.writeFile(programFile, programStream.view.buffer.asUint8List());
     return;
   }
@@ -424,7 +427,7 @@ class GameProgramHelper {
     if (packageType == .flat) {
       for (var necessaryFileName in necessaryFileNameList) {
         if (await StorageHelper.existFile('${target}/${necessaryFileName}')) {
-          await StorageHelper.copy('${target}/${necessaryFileName}', '${targetDirectory}/${necessaryFileName}');
+          await StorageHelper.copy('${target}/${necessaryFileName}', '${targetDirectory}/${necessaryFileName}', false);
         }
       }
     }
@@ -436,6 +439,7 @@ class GameProgramHelper {
           if (necessaryFile == null) {
             continue;
           }
+          await StorageHelper.createFile('${targetDirectory}/${necessaryFileName}');
           await StorageHelper.writeFile('${targetDirectory}/${necessaryFileName}', necessaryFile.content);
           await necessaryFile.close();
         }
@@ -481,6 +485,7 @@ class GameProgramHelper {
         replaceTask.data.add(.bytes(fileName, await StorageHelper.readFile('${targetDirectory}/${fileName}')));
       }
       for (var packagePart in packagePartList) {
+        await StorageHelper.createFile('${temporaryDirectory}/package/${packagePart.name}');
         await StorageHelper.writeFile('${temporaryDirectory}/package/${packagePart.name}', lib.ZipEncoder().encodeBytes(packagePart.data));
       }
     }
@@ -503,12 +508,14 @@ class GameProgramHelper {
     onNotify('Phase: generate result.');
     if (packageType == .flat) {
       for (var platform in platformList) {
-        await StorageHelper.copy('${targetDirectory}/${GameProgramHelper._getProgramFilePath(platform)}', '${target}/${GameProgramHelper._getProgramFilePath(platform)}');
+        await StorageHelper.remove('${target}/${GameProgramHelper._getProgramFilePath(platform)}');
+        await StorageHelper.copy('${targetDirectory}/${GameProgramHelper._getProgramFilePath(platform)}', '${target}/${GameProgramHelper._getProgramFilePath(platform)}', false);
       }
     }
     if (packageType == .zip || packageType == .apk) {
       packagePartList!;
-      await StorageHelper.copy('${temporaryDirectory}/package/${packagePartList.first.name}', target);
+      await StorageHelper.remove(target);
+      await StorageHelper.copy('${temporaryDirectory}/package/${packagePartList.first.name}', target, false);
     }
     if (packageType == .apks) {
       packageBundle!;
@@ -517,8 +524,10 @@ class GameProgramHelper {
         packageBundle.removeFile(packageBundle.find(packagePart.name)!);
         packageBundle.add(.bytes(packagePart.name, await StorageHelper.readFile('${temporaryDirectory}/package/${packagePart.name}')));
       }
+      await StorageHelper.createFile('${temporaryDirectory}/package/bundle.apks');
       await StorageHelper.writeFile('${temporaryDirectory}/package/bundle.apks', lib.ZipEncoder().encodeBytes(packageBundle));
-      await StorageHelper.copy('${temporaryDirectory}/package/bundle.apks', target);
+      await StorageHelper.remove(target);
+      await StorageHelper.copy('${temporaryDirectory}/package/bundle.apks', target, false);
     }
     await StorageHelper.remove(temporaryDirectory);
     onNotify('Phase: done.');
@@ -536,7 +545,7 @@ class GameRecordHelper {
   static Future<List<String>> listFile(
     String recordDirectory,
   ) async {
-    return (await StorageHelper.listDirectory(recordDirectory, 1, true, false))
+    return (await StorageHelper.listDirectory(recordDirectory, 1, true, false, true, false))
       .where(RegExp(r'^\d{4,4}(_backup)?$').hasMatch)
       .toList();
   }
@@ -592,6 +601,9 @@ class GameRecordHelper {
   ) async {
     var data = await StorageHelper.readFile(sourceFile);
     GameRecordHelper.encryptData(data, key);
+    if (!await StorageHelper.existFile(destinationFile)) {
+      await StorageHelper.createFile(destinationFile);
+    }
     await StorageHelper.writeFile(destinationFile, data);
     return;
   }
@@ -619,6 +631,7 @@ class GameRecordHelper {
     var archiveDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(archiveDirectory);
     // TODO
+    await StorageHelper.createFile('${archiveDirectory}/configuration');
     await StorageHelper.writeFileText('${archiveDirectory}/configuration', '');
     await StorageHelper.createDirectory('${archiveDirectory}/data');
     for (var dataFile in await GameRecordHelper.listFile(targetDirectory)) {
@@ -629,6 +642,9 @@ class GameRecordHelper {
     }
     var archive = lib.createArchiveFromDirectory(.new(archiveDirectory));
     var archiveData = lib.ZipEncoder().encodeBytes(archive, level: lib.DeflateLevel.bestCompression);
+    if (!await StorageHelper.existFile(archiveFile)) {
+      await StorageHelper.createFile(archiveFile);
+    }
     await StorageHelper.writeFile(archiveFile, archiveData);
     await StorageHelper.remove(archiveDirectory);
     return;
@@ -742,7 +758,7 @@ class GameRepositoryHelper {
     information.icon = await GameRepositoryHelper.extractProgramIcon('${gameDirectory}/KairoGames.exe');
     information.key = '0';
     if (!await StorageHelper.existDirectory('${gameDirectory}/saves')) {
-      information.key = (await StorageHelper.listDirectory('${gameDirectory}/saves', 1, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it)) ?? '0';
+      information.key = (await StorageHelper.listDirectory('${gameDirectory}/saves', 1, true, false, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it)) ?? '0';
     }
     var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.version, information.key!);
     information.program = gameState.program;
@@ -759,7 +775,7 @@ class GameRepositoryHelper {
   static Future<List<GameInformation>> loadCustomRepository(
     String repositoryDirectory,
   ) async {
-    var libraryList = await StorageHelper.listDirectory(repositoryDirectory, 1, false, true);
+    var libraryList = await StorageHelper.listDirectory(repositoryDirectory, 1, true, false, false, true);
     var result = <GameInformation>[];
     for (var library in libraryList) {
       var libraryDirectory = '${repositoryDirectory}/${library}';

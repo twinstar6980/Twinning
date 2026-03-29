@@ -55,6 +55,8 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline auto const $CreateFileW = CreateFileW;
 
+	inline auto const $GetFileAttributesW = GetFileAttributesW;
+
 	inline auto const $CreateProcessW = CreateProcessW;
 
 	inline auto const $GetExitCodeProcess = GetExitCodeProcess;
@@ -89,7 +91,11 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $OPEN_EXISTING = OPEN_EXISTING;
 
+	inline constexpr auto $INVALID_FILE_ATTRIBUTES = INVALID_FILE_ATTRIBUTES;
+
 	inline constexpr auto $FILE_ATTRIBUTE_NORMAL = FILE_ATTRIBUTE_NORMAL;
+
+	inline constexpr auto $FILE_ATTRIBUTE_DIRECTORY = FILE_ATTRIBUTE_DIRECTORY;
 
 	inline constexpr auto $STARTF_USESTDHANDLES = STARTF_USESTDHANDLES;
 

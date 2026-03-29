@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 113
+ * @version 114
  */
 declare namespace Twinning.Kernel {
 
@@ -1007,105 +1007,92 @@ declare namespace Twinning.Kernel {
 		/**
 		 * 判断目标是否存在
 		 * @param target 目标
-		 * @returns 目标存在与否
+		 * @returns 判断结果
 		 */
 		function exist(
 			target: Path,
 		): Boolean;
 
 		/**
-		 * 判断目标是否存在且为文件
+		 * 复制目标
 		 * @param target 目标
-		 * @returns 文件存在与否
-		 */
-		function exist_file(
-			target: Path,
-		): Boolean;
-
-		/**
-		 * 判断目标是否存在且为目录
-		 * @param target 目标
-		 * @returns 目录存在与否
-		 */
-		function exist_directory(
-			target: Path,
-		): Boolean;
-
-		// ----------------
-
-		/**
-		 * 复制文件或目录
-		 * @param source 来源
-		 * @param destination 目的
+		 * @param placement 位置，必须未被占用
+		 * @param follow_link 跟随链接，复制其指向的实际目标
 		 * @returns 无
 		 */
 		function copy(
-			source: Path,
-			destination: Path,
+			target: Path,
+			placement: Path,
+			follow_link: Boolean,
 		): Void;
 
 		/**
-		 * 移动文件或目录
-		 * @param source 来源
-		 * @param destination 目的
+		 * 移动目标
+		 * @param target 目标
+		 * @param placement 位置，必须未被占用
 		 * @returns 无
 		 */
 		function rename(
-			source: Path,
-			destination: Path,
+			target: Path,
+			placement: Path,
 		): Void;
 
 		/**
-		 * 删除文件或目录
-		 * @param source 来源
+		 * 删除目标
+		 * @param target 目标
 		 * @returns 无
 		 */
 		function remove(
-			source: Path,
+			target: Path,
 		): Void;
 
 		// ----------------
 
 		/**
-		 * 创建符号链接
+		 * 判断目标是否存在且为链接
 		 * @param target 目标
-		 * @param object 对象，即链接指向的路径，可以不存在或为非法
-		 * @param is_directory 指向的路径是否为目录
+		 * @returns 判断结果
+		 */
+		function exist_link(
+			target: Path,
+		): Boolean;
+
+		/**
+		 * 创建链接
+		 * @param target 目标
+		 * @param referent 指向，可以不存在或为非法
+		 * @param is_directory 指向是否为目录
 		 * @returns 无
 		 */
 		function create_link(
 			target: Path,
-			object: Path,
+			referent: Path,
 			is_directory: Boolean,
 		): Void;
 
 		/**
-		 * 解析符号链接
+		 * 解析链接
 		 * @param target 目标
-		 * @returns 链接所指向的对象
+		 * @returns 指向
 		 */
-		function parse_link(
+		function resolve_link(
 			target: Path,
 		): Path;
 
 		// ----------------
 
 		/**
-		 * 创建硬链接
+		 * 判断目标是否存在且为文件，对于链接，会解析其指向
 		 * @param target 目标
-		 * @param object 对象，即链接所指向的文件系统对象，必须存在
-		 * @returns 无
+		 * @returns 判断结果
 		 */
-		function create_hard_link(
+		function exist_file(
 			target: Path,
-			object: Path,
-		): Void;
-
-		// ----------------
+		): Boolean;
 
 		/**
 		 * 创建文件
-		 * @param target 目标文件
+		 * @param target 目标
 		 * @returns 无
 		 */
 		function create_file(
@@ -1114,28 +1101,17 @@ declare namespace Twinning.Kernel {
 
 		/**
 		 * 获取文件尺寸
-		 * @param target 目标文件
-		 * @returns 文件尺寸
+		 * @param target 目标
+		 * @returns 尺寸
 		 */
 		function size_file(
 			target: Path,
 		): Size;
 
 		/**
-		 * 调整文件尺寸
-		 * @param target 目标文件
-		 * @param size 文件尺寸
-		 * @returns 无
-		 */
-		function resize_file(
-			target: Path,
-			size: Size,
-		): Void;
-
-		/**
 		 * 读取文件至一个新的字节序列容器
-		 * @param target 目标文件
-		 * @returns 文件内容
+		 * @param target 目标
+		 * @returns 内容
 		 */
 		function read_file(
 			target: Path,
@@ -1143,8 +1119,8 @@ declare namespace Twinning.Kernel {
 
 		/**
 		 * 将字节序列写入文件
-		 * @param target 目标文件
-		 * @param data 文件内容
+		 * @param target 目标
+		 * @param data 内容
 		 * @returns 无
 		 */
 		function write_file(
@@ -1154,8 +1130,8 @@ declare namespace Twinning.Kernel {
 
 		/**
 		 * 读取文件至字节输出流
-		 * @param target 目标文件
-		 * @param data 文件内容
+		 * @param target 目标
+		 * @param data 内容
 		 * @returns 无
 		 */
 		function read_file_stream(
@@ -1165,8 +1141,8 @@ declare namespace Twinning.Kernel {
 
 		/**
 		 * 将字节输入流写入文件
-		 * @param target 目标文件
-		 * @param data 文件内容
+		 * @param target 目标
+		 * @param data 内容
 		 * @returns 无
 		 */
 		function write_file_stream(
@@ -1177,8 +1153,17 @@ declare namespace Twinning.Kernel {
 		// ----------------
 
 		/**
+		 * 判断目标是否存在且为目录，对于链接，会解析其指向
+		 * @param target 目标
+		 * @returns 判断结果
+		 */
+		function exist_directory(
+			target: Path,
+		): Boolean;
+
+		/**
 		 * 创建目录
-		 * @param target 目标目录
+		 * @param target 目标
 		 * @returns 无
 		 */
 		function create_directory(
@@ -1186,16 +1171,20 @@ declare namespace Twinning.Kernel {
 		): Void;
 
 		/**
-		 * 列出目标目录下的文件与目录
-		 * @param target 目标目录
+		 * 列出目录下的子项
+		 * @param target 目标
 		 * @param depth 需要处理的深度，为空时处理所有层级
-		 * @param allow_file 记录子文件
-		 * @param allow_directory 记录子目录
-		 * @returns 目标目录下的文件与目录列表
+		 * @param follow_link 跟随链接
+		 * @param allow_link 记录链接
+		 * @param allow_file 记录文件
+		 * @param allow_directory 记录目录
+		 * @returns 子项列表
 		 */
 		function list_directory(
 			target: Path,
 			depth: SizeOptional,
+			follow_link: Boolean,
+			allow_link: Boolean,
 			allow_file: Boolean,
 			allow_directory: Boolean,
 		): PathList;

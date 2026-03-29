@@ -252,10 +252,10 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 					continue;
 				}
 				var itemType = null as Boolean?;
-				if (StorageHelper.ExistFile(item)) {
+				if (await StorageHelper.ExistFile(item)) {
 					itemType = false;
 				}
-				if (StorageHelper.ExistDirectory(item)) {
+				if (await StorageHelper.ExistDirectory(item)) {
 					itemType = true;
 				}
 				this.Resource.Add(new (item, itemType));

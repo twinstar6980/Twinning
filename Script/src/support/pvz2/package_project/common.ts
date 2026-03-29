@@ -74,7 +74,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 		parent_directory: string,
 		child_scope: Scope,
 	): Array<string> {
-		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.Storage.list_directory(parent_directory, 1n, false, true)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
+		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.Storage.list_directory(parent_directory, 1n, true, false, false, true)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
 	}
 
 	// ----------------

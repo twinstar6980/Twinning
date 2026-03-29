@@ -50,8 +50,12 @@ namespace Twinning.Script.HomePath {
 		location: string,
 	): void {
 		g_location = location;
-		KernelX.Storage.create_directory(workspace());
-		KernelX.Storage.create_directory(temporary());
+		if (!KernelX.Storage.exist_directory(workspace())) {
+			KernelX.Storage.create_directory(workspace());
+		}
+		if (!KernelX.Storage.exist_directory(temporary())) {
+			KernelX.Storage.create_directory(temporary());
+		}
 		KernelX.Process.set_workspace(workspace());
 		return;
 	}

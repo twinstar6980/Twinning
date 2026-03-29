@@ -21,14 +21,14 @@ namespace Twinning.AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
-		public ModuleType                        Type                  { get; set; } = default!;
-		public String                            Identifier            { get; set; } = default!;
-		public String                            Name                  { get; set; } = default!;
-		public String                            Icon                  { get; set; } = default!;
-		public Func<Type>                        GetMainPage           { get; set; } = default!;
-		public Func<UIElement>                   BuildSettingPanel     { get; set; } = default!;
-		public Func<List<String>, List<String>?> GenerateForwardOption { get; set; } = default!;
-		public Tuple<Integer, Integer>           StandardSize          { get; set; } = default!;
+		public ModuleType                              Type                  { get; set; } = default!;
+		public String                                  Identifier            { get; set; } = default!;
+		public String                                  Name                  { get; set; } = default!;
+		public String                                  Icon                  { get; set; } = default!;
+		public Func<Type>                              GetMainPage           { get; set; } = default!;
+		public Func<UIElement>                         BuildSettingPanel     { get; set; } = default!;
+		public Func<List<String>, Task<List<String>?>> GenerateForwardOption { get; set; } = default!;
+		public Tuple<Integer, Integer>                 StandardSize          { get; set; } = default!;
 	}
 
 	#endregion
@@ -72,7 +72,7 @@ namespace Twinning.AssistantPlus {
 				BuildSettingPanel = () => new View.CoreTaskWorker.SettingPanel() {
 					Data = App.Instance.Setting.Data.CoreTaskWorker,
 				},
-				GenerateForwardOption = (resource) => {
+				GenerateForwardOption = async (resource) => {
 					return ["-additional_argument", ..resource];
 				},
 				StandardSize = new (480, 840),
@@ -86,7 +86,7 @@ namespace Twinning.AssistantPlus {
 				BuildSettingPanel = () => new View.CoreCommandSender.SettingPanel() {
 					Data = App.Instance.Setting.Data.CoreCommandSender,
 				},
-				GenerateForwardOption = (resource) => {
+				GenerateForwardOption = async (resource) => {
 					return null;
 				},
 				StandardSize = new (920, 840),
@@ -100,9 +100,9 @@ namespace Twinning.AssistantPlus {
 				BuildSettingPanel = () => new View.CoreResourceShipper.SettingPanel() {
 					Data = App.Instance.Setting.Data.CoreResourceShipper,
 				},
-				GenerateForwardOption = (resource) => {
+				GenerateForwardOption = async (resource) => {
 					foreach (var resourceItem in resource) {
-						if (!StorageHelper.Exist(resourceItem)) {
+						if (!await StorageHelper.Exist(resourceItem)) {
 							return null;
 						}
 					}
@@ -119,16 +119,16 @@ namespace Twinning.AssistantPlus {
 				BuildSettingPanel = () => new View.PopcapAnimationViewer.SettingPanel() {
 					Data = App.Instance.Setting.Data.PopcapAnimationViewer,
 				},
-				GenerateForwardOption = (resource) => {
+				GenerateForwardOption = async (resource) => {
 					if (resource.Count != 1) {
 						return null;
 					}
 					var animationFile = null as String;
-					if (StorageHelper.ExistFile(resource[0])) {
-						animationFile = PopcapAnimationHelper.CheckAnimationFilePath(resource[0]);
+					if (await StorageHelper.ExistFile(resource[0])) {
+						animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(resource[0]);
 					}
-					if (StorageHelper.ExistDirectory(resource[0])) {
-						animationFile = PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);
+					if (await StorageHelper.ExistDirectory(resource[0])) {
+						animationFile = await PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);
 					}
 					if (animationFile == null) {
 						return null;
@@ -146,11 +146,11 @@ namespace Twinning.AssistantPlus {
 				BuildSettingPanel = () => new View.PopcapReflectionDescriptor.SettingPanel() {
 					Data = App.Instance.Setting.Data.PopcapReflectionDescriptor,
 				},
-				GenerateForwardOption = (resource) => {
+				GenerateForwardOption = async (resource) => {
 					if (resource.Count != 1) {
 						return null;
 					}
-					if (!StorageHelper.ExistFile(resource[0])) {
+					if (!await StorageHelper.ExistFile(resource[0])) {
 						return null;
 					}
 					if (!new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0])) {
@@ -169,11 +169,11 @@ namespace Twinning.AssistantPlus {
 				BuildSettingPanel = () => new View.PopcapPackageBuilder.SettingPanel() {
 					Data = App.Instance.Setting.Data.PopcapPackageBuilder,
 				},
-				GenerateForwardOption = (resource) => {
+				GenerateForwardOption = async (resource) => {
 					if (resource.Count != 1) {
 						return null;
 					}
-					if (!StorageHelper.ExistDirectory(resource[0])) {
+					if (!await StorageHelper.ExistDirectory(resource[0])) {
 						return null;
 					}
 					if (!new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0])) {
