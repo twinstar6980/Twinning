@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/vdf_helper.dart';
 import '/utility/byte_stream_view.dart';
@@ -43,8 +44,8 @@ enum GamePackageType {
 }
 
 class GameInformation {
-  String           path;
-  String?          library;
+  StoragePath      path;
+  StoragePath?     library;
   String?          identifier;
   String?          version;
   String           name;
@@ -52,8 +53,9 @@ class GameInformation {
   String?          key;
   GameProgramState program;
   GameRecordState  record;
-  GameInformation({
-    this.path = '',
+  GameInformation(
+  ) :
+    this.path = .nothing(),
     this.library = null,
     this.identifier = null,
     this.version = null,
@@ -61,8 +63,7 @@ class GameInformation {
     this.icon = null,
     this.key = null,
     this.program = .none,
-    this.record = .none,
-  });
+    this.record = .none;
 }
 
 enum GameFunctionType {
@@ -76,38 +77,38 @@ class GameProgramHelper {
 
   // #region common
 
-  static String _getProgramFilePath(
+  static StoragePath _getProgramFilePath(
     GamePlatform platform,
   ) {
     return switch (platform) {
-      .windowsIntel32 => 'GameAssembly.dll',
-      .androidArm32   => 'lib/armeabi-v7a/libil2cpp.so',
-      .androidArm64   => 'lib/arm64-v8a/libil2cpp.so',
+      .windowsIntel32 => .of('GameAssembly.dll'),
+      .androidArm32   => .of('lib/armeabi-v7a/libil2cpp.so'),
+      .androidArm64   => .of('lib/arm64-v8a/libil2cpp.so'),
     };
   }
 
-  static String _getMetadataFilePath(
+  static StoragePath _getMetadataFilePath(
     GamePlatform platform,
   ) {
     return switch (platform) {
-      .windowsIntel32 => 'KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat',
-      .androidArm32   => 'assets/bin/Data/Managed/Metadata/global-metadata.dat',
-      .androidArm64   => 'assets/bin/Data/Managed/Metadata/global-metadata.dat',
+      .windowsIntel32 => .of('KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat'),
+      .androidArm32   => .of('assets/bin/Data/Managed/Metadata/global-metadata.dat'),
+      .androidArm64   => .of('assets/bin/Data/Managed/Metadata/global-metadata.dat'),
     };
   }
 
   // ----------------
 
   static Future<List<GamePlatform>> detectPlatform(
-    String gameDirectory,
+    StoragePath gameDirectory,
   ) async {
     assertTest(await StorageHelper.existDirectory(gameDirectory));
     var result = <GamePlatform>[];
     for (var platform in GamePlatform.values) {
-      if (!await StorageHelper.existFile('${gameDirectory}/${GameProgramHelper._getProgramFilePath(platform)}')) {
+      if (!await StorageHelper.existFile(gameDirectory.push(GameProgramHelper._getProgramFilePath(platform)))) {
         continue;
       }
-      if (!await StorageHelper.existFile('${gameDirectory}/${GameProgramHelper._getMetadataFilePath(platform)}')) {
+      if (!await StorageHelper.existFile(gameDirectory.push(GameProgramHelper._getMetadataFilePath(platform)))) {
         continue;
       }
       result.add(platform);
@@ -216,8 +217,8 @@ class GameProgramHelper {
 
   static Future<Void> modify(
     GamePlatform                  platform,
-    String                        programFile,
-    String                        metadataFile,
+    StoragePath                   programFile,
+    StoragePath                   metadataFile,
     Boolean                       disableRecordEncryption,
     Boolean                       enableDebugMode,
     dynamic                       externalToolSetting,
@@ -383,7 +384,7 @@ class GameProgramHelper {
   }
 
   static Future<Void> modifyBundle(
-    String                        target,
+    StoragePath                   target,
     Boolean                       disableRecordEncryption,
     Boolean                       enableDebugMode,
     dynamic                       externalToolSetting,
@@ -397,13 +398,13 @@ class GameProgramHelper {
       packageType = .flat;
     }
     if (await StorageHelper.existFile(target)) {
-      if (target.toLowerCase().endsWith('.zip')) {
+      if (target.name()!.endsWith('.zip')) {
         packageType = .zip;
       }
-      if (target.toLowerCase().endsWith('.apk')) {
+      if (target.name()!.endsWith('.apk')) {
         packageType = .apk;
       }
-      if (target.toLowerCase().endsWith('.apks')) {
+      if (target.name()!.endsWith('.apks')) {
         packageType = .apks;
       }
     }
@@ -422,12 +423,12 @@ class GameProgramHelper {
       };
     }
     onNotify('Phase: extract necessary file.');
-    var targetDirectory = '${temporaryDirectory}/flat';
+    var targetDirectory = temporaryDirectory.join('flat');
     var necessaryFileNameList = GamePlatform.values.map((it) => [GameProgramHelper._getProgramFilePath(it), GameProgramHelper._getMetadataFilePath(it)]).flattenedToSet;
     if (packageType == .flat) {
       for (var necessaryFileName in necessaryFileNameList) {
-        if (await StorageHelper.existFile('${target}/${necessaryFileName}')) {
-          await StorageHelper.copy('${target}/${necessaryFileName}', '${targetDirectory}/${necessaryFileName}', false);
+        if (await StorageHelper.existFile(target.push(necessaryFileName))) {
+          await StorageHelper.copy(target.push(necessaryFileName), targetDirectory.push(necessaryFileName), false);
         }
       }
     }
@@ -435,26 +436,26 @@ class GameProgramHelper {
       packagePartList!;
       for (var packagePart in packagePartList) {
         for (var necessaryFileName in necessaryFileNameList) {
-          var necessaryFile = packagePart.data.find(necessaryFileName);
+          var necessaryFile = packagePart.data.find(necessaryFileName.emitGeneric());
           if (necessaryFile == null) {
             continue;
           }
-          await StorageHelper.createFile('${targetDirectory}/${necessaryFileName}');
-          await StorageHelper.writeFile('${targetDirectory}/${necessaryFileName}', necessaryFile.content);
+          await StorageHelper.createFile(targetDirectory.push(necessaryFileName));
+          await StorageHelper.writeFile(targetDirectory.push(necessaryFileName), necessaryFile.content);
           await necessaryFile.close();
         }
       }
     }
     onNotify('Phase: detect platform.');
     var platformList = await GameProgramHelper.detectPlatform(targetDirectory);
-    assertTest(platformList.isNotEmpty);
+    assertTest(!platformList.isEmpty);
     onNotify('Tip: the platform is \'${platformList.map((it) => it.name).join('|')}\'.');
     for (var platform in platformList) {
       onNotify('Phase: modify program of \'${platform.name}\'.');
       await GameProgramHelper.modify(
         platform,
-        '${targetDirectory}/${GameProgramHelper._getProgramFilePath(platform)}',
-        '${targetDirectory}/${GameProgramHelper._getMetadataFilePath(platform)}',
+        targetDirectory.push(GameProgramHelper._getProgramFilePath(platform)),
+        targetDirectory.push(GameProgramHelper._getMetadataFilePath(platform)),
         disableRecordEncryption,
         enableDebugMode,
         externalToolSetting,
@@ -480,54 +481,54 @@ class GameProgramHelper {
         }
       }
       for (var replaceTask in replaceTaskList) {
-        var fileName = GameProgramHelper._getProgramFilePath(replaceTask.platform);
-        replaceTask.data.removeFile(replaceTask.data.find(fileName)!);
-        replaceTask.data.add(.bytes(fileName, await StorageHelper.readFile('${targetDirectory}/${fileName}')));
+        var filePath = GameProgramHelper._getProgramFilePath(replaceTask.platform);
+        replaceTask.data.removeFile(replaceTask.data.find(filePath.emitGeneric())!);
+        replaceTask.data.add(.bytes(filePath.emitGeneric(), await StorageHelper.readFile(targetDirectory.push(targetDirectory))));
       }
       for (var packagePart in packagePartList) {
-        await StorageHelper.createFile('${temporaryDirectory}/package/${packagePart.name}');
-        await StorageHelper.writeFile('${temporaryDirectory}/package/${packagePart.name}', lib.ZipEncoder().encodeBytes(packagePart.data));
+        await StorageHelper.createFile(temporaryDirectory.join('package').join(packagePart.name));
+        await StorageHelper.writeFile(temporaryDirectory.join('package').join(packagePart.name), lib.ZipEncoder().encodeBytes(packagePart.data));
       }
     }
     if (packageType == .apk || packageType == .apks) {
       onNotify('Phase: post-processing apk file.');
       packagePartList!;
-      var enableAlign = false;
-      var enableSign = false;
+      var enableAlign = true;
+      var enableSign = true;
       // TODO
       for (var packagePart in packagePartList) {
-        var packagePartFile = '${temporaryDirectory}/package/${packagePart.data}';
+        var packagePartFile = temporaryDirectory.join('package').join(packagePart.name);
         if (enableAlign) {
           await ExternalToolHelper.runZipalign(packagePartFile);
         }
         if (enableSign) {
-          await ExternalToolHelper.runApksigner(packagePartFile, '', '');
+          await ExternalToolHelper.runApksigner(packagePartFile, .nothing(), '');
         }
       }
     }
     onNotify('Phase: generate result.');
     if (packageType == .flat) {
       for (var platform in platformList) {
-        await StorageHelper.remove('${target}/${GameProgramHelper._getProgramFilePath(platform)}');
-        await StorageHelper.copy('${targetDirectory}/${GameProgramHelper._getProgramFilePath(platform)}', '${target}/${GameProgramHelper._getProgramFilePath(platform)}', false);
+        await StorageHelper.remove(target.push(GameProgramHelper._getProgramFilePath(platform)));
+        await StorageHelper.copy(targetDirectory.push(GameProgramHelper._getProgramFilePath(platform)), target.push(GameProgramHelper._getProgramFilePath(platform)), false);
       }
     }
     if (packageType == .zip || packageType == .apk) {
       packagePartList!;
       await StorageHelper.remove(target);
-      await StorageHelper.copy('${temporaryDirectory}/package/${packagePartList.first.name}', target, false);
+      await StorageHelper.copy(temporaryDirectory.join('package').join(packagePartList.first.name), target, false);
     }
     if (packageType == .apks) {
       packageBundle!;
       packagePartList!;
       for (var packagePart in packagePartList) {
         packageBundle.removeFile(packageBundle.find(packagePart.name)!);
-        packageBundle.add(.bytes(packagePart.name, await StorageHelper.readFile('${temporaryDirectory}/package/${packagePart.name}')));
+        packageBundle.add(.bytes(packagePart.name, await StorageHelper.readFile(temporaryDirectory.join('package').join(packagePart.name))));
       }
-      await StorageHelper.createFile('${temporaryDirectory}/package/bundle.apks');
-      await StorageHelper.writeFile('${temporaryDirectory}/package/bundle.apks', lib.ZipEncoder().encodeBytes(packageBundle));
+      await StorageHelper.createFile(temporaryDirectory.join('package').join('bundle.apks'));
+      await StorageHelper.writeFile(temporaryDirectory.join('package').join('bundle.apks'), lib.ZipEncoder().encodeBytes(packageBundle));
       await StorageHelper.remove(target);
-      await StorageHelper.copy('${temporaryDirectory}/package/bundle.apks', target, false);
+      await StorageHelper.copy(temporaryDirectory.join('package').join('bundle.apks'), target, false);
     }
     await StorageHelper.remove(temporaryDirectory);
     onNotify('Phase: done.');
@@ -542,25 +543,25 @@ class GameRecordHelper {
 
   // #region common
 
-  static Future<List<String>> listFile(
-    String recordDirectory,
+  static Future<List<StoragePath>> listFile(
+    StoragePath recordDirectory,
   ) async {
     return (await StorageHelper.listDirectory(recordDirectory, 1, true, false, true, false))
-      .where(RegExp(r'^\d{4,4}(_backup)?$').hasMatch)
+      .where((it) => RegExp(r'^\d{4,4}(_backup)?$').hasMatch(it.name()!))
       .toList();
   }
 
   static Future<GameRecordState> detectState(
-    String     recordDirectory,
-    Uint8List? key,
+    StoragePath recordDirectory,
+    Uint8List?  key,
   ) async {
     var state = GameRecordState.invalid;
     var itemList = await GameRecordHelper.listFile(recordDirectory);
     if (itemList.length == 0) {
       state = .none;
     }
-    else if (itemList.contains('0000')) {
-      var itemFile = '${recordDirectory}/0000';
+    else if (itemList.firstWhereOrNull((it) => it.name()! == '0000') != null) {
+      var itemFile = recordDirectory.join('0000');
       var itemData = await StorageHelper.readFile(itemFile); // TODO 8
       if (itemData.length == 8) {
         if (itemData.buffer.asUint32List().first == 0x00000000) {
@@ -586,7 +587,7 @@ class GameRecordHelper {
     Uint8List? key,
   ) {
     if (key != null) {
-      assertTest(key.isNotEmpty);
+      assertTest(!key.isEmpty);
       for (var index = 0; index < data.length; index++) {
         data[index] ^= key[index % key.length];
       }
@@ -595,9 +596,9 @@ class GameRecordHelper {
   }
 
   static Future<Void> encryptFile(
-    String     sourceFile,
-    String     destinationFile,
-    Uint8List? key,
+    StoragePath sourceFile,
+    StoragePath destinationFile,
+    Uint8List?  key,
   ) async {
     var data = await StorageHelper.readFile(sourceFile);
     GameRecordHelper.encryptData(data, key);
@@ -609,12 +610,12 @@ class GameRecordHelper {
   }
 
   static Future<Void> encrypt(
-    String     recordDirectory,
-    Uint8List? key,
+    StoragePath recordDirectory,
+    Uint8List?  key,
   ) async {
     var itemList = await GameRecordHelper.listFile(recordDirectory);
     for (var item in itemList) {
-      await GameRecordHelper.encryptFile('${recordDirectory}/${item}', '${recordDirectory}/${item}', key);
+      await GameRecordHelper.encryptFile(recordDirectory.push(item), recordDirectory.push(item), key);
     }
     return;
   }
@@ -624,23 +625,23 @@ class GameRecordHelper {
   // #region archive
 
   static Future<Void> export(
-    String     targetDirectory,
-    String     archiveFile,
-    Uint8List? key,
+    StoragePath targetDirectory,
+    StoragePath archiveFile,
+    Uint8List?  key,
   ) async {
     var archiveDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(archiveDirectory);
     // TODO
-    await StorageHelper.createFile('${archiveDirectory}/configuration');
-    await StorageHelper.writeFileText('${archiveDirectory}/configuration', '');
-    await StorageHelper.createDirectory('${archiveDirectory}/data');
+    await StorageHelper.createFile(archiveDirectory.join('configuration'));
+    await StorageHelper.writeFileText(archiveDirectory.join('configuration'), '');
+    await StorageHelper.createDirectory(archiveDirectory.join('data'));
     for (var dataFile in await GameRecordHelper.listFile(targetDirectory)) {
-      await GameRecordHelper.encryptFile('${targetDirectory}/${dataFile}', '${targetDirectory}/data/${dataFile}', key);
+      await GameRecordHelper.encryptFile(targetDirectory.push(dataFile), archiveDirectory.join('data').push(dataFile), key);
     }
     if (await StorageHelper.exist(archiveFile)) {
       await StorageHelper.remove(archiveFile);
     }
-    var archive = lib.createArchiveFromDirectory(.new(archiveDirectory));
+    var archive = lib.createArchiveFromDirectory(.new(archiveDirectory.emitGeneric()));
     var archiveData = lib.ZipEncoder().encodeBytes(archive, level: lib.DeflateLevel.bestCompression);
     if (!await StorageHelper.existFile(archiveFile)) {
       await StorageHelper.createFile(archiveFile);
@@ -651,23 +652,23 @@ class GameRecordHelper {
   }
 
   static Future<Void> import(
-    String     targetDirectory,
-    String     archiveFile,
-    Uint8List? key,
+    StoragePath targetDirectory,
+    StoragePath archiveFile,
+    Uint8List?  key,
   ) async {
     var archiveDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(archiveDirectory);
     var archiveData = await StorageHelper.readFile(archiveFile);
     var archive = lib.ZipDecoder().decodeBytes(archiveData);
-    await lib.extractArchiveToDisk(archive, archiveDirectory);
+    await lib.extractArchiveToDisk(archive, archiveDirectory.emitGeneric());
     if (await StorageHelper.exist(targetDirectory)) {
       await StorageHelper.remove(targetDirectory);
     }
     // TODO
-    var configuration = StorageHelper.readFileText('${archiveDirectory}/configuration');
+    var configuration = StorageHelper.readFileText(archiveDirectory.join('configuration'));
     await StorageHelper.createDirectory(targetDirectory);
-    for (var dataFile in await GameRecordHelper.listFile('${archiveDirectory}/data')) {
-      await GameRecordHelper.encryptFile('${archiveDirectory}/data/${dataFile}', '${targetDirectory}/${dataFile}', key);
+    for (var dataFile in await GameRecordHelper.listFile(archiveDirectory.join('data'))) {
+      await GameRecordHelper.encryptFile(archiveDirectory.join('configuration').push(dataFile), targetDirectory.push(dataFile), key);
     }
     await StorageHelper.remove(archiveDirectory);
     return;
@@ -682,10 +683,10 @@ class GameRepositoryHelper {
   // #region common
 
   static Future<Image?> extractProgramIcon(
-    String programFile,
+    StoragePath programFile,
   ) async {
     var result = null as Image?;
-    var hIconPath = programFile.toNativeUtf16();
+    var hIconPath = programFile.emitNative().toNativeUtf16();
     var hIconIndex = lib.calloc.call<lib.Uint16>();
     var hIcon = lib.ExtractAssociatedIcon(lib.NULL, hIconPath, hIconIndex);
     lib.calloc.free(hIconPath);
@@ -722,19 +723,19 @@ class GameRepositoryHelper {
   }
 
   static Future<({GameProgramState program, GameRecordState record})> checkGameState(
-    String  gameDirectory,
-    String? version,
-    String  user,
+    StoragePath gameDirectory,
+    String?     version,
+    String      user,
   ) async {
     var programState = GameProgramState.none;
     var recordState = GameRecordState.none;
-    if (await StorageHelper.existFile('${gameDirectory}/KairoGames.exe')) {
-      programState = !await StorageHelper.existFile('${gameDirectory}/KairoGames.exe.${version ?? '0'}.bak')
+    if (await StorageHelper.existFile(gameDirectory.join('KairoGames.exe'))) {
+      programState = !await StorageHelper.existFile(gameDirectory.join('KairoGames.exe.${version ?? '0'}.bak'))
         ? .original
         : .modified;
     }
-    if (await StorageHelper.existDirectory('${gameDirectory}/saves/${user}')) {
-      recordState = await GameRecordHelper.detectState('${gameDirectory}/saves/${user}', GameRepositoryHelper.makeKeyFromSteamUser(user));
+    if (await StorageHelper.existDirectory(gameDirectory.join('saves').join('${user}'))) {
+      recordState = await GameRecordHelper.detectState(gameDirectory.join('saves').join('${user}'), GameRepositoryHelper.makeKeyFromSteamUser(user));
     }
     return (program: programState, record: recordState);
   }
@@ -744,9 +745,9 @@ class GameRepositoryHelper {
   // #region custom
 
   static Future<GameInformation?> loadCustomGame(
-    String gameDirectory,
+    StoragePath gameDirectory,
   ) async {
-    if (!await StorageHelper.existFile('${gameDirectory}/KairoGames.exe')) {
+    if (!await StorageHelper.existFile(gameDirectory.join('KairoGames.exe'))) {
       return null;
     }
     var information = GameInformation();
@@ -754,11 +755,11 @@ class GameRepositoryHelper {
     information.library = null;
     information.identifier = null;
     information.version = null;
-    information.name = StorageHelper.name(gameDirectory);
-    information.icon = await GameRepositoryHelper.extractProgramIcon('${gameDirectory}/KairoGames.exe');
+    information.name = gameDirectory.name()!;
+    information.icon = await GameRepositoryHelper.extractProgramIcon(gameDirectory.join('KairoGames.exe'));
     information.key = '0';
-    if (!await StorageHelper.existDirectory('${gameDirectory}/saves')) {
-      information.key = (await StorageHelper.listDirectory('${gameDirectory}/saves', 1, true, false, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it)) ?? '0';
+    if (!await StorageHelper.existDirectory(gameDirectory.join('saves'))) {
+      information.key = (await StorageHelper.listDirectory(gameDirectory.join('saves'), 1, true, false, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it.name()!))?.name()! ?? '0';
     }
     var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.version, information.key!);
     information.program = gameState.program;
@@ -767,18 +768,18 @@ class GameRepositoryHelper {
   }
 
   static Future<Boolean> checkCustomRepository(
-    String repositoryDirectory,
+    StoragePath repositoryDirectory,
   ) async {
-    return await StorageHelper.existDirectory('${repositoryDirectory}');
+    return await StorageHelper.existDirectory(repositoryDirectory);
   }
 
   static Future<List<GameInformation>> loadCustomRepository(
-    String repositoryDirectory,
+    StoragePath repositoryDirectory,
   ) async {
     var libraryList = await StorageHelper.listDirectory(repositoryDirectory, 1, true, false, false, true);
     var result = <GameInformation>[];
     for (var library in libraryList) {
-      var libraryDirectory = '${repositoryDirectory}/${library}';
+      var libraryDirectory = repositoryDirectory.push(library);
       var gameConfiguration = await GameRepositoryHelper.loadCustomGame(libraryDirectory);
       if (gameConfiguration != null) {
         result.add(gameConfiguration);
@@ -800,10 +801,10 @@ class GameRepositoryHelper {
   }
 
   static Future<GameInformation?> loadSteamGame(
-    String libraryDirectory,
-    String gameIdentifier,
+    StoragePath libraryDirectory,
+    String      gameIdentifier,
   ) async {
-    var gameManifestFile = '${libraryDirectory}/steamapps/appmanifest_${gameIdentifier}.acf';
+    var gameManifestFile = libraryDirectory.join('steamapps').join('appmanifest_${gameIdentifier}.acf');
     if (!await StorageHelper.existFile(gameManifestFile)) {
       return null;
     }
@@ -811,8 +812,8 @@ class GameRepositoryHelper {
     assertTest(gameManifest.length == 1);
     assertTest(gameManifest.entries.first.key == 'AppState');
     assertTest(gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['appid']!.as<Integer>().toString() == gameIdentifier);
-    var gameDirectory = '${libraryDirectory}/steamapps/common/${gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['installdir']!.as<String>()}';
-    if (!await StorageHelper.existFile('${gameDirectory}/KairoGames.exe')) {
+    var gameDirectory = libraryDirectory.join('steamapps').join('common').join(gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['installdir']!.as<String>());
+    if (!await StorageHelper.existFile(gameDirectory.join('KairoGames.exe'))) {
       return null;
     }
     var information = GameInformation();
@@ -821,7 +822,7 @@ class GameRepositoryHelper {
     information.identifier = gameIdentifier;
     information.version = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['buildid']!.as<Integer>().toString();
     information.name = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['name']!.as<String>();
-    information.icon = await GameRepositoryHelper.extractProgramIcon('${gameDirectory}/KairoGames.exe');
+    information.icon = await GameRepositoryHelper.extractProgramIcon(gameDirectory.join('KairoGames.exe'));
     information.key = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
     var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.version, information.key!);
     information.program = gameState.program;
@@ -830,20 +831,20 @@ class GameRepositoryHelper {
   }
 
   static Future<Boolean> checkSteamRepository(
-    String repositoryDirectory,
+    StoragePath repositoryDirectory,
   ) async {
-    return await StorageHelper.existFile('${repositoryDirectory}/steam.exe');
+    return await StorageHelper.existFile(repositoryDirectory.join('steam.exe'));
   }
 
   static Future<List<GameInformation>> loadSteamRepository(
-    String repositoryDirectory,
+    StoragePath repositoryDirectory,
   ) async {
-    var libraryList = await VdfHelper.deserializeFile('${repositoryDirectory}/steamapps/libraryfolders.vdf');
+    var libraryList = await VdfHelper.deserializeFile(repositoryDirectory.join('steamapps').join('libraryfolders.vdf'));
     assertTest(libraryList.length == 1);
     assertTest(libraryList.entries.first.key == 'libraryfolders');
     var result = <GameInformation>[];
     for (var library in libraryList['libraryfolders']!.as<Map<Object?, Object?>>().entries) {
-      var libraryDirectory = library.value!.as<Map<Object?, Object?>>()['path']!.as<String>().replaceAll('\\\\', '/');
+      var libraryDirectory = StoragePath.of(library.value!.as<Map<Object?, Object?>>()['path']!.as<String>().replaceAll('\\\\', '/'));
       for (var game in library.value!.as<Map<Object?, Object?>>()['apps']!.as<Map<Object?, Object?>>().entries) {
         var gameIdentifier = game.key!.as<String>();
         var gameConfiguration = await GameRepositoryHelper.loadSteamGame(libraryDirectory, gameIdentifier);

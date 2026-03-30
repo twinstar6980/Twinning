@@ -2,7 +2,6 @@ import '/common.dart';
 import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
-import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/submission_type.dart';
 import '/view/core_task_worker/value_expression.dart';
@@ -553,7 +552,7 @@ class _PathSubmissionBar extends StatelessWidget {
                   )),
                 ));
                 if (value != null) {
-                  this.value.value = .new(value);
+                  this.value.value = .new(.of(value)); // TODO: special path
                   await refreshState(setState);
                 }
               },
@@ -578,13 +577,13 @@ class _PathSubmissionBar extends StatelessWidget {
               },
             ),
           ],
-          value: this.value.value == null ? '' : this.value.value!.content,
+          value: this.value.value == null ? '' : this.value.value!.content.emit(),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              this.value.value = .new(StorageHelper.regularize(value));
+              this.value.value = .new(.of(value));
             }
             await refreshState(setState);
           },

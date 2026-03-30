@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/utility/application_font_manager.dart';
@@ -23,18 +24,18 @@ class SettingData {
   Color                           themeColorLight;
   Color                           themeColorDark;
   Boolean                         themeFontState;
-  List<String>                    themeFontPath;
+  List<StoragePath>               themeFontPath;
   Boolean                         windowPositionState;
   Integer                         windowPositionX;
   Integer                         windowPositionY;
   Boolean                         windowSizeState;
   Integer                         windowSizeWidth;
   Integer                         windowSizeHeight;
-  String                          storagePickerFallbackDirectory;
-  Map<String, String>             storagePickerHistoryLocation;
+  StoragePath                     storagePickerFallbackDirectory;
+  Map<String, StoragePath>        storagePickerHistoryLocation;
   ModuleType                      forwarderDefaultTarget;
   Boolean                         forwarderImmediateJump;
-  String                          moduleConfigurationDirectory;
+  StoragePath                     moduleConfigurationDirectory;
   ModuleLauncherSetting           moduleLauncher;
   core_task_worker.Setting        coreTaskWorker;
   core_command_sender.Setting     coreCommandSender;
@@ -71,7 +72,7 @@ class SettingData {
 
 class SettingState {
   Future<Void> Function(String title, ModuleType type, List<String> option)? handleLaunch;
-  Future<Void> Function(List<String> resource)?                              handleForward;
+  Future<Void> Function(List<StoragePath> resource)?                         handleForward;
   Future<Void> Function(List<String> command)?                               handleCommand;
   Future<Void> Function(Uri link)?                                           handleLink;
   GlobalKey<NavigatorState>                                                  applicationNavigatorKey;
@@ -145,14 +146,14 @@ class SettingProvider with ChangeNotifier {
 
   // #region storage
 
-  Future<String> get file async {
-    return '${await StorageHelper.queryApplicationSharedDirectory()}/setting.json';
+  Future<StoragePath> get file async {
+    return (await StorageHelper.queryApplicationSharedDirectory()).join('setting.json');
   }
 
   // ----------------
 
   Future<Void> load({
-    String? file = null,
+    StoragePath? file = null,
   }) async {
     file ??= await this.file;
     this.data = SettingProvider._parseDataFromJson(await JsonHelper.deserializeFile(file));
@@ -160,8 +161,8 @@ class SettingProvider with ChangeNotifier {
   }
 
   Future<Void> save({
-    String? file = null,
-    Boolean apply = true,
+    StoragePath? file = null,
+    Boolean      apply = true,
   }) async {
     file ??= await this.file;
     if (apply) {
@@ -194,11 +195,11 @@ class SettingProvider with ChangeNotifier {
       windowSizeState: true,
       windowSizeWidth: 480,
       windowSizeHeight: 840,
-      storagePickerFallbackDirectory: '',
+      storagePickerFallbackDirectory: .nothing(),
       storagePickerHistoryLocation: {},
       forwarderDefaultTarget: .coreResourceShipper,
       forwarderImmediateJump: false,
-      moduleConfigurationDirectory: '',
+      moduleConfigurationDirectory: .nothing(),
       moduleLauncher: .new(
         module: ModuleType.values.map(ModuleHelper.query).map((it) => ModuleLauncherConfiguration(
           title: it.name,
@@ -209,8 +210,8 @@ class SettingProvider with ChangeNotifier {
         recent: [],
       ),
       coreTaskWorker: .new(
-        kernel: '',
-        script: '',
+        kernel: .nothing(),
+        script: .nothing(),
         argument: [],
         immediateLaunch: true,
         messageFont: [],
@@ -265,18 +266,18 @@ class SettingProvider with ChangeNotifier {
       'theme_color_light': data.themeColorLight.toARGB32(),
       'theme_color_dark': data.themeColorDark.toARGB32(),
       'theme_font_state': data.themeFontState,
-      'theme_font_path': data.themeFontPath,
+      'theme_font_path': data.themeFontPath.map((it) => it.emit()).toList(),
       'window_position_state': data.windowPositionState,
       'window_position_x': data.windowPositionX,
       'window_position_y': data.windowPositionY,
       'window_size_state': data.windowSizeState,
       'window_size_width': data.windowSizeWidth,
       'window_size_height': data.windowSizeHeight,
-      'storage_picker_fallback_directory': data.storagePickerFallbackDirectory,
-      'storage_picker_history_location': data.storagePickerHistoryLocation,
+      'storage_picker_fallback_directory': data.storagePickerFallbackDirectory.emit(),
+      'storage_picker_history_location': data.storagePickerHistoryLocation.map((key, value) => .new(key, value.emit())),
       'forwarder_default_target': data.forwarderDefaultTarget.selfLet((it) => ModuleHelper.query(it).identifier),
       'forwarder_immediate_jump': data.forwarderImmediateJump,
-      'module_configuration_directory': data.moduleConfigurationDirectory,
+      'module_configuration_directory': data.moduleConfigurationDirectory.emit(),
       'module_launcher': {
         'module': data.moduleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
@@ -295,11 +296,11 @@ class SettingProvider with ChangeNotifier {
         }).toList(),
       },
       'core_task_worker': {
-        'kernel': data.coreTaskWorker.kernel,
-        'script': data.coreTaskWorker.script,
+        'kernel': data.coreTaskWorker.kernel.emit(),
+        'script': data.coreTaskWorker.script.emit(),
         'argument': data.coreTaskWorker.argument,
         'immediate_launch': data.coreTaskWorker.immediateLaunch,
-        'message_font': data.coreTaskWorker.messageFont,
+        'message_font': data.coreTaskWorker.messageFont.map((it) => it.emit()).toList(),
       },
       'core_command_sender': {
         'parallel_forward': data.coreCommandSender.parallelForward,
@@ -332,18 +333,18 @@ class SettingProvider with ChangeNotifier {
       themeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => .new(it)),
       themeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => .new(it)),
       themeFontState: (json['theme_font_state'] as Boolean),
-      themeFontPath: (json['theme_font_path'] as List<dynamic>).cast<String>(),
+      themeFontPath: (json['theme_font_path'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
       windowPositionState: (json['window_position_state'] as Boolean),
       windowPositionX: (json['window_position_x'] as Integer),
       windowPositionY: (json['window_position_y'] as Integer),
       windowSizeState: (json['window_size_state'] as Boolean),
       windowSizeWidth: (json['window_size_width'] as Integer),
       windowSizeHeight: (json['window_size_height'] as Integer),
-      storagePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String),
-      storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>(),
+      storagePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String).selfLet((it) => StoragePath.of(it)),
+      storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>().map((key, value) => .new(key, StoragePath.of(value))),
       forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
       forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
-      moduleConfigurationDirectory: (json['module_configuration_directory'] as String),
+      moduleConfigurationDirectory: (json['module_configuration_directory'] as String).selfLet((it) => StoragePath.of(it)),
       moduleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),
@@ -362,11 +363,11 @@ class SettingProvider with ChangeNotifier {
         )).toList(),
       )),
       coreTaskWorker: (json['core_task_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_task_worker.Setting(
-        kernel: (jsonPart['kernel'] as String),
-        script: (jsonPart['script'] as String),
+        kernel: (jsonPart['kernel'] as String).selfLet((it) => StoragePath.of(it)),
+        script: (jsonPart['script'] as String).selfLet((it) => StoragePath.of(it)),
         argument: (jsonPart['argument'] as List<dynamic>).cast<String>(),
         immediateLaunch: (jsonPart['immediate_launch'] as Boolean),
-        messageFont: (jsonPart['message_font'] as List<dynamic>).cast<String>(),
+        messageFont: (jsonPart['message_font'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
       )),
       coreCommandSender: (json['core_command_sender'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_command_sender.Setting(
         parallelForward: (jsonPart['parallel_forward'] as Boolean),
@@ -392,13 +393,13 @@ class SettingProvider with ChangeNotifier {
   // ----------------
 
   Future<Void> quickSetup(
-    String homeDirectory,
+    StoragePath homeDirectory,
   ) async {
-    this.data.moduleConfigurationDirectory = '${homeDirectory}/assistant';
-    this.data.storagePickerFallbackDirectory = '${homeDirectory}/workspace';
-    this.data.coreTaskWorker.kernel = '${homeDirectory}/kernel';
-    this.data.coreTaskWorker.script = '${homeDirectory}/script/main.js';
-    this.data.coreTaskWorker.argument = ['${homeDirectory}'];
+    this.data.moduleConfigurationDirectory = homeDirectory.join('assistant');
+    this.data.storagePickerFallbackDirectory = homeDirectory.join('workspace');
+    this.data.coreTaskWorker.kernel = homeDirectory.join('kernel');
+    this.data.coreTaskWorker.script = homeDirectory.join('script').join('main.js');
+    this.data.coreTaskWorker.argument = [homeDirectory.emitGeneric()];
     return;
   }
 

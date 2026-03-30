@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import 'dart:io';
 
@@ -26,7 +27,7 @@ class ProcessHelper {
   // #region process
 
   static Future<({Integer code, String output, String error})> runProcess(
-    String               program,
+    StoragePath          program,
     List<String>         argument,
     Map<String, String>? environment,
   ) async {
@@ -34,7 +35,7 @@ class ProcessHelper {
       environment = ProcessHelper.listEnvironment();
     }
     var process = await Process.run(
-      program,
+      program.emitNative(),
       argument,
       environment: environment,
     );
@@ -49,18 +50,15 @@ class ProcessHelper {
 
   // #region program
 
-  static Future<String?> searchProgram(
+  static Future<StoragePath?> searchProgram(
     String  name,
     Boolean allowExtension,
   ) async {
-    var result = null as String?;
+    var result = null as StoragePath?;
     var itemDelimiter = SystemChecker.isWindows ? ';' : ':';
     var pathEnvironment = ProcessHelper.queryEnvironment('PATH');
     assertTest(pathEnvironment != null);
-    var pathList = pathEnvironment!.split(itemDelimiter);
-    if (SystemChecker.isWindows) {
-      pathList = pathList.map(StorageHelper.regularize).toList();
-    }
+    var pathList = pathEnvironment!.split(itemDelimiter).map(StoragePath.of);
     var pathExtensionList = [''];
     if (SystemChecker.isWindows && allowExtension) {
       var pathExtensionEnvironment = ProcessHelper.queryEnvironment('PATHEXT');
@@ -68,23 +66,18 @@ class ProcessHelper {
       pathExtensionList.addAll(pathExtensionEnvironment!.split(itemDelimiter));
     }
     for (var path in pathList) {
-      var pathBase = '${path}/${name}';
-      var pathExtension = null as String?;
-      for (var pathExtensionItem in pathExtensionList) {
-        if (await StorageHelper.existFile('${pathBase}${pathExtensionItem}')) {
-          pathExtension = pathExtensionItem;
+      for (var pathExtension in pathExtensionList) {
+        var currentPath = path.join('${name}${pathExtension}');
+        if (await StorageHelper.existFile(currentPath)) {
+          result = currentPath;
           break;
         }
-      }
-      if (pathExtension != null) {
-        result = '${pathBase}${pathExtension}';
-        break;
       }
     }
     return result;
   }
 
-  static Future<String> searchProgramEnsure(
+  static Future<StoragePath> searchProgramEnsure(
     String  name,
     Boolean allowExtension,
   ) async {

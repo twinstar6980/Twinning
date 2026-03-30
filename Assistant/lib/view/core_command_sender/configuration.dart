@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/view/core_command_sender/value_expression.dart';
 
 // ----------------
@@ -88,7 +89,7 @@ class ConfigurationHelper {
       FloaterExpression _ => value.value,
       SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count, false)}${['b', 'k', 'm', 'g'][value.exponent]}',
       StringExpression  _ => value.value,
-      PathExpression    _ => '${value.content}',
+      PathExpression    _ => '${value.content.emitGeneric()}',
       _                   => throw UnreachableException(),
     };
   }
@@ -115,7 +116,7 @@ class ConfigurationHelper {
         json.as<String>(),
       ),
       .path => PathExpression(
-        json.as<String>(),
+        json.as<String>().selfLet((it) => StoragePath.of(it)),
       ),
     };
   }

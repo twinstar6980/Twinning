@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import 'dart:convert';
 import 'package:json5/json5.dart' as lib;
@@ -31,15 +32,15 @@ class JsonHelper {
   // ----------------
 
   static Future<Void> serializeFile(
-    String  path,
-    Object? value, {
-    Boolean indented = true,
+    StoragePath path,
+    Object?     value, {
+    Boolean     indented = true,
   }) async {
     return await StorageHelper.writeFileText(path, JsonHelper.serializeText(value, indented: indented));
   }
 
   static Future<Object?> deserializeFile(
-    String path,
+    StoragePath path,
   ) async {
     return JsonHelper.deserializeText(await StorageHelper.readFileText(path));
   }

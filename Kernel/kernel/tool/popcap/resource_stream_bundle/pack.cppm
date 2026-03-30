@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto & resource_detail_manifest_information_structure = resource_detail_manifest_information_structure_list.append();
 						resource_manifest_information_structure.detail_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
 						resource_detail_manifest_information_structure.identifier_offset = set_string(resource_manifest.identifier);
-						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.to_string(CharacterType::k_path_separator_windows));
+						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.emit_windows());
 						resource_detail_manifest_information_structure.header_size = cbox<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<t_version>>());
 						resource_detail_manifest_information_structure.type = cbox<IntegerU16>(resource_manifest.type);
 						if (resource_detail_manifest_information_structure.type == 0_iu16) {
@@ -249,7 +249,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						for (auto & resource_index : SizeRange{subgroup_definition.resource.size()}) {
 							auto & resource_definition = subgroup_definition.resource[resource_index];
 							auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
-							resource_path_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
+							resource_path_structure.key = resource_definition.path.emit_windows();
 							switch (resource_definition.additional.type().value) {
 								case ResourceType::Constant::general().value: {
 									auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
@@ -426,7 +426,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					auto make_formatted_path = [&](
 						Path const & path_format
 					) -> Path {
-						return Path{format_string(path_format.to_string(), group_definition.identifier, subgroup_definition.identifier)};
+						return Path{format_string(path_format.emit(), group_definition.identifier, subgroup_definition.identifier)};
 					};
 					auto texture_resource_begin = global_texture_resource_index;
 					auto texture_resource_count = k_none_size;
@@ -434,7 +434,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto & resource_definition = subgroup_definition.resource[resource_index];
 						auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
 						auto & packet_resource_definition = packet_package_definition.resource[resource_index];
-						resource_path_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
+						resource_path_structure.key = resource_definition.path.emit_windows();
 						resource_path_structure.value = cbox<IntegerU32>(global_subgroup_index);
 						packet_resource_definition.path = resource_definition.path;
 						switch (resource_definition.additional.type().value) {

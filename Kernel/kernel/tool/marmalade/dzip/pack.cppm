@@ -49,13 +49,13 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				information_structure.resource_information.allocate_full(definition.resource.size());
 				information_structure.chunk_information.allocate_full(k_none_size);
 				information_structure.archive_resource_information.allocate_full(k_none_size);
-				information_structure.resource_directory.append(""_sv);
+				information_structure.resource_directory.append("."_sv);
 				auto global_chunk_index = k_begin_index;
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
-					auto   resource_directory_string = resource_definition.path.parent().to_string(CharacterType::k_path_separator_windows);
-					information_structure.resource_file.append(resource_definition.path.name());
+					auto   resource_directory_string = resource_definition.path.parent().get().emit_windows();
+					information_structure.resource_file.append(resource_definition.path.name().get());
 					if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
 					}
 					else {
@@ -114,14 +114,14 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			information_structure.resource_information.allocate_full(definition.resource.size());
 			information_structure.chunk_information.allocate_full(k_none_size);
 			information_structure.archive_resource_information.allocate_full(k_none_size);
-			information_structure.resource_directory.append(""_sv);
+			information_structure.resource_directory.append("."_sv);
 			auto global_chunk_index = k_begin_index;
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
-				auto   resource_path = resource_directory / resource_definition.path;
-				auto   resource_directory_string = resource_definition.path.parent().to_string(CharacterType::k_path_separator_windows);
-				information_structure.resource_file.append(resource_definition.path.name());
+				auto   resource_path = resource_directory.push(resource_definition.path);
+				auto   resource_directory_string = resource_definition.path.parent().get().emit_windows();
+				information_structure.resource_file.append(resource_definition.path.name().get());
 				if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
 					resource_information_structure.directory_index = cbox<IntegerU16>(index.get());
 				}

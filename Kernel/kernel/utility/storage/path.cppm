@@ -12,21 +12,43 @@ import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.miscellaneous.character_series.type;
 import twinning.kernel.utility.range.range_wrapper;
+import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.string.basic_string;
 
 export namespace Twinning::Kernel::Storage {
 
 	#pragma region type
 
+	M_enumeration(
+		M_wrap(PathType),
+		M_wrap(
+			nothing,
+			relative,
+			absolute,
+		),
+	);
+
+	M_enumeration(
+		M_wrap(PathStyle),
+		M_wrap(
+			generic,
+			native,
+			posix,
+			windows,
+		),
+	);
+
+	// ----------------
+
 	class Path {
 
 	protected:
 
+		PathType m_type;
+
 		Optional<String> m_root;
 
-		Boolean m_absolute;
-
-		List<String> m_relative;
+		List<String> m_part;
 
 	public:
 
@@ -39,9 +61,9 @@ export namespace Twinning::Kernel::Storage {
 
 		Path(
 		) :
+			m_type{},
 			m_root{},
-			m_absolute{},
-			m_relative{} {
+			m_part{} {
 			return;
 		}
 
@@ -56,10 +78,18 @@ export namespace Twinning::Kernel::Storage {
 		// ----------------
 
 		explicit Path(
+			PathType const & type
+		) :
+			Path{} {
+			thiz.m_type = type;
+			return;
+		}
+
+		explicit Path(
 			String const & path
 		) :
 			Path{} {
-			thiz.from_string(path);
+			thiz.parse(path);
 			return;
 		}
 
@@ -75,101 +105,13 @@ export namespace Twinning::Kernel::Storage {
 			Path && that
 		) -> Path & = default;
 
-		// ----------------
-
-		auto operator /(
-			String const & that
-		) const -> Path {
-			auto result = Path{};
-			result.m_root = thiz.m_root;
-			result.m_absolute = thiz.m_absolute;
-			result.m_relative.allocate(thiz.m_relative.size() + 1_sz);
-			result.m_relative.append_list(thiz.m_relative);
-			result.m_relative.append(that);
-			return result;
-		}
-
-		auto operator /(
-			String && that
-		) const -> Path {
-			auto result = Path{};
-			result.m_root = thiz.m_root;
-			result.m_absolute = thiz.m_absolute;
-			result.m_relative.allocate(thiz.m_relative.size() + 1_sz);
-			result.m_relative.append_list(thiz.m_relative);
-			result.m_relative.append(as_moveable(that));
-			return result;
-		}
-
-		// ----------------
-
-		auto operator /(
-			Path const & that
-		) const -> Path {
-			assert_test(!that.m_root.has() && !that.m_absolute);
-			auto result = Path{};
-			result.m_root = thiz.m_root;
-			result.m_absolute = thiz.m_absolute;
-			result.m_relative.allocate(thiz.m_relative.size() + that.m_relative.size());
-			result.m_relative.append_list(thiz.m_relative);
-			result.m_relative.append_list(that.m_relative);
-			return result;
-		}
-
-		auto operator /(
-			Path && that
-		) const -> Path {
-			assert_test(!that.m_root.has() && !that.m_absolute);
-			auto result = Path{};
-			result.m_root = thiz.m_root;
-			result.m_absolute = thiz.m_absolute;
-			result.m_relative.allocate(thiz.m_relative.size() + that.m_relative.size());
-			result.m_relative.append_list(thiz.m_relative);
-			result.m_relative.append_list(Range::make_moveable_range_of(that.m_relative));
-			return result;
-		}
-
-		// ----------------
-
-		auto operator /=(
-			String const & that
-		) -> Path & {
-			thiz.m_relative.append(that);
-			return thiz;
-		}
-
-		auto operator /=(
-			String && that
-		) -> Path & {
-			thiz.m_relative.append(as_moveable(that));
-			return thiz;
-		}
-
-		// ----------------
-
-		auto operator /=(
-			Path const & that
-		) -> Path & {
-			assert_test(!that.m_root.has() && !that.m_absolute);
-			thiz.m_relative.append_list(that.m_relative);
-			return thiz;
-		}
-
-		auto operator /=(
-			Path && that
-		) -> Path & {
-			assert_test(!that.m_root.has() && !that.m_absolute);
-			thiz.m_relative.append_list(Range::make_moveable_range_of(that.m_relative));
-			return thiz;
-		}
-
 		#pragma endregion
 
-		#pragma region value
+		#pragma region query
 
-		auto root(
-		) -> Optional<String> & {
-			return thiz.m_root;
+		auto type(
+		) const -> PathType const & {
+			return thiz.m_type;
 		}
 
 		auto root(
@@ -177,85 +119,199 @@ export namespace Twinning::Kernel::Storage {
 			return thiz.m_root;
 		}
 
-		// ----------------
-
-		auto absolute(
-		) -> Boolean & {
-			return thiz.m_absolute;
-		}
-
-		auto absolute(
-		) const -> Boolean const & {
-			return thiz.m_absolute;
-		}
-
-		// ----------------
-
-		auto relative(
-		) -> List<String> & {
-			return thiz.m_relative;
-		}
-
-		auto relative(
+		auto part(
 		) const -> List<String> const & {
-			return thiz.m_relative;
+			return thiz.m_part;
 		}
 
 		#pragma endregion
 
-		#pragma region split
+		#pragma region segment
 
 		auto parent(
-		) const -> Path {
-			assert_test(!thiz.m_relative.empty());
-			auto result = Path{};
-			result.m_root = thiz.m_root;
-			result.m_absolute = thiz.m_absolute;
-			result.m_relative = thiz.m_relative.head(thiz.m_relative.size() - 1_sz);
+		) const -> Optional<Path> {
+			auto result = Optional<Path>{};
+			if (thiz.m_type != PathType::Constant::nothing() && !thiz.m_part.empty()) {
+				result.set();
+				result.get().m_type = thiz.m_type;
+				result.get().m_root = thiz.m_root;
+				result.get().m_part = thiz.m_part.head(thiz.m_part.size() - 1_sz);
+			}
 			return result;
 		}
 
 		auto name(
-		) const -> String {
-			assert_test(!thiz.m_relative.empty());
-			return thiz.m_relative.last();
+		) const -> Optional<String> {
+			auto result = Optional<String>{};
+			if (thiz.m_type != PathType::Constant::nothing() && !thiz.m_part.empty()) {
+				result.set(thiz.m_part.last());
+			}
+			return result;
 		}
 
 		#pragma endregion
 
-		#pragma region string convert
+		#pragma region compose
 
-		auto from_string(
+		auto join(
+			String && other
+		) const -> Path {
+			assert_test(thiz.m_type != PathType::Constant::nothing());
+			auto result = Path{};
+			result.m_type = thiz.m_type;
+			result.m_root = thiz.m_root;
+			result.m_part.allocate(thiz.m_part.size() + 1_sz);
+			result.m_part.append_list(thiz.m_part);
+			result.m_part.append(as_moveable(other));
+			return result;
+		}
+
+		auto join(
+			String const & other
+		) const -> Path {
+			return thiz.join(String{other});
+		}
+
+		auto push(
+			Path && other
+		) const -> Path {
+			assert_test(thiz.m_type != PathType::Constant::nothing());
+			assert_test(other.m_type == PathType::Constant::relative());
+			auto result = Path{};
+			result.m_type = thiz.m_type;
+			result.m_root = thiz.m_root;
+			result.m_part.allocate(thiz.m_part.size() + 1_sz);
+			result.m_part.append_list(thiz.m_part);
+			result.m_part.append_list(Range::make_moveable_range_of(other.m_part));
+			return result;
+		}
+
+		auto push(
+			Path const & other
+		) const -> Path {
+			return thiz.push(Path{other});
+		}
+
+		#pragma endregion
+
+		#pragma region convert
+
+		auto parse(
 			String const & path
 		) -> Void {
 			thiz.m_root.reset();
-			thiz.m_absolute = k_false;
-			thiz.m_relative.reset();
-			auto relative_path_begin = k_begin_index;
-			if (path.size() >= 2_sz && path[2_ix] == ':'_c && CharacterType::is_letter(path[1_ix])) {
-				thiz.m_root.set(path.sub(1_ix, 2_sz));
-				relative_path_begin += 2_sz;
+			thiz.m_type = PathType::Constant::nothing();
+			thiz.m_part.reset();
+			if (!path.empty()) {
+				auto position = k_begin_index;
+				if (path.size() >= 2_sz && path[2_ix] == ':'_c && CharacterType::is_letter(path[1_ix])) {
+					thiz.m_root.set(path.sub(1_ix, 2_sz));
+					position += 2_sz;
+				}
+				if (path.size() > position && CharacterType::is_path_separator(path[position])) {
+					thiz.m_type = PathType::Constant::absolute();
+					position += 1_sz;
+				}
+				else {
+					thiz.m_type = PathType::Constant::relative();
+				}
+				auto location = position;
+				while (k_true) {
+					if (position == path.size() || CharacterType::is_path_separator(path[position])) {
+						auto segment = path.sub(location, position - location);
+						if (segment == ""_sv || segment == "."_sv) {
+						}
+						else if (segment == ".."_sv && !thiz.m_part.empty() && thiz.m_part.last() != ".."_sv) {
+							thiz.m_part.remove_tail();
+						}
+						else {
+							thiz.m_part.append(segment);
+						}
+						if (position == path.size()) {
+							break;
+						}
+						position += 1_sz;
+						location = position;
+						continue;
+					}
+					position += 1_sz;
+				}
 			}
-			if (path.size() > relative_path_begin && CharacterType::is_path_separator(path[relative_path_begin])) {
-				thiz.m_absolute = k_true;
-				relative_path_begin += 1_sz;
-			}
-			thiz.m_relative = split_string<String>(path.tail(path.size() - relative_path_begin), CharacterType::k_path_separator_set);
 			return;
 		}
 
-		auto to_string(
-			Character const & separator = CharacterType::k_path_separator_generic
+		auto emit(
+			PathStyle const & style = PathStyle::Constant::generic()
 		) const -> String {
 			auto result = String{};
-			if (thiz.m_root.has()) {
-				result.append_list(thiz.m_root.get());
+			if (thiz.m_type != PathType::Constant::nothing()) {
+				auto mapped_style = style;
+				if (style == PathStyle::Constant::generic()) {
+					mapped_style = PathStyle::Constant::posix();
+				}
+				if (style == PathStyle::Constant::native()) {
+					#if defined M_system_windows
+					mapped_style = PathStyle::Constant::windows();
+					#endif
+					#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+					mapped_style = PathStyle::Constant::posix();
+					#endif
+				}
+				auto separator = mapped_style == PathStyle::Constant::posix() ? CharacterType::k_path_separator_poisx : CharacterType::k_path_separator_windows;
+				if (thiz.m_root.has()) {
+					result.append_list(thiz.m_root.get());
+				}
+				if (thiz.m_type == PathType::Constant::relative()) {
+					result.append('.'_c);
+				}
+				if (thiz.m_part.empty()) {
+					result.append(separator);
+				}
+				for (auto & segment : thiz.m_part) {
+					result.append(separator);
+					if (mapped_style == PathStyle::Constant::posix()) {
+						result.append_list(segment);
+					}
+					if (mapped_style == PathStyle::Constant::windows()) {
+						auto segment_size = segment.size();
+						while (segment_size != k_none_size) {
+							if (segment[segment_size - 1_sz] == ' '_c) {
+								segment_size -= 1_sz;
+								continue;
+							}
+							if (segment[segment_size - 1_sz] == '.'_c && !((segment_size == 1_sz) || (segment_size == 2_sz && segment[1_ix] == '.'_c))) {
+								segment_size -= 1_sz;
+								continue;
+							}
+							break;
+						}
+						result.append_list(Range::make_range_n(segment.begin(), segment_size));
+					}
+				}
 			}
-			if (thiz.m_absolute) {
-				result.append(separator);
-			}
-			result.append_list(catenate_string<String>(thiz.m_relative, separator));
 			return result;
+		}
+
+		// ----------------
+
+		auto emit_generic(
+		) const -> String {
+			return thiz.emit(PathStyle::Constant::generic());
+		}
+
+		auto emit_native(
+		) const -> String {
+			return thiz.emit(PathStyle::Constant::native());
+		}
+
+		auto emit_posix(
+		) const -> String {
+			return thiz.emit(PathStyle::Constant::posix());
+		}
+
+		auto emit_windows(
+		) const -> String {
+			return thiz.emit(PathStyle::Constant::windows());
 		}
 
 		#pragma endregion

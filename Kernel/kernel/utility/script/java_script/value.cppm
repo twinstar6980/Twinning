@@ -1206,7 +1206,7 @@ export namespace Twinning::Kernel::JavaScript {
 					Third::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': path invalid", module_name);
 					return nullptr;
 				}
-				path = home.get() / Path{make_string(module_name + 2)};
+				path = home.get().push(Path{make_string(module_name + 2)});
 			}
 			else {
 				path = Path{make_string(module_name)};

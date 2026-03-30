@@ -99,6 +99,29 @@ class ConvertHelper {
 
   // #endregion
 
+  // #region character
+
+  static Boolean isPathSeparator(
+    String value,
+  ) {
+    if (value.length != 1) {
+      return false;
+    }
+    return value == '/' || value == '\\';
+  }
+
+  static Boolean isLetter(
+    String value,
+  ) {
+    if (value.length != 1) {
+      return false;
+    }
+    var code = value.codeUnitAt(0) | 0x20;
+    return 'a'.codeUnitAt(0) <= code && code <= 'z'.codeUnitAt(0);
+  }
+
+  // #endregion
+
   // #region string
 
   static List<String> splitStringOfCamelCase(
@@ -125,14 +148,14 @@ class ConvertHelper {
   static String makeStringListToStringWithLine(
     List<String> value,
   ) {
-    return value.join('\n') + (value.isNotEmpty && value.last.isEmpty ? '\n' : '');
+    return value.join('\n') + (!value.isEmpty && value.last.isEmpty ? '\n' : '');
   }
 
   static List<String> parseStringListFromStringWithLine(
     String text,
   ) {
     var value = text.split('\n').map((value) => !value.endsWith('\r') ? value : value.substring(0, value.length - 1)).toList();
-    if (value.isNotEmpty && value.last.isEmpty) {
+    if (!value.isEmpty && value.last.isEmpty) {
       value.removeLast();
     }
     return value;

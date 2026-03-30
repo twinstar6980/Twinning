@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/setting.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/main_page.dart' as core_task_worker;
@@ -42,7 +43,7 @@ class ModuleInformation {
   Widget Function(BuildContext context)                                      buildSettingPanel;
   Object Function(BuildContext context)                                      querySetting;
   Object Function(Object json)                                               parseConfiguration;
-  Future<List<String>?> Function(List<String> resource)                      generateForwardOption;
+  Future<List<String>?> Function(List<StoragePath> resource)                 generateForwardOption;
   ModuleInformation({
     required this.type,
     required this.identifier,
@@ -109,7 +110,7 @@ class ModuleHelper {
       querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.coreTaskWorker,
       parseConfiguration: (json) => core_task_worker.ConfigurationHelper.parseDataFromJson(json),
       generateForwardOption: (resource) async {
-        return ['-additional_argument', ...resource];
+        return ['-additional_argument', ...resource.map((it) => it.emit())];
       },
     ),
     .new(
@@ -156,7 +157,7 @@ class ModuleHelper {
             return null;
           }
         }
-        return ['-resource', ...resource];
+        return ['-resource', ...resource.map((it) => it.emit())];
       },
     ),
     .new(
@@ -180,7 +181,7 @@ class ModuleHelper {
         if (resource.length != 1) {
           return null;
         }
-        var animationFile = null as String?;
+        var animationFile = null as StoragePath?;
         if (await StorageHelper.existFile(resource.first)) {
           animationFile = await popcap_animation_viewer.VisualHelper.checkAnimationFilePath(resource.first);
         }
@@ -190,7 +191,7 @@ class ModuleHelper {
         if (animationFile == null) {
           return null;
         }
-        return ['-animation_file', animationFile];
+        return ['-animation_file', animationFile.emit()];
       },
     ),
     .new(

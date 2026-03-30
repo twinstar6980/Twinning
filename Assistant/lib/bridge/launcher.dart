@@ -56,7 +56,7 @@ class Launcher {
         ffi.calloc.free(result);
         ffi.calloc.free(exception);
         ffi.calloc.free(state);
-        if (exceptionProxy.value.isNotEmpty) {
+        if (!exceptionProxy.value.isEmpty) {
           throw exceptionProxy.value.first;
         }
         return null as Void;

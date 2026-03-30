@@ -22,21 +22,6 @@ export namespace Twinning::Kernel::CharacterType {
 
 	inline constexpr auto k_path_separator_windows = Character{'\\'_c};
 
-	inline constexpr auto k_path_separator_set = StaticArray<Character, 2_sz>{{k_path_separator_poisx, k_path_separator_windows}};
-
-	inline constexpr auto k_path_separator_generic = Character{
-		k_path_separator_poisx,
-	};
-
-	inline constexpr auto k_path_separator_native = Character{
-		#if defined M_system_windows
-		k_path_separator_windows,
-		#endif
-		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		k_path_separator_poisx,
-		#endif
-	};
-
 	inline constexpr auto k_letter_case_offset = Character{'a'_c - 'A'_c};
 
 	#pragma endregion

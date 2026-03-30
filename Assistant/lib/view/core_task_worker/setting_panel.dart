@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/setting.dart';
@@ -61,9 +62,9 @@ class SettingPanel extends StatelessWidget {
                     },
                   ),
                 ],
-                value: this.data.kernel,
+                value: this.data.kernel.emit(),
                 onChanged: (context, value) async {
-                  this.data.kernel = StorageHelper.regularize(value);
+                  this.data.kernel = .of(value);
                   await refreshState(setStateForPanel);
                   await refreshState(setState);
                   this.onUpdate();
@@ -105,9 +106,9 @@ class SettingPanel extends StatelessWidget {
                     },
                   ),
                 ],
-                value: this.data.script,
+                value: this.data.script.emit(),
                 onChanged: (context, value) async {
-                  this.data.script = StorageHelper.regularize(value);
+                  this.data.script = .of(value);
                   await refreshState(setStateForPanel);
                   await refreshState(setState);
                   this.onUpdate();
@@ -120,7 +121,7 @@ class SettingPanel extends StatelessWidget {
           icon: IconSet.format_list_bulleted,
           label: 'Argument',
           comment: [
-            StyledText.inherit(!this.data.argument.isNotEmpty ? 'Empty' : 'Defined'),
+            StyledText.inherit(this.data.argument.isEmpty ? 'Empty' : 'Defined'),
           ],
           onPressed: null,
           panelBuilder: (context, setStateForPanel) => [
@@ -143,7 +144,7 @@ class SettingPanel extends StatelessWidget {
                         location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.argument',
                       );
                       if (target != null) {
-                        this.data.argument = [...this.data.argument, target];
+                        this.data.argument = [...this.data.argument, target.emit()];
                         await refreshState(setStateForPanel);
                         await refreshState(setState);
                         this.onUpdate();
@@ -188,7 +189,7 @@ class SettingPanel extends StatelessWidget {
           icon: IconSet.text_fields,
           label: 'Message Font',
           comment: [
-            StyledText.inherit(!this.data.messageFont.isNotEmpty ? 'Default' : 'Custom'),
+            StyledText.inherit(this.data.messageFont.isEmpty ? 'Default' : 'Custom'),
           ],
           onPressed: null,
           panelBuilder: (context, setStateForPanel) => [
@@ -217,9 +218,9 @@ class SettingPanel extends StatelessWidget {
                     },
                   ),
                 ],
-                value: ConvertHelper.makeStringListToStringWithLine(this.data.messageFont),
+                value: ConvertHelper.makeStringListToStringWithLine(this.data.messageFont.map((it) => it.emit()).toList()),
                 onChanged: (context, value) async {
-                  this.data.messageFont = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                  this.data.messageFont = ConvertHelper.parseStringListFromStringWithLine(value).map(StoragePath.of).toList();
                   await refreshState(setStateForPanel);
                   await refreshState(setState);
                   this.onUpdate();

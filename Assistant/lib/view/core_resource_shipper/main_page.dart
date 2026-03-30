@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
@@ -41,7 +42,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   late Boolean                                                                                                    _parallelForward;
   late Boolean                                                                                                    _enableFilter;
   late Boolean                                                                                                    _enableBatch;
-  late List<({String name, Boolean? type})>                                                                       _resource;
+  late List<({StoragePath path, Boolean? type})>                                                                  _resource;
   late List<List<({Boolean singleEnabled, Boolean singleFiltered, Boolean batchEnabled, Boolean batchFiltered})>> _optionMatch;
   late List<Boolean>                                                                                              _optionExpanded;
   late ScrollController                                                                                           _optionListScrollController;
@@ -72,7 +73,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         }
         if (item.filter != null && this._resource.length != 0) {
           var nameRule = RegExp(item.filter!.name);
-          singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.name));
+          singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.path.name() ?? ''));
           batchFiltered |= true;
         }
         groupMatch.add((
@@ -89,10 +90,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   }
 
   Future<Void> _appendResource(
-    List<String> list,
+    List<StoragePath> list,
   ) async {
     for (var item in list) {
-      if (this._resource.any((value) => value.name == item)) {
+      if (this._resource.any((value) => value.path == item)) {
         continue;
       }
       var itemType = null as Boolean?;
@@ -102,17 +103,17 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       if (await StorageHelper.existDirectory(item)) {
         itemType = true;
       }
-      this._resource.add((name: item, type: itemType));
+      this._resource.add((path: item, type: itemType));
     }
     await this._refreshMatch();
     return;
   }
 
   Future<Void> _removeResource(
-    List<String> list,
+    List<StoragePath> list,
   ) async {
     for (var item in list) {
-      this._resource.removeWhere((value) => value.name == item);
+      this._resource.removeWhere((value) => value.path == item);
     }
     await this._refreshMatch();
     return;
@@ -122,7 +123,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     String?              method,
     Map<String, Object>? argument,
   ) async {
-    var actualInput = this._resource.isNotEmpty ? this._resource.map((value) => value.name).toList() : <String?>[null];
+    var actualInput = !this._resource.isEmpty ? this._resource.map((value) => value.path.emitGeneric()).toList() : <String?>[null];
     var actualMethod = method == null ? null : core_task_worker.ForwardHelper.makeMethodMaybeBatch(method, this._enableBatch);
     var actualCommand = actualInput.map((value) => core_task_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
     await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
@@ -157,7 +158,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     var optionParallelForward = null as Boolean?;
     var optionEnableFilter = null as Boolean?;
     var optionEnableBatch = null as Boolean?;
-    var optionResource = null as List<({String name})>?;
+    var optionResource = null as List<({StoragePath path})>?;
     var option = CommandLineReader(optionView);
     if (option.check('-parallel_forward')) {
       optionParallelForward = option.nextBoolean();
@@ -172,7 +173,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       optionResource = [];
       while (!option.done()) {
         optionResource.add((
-          name: option.nextString(),
+          path: option.nextString().selfLet(StoragePath.of),
         ));
       }
     }
@@ -189,7 +190,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       this._enableBatch = optionEnableBatch;
     }
     if (optionResource != null) {
-      await this._appendResource(optionResource.map((item) => StorageHelper.regularize(item.name)).toList());
+      await this._appendResource(optionResource.map((item) => item.path).toList());
     }
     await refreshState(this.setState);
     return;
@@ -209,7 +210,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     }
     if (option.check('-resource')) {
       for (var item in this._resource) {
-        option.nextString(item.name);
+        option.nextString(item.path.emit());
       }
     }
     return option.done();
@@ -293,7 +294,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       content: StyledText.inherit('Remove All'),
                       onPressed: (context) async {
                         if (await MoreModalDialogExtension.showForConfirm(context)) {
-                          await this._removeResource(this._resource.map((value) => value.name).toList());
+                          await this._removeResource(this._resource.map((value) => value.path).toList());
                           await refreshState(setStateForPanel);
                         }
                       },
@@ -303,7 +304,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_stack_add),
                       content: StyledText.inherit('Append New'),
                       onPressed: (context) async {
-                        var item = <String>[];
+                        var item = <StoragePath>[];
                         var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
                           title: 'Append New',
                           contentBuilder: (context, setStateForPanelInner) => [
@@ -313,9 +314,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                               hint: null,
                               prefix: null,
                               suffix: null,
-                              value: ConvertHelper.makeStringListToStringWithLine(item),
+                              value: ConvertHelper.makeStringListToStringWithLine(item.map((it) => it.emit()).toList()),
                               onChanged: (context, value) async {
-                                item = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                                item = ConvertHelper.parseStringListFromStringWithLine(value).map(StoragePath.of).toList();
                                 await refreshState(setStateForPanelInner);
                               },
                             ),
@@ -379,12 +380,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       true  => IconSet.folder,
                     }),
                     content: StyledText.custom(
-                      StorageHelper.name(value.name),
+                      value.path.name() ?? '',
                       tooltip: true,
-                      tooltipText: value.name,
+                      tooltipText: value.path.emit(),
                     ),
                     onPressed: (context) async {
-                      await this._removeResource([value.name]);
+                      await this._removeResource([value.path]);
                       await refreshState(setStateForPanel);
                     },
                   )),

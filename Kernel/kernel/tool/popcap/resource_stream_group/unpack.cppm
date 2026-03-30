@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						continue;
 					}
 					auto & resource_definition = definition.resource[resource_index];
-					resource_definition.path.from_string(resource_information_structure.key);
+					resource_definition.path.parse(resource_information_structure.key);
 					switch (resource_information_structure.value.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template get_of_type<ResourceType::Constant::general()>();
@@ -106,10 +106,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 					auto resource_data = resource_data_section_view.sub(cbox<Size>(resource_information_structure.value.offset), cbox<Size>(resource_information_structure.value.size));
 					if (resource_directory.has()) {
-						if (!Storage::exist_file(resource_directory.get() / resource_definition.path)) {
-							Storage::create_file(resource_directory.get() / resource_definition.path);
+						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
+							Storage::create_file(resource_directory.get().push(resource_definition.path));
 						}
-						Storage::write_file(resource_directory.get() / resource_definition.path, resource_data);
+						Storage::write_file(resource_directory.get().push(resource_definition.path), resource_data);
 					}
 				}
 			}

@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/json_helper.dart';
 import '/widget/export.dart';
@@ -98,20 +99,20 @@ class VisualHelper {
 
   // ----------------
 
-  static Future<String?> checkAnimationFilePath(
-    String path,
+  static Future<StoragePath?> checkAnimationFilePath(
+    StoragePath path,
   ) async {
     var nameRule = RegExp(r'(\.pam\.json)$', caseSensitive: false);
-    return !nameRule.hasMatch(path) ? null : path;
+    return !nameRule.hasMatch(path.name() ?? '') ? null : path;
   }
 
-  static Future<String?> checkAnimationDirectoryPath(
-    String path,
+  static Future<StoragePath?> checkAnimationDirectoryPath(
+    StoragePath path,
   ) async {
     var nameRule = RegExp(r'(\.pam\.json)$', caseSensitive: false);
     var animationFile = await StorageHelper.listDirectory(path, 1, true, false, true, false);
-    animationFile = animationFile.where((it) => nameRule.hasMatch(it)).toList();
-    return animationFile.length != 1 ? null : '${path}/${animationFile.first}';
+    animationFile = animationFile.where((it) => nameRule.hasMatch(it.name() ?? '')).toList();
+    return animationFile.length != 1 ? null : path.push(animationFile.first);
   }
 
   // #endregion
@@ -317,18 +318,18 @@ class VisualHelper {
   // #region load
 
   static Future<model.Animation> loadAnimation(
-    String file,
+    StoragePath file,
   ) async {
     return model.ModelHelper.parseDataFromJson(await JsonHelper.deserializeFile(file));
   }
 
   static Future<Map<String, ({lib.Image image, Integer width, Integer height})>> loadTexture(
-    String          directory,
+    StoragePath     directory,
     model.Animation animation,
   ) async {
     var result = <String, ({lib.Image image, Integer width, Integer height})>{};
     for (var image in animation.image) {
-      var textureFile = '${directory}/${VisualHelper.parseImageFileName(image.name)}.png';
+      var textureFile = directory.join('${VisualHelper.parseImageFileName(image.name)}.png');
       if (!await StorageHelper.existFile(textureFile)) {
         continue;
       }

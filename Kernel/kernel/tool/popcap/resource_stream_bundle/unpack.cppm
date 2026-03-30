@@ -241,7 +241,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					auto make_formatted_path = [&](
 						Path const & path_format
 					) -> Path {
-						return Path{format_string(path_format.to_string(), group_definition.identifier, subgroup_definition.identifier)};
+						return Path{format_string(path_format.emit(), group_definition.identifier, subgroup_definition.identifier)};
 					};
 					auto packet_data = data.sub_view(cbox<Size>(subgroup_information_structure.offset), cbox<Size>(subgroup_information_structure.size));
 					auto packet_stream = InputByteStreamView{packet_data};

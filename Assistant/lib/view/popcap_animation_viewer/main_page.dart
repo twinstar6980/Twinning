@@ -2,6 +2,7 @@ import '/common.dart';
 import '/module.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
 import '/widget/export.dart';
@@ -48,7 +49,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   late Boolean                                                          _reversePlay;
   late Boolean                                                          _keepSpeed;
   late Boolean                                                          _showBoundary;
-  late String?                                                          _animationFile;
+  late StoragePath?                                                     _animationFile;
   late model.Animation?                                                 _animation;
   late Map<String, ({lib.Image image, Integer width, Integer height})>? _texture;
   late List<Boolean>?                                                   _imageFilter;
@@ -72,11 +73,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   Boolean get _activated => this._activeTarget != null;
 
   Future<Void> _load(
-    String animationFile,
+    StoragePath animationFile,
   ) async {
     assertTest(!this._loaded && !this._activated);
     var animation = await VisualHelper.loadAnimation(animationFile);
-    var texture = await VisualHelper.loadTexture(StorageHelper.parent(animationFile), animation);
+    var texture = await VisualHelper.loadTexture(animationFile.parent()!, animation);
     this._animationFile = animationFile;
     this._animation = animation;
     this._texture = texture;
@@ -310,7 +311,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   }
 
   Future<Void> _applyLoad(
-    String                           animationFile,
+    StoragePath                      animationFile,
     List<Integer>?                   imageFilter,
     List<Integer>?                   spriteFilter,
     ({Boolean type, Integer index})? activeTarget,
@@ -369,7 +370,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     var optionReversePlay = null as Boolean?;
     var optionKeepSpeed = null as Boolean?;
     var optionShowBoundary = null as Boolean?;
-    var optionAnimationFile = null as String?;
+    var optionAnimationFile = null as StoragePath?;
     var optionImageFilter = null as List<Integer>?;
     var optionSpriteFilter = null as List<Integer>?;
     var optionActiveTarget = null as ({Boolean type, Integer index})?;
@@ -397,13 +398,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       optionShowBoundary = option.nextBoolean();
     }
     if (option.check('-animation_file')) {
-      optionAnimationFile = option.nextString();
+      optionAnimationFile = option.nextString().selfLet(StoragePath.of);
     }
     if (option.check('-image_filter')) {
-      optionImageFilter = option.nextString().split(',').where((value) => value.isNotEmpty).map(Integer.parse).toList();
+      optionImageFilter = option.nextString().split(',').where((value) => !value.isEmpty).map(Integer.parse).toList();
     }
     if (option.check('-sprite_filter')) {
-      optionSpriteFilter = option.nextString().split(',').where((value) => value.isNotEmpty).map(Integer.parse).toList();
+      optionSpriteFilter = option.nextString().split(',').where((value) => !value.isEmpty).map(Integer.parse).toList();
     }
     if (option.check('-active_target')) {
       optionActiveTarget = (
@@ -485,7 +486,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       option.nextBoolean(this._showBoundary);
     }
     if (option.check('-animation_file', state: this._loaded)) {
-      option.nextString(this._animationFile!);
+      option.nextString(this._animationFile!.emit());
     }
     if (option.check('-image_filter', state: this._loaded)) {
       option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).nonNulls.join(','));
@@ -574,7 +575,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
           await StyledSnackExtension.show(context, 'Source is multiply.');
           return;
         }
-        var animationFile = null as String?;
+        var animationFile = null as StoragePath?;
         if (await StorageHelper.existFile(item.first)) {
           animationFile = await VisualHelper.checkAnimationFilePath(item.first);
         }
@@ -1001,7 +1002,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                   hint: null,
                   prefix: IconView.of(IconSet.attachment),
                   suffix: null,
-                  value: !this._loaded ? '' : this._animationFile!,
+                  value: !this._loaded ? '' : this._animationFile!.emit(),
                   onChanged: (context, value) async {
                   },
                 ),

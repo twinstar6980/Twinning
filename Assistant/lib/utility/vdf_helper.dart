@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import 'package:vdf/vdf.dart' as lib;
 
@@ -24,7 +25,7 @@ class VdfHelper {
   // ----------------
 
   static Future<Void> serializeFile(
-    String               path,
+    StoragePath          path,
     Map<String, Object?> value, {
     Boolean              indented = true,
   }) async {
@@ -32,7 +33,7 @@ class VdfHelper {
   }
 
   static Future<Map<String, Object?>> deserializeFile(
-    String path,
+    StoragePath path,
   ) async {
     return VdfHelper.deserializeText(await StorageHelper.readFileText(path));
   }

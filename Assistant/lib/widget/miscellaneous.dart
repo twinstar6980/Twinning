@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
@@ -232,7 +233,7 @@ extension MoreModalDialogExtension on StyledModalDialog {
   static Future<Void> showForRevealStoragePath(
     BuildContext context,
     String       title,
-    String       path,
+    StoragePath  path,
   ) async {
     var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
       title: title,
@@ -243,7 +244,7 @@ extension MoreModalDialogExtension on StyledModalDialog {
           hint: null,
           prefix: null,
           suffix: null,
-          value: path,
+          value: path.emit(),
           onChanged: (context, value) async {
           },
         ),
@@ -281,8 +282,8 @@ class StorageDropRegion extends StatelessWidget {
 
   // ----------------
 
-  final Void Function(List<String> item)? onDrop;
-  final Widget                            child;
+  final Void Function(List<StoragePath> item)? onDrop;
+  final Widget                                 child;
 
   // ----------------
 
@@ -300,7 +301,7 @@ class StorageDropRegion extends StatelessWidget {
           return .none;
         },
         onPerformDrop: (event) async {
-          var result = <String>[];
+          var result = <StoragePath>[];
           for (var item in event.session.items) {
             var progress = item.dataReader!.getValue(lib.Formats.fileUri, (uri) async {
               uri!;
@@ -321,7 +322,7 @@ class StorageDropRegion extends StatelessWidget {
                 }
                 assertTest(uri.authority == '');
               }
-              result.add(path);
+              result.add(.of(path));
             })!;
             while (progress.fraction.value != 1.0) {
               await Future.delayed(.zero);
@@ -338,8 +339,8 @@ class StorageDropRegion extends StatelessWidget {
 
 extension StorageDropRegionWidgetExtension on Widget {
 
-  StorageDropRegion withStorageDropRegion( {
-    Void Function(List<String> item)? onDrop,
+  StorageDropRegion withStorageDropRegion({
+    Void Function(List<StoragePath> item)? onDrop,
   }) {
     return .new(
       onDrop: onDrop,
@@ -351,7 +352,7 @@ extension StorageDropRegionWidgetExtension on Widget {
 
 extension StorageDropRegionExtension on StorageDropRegion {
 
-  static Future<String?> pick({
+  static Future<StoragePath?> pick({
     required BuildContext context,
     Boolean               allowLoadFile = false,
     Boolean               allowLoadDirectory = false,

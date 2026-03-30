@@ -1,13 +1,14 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 
 // ----------------
 
 class Setting {
-  String       kernel;
-  String       script;
-  List<String> argument;
-  Boolean      immediateLaunch;
-  List<String> messageFont;
+  StoragePath       kernel;
+  StoragePath       script;
+  List<String>      argument;
+  Boolean           immediateLaunch;
+  List<StoragePath> messageFont;
   Setting({
     required this.kernel,
     required this.script,

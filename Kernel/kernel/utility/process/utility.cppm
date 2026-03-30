@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Process {
 			String &     destination
 		) -> Void {
 			destination.append('"'_c);
-			destination.append_list(source.to_string(CharacterType::k_path_separator_windows));
+			destination.append_list(source.emit_windows());
 			destination.append('"'_c);
 			return;
 		}
@@ -257,12 +257,12 @@ export namespace Twinning::Kernel::Process {
 		auto state_b = Third::system::windows::$BOOL{};
 		auto state_d = Third::system::windows::$DWORD{};
 		auto null_device = Path{"/NUL"_s};
-		auto program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(program.to_string(CharacterType::k_path_separator_windows))));
+		auto program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(program.emit_native())));
 		auto argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_command_string(program, argument))));
 		auto environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_environment_string(environment))));
-		auto input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).to_string())));
-		auto output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).to_string())));
-		auto error_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).to_string())));
+		auto input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).emit_native())));
+		auto output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).emit_native())));
+		auto error_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).emit_native())));
 		auto security_attribute = Third::system::windows::$SECURITY_ATTRIBUTES{};
 		security_attribute.nLength = sizeof(Third::system::windows::$SECURITY_ATTRIBUTES);
 		security_attribute.lpSecurityDescriptor = nullptr;
@@ -334,7 +334,7 @@ export namespace Twinning::Kernel::Process {
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		auto state_i = int{};
 		auto null_device = Path{"/dev/null"_s};
-		auto program_string = make_null_terminated_string(program.to_string());
+		auto program_string = make_null_terminated_string(program.emit_native());
 		auto argument_string = List<String>{};
 		argument_string.allocate(1_sz + argument.size());
 		argument_string.append(program_string);
@@ -358,9 +358,9 @@ export namespace Twinning::Kernel::Process {
 			environment_string_list.append(element.begin().value);
 		}
 		environment_string_list.append(nullptr);
-		auto input_string = make_null_terminated_string((!input.has() ? (null_device) : (input.get())).to_string());
-		auto output_string = make_null_terminated_string((!output.has() ? (null_device) : (output.get())).to_string());
-		auto error_string = make_null_terminated_string((!error.has() ? (null_device) : (error.get())).to_string());
+		auto input_string = make_null_terminated_string((!input.has() ? (null_device) : (input.get())).emit_native());
+		auto output_string = make_null_terminated_string((!output.has() ? (null_device) : (output.get())).emit_native());
+		auto error_string = make_null_terminated_string((!error.has() ? (null_device) : (error.get())).emit_native());
 		auto spawn_file_action = Third::system::posix::$posix_spawn_file_actions_t{};
 		state_i = Third::system::posix::$posix_spawn_file_actions_init(&spawn_file_action);
 		assert_test(state_i == 0);

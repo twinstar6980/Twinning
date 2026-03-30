@@ -2,6 +2,7 @@ import '/common.dart';
 import '/setting.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/application_permission_manager.dart';
 import '/utility/application_extension_manager.dart';
@@ -201,9 +202,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   },
                 ),
               ],
-              value: ConvertHelper.makeStringListToStringWithLine(setting.data.themeFontPath),
+              value: ConvertHelper.makeStringListToStringWithLine(setting.data.themeFontPath.map((it) => it.emit()).toList()),
               onChanged: (context, value) async {
-                setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value).map(StorageHelper.regularize).toList();
+                setting.data.themeFontPath = ConvertHelper.parseStringListFromStringWithLine(value).map(StoragePath.of).toList();
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();
@@ -377,9 +378,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   },
                 ),
               ],
-              value: setting.data.storagePickerFallbackDirectory,
+              value: setting.data.storagePickerFallbackDirectory.emit(),
               onChanged: (context, value) async {
-                setting.data.storagePickerFallbackDirectory = StorageHelper.regularize(value);
+                setting.data.storagePickerFallbackDirectory = .of(value);
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();
@@ -496,9 +497,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   },
                 ),
               ],
-              value: setting.data.moduleConfigurationDirectory,
+              value: setting.data.moduleConfigurationDirectory.emit(),
               onChanged: (context, value) async {
-                setting.data.moduleConfigurationDirectory = StorageHelper.regularize(value);
+                setting.data.moduleConfigurationDirectory = .of(value);
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();

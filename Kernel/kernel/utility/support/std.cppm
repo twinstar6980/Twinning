@@ -95,7 +95,7 @@ export {
 			Twinning::Kernel::Storage::Path const & value,
 			TContext &                              context
 		) const -> TContext::iterator {
-			return std::formatter<Twinning::Kernel::String>::format(value.to_string(), context);
+			return std::formatter<Twinning::Kernel::String>::format(value.emit(), context);
 		}
 	};
 

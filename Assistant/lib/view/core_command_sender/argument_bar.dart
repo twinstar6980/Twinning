@@ -2,7 +2,6 @@ import '/common.dart';
 import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
-import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/core_command_sender/configuration.dart';
 import '/view/core_command_sender/value_expression.dart';
@@ -434,13 +433,13 @@ class _PathArgumentBar extends StatelessWidget {
               },
             ),
           ],
-          value: this.value.value == null ? '' : this.value.value!.content,
+          value: this.value.value == null ? '' : this.value.value!.content.emit(),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              this.value.value = .new(StorageHelper.regularize(value));
+              this.value.value = .new(.of(value));
             }
             await refreshState(setState);
           },

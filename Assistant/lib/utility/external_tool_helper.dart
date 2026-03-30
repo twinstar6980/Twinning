@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/process_helper.dart';
 
@@ -9,23 +10,23 @@ class ExternalToolHelper {
   // #region special
 
   static Future<List<String>> runIl2cppdumper(
-    String programFile,
-    String metadataFile,
+    StoragePath programFile,
+    StoragePath metadataFile,
   ) async {
     var dumpDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(dumpDirectory);
     var processResult = await ProcessHelper.runProcess(
       await ProcessHelper.searchProgramEnsure('dotnet', true),
       [
-        await ProcessHelper.searchProgramEnsure('Il2CppDumper.dll', false),
-        programFile,
-        metadataFile,
-        dumpDirectory,
+        (await ProcessHelper.searchProgramEnsure('Il2CppDumper.dll', false)).emitGeneric(),
+        programFile.emitGeneric(),
+        metadataFile.emitGeneric(),
+        dumpDirectory.emitGeneric(),
       ],
       null,
     );
     assertTest(processResult.output.replaceAll('\r\n', '\n').endsWith('Done!\nPress any key to exit...\n'));
-    var result = (await StorageHelper.readFileText('${dumpDirectory}/dump.cs')).split('\n');
+    var result = (await StorageHelper.readFileText(dumpDirectory.join('dump.cs'))).split('\n');
     await StorageHelper.remove(dumpDirectory);
     return result;
   }
@@ -102,7 +103,7 @@ class ExternalToolHelper {
   // ----------------
 
   static Future<Void> runZipalign(
-    String zipFile,
+    StoragePath zipFile,
   ) async {
     var alignedFile = await StorageHelper.temporary();
     await StorageHelper.createFile(alignedFile);
@@ -112,8 +113,8 @@ class ExternalToolHelper {
         '-P', '16',
         '-f',
         '4',
-        '${zipFile}',
-        '${alignedFile}',
+        '${zipFile.emitGeneric()}',
+        '${alignedFile.emitGeneric()}',
       ],
       null,
     );
@@ -127,9 +128,9 @@ class ExternalToolHelper {
   // ----------------
 
   static Future<Void> runApksigner(
-    String apkFile,
-    String apkKeystoreFile,
-    String apkKeystorePassword,
+    StoragePath apkFile,
+    StoragePath apkKeystoreFile,
+    String      apkKeystorePassword,
   ) async {
     var processResult = await ProcessHelper.runProcess(
       await ProcessHelper.searchProgramEnsure('apksigner', true),
@@ -139,9 +140,9 @@ class ExternalToolHelper {
         '--v2-signing-enabled', 'true',
         '--v3-signing-enabled', 'true',
         '--v4-signing-enabled', 'false',
-        '--ks', '${apkKeystoreFile}',
+        '--ks', '${apkKeystoreFile.emitGeneric()}',
         '--ks-pass', 'pass:${apkKeystorePassword}',
-        '${apkFile}',
+        '${apkFile.emitGeneric()}',
       ],
       null,
     );

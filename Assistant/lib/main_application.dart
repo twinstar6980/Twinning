@@ -3,6 +3,7 @@ import '/module.dart';
 import '/setting.dart';
 import '/application.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
@@ -159,7 +160,7 @@ class MainApplication {
   }
 
   Future<Void> _handleForward(
-    List<String> resource,
+    List<StoragePath> resource,
   ) async {
     var setting = Provider.of<SettingProvider>(this._setting.state.applicationNavigatorKey.currentContext!, listen: false);
     var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
@@ -207,14 +208,17 @@ class MainApplication {
       var convertedCommand = <String>[];
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          commandItem = await StorageHelper.parseAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true) ?? commandItem;
+          var referent = await StorageHelper.parseAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true);
+          if (referent != null) {
+            commandItem = referent.emitGeneric();
+          }
         }
         convertedCommand.add(commandItem);
       }
       command = convertedCommand;
     }
     var optionLaunch = null as ({String title, ModuleType type, List<String> option})?;
-    var optionForward = null as ({List<String> resource})?;
+    var optionForward = null as ({List<StoragePath> resource})?;
     var option = CommandLineReader(command);
     if (option.check('-launch')) {
       optionLaunch = (
@@ -225,7 +229,7 @@ class MainApplication {
     }
     if (option.check('-forward')) {
       optionForward = (
-        resource: option.nextStringList(),
+        resource: option.nextStringList().map(StoragePath.of).toList(),
       );
     }
     if (!option.done()) {

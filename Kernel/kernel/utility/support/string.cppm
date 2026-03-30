@@ -491,7 +491,7 @@ export namespace Twinning::Kernel {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix = that.to_string();
+			thix = that.emit();
 			return;
 		}
 
@@ -499,7 +499,7 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			that.from_string(thix);
+			that.parse(thix);
 			return;
 		}
 

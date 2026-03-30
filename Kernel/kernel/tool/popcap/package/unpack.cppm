@@ -55,10 +55,10 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				auto resource_data = data.forward_view(cbox<Size>(resource_information_structure.size));
 				if constexpr (check_version(t_version, {}, {false})) {
 					if (resource_directory.has()) {
-						if (!Storage::exist_file(resource_directory.get() / resource_definition.path)) {
-							Storage::create_file(resource_directory.get() / resource_definition.path);
+						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
+							Storage::create_file(resource_directory.get().push(resource_definition.path));
 						}
-						Storage::write_file(resource_directory.get() / resource_definition.path, resource_data);
+						Storage::write_file(resource_directory.get().push(resource_definition.path), resource_data);
 					}
 				}
 				if constexpr (check_version(t_version, {}, {true})) {
@@ -68,10 +68,10 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 					Data::Compression::Deflate::Uncompress::process(resource_data_stream, resource_data_original_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					assert_test(resource_data_stream.full() && resource_data_original_stream.full());
 					if (resource_directory.has()) {
-						if (!Storage::exist_file(resource_directory.get() / resource_definition.path)) {
-							Storage::create_file(resource_directory.get() / resource_definition.path);
+						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
+							Storage::create_file(resource_directory.get().push(resource_definition.path));
 						}
-						Storage::write_file(resource_directory.get() / resource_definition.path, resource_data_original);
+						Storage::write_file(resource_directory.get().push(resource_definition.path), resource_data_original);
 					}
 				}
 			}

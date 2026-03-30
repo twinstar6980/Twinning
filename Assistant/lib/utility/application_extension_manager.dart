@@ -27,7 +27,7 @@ class ApplicationExtensionManager {
   ) async {
     var result = null as Boolean?;
     if (SystemChecker.isWindows) {
-      var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
+      var stateFile = (await StorageHelper.queryApplicationSharedDirectory()).join('forwarder');
       result = await StorageHelper.exist(stateFile);
     }
     if (SystemChecker.isLinux) {
@@ -35,7 +35,7 @@ class ApplicationExtensionManager {
     }
     if (SystemChecker.isMacintosh) {
       var pluginkitResult = await ProcessHelper.runProcess(
-        '/usr/bin/pluginkit',
+        .of('/usr/bin/pluginkit'),
         [
           '-m',
           '-i', '${ApplicationInformation.identifier}.Forwarder',
@@ -60,7 +60,7 @@ class ApplicationExtensionManager {
       return;
     }
     if (SystemChecker.isWindows) {
-      var stateFile = '${await StorageHelper.queryApplicationSharedDirectory()}/forwarder';
+      var stateFile = (await StorageHelper.queryApplicationSharedDirectory()).join('forwarder');
       var exist = await StorageHelper.exist(stateFile);
       if (!state && exist) {
         await StorageHelper.remove(stateFile);
@@ -74,7 +74,7 @@ class ApplicationExtensionManager {
     }
     if (SystemChecker.isMacintosh) {
       var pluginkitResult = await ProcessHelper.runProcess(
-        '/usr/bin/pluginkit',
+        .of('/usr/bin/pluginkit'),
         [
           '-e', '${!state ? 'ignore' : 'use'}',
           '-i', '${ApplicationInformation.identifier}.Forwarder',

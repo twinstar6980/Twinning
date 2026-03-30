@@ -2,8 +2,6 @@ import 'package:assistant/utility/process_helper.dart';
 import 'package:assistant/utility/storage_helper.dart';
 import 'package:flutter/material.dart';
 import '/common.dart';
-import '/module.dart';
-import '/utility/convert_helper.dart';
 import '/utility/kairosoft_game_helper.dart';
 import '/widget/export.dart';
 import 'package:flutter/widgets.dart';
@@ -37,7 +35,7 @@ Future<Void> doAction(
       break;
     }
     case 'launch_game': {
-      await ProcessHelper.runProcess(information.path + '/KairoGames.exe', [], null);
+      await ProcessHelper.runProcess(information.path.join('KairoGames.exe'), [], null);
       break;
     }
     case 'restore_program': {

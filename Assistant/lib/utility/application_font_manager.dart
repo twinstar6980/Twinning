@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +15,7 @@ class ApplicationFontManager {
 
   // #region constructor
 
-  List<String> _loadedFile;
+  List<StoragePath> _loadedFile;
 
   // ----------------
 
@@ -27,7 +28,7 @@ class ApplicationFontManager {
   // #region utility
 
   Future<String?> loadFile(
-    String path,
+    StoragePath path,
   ) async {
     try {
       var index = this._loadedFile.indexOf(path);

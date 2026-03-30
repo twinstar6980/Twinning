@@ -36,16 +36,15 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
-  late Integer      _pageIndex;
-
+  late Integer               _pageIndex;
   late List<GameInformation> _gameInformation;
-  late FunctionPanelData _functionData;
+  late FunctionPanelData     _functionData;
 
   // ----------------
 
   @override
   modulePageOpenView() async {
-    this._gameInformation = await GameRepositoryHelper.loadSteamRepository(r'D:\.dddd\Steam-Test');
+    this._gameInformation = await GameRepositoryHelper.loadSteamRepository(.of(r'D:\.dddd\Steam-Test'));
     return;
   }
 
@@ -89,11 +88,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._gameInformation = [];
     this._functionData = .new(
       type: .modifyProgram,
-      programTarget: '',
+      programTarget: .nothing(),
       programDisableRecordEncryption: true,
       programEnableDebugMode: false,
-      recordTargetDirectory: '',
-      recordArchiveFile: '',
+      recordTargetDirectory: .nothing(),
+      recordArchiveFile: .nothing(),
       recordKey: .fromList([0x00]),
     );
     postTask(() async {

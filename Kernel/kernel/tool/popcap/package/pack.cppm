@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
-					resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::k_path_separator_windows)};
+					resource_information_structure.path = StringBlock8{resource_definition.path.emit_windows()};
 				}
 				information_data.resource_information = OutputByteStreamView{
 					data.forward_view(
@@ -60,8 +60,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
-				auto   resource_path = resource_directory / resource_definition.path;
-				resource_information_structure.path = StringBlock8{resource_definition.path.to_string(CharacterType::k_path_separator_windows)};
+				auto   resource_path = resource_directory.push(resource_definition.path);
+				resource_information_structure.path = StringBlock8{resource_definition.path.emit_windows()};
 				resource_information_structure.time = cbox<IntegerU64>(resource_definition.time);
 				if constexpr (check_version(t_version, {}, {false})) {
 					auto resource_size = Storage::read_file_stream(resource_path, data);

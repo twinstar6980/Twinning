@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
-					resource_information_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
+					resource_information_structure.key = resource_definition.path.emit_windows();
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							resource_information_structure.value.type = Structure::ResourceTypeFlag<t_version>::general;
@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					if (resource_definition.additional.type() != current_resource_type) {
 						continue;
 					}
-					auto resource_path_full = resource_directory / resource_definition.path;
+					auto resource_path_full = resource_directory.push(resource_definition.path);
 					auto resource_size = Storage::size_file(resource_path_full);
 					resource_data_section_size_original += compute_padded_size(resource_size, k_padding_unit_size);
 				}
@@ -117,8 +117,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						continue;
 					}
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
-					auto   resource_path_full = resource_directory / resource_definition.path;
-					resource_information_structure.key = resource_definition.path.to_string(CharacterType::k_path_separator_windows);
+					auto   resource_path_full = resource_directory.push(resource_definition.path);
+					resource_information_structure.key = resource_definition.path.emit_windows();
 					resource_information_structure.value.offset = cbox<IntegerU32>(resource_data_section_stream.position());
 					resource_information_structure.value.size = cbox<IntegerU32>(Storage::read_file_stream(resource_path_full, resource_data_section_stream));
 					switch (resource_definition.additional.type().value) {

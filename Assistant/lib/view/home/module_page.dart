@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/widget/export.dart';
+import '/utility/storage_path.dart';
 import 'package:flutter/widgets.dart';
 
 // ----------------
@@ -15,9 +16,9 @@ class ModulePageRegion extends StatelessWidget {
 
   // ----------------
 
-  final Void Function(List<String> item)? onStorageDrop;
-  final Widget                            content;
-  final Widget                            bottom;
+  final Void Function(List<StoragePath> item)? onStorageDrop;
+  final Widget                                 content;
+  final Widget                                 bottom;
 
   // ----------------
 

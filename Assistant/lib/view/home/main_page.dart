@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
     }
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var moduleSetting = ModuleHelper.query(configuration.type).querySetting(context);
-    var moduleConfiguration = ModuleHelper.query(configuration.type).parseConfiguration((await JsonHelper.deserializeFile('${setting.data.moduleConfigurationDirectory}/${ModuleHelper.query(configuration.type).identifier}.json'))!);
+    var moduleConfiguration = ModuleHelper.query(configuration.type).parseConfiguration((await JsonHelper.deserializeFile(setting.data.moduleConfigurationDirectory.join('${ModuleHelper.query(configuration.type).identifier}.json')))!);
     this._pageList.add((
       title: configuration.title,
       type: configuration.type,

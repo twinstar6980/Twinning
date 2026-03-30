@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 
 // ----------------
 
@@ -81,7 +82,7 @@ class StringExpression extends ValueExpression {
 }
 
 class PathExpression extends ValueExpression {
-  String content;
+  StoragePath content;
   PathExpression(
     this.content,
   );
@@ -118,7 +119,7 @@ class ValueExpressionHelper {
       FloaterExpression     _ => '${ConvertHelper.makeFloaterToString(value.value, true)}',
       SizeExpression        _ => '${ConvertHelper.makeFloaterToString(value.count, false)}${['b', 'k', 'm', 'g'][value.exponent]}',
       StringExpression      _ => '${value.value}',
-      PathExpression        _ => '${value.content}',
+      PathExpression        _ => '${value.content.emitGeneric()}',
       EnumerationExpression _ => '${value.item}',
       _                       => throw UnreachableException(),
     };

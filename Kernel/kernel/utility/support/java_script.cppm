@@ -1458,7 +1458,7 @@ export namespace Twinning::Kernel::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string(that.to_string());
+			thix.set_string(that.emit());
 			return;
 		}
 
@@ -1467,7 +1467,7 @@ export namespace Twinning::Kernel::JavaScript {
 			That & that
 		) -> Void {
 			assert_test(thix.is_string());
-			that.from_string(thix.get_string());
+			that.parse(thix.get_string());
 			return;
 		}
 

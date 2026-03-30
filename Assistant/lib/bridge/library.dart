@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
 import '/bridge/service.dart';
 import 'dart:ffi' as ffi;
 
@@ -31,13 +32,14 @@ class Library {
   // ----------------
 
   Void open(
-    String path,
+    StoragePath path,
   ) {
     assertTest(!this.state());
+    var pathString = path.emitNative();
     if (SystemChecker.isWindows) {
-      path += '.';
+      pathString += '.';
     }
-    var handle = ffi.DynamicLibrary.open(path);
+    var handle = ffi.DynamicLibrary.open(pathString);
     var symbol = null as ffi.Pointer<Service>?;
     try {
       symbol = handle.lookup<Service>('_ZN8Twinning6Kernel9Interface7serviceE');

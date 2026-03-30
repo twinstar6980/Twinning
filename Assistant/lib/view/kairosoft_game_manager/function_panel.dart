@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/convert_helper.dart';
-import '/utility/storage_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/kairosoft_game_helper.dart';
 import '/widget/export.dart';
 import 'dart:typed_data';
@@ -144,9 +144,9 @@ class FunctionPanel extends StatelessWidget {
                       },
                     ),
                   ],
-                  value: this.data.programTarget,
+                  value: this.data.programTarget.emit(),
                   onChanged: (context, value) async {
-                    this.data.programTarget = StorageHelper.regularize(value);
+                    this.data.programTarget = .of(value);
                     await refreshState(setState);
                   },
                 ).withStorageDropRegion(
@@ -259,9 +259,9 @@ class FunctionPanel extends StatelessWidget {
                       },
                     ),
                   ],
-                  value: this.data.recordTargetDirectory,
+                  value: this.data.recordTargetDirectory.emit(),
                   onChanged: (context, value) async {
-                    this.data.recordTargetDirectory = StorageHelper.regularize(value);
+                    this.data.recordTargetDirectory = .of(value);
                     await refreshState(setState);
                   },
                 ).withStorageDropRegion(
@@ -296,9 +296,9 @@ class FunctionPanel extends StatelessWidget {
                       },
                     ),
                   ],
-                  value: this.data.recordArchiveFile,
+                  value: this.data.recordArchiveFile.emit(),
                   onChanged: (context, value) async {
-                    this.data.recordArchiveFile = StorageHelper.regularize(value);
+                    this.data.recordArchiveFile = .of(value);
                     await refreshState(setState);
                   },
                 ).withStorageDropRegion(
@@ -318,7 +318,7 @@ class FunctionPanel extends StatelessWidget {
                   suffix: null,
                   value: this.data.recordKey.selfLet((it) => it.map((value) => value.toRadixString(16).padLeft(2, '0')).join(' ')) ?? '',
                   onChanged: (context, value) async {
-                    // this.data['record.key'] = StorageHelper.regularize(value);
+                    // this.data['record.key'] = (value);
                     await refreshState(setState);
                   },
                 ),
@@ -344,11 +344,11 @@ class FunctionPanel extends StatelessWidget {
 
 class FunctionPanelData {
   GameFunctionType type;
-  String           programTarget;
+  StoragePath      programTarget;
   Boolean          programDisableRecordEncryption;
   Boolean          programEnableDebugMode;
-  String           recordTargetDirectory;
-  String           recordArchiveFile;
+  StoragePath      recordTargetDirectory;
+  StoragePath      recordArchiveFile;
   Uint8List        recordKey;
   FunctionPanelData({
     required this.type,

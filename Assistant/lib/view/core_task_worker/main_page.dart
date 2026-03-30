@@ -127,7 +127,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       try {
         await StorageHelper.copy(this.widget.setting.kernel, kernel, true);
         library.open(kernel);
-        result = await bridge.Launcher.launch(this._sessionClient, library, this.widget.setting.script, this.widget.setting.argument + this._additionalArgument);
+        result = await bridge.Launcher.launch(this._sessionClient, library, this.widget.setting.script.emitGeneric(), this.widget.setting.argument + this._additionalArgument);
       }
       catch (e, s) {
         exception = (exception: e, stack: s);
@@ -500,7 +500,7 @@ class _MainPageBridgeClient extends bridge.Client {
       'save_file'      => 'save_file',
       _                => throw Exception(),
     };
-    target = await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.generic', null) ?? '';
+    target = (await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.generic', null))?.emitGeneric() ?? '';
     return (target: target);
   }
 
