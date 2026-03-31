@@ -54,7 +54,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		// ----------------
 
-		public String? DescriptorFile { get; set; } = null;
+		public StoragePath? DescriptorFile { get; set; } = null;
 
 		public PopcapReflectionModel.DescriptorArchive? DescriptorArchive { get; set; } = null;
 
@@ -86,7 +86,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		public async Task OpenView(
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>(App.Instance.Setting.Data.ModuleConfigurationDirectory.Join($"{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.json"));
 			return;
 		}
 
@@ -108,10 +108,10 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 		public async Task ApplyOption(
 			List<String> optionView
 		) {
-			var optionDescriptorFile = default(String?);
+			var optionDescriptorFile = null as StoragePath;
 			var option = new CommandLineReader(optionView);
 			if (option.Check("-descriptor_file")) {
-				optionDescriptorFile = option.NextString();
+				optionDescriptorFile = option.NextString().SelfLet((it)=>new StoragePath(it));
 			}
 			if (!option.Done()) {
 				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
@@ -126,7 +126,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-descriptor_file", this.DescriptorFile != null)) {
-				option.NextString(this.DescriptorFile.AsNotNull());
+				option.NextString(this.DescriptorFile.AsNotNull().Emit());
 			}
 			return option.Done();
 		}
@@ -148,7 +148,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 		// ----------------
 
 		public async Task ApplyLoad(
-			String descriptorFile
+			StoragePath descriptorFile
 		) {
 			if (this.IsLoaded) {
 				await this.Unload();
@@ -156,7 +156,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			await this.Load(descriptorFile);
 			if (this.IsLoaded) {
 				await App.Instance.AppendRecentLauncherItem(new () {
-					Title = Regex.Replace(StorageHelper.Name(descriptorFile), @"(\.json)$", "", RegexOptions.IgnoreCase),
+					Title = Regex.Replace(descriptorFile.Name().AsNotNull(), @"(\.json)$", "", RegexOptions.IgnoreCase),
 					Type = ModuleType.PopcapReflectionDescriptor,
 					Option = await this.CollectOption(),
 					Command = [],
@@ -207,7 +207,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 		#region load
 
 		public async Task Load(
-			String descriptorFile
+			StoragePath descriptorFile
 		) {
 			AssertTest(!this.IsLoaded);
 			var descriptorArchive = await PopcapReflectionHelper.LoadDescriptorArchive(descriptorFile);
@@ -260,7 +260,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 				if (!this.IsLoaded) {
 					return "None";
 				}
-				return new Regex(@"(\.json)$", RegexOptions.IgnoreCase).Replace(StorageHelper.Name(this.DescriptorFile), "");
+				return new Regex(@"(\.json)$", RegexOptions.IgnoreCase).Replace(this.DescriptorFile.Name().AsNotNull(), "");
 			}
 		}
 

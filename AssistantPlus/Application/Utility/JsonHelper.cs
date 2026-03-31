@@ -56,7 +56,7 @@ namespace Twinning.AssistantPlus.Utility {
 		// ----------------
 
 		public static async Task SerializeFile<TValue>(
-			String  path,
+			StoragePath  path,
 			TValue  value,
 			Boolean indented = true
 		)
@@ -66,7 +66,7 @@ namespace Twinning.AssistantPlus.Utility {
 		}
 
 		public static async Task<TValue> DeserializeFile<TValue>(
-			String path
+			StoragePath path
 		)
 			where TValue : notnull {
 			return JsonHelper.DeserializeText<TValue>(await StorageHelper.ReadFileText(path));
@@ -226,6 +226,31 @@ namespace Twinning.AssistantPlus.Utility {
 
 		}
 
+		private class StoragePathJsonConverter: JsonConverter<StoragePath> {
+
+			public override Boolean HandleNull => false;
+
+			public override StoragePath Read(
+				ref Utf8JsonReader    reader,
+				Type                  typeToConvert,
+				JsonSerializerOptions options
+			) {
+				var value = reader.GetString().AsNotNull().SelfLet((it) => new StoragePath(it));
+				return value;
+			}
+
+			public override void Write(
+				Utf8JsonWriter        writer,
+				StoragePath           value,
+				JsonSerializerOptions options
+			) {
+				var text = value.Emit();
+				writer.WriteStringValue(text);
+				return;
+			}
+
+		}
+
 		#endregion
 
 		#region option
@@ -265,6 +290,7 @@ namespace Twinning.AssistantPlus.Utility {
 					new FloaterJsonConverter<FloaterS32>(),
 					new FloaterJsonConverter<FloaterS64>(),
 					new TupleJsonConverterFactory(),
+					new StoragePathJsonConverter(),
 					new PopcapReflectionHelper.CompositeTypeJsonConverter(),
 				},
 			};

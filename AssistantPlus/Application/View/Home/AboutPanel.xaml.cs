@@ -460,7 +460,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public String uSettingModuleConfigurationDirectoryText_Text {
 			get {
-				return App.Instance.Setting.Data.ModuleConfigurationDirectory;
+				return App.Instance.Setting.Data.ModuleConfigurationDirectory.Emit();
 			}
 		}
 

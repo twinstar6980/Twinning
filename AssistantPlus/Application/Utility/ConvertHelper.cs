@@ -160,6 +160,23 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region string
 
+		public static Boolean IsPathSeparator(
+			Character value
+		) {
+			return value == '/' || value == '\\';
+		}
+
+		public static Boolean IsLetter(
+			Character value
+		) {
+			var code = (value | 0x20).CastPrimitive<Character>();
+			return 'a' <= code && code <= 'z';
+		}
+
+		#endregion
+
+		#region string
+
 		public static List<String> SplitStringOfCamelCase(
 			String source
 		) {

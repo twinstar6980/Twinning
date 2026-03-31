@@ -76,7 +76,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public async Task OpenView(
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>(App.Instance.Setting.Data.ModuleConfigurationDirectory.Join($"{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.json"));
 			this.uMethodList_ItemsSource = this.Configuration.Method.Select((group) => new MainPageMethodGroupItemController() {
 				Host = this,
 				Configuration = group,

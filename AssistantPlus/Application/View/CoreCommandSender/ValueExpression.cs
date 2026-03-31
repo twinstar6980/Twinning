@@ -33,7 +33,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 	}
 
 	public record PathExpression : ValueExpression {
-		public String Content { get; set; } = "";
+		public StoragePath Content { get; set; } = new ();
 	}
 
 	// ----------------
@@ -51,7 +51,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				FloaterExpression values => $"{ConvertHelper.MakeFloaterToString(values.Value, true)}",
 				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
 				StringExpression values  => $"{values.Value}",
-				PathExpression values    => $"{values.Content}",
+				PathExpression values    => $"{values.Content.Emit()}",
 				_                        => throw new UnreachableException(),
 			};
 		}

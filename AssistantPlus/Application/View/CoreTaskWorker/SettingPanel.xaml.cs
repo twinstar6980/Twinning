@@ -39,12 +39,12 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			typeof(Setting),
 			typeof(SettingPanel),
 			new (new Setting() {
-				Kernel = "",
-				Script = "",
+				Kernel = new (),
+				Script = new (),
 				Argument = [],
 				AutomaticScroll = false,
 				ImmediateLaunch = false,
-				MessageFont = "",
+				MessageFont = new (),
 			})
 		);
 
@@ -93,7 +93,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Data.Kernel = StorageHelper.Regularize(senders.Text);
+			this.Data.Kernel = new (senders.Text);
 			this.NotifyPropertyChanged([
 				nameof(this.uKernelText_Text),
 			]);
@@ -102,7 +102,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public String uKernelText_Text {
 			get {
-				return this.Data.Kernel;
+				return this.Data.Kernel.Emit();
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Data.Script = StorageHelper.Regularize(senders.Text);
+			this.Data.Script = new (senders.Text);
 			this.NotifyPropertyChanged([
 				nameof(this.uScriptText_Text),
 			]);
@@ -139,7 +139,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public String uScriptText_Text {
 			get {
-				return this.Data.Script;
+				return this.Data.Script.Emit();
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			var senders = sender.As<MenuFlyoutItem>();
 			var value = await StorageHelper.Pick(senders.Tag.As<String>(), App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.argument", null);
 			if (value != null) {
-				this.Data.Argument = [..this.Data.Argument, value];
+				this.Data.Argument = [..this.Data.Argument, value.Emit()];
 				this.NotifyPropertyChanged([
 					nameof(this.uArgumentText_Text),
 				]);
@@ -248,7 +248,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Data.MessageFont = senders.Text;
+			this.Data.MessageFont = senders.Text.SelfLet((it) => new StoragePath(it));
 			this.NotifyPropertyChanged([
 				nameof(this.uMessageFontText_Text),
 			]);
@@ -257,7 +257,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public String uMessageFontText_Text {
 			get {
-				return this.Data.MessageFont;
+				return this.Data.MessageFont.Emit();
 			}
 		}
 
@@ -277,7 +277,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 					FontFamily = new (item),
 				}.SelfAlso((it) => {
 					it.Click += async (_, _) => {
-						this.Data.MessageFont = item;
+						this.Data.MessageFont = item.SelfLet((it) => new StoragePath(it));
 						this.NotifyPropertyChanged([
 							nameof(this.uMessageFontText_Text),
 						]);

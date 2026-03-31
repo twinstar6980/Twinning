@@ -588,7 +588,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				this.ValueOfPath = null;
 			}
 			else {
-				this.ValueOfPath = new () { Content = StorageHelper.Regularize(senders.Text) };
+				this.ValueOfPath = new () { Content = new (senders.Text) };
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uPathContent_Text),
@@ -601,7 +601,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				if (this.Type != ArgumentType.Path || this.Option != null) {
 					return "";
 				}
-				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content;
+				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content.Emit();
 			}
 		}
 

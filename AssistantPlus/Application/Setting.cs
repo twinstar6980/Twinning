@@ -23,10 +23,10 @@ namespace Twinning.AssistantPlus {
 		public Boolean                                 WindowSizeState              { get; set; } = default!;
 		public Integer                                 WindowSizeWidth              { get; set; } = default!;
 		public Integer                                 WindowSizeHeight             { get; set; } = default!;
-		public Dictionary<String, String>              StoragePickerHistoryLocation { get; set; } = default!;
+		public Dictionary<String, StoragePath>         StoragePickerHistoryLocation { get; set; } = default!;
 		public ModuleType                              ForwarderDefaultTarget       { get; set; } = default!;
 		public Boolean                                 ForwarderImmediateJump       { get; set; } = default!;
-		public String                                  ModuleConfigurationDirectory { get; set; } = default!;
+		public StoragePath                             ModuleConfigurationDirectory { get; set; } = default!;
 		public ModuleLauncherSetting                   ModuleLauncher               { get; set; } = default!;
 		public View.CoreTaskWorker.Setting             CoreTaskWorker               { get; set; } = default!;
 		public View.CoreCommandSender.Setting          CoreCommandSender            { get; set; } = default!;
@@ -146,7 +146,7 @@ namespace Twinning.AssistantPlus {
 			}
 			// CoreTaskWorker.MessageFont
 			{
-				App.Instance.Resources["CoreTaskWorker.MessageFont"] = this.Data.CoreTaskWorker.MessageFont.Length == 0 ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreTaskWorker.MessageFont);
+				App.Instance.Resources["CoreTaskWorker.MessageFont"] = this.Data.CoreTaskWorker.MessageFont.Type() == StoragePathType.Nothing ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreTaskWorker.MessageFont.EmitGeneric());
 			}
 			return;
 		}
@@ -155,16 +155,16 @@ namespace Twinning.AssistantPlus {
 
 		#region storage
 
-		public String File {
+		public StoragePath File {
 			get {
-				return $"{App.Instance.SharedDirectory}/setting.json";
+				return App.Instance.SharedDirectory.Join("setting.json");
 			}
 		}
 
 		// ----------------
 
 		public async Task Load(
-			String? file = null
+			StoragePath? file = null
 		) {
 			file ??= this.File;
 			this.Data = (await JsonHelper.DeserializeFile<SettingData>(file)).SelfAlso((it) => AssertTest(it.Version == ApplicationInformation.Version));
@@ -172,8 +172,8 @@ namespace Twinning.AssistantPlus {
 		}
 
 		public async Task Save(
-			String? file  = null,
-			Boolean apply = true
+			StoragePath? file  = null,
+			Boolean      apply = true
 		) {
 			file ??= this.File;
 			if (apply) {
@@ -208,7 +208,7 @@ namespace Twinning.AssistantPlus {
 				StoragePickerHistoryLocation = [],
 				ForwarderDefaultTarget = ModuleType.CoreResourceShipper,
 				ForwarderImmediateJump = false,
-				ModuleConfigurationDirectory = "",
+				ModuleConfigurationDirectory = new (),
 				ModuleLauncher = new () {
 					Module = Enum.GetValues<ModuleType>().Select(ModuleHelper.Query).Select((value) => new ModuleLauncherConfiguration() {
 						Title = value.Name,
@@ -224,12 +224,12 @@ namespace Twinning.AssistantPlus {
 					Recent = [],
 				},
 				CoreTaskWorker = new () {
-					Kernel = "",
-					Script = "",
+					Kernel = new (),
+					Script = new (),
 					Argument = [],
 					AutomaticScroll = true,
 					ImmediateLaunch = true,
-					MessageFont = "",
+					MessageFont = new (),
 				},
 				CoreCommandSender = new () {
 					ParallelForward = false,
@@ -267,12 +267,12 @@ namespace Twinning.AssistantPlus {
 		// ----------------
 
 		public async Task QuickSetup(
-			String homeDirectory
+			StoragePath homeDirectory
 		) {
-			this.Data.ModuleConfigurationDirectory = $"{homeDirectory}/assistant_plus";
-			this.Data.CoreTaskWorker.Kernel = $"{homeDirectory}/kernel";
-			this.Data.CoreTaskWorker.Script = $"{homeDirectory}/script/main.js";
-			this.Data.CoreTaskWorker.Argument = [$"{homeDirectory}"];
+			this.Data.ModuleConfigurationDirectory = homeDirectory.Join("assistant_plus");
+			this.Data.CoreTaskWorker.Kernel = homeDirectory.Join("kernel");
+			this.Data.CoreTaskWorker.Script = homeDirectory.Join("script").Join("main.js");
+			this.Data.CoreTaskWorker.Argument = [homeDirectory.EmitGeneric()];
 			return;
 		}
 

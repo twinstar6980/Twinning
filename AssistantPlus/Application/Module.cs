@@ -21,14 +21,14 @@ namespace Twinning.AssistantPlus {
 	// ----------------
 
 	public record ModuleInformation {
-		public ModuleType                              Type                  { get; set; } = default!;
-		public String                                  Identifier            { get; set; } = default!;
-		public String                                  Name                  { get; set; } = default!;
-		public String                                  Icon                  { get; set; } = default!;
-		public Func<Type>                              GetMainPage           { get; set; } = default!;
-		public Func<UIElement>                         BuildSettingPanel     { get; set; } = default!;
-		public Func<List<String>, Task<List<String>?>> GenerateForwardOption { get; set; } = default!;
-		public Tuple<Integer, Integer>                 StandardSize          { get; set; } = default!;
+		public ModuleType                                   Type                  { get; set; } = default!;
+		public String                                       Identifier            { get; set; } = default!;
+		public String                                       Name                  { get; set; } = default!;
+		public String                                       Icon                  { get; set; } = default!;
+		public Func<Type>                                   GetMainPage           { get; set; } = default!;
+		public Func<UIElement>                              BuildSettingPanel     { get; set; } = default!;
+		public Func<List<StoragePath>, Task<List<String>?>> GenerateForwardOption { get; set; } = default!;
+		public Tuple<Integer, Integer>                      StandardSize          { get; set; } = default!;
 	}
 
 	#endregion
@@ -73,7 +73,7 @@ namespace Twinning.AssistantPlus {
 					Data = App.Instance.Setting.Data.CoreTaskWorker,
 				},
 				GenerateForwardOption = async (resource) => {
-					return ["-additional_argument", ..resource];
+					return ["-additional_argument", ..resource.Select((it) => it.Emit())];
 				},
 				StandardSize = new (480, 840),
 			},
@@ -106,7 +106,7 @@ namespace Twinning.AssistantPlus {
 							return null;
 						}
 					}
-					return ["-resource", ..resource];
+					return ["-resource", ..resource.Select((it) => it.Emit())];
 				},
 				StandardSize = new (480, 840),
 			},
@@ -123,17 +123,17 @@ namespace Twinning.AssistantPlus {
 					if (resource.Count != 1) {
 						return null;
 					}
-					var animationFile = null as String;
-					if (await StorageHelper.ExistFile(resource[0])) {
-						animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(resource[0]);
+					var animationFile = null as StoragePath;
+					if (await StorageHelper.ExistFile(resource.First())) {
+						animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(resource.First());
 					}
-					if (await StorageHelper.ExistDirectory(resource[0])) {
-						animationFile = await PopcapAnimationHelper.CheckAnimationDirectoryPath(resource[0]);
+					if (await StorageHelper.ExistDirectory(resource.First())) {
+						animationFile = await PopcapAnimationHelper.CheckAnimationDirectoryPath(resource.First());
 					}
 					if (animationFile == null) {
 						return null;
 					}
-					return ["-animation_file", animationFile];
+					return ["-animation_file", animationFile.Emit()];
 				},
 				StandardSize = new (1600, 840),
 			},
@@ -150,13 +150,13 @@ namespace Twinning.AssistantPlus {
 					if (resource.Count != 1) {
 						return null;
 					}
-					if (!await StorageHelper.ExistFile(resource[0])) {
+					if (!await StorageHelper.ExistFile(resource.First())) {
 						return null;
 					}
-					if (!new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource[0])) {
+					if (!new Regex(@"(\.json)$", RegexOptions.IgnoreCase).IsMatch(resource.First().Name().AsNotNull())) {
 						return null;
 					}
-					return ["-descriptor_file", resource[0]];
+					return ["-descriptor_file", resource.First().Emit()];
 				},
 				StandardSize = new (920, 840),
 			},
@@ -173,13 +173,13 @@ namespace Twinning.AssistantPlus {
 					if (resource.Count != 1) {
 						return null;
 					}
-					if (!await StorageHelper.ExistDirectory(resource[0])) {
+					if (!await StorageHelper.ExistDirectory(resource.First())) {
 						return null;
 					}
-					if (!new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource[0])) {
+					if (!new Regex(@"(\.pvz2_package_project)$", RegexOptions.IgnoreCase).IsMatch(resource.First().Name().AsNotNull())) {
 						return null;
 					}
-					return ["-project_directory", resource[0]];
+					return ["-project_directory", resource.First().Emit()];
 				},
 				StandardSize = new (1440, 840),
 			},

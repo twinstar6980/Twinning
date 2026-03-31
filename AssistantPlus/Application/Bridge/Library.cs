@@ -35,10 +35,12 @@ namespace Twinning.AssistantPlus.Bridge {
 		// ----------------
 
 		public void Open(
-			String path
+			StoragePath path
 		) {
 			AssertTest(!this.State());
-			var handle = Win32.PInvoke.LoadLibrary($"{path}.");
+			var pathString = path.EmitNative();
+			pathString += '.';
+			var handle = Win32.PInvoke.LoadLibrary(pathString);
 			AssertTest(!handle.IsNull);
 			var symbol = default(Win32.Foundation.FARPROC);
 			try {

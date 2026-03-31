@@ -103,20 +103,20 @@ namespace Twinning.AssistantPlus {
 
 		// ----------------
 
-		public static async Task<String?> CheckAnimationFilePath(
-			String path
+		public static async Task<StoragePath?> CheckAnimationFilePath(
+			StoragePath path
 		) {
 			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
-			return !nameRule.IsMatch(path) ? null : path;
+			return !nameRule.IsMatch(path.Name() ?? "") ? null : path;
 		}
 
-		public static async Task<String?> CheckAnimationDirectoryPath(
-			String path
+		public static async Task<StoragePath?> CheckAnimationDirectoryPath(
+			StoragePath path
 		) {
 			var nameRule = new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase);
 			var animationFile = await StorageHelper.ListDirectory(path, 1, true, false, true, false);
-			animationFile = animationFile.Where((it) => nameRule.IsMatch(it)).ToList();
-			return animationFile.Count != 1 ? null : $"{path}/{animationFile[0]}";
+			animationFile = animationFile.Where((it) => nameRule.IsMatch(it.Name() ?? "")).ToList();
+			return animationFile.Count != 1 ? null : path.Push(animationFile.First());
 		}
 
 		#endregion
@@ -347,18 +347,18 @@ namespace Twinning.AssistantPlus {
 		#region load
 
 		public static async Task<PopcapAnimationModel.Animation> LoadAnimation(
-			String file
+			StoragePath file
 		) {
 			return await JsonHelper.DeserializeFile<PopcapAnimationModel.Animation>(file);
 		}
 
 		public static async Task<Dictionary<String, BitmapSource>> LoadTexture(
-			String                         directory,
+			StoragePath                    directory,
 			PopcapAnimationModel.Animation animation
 		) {
 			var result = new Dictionary<String, BitmapSource>(animation.Image.Count);
 			foreach (var image in animation.Image) {
-				var file = $"{directory}/{PopcapAnimationHelper.ParseImageFileName(image.Name)}.png";
+				var file = directory.Join($"{PopcapAnimationHelper.ParseImageFileName(image.Name)}.png");
 				if (await StorageHelper.ExistFile(file)) {
 					var data = await ConvertHelper.ParseBitmapFromBinary(await StorageHelper.ReadFile(file));
 					result.Add(image.Name, data);

@@ -57,7 +57,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public String? ProjectDirectory { get; set; } = null;
+		public StoragePath? ProjectDirectory { get; set; } = null;
 
 		public ProjectSetting? ProjectSetting { get; set; } = null;
 
@@ -88,7 +88,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		public async Task OpenView(
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>(App.Instance.Setting.Data.ModuleConfigurationDirectory.Join($"{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.json"));
 			return;
 		}
 
@@ -110,10 +110,10 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		public async Task ApplyOption(
 			List<String> optionView
 		) {
-			var optionProjectDirectory = default(String?);
+			var optionProjectDirectory = default(StoragePath?);
 			var option = new CommandLineReader(optionView);
 			if (option.Check("-project_directory")) {
-				optionProjectDirectory = option.NextString();
+				optionProjectDirectory = option.NextString().SelfLet((it) => new StoragePath(it));
 			}
 			if (!option.Done()) {
 				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");
@@ -128,7 +128,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		) {
 			var option = new CommandLineWriter();
 			if (option.Check("-project_directory", this.ProjectDirectory != null)) {
-				option.NextString(this.ProjectDirectory.AsNotNull());
+				option.NextString(this.ProjectDirectory.AsNotNull().Emit());
 			}
 			return option.Done();
 		}
@@ -240,70 +240,73 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 
 		// ----------------
 
-		public String MakeScopeRootPath(
+		public StoragePath MakeScopeRootPath(
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
-			return $"{projectDirectory}";
+			return projectDirectory;
 		}
 
-		public String MakeScopeRootPath(
+		public StoragePath MakeScopeRootPath(
 			String part
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
-			return $"{projectDirectory}/{part}";
+			return projectDirectory.Join(part);
 		}
 
-		public String MakeScopeRootPath(
+		public StoragePath MakeScopeRootPath(
 			String part,
 			String group
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
-			return $"{projectDirectory}/{part}/{group}";
+			return projectDirectory.Join(part).Join(group);
 		}
 
-		public String MakeScopeRootPath(
+		public StoragePath MakeScopeRootPath(
 			String part,
 			String group,
 			String resource
 		) {
 			AssertTest(this.IsLoaded);
 			var projectDirectory = this.ProjectDirectory;
-			return $"{projectDirectory}/{part}/{group}/{resource}";
+			return projectDirectory.Join(part).Join(group).Join(resource);
 		}
 
-		public String MakeScopeChildPath(
-			String parent,
-			String name
+		public StoragePath MakeScopeChildPath(
+			StoragePath parent,
+			String      name
 		) {
 			AssertTest(this.IsLoaded);
-			return $"{parent}/{name}";
+			return parent.Join(name);
 		}
 
-		public String MakeScopeSettingPath(
-			String parent
+		public StoragePath MakeScopeSettingPath(
+			StoragePath parent
 		) {
 			AssertTest(this.IsLoaded);
-			return $"{parent}/setting.json";
+			return parent.Join("setting.json");
 		}
 
 		public async Task<List<String>> ListScopeChildName(
-			String parent
+			StoragePath parent
 		) {
 			AssertTest(this.IsLoaded);
-			return (await StorageHelper.ListDirectory(parent, 1, true, false, false, true)).Where((value) => !value.StartsWith(".")).ToList();
+			return (await StorageHelper.ListDirectory(parent, 1, true, false, false, true))
+				.Select((value) => value.Name().AsNotNull())
+				.Where((value) => !value.StartsWith("."))
+				.ToList();
 		}
 
 		public async Task<String> FindAvailableScopeChildName(
-			String parent,
-			String name
+			StoragePath parent,
+			String      name
 		) {
 			AssertTest(this.IsLoaded);
 			var index = 0;
 			var nameRequest = name;
-			while (await StorageHelper.ExistDirectory($"{parent}/{nameRequest}")) {
+			while (await StorageHelper.ExistDirectory(parent.Join(nameRequest))) {
 				index++;
 				nameRequest = $"{name}~{index}";
 			}
@@ -339,7 +342,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		// ----------------
 
 		public async Task ProjectOpen(
-			String projectDirectory
+			StoragePath projectDirectory
 		) {
 			AssertTest(!this.IsLoaded);
 			if (!await ProjectSettingHelper.CheckVersionFile(projectDirectory)) {
@@ -1089,7 +1092,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		// ----------------
 
 		public async Task ApplyLoad(
-			String projectDirectory
+			StoragePath projectDirectory
 		) {
 			if (this.IsLoaded) {
 				await this.ProjectClose();
@@ -1097,7 +1100,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			await this.ProjectOpen(projectDirectory);
 			if (this.IsLoaded) {
 				await App.Instance.AppendRecentLauncherItem(new () {
-					Title = Regex.Replace(StorageHelper.Name(projectDirectory), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
+					Title = Regex.Replace(projectDirectory.Name().AsNotNull(), @"(\.pvz2_package_project)$", "", RegexOptions.IgnoreCase),
 					Type = ModuleType.PopcapPackageBuilder,
 					Option = await this.CollectOption(),
 					Command = [],
@@ -1178,7 +1181,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				if (!this.IsLoaded) {
 					return "";
 				}
-				return this.ProjectDirectory;
+				return this.ProjectDirectory.Emit();
 			}
 		}
 

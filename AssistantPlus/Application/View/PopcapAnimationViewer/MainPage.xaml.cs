@@ -78,7 +78,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		// ----------------
 
-		public String? AnimationFile { get; set; } = null;
+		public StoragePath? AnimationFile { get; set; } = null;
 
 		// ----------------
 
@@ -147,7 +147,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public async Task OpenView(
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>(App.Instance.Setting.Data.ModuleConfigurationDirectory.Join($"{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.json"));
 			return;
 		}
 
@@ -176,7 +176,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			var optionShowBoundary = default(Boolean?);
 			var optionImageFilterRule = default(String?);
 			var optionSpriteFilterRule = default(String?);
-			var optionAnimationFile = default(String?);
+			var optionAnimationFile = default(StoragePath?);
 			var optionImageFilter = default(List<Integer>?);
 			var optionSpriteFilter = default(List<Integer>?);
 			var optionActiveTarget = default(Tuple<Boolean, Integer>?);
@@ -206,7 +206,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				optionSpriteFilterRule = option.NextString();
 			}
 			if (option.Check("-animation_file")) {
-				optionAnimationFile = option.NextString();
+				optionAnimationFile = option.NextString().SelfLet((it) => new StoragePath(it));
 			}
 			if (option.Check("-image_filter")) {
 				optionImageFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
@@ -316,7 +316,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				option.NextString(this.SpriteFilterRule);
 			}
 			if (option.Check("-animation_file", this.Loaded)) {
-				option.NextString(this.AnimationFile.AsNotNull());
+				option.NextString(this.AnimationFile.AsNotNull().Emit());
 			}
 			if (option.Check("-image_filter", this.Loaded)) {
 				option.NextString(this.ImageFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
@@ -382,11 +382,11 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		// ----------------
 
 		public async Task Load(
-			String animationFile
+			StoragePath animationFile
 		) {
 			AssertTest(!this.Loaded && !this.Activated);
 			var animation = await PopcapAnimationHelper.LoadAnimation(animationFile);
-			var texture = await PopcapAnimationHelper.LoadTexture(StorageHelper.Parent(animationFile).AsNotNull(), animation);
+			var texture = await PopcapAnimationHelper.LoadTexture(animationFile.Parent().AsNotNull(), animation);
 			this.AnimationFile = animationFile;
 			this.Animation = animation;
 			this.Texture = texture;
@@ -751,7 +751,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		// ----------------
 
 		public async Task ApplyLoad(
-			String                            animationFile,
+			StoragePath                       animationFile,
 			List<Integer>?                    imageFilter,
 			List<Integer>?                    spriteFilter,
 			Tuple<Boolean, Size>?             activeTarget,
@@ -783,7 +783,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				await this.Activate(activeTarget, activeFrameRange, activeFrameSpeed, activeProgressState, null);
 			}
 			await App.Instance.AppendRecentLauncherItem(new () {
-				Title = Regex.Replace(StorageHelper.Name(animationFile), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),
+				Title = Regex.Replace(animationFile.Name().AsNotNull(), @"(\.pam\.json)$", "", RegexOptions.IgnoreCase),
 				Type = ModuleType.PopcapAnimationViewer,
 				Option = await this.CollectOption(),
 				Command = [],
@@ -819,7 +819,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 					return;
 				}
 				var itemPath = StorageHelper.GetLongPath(item[0].Path);
-				var animationFile = null as String;
+				var animationFile = null as StoragePath;
 				if (await StorageHelper.ExistFile(itemPath)) {
 					animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(itemPath);
 				}
@@ -967,7 +967,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				if (!this.Loaded) {
 					return "None";
 				}
-				return new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).Replace(StorageHelper.Name(this.AnimationFile), "");
+				return new Regex(@"(\.pam\.json)$", RegexOptions.IgnoreCase).Replace(this.AnimationFile.Name().AsNotNull(), "");
 			}
 		}
 

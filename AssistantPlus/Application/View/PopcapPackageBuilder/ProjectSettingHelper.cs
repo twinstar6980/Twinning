@@ -15,11 +15,11 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 		// ----------------
 
 		public static async Task<Boolean> CheckVersionFile(
-			String projectDirectory
+			StoragePath projectDirectory
 		) {
 			var result = true;
 			try {
-				var versionFile = $"{projectDirectory}/version.txt";
+				var versionFile = projectDirectory.Join("version.txt");
 				var versionText = await StorageHelper.ReadFileText(versionFile);
 				AssertTest(versionText == ProjectSettingHelper.Version.ToString());
 			}

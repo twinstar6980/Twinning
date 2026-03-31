@@ -7,12 +7,12 @@ using Twinning.AssistantPlus.Utility;
 namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 	public record Setting {
-		public String       Kernel          { get; set; } = default!;
-		public String       Script          { get; set; } = default!;
+		public StoragePath  Kernel          { get; set; } = default!;
+		public StoragePath  Script          { get; set; } = default!;
 		public List<String> Argument        { get; set; } = default!;
 		public Boolean      AutomaticScroll { get; set; } = default!;
 		public Boolean      ImmediateLaunch { get; set; } = default!;
-		public String       MessageFont     { get; set; } = default!;
+		public StoragePath  MessageFont     { get; set; } = default!;
 	}
 
 }

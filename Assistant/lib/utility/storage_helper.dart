@@ -349,6 +349,21 @@ class StorageHelper {
 
   // #region shell
 
+  static Future<StoragePath> temporary(
+  ) async {
+    var parent = await StorageHelper.queryApplicationCacheDirectory();
+    var name = DateTime.now().millisecondsSinceEpoch.toString();
+    var result = parent.join(name);
+    var suffix = 0;
+    while (await exist(result)) {
+      suffix += 1;
+      result = parent.join('${name}.${suffix}');
+    }
+    return result;
+  }
+
+  // ----------------
+
   static Future<Void> reveal(
     StoragePath target,
   ) async {
@@ -515,19 +530,6 @@ class StorageHelper {
   }
 
   // ----------------
-
-  static Future<StoragePath> temporary(
-  ) async {
-    var parent = await StorageHelper.queryApplicationCacheDirectory();
-    var name = DateTime.now().millisecondsSinceEpoch.toString();
-    var result = parent.join(name);
-    var suffix = 0;
-    while (await exist(result)) {
-      suffix += 1;
-      result = parent.join('${name}.${suffix}');
-    }
-    return result;
-  }
 
   // ----------------
 

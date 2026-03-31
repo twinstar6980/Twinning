@@ -483,13 +483,13 @@ namespace Twinning.AssistantPlus {
 		#region load
 
 		public static async Task<PopcapReflectionModel.DescriptorArchive> LoadDescriptorArchive(
-			String file
+			StoragePath file
 		) {
 			return await JsonHelper.DeserializeFile<PopcapReflectionModel.DescriptorArchive>(file);
 		}
 
 		public static async Task<PopcapReflectionModel.DataArchive> LoadDataArchive(
-			String file
+			StoragePath file
 		) {
 			return await JsonHelper.DeserializeFile<PopcapReflectionModel.DataArchive>(file);
 		}

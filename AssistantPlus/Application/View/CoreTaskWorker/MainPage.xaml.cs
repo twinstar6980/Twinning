@@ -96,7 +96,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public async Task OpenView(
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>(App.Instance.Setting.Data.ModuleConfigurationDirectory.Join($"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.json"));
 			return;
 		}
 
@@ -266,7 +266,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				try {
 					await StorageHelper.Copy(this.Setting.Kernel, kernel, true);
 					library.Open(kernel);
-					result = await Task.Run(() => Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script, [..this.Setting.Argument, ..this.AdditionalArgument]));
+					result = await Task.Run(() => Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script.EmitGeneric(), [..this.Setting.Argument, ..this.AdditionalArgument]));
 				}
 				catch (Exception e) {
 					exception = e;
@@ -670,7 +670,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				"save_file"      => "SaveFile",
 				_                => throw new (),
 			};
-			target = await StorageHelper.Pick(typeValue, App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null) ?? "";
+			target = (await StorageHelper.Pick(typeValue, App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null))?.Emit() ?? "";
 			return new (target);
 		}
 

@@ -18,13 +18,13 @@ namespace Twinning.AssistantPlus {
 
 		#region life
 
-		public String PackageDirectory { get; }
+		public StoragePath PackageDirectory { get; }
 
-		public String ProgramFile { get; }
+		public StoragePath ProgramFile { get; }
 
-		public String SharedDirectory { get; }
+		public StoragePath SharedDirectory { get; }
 
-		public String CacheDirectory { get; }
+		public StoragePath CacheDirectory { get; }
 
 		public SettingProvider Setting { get; }
 
@@ -44,10 +44,10 @@ namespace Twinning.AssistantPlus {
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 			AssertTest(App.Instance == null);
 			App.Instance = this;
-			this.PackageDirectory = StorageHelper.Regularize(Package.Current.InstalledPath);
-			this.ProgramFile = $"{this.PackageDirectory}/Application.exe";
-			this.SharedDirectory = StorageHelper.Regularize($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/{ApplicationInformation.Identifier}");
-			this.CacheDirectory = $"{this.SharedDirectory}/cache";
+			this.PackageDirectory = new (Package.Current.InstalledPath);
+			this.ProgramFile = this.PackageDirectory.Join("Application.exe");
+			this.SharedDirectory = new StoragePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Join(ApplicationInformation.Identifier);
+			this.CacheDirectory = this.SharedDirectory.Join("cache");
 			this.Setting = new ();
 			this.MainWindow = null!;
 			this.InitializeComponent();
@@ -224,7 +224,7 @@ namespace Twinning.AssistantPlus {
 		}
 
 		public async Task HandleForward(
-			List<String> resource
+			List<StoragePath> resource
 		) {
 			var forwardOption = (await Task.WhenAll(Enum.GetValues<ModuleType>().Select(async (value) => await ModuleHelper.Query(value).GenerateForwardOption(resource)))).ToList();
 			var targetType = forwardOption[this.Setting.Data.ForwarderDefaultTarget.CastPrimitive<Size>()] != null ? this.Setting.Data.ForwarderDefaultTarget : null as ModuleType?;
@@ -259,7 +259,7 @@ namespace Twinning.AssistantPlus {
 			var optionWindowPosition = default(Tuple<Integer, Integer>?);
 			var optionWindowSize = default(Tuple<Integer, Integer>?);
 			var optionLaunch = default(Tuple<String, ModuleType, List<String>>?);
-			var optionForward = default(Tuple<List<String>>?);
+			var optionForward = default(Tuple<List<StoragePath>>?);
 			var option = new CommandLineReader(command);
 			if (option.Check("-window_position")) {
 				optionWindowPosition = new (
@@ -282,7 +282,7 @@ namespace Twinning.AssistantPlus {
 			}
 			if (option.Check("-forward")) {
 				optionForward = new (
-					option.NextStringList()
+					option.NextStringList().Select((it) => new StoragePath(it)).ToList()
 				);
 			}
 			if (!option.Done()) {

@@ -46,7 +46,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 					Value = json.As<String>(),
 				},
 				ArgumentType.Path => new PathExpression() {
-					Content = json.As<String>(),
+					Content = json.As<String>().SelfLet((it) => new StoragePath(it)),
 				},
 				_ => throw new UnreachableException(),
 			};

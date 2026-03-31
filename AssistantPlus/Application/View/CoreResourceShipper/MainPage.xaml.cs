@@ -61,7 +61,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public Boolean EnableBatch { get; set; } = default!;
 
-		public List<Tuple<String, Boolean?>> Resource { get; set; } = [];
+		public List<Tuple<StoragePath, Boolean?>> Resource { get; set; } = [];
 
 		#endregion
 
@@ -81,7 +81,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public async Task OpenView(
 		) {
-			this.Configuration = await JsonHelper.DeserializeFile<Configuration>($"{App.Instance.Setting.Data.ModuleConfigurationDirectory}/{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.json");
+			this.Configuration = await JsonHelper.DeserializeFile<Configuration>(App.Instance.Setting.Data.ModuleConfigurationDirectory.Join($"{ModuleHelper.Query(ModuleType.CoreResourceShipper).Identifier}.json"));
 			this.uOptionList_ItemsSource = this.Configuration.Option.Select((group) => new MainPageOptionGroupItemController() {
 				Host = this,
 				Configuration = group,
@@ -122,7 +122,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			var optionParallelForward = default(Boolean?);
 			var optionEnableFilter = default(Boolean?);
 			var optionEnableBatch = default(Boolean?);
-			var optionResource = default(List<Tuple<String>>?);
+			var optionResource = default(List<Tuple<StoragePath>>?);
 			var option = new CommandLineReader(optionView);
 			if (option.Check("-parallel_forward")) {
 				optionParallelForward = option.NextBoolean();
@@ -137,7 +137,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 				optionResource = [];
 				while (!option.Done()) {
 					optionResource.Add(new (
-						option.NextString()
+						option.NextString().SelfLet((it) => new StoragePath(it))
 					));
 				}
 			}
@@ -163,7 +163,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 				]);
 			}
 			if (optionResource != null) {
-				await this.AppendResource(optionResource.Select((item) => StorageHelper.Regularize(item.Item1)).ToList());
+				await this.AppendResource(optionResource.Select((item) => item.Item1).ToList());
 			}
 			return;
 		}
@@ -182,7 +182,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			}
 			if (option.Check("-resource")) {
 				foreach (var item in this.Resource) {
-					option.NextString(item.Item1);
+					option.NextString(item.Item1.Emit());
 				}
 			}
 			return option.Done();
@@ -217,7 +217,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 					}
 					if (item.Configuration.Filter != null && this.Resource.Count != 0) {
 						var nameRule = new Regex(item.Configuration.Filter.Name, RegexOptions.IgnoreCase);
-						item.SingleFiltered |= this.Resource.All((resource) => nameRule.IsMatch(resource.Item1));
+						item.SingleFiltered |= this.Resource.All((resource) => nameRule.IsMatch(resource.Item1.Name() ?? ""));
 						item.BatchFiltered |= true;
 					}
 				}
@@ -245,7 +245,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 		// ----------------
 
 		public async Task AppendResource(
-			List<String> list
+			List<StoragePath> list
 		) {
 			foreach (var item in list) {
 				if (this.Resource.Any((value) => value.Item1 == item)) {
@@ -270,7 +270,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 		}
 
 		public async Task RemoveResource(
-			List<String> list
+			List<StoragePath> list
 		) {
 			foreach (var item in list) {
 				this.Resource.RemoveAll((value) => value.Item1 == item);
@@ -413,7 +413,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 					break;
 				}
 				case "AppendNew": {
-					var item = new List<String>();
+					var item = new List<StoragePath>();
 					var dialogResult = await ControlHelper.ShowDialogAsAutomatic(this.View, "Append New", new TextBox() {
 						HorizontalAlignment = HorizontalAlignment.Stretch,
 						VerticalAlignment = VerticalAlignment.Stretch,
@@ -422,8 +422,8 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 						Text = "",
 					}.SelfAlso((it) => {
 						it.LostFocus += async (_, _) => {
-							item = ConvertHelper.ParseStringListFromStringWithLine(it.Text).Select(StorageHelper.Regularize).ToList();
-							it.Text = ConvertHelper.MakeStringListToStringWithLine(item);
+							item = ConvertHelper.ParseStringListFromStringWithLine(it.Text).Select((it) => new StoragePath(it)).ToList();
+							it.Text = ConvertHelper.MakeStringListToStringWithLine(item.Select((it) => it.Emit()).ToList());
 							return;
 						};
 					}), new ("Cancel", "Continue", null));
@@ -498,7 +498,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		// ----------------
 
-		public String Path { get; set; } = default!;
+		public StoragePath Path { get; set; } = default!;
 
 		public Boolean? Type { get; set; } = default!;
 
@@ -518,13 +518,13 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 
 		public String uName_ToolTip {
 			get {
-				return this.Path;
+				return this.Path.Emit();
 			}
 		}
 
 		public String uName_Text {
 			get {
-				return StorageHelper.Name(this.Path);
+				return this.Path.Name() ?? "";
 			}
 		}
 

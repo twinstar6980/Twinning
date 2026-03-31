@@ -662,7 +662,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				this.ValueOfPath = null;
 			}
 			else {
-				this.ValueOfPath = new () { Content = StorageHelper.Regularize(senders.Text) };
+				this.ValueOfPath = new () { Content = senders.Text.SelfLet((it) => new StoragePath(it)) };
 			}
 			this.NotifyPropertyChanged([
 				nameof(this.uPathContent_Text),
@@ -675,7 +675,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				if (this.Type != SubmissionType.Path) {
 					return "";
 				}
-				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content;
+				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content.Emit();
 			}
 		}
 
@@ -689,7 +689,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			this.ValueOfPath = new () { Content = senders.Tag.As<String>() };
+			this.ValueOfPath = new () { Content = new (senders.Tag.As<String>()) };
 			this.NotifyPropertyChanged([
 				nameof(this.uPathContent_Text),
 			]);

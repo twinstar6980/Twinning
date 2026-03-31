@@ -398,13 +398,13 @@ class GameProgramHelper {
       packageType = .flat;
     }
     if (await StorageHelper.existFile(target)) {
-      if (target.name()!.endsWith('.zip')) {
+      if (target.extension()! == 'zip') {
         packageType = .zip;
       }
-      if (target.name()!.endsWith('.apk')) {
+      if (target.extension()! == 'apk') {
         packageType = .apk;
       }
-      if (target.name()!.endsWith('.apks')) {
+      if (target.extension()! == 'apks') {
         packageType = .apks;
       }
     }
