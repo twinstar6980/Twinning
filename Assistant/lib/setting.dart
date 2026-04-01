@@ -195,11 +195,11 @@ class SettingProvider with ChangeNotifier {
       windowSizeState: true,
       windowSizeWidth: 480,
       windowSizeHeight: 840,
-      storagePickerFallbackDirectory: .nothing(),
+      storagePickerFallbackDirectory: .new(),
       storagePickerHistoryLocation: {},
       forwarderDefaultTarget: .coreResourceShipper,
       forwarderImmediateJump: false,
-      moduleConfigurationDirectory: .nothing(),
+      moduleConfigurationDirectory: .new(),
       moduleLauncher: .new(
         module: ModuleType.values.map(ModuleHelper.query).map((it) => ModuleLauncherConfiguration(
           title: it.name,
@@ -210,8 +210,8 @@ class SettingProvider with ChangeNotifier {
         recent: [],
       ),
       coreTaskWorker: .new(
-        kernel: .nothing(),
-        script: .nothing(),
+        kernel: .new(),
+        script: .new(),
         argument: [],
         immediateLaunch: true,
         messageFont: [],

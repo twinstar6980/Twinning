@@ -175,6 +175,12 @@ public static class CommonUtility {
 		return;
 	}
 
+	public static Boolean IsEmpty<TValue>(
+		this IEnumerable<TValue> self
+	) {
+		return !self.Any();
+	}
+
 	public static ObservableCollection<TValue> ToObservableCollection<TValue>(
 		this IEnumerable<TValue> self
 	) {

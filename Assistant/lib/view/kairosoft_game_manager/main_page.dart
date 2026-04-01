@@ -88,11 +88,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._gameInformation = [];
     this._functionData = .new(
       type: .modifyProgram,
-      programTarget: .nothing(),
+      programTarget: .new(),
       programDisableRecordEncryption: true,
       programEnableDebugMode: false,
-      recordTargetDirectory: .nothing(),
-      recordArchiveFile: .nothing(),
+      recordTargetDirectory: .new(),
+      recordArchiveFile: .new(),
       recordKey: .fromList([0x00]),
     );
     postTask(() async {

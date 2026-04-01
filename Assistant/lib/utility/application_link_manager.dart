@@ -17,7 +17,7 @@ class ApplicationLinkManager {
 
   lib.AppLinks? _plugin;
 
-  Void Function(Uri link)? _handler;
+  Future<Void> Function(Uri link)? _handler;
 
   // ----------------
 
@@ -40,7 +40,7 @@ class ApplicationLinkManager {
   }
 
   Future<Void> listen(
-    Void Function(Uri link) handler,
+    Future<Void> Function(Uri link) handler,
   ) async {
     assertTest(this._initialized);
     this._handler = handler;

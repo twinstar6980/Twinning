@@ -56,9 +56,9 @@ namespace Twinning.AssistantPlus.Utility {
 		// ----------------
 
 		public static async Task SerializeFile<TValue>(
-			StoragePath  path,
-			TValue  value,
-			Boolean indented = true
+			StoragePath path,
+			TValue      value,
+			Boolean     indented = true
 		)
 			where TValue : notnull {
 			await StorageHelper.WriteFileText(path, JsonHelper.SerializeText(value, indented));
@@ -226,7 +226,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		}
 
-		private class StoragePathJsonConverter: JsonConverter<StoragePath> {
+		private class StoragePathJsonConverter : JsonConverter<StoragePath> {
 
 			public override Boolean HandleNull => false;
 
@@ -265,7 +265,7 @@ namespace Twinning.AssistantPlus.Utility {
 						return;
 					}
 					foreach (var propertyInfo in typeInfo.Properties) {
-						propertyInfo.IsRequired = !propertyInfo.IsExtensionData && propertyInfo.AttributeProvider.AsNotNull().GetCustomAttributes(typeof(JsonOptionalAttribute), false).Length == 0;
+						propertyInfo.IsRequired = !propertyInfo.IsExtensionData && propertyInfo.AttributeProvider.AsNotNull().GetCustomAttributes(typeof(JsonOptionalAttribute), false).IsEmpty();
 					}
 					return;
 				}),

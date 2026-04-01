@@ -207,14 +207,14 @@ namespace Twinning.AssistantPlus.Utility {
 		public static String MakeStringListToStringWithLine(
 			List<String> value
 		) {
-			return String.Join('\r', value) + (value.Count != 0 && value[^1].Length == 0 ? "\r" : "");
+			return String.Join('\r', value) + (!value.IsEmpty() && value[^1].IsEmpty() ? "\r" : "");
 		}
 
 		public static List<String> ParseStringListFromStringWithLine(
 			String text
 		) {
 			var value = text.Split('\r').ToList();
-			if (value.Count != 0 && value[^1].Length == 0) {
+			if (!value.IsEmpty() && value[^1].IsEmpty()) {
 				value.RemoveAt(value.Count - 1);
 			}
 			return value;

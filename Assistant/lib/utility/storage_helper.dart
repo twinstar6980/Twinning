@@ -341,7 +341,7 @@ class StorageHelper {
       }
       return null as Void;
     };
-    await iterate(iterate, target, .relative(), 0);
+    await iterate(iterate, target, .by(.relative), 0);
     return result;
   }
 

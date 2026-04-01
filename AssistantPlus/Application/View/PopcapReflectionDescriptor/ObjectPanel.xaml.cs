@@ -96,7 +96,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 
 		public async Task UpdateView(
 		) {
-			if (this.Type.Length == 0) {
+			if (this.Type.IsEmpty()) {
 				this.DescriptorList = null;
 				this.uGroup_ItemsSource = [];
 			}

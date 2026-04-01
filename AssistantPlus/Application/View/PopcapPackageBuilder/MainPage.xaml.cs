@@ -1847,7 +1847,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			if (args.DataView.Contains(MainPageController.DataViewFormatForGroup)) {
 				args.Handled = true;
 				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForGroup)).As<String>();
-				if (data.Length != 0) {
+				if (!data.IsEmpty()) {
 					var itemList = data.Split('\n');
 					foreach (var item in itemList) {
 						var scope = item.Split('/');
@@ -2116,7 +2116,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			if (args.DataView.Contains(MainPageController.DataViewFormatForResource)) {
 				args.Handled = true;
 				var data = (await args.DataView.GetDataAsync(MainPageController.DataViewFormatForResource)).As<String>();
-				if (data.Length != 0) {
+				if (!data.IsEmpty()) {
 					var itemList = data.Split('\n');
 					foreach (var item in itemList) {
 						var scope = item.Split('/');

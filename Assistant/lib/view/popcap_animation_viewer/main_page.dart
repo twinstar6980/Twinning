@@ -147,7 +147,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     else {
       var originalTarget = VisualHelper.selectSprite(this._animation!, target.index);
       activeSprite = originalTarget;
-      assertTest(activeSprite.frame.length != 0);
+      assertTest(!activeSprite.frame.isEmpty);
     }
     this._activeTarget = target;
     this._activeSprite = activeSprite;

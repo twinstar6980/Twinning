@@ -19,7 +19,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		private Boolean mInitialized;
 
-		private Action? mHandler;
+		private Func<Task>? mHandler;
 
 		// ----------------
 
@@ -57,7 +57,7 @@ namespace Twinning.AssistantPlus.Utility {
 		}
 
 		public async Task Listen(
-			Action? handler
+			Func<Task>? handler
 		) {
 			AssertTest(this.mInitialized);
 			this.mHandler = handler;

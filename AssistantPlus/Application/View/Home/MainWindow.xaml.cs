@@ -22,7 +22,7 @@ namespace Twinning.AssistantPlus.View.Home {
 		public MainWindow(
 		) {
 			this.InitializeComponent();
-			WindowHelper.SetIcon(this, $"{App.Instance.PackageDirectory}/Asset/Logo.ico");
+			WindowHelper.SetIcon(this, App.Instance.PackageDirectory.Join("Asset").Join("Logo.ico").EmitNative());
 			WindowHelper.SetTitle(this, ApplicationInformation.Name);
 			WindowHelper.SetTitleBar(this, true, this.uTab.TabStripFooter.As<UIElement>(), false);
 			this.Controller = new () { View = this };
@@ -143,7 +143,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			}
 			else {
 				this.uTab_TabItemsSource.Remove(item);
-				if (this.uTab_TabItemsSource.Count == 0) {
+				if (this.uTab_TabItemsSource.IsEmpty()) {
 					await this.ShowLauncher();
 					await Task.Delay(400);
 					this.NotifyPropertyChanged([
@@ -317,7 +317,7 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		public Boolean uBlank_Visibility {
 			get {
-				return this.uTab_TabItemsSource.Count == 0;
+				return this.uTab_TabItemsSource.IsEmpty();
 			}
 		}
 

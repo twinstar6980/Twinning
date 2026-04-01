@@ -311,7 +311,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Boolean) {
 				return;
 			}
-			if (senders.Text.Length == 0) {
+			if (senders.Text.IsEmpty()) {
 				this.ValueOfBoolean = null;
 			}
 			else if (senders.Text == "n" || senders.Text == "y") {
@@ -419,7 +419,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Integer) {
 				return;
 			}
-			if (senders.Text.Length == 0) {
+			if (senders.Text.IsEmpty()) {
 				this.ValueOfInteger = null;
 			}
 			else if (Floater.IsFinite(senders.Value) && Integer.MinValue <= senders.Value && senders.Value <= Integer.MaxValue) {
@@ -465,7 +465,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Floater) {
 				return;
 			}
-			if (senders.Text.Length == 0) {
+			if (senders.Text.IsEmpty()) {
 				this.ValueOfFloater = null;
 			}
 			else if (Floater.IsFinite(senders.Value)) {
@@ -511,7 +511,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Size) {
 				return;
 			}
-			if (senders.Text.Length == 0) {
+			if (senders.Text.IsEmpty()) {
 				this.ValueOfSize = null;
 			}
 			else if (Floater.IsFinite(senders.Value) && senders.Value >= 0.0) {
@@ -585,7 +585,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.String) {
 				return;
 			}
-			if (senders.Text.Length == 0) {
+			if (senders.Text.IsEmpty()) {
 				this.ValueOfString = null;
 			}
 			else {
@@ -658,7 +658,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			if (senders.Text.Length == 0) {
+			if (senders.Text.IsEmpty()) {
 				this.ValueOfPath = null;
 			}
 			else {

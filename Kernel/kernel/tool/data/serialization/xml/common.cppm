@@ -21,7 +21,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		class TinyXml2Printer :
 			public Third::tinyxml2::XMLPrinter {
 
-		public:
+		protected:
 
 			virtual auto PrintSpace(
 				int depth

@@ -209,10 +209,10 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				optionAnimationFile = option.NextString().SelfLet((it) => new StoragePath(it));
 			}
 			if (option.Check("-image_filter")) {
-				optionImageFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
+				optionImageFilter = option.NextString().Split(',').Where((value) => !value.IsEmpty()).Select(Integer.Parse).ToList();
 			}
 			if (option.Check("-sprite_filter")) {
-				optionSpriteFilter = option.NextString().Split(',').Where((value) => value.Length != 0).Select(Integer.Parse).ToList();
+				optionSpriteFilter = option.NextString().Split(',').Where((value) => !value.IsEmpty()).Select(Integer.Parse).ToList();
 			}
 			if (option.Check("-active_target")) {
 				optionActiveTarget = new (
@@ -518,7 +518,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			else {
 				var originalTarget = PopcapAnimationHelper.SelectSprite(this.Animation, target.Item2);
 				activeSprite = originalTarget;
-				AssertTest(activeSprite.Frame.Count != 0);
+				AssertTest(!activeSprite.Frame.IsEmpty());
 			}
 			this.ActiveTarget = target;
 			this.ActiveSprite = activeSprite;
@@ -724,8 +724,8 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 		) {
 			AssertTest(this.Loaded);
 			await this.ChangeElementFilter(
-				this.Animation.Image.Select((value) => this.ImageFilterRule.Length != 0 && Regex.IsMatch(PopcapAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null).ToList(),
-				this.Animation.Sprite.Select((value) => value.Name != null && this.SpriteFilterRule.Length != 0 && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null).ToList()
+				this.Animation.Image.Select((value) => !this.ImageFilterRule.IsEmpty() && Regex.IsMatch(PopcapAnimationHelper.ParseImageFileName(value.Name), this.ImageFilterRule) ? false : (Boolean?)null).ToList(),
+				this.Animation.Sprite.Select((value) => value.Name != null && !this.SpriteFilterRule.IsEmpty() && Regex.IsMatch(value.Name, this.SpriteFilterRule) ? false : (Boolean?)null).ToList()
 			);
 			return;
 		}
@@ -1073,7 +1073,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				nameof(this.uZombieGroundSwatchLayer_IsChecked),
 			]);
 			this.SuppressApplyFilterChanged = false;
-			if (this.Activated && (args.AddedItems.Count != 0 || args.RemovedItems.Count != 0)) {
+			if (this.Activated && (!args.AddedItems.IsEmpty() || !args.RemovedItems.IsEmpty())) {
 				var target = this.ActiveTarget;
 				var frameRange = this.ActiveFrameRange;
 				var frameSpeed = this.ActiveFrameSpeed;
@@ -1120,7 +1120,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				nameof(this.uZombieGroundSwatchLayer_IsChecked),
 			]);
 			this.SuppressApplyFilterChanged = false;
-			if (this.Activated && (args.AddedItems.Count != 0 || args.RemovedItems.Count != 0)) {
+			if (this.Activated && (!args.AddedItems.IsEmpty() || !args.RemovedItems.IsEmpty())) {
 				var target = this.ActiveTarget;
 				var frameRange = this.ActiveFrameRange;
 				var frameSpeed = this.ActiveFrameSpeed;
@@ -1169,7 +1169,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			if (!this.Loaded) {
 				return;
 			}
-			if (senders.SelectedItems.Count == 0) {
+			if (senders.SelectedItems.IsEmpty()) {
 				senders.SelectAll();
 			}
 			return;
@@ -1757,7 +1757,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Floater uPlantCustomLayerIcon_Opacity {
 			get {
-				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
+				if (!this.Loaded || this.PlantCustomLayerName.IsEmpty()) {
 					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
 				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
@@ -1770,7 +1770,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Boolean uPlantCustomLayer_IsEnabled {
 			get {
-				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
+				if (!this.Loaded || this.PlantCustomLayerName.IsEmpty()) {
 					return false;
 				}
 				return true;
@@ -1779,7 +1779,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public List<String> uPlantCustomLayer_ItemsSource {
 			get {
-				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
+				if (!this.Loaded || this.PlantCustomLayerName.IsEmpty()) {
 					return [];
 				}
 				return [..this.PlantCustomLayerName.Select((value) => value["custom_".Length..]), this.uPlantCustomLayer_mItemNameOfNone];
@@ -1788,7 +1788,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public String? uPlantCustomLayer_SelectedItem {
 			get {
-				if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
+				if (!this.Loaded || this.PlantCustomLayerName.IsEmpty()) {
 					return null;
 				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.PlantCustomLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
@@ -1805,7 +1805,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (!this.Loaded || this.PlantCustomLayerName.Count == 0) {
+			if (!this.Loaded || this.PlantCustomLayerName.IsEmpty()) {
 				return;
 			}
 			if (senders.SelectedIndex == -1) {
@@ -1825,7 +1825,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Floater uZombieStateLayerIcon_Opacity {
 			get {
-				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieStateLayerName.IsEmpty()) {
 					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
 				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
@@ -1838,7 +1838,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Boolean uZombieStateLayer_IsEnabled {
 			get {
-				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieStateLayerName.IsEmpty()) {
 					return false;
 				}
 				return true;
@@ -1847,7 +1847,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public List<String> uZombieStateLayer_ItemsSource {
 			get {
-				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieStateLayerName.IsEmpty()) {
 					return [];
 				}
 				return [..this.ZombieStateLayerName, this.uZombieStateLayer_mItemNameOfNone];
@@ -1856,7 +1856,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public String? uZombieStateLayer_SelectedItem {
 			get {
-				if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieStateLayerName.IsEmpty()) {
 					return null;
 				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.ZombieStateLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
@@ -1873,7 +1873,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			SelectionChangedEventArgs args
 		) {
 			var senders = sender.As<ComboBox>();
-			if (!this.Loaded || this.ZombieStateLayerName.Count == 0) {
+			if (!this.Loaded || this.ZombieStateLayerName.IsEmpty()) {
 				return;
 			}
 			if (senders.SelectedIndex == -1) {
@@ -1893,7 +1893,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Floater uZombieGroundSwatchLayerIcon_Opacity {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.IsEmpty()) {
 					return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(false);
 				}
 				return ConvertHelper.MakeBooleanToFloaterOfOpacityEnabled(true);
@@ -1904,7 +1904,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Boolean uZombieGroundSwatchLayer_IsEnabled {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.IsEmpty()) {
 					return false;
 				}
 				return true;
@@ -1913,11 +1913,11 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 
 		public Boolean uZombieGroundSwatchLayer_IsChecked {
 			get {
-				if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+				if (!this.Loaded || this.ZombieGroundSwatchLayerName.IsEmpty()) {
 					return false;
 				}
 				var selectedItem = this.Animation.Sprite.Where((value, index) => value.Name != null && this.ZombieGroundSwatchLayerName.Contains(value.Name) && this.SpriteFilter[index]).ToList();
-				return selectedItem.Count != 0;
+				return !selectedItem.IsEmpty();
 			}
 		}
 
@@ -1926,7 +1926,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<ToggleButton>();
-			if (!this.Loaded || this.ZombieGroundSwatchLayerName.Count == 0) {
+			if (!this.Loaded || this.ZombieGroundSwatchLayerName.IsEmpty()) {
 				return;
 			}
 			var newValue = senders.IsChecked.AsNotNull();

@@ -263,30 +263,6 @@ export namespace Twinning::Kernel::Range {
 		return current;
 	}
 
-	template <typename TRange, typename TValue> requires
-		CategoryConstraint<IsValid<TRange> && IsPureInstance<TValue>>
-		&& (IsRange<AsPure<TRange>>)
-	inline constexpr auto find(
-		TRange &&                 range,
-		TValue const &            value,
-		decltype(range.begin()) & result
-	) -> Boolean {
-		result = find(range, value);
-		return result != range.end();
-	}
-
-	template <typename TRange, typename TValue> requires
-		CategoryConstraint<IsValid<TRange> && IsPureInstance<TValue>>
-		&& (IsRange<AsPure<TRange>>)
-	inline constexpr auto has(
-		TRange &&      range,
-		TValue const & value
-	) -> Boolean {
-		return find(range, value) != range.end();
-	}
-
-	// ----------------
-
 	template <typename TRange, typename TFinder> requires
 		CategoryConstraint<IsValid<TRange> && IsPureInstance<TFinder>>
 		&& (IsRange<AsPure<TRange>>)
@@ -304,30 +280,6 @@ export namespace Twinning::Kernel::Range {
 			++current;
 		}
 		return current;
-	}
-
-	template <typename TRange, typename TFinder> requires
-		CategoryConstraint<IsValid<TRange> && IsPureInstance<TFinder>>
-		&& (IsRange<AsPure<TRange>>)
-		&& (IsGenericCallable<TFinder>)
-	inline constexpr auto find_if(
-		TRange &&                 range,
-		TFinder const &           finder,
-		decltype(range.begin()) & result
-	) -> Boolean {
-		result = find_if(range, finder);
-		return result != range.end();
-	}
-
-	template <typename TRange, typename TFinder> requires
-		CategoryConstraint<IsValid<TRange> && IsPureInstance<TFinder>>
-		&& (IsRange<AsPure<TRange>>)
-		&& (IsGenericCallable<TFinder>)
-	inline constexpr auto has_if(
-		TRange &&       range,
-		TFinder const & finder
-	) -> Boolean {
-		return find_if(range, finder) != range.end();
 	}
 
 	// ----------------
@@ -373,42 +325,27 @@ export namespace Twinning::Kernel::Range {
 		return k_null_optional;
 	}
 
-	#pragma endregion
+	// ----------------
 
-	#pragma region find sub
-
-	template <typename TRange, typename TSubRange> requires
-		CategoryConstraint<IsValid<TRange> && IsValid<TSubRange>>
-		&& (IsRange<AsPure<TRange>> && IsRange<AsPure<TSubRange>>)
-	inline constexpr auto find_sub_index(
-		TRange &&    range,
-		TSubRange && sub_range
-	) -> Optional<Size> {
-		auto range_size = size(range);
-		auto sub_range_size = size(sub_range);
-		if (range_size >= sub_range_size) {
-			auto index = k_begin_index;
-			auto current = range.begin();
-			auto end = range.begin() + (range_size - sub_range_size + k_next_index);
-			while (current != end) {
-				if (equal(make_range_n(current, sub_range_size), sub_range)) {
-					return make_optional_of(index);
-				}
-				++current;
-				++index;
-			}
-		}
-		return k_null_optional;
+	template <typename TRange, typename TValue> requires
+		CategoryConstraint<IsValid<TRange> && IsPureInstance<TValue>>
+		&& (IsRange<AsPure<TRange>>)
+	inline constexpr auto has(
+		TRange &&      range,
+		TValue const & value
+	) -> Boolean {
+		return find(range, value) != range.end();
 	}
 
-	template <typename TRange, typename TSubRange> requires
-		CategoryConstraint<IsValid<TRange> && IsValid<TSubRange>>
-		&& (IsRange<AsPure<TRange>> && IsRange<AsPure<TSubRange>>)
-	inline constexpr auto has_sub(
-		TRange &&    range,
-		TSubRange && sub_range
+	template <typename TRange, typename TFinder> requires
+		CategoryConstraint<IsValid<TRange> && IsPureInstance<TFinder>>
+		&& (IsRange<AsPure<TRange>>)
+		&& (IsGenericCallable<TFinder>)
+	inline constexpr auto has_if(
+		TRange &&       range,
+		TFinder const & finder
 	) -> Boolean {
-		return find_sub_index(range, sub_range).has();
+		return find_if(range, finder) != range.end();
 	}
 
 	// ----------------

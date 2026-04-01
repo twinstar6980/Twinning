@@ -56,6 +56,33 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#endregion
 
+		#region equality
+
+		public override Boolean Equals(
+			Object? other
+		) {
+			return other is StoragePath that && this.mType == that.mType && this.mRoot == that.mRoot && this.mPart.SequenceEqual(that.mPart);
+		}
+
+		public override Size GetHashCode(
+		) {
+			return HashCode.Combine(this.mType, this.mRoot, this.mPart);
+		}
+
+		// ----------------
+
+		public static Boolean operator ==(
+			StoragePath? left,
+			StoragePath? right
+		) => Object.Equals(left, right);
+
+		public static Boolean operator !=(
+			StoragePath? left,
+			StoragePath? right
+		) => !Object.Equals(left, right);
+
+		#endregion
+
 		#region query
 
 		public StoragePathType Type(
@@ -80,7 +107,7 @@ namespace Twinning.AssistantPlus.Utility {
 		public StoragePath? Parent(
 		) {
 			var result = null as StoragePath;
-			if (this.mType != StoragePathType.Nothing && this.mPart.Count != 0) {
+			if (this.mType != StoragePathType.Nothing && !this.mPart.IsEmpty()) {
 				result = new ();
 				result.mType = this.mType;
 				result.mRoot = this.mRoot;
@@ -92,7 +119,7 @@ namespace Twinning.AssistantPlus.Utility {
 		public String? Name(
 		) {
 			var result = null as String;
-			if (this.mType != StoragePathType.Nothing && this.mPart.Count != 0) {
+			if (this.mType != StoragePathType.Nothing && !this.mPart.IsEmpty()) {
 				result = this.mPart[^1];
 			}
 			return result;
@@ -101,7 +128,7 @@ namespace Twinning.AssistantPlus.Utility {
 		public String? Stem(
 		) {
 			var result = null as String;
-			if (this.mType != StoragePathType.Nothing && this.mPart.Count != 0) {
+			if (this.mType != StoragePathType.Nothing && !this.mPart.IsEmpty()) {
 				var position = this.mPart[^1].LastIndexOf('.');
 				if (position != -1) {
 					result = this.mPart[^1].Substring(0, position);
@@ -116,7 +143,7 @@ namespace Twinning.AssistantPlus.Utility {
 		public String? Extension(
 		) {
 			var result = null as String;
-			if (this.mType != StoragePathType.Nothing && this.mPart.Count != 0) {
+			if (this.mType != StoragePathType.Nothing && !this.mPart.IsEmpty()) {
 				var position = this.mPart[^1].LastIndexOf('.');
 				if (position != -1) {
 					result = this.mPart[^1].Substring(position + 1);
@@ -164,7 +191,7 @@ namespace Twinning.AssistantPlus.Utility {
 			this.mType = StoragePathType.Nothing;
 			this.mRoot = null;
 			this.mPart = [];
-			if (path.Length != 0) {
+			if (!path.IsEmpty()) {
 				var position = 0;
 				if (path.Length >= 2 && path[1] == ':' && ConvertHelper.IsLetter(path[0])) {
 					this.mRoot = path.Substring(0, 2);
@@ -183,7 +210,7 @@ namespace Twinning.AssistantPlus.Utility {
 						var segment = path.Substring(location, position - location);
 						if (segment == "" || segment == ".") {
 						}
-						else if (segment == ".." && this.mPart.Count != 0 && this.mPart.Last() != "..") {
+						else if (segment == ".." && !this.mPart.IsEmpty() && this.mPart.Last() != "..") {
 							this.mPart.RemoveAt(this.mPart.Count - 1);
 						}
 						else {
@@ -221,7 +248,7 @@ namespace Twinning.AssistantPlus.Utility {
 				if (this.mType == StoragePathType.Relative) {
 					result += '.';
 				}
-				if (this.mPart.Count == 0) {
+				if (this.mPart.IsEmpty()) {
 					result += separator;
 				}
 				foreach (var segment in this.mPart) {

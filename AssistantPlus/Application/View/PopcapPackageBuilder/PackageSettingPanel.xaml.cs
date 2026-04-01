@@ -247,7 +247,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			if (senders.Text.Length == 0 || StorageHelper.CheckName(senders.Text)) {
+			if (senders.Text.IsEmpty() || StorageHelper.CheckName(senders.Text)) {
 				this.Value.Manifest.Suffix = senders.Text;
 			}
 			this.NotifyPropertyChanged([

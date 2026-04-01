@@ -211,11 +211,11 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 					}
 					item.SingleFiltered = false;
 					item.BatchFiltered = false;
-					if (item.Configuration.Filter == null && this.Resource.Count == 0) {
+					if (item.Configuration.Filter == null && this.Resource.IsEmpty()) {
 						item.SingleFiltered |= true;
 						item.BatchFiltered |= true;
 					}
-					if (item.Configuration.Filter != null && this.Resource.Count != 0) {
+					if (item.Configuration.Filter != null && !this.Resource.IsEmpty()) {
 						var nameRule = new Regex(item.Configuration.Filter.Name, RegexOptions.IgnoreCase);
 						item.SingleFiltered |= this.Resource.All((resource) => nameRule.IsMatch(resource.Item1.Name() ?? ""));
 						item.BatchFiltered |= true;
@@ -288,7 +288,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			String?                     method,
 			Dictionary<String, Object>? argument
 		) {
-			var actualInput = this.Resource.Count != 0 ? this.Resource.Select((value) => value.Item1).Cast<String?>() : [null];
+			var actualInput = !this.Resource.IsEmpty() ? this.Resource.Select((value) => value.Item1.EmitGeneric()).Cast<String?>() : [null];
 			var actualMethod = method == null ? null : CoreTaskWorker.ForwardHelper.MakeMethodMaybeBatch(method, this.EnableBatch);
 			var actualCommand = actualInput.Select((value) => CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(value, actualMethod, argument)).ToList();
 			await CoreTaskWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);

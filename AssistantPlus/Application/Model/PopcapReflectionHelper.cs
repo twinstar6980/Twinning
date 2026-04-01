@@ -150,7 +150,7 @@ namespace Twinning.AssistantPlus {
 		public static String MakeReferenceExpression(
 			Tuple<String, String> ripe
 		) {
-			return $"RTID({(ripe.Item1.Length == 0 && ripe.Item2.Length == 0 ? "0" : $"{ripe.Item2}@{ripe.Item1}")})";
+			return $"RTID({(ripe.Item1.IsEmpty() && ripe.Item2.IsEmpty() ? "0" : $"{ripe.Item2}@{ripe.Item1}")})";
 		}
 
 		public static Tuple<String, String> ParseReferenceExpression(

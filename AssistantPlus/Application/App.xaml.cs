@@ -194,7 +194,7 @@ namespace Twinning.AssistantPlus {
 					}
 					return;
 				};
-				WindowHelper.SetIcon(window, $"{this.PackageDirectory}/Asset/Logo.ico");
+				WindowHelper.SetIcon(window, this.PackageDirectory.Join("Asset").Join("Logo.ico").EmitNative());
 				WindowHelper.SetTitle(window, ApplicationInformation.Name);
 				WindowHelper.SetTitleBar(window, true, null, false);
 				WindowHelper.Activate(window);

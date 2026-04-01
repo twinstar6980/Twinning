@@ -111,7 +111,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			var optionDescriptorFile = null as StoragePath;
 			var option = new CommandLineReader(optionView);
 			if (option.Check("-descriptor_file")) {
-				optionDescriptorFile = option.NextString().SelfLet((it)=>new StoragePath(it));
+				optionDescriptorFile = option.NextString().SelfLet((it) => new StoragePath(it));
 			}
 			if (!option.Done()) {
 				throw new ($"Too many option '{String.Join(' ', option.NextStringList())}'.");

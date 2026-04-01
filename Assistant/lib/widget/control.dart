@@ -2279,7 +2279,7 @@ extension StyledMenuExtension on StyledMenu<dynamic> {
     return await material.showMenu(
       context: context,
       position: position,
-      items: menu.content.length == 0
+      items: menu.content.isEmpty
         ? [
           material.PopupMenuItem(
             height: 16,

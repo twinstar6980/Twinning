@@ -67,11 +67,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         }
         var singleFiltered = false;
         var batchFiltered = false;
-        if (item.filter == null && this._resource.length == 0) {
+        if (item.filter == null && this._resource.isEmpty) {
           singleFiltered |= true;
           batchFiltered |= true;
         }
-        if (item.filter != null && this._resource.length != 0) {
+        if (item.filter != null && !this._resource.isEmpty) {
           var nameRule = RegExp(item.filter!.name);
           singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.path.name() ?? ''));
           batchFiltered |= true;

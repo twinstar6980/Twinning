@@ -17,7 +17,7 @@ class ApplicationNotificationManager {
 
   lib.FlutterLocalNotificationsPlugin? _plugin;
 
-  Void Function()? _handler;
+  Future<Void> Function()? _handler;
 
   // ----------------
 
@@ -65,7 +65,7 @@ class ApplicationNotificationManager {
   }
 
   Future<Void> listen(
-    Void Function()? handler,
+    Future<Void> Function()? handler,
   ) async {
     assertTest(this._initialized);
     this._handler = handler;

@@ -172,7 +172,7 @@ namespace Twinning.AssistantPlus.Bridge {
 					MemoryHelper.Free(result);
 					MemoryHelper.Free(exception);
 				}
-				if (exceptionProxy.Value.Count != 0) {
+				if (!exceptionProxy.Value.IsEmpty()) {
 					throw new (exceptionProxy.Value.First());
 				}
 				return;

@@ -55,7 +55,7 @@ class GameInformation {
   GameRecordState  record;
   GameInformation(
   ) :
-    this.path = .nothing(),
+    this.path = .new(),
     this.library = null,
     this.identifier = null,
     this.version = null,
@@ -502,7 +502,7 @@ class GameProgramHelper {
           await ExternalToolHelper.runZipalign(packagePartFile);
         }
         if (enableSign) {
-          await ExternalToolHelper.runApksigner(packagePartFile, .nothing(), '');
+          await ExternalToolHelper.runApksigner(packagePartFile, .new(), '');
         }
       }
     }
@@ -557,7 +557,7 @@ class GameRecordHelper {
   ) async {
     var state = GameRecordState.invalid;
     var itemList = await GameRecordHelper.listFile(recordDirectory);
-    if (itemList.length == 0) {
+    if (itemList.isEmpty) {
       state = .none;
     }
     else if (itemList.firstWhereOrNull((it) => it.name()! == '0000') != null) {

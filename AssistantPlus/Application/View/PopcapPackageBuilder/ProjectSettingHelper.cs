@@ -38,7 +38,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			Integer? fallback
 		) {
 			var result = default(Integer?);
-			if (text.Length != 0) {
+			if (!text.IsEmpty()) {
 				if (text.All(Character.IsAsciiDigit) && Integer.TryParse(text, out var resultValue)) {
 					if (resultValue != 0) {
 						result = resultValue;
@@ -56,7 +56,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			String? fallback
 		) {
 			var result = null as String;
-			if (text.Length != 0) {
+			if (!text.IsEmpty()) {
 				if (text.Length == 4 && text.All(Character.IsAsciiLetter)) {
 					result = text.ToUpperInvariant();
 				}

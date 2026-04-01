@@ -362,6 +362,21 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region shell
 
+		public static async Task<StoragePath> Temporary(
+		) {
+			var parent = App.Instance.CacheDirectory;
+			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
+			var result = parent.Join(name);
+			var suffix = 0;
+			while (await StorageHelper.Exist(result)) {
+				suffix += 1;
+				result = parent.Join($"{name}.{suffix}");
+			}
+			return result;
+		}
+
+		// ----------------
+
 		public static async Task Reveal(
 			StoragePath target
 		) {
@@ -513,28 +528,13 @@ namespace Twinning.AssistantPlus.Utility {
 		public static Boolean CheckName(
 			String name
 		) {
-			if (name.Length == 0) {
+			if (name.IsEmpty()) {
 				return false;
 			}
 			if (name[0] == ' ' || name[^1] == ' ' || name[^1] == '.') {
 				return false;
 			}
 			return name.All((value) => !StorageHelper.InvalidPathNameCharacter.Contains(value));
-		}
-
-		// ----------------
-
-		public static async Task<StoragePath> Temporary(
-		) {
-			var parent = App.Instance.CacheDirectory;
-			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
-			var result = parent.Join(name);
-			var suffix = 0;
-			while (await StorageHelper.Exist(result)) {
-				suffix += 1;
-				result = parent.Join($"{name}.{suffix}");
-			}
-			return result;
 		}
 
 		// ----------------

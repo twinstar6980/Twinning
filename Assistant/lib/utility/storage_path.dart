@@ -32,21 +32,16 @@ class StoragePath {
 
   // ----------------
 
-  StoragePath.nothing(
+  StoragePath(
   ) :
     this._type = .nothing,
     this._root = null,
     this._part = [];
 
-  StoragePath.relative(
+  StoragePath.by(
+    StoragePathType type,
   ) :
-    this._type = .relative,
-    this._root = null,
-    this._part = [];
-
-  StoragePath.absolute(
-  ) :
-    this._type = .absolute,
+    this._type = type,
     this._root = null,
     this._part = [];
 
@@ -62,13 +57,13 @@ class StoragePath {
 
   // #endregion
 
-  // #region operator
-
-  @override
-  get hashCode => super.hashCode ^ this._type.hashCode ^ this._root.hashCode ^ this._part.hashCode;
+  // #region equality
 
   @override
   operator ==(other) => other is StoragePath && this._type == other._type && this._root == other._root && listEquals(this._part, other._part);
+
+  @override
+  get hashCode => super.hashCode ^ this._type.hashCode ^ this._root.hashCode ^ this._part.hashCode;
 
   // #endregion
 
@@ -97,7 +92,7 @@ class StoragePath {
   ) {
     var result = null as StoragePath?;
     if (this._type != .nothing && !this._part.isEmpty) {
-      result = .relative();
+      result = .new();
       result._type = this._type;
       result._root = this._root;
       result._part.addAll(this._part.slice(0, this._part.length - 1));
@@ -151,7 +146,7 @@ class StoragePath {
     String other,
   ) {
     assertTest(this._type != .nothing);
-    var result = StoragePath.nothing();
+    var result = StoragePath();
     result._type = this._type;
     result._root = this._root;
     result._part.addAll(this._part);
@@ -164,7 +159,7 @@ class StoragePath {
   ) {
     assertTest(this._type != .nothing);
     assertTest(other._type == .relative);
-    var result = StoragePath.nothing();
+    var result = StoragePath();
     result._type = this._type;
     result._root = this._root;
     result._part.addAll(this._part);

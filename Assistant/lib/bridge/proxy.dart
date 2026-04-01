@@ -157,7 +157,7 @@ class ExecutorProxy {
         ffi.calloc.free(result);
         ffi.calloc.free(exception);
       }
-      if (exceptionProxy.value.length != 0) {
+      if (!exceptionProxy.value.isEmpty) {
         throw exceptionProxy.value.first;
       }
       return;

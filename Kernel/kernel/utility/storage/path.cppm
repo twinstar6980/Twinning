@@ -149,6 +149,35 @@ export namespace Twinning::Kernel::Storage {
 			return result;
 		}
 
+		// ----------------
+
+		auto stem(
+		) const -> Optional<String> {
+			auto result = Optional<String>{};
+			if (thiz.m_type != PathType::Constant::nothing() && !thiz.m_part.empty()) {
+				auto position = Range::find_index(Range::make_reverse_range_of(thiz.m_part.last()), '.'_c);
+				if (position.has()) {
+					result.set(thiz.m_part.last().head(thiz.m_part.last().size() - k_next_index - position.get()));
+				}
+				else {
+					result.set(thiz.m_part.last());
+				}
+			}
+			return result;
+		}
+
+		auto extension(
+		) const -> Optional<String> {
+			auto result = Optional<String>{};
+			if (thiz.m_type != PathType::Constant::nothing() && !thiz.m_part.empty()) {
+				auto position = Range::find_index(Range::make_reverse_range_of(thiz.m_part.last()), '.'_c);
+				if (position.has()) {
+					result.set(thiz.m_part.last().tail(position.get()));
+				}
+			}
+			return result;
+		}
+
 		#pragma endregion
 
 		#pragma region compose

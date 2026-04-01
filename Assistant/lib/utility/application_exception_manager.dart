@@ -15,7 +15,7 @@ class ApplicationExceptionManager {
 
   Boolean _initialized;
 
-  Void Function(Object exception, StackTrace? stack)? _handler;
+  Future<Void> Function(Object exception, StackTrace? stack)? _handler;
 
   // ----------------
 
@@ -45,7 +45,7 @@ class ApplicationExceptionManager {
   }
 
   Future<Void> listen(
-    Void Function(Object exception, StackTrace? stack)? handler,
+    Future<Void> Function(Object exception, StackTrace? stack)? handler,
   ) async {
     assertTest(this._initialized);
     this._handler = handler;

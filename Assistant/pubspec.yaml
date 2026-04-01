@@ -1,7 +1,7 @@
 name: assistant
-version: 163.0.0+163
+version: 164.0.0+164
 environment:
-  sdk: ^3.11.3
+  sdk: ^3.11.4
 dependencies:
   flutter:
     sdk: flutter
@@ -17,7 +17,7 @@ dependencies:
   archive: 4.0.9
   provider: 6.1.5+1
   path_provider: 2.1.5
-  material_symbols_icons: 4.2928.0
+  material_symbols_icons: 4.2928.1
   single_child_two_dimensional_scroll_view: 0.1.0
   super_drag_and_drop: 0.9.1
   dynamic_color: 1.8.1
