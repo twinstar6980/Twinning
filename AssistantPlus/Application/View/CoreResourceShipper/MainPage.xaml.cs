@@ -317,9 +317,8 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var item = await args.DataView.GetStorageItemsAsync();
-				var resource = item.Select((value) => StorageHelper.GetLongPath(value.Path)).ToList();
-				await this.AppendResource(resource);
+				var item = await args.DataView.SelfLet(ConvertHelper.DataViewGetStoragePath);
+				await this.AppendResource(item);
 			}
 			return;
 		}

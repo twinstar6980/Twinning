@@ -813,18 +813,17 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var item = await args.DataView.GetStorageItemsAsync();
+				var item = await args.DataView.SelfLet(ConvertHelper.DataViewGetStoragePath);
 				if (item.Count != 1) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var itemPath = StorageHelper.GetLongPath(item[0].Path);
 				var animationFile = null as StoragePath;
-				if (await StorageHelper.ExistFile(itemPath)) {
-					animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(itemPath);
+				if (await StorageHelper.ExistFile(item.First())) {
+					animationFile = await PopcapAnimationHelper.CheckAnimationFilePath(item.First());
 				}
-				if (await StorageHelper.ExistDirectory(itemPath)) {
-					animationFile = await PopcapAnimationHelper.CheckAnimationDirectoryPath(itemPath);
+				if (await StorageHelper.ExistDirectory(item.First())) {
+					animationFile = await PopcapAnimationHelper.CheckAnimationDirectoryPath(item.First());
 				}
 				if (animationFile == null) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");

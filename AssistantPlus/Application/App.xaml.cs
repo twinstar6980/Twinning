@@ -44,9 +44,9 @@ namespace Twinning.AssistantPlus {
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 			AssertTest(App.Instance == null);
 			App.Instance = this;
-			this.PackageDirectory = new (Package.Current.InstalledPath);
+			this.PackageDirectory = StorageHelper.QueryApplicationPackageDirectory();
 			this.ProgramFile = this.PackageDirectory.Join("Application.exe");
-			this.SharedDirectory = new StoragePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).Join(ApplicationInformation.Identifier);
+			this.SharedDirectory = StorageHelper.QueryApplicationUnpackageSharedDirectory().Join(ApplicationInformation.Identifier);
 			this.CacheDirectory = this.SharedDirectory.Join("cache");
 			this.Setting = new ();
 			this.MainWindow = null!;

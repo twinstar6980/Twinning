@@ -1131,14 +1131,17 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var item = await args.DataView.GetStorageItemsAsync();
+				var item = await args.DataView.SelfLet(ConvertHelper.DataViewGetStoragePath);
 				if (item.Count != 1) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var projectDirectory = StorageHelper.GetLongPath(item[0].Path);
-				if (!await StorageHelper.ExistDirectory(projectDirectory)) {
-					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a directory.", "");
+				var projectDirectory = null as StoragePath;
+				if (await StorageHelper.ExistDirectory(item.First())) {
+					projectDirectory = item.First();
+				}
+				if (projectDirectory == null) {
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");
 					return;
 				}
 				await this.ApplyLoad(projectDirectory);

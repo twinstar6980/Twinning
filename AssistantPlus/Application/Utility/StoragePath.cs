@@ -66,19 +66,19 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public override Size GetHashCode(
 		) {
-			return HashCode.Combine(this.mType, this.mRoot, this.mPart);
+			return new List<Object?>([this.mType, this.mRoot, ..this.mPart]).GetMixedHashCode();
 		}
 
 		// ----------------
 
 		public static Boolean operator ==(
 			StoragePath? left,
-			StoragePath? right
+			Object?      right
 		) => Object.Equals(left, right);
 
 		public static Boolean operator !=(
 			StoragePath? left,
-			StoragePath? right
+			Object?      right
 		) => !Object.Equals(left, right);
 
 		#endregion

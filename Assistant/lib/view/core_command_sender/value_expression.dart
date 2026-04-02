@@ -10,7 +10,7 @@ class ValueExpression {
   @override
   operator ==(other) => other is ValueExpression;
   @override
-  get hashCode => super.hashCode; // ignore: unnecessary_overrides
+  get hashCode => Object.hashAll([]);
 }
 
 // ----------------
@@ -23,7 +23,7 @@ class BooleanExpression extends ValueExpression {
   @override
   operator ==(other) => other is BooleanExpression && this.value == other.value;
   @override
-  get hashCode => super.hashCode ^ this.value.hashCode;
+  get hashCode => Object.hashAll([this.value]);
 }
 
 class IntegerExpression extends ValueExpression {
@@ -34,7 +34,7 @@ class IntegerExpression extends ValueExpression {
   @override
   operator ==(other) => other is IntegerExpression && this.value == other.value;
   @override
-  get hashCode => super.hashCode ^ this.value.hashCode;
+  get hashCode => Object.hashAll([this.value]);
 }
 
 class FloaterExpression extends ValueExpression {
@@ -45,7 +45,7 @@ class FloaterExpression extends ValueExpression {
   @override
   operator ==(other) => other is FloaterExpression && this.value == other.value;
   @override
-  get hashCode => super.hashCode ^ this.value.hashCode;
+  get hashCode => Object.hashAll([this.value]);
 }
 
 class SizeExpression extends ValueExpression {
@@ -58,7 +58,7 @@ class SizeExpression extends ValueExpression {
   @override
   operator ==(other) => other is SizeExpression && this.count == other.count && this.exponent == other.exponent;
   @override
-  get hashCode => super.hashCode ^ this.count.hashCode ^ this.exponent.hashCode;
+  get hashCode => Object.hashAll([this.count, this.exponent]);
 }
 
 class StringExpression extends ValueExpression {
@@ -69,7 +69,7 @@ class StringExpression extends ValueExpression {
   @override
   operator ==(other) => other is StringExpression && this.value == other.value;
   @override
-  get hashCode => super.hashCode ^ this.value.hashCode;
+  get hashCode => Object.hashAll([this.value]);
 }
 
 class PathExpression extends ValueExpression {
@@ -80,7 +80,7 @@ class PathExpression extends ValueExpression {
   @override
   operator ==(other) => other is PathExpression && this.content == other.content;
   @override
-  get hashCode => super.hashCode ^ this.content.hashCode;
+  get hashCode => Object.hashAll([this.content]);
 }
 
 // ----------------

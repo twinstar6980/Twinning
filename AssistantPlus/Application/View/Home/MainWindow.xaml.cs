@@ -341,9 +341,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			var senders = sender.As<Control.Box>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var item = await args.DataView.GetStorageItemsAsync();
-				var itemPath = item.Select((it) => StorageHelper.GetLongPath(it.Path)).ToList();
-				await App.Instance.HandleForward(itemPath);
+				var item = await args.DataView.SelfLet(ConvertHelper.DataViewGetStoragePath);
+				await App.Instance.HandleForward(item);
 			}
 			return;
 		}

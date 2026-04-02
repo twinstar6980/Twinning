@@ -187,14 +187,17 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			var senders = sender.As<Page>();
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var item = await args.DataView.GetStorageItemsAsync();
+				var item = await args.DataView.SelfLet(ConvertHelper.DataViewGetStoragePath);
 				if (item.Count != 1) {
 					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is multiply.", "");
 					return;
 				}
-				var descriptorFile = StorageHelper.GetLongPath(item[0].Path);
-				if (!await StorageHelper.ExistFile(descriptorFile)) {
-					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is not a file.", "");
+				var descriptorFile = null as StoragePath;
+				if (await StorageHelper.ExistDirectory(item.First())) {
+					descriptorFile = item.First();
+				}
+				if (descriptorFile == null) {
+					await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Error, "Source is invalid.", "");
 					return;
 				}
 				await this.ApplyLoad(descriptorFile);

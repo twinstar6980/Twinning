@@ -63,7 +63,7 @@ class StoragePath {
   operator ==(other) => other is StoragePath && this._type == other._type && this._root == other._root && listEquals(this._part, other._part);
 
   @override
-  get hashCode => super.hashCode ^ this._type.hashCode ^ this._root.hashCode ^ this._part.hashCode;
+  get hashCode => Object.hashAll([this._type, this._root, ...this._part]);
 
   // #endregion
 

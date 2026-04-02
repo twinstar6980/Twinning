@@ -187,4 +187,14 @@ public static class CommonUtility {
 		return new (self);
 	}
 
+	public static Size GetMixedHashCode<TValue>(
+		this IEnumerable<TValue> self
+	) {
+		var result = new HashCode();
+		foreach (var item in self) {
+			result.Add(item);
+		}
+		return result.ToHashCode();
+	}
+
 }

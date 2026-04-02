@@ -531,8 +531,6 @@ class StorageHelper {
 
   // ----------------
 
-  // ----------------
-
   static Future<StoragePath?> parseAndroidContentUri(
     BuildContext context,
     Uri          uri,

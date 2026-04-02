@@ -398,13 +398,13 @@ class GameProgramHelper {
       packageType = .flat;
     }
     if (await StorageHelper.existFile(target)) {
-      if (target.extension()! == 'zip') {
+      if (target.extension()?.toLowerCase() == 'zip') {
         packageType = .zip;
       }
-      if (target.extension()! == 'apk') {
+      if (target.extension()?.toLowerCase() == 'apk') {
         packageType = .apk;
       }
-      if (target.extension()! == 'apks') {
+      if (target.extension()?.toLowerCase() == 'apks') {
         packageType = .apks;
       }
     }
@@ -415,33 +415,45 @@ class GameProgramHelper {
     if (packageType != .flat) {
       onNotify('Phase: load package file.');
       packageBundle = lib.ZipDecoder().decodeBytes(await StorageHelper.readFile(target));
-      packagePartList = switch (packageType) {
-        .zip  => [(name: 'main.zip', data: packageBundle)],
-        .apk  => [(name: 'main.apk', data: packageBundle)],
-        .apks => packageBundle.files.where((it) => it.isFile && it.name.toLowerCase().endsWith('.apk')).map((it) => (name: it.name, data: lib.ZipDecoder().decodeBytes(it.content))).toList(),
-        _     => throw UnreachableException(),
-      };
+      packagePartList = [];
+      if (packageType == .zip) {
+        packagePartList.add((name: 'main.zip', data: packageBundle));
+      }
+      if (packageType == .apk) {
+        packagePartList.add((name: 'main.apk', data: packageBundle));
+      }
+      if (packageType == .apks) {
+        for (var packagePartFile in packageBundle.files) {
+          if (!packagePartFile.isFile) {
+            continue;
+          }
+          if (!packagePartFile.name.toLowerCase().endsWith('.apk')) {
+            continue;
+          }
+          packagePartList.add((name: packagePartFile.name, data: lib.ZipDecoder().decodeBytes(packagePartFile.content)));
+        }
+      }
     }
     onNotify('Phase: extract necessary file.');
     var targetDirectory = temporaryDirectory.join('flat');
-    var necessaryFileNameList = GamePlatform.values.map((it) => [GameProgramHelper._getProgramFilePath(it), GameProgramHelper._getMetadataFilePath(it)]).flattenedToSet;
+    var necessaryFilePathList = GamePlatform.values.map((it) => [GameProgramHelper._getProgramFilePath(it), GameProgramHelper._getMetadataFilePath(it)]).flattenedToSet;
     if (packageType == .flat) {
-      for (var necessaryFileName in necessaryFileNameList) {
-        if (await StorageHelper.existFile(target.push(necessaryFileName))) {
-          await StorageHelper.copy(target.push(necessaryFileName), targetDirectory.push(necessaryFileName), false);
+      for (var necessaryFilePath in necessaryFilePathList) {
+        if (await StorageHelper.existFile(target.push(necessaryFilePath))) {
+          await StorageHelper.copy(target.push(necessaryFilePath), targetDirectory.push(necessaryFilePath), false);
         }
       }
     }
     else {
       packagePartList!;
       for (var packagePart in packagePartList) {
-        for (var necessaryFileName in necessaryFileNameList) {
-          var necessaryFile = packagePart.data.find(necessaryFileName.emitGeneric());
+        for (var necessaryFilePath in necessaryFilePathList) {
+          var necessaryFile = packagePart.data.find(necessaryFilePath.emitGeneric());
           if (necessaryFile == null) {
             continue;
           }
-          await StorageHelper.createFile(targetDirectory.push(necessaryFileName));
-          await StorageHelper.writeFile(targetDirectory.push(necessaryFileName), necessaryFile.content);
+          await StorageHelper.createFile(targetDirectory.push(necessaryFilePath));
+          await StorageHelper.writeFile(targetDirectory.push(necessaryFilePath), necessaryFile.content);
           await necessaryFile.close();
         }
       }
@@ -515,20 +527,23 @@ class GameProgramHelper {
     }
     if (packageType == .zip || packageType == .apk) {
       packagePartList!;
+      var packagePartPath = temporaryDirectory.join('package').join(packagePartList.first.name);
       await StorageHelper.remove(target);
-      await StorageHelper.copy(temporaryDirectory.join('package').join(packagePartList.first.name), target, false);
+      await StorageHelper.copy(packagePartPath, target, false);
     }
     if (packageType == .apks) {
       packageBundle!;
       packagePartList!;
       for (var packagePart in packagePartList) {
+        var packagePartPath = temporaryDirectory.join('package').join(packagePart.name);
         packageBundle.removeFile(packageBundle.find(packagePart.name)!);
-        packageBundle.add(.bytes(packagePart.name, await StorageHelper.readFile(temporaryDirectory.join('package').join(packagePart.name))));
+        packageBundle.add(.bytes(packagePart.name, await StorageHelper.readFile(packagePartPath)));
       }
-      await StorageHelper.createFile(temporaryDirectory.join('package').join('bundle.apks'));
-      await StorageHelper.writeFile(temporaryDirectory.join('package').join('bundle.apks'), lib.ZipEncoder().encodeBytes(packageBundle));
+      var packageMainPath = temporaryDirectory.join('package').join('bundle.apks');
+      await StorageHelper.createFile(packageMainPath);
+      await StorageHelper.writeFile(packageMainPath, lib.ZipEncoder().encodeBytes(packageBundle));
       await StorageHelper.remove(target);
-      await StorageHelper.copy(temporaryDirectory.join('package').join('bundle.apks'), target, false);
+      await StorageHelper.copy(packageMainPath, target, false);
     }
     await StorageHelper.remove(temporaryDirectory);
     onNotify('Phase: done.');
@@ -562,7 +577,7 @@ class GameRecordHelper {
     }
     else if (itemList.firstWhereOrNull((it) => it.name()! == '0000') != null) {
       var itemFile = recordDirectory.join('0000');
-      var itemData = await StorageHelper.readFile(itemFile); // TODO 8
+      var itemData = await StorageHelper.readFile(itemFile); // TODO: limit 8
       if (itemData.length == 8) {
         if (itemData.buffer.asUint32List().first == 0x00000000) {
           state = .decrypted;

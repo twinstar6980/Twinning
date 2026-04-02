@@ -2,6 +2,7 @@
 // ReSharper disable
 
 using Twinning.AssistantPlus;
+using Windows.ApplicationModel;
 
 namespace Twinning.AssistantPlus.Utility {
 
@@ -521,7 +522,9 @@ namespace Twinning.AssistantPlus.Utility {
 			return;
 		}
 
-		// ----------------
+		#endregion
+
+		#region miscellaneous
 
 		private static readonly Character[] InvalidPathNameCharacter = Path.GetInvalidFileNameChars();
 
@@ -547,6 +550,23 @@ namespace Twinning.AssistantPlus.Utility {
 			var destinationLengthCheck = Win32.PInvoke.GetLongPathName(source, destination.AsSpan());
 			AssertTest(destinationLengthCheck == destinationLength - 1);
 			return new (new String(destination.AsSpan(0, destinationLength.CastPrimitive<Size>() - 1)));
+		}
+
+		// ----------------
+
+		public static StoragePath QueryApplicationPackageDirectory(
+		) {
+			return new (Package.Current.InstalledPath);
+		}
+
+		public static StoragePath QueryApplicationPackageSharedDirectory(
+		) {
+			return new (Windows.Storage.ApplicationData.Current.LocalFolder.Path);
+		}
+
+		public static StoragePath QueryApplicationUnpackageSharedDirectory(
+		) {
+			return new (Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
 		}
 
 		#endregion

@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using Windows.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace Twinning.AssistantPlus.Utility {
 
@@ -158,7 +159,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#endregion
 
-		#region string
+		#region character
 
 		public static Boolean IsPathSeparator(
 			Character value
@@ -257,6 +258,18 @@ namespace Twinning.AssistantPlus.Utility {
 			stream.Seek(0);
 			await image.SetSourceAsync(stream);
 			return image;
+		}
+
+		#endregion
+
+		#region data view
+
+		public static async Task<List<StoragePath>> DataViewGetStoragePath(
+			DataPackageView view
+		) {
+			return (await view.GetStorageItemsAsync())
+				.Select((it) => StorageHelper.GetLongPath(it.Path))
+				.ToList();
 		}
 
 		#endregion

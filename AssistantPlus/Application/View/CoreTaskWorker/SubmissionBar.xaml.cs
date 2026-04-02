@@ -641,8 +641,8 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			}
 			if (args.DataView.Contains(StandardDataFormats.StorageItems)) {
 				args.Handled = true;
-				var item = await args.DataView.GetStorageItemsAsync();
-				this.ValueOfPath = new () { Content = StorageHelper.GetLongPath(item[0].Path) };
+				var item = await args.DataView.SelfLet(ConvertHelper.DataViewGetStoragePath);
+				this.ValueOfPath = new () { Content = item.First() };
 				this.NotifyPropertyChanged([
 					nameof(this.uPathContent_Text),
 				]);
