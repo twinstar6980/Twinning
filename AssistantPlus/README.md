@@ -8,7 +8,7 @@
 
 * 要求
 
-	* [Visual Studio 2026 18.3](https://visualstudio.microsoft.com/downloads/)
+	* [Visual Studio 2026 18.4](https://visualstudio.microsoft.com/downloads/)
 
 ## 第三方库使用
 

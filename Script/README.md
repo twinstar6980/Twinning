@@ -8,7 +8,7 @@
 
 * 要求
 
-	* [Node.js 25.8](https://nodejs.org/)
+	* [Node.js 25.9](https://nodejs.org/)
 
 ## 第三方库使用
 

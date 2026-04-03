@@ -60,9 +60,7 @@
 
 * 下载并解压捆绑包。
 
-  查看 [Release](https://github.com/twinstar6980/Twinning/releases/tag/latest) ，捆绑包分发的命名为 `<version>.<system>.<architecture>.bundle.zip` ，其中 `system` 代表适配的操作系统，`architecture` 代表适配的 CPU 架构。
-
-  > GitHub Release 中仅保留最后一次分发，历史分发可以在开发者的 [OneDrive](https://1drv.ms/f/c/2d321feb9cd374ed/Qu1005zrHzIggC2EAAAAAAAAiShIb2wbJMeZsw) 中找到。
+  查看 [Release](https://github.com/twinstar6980/Automation/releases/tag/Twinning-latest) ，捆绑包的命名为 `<version>.<system>.<architecture>.bundle.zip` ，其中 `system` 代表适配的操作系统，`architecture` 代表适配的 CPU 架构。
 
   目前，提供了预编译分发的平台如下：
 

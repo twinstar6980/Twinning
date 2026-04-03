@@ -10,6 +10,7 @@
 				"./src/*",
 			],
 		},
+		"rootDir": "src",
 		"outDir": "dist",
 		"declaration": false,
 		"esModuleInterop": true,

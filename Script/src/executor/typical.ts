@@ -205,7 +205,7 @@ namespace Twinning.Script.Executor {
 
 	// ----------------
 
-	export function typical_method<Identifier extends string, Argument extends Array<TypicalArgument<string, any, any>>, Batch extends Array<TypicalBatchArgument<string>>, WorkerTemporary extends Record<string, any>>(
+	export function typical_method<Identifier extends string, Argument extends Array<any>, Batch extends Array<TypicalBatchArgument<string>>, WorkerTemporary extends Record<string, any>>(
 		object: {
 			identifier: Identifier;
 			filter: null | ['any' | 'file' | 'directory', RegExp];
