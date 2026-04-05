@@ -130,14 +130,9 @@ namespace Twinning.AssistantPlus.Utility {
 		#region integer
 
 		public static String MakeIntegerToString(
-			Integer value,
-			Boolean showPositiveSign
+			Integer value
 		) {
-			return value switch {
-				0   => "0",
-				< 0 => $"{value}",
-				> 0 => $"{(!showPositiveSign ? "" : "+")}{value}",
-			};
+			return $"{value}";
 		}
 
 		#endregion
@@ -145,16 +140,10 @@ namespace Twinning.AssistantPlus.Utility {
 		#region floater
 
 		public static String MakeFloaterToString(
-			Floater value,
-			Boolean showPositiveSign
+			Floater value
 		) {
 			var valueDecimal = new Decimal(value);
-			return value switch {
-				0.0   => "0",
-				< 0.0 => $"{valueDecimal}",
-				> 0.0 => $"{(!showPositiveSign ? "" : "+")}{valueDecimal}",
-				_     => throw new (),
-			} + (!Decimal.IsInteger(valueDecimal) ? "" : ".0");
+			return $"{valueDecimal}{(!Decimal.IsInteger(valueDecimal) ? "" : ".0")}";
 		}
 
 		#endregion

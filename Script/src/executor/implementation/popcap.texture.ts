@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Texture {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {image_file: string}) => (argument.image_file.replace(/(\.png)?$/i, '.ptx')),
+						automatic: (argument: {image_file: StoragePath}) => ConvertHelper.replace_path_name(argument.image_file, /(\.png)?$/i, '.ptx'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -32,7 +32,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Texture {
 					}),
 				],
 				batch: null,
-				worker: ({image_file, data_file, format}, temporary: {}) => {
+				worker: ({image_file, data_file, format}, store: {}) => {
 					Support.Popcap.Texture.Encoding.encode_fs(image_file, data_file, format as any);
 					return;
 				},
@@ -52,7 +52,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Texture {
 						identifier: 'image_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.ptx)?$/i, '.png')),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.ptx)?$/i, '.png'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -78,7 +78,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Texture {
 					}),
 				],
 				batch: null,
-				worker: ({data_file, image_file, format, image_width, image_height}, temporary: {}) => {
+				worker: ({data_file, image_file, format, image_width, image_height}, store: {}) => {
 					Support.Popcap.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], format as any);
 					return;
 				},

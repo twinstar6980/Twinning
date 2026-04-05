@@ -18,8 +18,8 @@ namespace Twinning.Script.Executor.Implementation.Common.Utility {
 					}),
 				],
 				batch: null,
-				worker: ({data}, temporary: {}) => {
-					update_setting(KernelX.Json.read_s_js(data) as Partial<Setting>, MainScript.g_setting);
+				worker: ({data}, store: {}) => {
+					update_setting(JsonHelper.decode_text(data) as Partial<Setting>, MainScript.g_setting);
 					return;
 				},
 			}),
@@ -36,7 +36,7 @@ namespace Twinning.Script.Executor.Implementation.Common.Utility {
 					}),
 				],
 				batch: null,
-				worker: ({target_name}, temporary: {}) => {
+				worker: ({target_name}, store: {}) => {
 					Executable[target_name as keyof typeof Executable].run();
 					return;
 				},
@@ -69,7 +69,7 @@ namespace Twinning.Script.Executor.Implementation.Common.Utility {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 				],
-				worker: ({target_file, is_module}, temporary: {}) => {
+				worker: ({target_file, is_module}, store: {}) => {
 					let result = KernelX.Miscellaneous.evaluate_fs(target_file, is_module);
 					Console.success(`> ${result}`, []);
 					return;

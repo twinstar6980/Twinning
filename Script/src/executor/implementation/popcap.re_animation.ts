@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReAnimation {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {definition_file: string}) => (argument.definition_file.replace(/(\.reanim\.json)?$/i, '.reanim.compiled')),
+						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /(\.reanim\.json)?$/i, '.reanim.compiled'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -57,16 +57,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReAnimation {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {definition_file: string}) => (argument.definition_file + '.encode'),
+						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /()?$/i, '.encode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.reanim\.json)?$/i, '.reanim.compiled')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.reanim\.json)?$/i, '.reanim.compiled'),
 					}),
 				],
-				worker: ({definition_file, data_file, version_platform, version_variant_64, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({definition_file, data_file, version_platform, version_variant_64, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Popcap.ReAnimation.encode_fs(data_file, definition_file, {platform: version_platform as any, variant_64: version_variant_64}, temporary.buffer.view());
+					KernelX.Tool.Popcap.ReAnimation.encode_fs(data_file, definition_file, {platform: version_platform as any, variant_64: version_variant_64}, store.buffer.view());
 					return;
 				},
 			}),
@@ -85,7 +85,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReAnimation {
 						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.reanim\.compiled)?$/i, '.reanim.json')),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.reanim\.compiled)?$/i, '.reanim.json'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -115,12 +115,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReAnimation {
 						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file + '.decode'),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.decode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.reanim\.compiled)?$/i, '.reanim.json')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.reanim\.compiled)?$/i, '.reanim.json'),
 					}),
 				],
-				worker: ({data_file, definition_file, version_platform, version_variant_64}, temporary: {}) => {
+				worker: ({data_file, definition_file, version_platform, version_variant_64}, store: {}) => {
 					KernelX.Tool.Popcap.ReAnimation.decode_fs(data_file, definition_file, {platform: version_platform as any, variant_64: version_variant_64});
 					return;
 				},

@@ -3,8 +3,8 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 	// #region common
 
 	export type Box = {
-		w: number;
-		h: number;
+		width: number;
+		height: number;
 	};
 
 	export type Rect = {
@@ -18,21 +18,21 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		item: Box,
 		container: Box,
 	): boolean {
-		return item.w <= container.w && item.h <= container.h;
+		return item.width <= container.width && item.height <= container.height;
 	}
 
 	function box_is_empty(
 		t: Box,
 	): boolean {
-		return t.w === 0 || t.h === 0;
+		return t.width === 0 || t.height === 0;
 	}
 
 	function box_compare_asc(
 		a: Box,
 		b: Box,
 	): number {
-		let a_area = a.w * a.h;
-		let b_area = b.w * b.h;
+		let a_area = a.width * a.height;
+		let b_area = b.width * b.height;
 		if (a_area === b_area) {
 			return 0;
 		}
@@ -49,37 +49,37 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 	function box_area(
 		t: Box,
 	): number {
-		return t.w * t.h;
+		return t.width * t.height;
 	}
 
 	function box_perimeter(
 		t: Box,
 	): number {
-		return 2 * (t.w + t.h);
+		return 2 * (t.width + t.height);
 	}
 
 	function box_bigger_side(
 		t: Box,
 	): number {
-		return Math.max(t.w, t.h);
+		return Math.max(t.width, t.height);
 	}
 
 	function box_smaller_side(
 		t: Box,
 	): number {
-		return Math.min(t.w, t.h);
+		return Math.min(t.width, t.height);
 	}
 
 	function box_width(
 		t: Box,
 	): number {
-		return t.w;
+		return t.width;
 	}
 
 	function box_height(
 		t: Box,
 	): number {
-		return t.h;
+		return t.height;
 	}
 
 	function box_pathological_multiplier(
@@ -95,15 +95,15 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 	): (it: Box, step: number) => void {
 		return (it, step) => {
 			if (square) {
-				it.w = Math.max(it.w, 1) * 2;
-				it.h = Math.max(it.h, 1) * 2;
+				it.width = Math.max(it.width, 1) * 2;
+				it.height = Math.max(it.height, 1) * 2;
 			}
 			else {
 				if (step % 2 === 0) {
-					it.h = Math.max(it.h, 1) * 2;
+					it.height = Math.max(it.height, 1) * 2;
 				}
 				else {
-					it.w = Math.max(it.w, 1) * 2;
+					it.width = Math.max(it.width, 1) * 2;
 				}
 			}
 		}
@@ -115,15 +115,15 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 	): (it: Box, step: number) => void {
 		return (it, step) => {
 			if (square) {
-				it.w += expand_value;
-				it.h += expand_value;
+				it.width += expand_value;
+				it.height += expand_value;
 			}
 			else {
 				if (step % 2 === 0) {
-					it.w += expand_value;
+					it.width += expand_value;
 				}
 				else {
-					it.h += expand_value;
+					it.height += expand_value;
 				}
 			}
 		}
@@ -150,20 +150,20 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 			let space = space_list[space_index];
 			space_list.splice(space_index, 1);
 			result[item.name] = {x: space.x, y: space.y, ...box};
-			let reserve_w = space.w - box.w;
-			let reserve_h = space.h - box.h;
+			let reserve_width = space.width - box.width;
+			let reserve_height = space.height - box.height;
 			let new_space = [
 				{
-					x: space.x + box.w,
+					x: space.x + box.width,
 					y: space.y,
-					w: reserve_w,
-					h: reserve_w > reserve_h ? space.h : box.h,
+					width: reserve_width,
+					height: reserve_width > reserve_height ? space.height : box.height,
 				},
 				{
 					x: space.x,
-					y: space.y + box.h,
-					w: reserve_w > reserve_h ? box.w : space.w,
-					h: reserve_h,
+					y: space.y + box.height,
+					width: reserve_width > reserve_height ? box.width : space.width,
+					height: reserve_height,
 				},
 			];
 			if (!box_is_empty(new_space[0])) {
@@ -184,7 +184,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		container_expander: (it: Box, step: number) => void,
 		item_weighter: (it: Box) => number,
 	): [Box, Record<string, Rect>] {
-		let container: Box = {w: 0, h: 0};
+		let container: Box = {width: 0, height: 0};
 		let result: null | Record<string, Rect>;
 		let expand_step = 0;
 		while (true) {

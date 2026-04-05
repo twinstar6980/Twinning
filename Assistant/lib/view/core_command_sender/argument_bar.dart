@@ -130,7 +130,7 @@ class _BooleanArgumentBar extends StatelessWidget {
               },
             ),
           ],
-          value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => ConvertHelper.makeBooleanToStringOfConfirmationCharacter(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -182,7 +182,7 @@ class _IntegerArgumentBar extends StatelessWidget {
           hint: 'Integer',
           prefix: null,
           suffix: null,
-          value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => ConvertHelper.makeIntegerToString(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -235,7 +235,7 @@ class _FloaterArgumentBar extends StatelessWidget {
           hint: 'Floater',
           prefix: null,
           suffix: null,
-          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => ConvertHelper.makeFloaterToString(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -245,6 +245,56 @@ class _FloaterArgumentBar extends StatelessWidget {
               if (parsedValue != null && parsedValue.isFinite) {
                 this.value.value = .new(parsedValue);
               }
+            }
+            await refreshState(setState);
+          },
+        ),
+      ),
+    );
+  }
+
+}
+
+class _StringArgumentBar extends StatelessWidget {
+
+  const _StringArgumentBar({
+    super.key, // ignore: unused_element_parameter
+    required this.name,
+    required this.value,
+    required this.batch,
+    required this.expanded,
+  });
+
+  // ----------------
+
+  final String                     name;
+  final Wrapper<StringExpression?> value;
+  final Boolean                    batch;
+  final Boolean                    expanded;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicArgumentBar(
+        name: this.name,
+        value: this.value.value,
+        batch: this.batch,
+        expanded: this.expanded,
+        content: StyledInput.underlined(
+          type: .text,
+          format: null,
+          hint: 'String',
+          prefix: null,
+          suffix: null,
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => it),
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              this.value.value = .new(value);
             }
             await refreshState(setState);
           },
@@ -312,7 +362,7 @@ class _SizeArgumentBar extends StatelessWidget {
               },
             ),
           ],
-          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
+          value: this.value.value == null ? '' : this.value.value!.count.selfLet((it) => ConvertHelper.makeFloaterToString(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -322,56 +372,6 @@ class _SizeArgumentBar extends StatelessWidget {
               if (parsedCount != null && parsedCount.isFinite && parsedCount >= 0.0) {
                 this.value.value = .new(parsedCount, this.value.value?.exponent ?? 2);
               }
-            }
-            await refreshState(setState);
-          },
-        ),
-      ),
-    );
-  }
-
-}
-
-class _StringArgumentBar extends StatelessWidget {
-
-  const _StringArgumentBar({
-    super.key, // ignore: unused_element_parameter
-    required this.name,
-    required this.value,
-    required this.batch,
-    required this.expanded,
-  });
-
-  // ----------------
-
-  final String                     name;
-  final Wrapper<StringExpression?> value;
-  final Boolean                    batch;
-  final Boolean                    expanded;
-
-  // ----------------
-
-  @override
-  build(context) {
-    return StatefulBuilder(
-      builder: (context, setState) => _BasicArgumentBar(
-        name: this.name,
-        value: this.value.value,
-        batch: this.batch,
-        expanded: this.expanded,
-        content: StyledInput.underlined(
-          type: .text,
-          format: null,
-          hint: 'String',
-          prefix: null,
-          suffix: null,
-          value: this.value.value == null ? '' : this.value.value!.value,
-          onChanged: (context, value) async {
-            if (value.isEmpty) {
-              this.value.value = null;
-            }
-            else {
-              this.value.value = .new(value);
             }
             await refreshState(setState);
           },
@@ -433,7 +433,7 @@ class _PathArgumentBar extends StatelessWidget {
               },
             ),
           ],
-          value: this.value.value == null ? '' : this.value.value!.content.emit(),
+          value: this.value.value == null ? '' : this.value.value!.content.selfLet((it) => it.emit()),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -558,13 +558,13 @@ class ArgumentBar extends StatelessWidget {
           batch: this.batch,
           expanded: this.expanded,
         ),
-        .size => _SizeArgumentBar(
+        .string => _StringArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,
           expanded: this.expanded,
         ),
-        .string => _StringArgumentBar(
+        .size => _SizeArgumentBar(
           name: this.name,
           value: this.value.cast(),
           batch: this.batch,

@@ -2,7 +2,7 @@ namespace Twinning.Script.AndroidHelper {
 
 	// #region common
 
-	export const k_temporary_directory = `/data/local/tmp/twinning`;
+	export const k_temporary_directory = new StoragePath(`/data/local/tmp/twinning`);
 
 	// ----------------
 
@@ -15,7 +15,7 @@ namespace Twinning.Script.AndroidHelper {
 	function run_sh(
 		argument: Array<string>,
 	): string {
-		let result = ProcessHelper.run_process(['sh'], argument, null, null);
+		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('sh', true), argument, null);
 		if (result.code !== 0n) {
 			throw new Error(`sh execute failed: ${result.code}\n${result.output}\n${result.error}`);
 		}
@@ -25,7 +25,7 @@ namespace Twinning.Script.AndroidHelper {
 	function run_adb(
 		argument: Array<string>,
 	): string {
-		let result = ProcessHelper.run_process(['adb'], argument, null, null);
+		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('adb', true), argument, null);
 		if (result.code !== 0n) {
 			throw new Error(`adb execute failed: ${result.code}\n${result.output}\n${result.error}`);
 		}
@@ -54,30 +54,30 @@ namespace Twinning.Script.AndroidHelper {
 	}
 
 	export function pull(
-		local: string,
-		remote: string,
+		local: StoragePath,
+		remote: StoragePath,
 	): void {
-		KernelX.Storage.remove_if(local);
-		let local_parent = StorageHelper.parent(local);
-		if (local_parent !== null && !KernelX.Storage.exist_directory(local_parent)) {
-			KernelX.Storage.create_directory(local_parent);
+		StorageHelper.remove_if(local);
+		let local_parent = local.parent();
+		if (local_parent !== null && !StorageHelper.exist_directory(local_parent)) {
+			StorageHelper.create_directory(local_parent);
 		}
 		if (k_mode === 'native') {
 			fs_copy(remote, local, false);
 		}
 		if (k_mode === 'bridge') {
-			run_adb([`pull`, remote, local]);
+			run_adb([`pull`, remote.emit(), local.emit()]);
 		}
 		return;
 	}
 
 	export function push(
-		local: string,
-		remote: string,
+		local: StoragePath,
+		remote: StoragePath,
 		owner: null | string,
 	): void {
 		fs_remove(remote);
-		let remote_parent = StorageHelper.parent(remote);
+		let remote_parent = remote.parent();
 		if (remote_parent !== null) {
 			fs_create_directory(remote_parent, null);
 		}
@@ -86,12 +86,12 @@ namespace Twinning.Script.AndroidHelper {
 		}
 		if (k_mode === 'bridge') {
 			if (fs_is_fuse_media_path(remote)) {
-				run_adb([`push`, local, remote]);
+				run_adb([`push`, local.emit(), remote.emit()]);
 			}
 			else {
 				fs_create_directory(k_temporary_directory, null);
-				let remote_temporary = `${k_temporary_directory}/${StorageHelper.name(local)}`;
-				run_adb([`push`, local, remote_temporary]);
+				let remote_temporary = k_temporary_directory.join(local.name() ?? '');
+				run_adb([`push`, local.emit(), remote_temporary.emit()]);
 				fs_copy(remote_temporary, remote, false);
 				fs_remove(remote_temporary);
 			}
@@ -107,139 +107,139 @@ namespace Twinning.Script.AndroidHelper {
 	// #region storage
 
 	export function fs_is_fuse_path(
-		target: string,
+		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target.emit());
 	}
 
 	export function fs_is_fuse_media_path(
-		target: string,
+		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?!(Android\/(data|obb))(?=\/|$))/.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?!(Android\/(data|obb))(?=\/|$))/.test(target.emit());
 	}
 
 	export function fs_is_fuse_ext_path(
-		target: string,
+		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data|obb))(?=\/|$))/.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data|obb))(?=\/|$))/.test(target.emit());
 	}
 
 	export function fs_is_fuse_ext_data_path(
-		target: string,
+		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data))(?=\/|$))/.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data))(?=\/|$))/.test(target.emit());
 	}
 
 	export function fs_is_fuse_ext_obb_path(
-		target: string,
+		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(obb))(?=\/|$))/.test(target);
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(obb))(?=\/|$))/.test(target.emit());
 	}
 
 	// ----------------
 
 	export function fs_exist(
-		target: string,
+		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -e ${escape(target)} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(`if [ -e ${escape(target.emit())} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
 	export function fs_copy(
-		target: string,
-		placement: string,
+		target: StoragePath,
+		placement: StoragePath,
 		follow_link: boolean,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target)} ${escape(placement)}`);
+		shell_result = shell(`cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target.emit())} ${escape(placement.emit())}`);
 		return;
 	}
 
 	export function fs_rename(
-		target: string,
-		placement: string,
+		target: StoragePath,
+		placement: StoragePath,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`mv -f ${escape(target)} ${escape(placement)}`);
+		shell_result = shell(`mv -f ${escape(target.emit())} ${escape(placement.emit())}`);
 		return;
 	}
 
 	export function fs_remove(
-		target: string,
+		target: StoragePath,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`rm -rf ${escape(target)}`);
+		shell_result = shell(`rm -rf ${escape(target.emit())}`);
 		return;
 	}
 
 	export function fs_exist_file(
-		target: string,
+		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -f ${escape(target)} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(`if [ -f ${escape(target.emit())} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
 	export function fs_exist_directory(
-		target: string,
+		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -d ${escape(target)} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(`if [ -d ${escape(target.emit())} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
 	export function fs_create_directory(
-		target: string,
+		target: StoragePath,
 		mode: null | string,
 	): void {
 		mode = CheckHelper.not_null_or(mode, '777');
 		let shell_result: string;
-		shell_result = shell(`mkdir -p -m ${escape(mode)} ${escape(target)}`);
+		shell_result = shell(`mkdir -p -m ${escape(mode)} ${escape(target.emit())}`);
 		return;
 	}
 
 	// ----------------
 
 	export function fs_change_mode(
-		target: string,
+		target: StoragePath,
 		mode: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chmod -R ${escape(mode)} ${escape(target)}`);
+		shell_result = shell(`chmod -R ${escape(mode)} ${escape(target.emit())}`);
 		return;
 	}
 
 	export function fs_change_owner(
-		target: string,
+		target: StoragePath,
 		owner: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chown -R ${escape(owner)} ${escape(target)}`);
+		shell_result = shell(`chown -R ${escape(owner)} ${escape(target.emit())}`);
 		return;
 	}
 
 	export function fs_change_group(
-		target: string,
+		target: StoragePath,
 		group: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chgrp -R ${escape(group)} ${escape(target)}`);
+		shell_result = shell(`chgrp -R ${escape(group)} ${escape(target.emit())}`);
 		return;
 	}
 
 	export function fs_change_owner_group(
-		target: string,
+		target: StoragePath,
 		owner: string,
 		group: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chown -R ${escape(owner)}:${escape(group)} ${escape(target)}`);
+		shell_result = shell(`chown -R ${escape(owner)}:${escape(group)} ${escape(target.emit())}`);
 		return;
 	}
 
 	export function fs_change_owner_group_fuse(
-		target: string,
+		target: StoragePath,
 		owner: string,
 	): void {
 		if (fs_is_fuse_path(target)) {

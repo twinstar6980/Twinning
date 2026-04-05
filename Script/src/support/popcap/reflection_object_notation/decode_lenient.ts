@@ -417,13 +417,13 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 	// ----------------
 
 	export function process_fs(
-		data_file: string,
-		definition_file: string,
+		data_file: StoragePath,
+		definition_file: StoragePath,
 		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 	): void {
-		let data = KernelX.Storage.read_file(data_file);
+		let data = StorageHelper.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value), version);
-		KernelX.Json.write_fs_js(definition_file, definition);
+		JsonHelper.encode_file(definition_file, definition);
 		return;
 	}
 

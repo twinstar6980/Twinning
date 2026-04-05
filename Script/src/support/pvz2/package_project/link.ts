@@ -3,14 +3,14 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 	// #region utility
 
 	export function link(
-		project_directory: string,
+		project_directory: StoragePath,
 		target_package: null | Array<string>,
 		remake_manifest: boolean,
 		buffer_size: bigint,
 	): void {
 		check_version_file(project_directory);
 		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
-		let project_setting = KernelX.Json.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		for (let package_setting of project_setting.package) {
 			if (target_package !== null && !target_package.includes(package_setting.name)) {
 				continue;
@@ -18,7 +18,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 			Console.information(`Linking package ...`, [`${package_setting.name}`]);
 			if (remake_manifest) {
 				Console.information(`Loading state ...`, []);
-				let package_state = KernelX.Json.read_fs_js(make_build_package_state_path(project_directory, package_setting.name)) as PackageState;
+				let package_state = JsonHelper.decode_file(make_build_package_state_path(project_directory, package_setting.name)) as PackageState;
 				Console.information(`Remaking manifest ...`, []);
 				let package_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package = {
 					group: [],
@@ -34,13 +34,13 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 					general: package_setting.compression.general,
 					texture: package_setting.compression.texture,
 				};
-				let part_name_list = list_scope_child_name(`${project_directory}`, []);
+				let part_name_list = list_scope_child_name(make_scope_root_path(project_directory), []);
 				for (let part_name in package_state.part) {
 					if (!part_name_list.includes(part_name) || !package_setting.part.includes(part_name)) {
 						continue;
 					}
 					let part_state = package_state.part[part_name];
-					let group_name_list = list_scope_child_name(`${project_directory}/${part_name}`, []);
+					let group_name_list = list_scope_child_name(make_scope_root_path(project_directory, part_name), []);
 					for (let group_name in part_state.group) {
 						if (!group_name_list.includes(group_name)) {
 							continue;
@@ -64,7 +64,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 							};
 							package_manifest.group.push(group_manifest);
 						}
-						let resource_name_list = list_scope_child_name(`${project_directory}/${part_name}/${group_name}`, []);
+						let resource_name_list = list_scope_child_name(make_scope_root_path(project_directory, part_name, group_name), []);
 						for (let resource_name in group_state.resource) {
 							if (!resource_name_list.includes(resource_name)) {
 								continue;
@@ -113,7 +113,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 					throw new Error('not implemented');
 				}
 				if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path' || package_setting.manifest.type === 'external_newton') {
-					KernelX.Json.write_fs_js(`${package_bundle_directory}/manifest.json`, null);
+					JsonHelper.encode_file(package_bundle_directory.join('manifest.json'), null);
 					let manifest_group_name = `__ManifestGroup__${package_setting.manifest.suffix}`;
 					let manifest_resource_path = `properties/resources${package_setting.manifest.suffix}`;
 					if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path') {
@@ -122,16 +122,16 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true});
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
 						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
-						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifest_resource_path}`, stream.stream_view());
+						StorageHelper.write_file(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.stream_view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {
 						manifest_resource_path += '.newton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, false);
 						let stream = new ByteStreamView(buffer.view().value);
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
-						KernelX.Storage.write_file(`${package_bundle_directory}/resource/${manifest_resource_path}`, stream.sub(0, stream.p()));
+						StorageHelper.write_file(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.sub(0, stream.p()));
 					}
-					KernelX.Storage.remove_if(`${package_bundle_directory}/packet/${manifest_group_name}.rsg`);
+					StorageHelper.remove_if(package_bundle_directory.join('packet').join(`${manifest_group_name}.rsg`));
 					package_definition.group.push({
 						identifier: manifest_group_name,
 						composite: false,
@@ -157,15 +157,15 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Link {
 						],
 					});
 				}
-				KernelX.Json.write_fs_js(`${package_bundle_directory}/definition.json`, package_definition);
+				JsonHelper.encode_file(package_bundle_directory.join('definition.json'), package_definition);
 			}
 			Console.information(`Packing bundle ...`, []);
 			let data_file = make_build_package_data_path(project_directory, package_setting.name);
 			let bundle_directory = make_build_package_bundle_path(project_directory, package_setting.name);
-			let definition_file = `${bundle_directory}/definition.json`;
-			let manifest_file = `${bundle_directory}/manifest.json`;
-			let resource_directory = `${bundle_directory}/resource`;
-			let packet_file = `${bundle_directory}/packet/{1}.rsg`;
+			let definition_file = bundle_directory.join('definition.json');
+			let manifest_file = bundle_directory.join('manifest.json');
+			let resource_directory = bundle_directory.join('resource');
+			let packet_file = bundle_directory.join('packet').join('{1}.rsg');
 			KernelX.Tool.Popcap.ResourceStreamBundle.pack_fs(data_file, definition_file, manifest_file, resource_directory, packet_file, packet_file, package_setting.version, buffer.view());
 		}
 		return;

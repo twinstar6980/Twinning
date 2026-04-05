@@ -23,7 +23,6 @@ namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation.De
 			}
 			default: {
 				throw new Error(`invalid boolean integer`);
-				break;
 			}
 		}
 		return value;
@@ -173,12 +172,12 @@ namespace Twinning.Script.Support.Pvz2.ResourceManifest.NewTypeObjectNotation.De
 	// ----------------
 
 	export function process_fs(
-		data_file: string,
-		definition_file: string,
+		data_file: StoragePath,
+		definition_file: StoragePath,
 	): void {
-		let data = KernelX.Storage.read_file(data_file);
+		let data = StorageHelper.read_file(data_file);
 		let definition = process(new ByteStreamView(data.view().value));
-		KernelX.Json.write_fs_js(definition_file, definition);
+		JsonHelper.encode_file(definition_file, definition);
 		return;
 	}
 

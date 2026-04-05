@@ -549,7 +549,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 					Resolution = sourcePackage.Category.Resolution.ToList(),
 					Locale = sourcePackage.Category.Locale.ToList(),
 				},
-				Conversion = JsonHelper.DeepCopy(sourcePackage.Conversion),
+				Conversion = JsonHelper.Clone(sourcePackage.Conversion),
 				Variable = sourcePackage.Variable.Select((value) => new Variable() { Name = value.Name, Value = value.Value }).ToList(),
 			};
 			this.ProjectSetting.Package.Add(destinationPackage);
@@ -2535,13 +2535,13 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			var senders = sender.As<SplitButton>();
 			AssertTest(this.Host.IsLoaded);
 			var property = this.Setting.Type switch {
-				ResourceType.Dummy       => JsonHelper.DeserializeNode<DummyResourceProperty>(this.Setting.Property) as Object,
-				ResourceType.General     => JsonHelper.DeserializeNode<GeneralResourceProperty>(this.Setting.Property),
-				ResourceType.Texture     => JsonHelper.DeserializeNode<TextureResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialRton => JsonHelper.DeserializeNode<SpecialRtonResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialPtx  => JsonHelper.DeserializeNode<SpecialPtxResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialPam  => JsonHelper.DeserializeNode<SpecialPamResourceProperty>(this.Setting.Property),
-				ResourceType.SpecialWem  => JsonHelper.DeserializeNode<SpecialWemResourceProperty>(this.Setting.Property),
+				ResourceType.Dummy       => JsonHelper.Deserialize<DummyResourceProperty>(this.Setting.Property) as Object,
+				ResourceType.General     => JsonHelper.Deserialize<GeneralResourceProperty>(this.Setting.Property),
+				ResourceType.Texture     => JsonHelper.Deserialize<TextureResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialRton => JsonHelper.Deserialize<SpecialRtonResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialPtx  => JsonHelper.Deserialize<SpecialPtxResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialPam  => JsonHelper.Deserialize<SpecialPamResourceProperty>(this.Setting.Property),
+				ResourceType.SpecialWem  => JsonHelper.Deserialize<SpecialWemResourceProperty>(this.Setting.Property),
 				_                        => throw new UnreachableException(),
 			};
 			await ControlHelper.ShowDialogAsFixed(this.Host.View, "Resource Property", this.Setting.Type switch {
@@ -2593,7 +2593,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				},
 				_ => throw new UnreachableException(),
 			}, null);
-			this.Setting.Property = JsonHelper.SerializeNode(property);
+			this.Setting.Property = JsonHelper.Serialize(property);
 			await this.SaveSetting();
 			return;
 		}
@@ -2616,13 +2616,13 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			switch (senders.Tag.As<String>()) {
 				case "Dummy": {
 					this.Setting.Type = ResourceType.Dummy;
-					this.Setting.Property = JsonHelper.SerializeNode(new DummyResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new DummyResourceProperty() {
 					});
 					break;
 				}
 				case "General": {
 					this.Setting.Type = ResourceType.General;
-					this.Setting.Property = JsonHelper.SerializeNode(new GeneralResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new GeneralResourceProperty() {
 						Path = "",
 						Type = "",
 					});
@@ -2631,7 +2631,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				}
 				case "Texture": {
 					this.Setting.Type = ResourceType.Texture;
-					this.Setting.Property = JsonHelper.SerializeNode(new TextureResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new TextureResourceProperty() {
 						Path = "",
 						Format = 0,
 						Pitch = 0,
@@ -2644,7 +2644,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				}
 				case "SpecialRton": {
 					this.Setting.Type = ResourceType.SpecialRton;
-					this.Setting.Property = JsonHelper.SerializeNode(new SpecialRtonResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new SpecialRtonResourceProperty() {
 						Conversion = "",
 						Path = "",
 					});
@@ -2653,7 +2653,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				}
 				case "SpecialPtx": {
 					this.Setting.Type = ResourceType.SpecialPtx;
-					this.Setting.Property = JsonHelper.SerializeNode(new SpecialPtxResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new SpecialPtxResourceProperty() {
 						Conversion = "",
 						Path = "",
 						Sprite = [],
@@ -2663,7 +2663,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				}
 				case "SpecialPam": {
 					this.Setting.Type = ResourceType.SpecialPam;
-					this.Setting.Property = JsonHelper.SerializeNode(new SpecialPamResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new SpecialPamResourceProperty() {
 						Conversion = "",
 						Path = "",
 					});
@@ -2672,7 +2672,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 				}
 				case "SpecialWem": {
 					this.Setting.Type = ResourceType.SpecialWem;
-					this.Setting.Property = JsonHelper.SerializeNode(new SpecialWemResourceProperty() {
+					this.Setting.Property = JsonHelper.Serialize(new SpecialWemResourceProperty() {
 						Conversion = "",
 						Path = "",
 					});

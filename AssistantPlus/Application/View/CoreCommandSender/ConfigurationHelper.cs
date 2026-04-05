@@ -17,8 +17,8 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				BooleanExpression values => values.Value,
 				IntegerExpression values => values.Value,
 				FloaterExpression values => values.Value,
-				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
 				StringExpression values  => values.Value,
+				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
 				PathExpression values    => $"{values.Content}",
 				_                        => throw new UnreachableException(),
 			};
@@ -38,12 +38,12 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				ArgumentType.Floater => new FloaterExpression() {
 					Value = json.As<Floater>(),
 				},
+				ArgumentType.String => new StringExpression() {
+					Value = json.As<String>(),
+				},
 				ArgumentType.Size => new SizeExpression() {
 					Count = json.As<String>().SelfLet((it) => Floater.Parse(it[..^1])),
 					Exponent = json.As<String>().SelfLet((it) => new[] { 'b', 'k', 'm', 'g' }.ToList().IndexOf(it[^1])).SelfAlso((it) => { AssertTest(it != -1); }),
-				},
-				ArgumentType.String => new StringExpression() {
-					Value = json.As<String>(),
 				},
 				ArgumentType.Path => new PathExpression() {
 					Content = json.As<String>().SelfLet((it) => new StoragePath(it)),

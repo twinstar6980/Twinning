@@ -63,7 +63,7 @@ class ProcessHelper {
     if (SystemChecker.isWindows && allowExtension) {
       var pathExtensionEnvironment = ProcessHelper.queryEnvironment('PATHEXT');
       assertTest(pathExtensionEnvironment != null);
-      pathExtensionList.addAll(pathExtensionEnvironment!.split(itemDelimiter));
+      pathExtensionList.addAll(pathExtensionEnvironment!.split(itemDelimiter).map((it) => it.toLowerCase()));
     }
     for (var path in pathList) {
       for (var pathExtension in pathExtensionList) {

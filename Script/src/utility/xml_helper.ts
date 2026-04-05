@@ -1,4 +1,4 @@
-namespace Twinning.Script.Xml {
+namespace Twinning.Script.XmlHelper {
 
 	// #region wrap
 
@@ -108,6 +108,49 @@ namespace Twinning.Script.Xml {
 			throw new Error(`xml element is not unique or none`);
 		}
 		return list.length === 0 ? null : list[0];
+	}
+
+	// #endregion
+
+	// #region encoding
+
+	export function encode_text<TValue extends Kernel.Xml.JS_Node>(
+		value: TValue,
+	): string {
+		let data = Kernel.String.default();
+		Kernel.Tool.Data.Serialization.Xml.Write.process(data, Kernel.Xml.Node.value(value));
+		return data.value;
+	}
+
+	export function decode_text<TValue extends Kernel.Xml.JS_Node>(
+		text: string,
+	): TValue {
+		let value = Kernel.Xml.Node.default<TValue>();
+		Kernel.Tool.Data.Serialization.Xml.Read.process(Kernel.String.value(text), value);
+		return value.value;
+	}
+
+	// ----------------
+
+	export function encode_file<TValue extends Kernel.Xml.JS_Node>(
+		path: StoragePath,
+		value: TValue,
+	): void {
+		let data = Kernel.String.default();
+		Kernel.Tool.Data.Serialization.Xml.Write.process(data, Kernel.Xml.Node.value(value));
+		let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
+		StorageHelper.write_file(path, data_byte);
+		return;
+	}
+
+	export function decode_file<TValue extends Kernel.Xml.JS_Node>(
+		path: StoragePath,
+	): TValue {
+		let data_byte = StorageHelper.read_file(path);
+		let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
+		let value = Kernel.Xml.Node.default<TValue>();
+		Kernel.Tool.Data.Serialization.Xml.Read.process(data, value);
+		return value.value;
 	}
 
 	// #endregion

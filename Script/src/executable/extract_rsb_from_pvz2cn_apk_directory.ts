@@ -15,8 +15,8 @@ namespace Twinning.Script.Executable.ExtractRsbFromPvz2cnApkDirectory {
 			los('executable.extract_rsb_from_pvz2cn_apk_directory:output_directory', output_directory),
 		]);
 		Executor.execute_typical_batch_task(input_directory, ['file', /.+\.rsb\.smf$/i], (item) => {
-			let input_file = `${input_directory}/${item}`;
-			let output_file = `${output_directory}/${item.slice(0, -4)}`;
+			let input_file = input_directory.push(item);
+			let output_file = output_directory.push(item.parent()!).join(item.stem()!);
 			KernelX.Tool.Popcap.Zlib.uncompress_fs(input_file, output_file, 15n, {variant_64: false});
 		});
 		Console.success(los('executable.extract_rsb_from_pvz2cn_apk_directory:extract_finish'), [

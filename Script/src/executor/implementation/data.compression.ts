@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -37,12 +37,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.compress'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.compress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, temporary: {}) => {
+				worker: ({raw_file, ripe_file}, store: {}) => {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'none');
 					return;
 				},
@@ -62,7 +62,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_size({
@@ -86,16 +86,16 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.uncompress'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.uncompress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({ripe_file, raw_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', temporary.buffer.view());
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', store.buffer.view());
 					return;
 				},
 			}),
@@ -114,7 +114,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -131,12 +131,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.compress'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.compress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, temporary: {}) => {
+				worker: ({raw_file, ripe_file}, store: {}) => {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'zlib');
 					return;
 				},
@@ -156,7 +156,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_size({
@@ -180,16 +180,16 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.uncompress'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.uncompress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({ripe_file, raw_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', temporary.buffer.view());
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', store.buffer.view());
 					return;
 				},
 			}),
@@ -208,7 +208,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -225,12 +225,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.compress'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.compress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, temporary: {}) => {
+				worker: ({raw_file, ripe_file}, store: {}) => {
 					KernelX.Tool.Data.Compression.Deflate.compress_fs(raw_file, ripe_file, 9n, 15n, 9n, 'default_mode', 'gzip');
 					return;
 				},
@@ -250,7 +250,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_size({
@@ -274,16 +274,16 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.uncompress'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.uncompress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({ripe_file, raw_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', temporary.buffer.view());
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', store.buffer.view());
 					return;
 				},
 			}),
@@ -302,7 +302,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -319,12 +319,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.compress'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.compress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, temporary: {}) => {
+				worker: ({raw_file, ripe_file}, store: {}) => {
 					KernelX.Tool.Data.Compression.Bzip2.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
@@ -344,7 +344,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_size({
@@ -368,16 +368,16 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.uncompress'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.uncompress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({ripe_file, raw_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Bzip2.uncompress_fs(ripe_file, raw_file, temporary.buffer.view());
+					KernelX.Tool.Data.Compression.Bzip2.uncompress_fs(ripe_file, raw_file, store.buffer.view());
 					return;
 				},
 			}),
@@ -396,7 +396,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -413,12 +413,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.compress'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.compress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, temporary: {}) => {
+				worker: ({raw_file, ripe_file}, store: {}) => {
 					KernelX.Tool.Data.Compression.Lzma.compress_fs(raw_file, ripe_file, 9n);
 					return;
 				},
@@ -438,7 +438,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_size({
@@ -462,16 +462,16 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.uncompress'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.uncompress'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({ripe_file, raw_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, temporary.buffer.view());
+					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, store.buffer.view());
 					return;
 				},
 			}),

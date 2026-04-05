@@ -135,6 +135,27 @@
 						</Setter>
 					</VisualState.Setters>
 				</VisualState>
+				<VisualState x:Name="StringState">
+					<VisualState.Setters>
+						<Setter Target="uAction.Content">
+							<Setter.Value>
+								<my:Stack
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									Orientation="Horizontal"
+									Spacing="8">
+									<TextBox
+										my:Stack.Weight="1"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										LostFocus="{x:Bind Controller.uStringValue_LostFocus}"
+										PlaceholderText="String"
+										Text="{x:Bind Controller.uStringValue_Text}" />
+								</my:Stack>
+							</Setter.Value>
+						</Setter>
+					</VisualState.Setters>
+				</VisualState>
 				<VisualState x:Name="SizeState">
 					<VisualState.Setters>
 						<Setter Target="uAction.Content">
@@ -179,27 +200,6 @@
 											</MenuFlyout>
 										</Button.Flyout>
 									</Button>
-								</my:Stack>
-							</Setter.Value>
-						</Setter>
-					</VisualState.Setters>
-				</VisualState>
-				<VisualState x:Name="StringState">
-					<VisualState.Setters>
-						<Setter Target="uAction.Content">
-							<Setter.Value>
-								<my:Stack
-									HorizontalAlignment="Stretch"
-									VerticalAlignment="Stretch"
-									Orientation="Horizontal"
-									Spacing="8">
-									<TextBox
-										my:Stack.Weight="1"
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Stretch"
-										LostFocus="{x:Bind Controller.uStringValue_LostFocus}"
-										PlaceholderText="String"
-										Text="{x:Bind Controller.uStringValue_Text}" />
 								</my:Stack>
 							</Setter.Value>
 						</Setter>

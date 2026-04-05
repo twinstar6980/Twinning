@@ -27,7 +27,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Hash {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 				],
-				worker: ({target_file}, temporary: {}) => {
+				worker: ({target_file}, store: {}) => {
 					let result = KernelX.Tool.Data.Hash.Md5.hash_fs(target_file);
 					Console.success(`${ConvertHelper.parse_string_from_byte_array(ConvertHelper.make_integer_to_byte_array(result, 16, 'little'), false)}`, []);
 					return;

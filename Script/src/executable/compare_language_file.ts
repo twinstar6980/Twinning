@@ -4,17 +4,19 @@ namespace Twinning.Script.Executable.CompareLanguageFile {
 
 	export function run(
 	): void {
-		Console.information(los('executable.compare_language_file:please_input_original_file'), []);
+		Console.information(los('executable.compare_language_file:please_input_original_file'), [
+		]);
 		let original_file = Console.path('file', 'input', null, null);
-		Console.information(los('executable.compare_language_file:please_input_translation_file'), []);
+		Console.information(los('executable.compare_language_file:please_input_translation_file'), [
+		]);
 		let translation_file = Console.path('file', 'input', null, null);
-		let original_map = KernelX.Json.read_fs_js(original_file) as Language.StringMap;
-		let translation_map = KernelX.Json.read_fs_js(translation_file) as Language.StringMap;
+		let original_map = JsonHelper.decode_file(original_file) as Language.StringMap;
+		let translation_map = JsonHelper.decode_file(translation_file) as Language.StringMap;
 		let original_key = Object.keys(original_map);
 		let translation_key = Object.keys(translation_map);
-		let missing_key = original_key.filter((key) => (!translation_key.includes(key)));
-		let surplus_key = translation_key.filter((key) => (!original_key.includes(key)));
-		let line_warning: Array<string> = [];
+		let missing_key = original_key.filter((key) => !translation_key.includes(key));
+		let surplus_key = translation_key.filter((key) => !original_key.includes(key));
+		let line_warning = [] as Array<string>;
 		let line_count = Math.min(original_key.length, translation_key.length);
 		for (let line = 0; line < line_count; line++) {
 			if (original_key[line] !== translation_key[line]) {

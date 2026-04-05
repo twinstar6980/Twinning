@@ -319,10 +319,10 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 				option.NextString(this.AnimationFile.AsNotNull().Emit());
 			}
 			if (option.Check("-image_filter", this.Loaded)) {
-				option.NextString(this.ImageFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
+				option.NextString(this.ImageFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
 			}
 			if (option.Check("-sprite_filter", this.Loaded)) {
-				option.NextString(this.SpriteFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index, false)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
+				option.NextString(this.SpriteFilter.AsNotNull().Select((value, index) => value ? null : ConvertHelper.MakeIntegerToString(index)).Where((value) => value != null).SelfLet((it) => String.Join(',', it)));
 			}
 			if (option.Check("-active_target", this.Activated)) {
 				option.NextBoolean(this.ActiveTarget.AsNotNull().Item1);

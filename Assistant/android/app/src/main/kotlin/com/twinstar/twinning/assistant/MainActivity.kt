@@ -14,7 +14,7 @@ class MainActivity : FlutterActivity() {
   ): Unit {
     super.configureFlutterEngine(flutterEngine)
     GeneratedPluginRegistrant.registerWith(flutterEngine)
-    this.customMethodChannel.register_onConfigureFlutterEngine(flutterEngine)
+    this.customMethodChannel.register_configureFlutterEngine(flutterEngine)
     return
   }
 

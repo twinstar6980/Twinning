@@ -4,7 +4,8 @@ namespace Twinning.Script.Executable.ComputeWwiseShortIdentifier {
 
 	export function run(
 	): void {
-		Console.information(los('executable.compute_wwise_short_identifier:please_input_string'), []);
+		Console.information(los('executable.compute_wwise_short_identifier:please_input_string'), [
+		]);
 		while (true) {
 			let name = Console.string(true, null);
 			if (name === null) {

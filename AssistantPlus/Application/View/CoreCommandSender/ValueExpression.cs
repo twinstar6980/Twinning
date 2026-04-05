@@ -12,28 +12,28 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 	// ----------------
 
 	public record BooleanExpression : ValueExpression {
-		public Boolean Value { get; set; } = false;
+		public required Boolean Value { get; set; }
 	}
 
 	public record IntegerExpression : ValueExpression {
-		public Integer Value { get; set; } = 0;
+		public required Integer Value { get; set; }
 	}
 
 	public record FloaterExpression : ValueExpression {
-		public Floater Value { get; set; } = 0.0;
-	}
-
-	public record SizeExpression : ValueExpression {
-		public Floater Count    { get; set; } = 0.0;
-		public Integer Exponent { get; set; } = 0;
+		public required Floater Value { get; set; }
 	}
 
 	public record StringExpression : ValueExpression {
-		public String Value { get; set; } = "";
+		public required String Value { get; set; }
+	}
+
+	public record SizeExpression : ValueExpression {
+		public required Floater Count    { get; set; }
+		public required Integer Exponent { get; set; }
 	}
 
 	public record PathExpression : ValueExpression {
-		public StoragePath Content { get; set; } = new ();
+		public required StoragePath Content { get; set; }
 	}
 
 	// ----------------
@@ -47,10 +47,10 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 		) {
 			return value switch {
 				BooleanExpression values => $"{ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(values.Value)}",
-				IntegerExpression values => $"{ConvertHelper.MakeIntegerToString(values.Value, true)}",
-				FloaterExpression values => $"{ConvertHelper.MakeFloaterToString(values.Value, true)}",
-				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count, false)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
+				IntegerExpression values => $"{ConvertHelper.MakeIntegerToString(values.Value)}",
+				FloaterExpression values => $"{ConvertHelper.MakeFloaterToString(values.Value)}",
 				StringExpression values  => $"{values.Value}",
+				SizeExpression values    => $"{ConvertHelper.MakeFloaterToString(values.Count)}{new[] { "b", "k", "m", "g" }[values.Exponent]}",
 				PathExpression values    => $"{values.Content.Emit()}",
 				_                        => throw new UnreachableException(),
 			};

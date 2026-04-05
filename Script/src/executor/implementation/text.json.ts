@@ -20,31 +20,31 @@ namespace Twinning.Script.Executor.Implementation.Text.Json {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file.replace(/(\.json)?$/i, '.format.json')),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /(\.json)?$/i, '.format.json'),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_array_trailing_comma',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.Json.g_format.disable_array_trailing_comma),
+						automatic: (argument: {}) => (KernelX.Tool.Data.Serialization.Json.g_format.disable_array_trailing_comma),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_array_line_breaking',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.Json.g_format.disable_array_line_breaking),
+						automatic: (argument: {}) => (KernelX.Tool.Data.Serialization.Json.g_format.disable_array_line_breaking),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_object_trailing_comma',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.Json.g_format.disable_object_trailing_comma),
+						automatic: (argument: {}) => (KernelX.Tool.Data.Serialization.Json.g_format.disable_object_trailing_comma),
 						condition: null,
 					}),
 					typical_argument_boolean({
 						identifier: 'disable_object_line_breaking',
 						checker: null,
-						automatic: (argument: {}) => (KernelX.Json.g_format.disable_object_line_breaking),
+						automatic: (argument: {}) => (KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking),
 						condition: null,
 					}),
 				],
@@ -61,14 +61,14 @@ namespace Twinning.Script.Executor.Implementation.Text.Json {
 						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file + '.format'),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /()?$/i, '.format'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.json)?$/i, '.json')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.json)?$/i, '.json'),
 					}),
 				],
-				worker: ({source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking}, temporary: {}) => {
-					let data = KernelX.Json.read_fs(source_file);
-					KernelX.Json.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
+				worker: ({source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking}, store: {}) => {
+					let data = KernelX.Tool.Data.Serialization.Json.read_fs(source_file);
+					KernelX.Tool.Data.Serialization.Json.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 					return;
 				},
 			}),

@@ -45,13 +45,13 @@ class CommandLineWriter {
   Void nextInteger(
     Integer value,
   ) {
-    return this.nextString(value.selfLet((it) => ConvertHelper.makeIntegerToString(it, false)));
+    return this.nextString(value.selfLet((it) => ConvertHelper.makeIntegerToString(it)));
   }
 
   Void nextFloater(
     Floater value,
   ) {
-    return this.nextString(value.selfLet((it) => ConvertHelper.makeFloaterToString(it, false)));
+    return this.nextString(value.selfLet((it) => ConvertHelper.makeFloaterToString(it)));
   }
 
   Void nextString(

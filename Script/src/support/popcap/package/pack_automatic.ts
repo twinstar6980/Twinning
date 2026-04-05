@@ -3,12 +3,12 @@ namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 	// #region utility
 
 	export function pack(
-		resource_directory: string,
+		resource_directory: StoragePath,
 		version_number: [0n][number],
 		version_compress_resource_data: boolean,
 	): [Kernel.ByteArray, Kernel.Size] {
 		let version_c = Kernel.Tool.Popcap.Package.Version.value({number: version_number, compress_resource_data: version_compress_resource_data});
-		let resource_list = KernelX.Storage.list_directory(resource_directory, null, true, false, true, false);
+		let resource_list = StorageHelper.list_directory(resource_directory, null, true, false, true, false);
 		let definition_js: Kernel.Tool.Popcap.Package.Definition.JS_N.Package = {
 			resource: [],
 		};
@@ -17,11 +17,11 @@ namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 		data_size_bound += 8; // version number
 		for (let resource of resource_list) {
 			definition_js.resource.push({
-				path: resource,
+				path: resource.emit(),
 				time: 0n,
 			});
-			let resource_size = KernelX.Storage.size_file(`${resource_directory}/${resource}`);
-			data_size_bound += (1 + 1 + resource.length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
+			let resource_size = StorageHelper.size_file(resource_directory.push(resource));
+			data_size_bound += (1 + 1 + resource.emit().length - 2 + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}
 		data_size_bound += 1; // list done flag
 		Console.information(los('support.popcap.package.pack_automatic:start'), [
@@ -30,7 +30,7 @@ namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(data_size_bound)));
 		let stream = Kernel.ByteStreamView.watch(data.view());
 		let definition = Kernel.Tool.Popcap.Package.Definition.Package.json(Kernel.Json.Value.value(definition_js), version_c);
-		Kernel.Tool.Popcap.Package.Pack.process(stream, definition, Kernel.Path.value(resource_directory), version_c);
+		Kernel.Tool.Popcap.Package.Pack.process(stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
 		Console.success(los('support.popcap.package.pack_automatic:finish'), [
 		]);
 		return [data, stream.position()];

@@ -36,23 +36,23 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 		let x_DOMSymbolItem = document;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === `image/image_${index + 1}`);
-		let x_timeline = Xml.find_child_element_unique(x_DOMSymbolItem, 'timeline');
-		let x_DOMTimeline = Xml.find_child_element_unique(x_timeline, 'DOMTimeline');
+		let x_timeline = XmlHelper.find_child_element_unique(x_DOMSymbolItem, 'timeline');
+		let x_DOMTimeline = XmlHelper.find_child_element_unique(x_timeline, 'DOMTimeline');
 		assert_test(x_DOMTimeline.attribute.name === `image_${index + 1}`);
-		let x_layers = Xml.find_child_element_unique(x_DOMTimeline, 'layers');
-		let x_DOMLayer = Xml.find_child_element_unique(x_layers, 'DOMLayer');
-		let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
-		let x_DOMFrame = Xml.find_child_element_unique(x_frames, 'DOMFrame');
-		let x_elements = Xml.find_child_element_unique(x_DOMFrame, 'elements');
-		let x_DOMSymbolInstance = Xml.find_child_element_unique(x_elements, 'DOMSymbolInstance');
+		let x_layers = XmlHelper.find_child_element_unique(x_DOMTimeline, 'layers');
+		let x_DOMLayer = XmlHelper.find_child_element_unique(x_layers, 'DOMLayer');
+		let x_frames = XmlHelper.find_child_element_unique(x_DOMLayer, 'frames');
+		let x_DOMFrame = XmlHelper.find_child_element_unique(x_frames, 'DOMFrame');
+		let x_elements = XmlHelper.find_child_element_unique(x_DOMFrame, 'elements');
+		let x_DOMSymbolInstance = XmlHelper.find_child_element_unique(x_elements, 'DOMSymbolInstance');
 		assert_test(x_DOMSymbolInstance.attribute.libraryItemName === `source/source_${index + 1}`);
 		let transform: Transform;
-		let x_matrix = Xml.find_child_element_unique_or_none(x_DOMSymbolInstance, 'matrix');
+		let x_matrix = XmlHelper.find_child_element_unique_or_none(x_DOMSymbolInstance, 'matrix');
 		if (x_matrix === null) {
 			transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
 		}
 		else {
-			let x_Matrix = Xml.find_child_element_unique(x_matrix, 'Matrix');
+			let x_Matrix = XmlHelper.find_child_element_unique(x_matrix, 'Matrix');
 			transform = parse_transform(x_Matrix);
 		}
 		return {
@@ -79,21 +79,21 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 		let x_DOMSymbolItem = document;
 		assert_test(x_DOMSymbolItem.name === 'DOMSymbolItem');
 		assert_test(x_DOMSymbolItem.attribute.name === (index === null ? `main_sprite` : `sprite/sprite_${index + 1}`));
-		let x_timeline = Xml.find_child_element_unique(x_DOMSymbolItem, 'timeline');
-		let x_DOMTimeline = Xml.find_child_element_unique(x_timeline, 'DOMTimeline');
+		let x_timeline = XmlHelper.find_child_element_unique(x_DOMSymbolItem, 'timeline');
+		let x_DOMTimeline = XmlHelper.find_child_element_unique(x_timeline, 'DOMTimeline');
 		assert_test(x_DOMTimeline.attribute.name === (index === null ? `main_sprite` : `sprite_${index + 1}`));
-		let x_layers = Xml.find_child_element_unique(x_DOMTimeline, 'layers');
-		let x_DOMLayer_list = Xml.find_child_element(x_layers, 'DOMLayer');
+		let x_layers = XmlHelper.find_child_element_unique(x_DOMTimeline, 'layers');
+		let x_DOMLayer_list = XmlHelper.find_child_element(x_layers, 'DOMLayer');
 		assert_test(x_DOMLayer_list.length >= 1);
 		let frame_list: Array<Kernel.Tool.Popcap.Animation.Definition.JS_N.Frame>;
 		{
 			let x_DOMLayer = x_DOMLayer_list[x_DOMLayer_list.length - 1];
-			let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
-			let x_DOMFrame = Xml.find_child_element_unique(x_frames, 'DOMFrame');
+			let x_frames = XmlHelper.find_child_element_unique(x_DOMLayer, 'frames');
+			let x_DOMFrame = XmlHelper.find_child_element_unique(x_frames, 'DOMFrame');
 			let frame_index = BigInt(x_DOMFrame.attribute.index);
 			let frame_duration = BigInt(CheckHelper.not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 			assert_test(frame_index === 0n && frame_duration > 0n);
-			let x_elements = Xml.find_child_element_unique(x_DOMFrame, 'elements');
+			let x_elements = XmlHelper.find_child_element_unique(x_DOMFrame, 'elements');
 			assert_test(x_elements.child.length === 0);
 			frame_list = new Array(Number(frame_duration) + 1);
 			for (let index = 0; index < frame_list.length; index++) {
@@ -111,8 +111,8 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 		x_DOMLayer_list.reverse();
 		let layer_count = 0;
 		for (let x_DOMLayer of x_DOMLayer_list) {
-			let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
-			let x_DOMFrame_list = Xml.find_child_element(x_frames, 'DOMFrame');
+			let x_frames = XmlHelper.find_child_element_unique(x_DOMLayer, 'frames');
+			let x_DOMFrame_list = XmlHelper.find_child_element(x_frames, 'DOMFrame');
 			let close_current_model_if_need = () => {
 				if (model !== null) {
 					let target_frame = frame_list[Number(model.frame_start + model.frame_duration)];
@@ -127,12 +127,12 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 				let frame_duration = BigInt(CheckHelper.not_undefined_or(x_DOMFrame.attribute.duration, '1'));
 				let transform: Kernel.Tool.Popcap.Animation.Definition.JS_N.VariantTransform;
 				let color: Color;
-				let x_elements = Xml.find_child_element_unique_or_none(x_DOMFrame, 'elements');
+				let x_elements = XmlHelper.find_child_element_unique_or_none(x_DOMFrame, 'elements');
 				if (x_elements === null) {
 					close_current_model_if_need();
 					continue;
 				}
-				let x_DOMSymbolInstance = Xml.find_child_element_unique_or_none(x_elements, 'DOMSymbolInstance');
+				let x_DOMSymbolInstance = XmlHelper.find_child_element_unique_or_none(x_elements, 'DOMSymbolInstance');
 				if (x_DOMSymbolInstance === null) {
 					continue;
 				}
@@ -142,20 +142,20 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 					resource: BigInt(name_match[3]) - 1n,
 					sprite: name_match[1] === 'sprite',
 				};
-				let x_matrix = Xml.find_child_element_unique_or_none(x_DOMSymbolInstance, 'matrix');
+				let x_matrix = XmlHelper.find_child_element_unique_or_none(x_DOMSymbolInstance, 'matrix');
 				if (x_matrix === null) {
 					transform = [0.0, 0.0];
 				}
 				else {
-					let x_Matrix = Xml.find_child_element_unique(x_matrix, 'Matrix');
+					let x_Matrix = XmlHelper.find_child_element_unique(x_matrix, 'Matrix');
 					transform = convert_transform_from_standard_to_variant(parse_transform(x_Matrix));
 				}
-				let x_color = Xml.find_child_element_unique_or_none(x_DOMSymbolInstance, 'color');
+				let x_color = XmlHelper.find_child_element_unique_or_none(x_DOMSymbolInstance, 'color');
 				if (x_color === null) {
 					color = [...k_initial_color];
 				}
 				else {
-					let x_Color = Xml.find_child_element_unique(x_color, 'Color');
+					let x_Color = XmlHelper.find_child_element_unique(x_color, 'Color');
 					color = parse_color(x_Color);
 				}
 				let target_frame = frame_list[Number(frame_index)];
@@ -219,28 +219,28 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 			Number(x_DOMDocument.attribute.height),
 		];
 		if (animation.main_sprite !== null) {
-			let x_timelines = Xml.find_child_element_unique(x_DOMDocument, 'timelines');
-			let x_DOMTimeline = Xml.find_child_element_unique(x_timelines, 'DOMTimeline');
+			let x_timelines = XmlHelper.find_child_element_unique(x_DOMDocument, 'timelines');
+			let x_DOMTimeline = XmlHelper.find_child_element_unique(x_timelines, 'DOMTimeline');
 			assert_test(x_DOMTimeline.attribute.name === 'animation');
-			let x_layers = Xml.find_child_element_unique(x_DOMTimeline, 'layers');
-			let x_DOMLayer_list = Xml.find_child_element(x_layers, 'DOMLayer');
+			let x_layers = XmlHelper.find_child_element_unique(x_DOMTimeline, 'layers');
+			let x_DOMLayer_list = XmlHelper.find_child_element(x_layers, 'DOMLayer');
 			assert_test(x_DOMLayer_list.length === 3);
 			{
 				let x_DOMLayer = x_DOMLayer_list[0];
 				assert_test(x_DOMLayer.attribute.name === 'flow');
-				let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
-				let x_DOMFrame_list = Xml.find_child_element(x_frames, 'DOMFrame');
+				let x_frames = XmlHelper.find_child_element_unique(x_DOMLayer, 'frames');
+				let x_DOMFrame_list = XmlHelper.find_child_element(x_frames, 'DOMFrame');
 				for (let x_DOMFrame of x_DOMFrame_list) {
 					let frame_index = Number(x_DOMFrame.attribute.index);
 					if (x_DOMFrame.attribute.name !== undefined) {
 						assert_test(x_DOMFrame.attribute.labelType === 'name');
 						animation.main_sprite.frame[frame_index].label = x_DOMFrame.attribute.name;
 					}
-					let x_Actionscript = Xml.find_child_element_unique_or_none(x_DOMFrame, 'Actionscript');
+					let x_Actionscript = XmlHelper.find_child_element_unique_or_none(x_DOMFrame, 'Actionscript');
 					if (x_Actionscript === null) {
 						continue;
 					}
-					let x_script = Xml.find_child_element_unique(x_Actionscript, 'script');
+					let x_script = XmlHelper.find_child_element_unique(x_Actionscript, 'script');
 					assert_test(x_script.child.length === 1);
 					let x_script_text = x_script.child[0];
 					assert_test(x_script_text.type === 'text');
@@ -251,15 +251,15 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 			{
 				let x_DOMLayer = x_DOMLayer_list[1];
 				assert_test(x_DOMLayer.attribute.name === 'command');
-				let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
-				let x_DOMFrame_list = Xml.find_child_element(x_frames, 'DOMFrame');
+				let x_frames = XmlHelper.find_child_element_unique(x_DOMLayer, 'frames');
+				let x_DOMFrame_list = XmlHelper.find_child_element(x_frames, 'DOMFrame');
 				for (let x_DOMFrame of x_DOMFrame_list) {
 					let frame_index = Number(x_DOMFrame.attribute.index);
-					let x_Actionscript = Xml.find_child_element_unique_or_none(x_DOMFrame, 'Actionscript');
+					let x_Actionscript = XmlHelper.find_child_element_unique_or_none(x_DOMFrame, 'Actionscript');
 					if (x_Actionscript === null) {
 						continue;
 					}
-					let x_script = Xml.find_child_element_unique(x_Actionscript, 'script');
+					let x_script = XmlHelper.find_child_element_unique(x_Actionscript, 'script');
 					assert_test(x_script.child.length === 1);
 					let x_script_text = x_script.child[0];
 					assert_test(x_script_text.type === 'text');
@@ -277,10 +277,10 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 			{
 				let x_DOMLayer = x_DOMLayer_list[2];
 				assert_test(x_DOMLayer.attribute.name === 'instance');
-				let x_frames = Xml.find_child_element_unique(x_DOMLayer, 'frames');
-				let x_DOMFrame = Xml.find_child_element_unique(x_frames, 'DOMFrame');
-				let x_elements = Xml.find_child_element_unique(x_DOMFrame, 'elements');
-				let x_DOMSymbolInstance = Xml.find_child_element_unique(x_elements, 'DOMSymbolInstance');
+				let x_frames = XmlHelper.find_child_element_unique(x_DOMLayer, 'frames');
+				let x_DOMFrame = XmlHelper.find_child_element_unique(x_frames, 'DOMFrame');
+				let x_elements = XmlHelper.find_child_element_unique(x_DOMFrame, 'elements');
+				let x_DOMSymbolInstance = XmlHelper.find_child_element_unique(x_elements, 'DOMSymbolInstance');
 				assert_test(x_DOMSymbolInstance.attribute.libraryItemName === 'main_sprite');
 			}
 		}
@@ -332,18 +332,18 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 	// ----------------
 
 	export function to_fsh(
-		raw_file: string,
+		raw_file: StoragePath,
 		ripe: FlashPackage,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 	): void {
 		let raw = to(ripe, version);
-		KernelX.Json.write_fs_js(raw_file, raw);
+		JsonHelper.encode_file(raw_file, raw);
 		return;
 	}
 
 	export function to_fs(
-		raw_file: string,
-		ripe_directory: string,
+		raw_file: StoragePath,
+		ripe_directory: StoragePath,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 	): void {
 		let ripe = load_flash_package(ripe_directory);

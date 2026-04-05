@@ -273,15 +273,15 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 	// ----------------
 
 	function cast_wwise_internal_path(
-		raw: string,
+		raw: StoragePath,
 	): string {
 		if (KernelX.is_windows) {
-			return raw;
+			return raw.emit();
 		}
 		if (KernelX.is_macintosh) {
 			// locate at wine drive Z
-			assert_test(raw.startsWith('/'));
-			return `Z:${raw}`;
+			assert_test(raw.type() === StoragePathType.absolute);
+			return `Z:${raw.emit()}`;
 		}
 		throw new Error();
 	}
@@ -291,8 +291,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 	// #region utility
 
 	export function encode_fs(
-		raw_file: string,
-		ripe_file: string,
+		raw_file: StoragePath,
+		ripe_file: StoragePath,
 		format: Format,
 	): void {
 		if (!KernelX.is_windows && !KernelX.is_macintosh) {
@@ -306,42 +306,41 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
 		let temporary_directory = HomePath.new_temporary(null, null);
-		let wwise_project_directory = `${temporary_directory}/Sample`;
-		let wwise_wproj_file = `${wwise_project_directory}/Sample.wproj`;
+		let wwise_project_directory = temporary_directory.join('Sample');
+		let wwise_wproj_file = wwise_project_directory.join('Sample.wproj');
 		while (true) {
 			let wwise_result = ProcessHelper.run_process(
-				[wwise_program_name],
+				ProcessHelper.search_program_ensure(wwise_program_name, true),
 				[
 					'create-new-project',
-					wwise_wproj_file,
+					wwise_wproj_file.emit(),
 					'--platform',
 					'Android',
 					'iOS',
 				],
 				null,
-				null,
 			);
 			if (wwise_result.code !== 0n) {
 				throw new Error(`execute failed by Wwise`);
 			}
-			if (KernelX.Storage.exist_file(wwise_wproj_file)) {
+			if (StorageHelper.exist_file(wwise_wproj_file)) {
 				break;
 			}
-			Console.warning(`failed to create wwise project, retry ...`, [wwise_wproj_file]);
+			Console.warning(`failed to create wwise project, retry ...`, [wwise_wproj_file.emit()]);
 		}
-		let wwise_wsources_file = `${wwise_project_directory}/Sample.wsources`;
-		KernelX.Xml.write_fs_js(wwise_wsources_file, Xml.create_element_node('ExternalSourcesList', {
+		let wwise_wsources_file = wwise_project_directory.join('Sample.wsources');
+		XmlHelper.encode_file(wwise_wsources_file, XmlHelper.create_element_node('ExternalSourcesList', {
 			SchemaVersion: '1',
 			Root: cast_wwise_internal_path(wwise_project_directory),
 		}, [
-			Xml.create_element_node('Source', {
+			XmlHelper.create_element_node('Source', {
 				Path: 'Sample.wav',
 				Destination: 'Sample.wem',
 				Conversion: `_${format}`,
 			}, []),
 		]));
-		KernelX.Storage.write_file_s(`${wwise_project_directory}/Conversion Settings/Sample Conversion Settings.wwu`, k_sample_conversion_settings);
-		KernelX.Storage.copy(raw_file, `${wwise_project_directory}/Sample.wav`, false);
+		StorageHelper.write_file_text(wwise_project_directory.join('Conversion Settings').join('Sample Conversion Settings.wwu'), k_sample_conversion_settings);
+		StorageHelper.copy(raw_file, wwise_project_directory.join('Sample.wav'), false);
 		let platform = ({
 			'pcm': 'Android',
 			'adpcm': 'Android',
@@ -351,23 +350,22 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			'wemopus': 'Android',
 		})[format];
 		let wwise_result = ProcessHelper.run_process(
-			[wwise_program_name],
+			ProcessHelper.search_program_ensure(wwise_program_name, true),
 			[
 				'convert-external-source',
-				wwise_wproj_file,
+				wwise_wproj_file.emit(),
 				'--platform',
 				platform,
 				'--source-file',
-				wwise_wsources_file,
+				wwise_wsources_file.emit(),
 			],
-			null,
 			null,
 		);
 		if (wwise_result.code !== 0n) {
 			throw new Error(`execute failed by Wwise`);
 		}
-		KernelX.Storage.copy(`${wwise_project_directory}/GeneratedSoundBanks/${platform}/Sample.wem`, ripe_file, false);
-		KernelX.Storage.remove(temporary_directory);
+		StorageHelper.copy(wwise_project_directory.join('GeneratedSoundBanks').join(platform).join('Sample.wem'), ripe_file, false);
+		StorageHelper.remove(temporary_directory);
 		return;
 	}
 

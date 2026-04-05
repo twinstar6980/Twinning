@@ -16,7 +16,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 	// ----------------
 
 	function transpile_resource(
-		project_directory: string,
+		project_directory: StoragePath,
 		part_name: string,
 		group_name: string,
 		resource_name: string,
@@ -25,7 +25,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 		buffer: Kernel.ByteArray,
 	): void {
 		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
-		let resource_setting = KernelX.Json.read_fs_js(make_scope_setting_path(resource_directory)) as ResourceSetting;
+		let resource_setting = JsonHelper.decode_file(make_scope_setting_path(resource_directory)) as ResourceSetting;
 		let resource_type_old = resource_setting.type;
 		switch (resource_setting.type) {
 			case 'dummy': {
@@ -43,7 +43,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					}
 					let new_source_file = make_scope_child_path(resource_directory, 'source.json');
 					KernelX.Tool.Popcap.ReflectionObjectNotation.decode_cipher_fs(source_file, new_source_file, conversion_setting.version, conversion_setting.key);
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					resource_setting.type = 'special_rton';
 					resource_setting.property = {
 						conversion: conversion_setting.name,
@@ -58,7 +58,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					}
 					let new_source_file = make_scope_child_path(resource_directory, 'source.json');
 					KernelX.Tool.Popcap.Animation.decode_fs(source_file, new_source_file, conversion_setting.version);
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					resource_setting.type = 'special_pam';
 					resource_setting.property = {
 						conversion: conversion_setting.name,
@@ -69,7 +69,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					Console.warning(`Transpiling by specialize_wem ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.wav');
 					let format = Support.Wwise.Media.Decode.decode_fs(source_file, new_source_file);
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					let conversion_setting = conversion_setting_map.wem.find((value) => (value.format === format));
 					if (conversion_setting === undefined) {
 						Console.warning(`could not find conversion setting for wem format ${format}`, []);
@@ -93,14 +93,14 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					}
 					let new_source_data_directory = make_scope_child_path(resource_directory, 'source.sprite');
 					let new_sprite_property_list: Array<SpecialPtxResourcePropertySpriteProperty> = [];
-					let data = KernelX.Storage.read_file(source_file);
+					let data = StorageHelper.read_file(source_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(resource_property.size));
 					let image_view = image.view();
 					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, conversion_setting.format);
 					for (let source_sprite of resource_property.sprite) {
 						let sprite_image_view = image_view.sub(Kernel.Image.ImagePosition.value(source_sprite.position), Kernel.Image.ImageSize.value(source_sprite.size));
-						KernelX.Image.File.Png.write_fs(make_scope_child_path(new_source_data_directory, source_sprite.path + '.png'), sprite_image_view);
+						KernelX.Tool.Texture.File.Png.write_fs(make_scope_child_path(new_source_data_directory, source_sprite.path + '.png'), sprite_image_view);
 						new_sprite_property_list.push({
 							source: source_sprite.path,
 							identifier: source_sprite.identifier,
@@ -109,7 +109,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 							separate: source_sprite.separate,
 						});
 					}
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					resource_setting.type = 'special_ptx';
 					resource_setting.property = {
 						conversion: conversion_setting.name,
@@ -133,7 +133,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					else {
 						KernelX.Tool.Popcap.ReflectionObjectNotation.encode_cipher_fs(new_source_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
 					}
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					resource_setting.type = 'general';
 					resource_setting.property = {
 						path: resource_property.path + '.rton',
@@ -153,14 +153,14 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					let source_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
 					for (let sprite_resource_property of resource_property.sprite) {
 						let source_file = make_scope_child_path(source_directory, sprite_resource_property.source + '.png');
-						let source = KernelX.Image.File.Png.read_fs_of(source_file);
+						let source = KernelX.Tool.Texture.File.Png.read_fs_of(source_file);
 						let source_view = source.view();
 						source_list[sprite_resource_property.source] = [source, source_view];
 					}
 					let sprite_list = source_list;
-					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, {w: Number(value[0].size().value[0]), h: Number(value[0].size().value[1])}]));
+					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, {width: Number(value[0].size().value[0]), height: Number(value[0].size().value[1])}]));
 					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
-					let atlas_size = Popcap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.w), BigInt(atlas_box.h)], conversion_setting.format);
+					let atlas_size = Popcap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.width), BigInt(atlas_box.height)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));
 					let atlas_view = atlas.view();
 					for (let sprite_resource_property of resource_property.sprite) {
@@ -169,7 +169,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 							identifier: sprite_resource_property.identifier,
 							path: sprite_resource_property.path,
 							position: [BigInt(sprite_rect.x), BigInt(sprite_rect.y)],
-							size: [BigInt(sprite_rect.w), BigInt(sprite_rect.h)],
+							size: [BigInt(sprite_rect.width), BigInt(sprite_rect.height)],
 							offset: sprite_resource_property.offset,
 							separate: sprite_resource_property.separate,
 						};
@@ -191,7 +191,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					}
 					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
 					Support.Popcap.Texture.Encoding.encode(atlas_view, resource_data, conversion_setting.format, texture_encode_option);
-					KernelX.Storage.write_file(new_source_file, resource_data.stream_view());
+					StorageHelper.write_file(new_source_file, resource_data.stream_view());
 					resource_setting.type = 'texture';
 					resource_setting.property = {
 						path: resource_property.path + '',
@@ -212,7 +212,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'pam', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					KernelX.Tool.Popcap.Animation.encode_fs(new_source_file, source_file, conversion_setting.version, buffer.view());
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					resource_setting.type = 'general';
 					resource_setting.property = {
 						path: resource_property.path + '.pam',
@@ -229,7 +229,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'wem', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					Support.Wwise.Media.Encode.encode_fs(new_source_file, source_file, conversion_setting.format);
-					KernelX.Storage.remove(source_file);
+					StorageHelper.remove(source_file);
 					resource_setting.type = 'general';
 					resource_setting.property = {
 						path: resource_property.path + '.wem',
@@ -244,13 +244,13 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 			}
 		}
 		if (resource_setting.type !== resource_type_old) {
-			KernelX.Json.write_fs_js(make_scope_setting_path(resource_directory), resource_setting);
+			JsonHelper.encode_file(make_scope_setting_path(resource_directory), resource_setting);
 		}
 		return;
 	}
 
 	function transpile_group(
-		project_directory: string,
+		project_directory: StoragePath,
 		part_name: string,
 		group_name: string,
 		resource_scope: Scope0 | Scope1,
@@ -266,7 +266,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 	}
 
 	function transpile_part(
-		project_directory: string,
+		project_directory: StoragePath,
 		part_name: string,
 		group_scope: Scope0 | Scope1 | Scope2,
 		conversion_setting_map: ConversionSetting,
@@ -281,7 +281,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 	}
 
 	function transpile_project(
-		project_directory: string,
+		project_directory: StoragePath,
 		part_scope: Scope0 | Scope1 | Scope2 | Scope3,
 		conversion_setting_map: ConversionSetting,
 		option: Option,
@@ -296,7 +296,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 	// ----------------
 
 	export function transpile(
-		project_directory: string,
+		project_directory: StoragePath,
 		target_scope: null | Array<Scope>,
 		target_package: string,
 		option: Option,
@@ -304,7 +304,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Transpile {
 	): void {
 		check_version_file(project_directory);
 		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
-		let project_setting = KernelX.Json.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		if (target_scope === null) {
 			target_scope = [[]];
 		}

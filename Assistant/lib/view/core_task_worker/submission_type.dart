@@ -7,8 +7,8 @@ enum SubmissionType {
   boolean,
   integer,
   floater,
-  size,
   string,
+  size,
   path,
   enumeration,
 }

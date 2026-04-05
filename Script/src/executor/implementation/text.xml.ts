@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Text.Xml {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file.replace(/(\.xml)?$/i, '.format.xml')),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /(\.xml)?$/i, '.format.xml'),
 						condition: null,
 					}),
 				],
@@ -37,14 +37,14 @@ namespace Twinning.Script.Executor.Implementation.Text.Xml {
 						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file + '.format'),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /()?$/i, '.format'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.xml)?$/i, '.xml')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.xml)?$/i, '.xml'),
 					}),
 				],
-				worker: ({source_file, destination_file}, temporary: {}) => {
-					let data = KernelX.Xml.read_fs(source_file);
-					KernelX.Xml.write_fs(destination_file, data);
+				worker: ({source_file, destination_file}, store: {}) => {
+					let data = KernelX.Tool.Data.Serialization.Json.read_fs(source_file);
+					KernelX.Tool.Data.Serialization.Json.write_fs(destination_file, data);
 					return;
 				},
 			}),

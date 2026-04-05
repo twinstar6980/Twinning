@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var history = setting.state.coreTaskWorkerSubmissionHistory[type.index];
     var completer = Completer<Void>();
-    var valueWrapper = Wrapper<ValueExpression?>(null);
+    var valueWrapper = Wrapper<ValueExpression?>();
     this._submissionBar = SubmissionBar(
       type: type,
       option: option,
@@ -477,8 +477,8 @@ class _MainPageBridgeClient extends bridge.Client {
       'boolean'     => SubmissionType.boolean,
       'integer'     => SubmissionType.integer,
       'floater'     => SubmissionType.floater,
-      'size'        => SubmissionType.size,
       'string'      => SubmissionType.string,
+      'size'        => SubmissionType.size,
       'path'        => SubmissionType.path,
       'enumeration' => SubmissionType.enumeration,
       _             => throw Exception(),
@@ -486,6 +486,9 @@ class _MainPageBridgeClient extends bridge.Client {
     var valueData = await this._controller._receiveSubmission(typeValue, option);
     if (valueData != null) {
       value = ValueExpressionHelper.makeString(valueData);
+      if (valueData.macro == null) {
+        value = '??${value}';
+      }
     }
     return (value: value);
   }

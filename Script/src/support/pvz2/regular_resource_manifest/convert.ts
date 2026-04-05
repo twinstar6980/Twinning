@@ -182,7 +182,7 @@ namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 						destination_subgroup.resources.push({
 							slot: slot_of(source_resource.identifier),
 							id: source_resource.identifier,
-							path: !use_array_style_path ? StorageHelper.to_windows_style('!program') : StorageHelper.split('!program'),
+							path: !use_array_style_path ? '!program' : ['!program'],
 							type: 'Image',
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 					}

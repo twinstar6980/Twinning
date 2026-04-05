@@ -70,14 +70,8 @@ class ConvertHelper {
 
   static String makeIntegerToString(
     Integer value,
-    Boolean showPositiveSign,
   ) {
-    return switch (value) {
-      0   => '0',
-      < 0 => '${value}',
-      > 0 => '${!showPositiveSign ? '' : '+'}${value}',
-      _   => throw Exception(),
-    };
+    return '${value}';
   }
 
   // #endregion
@@ -86,15 +80,9 @@ class ConvertHelper {
 
   static String makeFloaterToString(
     Floater value,
-    Boolean showPositiveSign,
   ) {
     var valueDecimal = lib.Decimal.parse(value.toString());
-    return switch (value) {
-      0.0   => '0',
-      < 0.0 => '${valueDecimal}',
-      > 0.0 => '${!showPositiveSign ? '' : '+'}${valueDecimal}',
-      _     => throw Exception(),
-    } + (!valueDecimal.isInteger ? '' : '.0');
+    return '${valueDecimal}${(!valueDecimal.isInteger ? '' : '.0')}';
   }
 
   // #endregion

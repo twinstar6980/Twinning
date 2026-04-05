@@ -28,11 +28,11 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 	// ----------------
 
 	export function check_version_file(
-		project_directory: string,
+		project_directory: StoragePath,
 	): void {
 		try {
 			let version_file = make_scope_child_path(project_directory, 'version.txt');
-			let version_data = KernelX.Storage.read_file(version_file);
+			let version_data = StorageHelper.read_file(version_file);
 			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
 			assert_test(version_text === k_version.toString());
 		}
@@ -71,44 +71,48 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 	// ----------------
 
 	export function list_scope_child_name(
-		parent_directory: string,
+		parent_directory: StoragePath,
 		child_scope: Scope,
 	): Array<string> {
-		return (child_scope.length !== 0 ? [child_scope[0]] : KernelX.Storage.list_directory(parent_directory, 1n, true, false, false, true)).filter((value) => (value.length !== 0 && !value.startsWith('.')));
+		return child_scope.length !== 0
+			? [child_scope[0]]
+			: StorageHelper.list_directory(parent_directory, 1n, true, false, false, true)
+				.map((value) => value.name()!)
+				.filter((value) => !value.startsWith('.'));
 	}
 
 	// ----------------
 
 	export function make_scope_root_path(
-		project_directory: string,
+		project_directory: StoragePath,
 		part_name?: string,
 		group_name?: string,
 		resource_name?: string,
-	): string {
+	): StoragePath {
 		let result = project_directory;
 		if (part_name !== undefined) {
-			result += `/${part_name}`;
+			result = result.join(part_name);
 		}
 		if (group_name !== undefined) {
-			result += `/${group_name}`;
+			result = result.join(group_name);
 		}
 		if (resource_name !== undefined) {
-			result += `/${resource_name}`;
+			result = result.join(resource_name);
 		}
 		return result;
 	}
 
 	export function make_scope_child_path(
-		parent_directory: string,
-		child_name: string,
-	): string {
-		return `${parent_directory}/${child_name}`;
+		parent: StoragePath,
+		name: string,
+	): StoragePath {
+		return parent.join(name);
 	}
 
 	export function make_scope_setting_path(
-		root_directory: string,
-	): string {
-		return `${root_directory}/setting.json`;
+		parent: StoragePath,
+	): StoragePath {
+		return parent.join('setting.json');
 	}
 
 	// #endregion
@@ -263,41 +267,41 @@ namespace Twinning.Script.Support.Pvz2.PackageProject {
 	// #region build
 
 	export function make_build_package_state_path(
-		project_directory: string,
+		project_directory: StoragePath,
 		package_name: string,
-	): string {
-		return `${project_directory}/.build/${package_name}/state.json`;
+	): StoragePath {
+		return project_directory.join('.build').join(package_name).join('state.json');
 	}
 
 	export function make_build_package_bundle_path(
-		project_directory: string,
+		project_directory: StoragePath,
 		package_name: string,
-	): string {
-		return `${project_directory}/.build/${package_name}/package.rsb.bundle`;
+	): StoragePath {
+		return project_directory.join('.build').join(package_name).join('package.rsb.bundle');
 	}
 
 	export function make_build_package_bundle_packet_path(
-		project_directory: string,
+		project_directory: StoragePath,
 		package_name: string,
 		group_name: string,
 		subgroup_category: RegularResourceManifest.SubgroupCategory,
-	): string {
-		return `${project_directory}/.build/${package_name}/package.rsb.bundle/packet/${make_subgroup_name(group_name, subgroup_category)}.rsg`;
+	): StoragePath {
+		return project_directory.join('.build').join(package_name).join('package.rsb.bundle').join('packet').join(`${make_subgroup_name(group_name, subgroup_category)}.rsg}`);
 	}
 
 	export function make_build_package_bundle_resource_path(
-		project_directory: string,
+		project_directory: StoragePath,
 		package_name: string,
 		resource_path: string,
-	): string {
-		return `${project_directory}/.build/${package_name}/package.rsb.bundle/resource/${resource_path}`;
+	): StoragePath {
+		return project_directory.join('.build').join(package_name).join('package.rsb.bundle').join('resource').join(resource_path);
 	}
 
 	export function make_build_package_data_path(
-		project_directory: string,
+		project_directory: StoragePath,
 		package_name: string,
-	): string {
-		return `${project_directory}/.build/${package_name}.rsb`;
+	): StoragePath {
+		return project_directory.join('.build').join(`${package_name}.rsb`);
 	}
 
 	// #endregion

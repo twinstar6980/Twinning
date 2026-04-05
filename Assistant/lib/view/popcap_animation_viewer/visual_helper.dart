@@ -320,7 +320,7 @@ class VisualHelper {
   static Future<model.Animation> loadAnimation(
     StoragePath file,
   ) async {
-    return model.ModelHelper.parseDataFromJson(await JsonHelper.deserializeFile(file));
+    return model.ModelHelper.parseDataFromJson(await JsonHelper.decodeFile(file));
   }
 
   static Future<Map<String, ({lib.Image image, Integer width, Integer height})>> loadTexture(

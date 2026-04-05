@@ -81,9 +81,9 @@ class GameProgramHelper {
     GamePlatform platform,
   ) {
     return switch (platform) {
-      .windowsIntel32 => .of('GameAssembly.dll'),
-      .androidArm32   => .of('lib/armeabi-v7a/libil2cpp.so'),
-      .androidArm64   => .of('lib/arm64-v8a/libil2cpp.so'),
+      .windowsIntel32 => .of('./GameAssembly.dll'),
+      .androidArm32   => .of('./lib/armeabi-v7a/libil2cpp.so'),
+      .androidArm64   => .of('./lib/arm64-v8a/libil2cpp.so'),
     };
   }
 
@@ -91,9 +91,9 @@ class GameProgramHelper {
     GamePlatform platform,
   ) {
     return switch (platform) {
-      .windowsIntel32 => .of('KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat'),
-      .androidArm32   => .of('assets/bin/Data/Managed/Metadata/global-metadata.dat'),
-      .androidArm64   => .of('assets/bin/Data/Managed/Metadata/global-metadata.dat'),
+      .windowsIntel32 => .of('./KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat'),
+      .androidArm32   => .of('./assets/bin/Data/Managed/Metadata/global-metadata.dat'),
+      .androidArm64   => .of('./assets/bin/Data/Managed/Metadata/global-metadata.dat'),
     };
   }
 
@@ -823,7 +823,7 @@ class GameRepositoryHelper {
     if (!await StorageHelper.existFile(gameManifestFile)) {
       return null;
     }
-    var gameManifest = await VdfHelper.deserializeFile(gameManifestFile);
+    var gameManifest = await VdfHelper.decodeFile(gameManifestFile);
     assertTest(gameManifest.length == 1);
     assertTest(gameManifest.entries.first.key == 'AppState');
     assertTest(gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['appid']!.as<Integer>().toString() == gameIdentifier);
@@ -854,7 +854,7 @@ class GameRepositoryHelper {
   static Future<List<GameInformation>> loadSteamRepository(
     StoragePath repositoryDirectory,
   ) async {
-    var libraryList = await VdfHelper.deserializeFile(repositoryDirectory.join('steamapps').join('libraryfolders.vdf'));
+    var libraryList = await VdfHelper.decodeFile(repositoryDirectory.join('steamapps').join('libraryfolders.vdf'));
     assertTest(libraryList.length == 1);
     assertTest(libraryList.entries.first.key == 'libraryfolders');
     var result = <GameInformation>[];

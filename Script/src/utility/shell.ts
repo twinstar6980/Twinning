@@ -14,13 +14,13 @@ namespace Twinning.Script.Shell {
 
 	export const name = String(callback(['name'])[0]);
 
-	export const is_basic = name === 'basic';
-
-	export const is_assistant = name === 'assistant' || name === 'assistant_plus';
+	export const version = String(callback(['version'])[0]);
 
 	// ----------------
 
-	export const version = String(callback(['version'])[0]);
+	export const is_basic = name === 'basic';
+
+	export const is_assistant = name === 'assistant' || name === 'assistant_plus';
 
 	// #endregion
 
@@ -53,7 +53,7 @@ namespace Twinning.Script.Shell {
 	}
 
 	export function assistant_receive_submission(
-		type: 'pause' | 'boolean' | 'integer' | 'floater' | 'size' | 'string' | 'path' | 'enumeration',
+		type: 'pause' | 'boolean' | 'integer' | 'floater' | 'string' | 'size' | 'path' | 'enumeration',
 		option: Array<string>,
 	): {value: string} {
 		let result = callback(['receive_submission', type, ...option]);

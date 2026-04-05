@@ -24,7 +24,7 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 		let source_list: null | Array<string> = null;
 		if (source_version === 'automatic') {
 			try {
-				let source = KernelX.Json.read(source_data).value as any;
+				let source = JsonHelper.decode_data(source_data) as any;
 				let source_variant = source?.objects[0]?.objdata?.LocStringValues;
 				if (CheckHelper.is_object_of_object(source_variant)) {
 					source_map = source_variant;
@@ -62,7 +62,7 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 			}
 			case 'json_map': {
 				if (source_map === null) {
-					let source = KernelX.Json.read(source_data).value as any;
+					let source = JsonHelper.decode_data(source_data) as any;
 					source_map = source?.objects[0]?.objdata?.LocStringValues;
 					if (!CheckHelper.is_object_of_object(source_map)) {
 						throw new Error(`invalid source`);
@@ -79,7 +79,7 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 			}
 			case 'json_list': {
 				if (source_list === null) {
-					let source = KernelX.Json.read(source_data).value as any;
+					let source = JsonHelper.decode_data(source_data) as any;
 					source_list = source?.objects[0]?.objdata?.LocStringValues;
 					if (!CheckHelper.is_object_of_array(source_list)) {
 						throw new Error(`invalid source`);
@@ -124,7 +124,7 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 						},
 					],
 				};
-				destination_data = Kernel.ByteArray.value(KernelX.Json.write_js(destination)).release();
+				destination_data = Kernel.ByteArray.value(JsonHelper.encode_data(destination)).release();
 				break;
 			}
 			case 'json_list': {
@@ -149,7 +149,7 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 						},
 					],
 				};
-				destination_data = Kernel.ByteArray.value(KernelX.Json.write_js(destination)).release();
+				destination_data = Kernel.ByteArray.value(JsonHelper.encode_data(destination)).release();
 				break;
 			}
 		}
@@ -159,14 +159,14 @@ namespace Twinning.Script.Support.Pvz2.TextTable.Convert {
 	// ----------------
 
 	export function convert_fs(
-		source_file: string,
-		destination_file: string,
+		source_file: StoragePath,
+		destination_file: StoragePath,
 		source_version: Version | 'automatic',
 		destination_version: Version,
 	): void {
-		let source_data = KernelX.Storage.read_file(source_file);
+		let source_data = StorageHelper.read_file(source_file);
 		let destination_data = convert(source_data.value, source_version, destination_version);
-		KernelX.Storage.write_file(destination_file, destination_data);
+		StorageHelper.write_file(destination_file, destination_data);
 		return;
 	}
 

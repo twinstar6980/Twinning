@@ -56,9 +56,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._command.add((
       groupConfiguration: groupConfiguration,
       itemConfiguration: itemConfiguration,
-      batch: .new(batch),
+      batch: .of(batch),
       argument: ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument),
-      expanded: .new(expanded),
+      expanded: .of(expanded),
     ));
     await refreshState(this.setState);
     this._commandListScrollController.jumpTo(this._commandListScrollController.position.maxScrollExtent);
@@ -124,7 +124,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         optionCommand.add((
           method: option.nextString(),
           batch: option.nextBoolean(),
-          argument: option.nextString().selfLet((it) => JsonHelper.deserializeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
+          argument: option.nextString().selfLet((it) => JsonHelper.decodeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
           expanded: option.nextBoolean(),
         ));
       }
@@ -154,7 +154,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       for (var item in this._command) {
         option.nextString(item.itemConfiguration.identifier);
         option.nextBoolean(item.batch.value);
-        option.nextString(item.argument.selfLet((it) => JsonHelper.serializeText(ConfigurationHelper.makeArgumentValueListJson(item.itemConfiguration.argument, it), indented: false)));
+        option.nextString(item.argument.selfLet((it) => JsonHelper.encodeText(ConfigurationHelper.makeArgumentValueListJson(item.itemConfiguration.argument, it), indented: false)));
         option.nextBoolean(item.expanded.value);
       }
     }

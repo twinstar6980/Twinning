@@ -19,8 +19,8 @@ enum ArgumentType {
   boolean,
   integer,
   floater,
-  size,
   string,
+  size,
   path,
 }
 
@@ -87,8 +87,8 @@ class ConfigurationHelper {
       BooleanExpression _ => value.value,
       IntegerExpression _ => value.value,
       FloaterExpression _ => value.value,
-      SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count, false)}${['b', 'k', 'm', 'g'][value.exponent]}',
       StringExpression  _ => value.value,
+      SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count)}${['b', 'k', 'm', 'g'][value.exponent]}',
       PathExpression    _ => '${value.content.emitGeneric()}',
       _                   => throw UnreachableException(),
     };
@@ -108,12 +108,12 @@ class ConfigurationHelper {
       .floater => FloaterExpression(
         json.as<Floater>(),
       ),
+      .string => StringExpression(
+        json.as<String>(),
+      ),
       .size => SizeExpression(
         json.as<String>().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
         json.as<String>().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) => assertTest(it != -1)),
-      ),
-      .string => StringExpression(
-        json.as<String>(),
       ),
       .path => PathExpression(
         json.as<String>().selfLet((it) => StoragePath.of(it)),
@@ -147,7 +147,7 @@ class ConfigurationHelper {
     for (var index = 0; index < configuration.length; index++) {
       var itemConfiguration = configuration[index];
       var itemJson = json[itemConfiguration.identifier];
-      value.add(.new(itemJson == null ? null : ConfigurationHelper.parseArgumentValueJson(itemConfiguration.type, itemJson)));
+      value.add(.of(itemJson == null ? null : ConfigurationHelper.parseArgumentValueJson(itemConfiguration.type, itemJson)));
     }
     return value;
   }

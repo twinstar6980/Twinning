@@ -3,35 +3,34 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 	// #region utility
 
 	export function decode_fs(
-		ripe_file: string,
-		raw_file: string,
+		ripe_file: StoragePath,
+		raw_file: StoragePath,
 	): Format {
 		if (!KernelX.is_windows && !KernelX.is_linux && !KernelX.is_macintosh) {
 			throw new Error(`unsupported system, this function only available for windows or linux or macintosh`);
 		}
-		let ripe_file_fallback_temporary: null | string = null;
+		let ripe_file_fallback_temporary: null | StoragePath = null;
 		let ripe_file_fallback = ripe_file;
-		if (!ripe_file.endsWith('.wem')) {
+		if (ripe_file.extension()?.toLowerCase() !== 'wem') {
 			ripe_file_fallback_temporary = HomePath.new_temporary(null, 'directory');
-			ripe_file_fallback = `${ripe_file_fallback_temporary}/sample.wem`;
-			KernelX.Storage.copy(ripe_file, ripe_file_fallback, false);
+			ripe_file_fallback = ripe_file_fallback_temporary.join('sample.wem');
+			StorageHelper.copy(ripe_file, ripe_file_fallback, false);
 		}
-		let raw_file_directory = StorageHelper.parent(raw_file);
-		if (raw_file_directory !== null && !KernelX.Storage.exist_directory(raw_file_directory)) {
-			KernelX.Storage.create_directory(raw_file_directory);
+		let raw_file_directory = raw_file.parent();
+		if (raw_file_directory !== null && !StorageHelper.exist_directory(raw_file_directory)) {
+			StorageHelper.create_directory(raw_file_directory);
 		}
 		let vgmstream_result = ProcessHelper.run_process(
-			['vgmstream-cli'],
+			ProcessHelper.search_program_ensure('vgmstream-cli', true),
 			[
 				'-o',
-				raw_file,
-				ripe_file_fallback,
+				raw_file.emit(),
+				ripe_file_fallback.emit(),
 			],
-			null,
 			null,
 		);
 		if (ripe_file_fallback_temporary !== null) {
-			KernelX.Storage.remove(ripe_file_fallback_temporary);
+			StorageHelper.remove(ripe_file_fallback_temporary);
 		}
 		if (vgmstream_result.code !== 0n) {
 			throw new Error(`execute failed by vgmstream-cli`);

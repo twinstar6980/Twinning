@@ -31,31 +31,31 @@ namespace Twinning.Script {
 				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
 			},
 			common_buffer_size: (value) => {
-				KernelX.g_common_buffer.allocate(Kernel.Size.value(ConvertHelper.parse_size_from_string(value)));
+				KernelX.g_common_buffer.allocate(Kernel.Size.value(new StorageSize(value).value()));
 			},
 			json_format_disable_array_trailing_comma: (value) => {
-				KernelX.Json.g_format.disable_array_trailing_comma = value;
+				KernelX.Tool.Data.Serialization.Json.g_format.disable_array_trailing_comma = value;
 			},
 			json_format_disable_array_line_breaking: (value) => {
-				KernelX.Json.g_format.disable_array_line_breaking = value;
+				KernelX.Tool.Data.Serialization.Json.g_format.disable_array_line_breaking = value;
 			},
 			json_format_disable_object_trailing_comma: (value) => {
-				KernelX.Json.g_format.disable_object_trailing_comma = value;
+				KernelX.Tool.Data.Serialization.Json.g_format.disable_object_trailing_comma = value;
 			},
 			json_format_disable_object_line_breaking: (value) => {
-				KernelX.Json.g_format.disable_object_line_breaking = value;
+				KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking = value;
 			},
 			thread_limit: (value) => {
 				MainScript.g_thread_manager.resize(Number(value), null);
 			},
 			external_program_path: (value) => {
-				ProcessHelper.g_program_path_map = value;
+				ProcessHelper.g_program_path_map = ConvertHelper.record_transform(value, (key, value) => [key, value === null ? null : new StoragePath(value)]);
 			},
 			console_basic_disable_virtual_terminal_sequence: (value) => {
 				Console.g_basic_disable_virtual_terminal_sequence = value;
 			},
 			language: (value) => {
-				Language.imbue(KernelX.Json.read_fs_js(HomePath.of(`~/script/configuration/language/${value}.json`)) as Language.StringMap);
+				Language.imbue(JsonHelper.decode_file(HomePath.script().join('configuration').join('language').join(`${value}.json`)) as Language.StringMap);
 			},
 			executor_typical_method_disable_name_filter: (value) => {
 				Executor.g_typical_method_disable_name_filter = value;

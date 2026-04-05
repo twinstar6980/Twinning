@@ -8,45 +8,45 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	function get_program_file_path(
 		platform: Platform,
-	): string {
-		let path = '';
+	): StoragePath {
+		let path = new StoragePath();
 		if (platform === 'windows_intel32') {
-			path = 'GameAssembly.dll';
+			path.parse('./GameAssembly.dll');
 		}
 		if (platform === 'android_arm32') {
-			path = 'lib/armeabi-v7a/libil2cpp.so';
+			path.parse('./lib/armeabi-v7a/libil2cpp.so');
 		}
 		if (platform === 'android_arm64') {
-			path = 'lib/arm64-v8a/libil2cpp.so';
+			path.parse('./lib/arm64-v8a/libil2cpp.so');
 		}
 		return path;
 	}
 
 	function get_metadata_file_path(
 		platform: Platform,
-	): string {
-		let path = '';
+	): StoragePath {
+		let path = new StoragePath();
 		if (platform === 'windows_intel32') {
-			path = 'KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat';
+			path.parse('./KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat');
 		}
 		if (platform === 'android_arm32') {
-			path = 'assets/bin/Data/Managed/Metadata/global-metadata.dat';
+			path.parse('./assets/bin/Data/Managed/Metadata/global-metadata.dat');
 		}
 		if (platform === 'android_arm64') {
-			path = 'assets/bin/Data/Managed/Metadata/global-metadata.dat';
+			path.parse('./assets/bin/Data/Managed/Metadata/global-metadata.dat');
 		}
 		return path;
 	}
 
 	function detect_platform(
-		game_directory: string,
+		game_directory: StoragePath,
 	): Array<Platform> {
 		let result: Array<Platform> = [];
 		for (let platform of ['windows_intel32', 'android_arm32', 'android_arm64'] as Array<Platform>) {
-			if (!KernelX.Storage.exist_file(`${game_directory}/${get_program_file_path(platform)}`)) {
+			if (!StorageHelper.exist_file(game_directory.push(get_program_file_path(platform)))) {
 				continue;
 			}
-			if (!KernelX.Storage.exist_file(`${game_directory}/${get_metadata_file_path(platform)}`)) {
+			if (!StorageHelper.exist_file(game_directory.push(get_metadata_file_path(platform)))) {
 				continue;
 			}
 			result.push(platform);
@@ -59,26 +59,25 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	// #region il2cppdumper
 
 	function run_il2cppdumper(
-		program_file: string,
-		metadata_file: string,
+		program_file: StoragePath,
+		metadata_file: StoragePath,
 	): Array<string> {
 		let dump_directory = HomePath.new_temporary(null, 'directory');
 		let il2cppdumper_result = ProcessHelper.run_process(
-			['dotnet'],
+			ProcessHelper.search_program_ensure('dotnet', true),
 			[
-				ProcessHelper.search_program_ensure('Il2CppDumper.dll', false),
-				program_file,
-				metadata_file,
-				dump_directory,
+				ProcessHelper.search_program_ensure('Il2CppDumper.dll', false).emit(),
+				program_file.emit(),
+				metadata_file.emit(),
+				dump_directory.emit(),
 			],
-			null,
 			null,
 		);
 		if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
 			throw new Error(`execute failed by Il2CppDumper`);
 		}
-		let dump_data = KernelX.Storage.read_file_s(`${dump_directory}/dump.cs`).split('\n');
-		KernelX.Storage.remove(dump_directory);
+		let dump_data = StorageHelper.read_file_text(dump_directory.join(`dump.cs`)).split('\n');
+		StorageHelper.remove(dump_directory);
 		return dump_data;
 	}
 
@@ -266,8 +265,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 
 	function modify_program_flat(
 		platform: Platform,
-		program_file: string,
-		metadata_file: string,
+		program_file: StoragePath,
+		metadata_file: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
@@ -339,7 +338,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			);
 		}
 		Console.information(`Phase: load original program`, []);
-		let program_data = KernelX.Storage.read_file(program_file);
+		let program_data = StorageHelper.read_file(program_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
 			Console.information(`Phase: modify method 'RecordStore.ReadRecord'`, []);
@@ -453,12 +452,12 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16).padStart(8, '0')}, but this modification may cause error`, []);
 		}
 		Console.information(`Phase: save modified program`, []);
-		KernelX.Storage.write_file(program_file, program_data);
+		StorageHelper.write_file(program_file, program_data);
 		return;
 	}
 
 	function modify_program(
-		target_directory: string,
+		target_directory: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
@@ -470,8 +469,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 			Console.information(`Phase: modify program of '${platform}'`, []);
 			modify_program_flat(
 				platform,
-				`${target_directory}/${get_program_file_path(platform)}`,
-				`${target_directory}/${get_metadata_file_path(platform)}`,
+				target_directory.push(get_program_file_path(platform)),
+				target_directory.push(get_metadata_file_path(platform)),
 				disable_record_encryption,
 				enable_debug_mode,
 			);
@@ -483,7 +482,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	// ----------------
 
 	export function process_fs(
-		target_directory: string,
+		target_directory: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {

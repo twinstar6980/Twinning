@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Wwise.SoundBank {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory.replace(/(\.bnk\.bundle)?$/i, '.bnk')),
+						automatic: (argument: {bundle_directory: StoragePath}) => ConvertHelper.replace_path_name(argument.bundle_directory, /(\.bnk\.bundle)?$/i, '.bnk'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -51,18 +51,18 @@ namespace Twinning.Script.Executor.Implementation.Wwise.SoundBank {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory + '.pack'),
+						automatic: (argument: {bundle_directory: StoragePath}) => ConvertHelper.replace_path_name(argument.bundle_directory, /()?$/i, '.pack'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.bnk\.bundle)?$/i, '.bnk')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.bnk\.bundle)?$/i, '.bnk'),
 					}),
 				],
-				worker: ({bundle_directory, data_file, version_number, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({bundle_directory, data_file, version_number, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					let definition_file = `${bundle_directory}/definition.json`;
-					let embedded_media_directory = `${bundle_directory}/embedded_media`;
-					KernelX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, {number: version_number as any}, temporary.buffer.view());
+					let definition_file = bundle_directory.join('definition.json');
+					let embedded_media_directory = bundle_directory.join('embedded_media');
+					KernelX.Tool.Wwise.SoundBank.encode_fs(data_file, definition_file, embedded_media_directory, {number: version_number as any}, store.buffer.view());
 					return;
 				},
 			}),
@@ -81,7 +81,7 @@ namespace Twinning.Script.Executor.Implementation.Wwise.SoundBank {
 						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.bnk)?$/i, '.bnk.bundle')),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.bnk)?$/i, '.bnk.bundle'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -105,14 +105,14 @@ namespace Twinning.Script.Executor.Implementation.Wwise.SoundBank {
 						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file + '.unpack'),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.unpack'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.bnk)?$/i, '.bnk.bundle')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.bnk)?$/i, '.bnk.bundle'),
 					}),
 				],
-				worker: ({data_file, bundle_directory, version_number}, temporary: {}) => {
-					let definition_file = `${bundle_directory}/definition.json`;
-					let embedded_media_directory = `${bundle_directory}/embedded_media`;
+				worker: ({data_file, bundle_directory, version_number}, store: {}) => {
+					let definition_file = bundle_directory.join('definition.json');
+					let embedded_media_directory = bundle_directory.join('embedded_media');
 					KernelX.Tool.Wwise.SoundBank.decode_fs(data_file, definition_file, embedded_media_directory, {number: version_number as any});
 					return;
 				},

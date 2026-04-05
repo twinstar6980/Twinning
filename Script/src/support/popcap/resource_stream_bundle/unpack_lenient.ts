@@ -42,7 +42,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 		size: null | number,
 		type: number,
 		list: Record<string, {type: number, offset: number, size: number}>,
-		directory: string,
+		directory: StoragePath,
 	): void {
 		let raw: ByteListView;
 		if (size === null) {
@@ -59,7 +59,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 		for (let item in list) {
 			let item_information = list[item];
 			if (item_information.type === type) {
-				KernelX.Storage.write_file(`${directory}/${item}`, raw.sub(item_information.offset, item_information.size));
+				StorageHelper.write_file(directory.push(new StoragePath(item)), raw.sub(item_information.offset, item_information.size));
 			}
 		}
 		return;
@@ -68,7 +68,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 	function process_package(
 		package_data: ByteListView,
 		package_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package,
-		resource_directory: string,
+		resource_directory: StoragePath,
 	): void {
 		package_definition.group = [];
 		let package_header = {
@@ -292,7 +292,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 	export function process(
 		data: ByteListView,
 		definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package,
-		resource_directory: string,
+		resource_directory: StoragePath,
 	): void {
 		return process_package(data, definition, resource_directory);
 	}
@@ -300,16 +300,16 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 	// ----------------
 
 	export function process_fs(
-		data_file: string,
-		definition_file: string,
-		manifest_file: string,
-		resource_directory: string,
+		data_file: StoragePath,
+		definition_file: StoragePath,
+		manifest_file: StoragePath,
+		resource_directory: StoragePath,
 	): void {
-		let data = KernelX.Storage.read_file(data_file);
+		let data = StorageHelper.read_file(data_file);
 		let definition = {} as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
 		process(new ByteListView(data.view().value), definition, resource_directory);
-		KernelX.Json.write_fs_js(definition_file, definition);
-		KernelX.Json.write_fs_js(manifest_file, null);
+		JsonHelper.encode_file(definition_file, definition);
+		JsonHelper.encode_file(manifest_file, null);
 		return;
 	}
 

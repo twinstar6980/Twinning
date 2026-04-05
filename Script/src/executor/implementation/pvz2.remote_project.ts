@@ -48,12 +48,12 @@ namespace Twinning.Script.Executor.Implementation.PvZ2.RemoteProject {
 						option: null,
 						checker: null,
 						automatic: null,
-						condition: (argument: {action: string, target: string}) => (['push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : 0n),
+						condition: (argument: {action: string, target: string}) => (['push'].includes(argument.action) && ['content_delivery', 'local_profile', 'player_profile'].includes(argument.target) ? null : new StorageSize()),
 					}),
 				],
 				batch: null,
-				worker: ({project_directory, action, target, rton_version_number, rton_version_native_string_encoding_use_utf8, rton_encode_buffer_size}, temporary: {}) => {
-					Support.Pvz2.RemoteProject.execute(project_directory, action as any, target === '' ? null : target as any, {number: rton_version_number as any, native_string_encoding_use_utf8: rton_version_native_string_encoding_use_utf8}, rton_encode_buffer_size);
+				worker: ({project_directory, action, target, rton_version_number, rton_version_native_string_encoding_use_utf8, rton_encode_buffer_size}, store: {}) => {
+					Support.Pvz2.RemoteProject.execute(project_directory, action as any, target === '' ? null : target as any, {number: rton_version_number as any, native_string_encoding_use_utf8: rton_version_native_string_encoding_use_utf8}, rton_encode_buffer_size.value());
 					return;
 				},
 			}),

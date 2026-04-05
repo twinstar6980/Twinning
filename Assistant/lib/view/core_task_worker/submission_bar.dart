@@ -18,7 +18,10 @@ class _BasicSubmissionBar extends StatelessWidget {
     super.key, // ignore: unused_element_parameter
     required this.completer,
     required this.history,
+    required this.macro,
+    required this.value,
     required this.onSelect,
+    required this.onMacro,
     required this.icon,
     required this.content,
   });
@@ -27,7 +30,10 @@ class _BasicSubmissionBar extends StatelessWidget {
 
   final Completer<Void>?                                  completer;
   final List<({ValueExpression value, Boolean enabled})>? history;
+  final List<({String value, String name})>?              macro;
+  final ValueExpression?                                  value;
   final Void Function(ValueExpression value)?             onSelect;
+  final Void Function(String? value)?                     onMacro;
   final IconData                                          icon;
   final Widget                                            content;
 
@@ -80,7 +86,51 @@ class _BasicSubmissionBar extends StatelessWidget {
           ),
         ),
         Gap.horizontal(16),
-        this.content.withFlexExpanded(),
+        if (this.value?.macro == null) ...[
+          this.content.withFlexExpanded(),
+        ],
+        if (this.value?.macro != null) ...[
+          StyledInput.underlined(
+            style: getSpecialFontTextStyle(context),
+            type: .text,
+            format: null,
+            hint: 'Macro',
+            prefix: null,
+            suffix: [
+              StyledIconButton.standard(
+                tooltip: 'Preset',
+                icon: IconView.of(IconSet.flash_on),
+                onPressed: (context) async {
+                  var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
+                    position: .under,
+                    content: this.macro!.mapIndexed((index, value) => StyledMenuItem.standard(
+                      value: value.value,
+                      content: StyledText.custom(
+                        value.name,
+                        style: getSpecialFontTextStyle(context, listen: false),
+                      ),
+                    )),
+                  ));
+                  if (value != null) {
+                    this.onMacro!(value);
+                  }
+                },
+              ),
+              Gap.horizontal(4),
+              StyledIconButton.standard(
+                tooltip: 'Reset',
+                icon: IconView.of(IconSet.adjust, fill: 1),
+                onPressed: (context) async {
+                  this.onMacro!(null);
+                },
+              ),
+            ],
+            value: this.value!.macro!,
+            onChanged: (context, value) async {
+              this.onMacro!(value);
+            },
+          ).withFlexExpanded(),
+        ],
       ],
     );
   }
@@ -104,7 +154,10 @@ class _IdleSubmissionBar extends StatelessWidget {
     return _BasicSubmissionBar(
       completer: null,
       history: null,
+      macro: null,
+      value: null,
       onSelect: null,
+      onMacro: null,
       icon: IconSet.more_horiz,
       content: StyledInput.underlined(
         enabled: false,
@@ -145,9 +198,16 @@ class _PauseSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as PauseExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value);
           await refreshState(setState);
         },
         icon: IconSet.pause,
@@ -157,7 +217,17 @@ class _PauseSubmissionBar extends StatelessWidget {
           format: null,
           hint: 'Pause',
           prefix: null,
-          suffix: null,
+          suffix: [
+            StyledIconButton.standard(
+              enabled: false,
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust, color: StyledColor.disabled.query(context)),
+              onPressed: (context) async {
+                this.value.value = .new('');
+                await refreshState(setState);
+              },
+            ),
+          ],
           value: '',
           onChanged: (context, value) async {
           },
@@ -191,9 +261,16 @@ class _BooleanSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as BooleanExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, false);
           await refreshState(setState);
         },
         icon: IconSet.check_box,
@@ -210,7 +287,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
               icon: IconView.of(IconSet.do_not_disturb_on),
               iconOnSelected: IconView.of(IconSet.do_not_disturb_on, fill: 1),
               onPressed: (context) async {
-                this.value.value = this.value.value?.value == false ? null : .new(false);
+                this.value.value = this.value.value?.value == false ? null : .new(null, false);
                 await refreshState(setState);
               },
             ),
@@ -221,19 +298,28 @@ class _BooleanSubmissionBar extends StatelessWidget {
               icon: IconView.of(IconSet.check_circle),
               iconOnSelected: IconView.of(IconSet.check_circle, fill: 1),
               onPressed: (context) async {
-                this.value.value = this.value.value?.value == true ? null : .new(true);
+                this.value.value = this.value.value?.value == true ? null : .new(null, true);
+                await refreshState(setState);
+              },
+            ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', false);
                 await refreshState(setState);
               },
             ),
           ],
-          value: this.value.value == null ? '' : ConvertHelper.makeBooleanToStringOfConfirmationCharacter(this.value.value!.value),
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => ConvertHelper.makeBooleanToStringOfConfirmationCharacter(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
             }
             else {
               if (value == 'n' || value == 'y') {
-                this.value.value = .new(value == 'y');
+                this.value.value = .new(null, value == 'y');
               }
             }
             await refreshState(setState);
@@ -268,9 +354,16 @@ class _IntegerSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as IntegerExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, 0);
           await refreshState(setState);
         },
         icon: IconSet.speed_1_2,
@@ -280,8 +373,17 @@ class _IntegerSubmissionBar extends StatelessWidget {
           format: null,
           hint: 'Integer',
           prefix: null,
-          suffix: null,
-          value: this.value.value == null ? '' : ConvertHelper.makeIntegerToString(this.value.value!.value, false),
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', 0);
+                await refreshState(setState);
+              },
+            ),
+          ],
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => ConvertHelper.makeIntegerToString(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -289,7 +391,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
             else {
               var parsedValue = Integer.tryParse(value);
               if (parsedValue != null) {
-                this.value.value = .new(parsedValue);
+                this.value.value = .new(null, parsedValue);
               }
             }
             await refreshState(setState);
@@ -324,9 +426,16 @@ class _FloaterSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as FloaterExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, 0.0);
           await refreshState(setState);
         },
         icon: IconSet.speed_1_2,
@@ -336,8 +445,17 @@ class _FloaterSubmissionBar extends StatelessWidget {
           format: null,
           hint: 'Floater',
           prefix: null,
-          suffix: null,
-          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.value, false),
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', 0.0);
+                await refreshState(setState);
+              },
+            ),
+          ],
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => ConvertHelper.makeFloaterToString(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -345,93 +463,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
             else {
               var parsedValue = Floater.tryParse(value);
               if (parsedValue != null && parsedValue.isFinite) {
-                this.value.value = .new(parsedValue);
-              }
-            }
-            await refreshState(setState);
-          },
-        ),
-      ),
-    );
-  }
-
-}
-
-class _SizeSubmissionBar extends StatelessWidget {
-
-  const _SizeSubmissionBar({
-    super.key, // ignore: unused_element_parameter
-    required this.completer,
-    required this.history,
-    required this.value,
-  });
-
-  // ----------------
-
-  final Completer<Void>          completer;
-  final List<SizeExpression>     history;
-  final Wrapper<SizeExpression?> value;
-
-  // ----------------
-
-  @override
-  build(context) {
-    return StatefulBuilder(
-      builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: true)).toList(),
-        onSelect: (value) async {
-          value as SizeExpression;
-          this.value.value = value;
-          await refreshState(setState);
-        },
-        icon: IconSet.memory,
-        content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
-          type: .numberWithOptions(signed: false, decimal: true),
-          format: null,
-          hint: 'Size',
-          prefix: null,
-          suffix: [
-            StyledIconButton.standard(
-              tooltip: 'Exponent',
-              icon: this.value.value == null
-                ? IconView.of(IconSet.expand_circle_down)
-                : BoxContainer.of(
-                  constraints: .tightFor(width: 24, height: 24),
-                  align: .center,
-                  child: StyledText.custom(
-                    ['B', 'K', 'M', 'G'][this.value.value!.exponent],
-                    style: getSpecialFontTextStyle(context),
-                  ),
-                ),
-              onPressed: (context) async {
-                var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
-                  position: .under,
-                  content: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
-                    value: index,
-                    content: StyledText.custom(
-                      value,
-                      style: getSpecialFontTextStyle(context, listen: false),
-                    ),
-                  )),
-                ));
-                if (value != null) {
-                  this.value.value = .new(this.value.value?.count ?? 1.0, value);
-                  await refreshState(setState);
-                }
-              },
-            ),
-          ],
-          value: this.value.value == null ? '' : ConvertHelper.makeFloaterToString(this.value.value!.count, false),
-          onChanged: (context, value) async {
-            if (value.isEmpty) {
-              this.value.value = null;
-            }
-            else {
-              var parsedCount = Floater.tryParse(value);
-              if (parsedCount != null && parsedCount.isFinite && parsedCount >= 0.0) {
-                this.value.value = .new(parsedCount, this.value.value?.exponent ?? 2);
+                this.value.value = .new(null, parsedValue);
               }
             }
             await refreshState(setState);
@@ -466,9 +498,17 @@ class _StringSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+          (value: 'empty', name: 'Empty'),
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as StringExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, '');
           await refreshState(setState);
         },
         icon: IconSet.text_fields,
@@ -478,14 +518,125 @@ class _StringSubmissionBar extends StatelessWidget {
           format: null,
           hint: 'String',
           prefix: null,
-          suffix: null,
-          value: this.value.value == null ? '' : this.value.value!.value,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', '');
+                await refreshState(setState);
+              },
+            ),
+          ],
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => it),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              this.value.value = .new(value);
+              this.value.value = .new(null, value);
+            }
+            await refreshState(setState);
+          },
+        ),
+      ),
+    );
+  }
+
+}
+
+class _SizeSubmissionBar extends StatelessWidget {
+
+  const _SizeSubmissionBar({
+    super.key, // ignore: unused_element_parameter
+    required this.completer,
+    required this.history,
+    required this.value,
+  });
+
+  // ----------------
+
+  final Completer<Void>          completer;
+  final List<SizeExpression>     history;
+  final Wrapper<SizeExpression?> value;
+
+  // ----------------
+
+  @override
+  build(context) {
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        completer: this.completer,
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+        ],
+        value: this.value.value,
+        onSelect: (value) async {
+          value as SizeExpression;
+          this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, 0.0, 0);
+          await refreshState(setState);
+        },
+        icon: IconSet.memory,
+        content: StyledInput.underlined(
+          style: getSpecialFontTextStyle(context),
+          type: .numberWithOptions(signed: false, decimal: true),
+          format: null,
+          hint: 'Size',
+          prefix: null,
+          suffix: [
+            StyledIconButton.standard(
+              tooltip: 'Exponent',
+              icon: this.value.value == null
+                ? IconView.of(IconSet.expand_circle_down)
+                : BoxContainer.of(
+                  constraints: .tightFor(width: 24, height: 24),
+                  align: .center,
+                  child: StyledText.custom(
+                    ['B', 'K', 'M', 'G'][this.value.value!.exponent],
+                    style: getSpecialFontTextStyle(context),
+                  ),
+                ),
+              onPressed: (context) async {
+                var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
+                  position: .under,
+                  content: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
+                    value: index,
+                    content: StyledText.custom(
+                      value,
+                      style: getSpecialFontTextStyle(context, listen: false),
+                    ),
+                  )),
+                ));
+                if (value != null) {
+                  this.value.value = .new(null, this.value.value?.count ?? 1.0, value);
+                  await refreshState(setState);
+                }
+              },
+            ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', 0.0, 0);
+                await refreshState(setState);
+              },
+            ),
+          ],
+          value: this.value.value == null ? '' : this.value.value!.count.selfLet((it) => ConvertHelper.makeFloaterToString(it)),
+          onChanged: (context, value) async {
+            if (value.isEmpty) {
+              this.value.value = null;
+            }
+            else {
+              var parsedCount = Floater.tryParse(value);
+              if (parsedCount != null && parsedCount.isFinite && parsedCount >= 0.0) {
+                this.value.value = .new(null, parsedCount, this.value.value?.exponent ?? 2);
+              }
             }
             await refreshState(setState);
           },
@@ -519,9 +670,20 @@ class _PathSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        macro: [
+          (value: 'generate', name: 'Generate'),
+          (value: 'move', name: 'Move'),
+          (value: 'delete', name: 'Delete'),
+          (value: 'overwrite', name: 'Overwrite'),
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as PathExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, .new());
           await refreshState(setState);
         },
         icon: IconSet.link,
@@ -532,32 +694,6 @@ class _PathSubmissionBar extends StatelessWidget {
           hint: 'Path',
           prefix: null,
           suffix: [
-            StyledIconButton.standard(
-              tooltip: 'Command',
-              icon: IconView.of(IconSet.adjust),
-              onPressed: (context) async {
-                var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-                  position: .under,
-                  content: <({String value, String text})>[
-                    (value: '?generate', text: 'Generate'),
-                    (value: '?move', text: 'Move'),
-                    (value: '?delete', text: 'Delete'),
-                    (value: '?overwrite', text: 'Overwrite'),
-                  ].mapIndexed((index, value) => StyledMenuItem.standard(
-                    value: value.value,
-                    content: StyledText.custom(
-                      value.text,
-                      style: getSpecialFontTextStyle(context, listen: false),
-                    ),
-                  )),
-                ));
-                if (value != null) {
-                  this.value.value = .new(.of(value)); // TODO: special path
-                  await refreshState(setState);
-                }
-              },
-            ),
-            Gap.horizontal(4),
             StyledIconButton.standard(
               tooltip: 'Pick',
               icon: IconView.of(IconSet.open_in_new),
@@ -571,25 +707,34 @@ class _PathSubmissionBar extends StatelessWidget {
                   textStyle: getSpecialFontTextStyle(context, listen: false),
                 );
                 if (target != null) {
-                  this.value.value = .new(target);
+                  this.value.value = .new(null, target);
                   await refreshState(setState);
                 }
               },
             ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', .new());
+                await refreshState(setState);
+              },
+            ),
           ],
-          value: this.value.value == null ? '' : this.value.value!.content.emit(),
+          value: this.value.value == null ? '' : this.value.value!.content.selfLet((it) => it.emit()),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
             }
             else {
-              this.value.value = .new(.of(value));
+              this.value.value = .new(null, .of(value));
             }
             await refreshState(setState);
           },
         ).withStorageDropRegion(
           onDrop: (item) async {
-            this.value.value = .new(item.first);
+            this.value.value = .new(null, item.first);
             await refreshState(setState);
           },
         ),
@@ -624,9 +769,16 @@ class _EnumerationSubmissionBar extends StatelessWidget {
       builder: (context, setState) => _BasicSubmissionBar(
         completer: this.completer,
         history: this.history.map((item) => (value: item, enabled: this.option.contains(item.item))).toList(),
+        macro: [
+        ],
+        value: this.value.value,
         onSelect: (value) async {
           value as EnumerationExpression;
           this.value.value = value;
+          await refreshState(setState);
+        },
+        onMacro: (value) async {
+          this.value.value = value == null ? null : .new(value, '');
           await refreshState(setState);
         },
         icon: IconSet.menu,
@@ -643,12 +795,21 @@ class _EnumerationSubmissionBar extends StatelessWidget {
                 await refreshState(setState);
               },
             ),
+            Gap.horizontal(4),
+            StyledIconButton.standard(
+              tooltip: 'Macro',
+              icon: IconView.of(IconSet.adjust),
+              onPressed: (context) async {
+                this.value.value = .new('', '');
+                await refreshState(setState);
+              },
+            ),
           ],
           option: this.option.map((value) => (value: value, name: value)).toList(),
           value: this.value.value == null ? null : this.value.value!.item, // ignore: prefer_null_aware_operators
           onChanged: (context, value) async {
             value as String;
-            this.value.value = .new(value);
+            this.value.value = .new(null, value);
             await refreshState(setState);
           },
         ),
@@ -710,12 +871,12 @@ class SubmissionBar extends StatelessWidget {
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        .size => _SizeSubmissionBar(
+        .string => _StringSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
         ),
-        .string => _StringSubmissionBar(
+        .size => _SizeSubmissionBar(
           completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),

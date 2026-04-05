@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '168';
+	export const k_version = '169';
 
 	// ----------------
 
@@ -108,11 +108,14 @@ namespace Twinning.Script {
 			`utility/text_generator`,
 			`utility/virtual_terminal_sequence`,
 			`utility/command_line_reader`,
-			`utility/xml`,
+			`utility/json_helper`,
+			`utility/xml_helper`,
 			`utility/byte_list_view`,
 			`utility/byte_stream_view`,
 			`utility/kernel_x`,
 			`utility/shell`,
+			`utility/storage_size`,
+			`utility/storage_path`,
 			`utility/storage_helper`,
 			`utility/thread_manager`,
 			`utility/process_helper`,
@@ -244,7 +247,7 @@ namespace Twinning.Script {
 			g_thread_manager = new ThreadManager();
 			HomePath.initialize(home_path);
 			// load setting
-			let setting_data = KernelX.Json.read_fs_js(HomePath.of(`~/script/configuration/setting.json`));
+			let setting_data = JsonHelper.decode_file(HomePath.script().join('configuration').join('setting.json'));
 			if (!CheckHelper.is_object_of_object(setting_data)) {
 				throw new Error(`setting data invalid`);
 			}

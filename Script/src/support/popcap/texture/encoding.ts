@@ -249,17 +249,17 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	// ----------------
 
 	export function encode_fs(
-		image_file: string,
-		data_file: string,
+		image_file: StoragePath,
+		data_file: StoragePath,
 		format: Format,
 	): void {
-		let image_data = KernelX.Storage.read_file(image_file);
+		let image_data = StorageHelper.read_file(image_file);
 		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
-		let image_size = KernelX.Image.File.Png.size(image_stream.view());
+		let image_size = KernelX.Tool.Texture.File.Png.size(image_stream.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
-		KernelX.Image.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		KernelX.Tool.Texture.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		let option: EncodeOption = {
 			rgb_etc1_a_palette: null,
 		};
@@ -272,23 +272,23 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 		let stream = Kernel.ByteStreamView.watch(data.view());
 		encode(image_view, stream, format, option);
-		KernelX.Storage.write_file(data_file, stream.stream_view());
+		StorageHelper.write_file(data_file, stream.stream_view());
 		return;
 	}
 
 	export function decode_fs(
-		data_file: string,
-		image_file: string,
+		data_file: StoragePath,
+		image_file: StoragePath,
 		image_size: KernelX.Image.ImageSize,
 		format: Format,
 	): void {
-		let data = KernelX.Storage.read_file(data_file);
+		let data = StorageHelper.read_file(data_file);
 		let stream = Kernel.ByteStreamView.watch(data.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
 		decode(stream, image_view, format);
-		KernelX.Image.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		KernelX.Tool.Texture.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		return;
 	}
 

@@ -19,7 +19,7 @@ namespace Twinning.Script.Runner {
 				if (input === null) {
 					break;
 				}
-				command_line.push(input);
+				command_line.push(input.emit());
 			}
 		}
 		let command = Executor.parse(command_line);
@@ -34,7 +34,7 @@ namespace Twinning.Script.Runner {
 			Console.information(los('runner:current_command_execute', progress), [
 				item.input,
 				item.method,
-				...ConvertHelper.record_to_array(item.argument, (key, value) => (`${key}: ${KernelX.Json.write_s_js(value, true, true, true, true)}`)),
+				...ConvertHelper.record_to_array(item.argument, (key, value) => `${key}: ${JsonHelper.encode_text(value, true, true, true, true)}`),
 			]);
 			let state = Executor.execute(item, Executor.g_method, Executor.g_method_batch);
 			if (state === null) {

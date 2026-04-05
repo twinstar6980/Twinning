@@ -7,35 +7,35 @@ import 'package:vdf/vdf.dart' as lib;
 
 class VdfHelper {
 
-  // #region serialization
+  // #region encoding
 
-  static String serializeText(
+  static String encodeText(
     Map<String, Object?> value, {
     Boolean              indented = true,
   }) {
     return lib.vdfEncode(value);
   }
 
-  static Map<String, Object?> deserializeText(
-    String text,
+  static Map<String, Object?> decodeText(
+    String target,
   ) {
-    return lib.vdfDecode(text);
+    return lib.vdfDecode(target);
   }
 
   // ----------------
 
-  static Future<Void> serializeFile(
-    StoragePath          path,
+  static Future<Void> encodeFile(
+    StoragePath          target,
     Map<String, Object?> value, {
     Boolean              indented = true,
   }) async {
-    return await StorageHelper.writeFileText(path, VdfHelper.serializeText(value, indented: indented));
+    return await StorageHelper.writeFileText(target, VdfHelper.encodeText(value, indented: indented));
   }
 
-  static Future<Map<String, Object?>> deserializeFile(
-    StoragePath path,
+  static Future<Map<String, Object?>> decodeFile(
+    StoragePath target,
   ) async {
-    return VdfHelper.deserializeText(await StorageHelper.readFileText(path));
+    return VdfHelper.decodeText(await StorageHelper.readFileText(target));
   }
 
   // #endregion

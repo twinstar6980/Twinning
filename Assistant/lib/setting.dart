@@ -156,7 +156,7 @@ class SettingProvider with ChangeNotifier {
     StoragePath? file = null,
   }) async {
     file ??= await this.file;
-    this.data = SettingProvider._parseDataFromJson(await JsonHelper.deserializeFile(file));
+    this.data = SettingProvider._parseDataFromJson(await JsonHelper.decodeFile(file));
     return;
   }
 
@@ -171,7 +171,7 @@ class SettingProvider with ChangeNotifier {
     if (!await StorageHelper.existFile(file)) {
       await StorageHelper.createFile(file);
     }
-    await JsonHelper.serializeFile(file, SettingProvider._makeDataToJson(this.data));
+    await JsonHelper.encodeFile(file, SettingProvider._makeDataToJson(this.data));
     return;
   }
 

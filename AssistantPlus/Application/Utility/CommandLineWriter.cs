@@ -50,14 +50,14 @@ namespace Twinning.AssistantPlus.Utility {
 		public void NextInteger(
 			Integer value
 		) {
-			this.NextString(value.SelfLet((it) => ConvertHelper.MakeIntegerToString(it, false)));
+			this.NextString(value.SelfLet((it) => ConvertHelper.MakeIntegerToString(it)));
 			return;
 		}
 
 		public void NextFloater(
 			Floater value
 		) {
-			this.NextString(value.SelfLet((it) => ConvertHelper.MakeFloaterToString(it, false)));
+			this.NextString(value.SelfLet((it) => ConvertHelper.MakeFloaterToString(it)));
 			return;
 		}
 

@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory.replace(/(\.dz\.bundle)?$/i, '.dz')),
+						automatic: (argument: {bundle_directory: StoragePath}) => ConvertHelper.replace_path_name(argument.bundle_directory, /(\.dz\.bundle)?$/i, '.dz'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -51,18 +51,18 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {bundle_directory: string}) => (argument.bundle_directory + '.pack'),
+						automatic: (argument: {bundle_directory: StoragePath}) => ConvertHelper.replace_path_name(argument.bundle_directory, /()?$/i, '.pack'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.dz\.bundle)?$/i, '.dz')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.dz\.bundle)?$/i, '.dz'),
 					}),
 				],
-				worker: ({bundle_directory, data_file, version_number, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({bundle_directory, data_file, version_number, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					let definition_file = `${bundle_directory}/definition.json`;
-					let resource_directory = `${bundle_directory}/resource`;
-					KernelX.Tool.Marmalade.Dzip.pack_fs(data_file, definition_file, resource_directory, {number: version_number as any}, temporary.buffer.view());
+					let definition_file = bundle_directory.join('definition.json');
+					let resource_directory = bundle_directory.join('resource');
+					KernelX.Tool.Marmalade.Dzip.pack_fs(data_file, definition_file, resource_directory, {number: version_number as any}, store.buffer.view());
 					return;
 				},
 			}),
@@ -81,7 +81,7 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 						identifier: 'bundle_directory',
 						rule: ['directory', 'output'],
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.dz)?$/i, '.dz.bundle')),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.dz)?$/i, '.dz.bundle'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -105,14 +105,14 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 						identifier: 'bundle_directory',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file + '.unpack'),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.unpack'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.dz)?$/i, '.dz.bundle')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.dz)?$/i, '.dz.bundle'),
 					}),
 				],
-				worker: ({data_file, bundle_directory, version_number}, temporary: {}) => {
-					let definition_file = `${bundle_directory}/definition.json`;
-					let resource_directory = `${bundle_directory}/resource`;
+				worker: ({data_file, bundle_directory, version_number}, store: {}) => {
+					let definition_file = bundle_directory.join('definition.json');
+					let resource_directory = bundle_directory.join('resource');
 					KernelX.Tool.Marmalade.Dzip.unpack_fs(data_file, definition_file, resource_directory, {number: version_number as any});
 					return;
 				},
@@ -132,7 +132,7 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {resource_directory: string}) => (argument.resource_directory.replace(/()?$/i, '.dz')),
+						automatic: (argument: {resource_directory: StoragePath}) => ConvertHelper.replace_path_name(argument.resource_directory, /()?$/i, '.dz'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -144,9 +144,9 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 					}),
 				],
 				batch: null,
-				worker: ({resource_directory, data_file, version_number}, temporary: {}) => {
+				worker: ({resource_directory, data_file, version_number}, store: {}) => {
 					let [data, data_size] = Support.Marmalade.Dzip.PackAutomatic.pack(resource_directory, version_number as any);
-					KernelX.Storage.write_file(data_file, data.view().sub(Kernel.Size.value(0n), data_size));
+					StorageHelper.write_file(data_file, data.view().sub(Kernel.Size.value(0n), data_size));
 					return;
 				},
 			}),

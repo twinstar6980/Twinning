@@ -6,24 +6,24 @@ namespace Twinning.Script.HomePath {
 
 	export function of(
 		format: string,
-	): string {
-		return format.replaceAll(/^~(?=([/]|$))/g, g_location);
+	): StoragePath {
+		return new StoragePath(format.replaceAll(/^~(?=([/]|$))/g, g_location));
 	}
 
 	// ----------------
 
 	export function script(
-	): string {
+	): StoragePath {
 		return of(`~/script`);
 	}
 
 	export function workspace(
-	): string {
+	): StoragePath {
 		return of(`~/workspace`);
 	}
 
 	export function temporary(
-	): string {
+	): StoragePath {
 		return of(`~/temporary`);
 	}
 
@@ -32,14 +32,14 @@ namespace Twinning.Script.HomePath {
 	export function new_temporary(
 		name: null | string,
 		create: null | 'file' | 'directory',
-	): string {
+	): StoragePath {
 		let temporary_name = name !== null ? name : ConvertHelper.make_date_to_string_simple(new Date());
-		let temporary_path = StorageHelper.generate_suffix_path(`${temporary()}/${temporary_name}`, null);
+		let temporary_path = StorageHelper.generate_suffix_path(temporary().join(temporary_name), null);
 		if (create === 'file') {
-			KernelX.Storage.create_file(temporary_path);
+			StorageHelper.create_file(temporary_path);
 		}
 		if (create === 'directory') {
-			KernelX.Storage.create_directory(temporary_path);
+			StorageHelper.create_directory(temporary_path);
 		}
 		return temporary_path;
 	}
@@ -50,11 +50,11 @@ namespace Twinning.Script.HomePath {
 		location: string,
 	): void {
 		g_location = location;
-		if (!KernelX.Storage.exist_directory(workspace())) {
-			KernelX.Storage.create_directory(workspace());
+		if (!StorageHelper.exist_directory(workspace())) {
+			StorageHelper.create_directory(workspace());
 		}
-		if (!KernelX.Storage.exist_directory(temporary())) {
-			KernelX.Storage.create_directory(temporary());
+		if (!StorageHelper.exist_directory(temporary())) {
+			StorageHelper.create_directory(temporary());
 		}
 		KernelX.Process.set_workspace(workspace());
 		return;

@@ -25,7 +25,6 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		protected override async Task StampUpdate(
 		) {
-			VisualStateManager.GoToState(this, $"{this.Type}State", false);
 			await this.Controller.UpdateView();
 			return;
 		}
@@ -98,6 +97,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public async Task UpdateView(
 		) {
+			VisualStateManager.GoToState(this.View, $"{this.Type}State", false);
 			this.NotifyPropertyChanged([
 				nameof(this.uTitle_Text),
 				nameof(this.uDescription_ItemsSource),

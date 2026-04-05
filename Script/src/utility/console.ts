@@ -154,12 +154,28 @@ namespace Twinning.Script.Console {
 	function common_input<TValue>(
 		reader: () => string,
 		echoer: (value: string) => void,
-		converter: (value: string) => string | [null | TValue],
+		converter: (representation: string | [string]) => string | [TValue],
 		nullable: boolean,
 		checker: CheckHelper.Checker<TValue>,
 		initial: undefined | null | TValue,
 	): null | TValue {
 		let result: null | TValue;
+		let converter_proxy = (representation: string): string | [null | TValue] => {
+			if (representation === '') {
+				return [null];
+			}
+			let result: string | [TValue];
+			assert_test(representation[0] === '?');
+			if (representation[1] === '?') {
+				let content = representation.substring(2);
+				result = converter(content);
+			}
+			else {
+				let macro = representation.substring(1);
+				result = converter([macro]);
+			}
+			return result;
+		};
 		while (true) {
 			let state: null | string = null;
 			let input: null | string = null;
@@ -171,7 +187,7 @@ namespace Twinning.Script.Console {
 			else {
 				input = reader();
 				echoer(input);
-				let convert_result = converter(input);
+				let convert_result = converter_proxy(input);
 				if (CheckHelper.is_string(convert_result)) {
 					state = convert_result;
 				}
@@ -198,7 +214,7 @@ namespace Twinning.Script.Console {
 	function basic_common_input<TValue>(
 		leading: string,
 		messenger: () => void,
-		converter: (value: string) => string | [null | TValue],
+		converter: (representation: string | [string]) => string | [TValue],
 		nullable: null | boolean,
 		checker: null | CheckHelper.Checker<TValue>,
 		initial: undefined | null | TValue,
@@ -214,7 +230,11 @@ namespace Twinning.Script.Console {
 				basic_common_output(leading, true, 0, true);
 				basic_set_message_text_attribute('verbosity');
 				basic_common_output('', false, 1, false);
-				return Shell.basic_input_text().text;
+				let value = Shell.basic_input_text().text;
+				if (value !== '' && value[0] !== '?') {
+					value = `??${value}`;
+				}
+				return value;
 			},
 			(value) => {
 				return;
@@ -227,10 +247,9 @@ namespace Twinning.Script.Console {
 	}
 
 	function assistant_common_input<TValue>(
-		reader: () => string,
 		leading: string,
-		echoer: (value: string) => string,
-		converter: (value: string) => string | [null | TValue],
+		reader: () => string,
+		converter: (representation: string | [string]) => string | [TValue],
 		nullable: null | boolean,
 		checker: null | CheckHelper.Checker<TValue>,
 		initial: undefined | null | TValue,
@@ -238,7 +257,7 @@ namespace Twinning.Script.Console {
 		return common_input(
 			reader,
 			(value) => {
-				assistant_common_output('input', leading, [echoer(value)]);
+				assistant_common_output('input', leading, [value]);
 				return;
 			},
 			converter,
@@ -293,15 +312,23 @@ namespace Twinning.Script.Console {
 	): null | boolean {
 		let result: null | boolean = undefined!;
 		let leading = 'Boolean';
-		let converter = (value: string): string | [null | boolean] => {
-			if (value === '') {
-				return [null];
+		let converter = (representation: string | [string]): string | [boolean] => {
+			let value: boolean;
+			if (CheckHelper.is_string(representation)) {
+				let check_result = CheckHelper.enumeration_checker(['n', 'y'])(representation);
+				if (check_result !== null) {
+					return los('console:boolean_format_error');
+				}
+				value = ConvertHelper.parse_boolean_from_string_of_confirmation_character(representation);
 			}
-			let regexp_check_result = CheckHelper.enumeration_checker(['n', 'y'])(value);
-			if (regexp_check_result !== null) {
-				return los('console:boolean_format_error');
+			else {
+				switch (representation[0]) {
+					default: {
+						return los('console:input_macro_invalid');
+					}
+				}
 			}
-			return [ConvertHelper.parse_boolean_from_string_of_confirmation_character(value)];
+			return [value];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -317,12 +344,9 @@ namespace Twinning.Script.Console {
 		}
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
+				leading,
 				() => {
 					return Shell.assistant_receive_submission('boolean', []).value;
-				},
-				leading,
-				(value) => {
-					return value;
 				},
 				converter,
 				nullable,
@@ -354,15 +378,23 @@ namespace Twinning.Script.Console {
 	): null | bigint {
 		let result: null | bigint = undefined!;
 		let leading = 'Integer';
-		let converter = (value: string): string | [null | bigint] => {
-			if (value === '') {
-				return [null];
+		let converter = (representation: string | [string]): string | [bigint] => {
+			let value: bigint;
+			if (CheckHelper.is_string(representation)) {
+				let check_result = CheckHelper.regexp_checker(/^([+-])?([\d]+)$/)(representation);
+				if (check_result !== null) {
+					return los('console:integer_format_error', check_result);
+				}
+				value = BigInt(representation);
 			}
-			let regexp_check_result = CheckHelper.regexp_checker(/^([+-])?([\d]+)$/)(value);
-			if (regexp_check_result !== null) {
-				return los('console:integer_format_error', regexp_check_result);
+			else {
+				switch (representation[0]) {
+					default: {
+						return los('console:input_macro_invalid');
+					}
+				}
 			}
-			return [BigInt(value)];
+			return [value];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -378,12 +410,9 @@ namespace Twinning.Script.Console {
 		}
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
+				leading,
 				() => {
 					return Shell.assistant_receive_submission('integer', []).value;
-				},
-				leading,
-				(value) => {
-					return value;
 				},
 				converter,
 				nullable,
@@ -415,15 +444,23 @@ namespace Twinning.Script.Console {
 	): null | number {
 		let result: null | number = undefined!;
 		let leading = 'Floater';
-		let converter = (value: string): string | [null | number] => {
-			if (value === '') {
-				return [null];
+		let converter = (representation: string | [string]): string | [number] => {
+			let value: number;
+			if (CheckHelper.is_string(representation)) {
+				let check_result = CheckHelper.regexp_checker(/^([+-])?([\d]+)([.][\d]+)?$/)(representation);
+				if (check_result !== null) {
+					return los('console:floater_format_error', check_result);
+				}
+				value = Number(representation);
 			}
-			let regexp_check_result = CheckHelper.regexp_checker(/^([+-])?([\d]+)([.][\d]+)?$/)(value);
-			if (regexp_check_result !== null) {
-				return los('console:floater_format_error', regexp_check_result);
+			else {
+				switch (representation[0]) {
+					default: {
+						return los('console:input_macro_invalid');
+					}
+				}
 			}
-			return [Number(value)];
+			return [value];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -439,73 +476,9 @@ namespace Twinning.Script.Console {
 		}
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
+				leading,
 				() => {
 					return Shell.assistant_receive_submission('floater', []).value;
-				},
-				leading,
-				(value) => {
-					return value;
-				},
-				converter,
-				nullable,
-				checker,
-				initial,
-			);
-		}
-		return result;
-	}
-
-	// ----------------
-
-	export function size(
-		nullable: null,
-		checker: null | CheckHelper.Checker<bigint>,
-		initial?: bigint,
-	): bigint;
-
-	export function size(
-		nullable: boolean,
-		checker: null | CheckHelper.Checker<bigint>,
-		initial?: null | bigint,
-	): null | bigint;
-
-	export function size(
-		nullable: null | boolean,
-		checker: null | CheckHelper.Checker<bigint>,
-		initial?: null | bigint,
-	): null | bigint {
-		let result: null | bigint = undefined!;
-		let leading = 'Size';
-		let converter = (value: string): string | [null | bigint] => {
-			if (value === '') {
-				return [null];
-			}
-			let regexp_check_result = CheckHelper.regexp_checker(/^([\d]+)([.][\d]+)?([bkmg])$/)(value);
-			if (regexp_check_result !== null) {
-				return los('console:size_format_error', regexp_check_result);
-			}
-			return [ConvertHelper.parse_size_from_string(value)];
-		};
-		if (Shell.is_basic) {
-			result = basic_common_input(
-				leading,
-				() => {
-					return;
-				},
-				converter,
-				nullable,
-				checker,
-				initial,
-			);
-		}
-		if (Shell.is_assistant) {
-			result = assistant_common_input(
-				() => {
-					return Shell.assistant_receive_submission('size', []).value;
-				},
-				leading,
-				(value) => {
-					return value;
 				},
 				converter,
 				nullable,
@@ -537,28 +510,24 @@ namespace Twinning.Script.Console {
 	): null | string {
 		let result: null | string = undefined!;
 		let leading = 'String';
-		let converter = (value: string): string | [null | string] => {
-			if (value === '') {
-				return [null];
-			}
-			let result: string;
-			if (value[0] !== '?') {
-				result = value;
+		let converter = (representation: string | [string]): string | [string] => {
+			let value: string;
+			if (CheckHelper.is_string(representation)) {
+				value = representation;
 			}
 			else {
-				if (value[1] === '?') {
-					result = value.slice(2);
-				}
-				else {
-					switch (value.substring(1)) {
-						default: {
-							return los('console:input_command_invalid');
-							break;
-						}
+				switch (representation[0]) {
+					case 'e':
+					case 'empty': {
+						value = '';
+						break;
+					}
+					default: {
+						return los('console:input_macro_invalid');
 					}
 				}
 			}
-			return [result];
+			return [value];
 		};
 		if (Shell.is_basic) {
 			result = basic_common_input(
@@ -574,12 +543,75 @@ namespace Twinning.Script.Console {
 		}
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
+				leading,
 				() => {
 					return Shell.assistant_receive_submission('string', []).value;
 				},
+				converter,
+				nullable,
+				checker,
+				initial,
+			);
+		}
+		return result;
+	}
+
+	// ----------------
+
+	export function size(
+		nullable: null,
+		checker: null | CheckHelper.Checker<StorageSize>,
+		initial?: StorageSize,
+	): StorageSize;
+
+	export function size(
+		nullable: boolean,
+		checker: null | CheckHelper.Checker<StorageSize>,
+		initial?: null | StorageSize,
+	): null | StorageSize;
+
+	export function size(
+		nullable: null | boolean,
+		checker: null | CheckHelper.Checker<StorageSize>,
+		initial?: null | StorageSize,
+	): null | StorageSize {
+		let result: null | StorageSize = undefined!;
+		let leading = 'Size';
+		let converter = (representation: string | [string]): string | [StorageSize] => {
+			let value: StorageSize;
+			if (CheckHelper.is_string(representation)) {
+				let check_result = CheckHelper.regexp_checker(/^([\d]+)([.][\d]+)?([bkmg])$/)(representation);
+				if (check_result !== null) {
+					return los('console:size_format_error', check_result);
+				}
+				value = new StorageSize(representation);
+			}
+			else {
+				switch (representation[0]) {
+					default: {
+						return los('console:input_macro_invalid');
+					}
+				}
+			}
+			return [value];
+		};
+		if (Shell.is_basic) {
+			result = basic_common_input(
 				leading,
-				(value) => {
-					return value;
+				() => {
+					return;
+				},
+				converter,
+				nullable,
+				checker,
+				initial,
+			);
+		}
+		if (Shell.is_assistant) {
+			result = assistant_common_input(
+				leading,
+				() => {
+					return Shell.assistant_receive_submission('size', []).value;
 				},
 				converter,
 				nullable,
@@ -596,136 +628,124 @@ namespace Twinning.Script.Console {
 		type: 'any' | 'file' | 'directory',
 		mode: 'any' | 'input' | 'output',
 		nullable: null,
-		checker: null | CheckHelper.Checker<string>,
-		initial?: string,
-	): string;
+		checker: null | CheckHelper.Checker<StoragePath>,
+		initial?: StoragePath,
+	): StoragePath;
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
 		mode: 'any' | 'input' | 'output',
 		nullable: boolean,
-		checker: null | CheckHelper.Checker<string>,
-		initial?: null | string,
-	): null | string;
+		checker: null | CheckHelper.Checker<StoragePath>,
+		initial?: null | StoragePath,
+	): null | StoragePath;
 
 	export function path(
 		type: 'any' | 'file' | 'directory',
 		mode: 'any' | 'input' | 'output',
 		nullable: null | boolean,
-		checker: null | CheckHelper.Checker<string>,
-		initial?: null | string,
-	): null | string {
-		let result: null | string = undefined!;
+		checker: null | CheckHelper.Checker<StoragePath>,
+		initial?: null | StoragePath,
+	): null | StoragePath {
+		let result: null | StoragePath = undefined!;
 		let leading = 'Path';
 		let state_data = {
-			last_value: null as null | string,
+			last_value: null as null | StoragePath,
 			allow_overwrite: false as boolean,
 		};
-		if (initial !== undefined && initial !== null) {
-			initial = HomePath.of(StorageHelper.regularize(initial));
-		}
-		let converter = (value: string): string | [null | string] => {
-			if (value === '') {
-				return [null];
-			}
-			let result: string;
-			if (value[0] !== '?') {
-				result = HomePath.of(StorageHelper.regularize(ConvertHelper.unquote_string(value)));
+		let converter = (representation: string | [string]): string | [StoragePath] => {
+			let value: StoragePath;
+			if (CheckHelper.is_string(representation)) {
+				value = new StoragePath(ConvertHelper.unquote_string(representation));
 			}
 			else {
-				if (value[1] === '?') {
-					result = HomePath.of(StorageHelper.regularize(value.slice(2)));
-				}
-				else {
-					switch (value.substring(1)) {
-						case 'g':
-						case 'generate': {
-							if (mode !== 'output') {
-								return los('console:path_command_need_output');
-							}
-							if (state_data.last_value === null) {
-								return los('console:input_command_need_previous_input');
-							}
-							result = state_data.last_value;
-							if (KernelX.Storage.exist(result)) {
-								result = StorageHelper.generate_suffix_path(result, null);
-								warning(los('console:path_is_exist_but_generate'), [result]);
-							}
-							break;
+				switch (representation[0]) {
+					case 'g':
+					case 'generate': {
+						if (mode !== 'output') {
+							return los('console:path_macro_need_output');
 						}
-						case 'm':
-						case 'move': {
-							if (mode !== 'output') {
-								return los('console:path_command_need_output');
-							}
-							if (state_data.last_value === null) {
-								return los('console:input_command_need_previous_input');
-							}
-							result = state_data.last_value;
-							if (KernelX.Storage.exist(result)) {
-								let move_path = StorageHelper.generate_suffix_path(result, null);
-								KernelX.Storage.rename(result, move_path);
-								warning(los('console:path_is_exist_but_move'), [move_path]);
-							}
-							break;
+						if (state_data.last_value === null) {
+							return los('console:input_macro_need_previous_input');
 						}
-						case 'd':
-						case 'delete': {
-							if (mode !== 'output') {
-								return los('console:path_command_need_output');
-							}
-							if (state_data.last_value === null) {
-								return los('console:input_command_need_previous_input');
-							}
-							result = state_data.last_value;
-							if (KernelX.Storage.exist(result)) {
-								KernelX.Storage.remove(result);
-								warning(los('console:path_is_exist_but_delete'), []);
-							}
-							break;
+						value = state_data.last_value;
+						if (StorageHelper.exist(value)) {
+							value = StorageHelper.generate_suffix_path(value, null);
+							warning(los('console:path_is_exist_but_generate'), [value.emit()]);
 						}
-						case 'o':
-						case 'overwrite': {
-							if (mode !== 'output') {
-								return los('console:path_command_need_output');
-							}
-							if (state_data.last_value === null) {
-								return los('console:input_command_need_previous_input');
-							}
-							result = state_data.last_value;
-							if (KernelX.Storage.exist(result)) {
-								state_data.allow_overwrite = true;
-								warning(los('console:path_is_exist_but_overwrite'), []);
-							}
-							break;
+						break;
+					}
+					case 'm':
+					case 'move': {
+						if (mode !== 'output') {
+							return los('console:path_macro_need_output');
 						}
-						default: {
-							return los('console:input_command_invalid');
-							break;
+						if (state_data.last_value === null) {
+							return los('console:input_macro_need_previous_input');
 						}
+						value = state_data.last_value;
+						if (StorageHelper.exist(value)) {
+							let move_path = StorageHelper.generate_suffix_path(value, null);
+							StorageHelper.rename(value, move_path);
+							warning(los('console:path_is_exist_but_move'), [move_path.emit()]);
+						}
+						break;
+					}
+					case 'd':
+					case 'delete': {
+						if (mode !== 'output') {
+							return los('console:path_macro_need_output');
+						}
+						if (state_data.last_value === null) {
+							return los('console:input_macro_need_previous_input');
+						}
+						value = state_data.last_value;
+						if (StorageHelper.exist(value)) {
+							StorageHelper.remove(value);
+							warning(los('console:path_is_exist_but_delete'), []);
+						}
+						break;
+					}
+					case 'o':
+					case 'overwrite': {
+						if (mode !== 'output') {
+							return los('console:path_macro_need_output');
+						}
+						if (state_data.last_value === null) {
+							return los('console:input_macro_need_previous_input');
+						}
+						value = state_data.last_value;
+						if (StorageHelper.exist(value)) {
+							state_data.allow_overwrite = true;
+							warning(los('console:path_is_exist_but_overwrite'), []);
+						}
+						break;
+					}
+					default: {
+						return los('console:input_macro_invalid');
 					}
 				}
 			}
-			return [result];
+			return [value];
 		};
-		let checker_proxy = (value: string): null | string => {
+		let checker_proxy = (value: StoragePath): null | string => {
 			state_data.last_value = value;
-			if (value.length === 0) {
+			if (value.type() === StoragePathType.nothing) {
 				return los('console:path_is_empty');
 			}
 			if (mode === 'input') {
-				if (!KernelX.Storage.exist(value)) {
+				if (!StorageHelper.exist(value)) {
 					return los('console:path_not_exist');
 				}
-				if (type === 'file' && !KernelX.Storage.exist_file(value)) {
+				if (type === 'file' && !StorageHelper.exist_file(value)) {
 					return los('console:path_is_exist_not_file');
 				}
-				if (type === 'directory' && !KernelX.Storage.exist_directory(value)) {
+				if (type === 'directory' && !StorageHelper.exist_directory(value)) {
 					return los('console:path_is_exist_not_directory');
 				}
 			}
 			if (mode === 'output') {
-				if (!state_data.allow_overwrite && KernelX.Storage.exist(value)) {
+				if (!state_data.allow_overwrite && StorageHelper.exist(value)) {
 					return los('console:path_is_exist');
 				}
 			}
@@ -746,12 +766,9 @@ namespace Twinning.Script.Console {
 		}
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
+				leading,
 				() => {
 					return Shell.assistant_receive_submission('path', []).value;
-				},
-				leading,
-				(value) => {
-					return value;
 				},
 				converter,
 				nullable,
@@ -788,15 +805,29 @@ namespace Twinning.Script.Console {
 		let leading = 'Enumeration';
 		let maximum_key_length = Math.max(...option.map((value) => (value[1].length)));
 		let message = option.map((value) => (`${value[1].padStart(maximum_key_length, ' ')}${value[2] === null ? '' : `. ${value[2]}`}`));
-		let converter = (value: string): string | [null | TValue] => {
-			if (value === '') {
-				return [null];
+		let converter = (representation: string | [string]): string | [TValue] => {
+			let value: TValue;
+			if (CheckHelper.is_string(representation)) {
+				let index = -1;
+				if (Shell.is_basic) {
+					index = option.findIndex((item) => (item[1] === representation));
+				}
+				if (Shell.is_assistant) {
+					index = message.findIndex((item) => (item === representation));
+				}
+				if (index === -1) {
+					return los('console:option_invalid');
+				}
+				value = option[index][0];
 			}
-			let index = option.findIndex((item) => (item[1] === value));
-			if (index === -1) {
-				return los('console:option_invalid');
+			else {
+				switch (representation[0]) {
+					default: {
+						return los('console:input_macro_invalid');
+					}
+				}
 			}
-			return [option[index][0]];
+			return [value];
 		};
 		let checker_proxy = (value: TValue): null | string => {
 			let index = option.findIndex((item) => (item[0] === value));
@@ -822,20 +853,9 @@ namespace Twinning.Script.Console {
 		}
 		if (Shell.is_assistant) {
 			result = assistant_common_input(
-				() => {
-					let value = Shell.assistant_receive_submission('enumeration', message).value;
-					return value === '' ? '' : option[message.indexOf(value)][1];
-				},
 				leading,
-				(value) => {
-					if (value === '') {
-						return '';
-					}
-					let index = option.findIndex((item) => (item[1] === value));
-					if (index === -1) {
-						return los('console:option_invalid');
-					}
-					return message[index];
+				() => {
+					return Shell.assistant_receive_submission('enumeration', message).value;
 				},
 				converter,
 				nullable,
@@ -851,25 +871,19 @@ namespace Twinning.Script.Console {
 	export function option_boolean<TValue extends boolean>(
 		value: Array<TValue>,
 	): Array<[TValue, string, null | string]> {
-		return value.map((value, index) => ([value, `${value === false ? 'n' : 'y'}`, null]));
+		return value.map((value, index) => ([value, `${ConvertHelper.make_boolean_to_string_of_confirmation_character(value)}`, `${ConvertHelper.make_boolean_to_string(value)}`]));
 	}
 
 	export function option_integer<TValue extends bigint>(
 		value: Array<TValue>,
 	): Array<[TValue, string, null | string]> {
-		return value.map((value, index) => ([value, `${value}`, null]));
+		return value.map((value, index) => ([value, `${String.fromCharCode(index + 'a'.charCodeAt(0))}`, `${ConvertHelper.make_integer_to_string(value)}`]));
 	}
 
 	export function option_floater<TValue extends number>(
 		value: Array<TValue>,
 	): Array<[TValue, string, null | string]> {
-		return value.map((value, index) => ([value, `${value}`, null]));
-	}
-
-	export function option_size<TValue extends bigint>(
-		value: Array<TValue>,
-	): Array<[TValue, string, null | string]> {
-		return value.map((value, index) => ([value, `${index + 1}`, `${ConvertHelper.make_size_to_string(value)}`]));
+		return value.map((value, index) => ([value, `${String.fromCharCode(index + 'a'.charCodeAt(0))}`, `${ConvertHelper.make_floater_to_string(value)}`]));
 	}
 
 	export function option_string<TValue extends string>(
@@ -878,10 +892,16 @@ namespace Twinning.Script.Console {
 		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
 	}
 
-	export function option_path<TValue extends string>(
+	export function option_size<TValue extends StorageSize>(
 		value: Array<TValue>,
 	): Array<[TValue, string, null | string]> {
-		return value.map((value, index) => ([value, `${index + 1}`, `${value}`]));
+		return value.map((value, index) => ([value, `${index + 1}`, `${value.emit()}`]));
+	}
+
+	export function option_path<TValue extends StoragePath>(
+		value: Array<TValue>,
+	): Array<[TValue, string, null | string]> {
+		return value.map((value, index) => ([value, `${index + 1}`, `${value.emit()}`]));
 	}
 
 	// #endregion
@@ -890,8 +910,8 @@ namespace Twinning.Script.Console {
 
 	export function pick_storage_item(
 		type: null | 'load_file' | 'load_directory' | 'save_file',
-	): null | string {
-		let result: null | string = undefined!;
+	): null | StoragePath {
+		let result: null | StoragePath = undefined!;
 		if (type === null) {
 			information(los('console:pick_path_type'), []);
 			type = enumeration(option_string(['load_file', 'load_directory', 'save_file']), null, null) as 'load_file' | 'load_directory' | 'save_file';
@@ -901,10 +921,10 @@ namespace Twinning.Script.Console {
 			result = null;
 		}
 		if (Shell.is_assistant) {
-			result = Shell.assistant_pick_storage_item(type).target;
-		}
-		if (result === '') {
-			result = null;
+			let result_value = Shell.assistant_pick_storage_item(type).target;
+			if (result_value !== '') {
+				result = new StoragePath(result_value);
+			}
 		}
 		return result;
 	}

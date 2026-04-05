@@ -11,8 +11,8 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 		Boolean,
 		Integer,
 		Floater,
-		Size,
 		String,
+		Size,
 		Path,
 		Enumeration,
 	}

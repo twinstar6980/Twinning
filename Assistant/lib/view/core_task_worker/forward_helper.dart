@@ -62,7 +62,7 @@ class ForwardHelper {
     }
     if (argument != null) {
       command.add('-argument');
-      command.add(JsonHelper.serializeText(argument, indented: false));
+      command.add(JsonHelper.encodeText(argument, indented: false));
     }
     return command;
   }

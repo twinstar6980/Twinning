@@ -3,8 +3,8 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 	// #region utility
 
 	export function parse(
-		project_directory: string,
-		package_directory: string,
+		project_directory: StoragePath,
+		package_directory: StoragePath,
 		package_name: string,
 		package_version: typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value,
 		conversion_setting: ConversionSetting,
@@ -21,15 +21,15 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 			return null;
 		};
 		Console.information(`Loading setting ...`, []);
-		let project_setting = KernelX.Json.read_fs_js(make_scope_setting_path(project_directory)) as ProjectSetting;
+		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		let part_directory = StorageHelper.generate_suffix_path(make_scope_child_path(project_directory, package_name), '~');
 		let part_setting: PartSetting = {
 			variable: [],
 		};
-		KernelX.Json.write_fs_js(make_scope_setting_path(part_directory), part_setting);
-		package_name = StorageHelper.name(part_directory);
-		let package_resource_directory = `${package_directory}/resource`;
-		let package_definition = KernelX.Json.read_fs_js(`${package_directory}/definition.json`) as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
+		JsonHelper.encode_file(make_scope_setting_path(part_directory), part_setting);
+		package_name = part_directory.name()!;
+		let package_resource_directory = package_directory.join('resource');
+		let package_definition = JsonHelper.decode_file(package_directory.join('definition.json')) as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
 		let package_manifest_official: null | ResourceManifest.Package = null;
 		let package_setting: PackageSetting = {
 			name: package_name,
@@ -78,7 +78,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 			resource_path = resource_path_list.find((value) => (value.endsWith('.newton')));
 			if (resource_path !== undefined) {
 				package_setting.manifest.type = 'external_newton';
-				let resource_data = KernelX.Storage.read_file(`${package_resource_directory}/${resource_path}`);
+				let resource_data = StorageHelper.read_file(package_resource_directory.push(new StoragePath(resource_path)));
 				let resource_data_stream = new ByteStreamView(resource_data.view().value);
 				package_manifest_official = ResourceManifest.NewTypeObjectNotation.Decode.process(resource_data_stream);
 				break;
@@ -86,7 +86,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 			resource_path = resource_path_list.find((value) => (value.endsWith('.rton')));
 			if (resource_path !== undefined) {
 				package_setting.manifest.type = 'external_rton_with_string_path';
-				let resource_data = KernelX.Storage.read_file(`${package_resource_directory}/${resource_path}`);
+				let resource_data = StorageHelper.read_file(package_resource_directory.push(new StoragePath(resource_path)));
 				let resource_data_stream = Kernel.ByteStreamView.watch(resource_data.view());
 				let resource_definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true}));
@@ -106,7 +106,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 			};
 			let group_definition = find_item_ignore_case(package_definition.group, 'identifier', group_manifest.identifier);
 			assert_test(group_definition !== null);
-			KernelX.Json.write_fs_js(make_scope_setting_path(group_directory), group_setting);
+			JsonHelper.encode_file(make_scope_setting_path(group_directory), group_setting);
 			for (let subgroup_manifest of group_manifest.subgroup) {
 				let subgroup_definition = find_item_ignore_case(group_definition.subgroup, 'identifier', subgroup_manifest.identifier);
 				assert_test(subgroup_definition !== null);
@@ -145,7 +145,7 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 							},
 							variable: [],
 						};
-						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.bin'), false);
+						StorageHelper.copy(package_resource_directory.push(new StoragePath(resource_definition.path)), make_scope_child_path(resource_directory, 'source.bin'), false);
 					}
 					if (resource_manifest.additional.type === 'texture') {
 						let resource_definition = find_item_ignore_case(subgroup_definition.resource, 'path', resource_manifest.additional.value.path + '.ptx');
@@ -166,16 +166,16 @@ namespace Twinning.Script.Support.Pvz2.PackageProject.Parse {
 							},
 							variable: [],
 						};
-						KernelX.Storage.copy(`${package_resource_directory}/${resource_definition.path}`, make_scope_child_path(resource_directory, 'source.ptx'), false);
+						StorageHelper.copy(package_resource_directory.push(new StoragePath(resource_definition.path)), make_scope_child_path(resource_directory, 'source.ptx'), false);
 					}
 					assert_test(resource_setting !== null);
-					KernelX.Json.write_fs_js(make_scope_setting_path(resource_directory), resource_setting);
+					JsonHelper.encode_file(make_scope_setting_path(resource_directory), resource_setting);
 				}
 			}
 		}
 		project_setting.package.push(package_setting);
 		Console.information(`Saving setting ...`, []);
-		KernelX.Json.write_fs_js(make_scope_setting_path(project_directory), project_setting);
+		JsonHelper.encode_file(make_scope_setting_path(project_directory), project_setting);
 		return;
 	}
 

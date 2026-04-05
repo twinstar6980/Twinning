@@ -30,6 +30,34 @@ class ApplicationPlatformMethod {
 
   // #region interface
 
+  Future<({String placement})> copyStorageFile(
+    String target,
+    String location,
+  ) async {
+    assertTest(SystemChecker.isAndroid);
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('copy_storage_file', <Object?, Object?>{
+      'target': target,
+      'location': location,
+    });
+    detail!;
+    return (
+      placement: detail['placement'] as String,
+    );
+  }
+
+  Future<()> revealStorageFile(
+    String target,
+  ) async {
+    assertTest(SystemChecker.isAndroid);
+    // ignore: unused_local_variable
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('reveal_storage_file', <Object?, Object?>{
+      'target': target,
+    });
+    detail!;
+    return (
+    );
+  }
+
   Future<({String? target})> pickStorageItem(
     String type,
     String location,
@@ -44,21 +72,6 @@ class ApplicationPlatformMethod {
     detail!;
     return (
       target: detail['target'] as String?,
-    );
-  }
-
-  Future<({String destination})> copyStorageFile(
-    String source,
-    String placement,
-  ) async {
-    assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('copy_storage_file', <Object?, Object?>{
-      'source': source,
-      'placement': placement,
-    });
-    detail!;
-    return (
-      destination: detail['destination'] as String,
     );
   }
 

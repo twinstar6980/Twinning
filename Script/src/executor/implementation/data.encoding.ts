@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -37,12 +37,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.encode'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, temporary: {}) => {
+				worker: ({raw_file, ripe_file}, store: {}) => {
 					KernelX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
 					return;
 				},
@@ -62,7 +62,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/()?$/i, '.bin')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 				],
@@ -79,12 +79,12 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.decode'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.decode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/()?$/i, '')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file}, temporary: {}) => {
+				worker: ({ripe_file, raw_file}, store: {}) => {
 					KernelX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
 					return;
 				},

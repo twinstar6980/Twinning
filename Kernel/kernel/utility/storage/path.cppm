@@ -86,10 +86,10 @@ export namespace Twinning::Kernel::Storage {
 		}
 
 		explicit Path(
-			String const & path
+			String const & text
 		) :
 			Path{} {
-			thiz.parse(path);
+			thiz.parse(text);
 			return;
 		}
 
@@ -226,18 +226,18 @@ export namespace Twinning::Kernel::Storage {
 		#pragma region convert
 
 		auto parse(
-			String const & path
+			String const & text
 		) -> Void {
 			thiz.m_root.reset();
 			thiz.m_type = PathType::Constant::nothing();
 			thiz.m_part.reset();
-			if (!path.empty()) {
+			if (!text.empty()) {
 				auto position = k_begin_index;
-				if (path.size() >= 2_sz && path[2_ix] == ':'_c && CharacterType::is_letter(path[1_ix])) {
-					thiz.m_root.set(path.sub(1_ix, 2_sz));
+				if (text.size() >= 2_sz && text[2_ix] == ':'_c && CharacterType::is_letter(text[1_ix])) {
+					thiz.m_root.set(text.sub(1_ix, 2_sz));
 					position += 2_sz;
 				}
-				if (path.size() > position && CharacterType::is_path_separator(path[position])) {
+				if (text.size() > position && CharacterType::is_path_separator(text[position])) {
 					thiz.m_type = PathType::Constant::absolute();
 					position += 1_sz;
 				}
@@ -246,8 +246,8 @@ export namespace Twinning::Kernel::Storage {
 				}
 				auto location = position;
 				while (k_true) {
-					if (position == path.size() || CharacterType::is_path_separator(path[position])) {
-						auto segment = path.sub(location, position - location);
+					if (position == text.size() || CharacterType::is_path_separator(text[position])) {
+						auto segment = text.sub(location, position - location);
 						if (segment == ""_sv || segment == "."_sv) {
 						}
 						else if (segment == ".."_sv && !thiz.m_part.empty() && thiz.m_part.last() != ".."_sv) {
@@ -256,7 +256,7 @@ export namespace Twinning::Kernel::Storage {
 						else {
 							thiz.m_part.append(segment);
 						}
-						if (position == path.size()) {
+						if (position == text.size()) {
 							break;
 						}
 						position += 1_sz;
@@ -272,7 +272,7 @@ export namespace Twinning::Kernel::Storage {
 		auto emit(
 			PathStyle const & style = PathStyle::Constant::generic()
 		) const -> String {
-			auto result = String{};
+			auto text = String{};
 			if (thiz.m_type != PathType::Constant::nothing()) {
 				auto mapped_style = style;
 				if (style == PathStyle::Constant::generic()) {
@@ -288,18 +288,18 @@ export namespace Twinning::Kernel::Storage {
 				}
 				auto separator = mapped_style == PathStyle::Constant::posix() ? CharacterType::k_path_separator_poisx : CharacterType::k_path_separator_windows;
 				if (thiz.m_root.has()) {
-					result.append_list(thiz.m_root.get());
+					text.append_list(thiz.m_root.get());
 				}
 				if (thiz.m_type == PathType::Constant::relative()) {
-					result.append('.'_c);
+					text.append('.'_c);
 				}
 				if (thiz.m_part.empty()) {
-					result.append(separator);
+					text.append(separator);
 				}
 				for (auto & segment : thiz.m_part) {
-					result.append(separator);
+					text.append(separator);
 					if (mapped_style == PathStyle::Constant::posix()) {
-						result.append_list(segment);
+						text.append_list(segment);
 					}
 					if (mapped_style == PathStyle::Constant::windows()) {
 						auto segment_size = segment.size();
@@ -314,11 +314,11 @@ export namespace Twinning::Kernel::Storage {
 							}
 							break;
 						}
-						result.append_list(Range::make_range_n(segment.begin(), segment_size));
+						text.append_list(Range::make_range_n(segment.begin(), segment_size));
 					}
 				}
 			}
-			return result;
+			return text;
 		}
 
 		// ----------------

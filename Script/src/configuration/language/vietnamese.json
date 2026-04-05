@@ -9,8 +9,8 @@
 	// utility/console
 	"console:not_nullable": "Không nên null",
 	"console:input_invalid_should_retry": "Dữ liệu nhập không hợp lệ, vui lòng nhập lại.",
-	"console:input_command_invalid": "Lệnh không hợp lệ",
-	"console:input_command_need_previous_input": "Lệnh yêu cầu đầu vào trước đó",
+	"console:input_macro_invalid": "Macro không hợp lệ",
+	"console:input_macro_need_previous_input": "Macro cần đầu vào trước đó",
 	"console:boolean_format_error": "Định dạng boolean không hợp lệ. Phải là \"n\" hoặc \"y\"",
 	"console:integer_format_error": "Định dạng số nguyên không hợp lệ, {}",
 	"console:floater_format_error": "Định dạng số thập phân không hợp lệ, {}",
@@ -24,7 +24,7 @@
 	"console:path_not_exist": "Đường dẫn đã được chỉ định không tồn tại",
 	"console:path_is_exist_not_file": "Đường dẫn đã được chỉ định đã tồn tại, nhưng không phải là tệp",
 	"console:path_is_exist_not_directory": "Đường dẫn đã được chỉ định đã tồn tại, nhưng không phải là thư mục",
-	"console:path_command_need_output": "Lệnh này chỉ có sẵn cho đường dẫn đầu ra",
+	"console:path_macro_need_output": "Macro này chỉ khả dụng cho đường dẫn đầu ra",
 	"console:option_invalid": "Dữ liệu đầu vào không thuộc một trong các tùy chọn",
 	"console:pick_path_type": "Chọn loại đường dẫn",
 	// support/marmalade/dzip/pack_automatic

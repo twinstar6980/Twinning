@@ -88,6 +88,14 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #region boolean
 
+	export function make_boolean_to_string(
+		value: boolean,
+	): string {
+		return !value ? 'false' : 'true';
+	}
+
+	// ----------------
+
 	export function make_boolean_to_string_of_confirmation_character(
 		value: boolean,
 	): string {
@@ -113,7 +121,7 @@ namespace Twinning.Script.ConvertHelper {
 	export function make_integer_to_string(
 		value: bigint,
 	): string {
-		return `${value > 0n ? '+' : ''}${value}`;
+		return `${value}`;
 	}
 
 	// ----------------
@@ -180,43 +188,30 @@ namespace Twinning.Script.ConvertHelper {
 	export function make_floater_to_string(
 		value: number,
 	): string {
-		return `${value > 0.0 ? '+' : ''}${value}${Number.isInteger(value) ? '.0' : ''}`;
+		return `${value}${Number.isInteger(value) ? '.0' : ''}`;
 	}
 
 	// #endregion
 
-	// #region size
+	// #region character
 
-	export function make_size_to_string(
-		value: bigint,
-	): string {
-		assert_test(value >= 0n);
-		let count = Number(value);
-		let exponent = 0;
-		if (count >= 1024.0) {
-			count /= 1024.0;
-			exponent += 1;
+	export function is_path_separator(
+		value: string,
+	): boolean {
+		if (value.length != 1) {
+			return false;
 		}
-		if (count >= 1024.0) {
-			count /= 1024.0;
-			exponent += 1;
-		}
-		if (count >= 1024.0) {
-			count /= 1024.0;
-			exponent += 1;
-		}
-		return `${count.toFixed(1)}${['b', 'k', 'm', 'g'][exponent]}`;
+		return value == '/' || value == '\\';
 	}
 
-	export function parse_size_from_string(
-		text: string,
-	): bigint {
-		let count = Number.parseFloat(text.slice(0, -1));
-		let exponent = ['b', 'k', 'm', 'g'].indexOf(text.slice(-1));
-		assert_test(exponent !== -1);
-		let countBig = Math.trunc(count);
-		let countLittle = count - countBig;
-		return BigInt(countBig) * BigInt(1024 ** exponent) + BigInt(Math.trunc(countLittle * (1024 ** exponent)));
+	export function is_letter(
+		value: string,
+	): boolean {
+		if (value.length != 1) {
+			return false;
+		}
+		var code = value.charCodeAt(0) | 0x20;
+		return 'a'.charCodeAt(0) <= code && code <= 'z'.charCodeAt(0);
 	}
 
 	// #endregion
@@ -227,9 +222,7 @@ namespace Twinning.Script.ConvertHelper {
 		source: string,
 	): string {
 		let destination = source;
-		if (false) {
-		}
-		else if (destination.length >= 2 && destination.startsWith(`'`) && destination.endsWith(`'`)) {
+		if (destination.length >= 2 && destination.startsWith(`'`) && destination.endsWith(`'`)) {
 			destination = destination.slice(1, -1);
 		}
 		else if (destination.length >= 2 && destination.startsWith(`"`) && destination.endsWith(`"`)) {
@@ -286,6 +279,27 @@ namespace Twinning.Script.ConvertHelper {
 		source: ArrayBuffer,
 	): boolean {
 		return source.byteLength >= 2 && [0xFFFE, 0xFEFF].includes(new DataView(source).getUint16(0, true));
+	}
+
+	// #endregion
+
+	// #region path
+
+	export function replace_path_name(
+		source: StoragePath,
+		pattern: RegExp,
+		replacement: string,
+	): StoragePath {
+		let destination = null as StoragePath | null;
+		let name = source.name();
+		if (name === null) {
+			destination = new StoragePath(source);
+		}
+		else {
+			name = name.replace(pattern, replacement);
+			destination = source.parent()!.join(name);
+		}
+		return destination;
 	}
 
 	// #endregion

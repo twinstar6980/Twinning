@@ -1,5 +1,6 @@
 package com.twinstar.twinning.assistant
 
+import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
@@ -47,7 +48,7 @@ class CustomMethodChannel {
 
   // region register
 
-  public fun register_onConfigureFlutterEngine(
+  public fun register_configureFlutterEngine(
     flutterEngine: FlutterEngine,
   ): Unit {
     MethodChannel(
@@ -90,6 +91,22 @@ class CustomMethodChannel {
   ): Unit {
     try {
       when (call.method) {
+        "copy_storage_file" -> {
+          val detail = this.handleCopyStorageFile(
+            call.argument<String>("target")!!,
+            call.argument<String>("location")!!,
+          )
+          result.success(mapOf<Any?, Any?>(
+            "placement" to detail,
+          ))
+        }
+        "reveal_storage_file" -> {
+          val detail = this.handleRevealPickStorageItem(
+            call.argument<String>("target")!!,
+          )
+          result.success(mapOf<Any?, Any?>(
+          ))
+        }
         "pick_storage_item" -> {
           val detail = this.handlePickStorageItem(
             call.argument<String>("type")!!,
@@ -98,15 +115,6 @@ class CustomMethodChannel {
           )
           result.success(mapOf<Any?, Any?>(
             "target" to detail,
-          ))
-        }
-        "copy_storage_file" -> {
-          val detail = this.handleCopyStorageFile(
-            call.argument<String>("source")!!,
-            call.argument<String>("placement")!!,
-          )
-          result.success(mapOf<Any?, Any?>(
-            "destination" to detail,
           ))
         }
         "check_external_storage_permission" -> {
@@ -135,6 +143,47 @@ class CustomMethodChannel {
     return
   }
 
+  private suspend fun handleCopyStorageFile(
+    target: String,
+    location: String,
+  ): String {
+    check(File(location).isDirectory)
+    val targetUri = target.toUri()
+    check(targetUri.scheme == "content")
+    val placementName = this.queryDatabaseOfContentUri<String>(targetUri, OpenableColumns.DISPLAY_NAME)
+    check(placementName != null)
+    var placement = "${location}/${placementName}"
+    var placementSuffix = 0
+    while (File(placement).exists()) {
+      placementSuffix += 1
+      placement = "${location}/${placementName}.${placementSuffix}"
+    }
+    this.host.contentResolver.openInputStream(targetUri)!!.use { input ->
+      FileOutputStream(placement, false).use { output ->
+        input.copyTo(output)
+      }
+    }
+    return placement
+  }
+
+  private suspend fun handleRevealPickStorageItem(
+    target: String,
+  ): Unit {
+    val primaryDirectory = Environment.getExternalStorageDirectory().absolutePath
+    if (!target.startsWith(primaryDirectory) || !(target.length == primaryDirectory.length || target[primaryDirectory.length] == '/')) {
+      throw UnsupportedOperationException()
+    }
+    val targetSegment = target.substring(primaryDirectory.length + if (target.length == primaryDirectory.length) 0 else 1)
+    val intent = Intent().also {
+      it.setAction(Intent.ACTION_VIEW)
+      it.setComponent(ComponentName("com.android.documentsui", "com.android.documentsui.files.FilesActivity"))
+      it.setData("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(targetSegment)}".toUri())
+      it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    }
+    this.host.startActivity(intent)
+    return
+  }
+
   private suspend fun handlePickStorageItem(
     type: String,
     location: String,
@@ -156,12 +205,12 @@ class CustomMethodChannel {
       intent.setType("*/*")
     }
     intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-    var locationSafe = ""
-    val primaryDirectory = Environment.getExternalStorageDirectory().absolutePath + "/"
-    if (location.startsWith(primaryDirectory)) {
-      locationSafe = location.substring(primaryDirectory.length)
+    val primaryDirectory = Environment.getExternalStorageDirectory().absolutePath
+    if (!location.startsWith(primaryDirectory) || !(location.length == primaryDirectory.length || location[primaryDirectory.length] == '/')) {
+      throw UnsupportedOperationException()
     }
-    intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(locationSafe)}".toUri())
+    val locationSegment = location.substring(primaryDirectory.length + if (location.length == primaryDirectory.length) 0 else 1)
+    intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, "content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(locationSegment)}".toUri())
     if (type == "save_file") {
       intent.putExtra(Intent.EXTRA_TITLE, name)
     }
@@ -175,29 +224,6 @@ class CustomMethodChannel {
     }
     val target = targetUri?.toString()
     return target
-  }
-
-  private suspend fun handleCopyStorageFile(
-    source: String,
-    placement: String,
-  ): String {
-    check(File(placement).isDirectory)
-    val sourceUri = source.toUri()
-    check(sourceUri.scheme == "content")
-    val destinationName = this.queryDatabaseOfContentUri<String>(sourceUri, OpenableColumns.DISPLAY_NAME)
-    check(destinationName != null)
-    var destination = "${placement}/${destinationName}"
-    var destinationSuffix = 0
-    while (File(destination).exists()) {
-      destinationSuffix += 1
-      destination = "${placement}/${destinationName}.${destinationSuffix}"
-    }
-    this.host.contentResolver.openInputStream(sourceUri)!!.use { input ->
-      FileOutputStream(destination, false).use { output ->
-        input.copyTo(output)
-      }
-    }
-    return destination
   }
 
   private suspend fun handleCheckExternalStoragePermission(

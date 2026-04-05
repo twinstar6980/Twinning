@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ParticleEffect {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {definition_file: string}) => (argument.definition_file.replace(/(\.ppf\.json)?$/i, '.ppf')),
+						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /(\.ppf\.json)?$/i, '.ppf'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -51,16 +51,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ParticleEffect {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {definition_file: string}) => (argument.definition_file + '.encode'),
+						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /()?$/i, '.encode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.ppf\.json)?$/i, '.ppf')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.ppf\.json)?$/i, '.ppf'),
 					}),
 				],
-				worker: ({definition_file, data_file, version_number, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({definition_file, data_file, version_number, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Popcap.ParticleEffect.encode_fs(data_file, definition_file, {number: version_number as any}, temporary.buffer.view());
+					KernelX.Tool.Popcap.ParticleEffect.encode_fs(data_file, definition_file, {number: version_number as any}, store.buffer.view());
 					return;
 				},
 			}),
@@ -79,7 +79,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ParticleEffect {
 						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.ppf)?$/i, '.ppf.json')),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.ppf)?$/i, '.ppf.json'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -103,12 +103,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ParticleEffect {
 						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file + '.decode'),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.decode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.ppf)?$/i, '.ppf.json')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.ppf)?$/i, '.ppf.json'),
 					}),
 				],
-				worker: ({data_file, definition_file, version_number}, temporary: {}) => {
+				worker: ({data_file, definition_file, version_number}, store: {}) => {
 					KernelX.Tool.Popcap.ParticleEffect.decode_fs(data_file, definition_file, {number: version_number as any});
 					return;
 				},

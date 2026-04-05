@@ -2,17 +2,10 @@ namespace Twinning.Script.ProcessHelper {
 
 	// #region environment
 
-	export function get_environment(
+	export function query_environment(
 		name: string,
 	): null | string {
 		return KernelX.Process.get_environment(name);
-	}
-
-	export function set_environment(
-		name: string,
-		value: null | string,
-	): void {
-		return KernelX.Process.set_environment(name, value);
 	}
 
 	// ----------------
@@ -33,43 +26,36 @@ namespace Twinning.Script.ProcessHelper {
 	// #region process
 
 	export function run_process(
-		program: string | [string],
+		program: StoragePath,
 		argument: Array<string>,
 		environment: null | Record<string, string>,
-		input: null | string,
 	): {
 		code: bigint;
 		output: string;
 		error: string;
 	} {
-		if (CheckHelper.is_object_of_array(program)) {
-			program = search_program_ensure(program[0], true);
-		}
 		if (environment === null) {
 			environment = list_environment();
 		}
-		if (input === null) {
-			input = '';
-		}
 		let temporary_directory = HomePath.new_temporary(null, 'directory');
-		let temporary_directory_fallback: null | string = null;
-		let input_file = `${temporary_directory}/input`;
-		let output_file = `${temporary_directory}/output`;
-		let error_file = `${temporary_directory}/error`;
-		KernelX.Storage.write_file_s(input_file, input);
+		let temporary_directory_fallback: null | StoragePath = null;
+		let input_file = temporary_directory.join('input');
+		let output_file = temporary_directory.join('output');
+		let error_file = temporary_directory.join('error');
+		StorageHelper.write_file_text(input_file, '');
 		if (KernelX.is_android && !Shell.is_basic) {
-			temporary_directory_fallback = `${AndroidHelper.k_temporary_directory}/${StorageHelper.name(temporary_directory)}`;
-			output_file = `${temporary_directory_fallback}/output`;
-			error_file = `${temporary_directory_fallback}/error`;
-			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback} ; touch ${output_file} ; chmod 777 ${output_file} ; touch ${error_file} ; chmod 777 ${error_file}"`) === 0n);
+			temporary_directory_fallback = AndroidHelper.k_temporary_directory.join(temporary_directory.name()!);
+			output_file = temporary_directory_fallback.join('output');
+			error_file = temporary_directory_fallback.join('error');
+			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback.emit()} ; touch ${output_file.emit()} ; chmod 777 ${output_file.emit()} ; touch ${error_file.emit()} ; chmod 777 ${error_file.emit()}"`) === 0n);
 		}
 		else {
-			KernelX.Storage.create_file(output_file);
-			KernelX.Storage.create_file(error_file);
+			StorageHelper.create_file(output_file);
+			StorageHelper.create_file(error_file);
 		}
-		let code = KernelX.Process.run_process(program, argument, ConvertHelper.record_to_array(environment, (key, value) => (`${key}=${value}`)), input_file, output_file, error_file);
-		let read_file = (path: string): string => {
-			let data = KernelX.Storage.read_file_s(path);
+		let code = KernelX.Process.run_process(program, argument, ConvertHelper.record_to_array(environment, (key, value) => `${key}=${value}`), input_file, output_file, error_file);
+		let read_file = (path: StoragePath): string => {
+			let data = StorageHelper.read_file_text(path);
 			return ConvertHelper.normalize_string_line_feed(data);
 		};
 		let result: ReturnType<typeof run_process> = {
@@ -77,7 +63,7 @@ namespace Twinning.Script.ProcessHelper {
 			output: read_file(output_file),
 			error: read_file(error_file),
 		};
-		KernelX.Storage.remove(temporary_directory);
+		StorageHelper.remove(temporary_directory);
 		if (KernelX.is_android && !Shell.is_basic) {
 			assert_test(temporary_directory_fallback !== null);
 			assert_test(KernelX.Process.execute_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
@@ -89,41 +75,35 @@ namespace Twinning.Script.ProcessHelper {
 
 	// #region program
 
-	export let g_program_path_map: Record<string, null | string> = {};
+	export let g_program_path_map: Record<string, null | StoragePath> = {};
 
 	// ----------------
 
 	export function search_program(
 		name: string,
 		allow_extension: boolean,
-	): null | string {
+	): null | StoragePath {
 		if (g_program_path_map[name] !== undefined && g_program_path_map[name] !== null) {
 			return g_program_path_map[name];
 		}
-		let result: null | string = null;
+		let result: null | StoragePath = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
-		let path_environment = get_environment('PATH');
-		if (path_environment === null) {
-			throw new Error(`could not find 'PATH' environment`);
-		}
-		let path_list = path_environment.split(item_delimiter);
-		if (KernelX.is_windows) {
-			path_list = path_list.map((value) => (StorageHelper.regularize(value)));
-		}
+		let path_environment = query_environment('PATH');
+		assert_test(path_environment !== null);
+		let path_list = path_environment.split(item_delimiter).map((it) => new StoragePath(it));
 		let path_extension_list = [''];
 		if (KernelX.is_windows && allow_extension) {
-			let path_extension_environment = get_environment('PATHEXT');
-			if (path_extension_environment === null) {
-				throw new Error(`could not find 'PATHEXT' environment`);
-			}
+			let path_extension_environment = query_environment('PATHEXT');
+			assert_test(path_extension_environment !== null);
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
 		}
 		for (let path of path_list) {
-			let path_base = `${path}/${name}`;
-			let path_extension = path_extension_list.find((value) => (KernelX.Storage.exist_file(`${path_base}${value}`)));
-			if (path_extension !== undefined) {
-				result = `${path_base}${path_extension}`;
-				break;
+			for (let path_extension in path_extension_list) {
+				let current_path = path.join(`${name}${path_extension}`);
+				if (StorageHelper.exist_file(current_path)) {
+					result = current_path;
+					break;
+				}
 			}
 		}
 		return result;
@@ -132,7 +112,7 @@ namespace Twinning.Script.ProcessHelper {
 	export function search_program_ensure(
 		name: string,
 		allow_extension: boolean,
-	): string {
+	): StoragePath {
 		let result = search_program(name, allow_extension);
 		if (result === null) {
 			throw new Error(`could not find '${name}' program from 'PATH' environment`);

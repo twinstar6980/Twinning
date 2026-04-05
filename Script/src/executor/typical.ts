@@ -4,32 +4,32 @@ namespace Twinning.Script.Executor {
 
 	export type TypicalArgumentExpression<TValue> = TValue | '?automatic' | '?input';
 
-	export type TypicalArgument<TIdentifier extends string, TValue extends any, TGivenValue extends any> = {
+	export type TypicalArgument<TIdentifier extends string, TValue extends any, TRepresentation extends any> = {
 		Value: TValue;
-		GivenValue: TGivenValue;
+		Representation: TRepresentation;
 		identifier: TIdentifier;
-		initial_echoer: (value: TValue) => string;
-		given_converter: (argument: any, given: TGivenValue) => TValue;
-		automatic_generator: (argument: any) => null | TValue;
-		input_generator: (argument: any, initial?: TValue) => null | TValue;
+		stringify: (value: TValue) => string;
+		parse: (representation: TRepresentation) => TValue;
+		automatic: (argument: any) => null | TValue;
+		input: (argument: any, initial?: TValue) => null | TValue;
 		condition: (argument: any) => null | TValue;
-		default: TypicalArgumentExpression<TGivenValue>;
+		default: TypicalArgumentExpression<TRepresentation>;
 	};
 
-	export type TypicalBatchArgument<TIdentifier extends string> = TypicalArgument<TIdentifier, string, string> & {
-		item_mapper: (argument: any, value: string) => string;
+	export type TypicalBatchArgument<TIdentifier extends string> = TypicalArgument<TIdentifier, StoragePath, string> & {
+		item_mapper: (argument: any, value: StoragePath) => StoragePath;
 	};
 
 	// ----------------
 
-	export type TypicalMethod<TIdentifier extends string, TArgument extends Array<TypicalArgument<string, any, any>>, TBatch extends Array<TypicalBatchArgument<string>>, TWorkerTemporary extends Record<string, any>> = {
-		Argument: {[Element in TArgument[number]as Element['identifier']]: Element['Value']};
-		GivenArgument: {[Element in TArgument[number]as Element['identifier']]: Element['GivenValue']};
+	export type TypicalMethod<TIdentifier extends string, TArgument extends Array<TypicalArgument<string, any, any>>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>> = {
+		Argument: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Value']};
+		ArgumentRepresentation: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Representation']};
 		identifier: TIdentifier;
 		filter: null | ['any' | 'file' | 'directory', RegExp];
 		argument: TArgument;
-		batch: null | TBatch;
-		worker: (argument: {[Element in TArgument[number]as Element['identifier']]: Element['Value']}, temporary: TWorkerTemporary) => void;
+		batch: null | TBatchArgument;
+		worker: (argument: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Value']}, store: TWorkerStore) => void;
 	};
 
 	export type TypicalMethodConfiguration = {
@@ -49,7 +49,7 @@ namespace Twinning.Script.Executor {
 	// #region basic
 
 	export function typical_argument_boolean<TIdentifier extends string>(
-		object: {
+		proto: {
 			identifier: TIdentifier;
 			checker: null | ((argument: any, value: boolean) => null | string);
 			automatic: null | ((argument: any) => null | boolean);
@@ -58,19 +58,19 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<TIdentifier, boolean, boolean> {
 		return {
 			Value: undefined!,
-			GivenValue: undefined!,
-			identifier: object.identifier,
-			initial_echoer: (value) => (ConvertHelper.make_boolean_to_string_of_confirmation_character(value)),
-			given_converter: (argument, given) => (given),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.boolean(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => ConvertHelper.make_boolean_to_string_of_confirmation_character(value),
+			parse: (representation) => representation,
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => Console.boolean(true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
 		};
 	}
 
 	export function typical_argument_integer<TIdentifier extends string>(
-		object: {
+		proto: {
 			identifier: TIdentifier;
 			option: null | Array<bigint>;
 			checker: null | ((argument: any, value: bigint) => null | string);
@@ -80,19 +80,19 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<TIdentifier, bigint, bigint> {
 		return {
 			Value: undefined!,
-			GivenValue: undefined!,
-			identifier: object.identifier,
-			initial_echoer: (value) => (ConvertHelper.make_integer_to_string(value)),
-			given_converter: (argument, given) => (given),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.integer(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => ConvertHelper.make_integer_to_string(value),
+			parse: (representation) => representation,
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => proto.option === null ? Console.integer(true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial) : Console.enumeration(Console.option_integer(proto.option), true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
 		};
 	}
 
 	export function typical_argument_floater<TIdentifier extends string>(
-		object: {
+		proto: {
 			identifier: TIdentifier;
 			option: null | Array<number>;
 			checker: null | ((argument: any, value: number) => null | string);
@@ -102,41 +102,19 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<TIdentifier, number, number> {
 		return {
 			Value: undefined!,
-			GivenValue: undefined!,
-			identifier: object.identifier,
-			initial_echoer: (value) => (ConvertHelper.make_floater_to_string(value)),
-			given_converter: (argument, given) => (given),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.floater(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
-		};
-	}
-
-	export function typical_argument_size<TIdentifier extends string>(
-		object: {
-			identifier: TIdentifier;
-			option: null | Array<bigint>;
-			checker: null | ((argument: any, value: bigint) => null | string);
-			automatic: null | ((argument: any) => null | bigint);
-			condition: null | ((argument: any) => null | bigint);
-		},
-	): TypicalArgument<TIdentifier, bigint, string> {
-		return {
-			Value: undefined!,
-			GivenValue: undefined!,
-			identifier: object.identifier,
-			initial_echoer: (value) => (ConvertHelper.make_size_to_string(value)),
-			given_converter: (argument, given) => (ConvertHelper.parse_size_from_string(given)),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.size(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_size(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => ConvertHelper.make_floater_to_string(value),
+			parse: (representation) => representation,
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => proto.option === null ? Console.floater(true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial) : Console.enumeration(Console.option_floater(proto.option), true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
 		};
 	}
 
 	export function typical_argument_string<TIdentifier extends string>(
-		object: {
+		proto: {
 			identifier: TIdentifier;
 			option: null | Array<string>;
 			checker: null | ((argument: any, value: string) => null | string);
@@ -146,82 +124,104 @@ namespace Twinning.Script.Executor {
 	): TypicalArgument<TIdentifier, string, string> {
 		return {
 			Value: undefined!,
-			GivenValue: undefined!,
-			identifier: object.identifier,
-			initial_echoer: (value) => (value),
-			given_converter: (argument, given) => (given),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (object.option === null ? Console.string(true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial) : Console.enumeration(Console.option_string(object.option), true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => value,
+			parse: (representation) => representation,
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => proto.option === null ? Console.string(true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial) : Console.enumeration(Console.option_string(proto.option), true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
+		};
+	}
+
+	export function typical_argument_size<TIdentifier extends string>(
+		proto: {
+			identifier: TIdentifier;
+			option: null | Array<StorageSize>;
+			checker: null | ((argument: any, value: StorageSize) => null | string);
+			automatic: null | ((argument: any) => null | StorageSize);
+			condition: null | ((argument: any) => null | StorageSize);
+		},
+	): TypicalArgument<TIdentifier, StorageSize, string> {
+		return {
+			Value: undefined!,
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => value.emit(),
+			parse: (representation) => new StorageSize(representation),
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => proto.option === null ? Console.size(true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial) : Console.enumeration(Console.option_size(proto.option), true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
 		};
 	}
 
 	export function typical_argument_path<TIdentifier extends string>(
-		object: {
+		proto: {
 			identifier: TIdentifier;
 			rule: ['any' | 'file' | 'directory', 'any' | 'input' | 'output'],
-			checker: null | ((argument: any, value: string) => null | string);
-			automatic: null | ((argument: any) => null | string);
-			condition: null | ((argument: any) => null | string);
+			checker: null | ((argument: any, value: StoragePath) => null | string);
+			automatic: null | ((argument: any) => null | StoragePath);
+			condition: null | ((argument: any) => null | StoragePath);
 		},
-	): TypicalArgument<TIdentifier, string, string> {
+	): TypicalArgument<TIdentifier, StoragePath, string> {
 		return {
-			Value: undefined! as string,
-			GivenValue: undefined! as string,
-			identifier: object.identifier,
-			initial_echoer: (value) => (value),
-			given_converter: (argument, given) => (StorageHelper.regularize(given)),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.path(object.rule[0], object.rule[1], true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
+			Value: undefined!,
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => value.emit(),
+			parse: (representation) => new StoragePath(representation),
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => Console.path(proto.rule[0], proto.rule[1], true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
 		};
 	}
 
 	export function typical_argument_batch<TIdentifier extends string>(
-		object: {
+		proto: {
 			identifier: TIdentifier;
 			rule: 'any' | 'input' | 'output',
-			checker: null | ((argument: any, value: string) => null | string);
-			automatic: null | ((argument: any) => null | string);
-			condition: null | ((argument: any) => null | string);
-			item_mapper: (argument: any, value: string) => string;
+			checker: null | ((argument: any, value: StoragePath) => null | string);
+			automatic: null | ((argument: any) => null | StoragePath);
+			condition: null | ((argument: any) => null | StoragePath);
+			item_mapper: (argument: any, value: StoragePath) => StoragePath;
 		},
 	): TypicalBatchArgument<TIdentifier> {
 		return {
 			Value: undefined!,
-			GivenValue: undefined!,
-			identifier: object.identifier,
-			initial_echoer: (value) => (value),
-			given_converter: (argument, given) => (StorageHelper.regularize(given)),
-			automatic_generator: (argument) => (object.automatic === null ? null : object.automatic(argument)),
-			input_generator: (argument, initial) => (Console.path('directory', object.rule, true, (value) => (object.checker === null ? null : object.checker(argument, value)), initial)),
-			condition: (argument) => (object.condition === null ? null : object.condition(argument)),
-			default: object.automatic === null ? '?input' : '?automatic',
-			item_mapper: object.item_mapper,
+			Representation: undefined!,
+			identifier: proto.identifier,
+			stringify: (value) => value.emit(),
+			parse: (representation) => new StoragePath(representation),
+			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
+			input: (argument, initial) => Console.path('directory', proto.rule, true, (value) => (proto.checker === null ? null : proto.checker(argument, value)), initial),
+			condition: (argument) => proto.condition === null ? null : proto.condition(argument),
+			default: proto.automatic === null ? '?input' : '?automatic',
+			item_mapper: proto.item_mapper,
 		};
 	}
 
 	// ----------------
 
-	export function typical_method<Identifier extends string, Argument extends Array<any>, Batch extends Array<TypicalBatchArgument<string>>, WorkerTemporary extends Record<string, any>>(
-		object: {
-			identifier: Identifier;
+	export function typical_method<TIdentifier extends string, TArgument extends Array<any>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>>(
+		proto: {
+			identifier: TIdentifier;
 			filter: null | ['any' | 'file' | 'directory', RegExp];
-			argument: Argument;
-			batch: null | Batch;
-			worker: (argument: {[Element in Argument[number]as Element['identifier']]: Element['Value']}, temporary: WorkerTemporary) => void;
+			argument: TArgument;
+			batch: null | TBatchArgument;
+			worker: (argument: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Value']}, store: TWorkerStore) => void;
 		},
-	): TypicalMethod<Identifier, Argument, Batch, WorkerTemporary> {
+	): TypicalMethod<TIdentifier, TArgument, TBatchArgument, TWorkerStore> {
 		return {
 			Argument: undefined!,
-			GivenArgument: undefined!,
-			identifier: object.identifier,
-			filter: object.filter === null ? null : object.filter,
-			argument: object.argument,
-			batch: object.batch,
-			worker: object.worker,
+			ArgumentRepresentation: undefined!,
+			identifier: proto.identifier,
+			filter: proto.filter === null ? null : proto.filter,
+			argument: proto.argument,
+			batch: proto.batch,
+			worker: proto.worker,
 		};
 	}
 
@@ -236,17 +236,17 @@ namespace Twinning.Script.Executor {
 	// ----------------
 
 	export function execute_typical_batch_task(
-		parent: string,
+		parent: StoragePath,
 		filter: ['any' | 'file' | 'directory', RegExp],
-		worker: (item: string) => void,
+		worker: (item: StoragePath) => void,
 	): void {
-		let all_item = KernelX.Storage.list_directory(parent, null, true, false, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
-		let valid_item = g_typical_method_disable_name_filter ? all_item : all_item.filter((value) => (filter[1].test(value)));
-		let failed_item = [] as Array<string>;
+		let all_item = StorageHelper.list_directory(parent, null, true, false, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
+		let valid_item = g_typical_method_disable_name_filter ? all_item : all_item.filter((value) => (filter[1].test(value.name()!)));
+		let failed_item = [] as Array<StoragePath>;
 		let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);
 		for (let item of valid_item) {
 			progress.increase();
-			Console.information(`${progress}`, [`${item}`]);
+			Console.information(`${progress}`, [item.emit()]);
 			try {
 				worker(item);
 			}
@@ -255,76 +255,76 @@ namespace Twinning.Script.Executor {
 				Console.error_of(e);
 			}
 		}
-		Console.warning(los('executor.typical:batch_result', all_item.length, valid_item.length, failed_item.length), failed_item);
+		Console.warning(los('executor.typical:batch_result', all_item.length, valid_item.length, failed_item.length), failed_item.map((it) => it.emit()));
 		return;
 	}
 
 	// ----------------
 
-	export function request_typical_argument<TGiven, TResult>(
+	export function request_typical_argument<TRepresentation, TValue>(
 		name: string,
-		given: TGiven | '?automatic' | '?input',
-		initial_echoer: (value: TResult) => string,
-		given_converter: (given: TGiven) => TResult,
-		automatic_generator: () => null | TResult,
-		input_generator: (initial?: TResult) => null | TResult,
-		skip_value: null | TResult,
-	): null | TResult {
-		if (skip_value !== null) {
+		expression: TypicalArgumentExpression<TRepresentation>,
+		stringify: (value: TValue) => string,
+		parse: (representation: TRepresentation) => TValue,
+		automatic: () => null | TValue,
+		input: (initial?: TValue) => null | TValue,
+		skip: null | TValue,
+	): null | TValue {
+		if (skip !== null) {
 			Console.information(los('executor.typical:argument_skipped', name), []);
-			return skip_value;
+			return skip;
 		}
-		let initial: undefined | TResult = undefined;
-		if (given === '?input') {
+		let initial: undefined | TValue = undefined;
+		if (expression === '?input') {
 			Console.information(los('executor.typical:argument_input', name), []);
 		}
-		else if (given === '?automatic') {
-			let automatic_value = automatic_generator();
+		else if (expression === '?automatic') {
+			let automatic_value = automatic();
 			if (automatic_value === null) {
 				Console.information(los('executor.typical:argument_automatic_failed', name), []);
 			}
 			else {
 				initial = automatic_value;
-				Console.information(los('executor.typical:argument_automatic', name), [initial_echoer(initial!)]);
+				Console.information(los('executor.typical:argument_automatic', name), [stringify(initial!)]);
 			}
 		}
 		else {
-			initial = given_converter(given);
-			Console.information(los('executor.typical:argument_given', name), [initial_echoer(initial!)]);
+			initial = parse(expression);
+			Console.information(los('executor.typical:argument_given', name), [stringify(initial!)]);
 		}
-		return input_generator(initial);
+		return input(initial);
 	}
 
-	export function convert_typical_method<Identifier extends string, Argument extends Array<TypicalArgument<string, any, any>>, Batch extends Array<TypicalBatchArgument<string>>, WorkerTemporary extends Record<string, any>>(
-		source: TypicalMethod<Identifier, Argument, Batch, WorkerTemporary>,
+	export function convert_typical_method<TIdentifier extends string, TArgument extends Array<TypicalArgument<string, any, any>>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>>(
+		proto: TypicalMethod<TIdentifier, TArgument, TBatchArgument, TWorkerStore>,
 		batch: boolean,
-	): Method<typeof source.GivenArgument> {
+	): Method<typeof proto.ArgumentRepresentation> {
 		return {
-			identifier: `${source.identifier}${!batch ? '' : '!batch'}`,
-			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${source.identifier}`)}`),
-			worker: (given_argument: Record<string, any>) => {
+			identifier: `${proto.identifier}${!batch ? '' : '!batch'}`,
+			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${proto.identifier}`)}`),
+			worker: (original_argument: Record<string, any>) => {
 				let interrupted = false;
-				let final_argument = {} as Record<string, any>;
-				for (let argument_index in source.argument) {
-					let argument = source.argument[argument_index];
-					let batch_argument = (!batch || source.batch === null) ? undefined : source.batch.find((value) => (value.identifier === argument.identifier));
+				let actual_argument = {} as Record<string, any>;
+				for (let argument_index in proto.argument) {
+					let argument = proto.argument[argument_index];
+					let batch_argument = (!batch || proto.batch === null) ? undefined : proto.batch.find((value) => value.identifier === argument.identifier);
 					if (batch_argument !== undefined) {
 						argument = batch_argument;
 					}
 					let argument_value = request_typical_argument(
-						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implement:${source.identifier}:${argument.identifier}`)}`,
-						given_argument[argument.identifier],
-						argument.initial_echoer,
-						(given) => (argument.given_converter(final_argument, given)),
-						() => (argument.automatic_generator(final_argument)),
-						(initial) => (argument.input_generator(final_argument, initial)),
-						argument.condition(final_argument),
+						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implement:${proto.identifier}:${argument.identifier}`)}`,
+						original_argument[argument.identifier],
+						argument.stringify,
+						argument.parse,
+						() => argument.automatic(actual_argument),
+						(initial) => argument.input(actual_argument, initial),
+						argument.condition(actual_argument),
 					);
 					if (argument_value === null) {
 						interrupted = true;
 						break;
 					}
-					final_argument[argument.identifier] = argument_value;
+					actual_argument[argument.identifier] = argument_value;
 				}
 				if (interrupted) {
 					return los('executor.typical:method_interrupted');
@@ -332,10 +332,10 @@ namespace Twinning.Script.Executor {
 				let state = false;
 				let timer = new Timer();
 				timer.start();
-				let temporary_data = {} as WorkerTemporary;
+				let temporary_store = {} as TWorkerStore;
 				if (!batch) {
 					try {
-						source.worker(final_argument as any, temporary_data);
+						proto.worker(actual_argument as any, temporary_store);
 						state = true;
 					}
 					catch (e) {
@@ -343,17 +343,17 @@ namespace Twinning.Script.Executor {
 					}
 				}
 				else {
-					assert_test(source.batch !== null && source.batch.length > 0);
-					assert_test(source.filter !== null);
+					assert_test(proto.batch !== null && proto.batch.length > 0);
+					assert_test(proto.filter !== null);
 					execute_typical_batch_task(
-						final_argument[source.argument[0].identifier],
-						source.filter!,
+						actual_argument[proto.argument[0].identifier],
+						proto.filter!,
 						(item) => {
-							let item_argument = {...final_argument};
-							for (let batch_argument of source.batch!) {
-								item_argument[batch_argument.identifier] += '/' + batch_argument.item_mapper(final_argument, item);
+							let item_argument = {...actual_argument};
+							for (let batch_argument of proto.batch!) {
+								item_argument[batch_argument.identifier] += '/' + batch_argument.item_mapper(actual_argument, item);
 							}
-							source.worker(item_argument as any, temporary_data);
+							proto.worker(item_argument as any, temporary_store);
 						},
 					);
 					state = true;
@@ -361,31 +361,34 @@ namespace Twinning.Script.Executor {
 				timer.stop();
 				return [state, timer.duration()];
 			},
-			default_argument: ConvertHelper.record_from_array(source.argument, (index, element) => ([element.identifier, element.default])) as typeof source.GivenArgument,
+			default_argument: ConvertHelper.record_from_array(proto.argument, (index, element) => ([element.identifier, element.default])) as typeof proto.ArgumentRepresentation,
 			input_filter: (input) => {
 				let state = true;
-				if (source.filter === null) {
+				if (proto.filter === null) {
 					if (input !== null) {
 						state &&= false;
 					}
 				}
 				else {
-					if (input === null || input === '') {
+					if (input === null) {
 						state &&= false;
 					}
-					else if (!batch) {
-						state &&= KernelX.Storage[({any: 'exist', file: 'exist_file', directory: 'exist_directory'} as const)[source.filter[0]]](input);
-						if (!g_typical_method_disable_name_filter) {
-							state &&= source.filter[1].test(input);
-						}
-					}
 					else {
-						state &&= KernelX.Storage.exist_directory(input);
+						let input_path = new StoragePath(input);
+						if (!batch) {
+							state &&= KernelX.Storage[({any: 'exist', file: 'exist_file', directory: 'exist_directory'} as const)[proto.filter[0]]](input_path);
+							if (!g_typical_method_disable_name_filter) {
+								state &&= proto.filter[1].test(input_path.name() ?? '');
+							}
+						}
+						else {
+							state &&= StorageHelper.exist_directory(input_path);
+						}
 					}
 				}
 				return state;
 			},
-			input_forwarder: source.filter === null ? null : source.argument[0].identifier as Exclude<keyof typeof source.GivenArgument, number>,
+			input_forwarder: proto.filter === null ? null : proto.argument[0].identifier as Exclude<keyof typeof proto.ArgumentRepresentation, number>,
 		};
 	}
 

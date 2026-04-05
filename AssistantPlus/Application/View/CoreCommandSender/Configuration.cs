@@ -15,8 +15,8 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 		Boolean,
 		Integer,
 		Floater,
-		Size,
 		String,
+		Size,
 		Path,
 	}
 

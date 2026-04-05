@@ -374,7 +374,8 @@ class StorageHelper {
       revealed = await lib.launchUrl(.file(targetString), mode: .externalApplication);
     }
     if (SystemChecker.isAndroid) {
-      throw UnsupportedException();
+      await ApplicationPlatformMethod.instance.revealStorageFile(target.emitNative());
+      revealed = true;
     }
     if (SystemChecker.isIphone) {
       revealed = await lib.launchUrl(.file(targetString).replace(scheme: 'shareddocuments'), mode: .externalApplication);
@@ -618,7 +619,7 @@ class StorageHelper {
       )) ?? false;
       if (canDuplicate) {
         var setting = Provider.of<SettingProvider>(context, listen: false);
-        result = .of((await ApplicationPlatformMethod.instance.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory.emitNative())).destination);
+        result = .of((await ApplicationPlatformMethod.instance.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory.emitNative())).placement);
       }
     }
     return result;

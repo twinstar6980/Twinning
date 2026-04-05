@@ -173,32 +173,32 @@ namespace Twinning.AssistantPlus {
 			switch (type.Primitive) {
 				case PopcapReflectionModel.PrimitiveType.Boolean: {
 					AssertTest(type.Element == null && type.Class == null);
-					raw = JsonHelper.SerializeNode(ripe.As<Boolean>());
+					raw = JsonHelper.Serialize(ripe.As<Boolean>());
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Integer: {
 					AssertTest(type.Element == null && type.Class == null);
-					raw = JsonHelper.SerializeNode(ripe.As<Integer>());
+					raw = JsonHelper.Serialize(ripe.As<Integer>());
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Floater: {
 					AssertTest(type.Element == null && type.Class == null);
-					raw = JsonHelper.SerializeNode(ripe.As<Floater>());
+					raw = JsonHelper.Serialize(ripe.As<Floater>());
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.String: {
 					AssertTest(type.Element == null && type.Class == null);
-					raw = JsonHelper.SerializeNode(ripe.As<String>());
+					raw = JsonHelper.Serialize(ripe.As<String>());
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Enumeration: {
 					AssertTest(type.Element == null && type.Class != null);
-					raw = JsonHelper.SerializeNode(PopcapReflectionHelper.MakeEnumerationExpression(ripe.As<Tuple<String>>()));
+					raw = JsonHelper.Serialize(PopcapReflectionHelper.MakeEnumerationExpression(ripe.As<Tuple<String>>()));
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Reference: {
 					AssertTest(type.Element == null && type.Class != null);
-					raw = JsonHelper.SerializeNode(PopcapReflectionHelper.MakeReferenceExpression(ripe.As<Tuple<String, String>>()));
+					raw = JsonHelper.Serialize(PopcapReflectionHelper.MakeReferenceExpression(ripe.As<Tuple<String, String>>()));
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.List: {
@@ -258,32 +258,32 @@ namespace Twinning.AssistantPlus {
 			switch (type.Primitive) {
 				case PopcapReflectionModel.PrimitiveType.Boolean: {
 					AssertTest(type.Element == null && type.Class == null);
-					ripe = JsonHelper.DeserializeNode<Boolean>(raw);
+					ripe = JsonHelper.Deserialize<Boolean>(raw);
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Integer: {
 					AssertTest(type.Element == null && type.Class == null);
-					ripe = JsonHelper.DeserializeNode<Integer>(raw);
+					ripe = JsonHelper.Deserialize<Integer>(raw);
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Floater: {
 					AssertTest(type.Element == null && type.Class == null);
-					ripe = JsonHelper.DeserializeNode<Floater>(raw);
+					ripe = JsonHelper.Deserialize<Floater>(raw);
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.String: {
 					AssertTest(type.Element == null && type.Class == null);
-					ripe = JsonHelper.DeserializeNode<String>(raw);
+					ripe = JsonHelper.Deserialize<String>(raw);
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Enumeration: {
 					AssertTest(type.Element == null && type.Class != null);
-					ripe = PopcapReflectionHelper.ParseEnumerationExpression(JsonHelper.DeserializeNode<String>(raw));
+					ripe = PopcapReflectionHelper.ParseEnumerationExpression(JsonHelper.Deserialize<String>(raw));
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.Reference: {
 					AssertTest(type.Element == null && type.Class != null);
-					ripe = PopcapReflectionHelper.ParseReferenceExpression(JsonHelper.DeserializeNode<String>(raw));
+					ripe = PopcapReflectionHelper.ParseReferenceExpression(JsonHelper.Deserialize<String>(raw));
 					break;
 				}
 				case PopcapReflectionModel.PrimitiveType.List: {

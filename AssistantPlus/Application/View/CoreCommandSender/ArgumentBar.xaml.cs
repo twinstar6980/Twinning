@@ -28,7 +28,6 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		protected override async Task StampUpdate(
 		) {
-			VisualStateManager.GoToState(this, $"{(this.Type == null ? "Null" : this.Option == null ? this.Type : "Enumeration")}State", false);
 			await this.Controller.UpdateView();
 			return;
 		}
@@ -133,6 +132,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		public async Task UpdateView(
 		) {
+			VisualStateManager.GoToState(this.View, $"{(this.Type == null ? "Null" : this.Option == null ? this.Type : "Enumeration")}State", false);
 			this.NotifyPropertyChanged([
 				nameof(this.uLabel_ToolTip),
 				nameof(this.uLabel_Style),
@@ -161,6 +161,12 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 							]);
 							break;
 						}
+						case ArgumentType.String: {
+							this.NotifyPropertyChanged([
+								nameof(this.uStringValue_Text),
+							]);
+							break;
+						}
 						case ArgumentType.Size: {
 							if (this.ValueOfSize != null) {
 								this.uSizeExponent_mValue = this.ValueOfSize.Exponent;
@@ -168,12 +174,6 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 							this.NotifyPropertyChanged([
 								nameof(this.uSizeCount_Value),
 								nameof(this.uSizeExponent_Content),
-							]);
-							break;
-						}
-						case ArgumentType.String: {
-							this.NotifyPropertyChanged([
-								nameof(this.uStringValue_Text),
 							]);
 							break;
 						}
@@ -256,7 +256,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				if (this.Type != ArgumentType.Boolean || this.Option != null) {
 					return "";
 				}
-				return this.ValueOfBoolean == null ? "" : this.ValueOfBoolean.Value == false ? "n" : "y";
+				return this.ValueOfBoolean == null ? "" : this.ValueOfBoolean.Value.SelfLet((it) => ConvertHelper.MakeBooleanToStringOfConfirmationCharacter(it));
 			}
 		}
 
@@ -420,6 +420,46 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#endregion
 
+		#region string
+
+		public StringExpression? ValueOfString {
+			get => this.Value.Value?.As<StringExpression>();
+			set => this.Value.Value = value;
+		}
+
+		// ----------------
+
+		public async void uStringValue_LostFocus(
+			Object          sender,
+			RoutedEventArgs args
+		) {
+			var senders = sender.As<TextBox>();
+			if (this.Type != ArgumentType.String || this.Option != null) {
+				return;
+			}
+			if (senders.Text.IsEmpty()) {
+				this.ValueOfString = null;
+			}
+			else {
+				this.ValueOfString = new () { Value = senders.Text };
+			}
+			this.NotifyPropertyChanged([
+				nameof(this.uStringValue_Text),
+			]);
+			return;
+		}
+
+		public String uStringValue_Text {
+			get {
+				if (this.Type != ArgumentType.String || this.Option != null) {
+					return "";
+				}
+				return this.ValueOfString == null ? "" : this.ValueOfString.Value;
+			}
+		}
+
+		#endregion
+
 		#region size
 
 		public SizeExpression? ValueOfSize {
@@ -494,46 +534,6 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 
 		#endregion
 
-		#region string
-
-		public StringExpression? ValueOfString {
-			get => this.Value.Value?.As<StringExpression>();
-			set => this.Value.Value = value;
-		}
-
-		// ----------------
-
-		public async void uStringValue_LostFocus(
-			Object          sender,
-			RoutedEventArgs args
-		) {
-			var senders = sender.As<TextBox>();
-			if (this.Type != ArgumentType.String || this.Option != null) {
-				return;
-			}
-			if (senders.Text.IsEmpty()) {
-				this.ValueOfString = null;
-			}
-			else {
-				this.ValueOfString = new () { Value = senders.Text };
-			}
-			this.NotifyPropertyChanged([
-				nameof(this.uStringValue_Text),
-			]);
-			return;
-		}
-
-		public String uStringValue_Text {
-			get {
-				if (this.Type != ArgumentType.String || this.Option != null) {
-					return "";
-				}
-				return this.ValueOfString == null ? "" : this.ValueOfString.Value;
-			}
-		}
-
-		#endregion
-
 		#region path
 
 		public PathExpression? ValueOfPath {
@@ -601,7 +601,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				if (this.Type != ArgumentType.Path || this.Option != null) {
 					return "";
 				}
-				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content.Emit();
+				return this.ValueOfPath == null ? "" : this.ValueOfPath.Content.SelfLet((it) => it.Emit());
 			}
 		}
 
@@ -643,7 +643,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 				if (this.Type == null || this.Option == null) {
 					return -1;
 				}
-				return this.Value.Value == null ? -1 : this.Option.IndexOf(this.Value.Value);
+				return this.Value.Value == null ? -1 : this.Value.Value.SelfLet((it) => this.Option.IndexOf(it));
 			}
 		}
 

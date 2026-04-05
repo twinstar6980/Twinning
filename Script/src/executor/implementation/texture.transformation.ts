@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file.replace(/(\.png)?$/i, '.flip.png')),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /(\.png)?$/i, '.flip.png'),
 						condition: null,
 					}),
 					typical_argument_boolean({
@@ -49,12 +49,12 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file + '.scale'),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /()?$/i, '.scale'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.png')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
 					}),
 				],
-				worker: ({source_file, destination_file, horizontal, vertical}, temporary: {}) => {
+				worker: ({source_file, destination_file, horizontal, vertical}, store: {}) => {
 					KernelX.Tool.Texture.Transformation.flip_fs(source_file, destination_file, horizontal, vertical);
 					return;
 				},
@@ -74,7 +74,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file.replace(/(\.png)?$/i, '.scale.png')),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /(\.png)?$/i, '.scale.png'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -105,12 +105,12 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file + '.scale'),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /()?$/i, '.scale'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.png')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
 					}),
 				],
-				worker: ({source_file, destination_file, size_width, size_height}, temporary: {}) => {
+				worker: ({source_file, destination_file, size_width, size_height}, store: {}) => {
 					KernelX.Tool.Texture.Transformation.scale_fs(source_file, destination_file, [size_width, size_height]);
 					return;
 				},
@@ -130,7 +130,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'destination_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file.replace(/(\.png)?$/i, '.scale.png')),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /(\.png)?$/i, '.scale.png'),
 						condition: null,
 					}),
 					typical_argument_floater({
@@ -154,12 +154,12 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'destination_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {source_file: string}) => (argument.source_file + '.scale'),
+						automatic: (argument: {source_file: StoragePath}) => ConvertHelper.replace_path_name(argument.source_file, /()?$/i, '.scale'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.png)?$/i, '.png')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
 					}),
 				],
-				worker: ({source_file, destination_file, size_rate}, temporary: {}) => {
+				worker: ({source_file, destination_file, size_rate}, store: {}) => {
 					KernelX.Tool.Texture.Transformation.scale_rate_fs(source_file, destination_file, size_rate);
 					return;
 				},

@@ -4,6 +4,10 @@ namespace Twinning.Script.KernelX {
 
 	export const system = Kernel.Miscellaneous.g_system.value;
 
+	export const architecture = Kernel.Miscellaneous.g_architecture.value;
+
+	// ----------------
+
 	export const is_windows = system === 'windows';
 
 	export const is_linux = system === 'linux';
@@ -26,190 +30,11 @@ namespace Twinning.Script.KernelX {
 
 	export namespace Json {
 
-		export let g_format: {
-			disable_array_trailing_comma: boolean;
-			disable_array_line_breaking: boolean;
-			disable_object_trailing_comma: boolean;
-			disable_object_line_breaking: boolean;
-		} = {
-			disable_array_trailing_comma: false,
-			disable_array_line_breaking: false,
-			disable_object_trailing_comma: false,
-			disable_object_line_breaking: false,
-		};
-
-		// ----------------
-
-		export function read<TConstraint extends Kernel.Json.JS_Value>(
-			data: ArrayBuffer,
-		): Kernel.Json.Value<TConstraint> {
-			let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
-			let value = Kernel.Json.Value.default<TConstraint>();
-			let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_for_string.view()));
-			Kernel.Tool.Data.Serialization.Json.Read.process(data_stream, value, buffer_stream);
-			return value;
-		}
-
-		/** result is a view of buffer */
-		export function write<TConstraint extends Kernel.Json.JS_Value>(
-			value: Kernel.Json.Value<TConstraint>,
-			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
-			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
-			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
-			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
-		): ArrayBuffer {
-			let data_stream = Kernel.CharacterStreamView.watch(data_buffer);
-			Kernel.Tool.Data.Serialization.Json.Write.process(data_stream, value, Kernel.Boolean.value(disable_array_trailing_comma), Kernel.Boolean.value(disable_array_line_breaking), Kernel.Boolean.value(disable_object_trailing_comma), Kernel.Boolean.value(disable_object_line_breaking));
-			return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
-		}
-
-		// ----------------
-
-		export function read_s<TConstraint extends Kernel.Json.JS_Value>(
-			data: string,
-		): Kernel.Json.Value<TConstraint> {
-			let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
-			return read(data_byte.view().value);
-		}
-
-		export function write_s<TConstraint extends Kernel.Json.JS_Value>(
-			value: Kernel.Json.Value<TConstraint>,
-			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
-			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
-			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
-			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
-		): string {
-			let data = write(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-			return Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
-		}
-
-		// ----------------
-
-		export function read_fs<TConstraint extends Kernel.Json.JS_Value>(
-			data_file: string,
-		): Kernel.Json.Value<TConstraint> {
-			let data = Storage.read_file(data_file);
-			return read(data.view().value);
-		}
-
-		export function write_fs<TConstraint extends Kernel.Json.JS_Value>(
-			data_file: string,
-			value: Kernel.Json.Value<TConstraint>,
-			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
-			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
-			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
-			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
-		): void {
-			let data = write(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-			Storage.write_file(data_file, data);
-			return;
-		}
-
-		// ----------------
-
-		export function read_js<TConstraint extends Kernel.Json.JS_Value>(
-			data: ArrayBuffer,
-		): TConstraint {
-			return read<TConstraint>(data).value;
-		}
-
-		/** result is a view of buffer */
-		export function write_js<TConstraint extends Kernel.Json.JS_Value>(
-			value: TConstraint,
-			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
-			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
-			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
-			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
-		): ArrayBuffer {
-			return write(Kernel.Json.Value.value<TConstraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-		}
-
-		// ----------------
-
-		export function read_s_js<TConstraint extends Kernel.Json.JS_Value>(
-			data: string,
-		): TConstraint {
-			return read_s<TConstraint>(data).value;
-		}
-
-		export function write_s_js<TConstraint extends Kernel.Json.JS_Value>(
-			value: TConstraint,
-			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
-			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
-			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
-			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
-		): string {
-			return write_s(Kernel.Json.Value.value<TConstraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-		}
-
-		// ----------------
-
-		export function read_fs_js<TConstraint extends Kernel.Json.JS_Value>(
-			data_file: string,
-		): TConstraint {
-			return read_fs<TConstraint>(data_file).value;
-		}
-
-		export function write_fs_js<TConstraint extends Kernel.Json.JS_Value>(
-			data_file: string,
-			value: TConstraint,
-			disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
-			disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
-			disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
-			disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-			data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
-		): void {
-			return write_fs(data_file, Kernel.Json.Value.value<TConstraint>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-		}
-
 	}
 
 	export namespace Xml {
 
-		export function read_fs(
-			data_file: string,
-		): Kernel.Xml.Node {
-			let data_byte = Storage.read_file(data_file);
-			let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
-			let value = Kernel.Xml.Node.default();
-			Kernel.Tool.Data.Serialization.Xml.Read.process(data, value);
-			return value;
-		}
-
-		export function write_fs(
-			data_file: string,
-			value: Kernel.Xml.Node,
-		): void {
-			let data = Kernel.String.default();
-			Kernel.Tool.Data.Serialization.Xml.Write.process(data, value);
-			let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
-			Storage.write_file(data_file, data_byte.view());
-			return;
-		}
-
-		// ----------------
-
-		export function read_fs_js(
-			data_file: string,
-		): Kernel.Xml.JS_Node {
-			return read_fs(data_file).value;
-		}
-
-		export function write_fs_js(
-			data_file: string,
-			value: Kernel.Xml.JS_Node,
-		): void {
-			return write_fs(data_file, Kernel.Xml.Node.value(value));
-		}
-
 	}
-
-	// ----------------
 
 	export namespace Image {
 
@@ -225,82 +50,6 @@ namespace Twinning.Script.KernelX {
 
 		export type Pixel = typeof Kernel.Image.Pixel.Value;
 
-		// ----------------
-
-		export namespace File {
-
-			export namespace Png {
-
-				export function size(
-					data: Kernel.ByteListView,
-				): ImageSize {
-					let size = Kernel.Image.ImageSize.default();
-					Kernel.Tool.Texture.File.Png.Read.estimate(data, size);
-					return size.value;
-				}
-
-				export function read(
-					data: Kernel.ByteStreamView,
-					image: Kernel.Image.VariableImageView,
-				): void {
-					return Kernel.Tool.Texture.File.Png.Read.process(data, image);
-				}
-
-				export function write(
-					data: Kernel.ByteStreamView,
-					image: Kernel.Image.ConstantImageView,
-				): void {
-					return Kernel.Tool.Texture.File.Png.Write.process(data, image);
-				}
-
-				// ----------------
-
-				export function size_fs(
-					file: string,
-				): ImageSize {
-					let data = Storage.read_file(file);
-					let image_size = size(data.view());
-					return image_size;
-				}
-
-				export function read_fs(
-					file: string,
-					image: Kernel.Image.VariableImageView,
-				): void {
-					let data = Storage.read_file(file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					read(data_stream, image);
-					return;
-				}
-
-				export function write_fs(
-					file: string,
-					image: Kernel.Image.ConstantImageView,
-					data_buffer: Kernel.ByteListView = g_common_buffer.view(),
-				): void {
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-					write(data_stream, image);
-					Storage.write_file(file, data_stream.stream_view());
-					return;
-				}
-
-				// ----------------
-
-				export function read_fs_of(
-					file: string,
-				): Kernel.Image.Image {
-					let data = Storage.read_file(file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					let image_size = size(data.view());
-					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
-					read(data_stream, image.view());
-					return image;
-				}
-
-			}
-
-		}
-
 	}
 
 	// ----------------
@@ -308,153 +57,110 @@ namespace Twinning.Script.KernelX {
 	export namespace Storage {
 
 		export function exist(
-			target: string,
+			target: StoragePath,
 		): boolean {
-			return Kernel.Storage.exist(Kernel.Path.value(target)).value;
+			return Kernel.Storage.exist(Kernel.Path.value(target.emit())).value;
 		}
 
 		export function copy(
-			target: string,
-			placement: string,
+			target: StoragePath,
+			placement: StoragePath,
 			follow_link: boolean,
 		): void {
-			return Kernel.Storage.copy(Kernel.Path.value(target), Kernel.Path.value(placement), Kernel.Boolean.value(follow_link));
+			return Kernel.Storage.copy(Kernel.Path.value(target.emit()), Kernel.Path.value(placement.emit()), Kernel.Boolean.value(follow_link));
 		}
 
 		export function rename(
-			target: string,
-			placement: string,
+			target: StoragePath,
+			placement: StoragePath,
 		): void {
-			return Kernel.Storage.rename(Kernel.Path.value(target), Kernel.Path.value(placement));
+			return Kernel.Storage.rename(Kernel.Path.value(target.emit()), Kernel.Path.value(placement.emit()));
 		}
 
 		export function remove(
-			target: string,
+			target: StoragePath,
 		): void {
-			return Kernel.Storage.remove(Kernel.Path.value(target));
-		}
-
-		// extension
-		export function remove_if(
-			target: string,
-		): void {
-			if (exist(target)) {
-				remove(target);
-			}
-			return;
+			return Kernel.Storage.remove(Kernel.Path.value(target.emit()));
 		}
 
 		// ----------------
 
 		export function exist_link(
-			target: string,
+			target: StoragePath,
 		): boolean {
-			return Kernel.Storage.exist_link(Kernel.Path.value(target)).value;
+			return Kernel.Storage.exist_link(Kernel.Path.value(target.emit())).value;
 		}
 
 		export function create_link(
-			target: string,
-			referent: string,
+			target: StoragePath,
+			referent: StoragePath,
 			is_directory: boolean,
 		): void {
-			return Kernel.Storage.create_link(Kernel.Path.value(target), Kernel.Path.value(referent), Kernel.Boolean.value(is_directory));
+			return Kernel.Storage.create_link(Kernel.Path.value(target.emit()), Kernel.Path.value(referent.emit()), Kernel.Boolean.value(is_directory));
 		}
 
 		export function resolve_link(
-			target: string,
+			target: StoragePath,
 		): string {
-			return Kernel.Storage.resolve_link(Kernel.Path.value(target)).value;
+			return Kernel.Storage.resolve_link(Kernel.Path.value(target.emit())).value;
 		}
 
 		// ----------------
 
 		export function exist_file(
-			target: string,
+			target: StoragePath,
 		): boolean {
-			return Kernel.Storage.exist_file(Kernel.Path.value(target)).value;
+			return Kernel.Storage.exist_file(Kernel.Path.value(target.emit())).value;
 		}
 
 		export function create_file(
-			target: string,
+			target: StoragePath,
 		): void {
-			return Kernel.Storage.create_file(Kernel.Path.value(target));
+			return Kernel.Storage.create_file(Kernel.Path.value(target.emit()));
 		}
 
 		export function size_file(
-			target: string,
+			target: StoragePath,
 		): bigint {
-			return Kernel.Storage.size_file(Kernel.Path.value(target)).value;
+			return Kernel.Storage.size_file(Kernel.Path.value(target.emit())).value;
 		}
 
 		export function read_file(
-			target: string,
+			target: StoragePath,
 		): Kernel.ByteArray {
-			return Kernel.Storage.read_file(Kernel.Path.value(target));
+			return Kernel.Storage.read_file(Kernel.Path.value(target.emit()));
 		}
 
 		export function write_file(
-			target: string,
-			data: Kernel.ByteListView | Kernel.ByteArray | ArrayBuffer,
+			target: StoragePath,
+			data: Kernel.ByteListView,
 		): void {
-			let data_view: Kernel.ByteListView;
-			if (data instanceof Kernel.ByteListView) {
-				data_view = data;
-			}
-			if (data instanceof Kernel.ByteArray) {
-				data_view = data.view();
-			}
-			if (data instanceof ArrayBuffer) {
-				data_view = Kernel.ByteListView.value(data);
-			}
-			let target_path = Kernel.Path.value(target);
-			if (!Kernel.Storage.exist_file(target_path).value) {
-				Kernel.Storage.create_file(target_path);
-			}
-			return Kernel.Storage.write_file(target_path, data_view!);
-		}
-
-		// extension
-		export function read_file_s(
-			target: string,
-		): string {
-			let data = read_file(target);
-			let data_string = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
-			return data_string;
-		}
-
-		// extension
-		export function write_file_s(
-			target: string,
-			data: string,
-		): void {
-			let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
-			write_file(target, data_byte);
-			return;
+			return Kernel.Storage.write_file(Kernel.Path.value(target.emit()), data);
 		}
 
 		// ----------------
 
 		export function exist_directory(
-			target: string,
+			target: StoragePath,
 		): boolean {
-			return Kernel.Storage.exist_directory(Kernel.Path.value(target)).value;
+			return Kernel.Storage.exist_directory(Kernel.Path.value(target.emit())).value;
 		}
 
 		export function create_directory(
-			path: string,
+			target: StoragePath,
 		): void {
-			return Kernel.Storage.create_directory(Kernel.Path.value(path));
+			return Kernel.Storage.create_directory(Kernel.Path.value(target.emit()));
 		}
 
 		export function list_directory(
-			target: string,
+			target: StoragePath,
 			depth: null | bigint,
 			follow_link: boolean,
 			allow_link: boolean,
 			allow_file: boolean,
 			allow_directory: boolean,
-		): Array<string> {
-			return Kernel.Storage.list_directory(Kernel.Path.value(target), Kernel.SizeOptional.value(depth), Kernel.Boolean.value(follow_link), Kernel.Boolean.value(allow_link), Kernel.Boolean.value(allow_file), Kernel.Boolean.value(allow_directory)).value;
+		): Array<StoragePath> {
+			return Kernel.Storage.list_directory(Kernel.Path.value(target.emit()), Kernel.SizeOptional.value(depth), Kernel.Boolean.value(follow_link), Kernel.Boolean.value(allow_link), Kernel.Boolean.value(allow_file), Kernel.Boolean.value(allow_directory)).value.map((it) => new StoragePath(it));
 		}
 
 	}
@@ -462,14 +168,14 @@ namespace Twinning.Script.KernelX {
 	export namespace Process {
 
 		export function get_workspace(
-		): string {
-			return Kernel.Process.get_workspace().value;
+		): StoragePath {
+			return new StoragePath(Kernel.Process.get_workspace().value);
 		}
 
 		export function set_workspace(
-			target: string,
+			target: StoragePath,
 		): void {
-			return Kernel.Process.set_workspace(Kernel.Path.value(target));
+			return Kernel.Process.set_workspace(Kernel.Path.value(target.emit()));
 		}
 
 		// ----------------
@@ -495,14 +201,14 @@ namespace Twinning.Script.KernelX {
 		// ----------------
 
 		export function run_process(
-			program: string,
+			program: StoragePath,
 			argument: Array<string>,
 			environment: Array<string>,
-			input: null | string,
-			output: null | string,
-			error: null | string,
+			input: null | StoragePath,
+			output: null | StoragePath,
+			error: null | StoragePath,
 		): bigint {
-			return Kernel.Process.run_process(Kernel.Path.value(program), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input), Kernel.PathOptional.value(output), Kernel.PathOptional.value(error)).value;
+			return Kernel.Process.run_process(Kernel.Path.value(program.emit()), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input === null ? null : input.emit()), Kernel.PathOptional.value(output === null ? null : output.emit()), Kernel.PathOptional.value(error === null ? null : error.emit())).value;
 		}
 
 		// ----------------
@@ -526,7 +232,7 @@ namespace Twinning.Script.KernelX {
 				export namespace Md5 {
 
 					export function hash_fs(
-						data_file: string,
+						data_file: StoragePath,
 					): bigint {
 						let data = Storage.read_file(data_file);
 						let value = Kernel.ByteArray.default();
@@ -538,23 +244,23 @@ namespace Twinning.Script.KernelX {
 
 				export namespace Fnv {
 
-					export function hash_fs(
-						data_file: string,
-						mode: typeof Kernel.Tool.Data.Hash.Fnv.Mode.Value,
-						bit_count: typeof Kernel.Tool.Data.Hash.Fnv.BitCount.Value,
-					): bigint {
-						let data = Storage.read_file(data_file);
-						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hash.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.Fnv.Mode.value(mode), Kernel.Tool.Data.Hash.Fnv.BitCount.value(bit_count));
-						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
-					}
-
 					export function hash_s(
 						data_string: string,
 						mode: typeof Kernel.Tool.Data.Hash.Fnv.Mode.Value,
 						bit_count: typeof Kernel.Tool.Data.Hash.Fnv.BitCount.Value,
 					): bigint {
 						let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data_string));
+						let value = Kernel.ByteArray.default();
+						Kernel.Tool.Data.Hash.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.Fnv.Mode.value(mode), Kernel.Tool.Data.Hash.Fnv.BitCount.value(bit_count));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+					}
+
+					export function hash_fs(
+						data_file: StoragePath,
+						mode: typeof Kernel.Tool.Data.Hash.Fnv.Mode.Value,
+						bit_count: typeof Kernel.Tool.Data.Hash.Fnv.BitCount.Value,
+					): bigint {
+						let data = Storage.read_file(data_file);
 						let value = Kernel.ByteArray.default();
 						Kernel.Tool.Data.Hash.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.Fnv.Mode.value(mode), Kernel.Tool.Data.Hash.Fnv.BitCount.value(bit_count));
 						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
@@ -569,8 +275,8 @@ namespace Twinning.Script.KernelX {
 				export namespace Base64 {
 
 					export function encode_fs(
-						raw_file: string,
-						ripe_file: string,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 					): void {
 						let raw = Storage.read_file(raw_file);
 						let ripe_size = Kernel.Size.default();
@@ -584,8 +290,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function decode_fs(
-						ripe_file: string,
-						raw_file: string,
+						ripe_file: StoragePath,
+						raw_file: StoragePath,
 					): void {
 						let ripe = Storage.read_file(ripe_file);
 						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe.view()));
@@ -607,8 +313,8 @@ namespace Twinning.Script.KernelX {
 				export namespace Exor {
 
 					export function encrypt_fs(
-						plain_file: string,
-						cipher_file: string,
+						plain_file: StoragePath,
+						cipher_file: StoragePath,
 						key: Array<bigint>,
 					): void {
 						let plain = Storage.read_file(plain_file);
@@ -641,8 +347,8 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function encrypt_fs(
-						plain_file: string,
-						cipher_file: string,
+						plain_file: StoragePath,
+						cipher_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
 						key_size: BlockSize,
@@ -659,8 +365,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function decrypt_fs(
-						cipher_file: string,
-						plain_file: string,
+						cipher_file: StoragePath,
+						plain_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
 						key_size: BlockSize,
@@ -717,8 +423,8 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function compress_fs(
-						raw_file: string,
-						ripe_file: string,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						level: Level,
 						window_bits: WindowBits,
 						memory_level: MemoryLevel,
@@ -737,8 +443,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function uncompress_fs(
-						ripe_file: string,
-						raw_file: string,
+						ripe_file: StoragePath,
+						raw_file: StoragePath,
 						window_bits: WindowBits,
 						wrapper: WrapperType,
 						raw_buffer: Kernel.ByteListView,
@@ -764,8 +470,8 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function compress_fs(
-						raw_file: string,
-						ripe_file: string,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						block_size: BlockSize,
 					): void {
 						let raw = Storage.read_file(raw_file);
@@ -779,8 +485,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function uncompress_fs(
-						ripe_file: string,
-						raw_file: string,
+						ripe_file: StoragePath,
+						raw_file: StoragePath,
 						raw_buffer: Kernel.ByteListView,
 					): void {
 						let ripe = Storage.read_file(ripe_file);
@@ -804,8 +510,8 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function compress_fs(
-						raw_file: string,
-						ripe_file: string,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						level: Level,
 					): void {
 						let raw = Storage.read_file(raw_file);
@@ -819,8 +525,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function uncompress_fs(
-						ripe_file: string,
-						raw_file: string,
+						ripe_file: StoragePath,
+						raw_file: StoragePath,
 						raw_buffer: Kernel.ByteListView,
 					): void {
 						let ripe = Storage.read_file(ripe_file);
@@ -840,9 +546,9 @@ namespace Twinning.Script.KernelX {
 				export namespace Vcdiff {
 
 					export function encode_fs(
-						before_file: string,
-						after_file: string,
-						patch_file: string,
+						before_file: StoragePath,
+						after_file: StoragePath,
+						patch_file: StoragePath,
 						interleaved: boolean,
 						patch_size_bound: bigint,
 					): void {
@@ -858,9 +564,9 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function decode_fs(
-						before_file: string,
-						after_file: string,
-						patch_file: string,
+						before_file: StoragePath,
+						after_file: StoragePath,
+						patch_file: StoragePath,
 						maximum_window_size: bigint,
 						after_size_bound: bigint,
 					): void {
@@ -873,6 +579,121 @@ namespace Twinning.Script.KernelX {
 						Kernel.Tool.Data.Differentiation.Vcdiff.Decode.process(before_stream, after_stream, patch_stream, Kernel.Size.value(maximum_window_size));
 						Storage.write_file(after_file, after_stream.stream_view());
 						return;
+					}
+
+				}
+
+			}
+
+			export namespace Serialization {
+				
+				export namespace Json {
+
+					export let g_format: {
+						disable_array_trailing_comma: boolean;
+						disable_array_line_breaking: boolean;
+						disable_object_trailing_comma: boolean;
+						disable_object_line_breaking: boolean;
+					} = {
+						disable_array_trailing_comma: false,
+						disable_array_line_breaking: false,
+						disable_object_trailing_comma: false,
+						disable_object_line_breaking: false,
+					};
+
+					// ----------------
+
+					/** result is a view of buffer */
+					export function write<TConstraint extends Kernel.Json.JS_Value>(
+						value: Kernel.Json.Value<TConstraint>,
+						disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+						disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
+						data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
+					): ArrayBuffer {
+						let data_stream = Kernel.CharacterStreamView.watch(data_buffer);
+						Kernel.Tool.Data.Serialization.Json.Write.process(data_stream, value, Kernel.Boolean.value(disable_array_trailing_comma), Kernel.Boolean.value(disable_array_line_breaking), Kernel.Boolean.value(disable_object_trailing_comma), Kernel.Boolean.value(disable_object_line_breaking));
+						return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
+					}
+
+					export function read<TConstraint extends Kernel.Json.JS_Value>(
+						data: ArrayBuffer,
+					): Kernel.Json.Value<TConstraint> {
+						let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
+						let value = Kernel.Json.Value.default<TConstraint>();
+						let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_for_string.view()));
+						Kernel.Tool.Data.Serialization.Json.Read.process(data_stream, value, buffer_stream);
+						return value;
+					}
+
+					// ----------------
+
+					export function write_s<TConstraint extends Kernel.Json.JS_Value>(
+						value: Kernel.Json.Value<TConstraint>,
+						disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+						disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
+						data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
+					): string {
+						let data = write(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+						return Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
+					}
+
+					export function read_s<TConstraint extends Kernel.Json.JS_Value>(
+						data: string,
+					): Kernel.Json.Value<TConstraint> {
+						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
+						return read(data_byte.view().value);
+					}
+
+					// ----------------
+
+					export function write_fs<TConstraint extends Kernel.Json.JS_Value>(
+						data_file: StoragePath,
+						value: Kernel.Json.Value<TConstraint>,
+						disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
+						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
+						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
+						disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
+						data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
+					): void {
+						let data = write(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+						StorageHelper.write_file(data_file, data);
+						return;
+					}
+
+					export function read_fs<TConstraint extends Kernel.Json.JS_Value>(
+						data_file: StoragePath,
+					): Kernel.Json.Value<TConstraint> {
+						let data = Storage.read_file(data_file);
+						return read(data.view().value);
+					}
+
+				}
+
+				export namespace Xml {
+
+					export function write_fs(
+						data_file: StoragePath,
+						value: Kernel.Xml.Node,
+					): void {
+						let data = Kernel.String.default();
+						Kernel.Tool.Data.Serialization.Xml.Write.process(data, value);
+						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
+						Storage.write_file(data_file, data_byte.view());
+						return;
+					}
+
+					export function read_fs(
+						data_file: StoragePath,
+					): Kernel.Xml.Node {
+						let data_byte = Storage.read_file(data_file);
+						let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
+						let value = Kernel.Xml.Node.default();
+						Kernel.Tool.Data.Serialization.Xml.Read.process(data, value);
+						return value;
 					}
 
 				}
@@ -903,43 +724,43 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function flip_fs(
-					source_file: string,
-					destination_file: string,
+					source_file: StoragePath,
+					destination_file: StoragePath,
 					horizontal: boolean,
 					vertical: boolean,
 				): void {
-					let target = Image.File.Png.read_fs_of(source_file);
+					let target = File.Png.read_fs_of(source_file);
 					let target_view = target.view();
 					flip(target_view, horizontal, vertical);
-					Image.File.Png.write_fs(destination_file, target_view);
+					File.Png.write_fs(destination_file, target_view);
 					return;
 				}
 
 				export function scale_fs(
-					source_file: string,
-					destination_file: string,
+					source_file: StoragePath,
+					destination_file: StoragePath,
 					size: Image.ImageSize,
 				): void {
-					let source = Image.File.Png.read_fs_of(source_file);
+					let source = File.Png.read_fs_of(source_file);
 					let source_view = source.view();
 					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
-					Image.File.Png.write_fs(destination_file, destination_view);
+					File.Png.write_fs(destination_file, destination_view);
 					return;
 				}
 
 				export function scale_rate_fs(
-					source_file: string,
-					destination_file: string,
+					source_file: StoragePath,
+					destination_file: StoragePath,
 					size_rate: number,
 				): void {
-					let source = Image.File.Png.read_fs_of(source_file);
+					let source = File.Png.read_fs_of(source_file);
 					let source_view = source.view();
 					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * size_rate)))]));
 					let destination_view = destination.view();
 					scale(source_view, destination_view);
-					Image.File.Png.write_fs(destination_file, destination_view);
+					File.Png.write_fs(destination_file, destination_view);
 					return;
 				}
 
@@ -1237,17 +1058,17 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					image_file: string,
+					data_file: StoragePath,
+					image_file: StoragePath,
 					format: CompositeFormat,
 				): void {
 					let image_original = Storage.read_file(image_file);
 					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
-					let image_size = Image.File.Png.size(image_stream.view());
+					let image_size = File.Png.size(image_stream.view());
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
-					Image.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					let data_size = compute_data_size(image_size_padded, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
@@ -1257,8 +1078,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					image_file: string,
+					data_file: StoragePath,
+					image_file: StoragePath,
 					image_size: Image.ImageSize,
 					format: CompositeFormat,
 				): void {
@@ -1271,8 +1092,82 @@ namespace Twinning.Script.KernelX {
 						image_view.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
 					}
 					decode(data_stream, image_view, format);
-					Image.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					return;
+				}
+
+			}
+
+			export namespace File {
+
+				export namespace Png {
+
+					export function size(
+						data: Kernel.ByteListView,
+					): Image.ImageSize {
+						let size = Kernel.Image.ImageSize.default();
+						Kernel.Tool.Texture.File.Png.Read.estimate(data, size);
+						return size.value;
+					}
+
+					export function read(
+						data: Kernel.ByteStreamView,
+						image: Kernel.Image.VariableImageView,
+					): void {
+						return Kernel.Tool.Texture.File.Png.Read.process(data, image);
+					}
+
+					export function write(
+						data: Kernel.ByteStreamView,
+						image: Kernel.Image.ConstantImageView,
+					): void {
+						return Kernel.Tool.Texture.File.Png.Write.process(data, image);
+					}
+
+					// ----------------
+
+					export function size_fs(
+						file: StoragePath,
+					): Image.ImageSize {
+						let data = Storage.read_file(file);
+						let image_size = size(data.view());
+						return image_size;
+					}
+
+					export function read_fs(
+						file: StoragePath,
+						image: Kernel.Image.VariableImageView,
+					): void {
+						let data = Storage.read_file(file);
+						let data_stream = Kernel.ByteStreamView.watch(data.view());
+						read(data_stream, image);
+						return;
+					}
+
+					export function write_fs(
+						file: StoragePath,
+						image: Kernel.Image.ConstantImageView,
+						data_buffer: Kernel.ByteListView = g_common_buffer.view(),
+					): void {
+						let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+						write(data_stream, image);
+						Storage.write_file(file, data_stream.stream_view());
+						return;
+					}
+
+					// ----------------
+
+					export function read_fs_of(
+						file: StoragePath,
+					): Kernel.Image.Image {
+						let data = Storage.read_file(file);
+						let data_stream = Kernel.ByteStreamView.watch(data.view());
+						let image_size = size(data.view());
+						let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
+						read(data_stream, image.view());
+						return image;
+					}
+
 				}
 
 			}
@@ -1290,33 +1185,33 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
-					embedded_media_directory: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
+					embedded_media_directory: StoragePath,
 					version: typeof Kernel.Tool.Wwise.SoundBank.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Wwise.SoundBank.Version.value(version);
-					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-					Kernel.Tool.Wwise.SoundBank.Encode.process(data_stream, definition, Kernel.Path.value(embedded_media_directory), version_c);
+					Kernel.Tool.Wwise.SoundBank.Encode.process(data_stream, definition, Kernel.Path.value(embedded_media_directory.emit()), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: null | string,
-					embedded_media_directory: null | string,
+					data_file: StoragePath,
+					definition_file: null | StoragePath,
+					embedded_media_directory: null | StoragePath,
 					version: typeof Kernel.Tool.Wwise.SoundBank.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Wwise.SoundBank.Version.value(version);
 					let data = Storage.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.default();
-					Kernel.Tool.Wwise.SoundBank.Decode.process(data_stream, definition, Kernel.PathOptional.value(embedded_media_directory), version_c);
+					Kernel.Tool.Wwise.SoundBank.Decode.process(data_stream, definition, Kernel.PathOptional.value(embedded_media_directory === null ? null : embedded_media_directory.emit()), version_c);
 					if (definition_file !== null) {
-						Json.write_fs(definition_file, definition.get_json(version_c));
+						Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -1336,33 +1231,33 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function pack_fs(
-					data_file: string,
-					definition_file: string,
-					resource_directory: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
+					resource_directory: StoragePath,
 					version: typeof Kernel.Tool.Marmalade.Dzip.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Marmalade.Dzip.Version.value(version);
-					let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-					Kernel.Tool.Marmalade.Dzip.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory), version_c);
+					Kernel.Tool.Marmalade.Dzip.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
-					data_file: string,
-					definition_file: null | string,
-					resource_directory: null | string,
+					data_file: StoragePath,
+					definition_file: null | StoragePath,
+					resource_directory: null | StoragePath,
 					version: typeof Kernel.Tool.Marmalade.Dzip.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Marmalade.Dzip.Version.value(version);
 					let data = Storage.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.default();
-					Kernel.Tool.Marmalade.Dzip.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
+					Kernel.Tool.Marmalade.Dzip.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), version_c);
 					if (definition_file !== null) {
-						Json.write_fs(definition_file, definition.get_json(version_c));
+						Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -1382,8 +1277,8 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function compress_fs(
-					raw_file: string,
-					ripe_file: string,
+					raw_file: StoragePath,
+					ripe_file: StoragePath,
 					level: Data.Compression.Deflate.Level,
 					window_bits: Data.Compression.Deflate.WindowBits,
 					memory_level: Data.Compression.Deflate.MemoryLevel,
@@ -1403,8 +1298,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function uncompress_fs(
-					ripe_file: string,
-					raw_file: string,
+					ripe_file: StoragePath,
+					raw_file: StoragePath,
 					window_bits: Data.Compression.Deflate.WindowBits,
 					version: typeof Kernel.Tool.Popcap.Zlib.Version.Value,
 				): void {
@@ -1425,8 +1320,8 @@ namespace Twinning.Script.KernelX {
 			export namespace CryptData {
 
 				export function encrypt_fs(
-					plain_file: string,
-					cipher_file: string,
+					plain_file: StoragePath,
+					cipher_file: StoragePath,
 					limit: bigint,
 					key: string,
 					version: typeof Kernel.Tool.Popcap.CryptData.Version.Value,
@@ -1444,8 +1339,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decrypt_fs(
-					cipher_file: string,
-					plain_file: string,
+					cipher_file: StoragePath,
+					plain_file: StoragePath,
 					limit: bigint,
 					key: string,
 					version: typeof Kernel.Tool.Popcap.CryptData.Version.Value,
@@ -1477,15 +1372,15 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					enable_string_index: boolean,
 					enable_reference: boolean,
 					version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
-					let definition = Json.read_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
+					let definition = Data.Serialization.Json.read_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1493,8 +1388,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
@@ -1502,13 +1397,13 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition);
+					Data.Serialization.Json.write_fs(definition_file, definition);
 					return;
 				}
 
 				export function encode_cipher_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					enable_string_index: boolean,
 					enable_reference: boolean,
 					version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
@@ -1519,7 +1414,7 @@ namespace Twinning.Script.KernelX {
 						return encode_fs(data_file, definition_file, enable_string_index, enable_reference, version, data_buffer);
 					}
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
-					let definition = Json.read_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
+					let definition = Data.Serialization.Json.read_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
 					let plain_stream = Kernel.ByteStreamView.watch(data_stream.stream_view());
@@ -1533,8 +1428,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_cipher_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 					key: null | string,
 				): void {
@@ -1552,7 +1447,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(plain_stream.stream_view());
 					let definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition);
+					Data.Serialization.Json.write_fs(definition_file, definition);
 					return;
 				}
 
@@ -1578,13 +1473,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					image_file: string,
+					data_file: StoragePath,
+					image_file: StoragePath,
 					format: Format,
 					version: typeof Kernel.Tool.Popcap.UTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.UTexture.Version.value(version);
-					let image = Image.File.Png.read_fs_of(image_file);
+					let image = Texture.File.Png.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
@@ -1596,8 +1491,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					image_file: string,
+					data_file: StoragePath,
+					image_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.UTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.UTexture.Version.value(version);
@@ -1608,7 +1503,7 @@ namespace Twinning.Script.KernelX {
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.UTexture.Decode.process(data_stream, image_view, version_c);
-					Image.File.Png.write_fs(image_file, image_view);
+					Texture.File.Png.write_fs(image_file, image_view);
 					return;
 				}
 
@@ -1639,14 +1534,14 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					image_file: string,
+					data_file: StoragePath,
+					image_file: StoragePath,
 					format: Format,
 					compress_texture_data: boolean,
 					version: typeof Kernel.Tool.Popcap.SexyTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.SexyTexture.Version.value(version);
-					let image = Image.File.Png.read_fs_of(image_file);
+					let image = Texture.File.Png.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
@@ -1658,8 +1553,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					image_file: string,
+					data_file: StoragePath,
+					image_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.SexyTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.SexyTexture.Version.value(version);
@@ -1670,7 +1565,7 @@ namespace Twinning.Script.KernelX {
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.SexyTexture.Decode.process(data_stream, image_view, version_c);
-					Image.File.Png.write_fs(image_file, image_view);
+					Texture.File.Png.write_fs(image_file, image_view);
 					return;
 				}
 
@@ -1685,13 +1580,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Animation.Version.value(version);
-					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Animation.Encode.process(data_stream, definition, version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1699,8 +1594,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Animation.Version.value(version);
@@ -1708,7 +1603,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.default();
 					Kernel.Tool.Popcap.Animation.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1727,13 +1622,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ReAnimation.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReAnimation.Version.value(version);
-					let definition = Kernel.Tool.Popcap.ReAnimation.Definition.Animation.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.ReAnimation.Definition.Animation.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReAnimation.Encode.process(data_stream, definition, version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1741,8 +1636,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ReAnimation.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReAnimation.Version.value(version);
@@ -1750,7 +1645,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ReAnimation.Definition.Animation.default();
 					Kernel.Tool.Popcap.ReAnimation.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1769,13 +1664,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Particle.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Particle.Version.value(version);
-					let definition = Kernel.Tool.Popcap.Particle.Definition.Particle.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.Particle.Definition.Particle.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Particle.Encode.process(data_stream, definition, version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1783,8 +1678,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Particle.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Particle.Version.value(version);
@@ -1792,7 +1687,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Particle.Definition.Particle.default();
 					Kernel.Tool.Popcap.Particle.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1811,13 +1706,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Trail.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Trail.Version.value(version);
-					let definition = Kernel.Tool.Popcap.Trail.Definition.Trail.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.Trail.Definition.Trail.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Trail.Encode.process(data_stream, definition, version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1825,8 +1720,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Trail.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Trail.Version.value(version);
@@ -1834,7 +1729,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Trail.Definition.Trail.default();
 					Kernel.Tool.Popcap.Trail.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1853,13 +1748,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.RenderEffect.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.RenderEffect.Version.value(version);
-					let definition = Kernel.Tool.Popcap.RenderEffect.Definition.Effect.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.RenderEffect.Definition.Effect.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.RenderEffect.Encode.process(data_stream, definition, version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1867,8 +1762,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.RenderEffect.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.RenderEffect.Version.value(version);
@@ -1876,7 +1771,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.RenderEffect.Definition.Effect.default();
 					Kernel.Tool.Popcap.RenderEffect.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1891,13 +1786,13 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ParticleEffect.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ParticleEffect.Version.value(version);
-					let definition = Kernel.Tool.Popcap.ParticleEffect.Definition.Effect.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.ParticleEffect.Definition.Effect.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ParticleEffect.Encode.process(data_stream, definition, version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
@@ -1905,8 +1800,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ParticleEffect.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ParticleEffect.Version.value(version);
@@ -1914,7 +1809,7 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ParticleEffect.Definition.Effect.default();
 					Kernel.Tool.Popcap.ParticleEffect.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1923,13 +1818,13 @@ namespace Twinning.Script.KernelX {
 			export namespace CharacterFontWidget2 {
 
 				export function encode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.CharacterFontWidget2.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.CharacterFontWidget2.Version.value(version);
-					let definition = Kernel.Tool.Popcap.CharacterFontWidget2.Definition.FontWidget.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.CharacterFontWidget2.Definition.FontWidget.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					data_stream.set_position(Kernel.Size.value(16n));
 					Kernel.Tool.Popcap.CharacterFontWidget2.Encode.process(data_stream, definition, version_c);
@@ -1938,8 +1833,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					data_file: string,
-					definition_file: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.CharacterFontWidget2.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.CharacterFontWidget2.Version.value(version);
@@ -1948,7 +1843,7 @@ namespace Twinning.Script.KernelX {
 					let definition = Kernel.Tool.Popcap.CharacterFontWidget2.Definition.FontWidget.default();
 					data_stream.set_position(Kernel.Size.value(16n));
 					Kernel.Tool.Popcap.CharacterFontWidget2.Decode.process(data_stream, definition, version_c);
-					Json.write_fs(definition_file, definition.get_json(version_c));
+					Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					return;
 				}
 
@@ -1967,33 +1862,33 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function pack_fs(
-					data_file: string,
-					definition_file: string,
-					resource_directory: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
+					resource_directory: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Package.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Package.Version.value(version);
-					let definition = Kernel.Tool.Popcap.Package.Definition.Package.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.Package.Definition.Package.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-					Kernel.Tool.Popcap.Package.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory), version_c);
+					Kernel.Tool.Popcap.Package.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
-					data_file: string,
-					definition_file: null | string,
-					resource_directory: null | string,
+					data_file: StoragePath,
+					definition_file: null | StoragePath,
+					resource_directory: null | StoragePath,
 					version: typeof Kernel.Tool.Popcap.Package.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Package.Version.value(version);
 					let data = Storage.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Package.Definition.Package.default();
-					Kernel.Tool.Popcap.Package.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
+					Kernel.Tool.Popcap.Package.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), version_c);
 					if (definition_file !== null) {
-						Json.write_fs(definition_file, definition.get_json(version_c));
+						Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -2009,33 +1904,33 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function pack_fs(
-					data_file: string,
-					definition_file: string,
-					resource_directory: string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
+					resource_directory: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamGroup.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamGroup.Version.value(version);
-					let definition = Kernel.Tool.Popcap.ResourceStreamGroup.Definition.Package.json(Json.read_fs(definition_file), version_c);
+					let definition = Kernel.Tool.Popcap.ResourceStreamGroup.Definition.Package.json(Data.Serialization.Json.read_fs(definition_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-					Kernel.Tool.Popcap.ResourceStreamGroup.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory), version_c);
+					Kernel.Tool.Popcap.ResourceStreamGroup.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
-					data_file: string,
-					definition_file: null | string,
-					resource_directory: null | string,
+					data_file: StoragePath,
+					definition_file: null | StoragePath,
+					resource_directory: null | StoragePath,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamGroup.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamGroup.Version.value(version);
 					let data = Storage.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ResourceStreamGroup.Definition.Package.default();
-					Kernel.Tool.Popcap.ResourceStreamGroup.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory), version_c);
+					Kernel.Tool.Popcap.ResourceStreamGroup.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), version_c);
 					if (definition_file !== null) {
-						Json.write_fs(definition_file, definition.get_json(version_c));
+						Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					}
 					return;
 				}
@@ -2055,30 +1950,30 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function pack_fs(
-					data_file: string,
-					definition_file: string,
-					manifest_file: string,
-					resource_directory: string,
-					packet_file: null | string,
-					new_packet_file: null | string,
+					data_file: StoragePath,
+					definition_file: StoragePath,
+					manifest_file: StoragePath,
+					resource_directory: StoragePath,
+					packet_file: null | StoragePath,
+					new_packet_file: null | StoragePath,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value,
 					data_buffer: Kernel.ByteListView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamBundle.Version.value(version);
-					let definition = Kernel.Tool.Popcap.ResourceStreamBundle.Definition.Package.json(Json.read_fs(definition_file), version_c);
-					let manifest = Kernel.Tool.Popcap.ResourceStreamBundle.Manifest.PackageOptional.json(Json.read_fs(manifest_file), version_c);
+					let definition = Kernel.Tool.Popcap.ResourceStreamBundle.Definition.Package.json(Data.Serialization.Json.read_fs(definition_file), version_c);
+					let manifest = Kernel.Tool.Popcap.ResourceStreamBundle.Manifest.PackageOptional.json(Data.Serialization.Json.read_fs(manifest_file), version_c);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-					Kernel.Tool.Popcap.ResourceStreamBundle.Pack.process(data_stream, definition, manifest, Kernel.Path.value(resource_directory), Kernel.PathOptional.value(packet_file), Kernel.PathOptional.value(new_packet_file), version_c);
+					Kernel.Tool.Popcap.ResourceStreamBundle.Pack.process(data_stream, definition, manifest, Kernel.Path.value(resource_directory.emit()), Kernel.PathOptional.value(packet_file === null ? null : packet_file.emit()), Kernel.PathOptional.value(new_packet_file === null ? null : new_packet_file.emit()), version_c);
 					Storage.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
 				export function unpack_fs(
-					data_file: string,
-					definition_file: null | string,
-					manifest_file: null | string,
-					resource_directory: null | string,
-					packet_file: null | string,
+					data_file: StoragePath,
+					definition_file: null | StoragePath,
+					manifest_file: null | StoragePath,
+					resource_directory: null | StoragePath,
+					packet_file: null | StoragePath,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamBundle.Version.value(version);
@@ -2086,12 +1981,12 @@ namespace Twinning.Script.KernelX {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ResourceStreamBundle.Definition.Package.default();
 					let manifest = Kernel.Tool.Popcap.ResourceStreamBundle.Manifest.PackageOptional.default();
-					Kernel.Tool.Popcap.ResourceStreamBundle.Unpack.process(data_stream, definition, manifest, Kernel.PathOptional.value(resource_directory), Kernel.PathOptional.value(packet_file), version_c);
+					Kernel.Tool.Popcap.ResourceStreamBundle.Unpack.process(data_stream, definition, manifest, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), Kernel.PathOptional.value(packet_file === null ? null : packet_file.emit()), version_c);
 					if (definition_file !== null) {
-						Json.write_fs(definition_file, definition.get_json(version_c));
+						Data.Serialization.Json.write_fs(definition_file, definition.get_json(version_c));
 					}
 					if (manifest_file !== null) {
-						Json.write_fs(manifest_file, manifest.get_json(version_c));
+						Data.Serialization.Json.write_fs(manifest_file, manifest.get_json(version_c));
 					}
 					return;
 				}
@@ -2107,9 +2002,9 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_fs(
-					before_file: string,
-					after_file: string,
-					patch_file: string,
+					before_file: StoragePath,
+					after_file: StoragePath,
+					patch_file: StoragePath,
 					use_raw_packet: boolean,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamBundlePatch.Version.Value,
 					patch_size_bound: bigint,
@@ -2127,9 +2022,9 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_fs(
-					before_file: string,
-					after_file: string,
-					patch_file: string,
+					before_file: StoragePath,
+					after_file: StoragePath,
+					patch_file: StoragePath,
 					use_raw_packet: boolean,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamBundlePatch.Version.Value,
 					after_size_bound: bigint,
@@ -2282,8 +2177,8 @@ namespace Twinning.Script.KernelX {
 			export namespace Pvz2cnCryptData {
 
 				export function encrypt_fs(
-					plain_file: string,
-					cipher_file: string,
+					plain_file: StoragePath,
+					cipher_file: StoragePath,
 					key: string,
 				): void {
 					let plain = Storage.read_file(plain_file);
@@ -2298,8 +2193,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decrypt_fs(
-					cipher_file: string,
-					plain_file: string,
+					cipher_file: StoragePath,
+					plain_file: StoragePath,
 					key: string,
 				): void {
 					let cipher = Storage.read_file(cipher_file);
@@ -2333,11 +2228,11 @@ namespace Twinning.Script.KernelX {
 		}
 
 		export function evaluate_fs(
-			script_file: string,
+			script_file: StoragePath,
 			is_module: boolean,
 		): any {
 			let script = Storage.read_file(script_file);
-			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(script_file), Kernel.Boolean.value(is_module));
+			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(script_file.emit()), Kernel.Boolean.value(is_module));
 		}
 
 		// ----------------

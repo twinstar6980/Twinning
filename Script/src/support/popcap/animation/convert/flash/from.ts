@@ -16,29 +16,29 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 			assert_test(image.transform.length === 6);
 			image_transform_matrix = image.transform;
 		}
-		return [Xml.create_element('DOMSymbolItem', {
+		return [XmlHelper.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
 			name: `image/image_${index + 1}`,
 			symbolType: 'graphic',
 		}, [
-			Xml.create_element_node('timeline', {}, [
-				Xml.create_element_node('DOMTimeline', {
+			XmlHelper.create_element_node('timeline', {}, [
+				XmlHelper.create_element_node('DOMTimeline', {
 					name: `image_${index + 1}`,
 				}, [
-					Xml.create_element_node('layers', {}, [
-						Xml.create_element_node('DOMLayer', {}, [
-							Xml.create_element_node('frames', {}, [
-								Xml.create_element_node('DOMFrame', {
+					XmlHelper.create_element_node('layers', {}, [
+						XmlHelper.create_element_node('DOMLayer', {}, [
+							XmlHelper.create_element_node('frames', {}, [
+								XmlHelper.create_element_node('DOMFrame', {
 									index: `0`,
 								}, [
-									Xml.create_element_node('elements', {}, [
-										Xml.create_element_node('DOMSymbolInstance', {
+									XmlHelper.create_element_node('elements', {}, [
+										XmlHelper.create_element_node('DOMSymbolInstance', {
 											libraryItemName: `source/source_${index + 1}`,
 											symbolType: 'graphic',
 											loop: 'loop',
 										}, [
-											Xml.create_element_node('matrix', {}, [
-												Xml.create_element_node('Matrix', {
+											XmlHelper.create_element_node('matrix', {}, [
+												XmlHelper.create_element_node('Matrix', {
 													a: `${image_transform_matrix[0].toFixed(6)}`,
 													b: `${image_transform_matrix[1].toFixed(6)}`,
 													c: `${image_transform_matrix[2].toFixed(6)}`,
@@ -95,11 +95,11 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				frame_node_list[Number(append.index)] = [];
 				if (frame_index > 0) {
 					frame_node_list[Number(append.index)].push(
-						Xml.create_element_node('DOMFrame', {
+						XmlHelper.create_element_node('DOMFrame', {
 							index: `0`,
 							duration: `${frame_index}`,
 						}, [
-							Xml.create_element_node('elements', {}, []),
+							XmlHelper.create_element_node('elements', {}, []),
 						])
 					);
 				}
@@ -122,12 +122,12 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				}
 				if (layer.state === true) {
 					frame_node.push(
-						Xml.create_element_node('DOMFrame', {
+						XmlHelper.create_element_node('DOMFrame', {
 							index: `${frame_index}`,
 							duration: ``,
 						}, [
-							Xml.create_element_node('elements', {}, [
-								Xml.create_element_node('DOMSymbolInstance', !layer.sprite ? {
+							XmlHelper.create_element_node('elements', {}, [
+								XmlHelper.create_element_node('DOMSymbolInstance', !layer.sprite ? {
 									libraryItemName: `image/image_${layer.resource + 1n}`,
 									symbolType: 'graphic',
 									loop: 'loop',
@@ -137,8 +137,8 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 									loop: 'loop',
 									firstFrame: `${(frame_index - Number(layer.frame_start)) % Number(sub_sprite[Number(layer.resource)].frame.length)}`,
 								}, [
-									Xml.create_element_node('matrix', {}, [
-										Xml.create_element_node('Matrix', {
+									XmlHelper.create_element_node('matrix', {}, [
+										XmlHelper.create_element_node('Matrix', {
 											a: `${layer.transform[0].toFixed(6)}`,
 											b: `${layer.transform[1].toFixed(6)}`,
 											c: `${layer.transform[2].toFixed(6)}`,
@@ -147,8 +147,8 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 											ty: `${layer.transform[5].toFixed(6)}`,
 										}, []),
 									]),
-									Xml.create_element_node('color', {}, [
-										Xml.create_element_node('Color', {
+									XmlHelper.create_element_node('color', {}, [
+										XmlHelper.create_element_node('Color', {
 											redMultiplier: `${layer.color[0].toFixed(6)}`,
 											greenMultiplier: `${layer.color[1].toFixed(6)}`,
 											blueMultiplier: `${layer.color[2].toFixed(6)}`,
@@ -174,32 +174,32 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 			(frame_node[frame_node.length - 1].value as Kernel.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
 			delete model[layer_index];
 		}
-		return [Xml.create_element('DOMSymbolItem', {
+		return [XmlHelper.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
 			name: index === null ? `main_sprite` : `sprite/sprite_${index + 1}`,
 			symbolType: 'graphic',
 		}, [
-			Xml.create_element_node('timeline', {}, [
-				Xml.create_element_node('DOMTimeline', {
+			XmlHelper.create_element_node('timeline', {}, [
+				XmlHelper.create_element_node('DOMTimeline', {
 					name: index === null ? `main_sprite` : `sprite_${index + 1}`,
 				}, [
-					Xml.create_element_node('layers', {}, [
+					XmlHelper.create_element_node('layers', {}, [
 						...ConvertHelper.record_to_array(frame_node_list, (layer_index, layer) => (
-							Xml.create_element_node('DOMLayer', {
+							XmlHelper.create_element_node('DOMLayer', {
 								name: `${layer_index + 1}`,
 							}, [
-								Xml.create_element_node('frames', {}, layer),
+								XmlHelper.create_element_node('frames', {}, layer),
 							])
 						)).reverse(),
-						Xml.create_element_node('DOMLayer', {
+						XmlHelper.create_element_node('DOMLayer', {
 							name: `${0}`,
 						}, [
-							Xml.create_element_node('frames', {}, [
-								Xml.create_element_node('DOMFrame', {
+							XmlHelper.create_element_node('frames', {}, [
+								XmlHelper.create_element_node('DOMFrame', {
 									index: `0`,
 									duration: `${sprite.frame.length}`,
 								}, [
-									Xml.create_element_node('elements', {}, []),
+									XmlHelper.create_element_node('elements', {}, []),
 								]),
 							]),
 						]),
@@ -229,17 +229,17 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				let frame = animation.main_sprite.frame[frame_index];
 				if (frame.label !== null || frame.stop) {
 					if (previous_end.flow + 1 < frame_index) {
-						flow_node.push(Xml.create_element_node('DOMFrame', {
+						flow_node.push(XmlHelper.create_element_node('DOMFrame', {
 							index: `${previous_end.flow + 1}`,
 							duration: `${frame_index - (previous_end.flow + 1)}`,
 						}, [
-							Xml.create_element_node('elements', {}, []),
+							XmlHelper.create_element_node('elements', {}, []),
 						]));
 					}
-					let node = Xml.create_element_node('DOMFrame', {
+					let node = XmlHelper.create_element_node('DOMFrame', {
 						index: `${frame_index}`,
 					}, [
-						Xml.create_element_node('elements', {}, []),
+						XmlHelper.create_element_node('elements', {}, []),
 					]);
 					let node_element = node.value as Kernel.Xml.JS_Element;
 					if (frame.label !== null) {
@@ -247,9 +247,9 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 						node_element.attribute['labelType'] = `name`;
 					}
 					if (frame.stop) {
-						node_element.child.unshift(Xml.create_element_node('Actionscript', {}, [
-							Xml.create_element_node('script', {}, [
-								Xml.create_text_node(`stop();`, true),
+						node_element.child.unshift(XmlHelper.create_element_node('Actionscript', {}, [
+							XmlHelper.create_element_node('script', {}, [
+								XmlHelper.create_text_node(`stop();`, true),
 							]),
 						]));
 					}
@@ -258,48 +258,48 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				}
 				if (frame.command.length > 0) {
 					if (previous_end.command + 1 < frame_index) {
-						command_node.push(Xml.create_element_node('DOMFrame', {
+						command_node.push(XmlHelper.create_element_node('DOMFrame', {
 							index: `${previous_end.command + 1}`,
 							duration: `${frame_index - (previous_end.command + 1)}`,
 						}, [
-							Xml.create_element_node('elements', {}, []),
+							XmlHelper.create_element_node('elements', {}, []),
 						]));
 					}
-					command_node.push(Xml.create_element_node('DOMFrame', {
+					command_node.push(XmlHelper.create_element_node('DOMFrame', {
 						index: `${frame_index}`,
 					}, [
-						Xml.create_element_node('Actionscript', {}, [
-							Xml.create_element_node('script', {}, [
-								Xml.create_text_node(frame.command.map((value) => (`fscommand("${value[0]}", "${value[1]}");`)).join('\n'), true),
+						XmlHelper.create_element_node('Actionscript', {}, [
+							XmlHelper.create_element_node('script', {}, [
+								XmlHelper.create_text_node(frame.command.map((value) => (`fscommand("${value[0]}", "${value[1]}");`)).join('\n'), true),
 							]),
 						]),
-						Xml.create_element_node('elements', {}, []),
+						XmlHelper.create_element_node('elements', {}, []),
 					]));
 					previous_end.command = frame_index;
 				}
 			}
 			if (previous_end.flow + 1 < animation.main_sprite.frame.length) {
-				flow_node.push(Xml.create_element_node('DOMFrame', {
+				flow_node.push(XmlHelper.create_element_node('DOMFrame', {
 					index: `${previous_end.flow + 1}`,
 					duration: `${animation.main_sprite.frame.length - (previous_end.flow + 1)}`,
 				}, [
-					Xml.create_element_node('elements', {}, []),
+					XmlHelper.create_element_node('elements', {}, []),
 				]));
 			}
 			if (previous_end.command + 1 < animation.main_sprite.frame.length) {
-				command_node.push(Xml.create_element_node('DOMFrame', {
+				command_node.push(XmlHelper.create_element_node('DOMFrame', {
 					index: `${previous_end.command + 1}`,
 					duration: `${animation.main_sprite.frame.length - (previous_end.command + 1)}`,
 				}, [
-					Xml.create_element_node('elements', {}, []),
+					XmlHelper.create_element_node('elements', {}, []),
 				]));
 			}
-			instance_node.push(Xml.create_element_node('DOMFrame', {
+			instance_node.push(XmlHelper.create_element_node('DOMFrame', {
 				index: `0`,
 				duration: `${animation.main_sprite.frame.length}`,
 			}, [
-				Xml.create_element_node('elements', {}, [
-					Xml.create_element_node('DOMSymbolInstance', {
+				XmlHelper.create_element_node('elements', {}, [
+					XmlHelper.create_element_node('DOMSymbolInstance', {
 						libraryItemName: `main_sprite`,
 						symbolType: 'graphic',
 						loop: 'loop',
@@ -307,64 +307,64 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				]),
 			]));
 		}
-		return Xml.create_element('DOMDocument', {
+		return XmlHelper.create_element('DOMDocument', {
 			...k_xmlns_attribute,
 			frameRate: `${animation.frame_rate}`,
 			width: `${animation.size[0]}`,
 			height: `${animation.size[1]}`,
 			xflVersion: `${k_xfl_version}`,
 		}, [
-			Xml.create_element_node('folders', {}, ['media', 'source', 'image', 'sprite'].map((value) => (
-				Xml.create_element_node('DOMFolderItem', {
+			XmlHelper.create_element_node('folders', {}, ['media', 'source', 'image', 'sprite'].map((value) => (
+				XmlHelper.create_element_node('DOMFolderItem', {
 					name: value,
 					isExpanded: `false`,
 				}, [])
 			))),
-			Xml.create_element_node('media', {}, animation.image.map((value) => (
-				Xml.create_element_node('DOMBitmapItem', {
+			XmlHelper.create_element_node('media', {}, animation.image.map((value) => (
+				XmlHelper.create_element_node('DOMBitmapItem', {
 					name: `media/${parse_image_file_name(value.name)}`,
 					href: `media/${parse_image_file_name(value.name)}.png`,
 				}, [])
 			))),
-			Xml.create_element_node('symbols', {}, [
+			XmlHelper.create_element_node('symbols', {}, [
 				...animation.image.map((value, index) => (
-					Xml.create_element_node('Include', {
+					XmlHelper.create_element_node('Include', {
 						href: `source/source_${index + 1}.xml`,
 					}, [])
 				)),
 				...animation.image.map((value, index) => (
-					Xml.create_element_node('Include', {
+					XmlHelper.create_element_node('Include', {
 						href: `image/image_${index + 1}.xml`,
 					}, [])
 				)),
 				...animation.sprite.map((value, index) => (
-					Xml.create_element_node('Include', {
+					XmlHelper.create_element_node('Include', {
 						href: `sprite/sprite_${index + 1}.xml`,
 					}, [])
 				)),
-				Xml.create_element_node('Include', {
+				XmlHelper.create_element_node('Include', {
 					href: `main_sprite.xml`,
 				}, []),
 			]),
-			Xml.create_element_node('timelines', {}, [
-				Xml.create_element_node('DOMTimeline', {
+			XmlHelper.create_element_node('timelines', {}, [
+				XmlHelper.create_element_node('DOMTimeline', {
 					name: 'animation',
 				}, [
-					Xml.create_element_node('layers', {}, [
-						Xml.create_element_node('DOMLayer', {
+					XmlHelper.create_element_node('layers', {}, [
+						XmlHelper.create_element_node('DOMLayer', {
 							name: 'flow',
 						}, [
-							Xml.create_element_node('frames', {}, flow_node),
+							XmlHelper.create_element_node('frames', {}, flow_node),
 						]),
-						Xml.create_element_node('DOMLayer', {
+						XmlHelper.create_element_node('DOMLayer', {
 							name: 'command',
 						}, [
-							Xml.create_element_node('frames', {}, command_node),
+							XmlHelper.create_element_node('frames', {}, command_node),
 						]),
-						Xml.create_element_node('DOMLayer', {
+						XmlHelper.create_element_node('DOMLayer', {
 							name: 'instance',
 						}, [
-							Xml.create_element_node('frames', {}, instance_node),
+							XmlHelper.create_element_node('frames', {}, instance_node),
 						]),
 					]),
 				]),
@@ -423,7 +423,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 
 	export function from_fsh(
 		raw: Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation,
-		ripe_directory: string,
+		ripe_directory: StoragePath,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 	): void {
 		let ripe = from(raw, version);
@@ -432,11 +432,11 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 	}
 
 	export function from_fs(
-		raw_file: string,
-		ripe_directory: string,
+		raw_file: StoragePath,
+		ripe_directory: StoragePath,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 	): void {
-		let raw = KernelX.Json.read_fs_js(raw_file) as Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation;
+		let raw = JsonHelper.decode_file(raw_file) as Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation;
 		let ripe = from(raw, version);
 		save_flash_package(ripe_directory, ripe);
 		return;

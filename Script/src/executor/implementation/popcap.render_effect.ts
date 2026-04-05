@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.RenderEffect {
 						identifier: 'data_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {definition_file: string}) => (argument.definition_file.replace(/(\.popfx\.json)?$/i, '.popfx')),
+						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /(\.popfx\.json)?$/i, '.popfx'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -58,16 +58,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.RenderEffect {
 						identifier: 'data_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {definition_file: string}) => (argument.definition_file + '.encode'),
+						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /()?$/i, '.encode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.popfx\.json)?$/i, '.popfx')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.popfx\.json)?$/i, '.popfx'),
 					}),
 				],
-				worker: ({definition_file, data_file, version_number, version_variant, buffer_size}, temporary: {buffer: Kernel.ByteArray}) => {
-					if (temporary.buffer === undefined) {
-						temporary.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+				worker: ({definition_file, data_file, version_number, version_variant, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+					if (store.buffer === undefined) {
+						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Popcap.RenderEffect.encode_fs(data_file, definition_file, {number: version_number as any, variant: version_variant as any}, temporary.buffer.view());
+					KernelX.Tool.Popcap.RenderEffect.encode_fs(data_file, definition_file, {number: version_number as any, variant: version_variant as any}, store.buffer.view());
 					return;
 				},
 			}),
@@ -86,7 +86,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.RenderEffect {
 						identifier: 'definition_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file.replace(/(\.popfx)?$/i, '.popfx.json')),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.popfx)?$/i, '.popfx.json'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -117,12 +117,12 @@ namespace Twinning.Script.Executor.Implementation.Popcap.RenderEffect {
 						identifier: 'definition_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {data_file: string}) => (argument.data_file + '.decode'),
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.decode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.popfx)?$/i, '.popfx.json')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.popfx)?$/i, '.popfx.json'),
 					}),
 				],
-				worker: ({data_file, definition_file, version_number, version_variant}, temporary: {}) => {
+				worker: ({data_file, definition_file, version_number, version_variant}, store: {}) => {
 					KernelX.Tool.Popcap.RenderEffect.decode_fs(data_file, definition_file, {number: version_number as any, variant: version_variant as any});
 					return;
 				},

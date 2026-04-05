@@ -647,8 +647,8 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				"boolean"     => SubmissionType.Boolean,
 				"integer"     => SubmissionType.Integer,
 				"floater"     => SubmissionType.Floater,
-				"size"        => SubmissionType.Size,
 				"string"      => SubmissionType.String,
+				"size"        => SubmissionType.Size,
 				"path"        => SubmissionType.Path,
 				"enumeration" => SubmissionType.Enumeration,
 				_             => throw new (),
@@ -656,6 +656,9 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			var valueData = await this.mController.ReceiveSubmission(typeValue, option);
 			if (valueData != null) {
 				value = ValueExpressionHelper.MakeString(valueData);
+				if (valueData.Macro == null) {
+					value = $"??{value}";
+				}
 			}
 			return new (value);
 		}

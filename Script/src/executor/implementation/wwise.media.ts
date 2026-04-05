@@ -20,7 +20,7 @@ namespace Twinning.Script.Executor.Implementation.Wwise.Media {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file.replace(/(\.wav)?$/i, '.wem')),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.wav)?$/i, '.wem'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -44,12 +44,12 @@ namespace Twinning.Script.Executor.Implementation.Wwise.Media {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: string}) => (argument.raw_file + '.encode'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.wav)?$/i, '.wem')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.wav)?$/i, '.wem'),
 					}),
 				],
-				worker: ({raw_file, ripe_file, format}, temporary: {}) => {
+				worker: ({raw_file, ripe_file, format}, store: {}) => {
 					Support.Wwise.Media.Encode.encode_fs(raw_file, ripe_file, format as any);
 					return;
 				},
@@ -69,7 +69,7 @@ namespace Twinning.Script.Executor.Implementation.Wwise.Media {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file.replace(/(\.wem)?$/i, '.wav')),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.wem)?$/i, '.wav'),
 						condition: null,
 					}),
 				],
@@ -86,12 +86,12 @@ namespace Twinning.Script.Executor.Implementation.Wwise.Media {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: string}) => (argument.ripe_file + '.decode'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.decode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => (value.replace(/(\.wem)?$/i, '.wav')),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.wem)?$/i, '.wav'),
 					}),
 				],
-				worker: ({ripe_file, raw_file}, temporary: {}) => {
+				worker: ({ripe_file, raw_file}, store: {}) => {
 					Support.Wwise.Media.Decode.decode_fs(ripe_file, raw_file);
 					return;
 				},

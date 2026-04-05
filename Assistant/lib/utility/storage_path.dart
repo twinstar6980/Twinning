@@ -38,6 +38,13 @@ class StoragePath {
     this._root = null,
     this._part = [];
 
+  StoragePath.copy(
+    StoragePath other,
+  ) :
+    this._type = other._type,
+    this._root = other._root,
+    this._part = other._part.toList();
+
   StoragePath.by(
     StoragePathType type,
   ) :
@@ -46,12 +53,12 @@ class StoragePath {
     this._part = [];
 
   StoragePath.of(
-    String path,
+    String text,
   ) :
     this._type = .nothing,
     this._root = null,
     this._part = [] {
-    this.parse(path);
+    this.parse(text);
     return;
   }
 
@@ -172,18 +179,18 @@ class StoragePath {
   // #region convert
 
   Void parse(
-    String path,
+    String text,
   ) {
     this._type = .nothing;
     this._root = null;
     this._part = [];
-    if (!path.isEmpty) {
+    if (!text.isEmpty) {
       var position = 0;
-      if (path.length >= 2 && path[1] == ':' && ConvertHelper.isLetter(path[0])) {
-        this._root = path.substring(0, 2);
+      if (text.length >= 2 && text[1] == ':' && ConvertHelper.isLetter(text[0])) {
+        this._root = text.substring(0, 2);
         position += 2;
       }
-      if (path.length > position && ConvertHelper.isPathSeparator(path[position])) {
+      if (text.length > position && ConvertHelper.isPathSeparator(text[position])) {
         this._type = .absolute;
         position += 1;
       }
@@ -192,8 +199,8 @@ class StoragePath {
       }
       var location = position;
       while (true) {
-        if (position == path.length || ConvertHelper.isPathSeparator(path[position])) {
-          var segment = path.substring(location, position);
+        if (position == text.length || ConvertHelper.isPathSeparator(text[position])) {
+          var segment = text.substring(location, position);
           if (segment == '' || segment == '.') {
           }
           else if (segment == '..' && !this._part.isEmpty && this._part.last != '..') {
@@ -202,7 +209,7 @@ class StoragePath {
           else {
             this._part.add(segment);
           }
-          if (position == path.length) {
+          if (position == text.length) {
             break;
           }
           position += 1;
@@ -218,7 +225,7 @@ class StoragePath {
   String emit({
     StoragePathStyle style = .generic,
   }) {
-    var result = '';
+    var text = '';
     if (this._type != .nothing) {
       var mappedStyle = style;
       if (style == .generic) {
@@ -234,18 +241,18 @@ class StoragePath {
       }
       var separator = mappedStyle == .posix ? '/' : '\\';
       if (this._root != null) {
-        result += this._root!;
+        text += this._root!;
       }
       if (this._type == .relative) {
-        result += '.';
+        text += '.';
       }
       if (this._part.isEmpty) {
-        result += separator;
+        text += separator;
       }
       for (var segment in this._part) {
-        result += separator;
+        text += separator;
         if (mappedStyle == .posix) {
-          result += segment;
+          text += segment;
         }
         if (mappedStyle == .windows) {
           var segmentSize = segment.length;
@@ -260,11 +267,11 @@ class StoragePath {
             }
             break;
           }
-          result += segment.substring(0, segmentSize);
+          text += segment.substring(0, segmentSize);
         }
       }
     }
-    return result;
+    return text;
   }
 
   // ----------------

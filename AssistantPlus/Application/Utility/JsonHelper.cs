@@ -16,7 +16,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		[UnconditionalSuppressMessage("Trimming", "IL2026")]
 		[UnconditionalSuppressMessage("AOT", "IL3050")]
-		public static JsonNode SerializeNode<TValue>(
+		public static JsonNode Serialize<TValue>(
 			TValue value
 		)
 			where TValue : notnull {
@@ -25,11 +25,11 @@ namespace Twinning.AssistantPlus.Utility {
 
 		[UnconditionalSuppressMessage("Trimming", "IL2026")]
 		[UnconditionalSuppressMessage("AOT", "IL3050")]
-		public static TValue DeserializeNode<TValue>(
-			JsonNode node
+		public static TValue Deserialize<TValue>(
+			JsonNode target
 		)
 			where TValue : notnull {
-			return JsonSerializer.Deserialize<TValue>(node, JsonHelper.Option) ?? throw new NullReferenceException();
+			return JsonSerializer.Deserialize<TValue>(target, JsonHelper.Option) ?? throw new NullReferenceException();
 		}
 
 		// ----------------
@@ -47,38 +47,38 @@ namespace Twinning.AssistantPlus.Utility {
 		[UnconditionalSuppressMessage("Trimming", "IL2026")]
 		[UnconditionalSuppressMessage("AOT", "IL3050")]
 		public static TValue DeserializeText<TValue>(
-			String text
+			String target
 		)
 			where TValue : notnull {
-			return JsonSerializer.Deserialize<TValue>(text, JsonHelper.Option) ?? throw new NullReferenceException();
+			return JsonSerializer.Deserialize<TValue>(target, JsonHelper.Option) ?? throw new NullReferenceException();
 		}
 
 		// ----------------
 
 		public static async Task SerializeFile<TValue>(
-			StoragePath path,
+			StoragePath target,
 			TValue      value,
 			Boolean     indented = true
 		)
 			where TValue : notnull {
-			await StorageHelper.WriteFileText(path, JsonHelper.SerializeText(value, indented));
+			await StorageHelper.WriteFileText(target, JsonHelper.SerializeText(value, indented));
 			return;
 		}
 
 		public static async Task<TValue> DeserializeFile<TValue>(
-			StoragePath path
+			StoragePath target
 		)
 			where TValue : notnull {
-			return JsonHelper.DeserializeText<TValue>(await StorageHelper.ReadFileText(path));
+			return JsonHelper.DeserializeText<TValue>(await StorageHelper.ReadFileText(target));
 		}
 
 		// ----------------
 
-		public static TValue DeepCopy<TValue>(
+		public static TValue Clone<TValue>(
 			TValue value
 		)
 			where TValue : notnull {
-			return JsonHelper.DeserializeNode<TValue>(JsonHelper.SerializeNode(value));
+			return JsonHelper.Deserialize<TValue>(JsonHelper.Serialize(value));
 		}
 
 		#endregion
@@ -275,10 +275,10 @@ namespace Twinning.AssistantPlus.Utility {
 				NewLine = "\n",
 				ReadCommentHandling = JsonCommentHandling.Skip,
 				AllowTrailingCommas = true,
-				PropertyNameCaseInsensitive = false,
+				PropertyNameCaseInsensitive = true,
 				PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
 				DictionaryKeyPolicy = null,
-				IncludeFields = true,
+				IncludeFields = false,
 				DefaultIgnoreCondition = JsonIgnoreCondition.Never,
 				RespectNullableAnnotations = true,
 				UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,

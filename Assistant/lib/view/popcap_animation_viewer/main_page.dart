@@ -489,10 +489,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
       option.nextString(this._animationFile!.emit());
     }
     if (option.check('-image_filter', state: this._loaded)) {
-      option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).nonNulls.join(','));
+      option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index)).nonNulls.join(','));
     }
     if (option.check('-sprite_filter', state: this._loaded)) {
-      option.nextString(this._spriteFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index, false)).nonNulls.join(','));
+      option.nextString(this._spriteFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index)).nonNulls.join(','));
     }
     if (option.check('-active_target', state: this._activated)) {
       option.nextBoolean(this._activeTarget!.type);
@@ -691,7 +691,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                                 ].map((value) => value == null ? null : StyledMenuItem.standard(
                                   value: value.value,
                                   content: StyledText.inherit(value.text),
-                                  trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.value, false)),
+                                  trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.value)),
                                 )),
                               ));
                               if (value != null) {
@@ -703,7 +703,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                             },
                           ),
                         ],
-                        value: ConvertHelper.makeIntegerToString(currentValue.begin + 1, false),
+                        value: ConvertHelper.makeIntegerToString(currentValue.begin + 1),
                         onChanged: (context, value) async {
                           var parsedValue = Integer.tryParse(value);
                           if (parsedValue != null && parsedValue >= 1 && parsedValue <= this._activeSprite!.frame.length) {
@@ -733,7 +733,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                                 ].map((value) => value == null ? null : StyledMenuItem.standard(
                                   value: value.value,
                                   content: StyledText.inherit(value.text),
-                                  trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.value, false)),
+                                  trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.value)),
                                 )),
                               ));
                               if (value != null) {
@@ -745,7 +745,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                             },
                           ),
                         ],
-                        value: ConvertHelper.makeIntegerToString(currentValue.end + 1, false),
+                        value: ConvertHelper.makeIntegerToString(currentValue.end + 1),
                         onChanged: (context, value) async {
                           var parsedValue = Integer.tryParse(value);
                           if (parsedValue != null && parsedValue >= 1 && parsedValue <= this._activeSprite!.frame.length) {
@@ -805,7 +805,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                 icon: IconView.of(IconSet.speed),
                 content: FlexContainer.horizontal([
                   StyledText.custom(
-                    !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!, false),
+                    !this._activated ? '0.0' : ConvertHelper.makeFloaterToString(this._activeFrameSpeed!),
                     align: .end,
                   ).withFlexExpanded(),
                 ]),
@@ -834,7 +834,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                                 ].map((value) => StyledMenuItem.standard(
                                   value: value.value,
                                   content: StyledText.inherit(value.text),
-                                  trailing: StyledText.inherit(ConvertHelper.makeFloaterToString(value.value, false)),
+                                  trailing: StyledText.inherit(ConvertHelper.makeFloaterToString(value.value)),
                                 )),
                               ));
                               if (value != null) {
@@ -844,7 +844,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                             },
                           ),
                         ],
-                        value: ConvertHelper.makeFloaterToString(currentValue, false),
+                        value: ConvertHelper.makeFloaterToString(currentValue),
                         onChanged: (context, value) async {
                           var parsedValue = Floater.tryParse(value);
                           if (parsedValue != null && parsedValue.isFinite && parsedValue > 0.0) {
@@ -962,7 +962,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                         ).withImpenetrableArea(
                         ),
                         content: StyledText.inherit(tooltip: true, item.name ?? ''),
-                        trailing: StyledText.inherit('${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!, false)}'),
+                        trailing: StyledText.inherit('${item.frame.length} / ${item.frameRate == null ? '?' : ConvertHelper.makeFloaterToString(item.frameRate!)}'),
                         onPressed: (context) async {
                           currentValue[index] = !currentValue[index];
                           await refreshState(setStateForPanel);

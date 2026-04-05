@@ -10,15 +10,19 @@ class Wrapper<TValue> {
 
   // ----------------
 
+  Wrapper(
+  ) :
+    this._data = .new(null);
+
+  Wrapper.of(
+    TValue value,
+  ) :
+    this._data = .new(value);
+
   Wrapper._of(
     _WrapperData data,
   ) :
     this._data = data;
-
-  Wrapper(
-    TValue value,
-  ) :
-    this._of(.new(value));
 
   // #endregion
 

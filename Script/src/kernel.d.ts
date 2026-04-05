@@ -647,14 +647,10 @@ declare namespace Twinning.Kernel {
 		/** 值 */
 		type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | {[key: string]: JS_Value};
 
-		/**
-		 * 值，存储 null、boolean、bigint、number、string、array、object 类型值的变体
-		 * 
-		 * Constraint 是为在 JS_Value 基础上对值的进一步约束，仅用于TS的静态类型检查
-		 */
-		class Value<Constraint extends JS_Value = JS_Value> {
+		/** 值 */
+		class Value<TConstraint extends JS_Value = JS_Value> {
 
-			private _Json_Value: Constraint;
+			private _Json_Value: TConstraint;
 
 			// ----------------
 
@@ -664,11 +660,11 @@ declare namespace Twinning.Kernel {
 
 			// ----------------
 
-			static value<Constraint extends JS_Value>(it: Constraint): Value<Constraint>;
+			static value<TConstraint extends JS_Value>(it: TConstraint): Value<TConstraint>;
 
-			get value(): Constraint;
+			get value(): TConstraint;
 
-			set value(it: Constraint);
+			set value(it: TConstraint);
 
 		}
 
@@ -726,23 +722,23 @@ declare namespace Twinning.Kernel {
 		type JS_Node = JS_ElementNode | JS_TextNode | JS_CommentNode;
 
 		/** 结点 */
-		class Node {
+		class Node<TConstraint extends JS_Node = JS_Node> {
 
-			private _Xml_Node;
-
-			// ----------------
-
-			static default(): Node;
-
-			static copy(it: Node): Node;
+			private _Xml_Node: TConstraint;
 
 			// ----------------
 
-			static value(it: JS_Node): Node;
+			static default<Constraint extends JS_Node>(): Node<Constraint>;
 
-			get value(): JS_Node;
+			static copy<Constraint extends JS_Node>(it: Node<Constraint>): Node<Constraint>;
 
-			set value(it: JS_Node);
+			// ----------------
+
+			static value<Constraint extends JS_Node>(it: Constraint): Node<Constraint>;
+
+			get value(): TConstraint;
+
+			set value(it: TConstraint);
 
 		}
 
