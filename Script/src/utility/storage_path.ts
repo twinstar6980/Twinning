@@ -216,7 +216,7 @@ namespace Twinning.Script {
 			style: StoragePathStyle = StoragePathStyle.generic,
 		): string {
 			let text = '';
-			if (this.m_type != StoragePathType.nothing) {
+			if (this.m_type !== StoragePathType.nothing) {
 				let mapped_style = style;
 				if (style === StoragePathStyle.generic) {
 					mapped_style = StoragePathStyle.posix;

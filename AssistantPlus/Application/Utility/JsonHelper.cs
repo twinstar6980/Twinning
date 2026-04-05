@@ -107,11 +107,11 @@ namespace Twinning.AssistantPlus.Utility {
 				return reader.TokenType switch {
 					JsonTokenType.False       => false,
 					JsonTokenType.True        => true,
-					JsonTokenType.Number      => reader.TryGetInt64(out var valueInteger) ? valueInteger : reader.GetDouble(),
+					JsonTokenType.Number      => reader.TryGetInt64(out var valueInteger) ? valueInteger.As<Object>() : reader.GetDouble().As<Object>(),
 					JsonTokenType.String      => reader.GetString().AsNotNull(),
 					JsonTokenType.StartArray  => JsonSerializer.Deserialize<List<Object>>(ref reader, options).AsNotNull(),
 					JsonTokenType.StartObject => JsonSerializer.Deserialize<Dictionary<String, Object>>(ref reader, options).AsNotNull(),
-					_                         => throw new (),
+					_                         => throw new UnreachableException(),
 				};
 			}
 

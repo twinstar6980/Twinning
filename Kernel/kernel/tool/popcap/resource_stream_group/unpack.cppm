@@ -106,6 +106,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 					auto resource_data = resource_data_section_view.sub(cbox<Size>(resource_information_structure.value.offset), cbox<Size>(resource_information_structure.value.size));
 					if (resource_directory.has()) {
+						if (!Storage::exist_directory(resource_directory.get())) {
+							Storage::create_directory(resource_directory.get());
+						}
 						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
 							Storage::create_file(resource_directory.get().push(resource_definition.path));
 						}

@@ -3,10 +3,10 @@
 
 using Twinning.AssistantPlus;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
 using Windows.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace Twinning.AssistantPlus.Utility {
 
@@ -95,6 +95,15 @@ namespace Twinning.AssistantPlus.Utility {
 			return value switch {
 				false => "false",
 				true  => "true",
+			};
+		}
+
+		public static String MakeBooleanToStringOfConfirmation(
+			Boolean value
+		) {
+			return value switch {
+				false => "No",
+				true  => "Yes",
 			};
 		}
 
@@ -232,6 +241,21 @@ namespace Twinning.AssistantPlus.Utility {
 				((integer & 0x0000FF00L) >> 8).CastPrimitive<Byte>(),
 				((integer & 0x000000FFL) >> 0).CastPrimitive<Byte>()
 			);
+		}
+
+		#endregion
+
+		#region theme
+
+		public static String MakeThemeToString(
+			ElementTheme value
+		) {
+			return value switch {
+				ElementTheme.Default => "System",
+				ElementTheme.Light   => "Light",
+				ElementTheme.Dark    => "Dark",
+				_                    => throw new UnreachableException(),
+			};
 		}
 
 		#endregion

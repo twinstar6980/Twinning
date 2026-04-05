@@ -28,14 +28,6 @@ namespace Twinning.Script.KernelX {
 
 	// #region wrapper
 
-	export namespace Json {
-
-	}
-
-	export namespace Xml {
-
-	}
-
 	export namespace Image {
 
 		export type ImageSize = typeof Kernel.Image.ImageSize.Value;

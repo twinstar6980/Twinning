@@ -198,16 +198,16 @@ namespace Twinning.Script.ConvertHelper {
 	export function is_path_separator(
 		value: string,
 	): boolean {
-		if (value.length != 1) {
+		if (value.length !== 1) {
 			return false;
 		}
-		return value == '/' || value == '\\';
+		return value === '/' || value === '\\';
 	}
 
 	export function is_letter(
 		value: string,
 	): boolean {
-		if (value.length != 1) {
+		if (value.length !== 1) {
 			return false;
 		}
 		var code = value.charCodeAt(0) | 0x20;

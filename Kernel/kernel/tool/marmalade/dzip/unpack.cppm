@@ -148,6 +148,9 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				}
 				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) -> auto { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {
+					if (!Storage::exist_directory(resource_directory.get())) {
+						Storage::create_directory(resource_directory.get());
+					}
 					if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
 						Storage::create_file(resource_directory.get().push(resource_definition.path));
 					}

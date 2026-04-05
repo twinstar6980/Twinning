@@ -225,7 +225,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 					SubmissionType.Size        => FluentIconGlyph.Component,
 					SubmissionType.Path        => FluentIconGlyph.Link,
 					SubmissionType.Enumeration => FluentIconGlyph.BulletedList,
-					_                          => throw new (),
+					_                          => throw new UnreachableException(),
 				};
 			}
 		}
@@ -906,7 +906,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 					],
 					SubmissionType.Enumeration => [
 					],
-					_ => throw new (),
+					_ => throw new UnreachableException(),
 				};
 				foreach (var preset in presetList) {
 					menu.Items.Add(new MenuFlyoutItem() {
