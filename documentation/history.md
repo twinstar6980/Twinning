@@ -4272,8 +4272,6 @@
 
 	* **`BUG` `Windows`** 由于 `libc++` 疑似存在的 BUG ，在通过 `std::filesystem` 中的某些函数进行操作时，若传递的路径中包含非 `ASCII` 字符，且路径指向的目标不存在，将抛出 `length_error` 而非 `filesystem_error` ，因而无法通过报错信息得知错误原因。
 
-	* **`BUG` `Macintosh`** 由于 `LLVM-21` 工具链随附的 `libc++` 与系统 `libc++` 库存在兼容性问题，进行编译时需要通过 [issue 235411](https://github.com/Homebrew/homebrew-core/issues/235411#issuecomment-3314586517) 中指示的步骤修改头文件。
-
 * `Assistant`
 
 	* **`OK`** 文本输入控件在离开视图区域后可能会被回收，当它再次进入视图时，会重构新的 State ，此时，之前的输入历史记录将丢失，无法通过 Undo/Redo 快捷键切换输入值。
@@ -4283,8 +4281,6 @@
 	* **`OK` `Windows` `Macintosh`** 由于系统通知行为的限制，若点击应用推送的系统通知时存在多个应用实例，将会由首个实例处理该通知，而不论该通知是否由首个实例自身推送。
 
 	* **`OK` `Windows` `Macintosh`** 与 `Assistant Plus` 不同，应用在调整窗口大小时，调整的是包括非用户区在内的整体窗口大小。
-
-	* **`OK` `Macintosh`** 为了减小应用包体积，构建应用包时不会生成 `amd64` 架构的可执行文件，这一设置被硬编码在项目的 [Release.xcconfig](../Assistant/macos/Runner/Configs/Release.xcconfig) 中，若需要为 `amd64` 构建应用包，请修改该文件。
 
 	* **`OK` `Android`** 由于 `SFA` 行为的限制，当打开文件保存对话框时，若指定的文件名已存在，且文件名是用户通过 IME 手动输入的，SFA 将无提示地为文件名添加后缀 ` (n)` ，若需要覆盖已存在的文件，请点击视图中对应的文件。
 
@@ -4296,9 +4292,9 @@
 
 	* **`OK` `Iphone`** 由于 `Sandbox` 机制的限制，当打开文件选择对话框时，若应用将初始目录设置为专属沙盒存储空间以外的目录，则初始目录设置可能无法生效。
 
-	* **`BUG` `Forwarder Extension` `Windows`** 扩展所在的 COM Surrogate 进程有时会一直在后台运行，导致无法卸载应用，需要手动在任务管理器中终止。
+	* **`BUG` `Forwarder Extension` `Windows`** 由于系统方面的问题，扩展所在的 COM Surrogate 进程有时会一直在后台运行，导致无法卸载应用，需要手动在任务管理器中终止。
 
-	* **`BUG` `Forwarder Extension` `Windows`** 在一些低版本的系统（如 Windows 10 2004）中，扩展启动了应用后，应用窗口可能不会被置于前台。
+	* **`BUG` `Forwarder Extension` `Windows`** 由于系统方面的问题，在一些低版本的系统（如 Windows 10 2004）中，扩展启动了应用后，应用窗口可能不会被置于前台。
 
 	* **`OK` `Task Worker`** 在消息列表中，每个文本控件都有各自独立的选择域，无法跨多个文本控件选择文本。
 
@@ -4326,8 +4322,8 @@
 
 	* **`BUG`** 由于 `WindowsAppSDK 1.7` 的 BUG ，当程序在在 Visual Studio 调试环境下运行并调用了 `JumpList.LoadCurrentAsync` 接口，大概率在终止程序后抛出未知异常 `0xc000027b` ，故暂时在 DEBUG 模式下避免该接口的调用。
 
-	* **`BUG` `Forwarder Extension`** 扩展所在的 COM Surrogate 进程有时会一直在后台运行，导致无法卸载应用，需要手动在任务管理器中终止。
+	* **`BUG` `Forwarder Extension`** 由于系统方面的问题，扩展所在的 COM Surrogate 进程有时会一直在后台运行，导致无法卸载应用，需要手动在任务管理器中终止。
 
-	* **`BUG` `Forwarder Extension`** 在一些低版本的系统（如 Windows 10 2004）中，扩展启动了应用后，应用窗口可能不会被置于前台。
+	* **`BUG` `Forwarder Extension`** 由于系统方面的问题，在一些低版本的系统（如 Windows 10 2004）中，扩展启动了应用后，应用窗口可能不会被置于前台。
 
 	* **`OK` `Task Worker`** 在消息列表中，每个文本控件都有各自独立的选择域，无法跨多个文本控件选择文本。
