@@ -29,23 +29,6 @@ namespace Twinning.Script.HomePath {
 
 	// ----------------
 
-	export function new_temporary(
-		name: null | string,
-		create: null | 'file' | 'directory',
-	): StoragePath {
-		let temporary_name = name !== null ? name : ConvertHelper.make_date_to_string_simple(new Date());
-		let temporary_path = StorageHelper.generate_suffix_path(temporary().join(temporary_name), null);
-		if (create === 'file') {
-			StorageHelper.create_file(temporary_path);
-		}
-		if (create === 'directory') {
-			StorageHelper.create_directory(temporary_path);
-		}
-		return temporary_path;
-	}
-
-	// ----------------
-
 	export function initialize(
 		location: string,
 	): void {

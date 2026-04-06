@@ -15,7 +15,7 @@
 	"console:integer_format_error": "Illegal integer format, {}",
 	"console:floater_format_error": "Illegal floater format, {}",
 	"console:size_format_error": "Illegal size format, {}",
-	"console:path_is_empty": "Path could not be empty",
+	"console:path_is_detached": "Path specified is detached, please provide an explicit absolute or relative path",
 	"console:path_is_exist": "Path specified already exists",
 	"console:path_is_exist_but_generate": "Path specified already exists, it's now been suffixed",
 	"console:path_is_exist_but_move": "Path specified already exists, the original path now been moved",

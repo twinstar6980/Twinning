@@ -37,7 +37,7 @@ namespace Twinning.Script.ProcessHelper {
 		if (environment === null) {
 			environment = list_environment();
 		}
-		let temporary_directory = HomePath.new_temporary(null, 'directory');
+		let temporary_directory = StorageHelper.temporary('directory');
 		let temporary_directory_fallback: null | StoragePath = null;
 		let input_file = temporary_directory.join('input');
 		let output_file = temporary_directory.join('output');
@@ -47,7 +47,7 @@ namespace Twinning.Script.ProcessHelper {
 			temporary_directory_fallback = AndroidHelper.k_temporary_directory.join(temporary_directory.name()!);
 			output_file = temporary_directory_fallback.join('output');
 			error_file = temporary_directory_fallback.join('error');
-			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback.emit()} ; touch ${output_file.emit()} ; chmod 777 ${output_file.emit()} ; touch ${error_file.emit()} ; chmod 777 ${error_file.emit()}"`) === 0n);
+			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback.emit_native()} ; touch ${output_file.emit_native()} ; chmod 777 ${output_file.emit_native()} ; touch ${error_file.emit_native()} ; chmod 777 ${error_file.emit_native()}"`) === 0n);
 		}
 		else {
 			StorageHelper.create_file(output_file);
@@ -98,7 +98,7 @@ namespace Twinning.Script.ProcessHelper {
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
 		}
 		for (let path of path_list) {
-			for (let path_extension in path_extension_list) {
+			for (let path_extension of path_extension_list) {
 				let current_path = path.join(`${name}${path_extension}`);
 				if (StorageHelper.exist_file(current_path)) {
 					result = current_path;

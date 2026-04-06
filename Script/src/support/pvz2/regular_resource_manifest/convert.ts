@@ -49,8 +49,12 @@ namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 					};
 					destination_group.subgroup.push(destination_subgroup);
 					for (let source_resource of source_subgroup.resources) {
-						let destination_resource_path = CheckHelper.is_string(source_resource.path) ? StorageHelper.regularize(source_resource.path) : StorageHelper.catenate(source_resource.path);
-						if (destination_resource_path === '!program') {
+						let destination_resource_path = CheckHelper.is_string(source_resource.path)
+							? new StoragePath(source_resource.path)
+							: new StoragePath(source_resource.path.join('/'));
+						assert_test(destination_resource_path.type() === StoragePathType.detached);
+						assert_test(destination_resource_path.segment().length !== 0);
+						if (destination_resource_path.segment().length === 1 && destination_resource_path.name() === '!program') {
 							destination_subgroup.resource.push({
 								identifier: source_resource.id,
 								additional: {
@@ -67,7 +71,7 @@ namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 									additional: {
 										type: 'texture',
 										value: {
-											path: destination_resource_path,
+											path: destination_resource_path.emit(),
 											size: [
 												JsonGenericGetter.integer(source_resource.width),
 												JsonGenericGetter.integer(source_resource.height),
@@ -87,7 +91,7 @@ namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 								}
 								texture_atlas.additional.value.sprite.push({
 									identifier: source_resource.id,
-									path: destination_resource_path,
+									path: destination_resource_path.emit(),
 									position: [
 										JsonGenericGetter.integer(source_resource.ax),
 										JsonGenericGetter.integer(source_resource.ay),
@@ -112,7 +116,7 @@ namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 									additional: {
 										type: 'general',
 										value: {
-											path: destination_resource_path,
+											path: destination_resource_path.emit(),
 											type: source_resource.type,
 										},
 									},
@@ -187,28 +191,34 @@ namespace Twinning.Script.Support.Pvz2.RegularResourceManifest.Convert {
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 					}
 					if (source_resource.additional.type === 'general') {
+						let destination_resource_path = new StoragePath(source_resource.additional.value.path);
+						assert_test(destination_resource_path.type() === StoragePathType.detached);
 						destination_subgroup.resources.push({
 							slot: slot_of(source_resource.identifier),
 							id: source_resource.identifier,
-							path: !use_array_style_path ? StorageHelper.to_windows_style(source_resource.additional.value.path) : StorageHelper.split(source_resource.additional.value.path),
+							path: !use_array_style_path ? destination_resource_path.emit_windows() : destination_resource_path.segment(),
 							type: source_resource.additional.value.type,
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 					}
 					if (source_resource.additional.type === 'texture') {
+						let destination_resource_path = new StoragePath(source_resource.additional.value.path);
+						assert_test(destination_resource_path.type() === StoragePathType.detached);
 						destination_subgroup.resources.push({
 							slot: slot_of(source_resource.identifier),
 							id: source_resource.identifier,
-							path: !use_array_style_path ? StorageHelper.to_windows_style(source_resource.additional.value.path) : StorageHelper.split(source_resource.additional.value.path),
+							path: !use_array_style_path ? destination_resource_path.emit_windows() : destination_resource_path.segment(),
 							type: 'Image',
 							atlas: true,
 							width: source_resource.additional.value.size[0],
 							height: source_resource.additional.value.size[1],
 						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
 						for (let source_sprite_resource of source_resource.additional.value.sprite) {
+							let destination_sprite_resource_path = new StoragePath(source_sprite_resource.path);
+							assert_test(destination_resource_path.type() === StoragePathType.detached);
 							destination_subgroup.resources.push({
 								slot: slot_of(source_sprite_resource.identifier),
 								id: source_sprite_resource.identifier,
-								path: !use_array_style_path ? StorageHelper.to_windows_style(source_sprite_resource.path) : StorageHelper.split(source_sprite_resource.path),
+								path: !use_array_style_path ? destination_sprite_resource_path.emit_windows() : destination_sprite_resource_path.segment(),
 								type: 'Image',
 								parent: source_resource.identifier,
 								ax: source_sprite_resource.position[0],

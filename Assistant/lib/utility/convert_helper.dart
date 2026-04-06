@@ -89,6 +89,15 @@ class ConvertHelper {
 
   // #region character
 
+  static Boolean isPathDot(
+    String value,
+  ) {
+    if (value.length != 1) {
+      return false;
+    }
+    return value == '.';
+  }
+
   static Boolean isPathSeparator(
     String value,
   ) {

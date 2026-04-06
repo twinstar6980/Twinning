@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           batchFiltered |= true;
         }
         if (item.filter != null && !this._resource.isEmpty) {
-          var nameRule = RegExp(item.filter!.name);
+          var nameRule = RegExp(item.filter!.name, caseSensitive: false);
           singleFiltered |= this._resource.every((resource) => nameRule.hasMatch(resource.path.name() ?? ''));
           batchFiltered |= true;
         }
@@ -123,7 +123,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     String?              method,
     Map<String, Object>? argument,
   ) async {
-    var actualInput = !this._resource.isEmpty ? this._resource.map((value) => value.path.emitGeneric()).toList() : <String?>[null];
+    var actualInput = !this._resource.isEmpty ? this._resource.map((value) => value.path.emit()).toList() : <String?>[null];
     var actualMethod = method == null ? null : core_task_worker.ForwardHelper.makeMethodMaybeBatch(method, this._enableBatch);
     var actualCommand = actualInput.map((value) => core_task_worker.ForwardHelper.makeArgumentForCommand(value, actualMethod, argument)).toList();
     await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);

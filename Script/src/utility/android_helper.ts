@@ -17,7 +17,7 @@ namespace Twinning.Script.AndroidHelper {
 	): string {
 		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('sh', true), argument, null);
 		if (result.code !== 0n) {
-			throw new Error(`sh execute failed: ${result.code}\n${result.output}\n${result.error}`);
+			throw new Error(`execute failed by sh: ${result.code}\n${result.output}\n${result.error}`);
 		}
 		return result.output;
 	}
@@ -27,7 +27,7 @@ namespace Twinning.Script.AndroidHelper {
 	): string {
 		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('adb', true), argument, null);
 		if (result.code !== 0n) {
-			throw new Error(`adb execute failed: ${result.code}\n${result.output}\n${result.error}`);
+			throw new Error(`execute failed by adb: ${result.code}\n${result.output}\n${result.error}`);
 		}
 		return result.output;
 	}
@@ -66,7 +66,7 @@ namespace Twinning.Script.AndroidHelper {
 			fs_copy(remote, local, false);
 		}
 		if (k_mode === 'bridge') {
-			run_adb([`pull`, remote.emit(), local.emit()]);
+			run_adb([`pull`, remote.emit_posix(true), local.emit_native()]);
 		}
 		return;
 	}
@@ -86,12 +86,12 @@ namespace Twinning.Script.AndroidHelper {
 		}
 		if (k_mode === 'bridge') {
 			if (fs_is_fuse_media_path(remote)) {
-				run_adb([`push`, local.emit(), remote.emit()]);
+				run_adb([`push`, local.emit_native(), remote.emit_posix(true)]);
 			}
 			else {
 				fs_create_directory(k_temporary_directory, null);
 				let remote_temporary = k_temporary_directory.join(local.name() ?? '');
-				run_adb([`push`, local.emit(), remote_temporary.emit()]);
+				run_adb([`push`, local.emit_native(), remote_temporary.emit_posix(true)]);
 				fs_copy(remote_temporary, remote, false);
 				fs_remove(remote_temporary);
 			}
@@ -109,31 +109,31 @@ namespace Twinning.Script.AndroidHelper {
 	export function fs_is_fuse_path(
 		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target.emit());
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\//.test(target.emit_posix(true));
 	}
 
 	export function fs_is_fuse_media_path(
 		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?!(Android\/(data|obb))(?=\/|$))/.test(target.emit());
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?!(Android\/(data|obb))(?=\/|$))/.test(target.emit_posix(true));
 	}
 
 	export function fs_is_fuse_ext_path(
 		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data|obb))(?=\/|$))/.test(target.emit());
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data|obb))(?=\/|$))/.test(target.emit_posix(true));
 	}
 
 	export function fs_is_fuse_ext_data_path(
 		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data))(?=\/|$))/.test(target.emit());
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(data))(?=\/|$))/.test(target.emit_posix(true));
 	}
 
 	export function fs_is_fuse_ext_obb_path(
 		target: StoragePath,
 	): boolean {
-		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(obb))(?=\/|$))/.test(target.emit());
+		return /^\/((storage\/emulated\/[0-9]+)|(sdcard))\/(?=(Android\/(obb))(?=\/|$))/.test(target.emit_posix(true));
 	}
 
 	// ----------------
@@ -142,7 +142,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -e ${escape(target.emit())} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(`if [ -e ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
@@ -152,7 +152,7 @@ namespace Twinning.Script.AndroidHelper {
 		follow_link: boolean,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target.emit())} ${escape(placement.emit())}`);
+		shell_result = shell(`cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target.emit_posix(true))} ${escape(placement.emit_posix(true))}`);
 		return;
 	}
 
@@ -161,7 +161,7 @@ namespace Twinning.Script.AndroidHelper {
 		placement: StoragePath,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`mv -f ${escape(target.emit())} ${escape(placement.emit())}`);
+		shell_result = shell(`mv -f ${escape(target.emit_posix(true))} ${escape(placement.emit_posix(true))}`);
 		return;
 	}
 
@@ -169,7 +169,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`rm -rf ${escape(target.emit())}`);
+		shell_result = shell(`rm -rf ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -177,7 +177,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -f ${escape(target.emit())} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(`if [ -f ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
@@ -185,7 +185,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -d ${escape(target.emit())} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(`if [ -d ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
@@ -195,7 +195,7 @@ namespace Twinning.Script.AndroidHelper {
 	): void {
 		mode = CheckHelper.not_null_or(mode, '777');
 		let shell_result: string;
-		shell_result = shell(`mkdir -p -m ${escape(mode)} ${escape(target.emit())}`);
+		shell_result = shell(`mkdir -p -m ${escape(mode)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -206,7 +206,7 @@ namespace Twinning.Script.AndroidHelper {
 		mode: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chmod -R ${escape(mode)} ${escape(target.emit())}`);
+		shell_result = shell(`chmod -R ${escape(mode)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -215,7 +215,7 @@ namespace Twinning.Script.AndroidHelper {
 		owner: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chown -R ${escape(owner)} ${escape(target.emit())}`);
+		shell_result = shell(`chown -R ${escape(owner)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -224,7 +224,7 @@ namespace Twinning.Script.AndroidHelper {
 		group: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chgrp -R ${escape(group)} ${escape(target.emit())}`);
+		shell_result = shell(`chgrp -R ${escape(group)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -234,7 +234,7 @@ namespace Twinning.Script.AndroidHelper {
 		group: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chown -R ${escape(owner)}:${escape(group)} ${escape(target.emit())}`);
+		shell_result = shell(`chown -R ${escape(owner)}:${escape(group)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 

@@ -81,9 +81,9 @@ class GameProgramHelper {
     GamePlatform platform,
   ) {
     return switch (platform) {
-      .windowsIntel32 => .of('./GameAssembly.dll'),
-      .androidArm32   => .of('./lib/armeabi-v7a/libil2cpp.so'),
-      .androidArm64   => .of('./lib/arm64-v8a/libil2cpp.so'),
+      .windowsIntel32 => .of('GameAssembly.dll'),
+      .androidArm32   => .of('lib/armeabi-v7a/libil2cpp.so'),
+      .androidArm64   => .of('lib/arm64-v8a/libil2cpp.so'),
     };
   }
 
@@ -91,9 +91,9 @@ class GameProgramHelper {
     GamePlatform platform,
   ) {
     return switch (platform) {
-      .windowsIntel32 => .of('./KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat'),
-      .androidArm32   => .of('./assets/bin/Data/Managed/Metadata/global-metadata.dat'),
-      .androidArm64   => .of('./assets/bin/Data/Managed/Metadata/global-metadata.dat'),
+      .windowsIntel32 => .of('KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat'),
+      .androidArm32   => .of('assets/bin/Data/Managed/Metadata/global-metadata.dat'),
+      .androidArm64   => .of('assets/bin/Data/Managed/Metadata/global-metadata.dat'),
     };
   }
 
@@ -448,7 +448,7 @@ class GameProgramHelper {
       packagePartList!;
       for (var packagePart in packagePartList) {
         for (var necessaryFilePath in necessaryFilePathList) {
-          var necessaryFile = packagePart.data.find(necessaryFilePath.emitGeneric());
+          var necessaryFile = packagePart.data.find(necessaryFilePath.emit());
           if (necessaryFile == null) {
             continue;
           }
@@ -494,8 +494,8 @@ class GameProgramHelper {
       }
       for (var replaceTask in replaceTaskList) {
         var filePath = GameProgramHelper._getProgramFilePath(replaceTask.platform);
-        replaceTask.data.removeFile(replaceTask.data.find(filePath.emitGeneric())!);
-        replaceTask.data.add(.bytes(filePath.emitGeneric(), await StorageHelper.readFile(targetDirectory.push(targetDirectory))));
+        replaceTask.data.removeFile(replaceTask.data.find(filePath.emit())!);
+        replaceTask.data.add(.bytes(filePath.emit(), await StorageHelper.readFile(targetDirectory.push(targetDirectory))));
       }
       for (var packagePart in packagePartList) {
         await StorageHelper.createFile(temporaryDirectory.join('package').join(packagePart.name));
@@ -656,7 +656,7 @@ class GameRecordHelper {
     if (await StorageHelper.exist(archiveFile)) {
       await StorageHelper.remove(archiveFile);
     }
-    var archive = lib.createArchiveFromDirectory(.new(archiveDirectory.emitGeneric()));
+    var archive = lib.createArchiveFromDirectory(.new(archiveDirectory.emit()));
     var archiveData = lib.ZipEncoder().encodeBytes(archive, level: lib.DeflateLevel.bestCompression);
     if (!await StorageHelper.existFile(archiveFile)) {
       await StorageHelper.createFile(archiveFile);
@@ -675,7 +675,7 @@ class GameRecordHelper {
     await StorageHelper.createDirectory(archiveDirectory);
     var archiveData = await StorageHelper.readFile(archiveFile);
     var archive = lib.ZipDecoder().decodeBytes(archiveData);
-    await lib.extractArchiveToDisk(archive, archiveDirectory.emitGeneric());
+    await lib.extractArchiveToDisk(archive, archiveDirectory.emit());
     if (await StorageHelper.exist(targetDirectory)) {
       await StorageHelper.remove(targetDirectory);
     }

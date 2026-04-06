@@ -22,7 +22,7 @@ namespace Twinning.Script.Support.Marmalade.Dzip.PackAutomatic {
 				chunk: [{flag: 'copy_coded'}],
 			});
 			let resource_size = StorageHelper.size_file(resource_directory.push(resource));
-			data_size_bound += (2 + resource.emit().length - 2) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data
+			data_size_bound += (2 + resource.emit_windows().length) + 6 + 16 + Number(resource_size); // path string + resource information + chunk information + resource data
 		}
 		Console.information(los('support.marmalade.dzip.pack_automatic:start'), [
 			los('support.marmalade.dzip.pack_automatic:total', resource_list.length),

@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Process {
 			String &     destination
 		) -> Void {
 			destination.append('"'_c);
-			destination.append_list(source.emit_windows());
+			destination.append_list(source.emit_windows(k_true));
 			destination.append('"'_c);
 			return;
 		}
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel::Process {
 	inline auto set_workspace(
 		Path const & target
 	) -> Void {
-		std::filesystem::current_path(Storage::Detail::make_std_path(target));
+		std::filesystem::current_path(Storage::Detail::emit_path(target));
 		return;
 	}
 

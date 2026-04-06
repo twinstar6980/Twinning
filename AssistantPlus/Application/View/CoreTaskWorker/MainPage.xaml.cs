@@ -266,7 +266,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				try {
 					await StorageHelper.Copy(this.Setting.Kernel, kernel, true);
 					library.Open(kernel);
-					result = await Task.Run(() => Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script.EmitGeneric(), [..this.Setting.Argument, ..this.AdditionalArgument]));
+					result = await Task.Run(() => Bridge.Launcher.Launch(this.SessionClient, library, this.Setting.Script.Emit(), [..this.Setting.Argument, ..this.AdditionalArgument]));
 				}
 				catch (Exception e) {
 					exception = e;

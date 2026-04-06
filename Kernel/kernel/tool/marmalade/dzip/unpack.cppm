@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					element = string;
 				}
 				information_structure.resource_directory.allocate_full(cbox<Size>(information_structure.archive_setting.resource_directory_count));
-				information_structure.resource_directory[1_ix] = "."_sv;
+				information_structure.resource_directory[1_ix] = ""_sv;
 				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
 					auto string = ConstantStringView{};
 					StringParser::read_string_until(self_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
@@ -62,7 +62,8 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
 				auto & resource_definition = definition.resource[resource_index];
-				resource_definition.path = Path{information_structure.resource_directory[cbox<Size>(resource_information_structure.directory_index)]}.join(information_structure.resource_file[resource_index]);
+				resource_definition.path = Path{information_structure.resource_directory[cbox<Size>(resource_information_structure.directory_index)]}.push(Path{information_structure.resource_file[resource_index]});
+				assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 				resource_definition.chunk.allocate_full(resource_information_structure.chunk_index.size());
 				auto chunk_data_list = Array<ByteArray>{resource_information_structure.chunk_index.size()};
 				for (auto & chunk_index : SizeRange{resource_information_structure.chunk_index.size()}) {

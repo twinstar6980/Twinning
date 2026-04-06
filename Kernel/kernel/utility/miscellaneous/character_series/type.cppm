@@ -18,6 +18,8 @@ export namespace Twinning::Kernel::CharacterType {
 
 	inline constexpr auto k_escape_slash = Character{'\\'_c};
 
+	inline constexpr auto k_path_dot = Character{'.'_c};
+
 	inline constexpr auto k_path_separator_poisx = Character{'/'_c};
 
 	inline constexpr auto k_path_separator_windows = Character{'\\'_c};
@@ -54,6 +56,12 @@ export namespace Twinning::Kernel::CharacterType {
 		Character const & character
 	) -> Boolean {
 		return character == k_escape_slash;
+	}
+
+	inline constexpr auto is_path_dot(
+		Character const & character
+	) -> Boolean {
+		return character == k_path_dot;
 	}
 
 	inline constexpr auto is_path_separator(

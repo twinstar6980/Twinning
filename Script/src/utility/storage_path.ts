@@ -1,14 +1,12 @@
 namespace Twinning.Script {
 
 	export enum StoragePathType {
-		nothing,
+		detached,
 		relative,
 		absolute,
 	}
 
 	export enum StoragePathStyle {
-		generic,
-		native,
 		posix,
 		windows,
 	}
@@ -23,7 +21,7 @@ namespace Twinning.Script {
 
 		private m_root: string | null;
 
-		private m_part: Array<string>;
+		private m_segment: Array<string>;
 
 		// ----------------
 
@@ -45,13 +43,13 @@ namespace Twinning.Script {
 		public constructor(
 			argument?: StoragePath | StoragePathType | string,
 		) {
-			this.m_type = StoragePathType.nothing;
+			this.m_type = StoragePathType.detached;
 			this.m_root = null;
-			this.m_part = [];
+			this.m_segment = [];
 			if (argument instanceof StoragePath) {
 				this.m_type = argument.m_type;
 				this.m_root = argument.m_root;
-				this.m_part = argument.m_part.slice();
+				this.m_segment = argument.m_segment.slice();
 			}
 			if (typeof argument === 'number') {
 				this.m_type = argument as StoragePathType;
@@ -76,23 +74,23 @@ namespace Twinning.Script {
 			return this.m_root;
 		}
 
-		public part(
+		public segment(
 		): Array<string> {
-			return this.m_part;
+			return this.m_segment;
 		}
 
 		// #endregion
 
-		// #region segment
+		// #region part
 
 		public parent(
 		): StoragePath | null {
 			let result = null as StoragePath | null;
-			if (this.m_type !== StoragePathType.nothing && this.m_part.length !== 0) {
+			if (this.m_segment.length !== 0) {
 				result = new StoragePath();
 				result.m_type = this.m_type;
 				result.m_root = this.m_root;
-				result.m_part.push(...this.m_part.slice(0, this.m_part.length - 1));
+				result.m_segment.push(...this.m_segment.slice(0, this.m_segment.length - 1));
 			}
 			return result;
 		}
@@ -100,8 +98,8 @@ namespace Twinning.Script {
 		public name(
 		): string | null {
 			let result = null as string | null;
-			if (this.m_type !== StoragePathType.nothing && this.m_part.length !== 0) {
-				result = this.m_part.at(-1)!;
+			if (this.m_segment.length !== 0) {
+				result = this.m_segment.at(-1)!;
 			}
 			return result;
 		}
@@ -111,13 +109,14 @@ namespace Twinning.Script {
 		public stem(
 		): string | null {
 			let result = null as string | null;
-			if (this.m_type !== StoragePathType.nothing && this.m_part.length !== 0) {
-				let position = this.m_part.at(-1)!.lastIndexOf('.');
+			if (this.m_segment.length !== 0) {
+				let segment = this.m_segment.at(-1)!;
+				let position = segment.lastIndexOf('.');
 				if (position !== -1) {
-					result = this.m_part.at(-1)!.substring(0, position);
+					result = segment.substring(0, position);
 				}
 				else {
-					result = this.m_part.at(-1)!;
+					result = segment;
 				}
 			}
 			return result;
@@ -126,10 +125,11 @@ namespace Twinning.Script {
 		public extension(
 		): string | null {
 			let result = null as string | null;
-			if (this.m_type !== StoragePathType.nothing && this.m_part.length !== 0) {
-				let position = this.m_part.at(-1)!.lastIndexOf('.');
+			if (this.m_segment.length !== 0) {
+				let segment = this.m_segment.at(-1)!;
+				let position = segment.lastIndexOf('.');
 				if (position !== -1) {
-					result = this.m_part.at(-1)!.substring(position + 1);
+					result = segment.substring(position + 1);
 				}
 			}
 			return result;
@@ -142,25 +142,23 @@ namespace Twinning.Script {
 		public join(
 			other: string,
 		): StoragePath {
-			assert_test(this.m_type !== StoragePathType.nothing);
 			let result = new StoragePath();
 			result.m_type = this.m_type;
 			result.m_root = this.m_root;
-			result.m_part.push(...this.m_part);
-			result.m_part.push(other);
+			result.m_segment.push(...this.m_segment);
+			result.m_segment.push(other);
 			return result;
 		}
 
 		public push(
 			other: StoragePath,
 		): StoragePath {
-			assert_test(this.m_type !== StoragePathType.nothing);
-			assert_test(other.m_type === StoragePathType.relative);
+			assert_test(other.m_type !== StoragePathType.absolute);
 			let result = new StoragePath();
 			result.m_type = this.m_type;
 			result.m_root = this.m_root;
-			result.m_part.push(...this.m_part);
-			result.m_part.push(...other.m_part);
+			result.m_segment.push(...this.m_segment);
+			result.m_segment.push(...other.m_segment);
 			return result;
 		}
 
@@ -171,80 +169,83 @@ namespace Twinning.Script {
 		public parse(
 			text: string,
 		): void {
-			this.m_type = StoragePathType.nothing;
+			this.m_type = StoragePathType.detached;
 			this.m_root = null;
-			this.m_part = [];
-			if (text.length !== 0) {
-				let position = 0;
-				if (text.length >= 2 && text[1] === ':' && ConvertHelper.is_letter(text[0])) {
-					this.m_root = text.substring(0, 2);
-					position += 2;
+			this.m_segment = [];
+			let position = 0;
+			if (text.length >= 2 && text[1] === ':' && ConvertHelper.is_letter(text[0])) {
+				this.m_root = text.substring(0, 2);
+				position += 2;
+			}
+			if (text.length > position && ConvertHelper.is_path_dot(text[position])) {
+				let is_relative = false;
+				let is_parent = false;
+				let offset = 1;
+				if (text.length > position + offset && ConvertHelper.is_path_dot(text[position + offset])) {
+					is_parent = true;
+					offset += 1;
 				}
-				if (text.length > position && ConvertHelper.is_path_separator(text[position])) {
-					this.m_type = StoragePathType.absolute;
-					position += 1;
+				if (text.length === position + offset) {
+					is_relative = true;
 				}
-				else {
+				else if (ConvertHelper.is_path_separator(text[position + offset])) {
+					is_relative = true;
+					offset += 1;
+				}
+				if (is_relative) {
 					this.m_type = StoragePathType.relative;
-				}
-				let location = position;
-				while (true) {
-					if (position === text.length || ConvertHelper.is_path_separator(text[position])) {
-						let segment = text.substring(location, position);
-						if (segment === '' || segment === '.') {
-						}
-						else if (segment === '..' && this.m_part.length !== 0 && this.m_part.at(-1)! !== '..') {
-							this.m_part.pop();
-						}
-						else {
-							this.m_part.push(segment);
-						}
-						if (position === text.length) {
-							break;
-						}
-						position += 1;
-						location = position;
-						continue;
+					if (!is_parent) {
+						position += offset;
 					}
-					position += 1;
+				}
+			}
+			else if (text.length > position && ConvertHelper.is_path_separator(text[position])) {
+				this.m_type = StoragePathType.absolute;
+				position += 1;
+			}
+			let location = position;
+			for (; position <= text.length; position++) {
+				if (position === text.length || ConvertHelper.is_path_separator(text[position])) {
+					let segment = text.substring(location, position);
+					if (segment.length !== 0) {
+						this.m_segment.push(segment);
+					}
+					location = position + 1;
 				}
 			}
 			return;
 		}
 
 		public emit(
-			style: StoragePathStyle = StoragePathStyle.generic,
+			style: StoragePathStyle = StoragePathStyle.posix,
+			rectify: boolean = false,
 		): string {
 			let text = '';
-			if (this.m_type !== StoragePathType.nothing) {
-				let mapped_style = style;
-				if (style === StoragePathStyle.generic) {
-					mapped_style = StoragePathStyle.posix;
-				}
-				if (style === StoragePathStyle.native) {
-					if (KernelX.is_windows) {
-						mapped_style = StoragePathStyle.windows;
-					}
-					if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {
-						mapped_style = StoragePathStyle.posix;
-					}
-				}
-				let separator = mapped_style === StoragePathStyle.posix ? '/' : '\\';
-				if (this.m_root !== null) {
-					text += this.m_root!;
-				}
-				if (this.m_type === StoragePathType.relative) {
-					text += '.';
-				}
-				if (this.m_part.length === 0) {
+			let dot = '.';
+			let separator = style === StoragePathStyle.posix ? '/' : '\\';
+			if (this.m_root !== null) {
+				text += this.m_root!;
+			}
+			if (this.m_type === StoragePathType.relative) {
+				text += dot;
+				text += separator;
+			}
+			if (this.m_type === StoragePathType.absolute) {
+				text += separator;
+			}
+			for (let segment_index = 0; segment_index < this.m_segment.length; segment_index++) {
+				let segment = this.m_segment[segment_index];
+				if (segment_index !== 0) {
 					text += separator;
 				}
-				for (let segment of this.m_part) {
-					text += separator;
-					if (mapped_style === StoragePathStyle.posix) {
+				if (!rectify) {
+					text += segment;
+				}
+				else {
+					if (style === StoragePathStyle.posix) {
 						text += segment;
 					}
-					if (mapped_style === StoragePathStyle.windows) {
+					if (style === StoragePathStyle.windows) {
 						let segment_size = segment.length;
 						while (segment_size !== 0) {
 							if (segment[segment_size - 1] === ' ') {
@@ -266,24 +267,28 @@ namespace Twinning.Script {
 
 		// ----------------
 
-		public emit_generic(
+		public emit_posix(
+			rectify: boolean = false,
 		): string {
-			return this.emit(StoragePathStyle.generic);
+			return this.emit(StoragePathStyle.posix, rectify);
+		}
+
+		public emit_windows(
+			rectify: boolean = false,
+		): string {
+			return this.emit(StoragePathStyle.windows, rectify);
 		}
 
 		public emit_native(
 		): string {
-			return this.emit(StoragePathStyle.native);
-		}
-
-		public emit_posix(
-		): string {
-			return this.emit(StoragePathStyle.posix);
-		}
-
-		public emit_windows(
-		): string {
-			return this.emit(StoragePathStyle.windows);
+			let mapped_style = null as StoragePathStyle | null;
+			if (KernelX.is_windows) {
+				mapped_style = StoragePathStyle.windows;
+			}
+			if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {
+				mapped_style = StoragePathStyle.posix;
+			}
+			return this.emit(mapped_style!, true);
 		}
 
 		// #endregion

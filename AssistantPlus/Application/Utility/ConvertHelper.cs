@@ -159,6 +159,12 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region character
 
+		public static Boolean IsPathDot(
+			Character value
+		) {
+			return value == '.';
+		}
+
 		public static Boolean IsPathSeparator(
 			Character value
 		) {

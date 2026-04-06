@@ -98,7 +98,7 @@ class ValueExpressionHelper {
       FloaterExpression _ => '${ConvertHelper.makeFloaterToString(value.value)}',
       StringExpression  _ => '${value.value}',
       SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count)}${['b', 'k', 'm', 'g'][value.exponent]}',
-      PathExpression    _ => '${value.content.emitGeneric()}',
+      PathExpression    _ => '${value.content.emit()}',
       _                   => throw UnreachableException(),
     };
   }

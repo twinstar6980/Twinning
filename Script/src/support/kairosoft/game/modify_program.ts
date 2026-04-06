@@ -62,19 +62,19 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 		program_file: StoragePath,
 		metadata_file: StoragePath,
 	): Array<string> {
-		let dump_directory = HomePath.new_temporary(null, 'directory');
+		let dump_directory = StorageHelper.temporary('directory');
 		let il2cppdumper_result = ProcessHelper.run_process(
 			ProcessHelper.search_program_ensure('dotnet', true),
 			[
-				ProcessHelper.search_program_ensure('Il2CppDumper.dll', false).emit(),
-				program_file.emit(),
-				metadata_file.emit(),
-				dump_directory.emit(),
+				ProcessHelper.search_program_ensure('Il2CppDumper.dll', false).emit_native(),
+				program_file.emit_native(),
+				metadata_file.emit_native(),
+				dump_directory.emit_native(),
 			],
 			null,
 		);
 		if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
-			throw new Error(`execute failed by Il2CppDumper`);
+			throw new Error(`execute failed by Il2CppDumpe: ${il2cppdumper_result.code}\n${il2cppdumper_result.output}\n${il2cppdumper_result.error}r`);
 		}
 		let dump_data = StorageHelper.read_file_text(dump_directory.join(`dump.cs`)).split('\n');
 		StorageHelper.remove(dump_directory);

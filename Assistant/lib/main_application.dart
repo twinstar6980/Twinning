@@ -210,7 +210,7 @@ class MainApplication {
         if (commandItem.startsWith('content://')) {
           var referent = await StorageHelper.parseAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true);
           if (referent != null) {
-            commandItem = referent.emitGeneric();
+            commandItem = referent.emit();
           }
         }
         convertedCommand.add(commandItem);

@@ -195,6 +195,15 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #region character
 
+	export function is_path_dot(
+		value: string,
+	): boolean {
+		if (value.length !== 1) {
+			return false;
+		}
+		return value === '.';
+	}
+
 	export function is_path_separator(
 		value: string,
 	): boolean {

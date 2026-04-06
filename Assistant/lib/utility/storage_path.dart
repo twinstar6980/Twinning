@@ -6,14 +6,12 @@ import 'package:flutter/foundation.dart';
 // ----------------
 
 enum StoragePathType {
-  nothing,
+  detached,
   relative,
   absolute,
 }
 
 enum StoragePathStyle {
-  generic,
-  native,
   posix,
   windows,
 }
@@ -28,36 +26,36 @@ class StoragePath {
 
   String? _root;
 
-  List<String> _part;
+  List<String> _segment;
 
   // ----------------
 
   StoragePath(
   ) :
-    this._type = .nothing,
+    this._type = .detached,
     this._root = null,
-    this._part = [];
+    this._segment = [];
 
   StoragePath.copy(
     StoragePath other,
   ) :
     this._type = other._type,
     this._root = other._root,
-    this._part = other._part.toList();
+    this._segment = other._segment.toList();
 
   StoragePath.by(
     StoragePathType type,
   ) :
     this._type = type,
     this._root = null,
-    this._part = [];
+    this._segment = [];
 
   StoragePath.of(
     String text,
   ) :
-    this._type = .nothing,
+    this._type = .detached,
     this._root = null,
-    this._part = [] {
+    this._segment = [] {
     this.parse(text);
     return;
   }
@@ -67,10 +65,10 @@ class StoragePath {
   // #region equality
 
   @override
-  operator ==(other) => other is StoragePath && this._type == other._type && this._root == other._root && listEquals(this._part, other._part);
+  operator ==(other) => other is StoragePath && this._type == other._type && this._root == other._root && listEquals(this._segment, other._segment);
 
   @override
-  get hashCode => Object.hashAll([this._type, this._root, ...this._part]);
+  get hashCode => Object.hashAll([this._type, this._root, ...this._segment]);
 
   // #endregion
 
@@ -86,23 +84,23 @@ class StoragePath {
     return this._root;
   }
 
-  List<String> part(
+  List<String> segment(
   ) {
-    return this._part;
+    return this._segment;
   }
 
   // #endregion
 
-  // #region segment
+  // #region part
 
   StoragePath? parent(
   ) {
     var result = null as StoragePath?;
-    if (this._type != .nothing && !this._part.isEmpty) {
+    if (!this._segment.isEmpty) {
       result = .new();
       result._type = this._type;
       result._root = this._root;
-      result._part.addAll(this._part.slice(0, this._part.length - 1));
+      result._segment.addAll(this._segment.slice(0, this._segment.length - 1));
     }
     return result;
   }
@@ -110,8 +108,8 @@ class StoragePath {
   String? name(
   ) {
     var result = null as String?;
-    if (this._type != .nothing && !this._part.isEmpty) {
-      result = this._part.last;
+    if (!this._segment.isEmpty) {
+      result = this._segment.last;
     }
     return result;
   }
@@ -121,13 +119,14 @@ class StoragePath {
   String? stem(
   ) {
     var result = null as String?;
-    if (this._type != .nothing && !this._part.isEmpty) {
-      var position = this._part.last.lastIndexOf('.');
+    if (!this._segment.isEmpty) {
+      var segment = this._segment.last;
+      var position = segment.lastIndexOf('.');
       if (position != -1) {
-        result = this._part.last.substring(0, position);
+        result = segment.substring(0, position);
       }
       else {
-        result = this._part.last;
+        result = segment;
       }
     }
     return result;
@@ -136,10 +135,11 @@ class StoragePath {
   String? extension(
   ) {
     var result = null as String?;
-    if (this._type != .nothing && !this._part.isEmpty) {
-      var position = this._part.last.lastIndexOf('.');
+    if (!this._segment.isEmpty) {
+      var segment = this._segment.last;
+      var position = segment.lastIndexOf('.');
       if (position != -1) {
-        result = this._part.last.substring(position + 1);
+        result = segment.substring(position + 1);
       }
     }
     return result;
@@ -152,25 +152,23 @@ class StoragePath {
   StoragePath join(
     String other,
   ) {
-    assertTest(this._type != .nothing);
     var result = StoragePath();
     result._type = this._type;
     result._root = this._root;
-    result._part.addAll(this._part);
-    result._part.add(other);
+    result._segment.addAll(this._segment);
+    result._segment.add(other);
     return result;
   }
 
   StoragePath push(
     StoragePath other,
   ) {
-    assertTest(this._type != .nothing);
-    assertTest(other._type == .relative);
+    assertTest(other._type != .absolute);
     var result = StoragePath();
     result._type = this._type;
     result._root = this._root;
-    result._part.addAll(this._part);
-    result._part.addAll(other._part);
+    result._segment.addAll(this._segment);
+    result._segment.addAll(other._segment);
     return result;
   }
 
@@ -181,80 +179,83 @@ class StoragePath {
   Void parse(
     String text,
   ) {
-    this._type = .nothing;
+    this._type = .detached;
     this._root = null;
-    this._part = [];
-    if (!text.isEmpty) {
-      var position = 0;
-      if (text.length >= 2 && text[1] == ':' && ConvertHelper.isLetter(text[0])) {
-        this._root = text.substring(0, 2);
-        position += 2;
+    this._segment = [];
+    var position = 0;
+    if (text.length >= 2 && text[1] == ':' && ConvertHelper.isLetter(text[0])) {
+      this._root = text.substring(0, 2);
+      position += 2;
+    }
+    if (text.length > position && ConvertHelper.isPathDot(text[position])) {
+      var isRelative = false;
+      var isParent = false;
+      var offset = 1;
+      if (text.length > position + offset && ConvertHelper.isPathDot(text[position + offset])) {
+        isParent = true;
+        offset += 1;
       }
-      if (text.length > position && ConvertHelper.isPathSeparator(text[position])) {
-        this._type = .absolute;
-        position += 1;
+      if (text.length == position + offset) {
+        isRelative = true;
       }
-      else {
+      else if (ConvertHelper.isPathSeparator(text[position + offset])) {
+        isRelative = true;
+        offset += 1;
+      }
+      if (isRelative) {
         this._type = .relative;
-      }
-      var location = position;
-      while (true) {
-        if (position == text.length || ConvertHelper.isPathSeparator(text[position])) {
-          var segment = text.substring(location, position);
-          if (segment == '' || segment == '.') {
-          }
-          else if (segment == '..' && !this._part.isEmpty && this._part.last != '..') {
-            this._part.removeLast();
-          }
-          else {
-            this._part.add(segment);
-          }
-          if (position == text.length) {
-            break;
-          }
-          position += 1;
-          location = position;
-          continue;
+        if (!isParent) {
+          position += offset;
         }
-        position += 1;
+      }
+    }
+    else if (text.length > position && ConvertHelper.isPathSeparator(text[position])) {
+      this._type = .absolute;
+      position += 1;
+    }
+    var location = position;
+    for (; position <= text.length; position++) {
+      if (position == text.length || ConvertHelper.isPathSeparator(text[position])) {
+        var segment = text.substring(location, position);
+        if (!segment.isEmpty) {
+          this._segment.add(segment);
+        }
+        location = position + 1;
       }
     }
     return;
   }
 
   String emit({
-    StoragePathStyle style = .generic,
+    StoragePathStyle style = .posix,
+    Boolean          rectify = false,
   }) {
-    var text = '';
-    if (this._type != .nothing) {
-      var mappedStyle = style;
-      if (style == .generic) {
-        mappedStyle = .posix;
+    var text = StringBuffer();
+    var dot = '.';
+    var separator = style == .posix ? '/' : '\\';
+    if (this._root != null) {
+      text.write(this._root!);
+    }
+    if (this._type == .relative) {
+      text.write(dot);
+      text.write(separator);
+    }
+    if (this._type == .absolute) {
+      text.write(separator);
+    }
+    for (var segmentIndex = 0; segmentIndex < this._segment.length; segmentIndex++) {
+      var segment = this._segment[segmentIndex];
+      if (segmentIndex != 0) {
+        text.write(separator);
       }
-      if (style == .native) {
-        if (SystemChecker.isWindows) {
-          mappedStyle = .windows;
+      if (!rectify) {
+        text.write(segment);
+      }
+      else {
+        if (style == .posix) {
+          text.write(segment);
         }
-        if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
-          mappedStyle = .posix;
-        }
-      }
-      var separator = mappedStyle == .posix ? '/' : '\\';
-      if (this._root != null) {
-        text += this._root!;
-      }
-      if (this._type == .relative) {
-        text += '.';
-      }
-      if (this._part.isEmpty) {
-        text += separator;
-      }
-      for (var segment in this._part) {
-        text += separator;
-        if (mappedStyle == .posix) {
-          text += segment;
-        }
-        if (mappedStyle == .windows) {
+        if (style == .windows) {
           var segmentSize = segment.length;
           while (segmentSize != 0) {
             if (segment[segmentSize - 1] == ' ') {
@@ -267,33 +268,37 @@ class StoragePath {
             }
             break;
           }
-          text += segment.substring(0, segmentSize);
+          text.write(segment.substring(0, segmentSize));
         }
       }
     }
-    return text;
+    return text.toString();
   }
 
   // ----------------
 
-  String emitGeneric(
-  ) {
-    return this.emit(style: .generic);
+  String emitPosix({
+    Boolean rectify = false,
+  }) {
+    return this.emit(style: .posix, rectify: rectify);
+  }
+
+  String emitWindows({
+    Boolean rectify = false,
+  }) {
+    return this.emit(style: .windows, rectify: rectify);
   }
 
   String emitNative(
   ) {
-    return this.emit(style: .native);
-  }
-
-  String emitPosix(
-  ) {
-    return this.emit(style: .posix);
-  }
-
-  String emitWindows(
-  ) {
-    return this.emit(style: .windows);
+    var mappedStyle = null as StoragePathStyle?;
+    if (SystemChecker.isWindows) {
+      mappedStyle = .windows;
+    }
+    if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
+      mappedStyle = .posix;
+    }
+    return this.emit(style: mappedStyle!, rectify: true);
   }
 
   // #endregion

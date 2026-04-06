@@ -42,6 +42,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
+					assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 					resource_information_structure.key = resource_definition.path.emit_windows();
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {

@@ -21,7 +21,7 @@ namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 				time: 0n,
 			});
 			let resource_size = StorageHelper.size_file(resource_directory.push(resource));
-			data_size_bound += (1 + 1 + resource.emit().length - 2 + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
+			data_size_bound += (1 + 1 + resource.emit_windows().length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}
 		data_size_bound += 1; // list done flag
 		Console.information(los('support.popcap.package.pack_automatic:start'), [

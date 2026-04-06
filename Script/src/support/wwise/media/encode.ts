@@ -276,12 +276,13 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		raw: StoragePath,
 	): string {
 		if (KernelX.is_windows) {
-			return raw.emit();
+			return raw.emit_native();
 		}
 		if (KernelX.is_macintosh) {
 			// locate at wine drive Z
 			assert_test(raw.type() === StoragePathType.absolute);
-			return `Z:${raw.emit()}`;
+			assert_test(raw.root() === null);
+			return `Z:${raw.emit_native()}`;
 		}
 		throw new Error();
 	}
@@ -305,7 +306,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		if (KernelX.is_macintosh) {
 			wwise_program_name = 'WwiseConsole.sh';
 		}
-		let temporary_directory = HomePath.new_temporary(null, null);
+		let temporary_directory = StorageHelper.temporary('directory');
 		let wwise_project_directory = temporary_directory.join('Sample');
 		let wwise_wproj_file = wwise_project_directory.join('Sample.wproj');
 		while (true) {
@@ -313,7 +314,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				ProcessHelper.search_program_ensure(wwise_program_name, true),
 				[
 					'create-new-project',
-					wwise_wproj_file.emit(),
+					wwise_wproj_file.emit_native(),
 					'--platform',
 					'Android',
 					'iOS',
@@ -321,7 +322,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				null,
 			);
 			if (wwise_result.code !== 0n) {
-				throw new Error(`execute failed by Wwise`);
+				throw new Error(`execute failed by Wwise: ${wwise_result.code}\n${wwise_result.output}\n${wwise_result.error}`);
 			}
 			if (StorageHelper.exist_file(wwise_wproj_file)) {
 				break;
@@ -353,16 +354,16 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			ProcessHelper.search_program_ensure(wwise_program_name, true),
 			[
 				'convert-external-source',
-				wwise_wproj_file.emit(),
+				wwise_wproj_file.emit_native(),
 				'--platform',
 				platform,
 				'--source-file',
-				wwise_wsources_file.emit(),
+				wwise_wsources_file.emit_native(),
 			],
 			null,
 		);
 		if (wwise_result.code !== 0n) {
-			throw new Error(`execute failed by Wwise`);
+			throw new Error(`execute failed by Wwise: ${wwise_result.code}\n${wwise_result.output}\n${wwise_result.error}`);
 		}
 		StorageHelper.copy(wwise_project_directory.join('GeneratedSoundBanks').join(platform).join('Sample.wem'), ripe_file, false);
 		StorageHelper.remove(temporary_directory);

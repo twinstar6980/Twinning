@@ -51,10 +51,14 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
 				auto & resource_definition = definition.resource[resource_index];
 				resource_definition.path = Path{resource_information_structure.path.value};
+				assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 				resource_definition.time = cbox<Integer>(resource_information_structure.time);
 				auto resource_data = data.forward_view(cbox<Size>(resource_information_structure.size));
 				if constexpr (check_version(t_version, {}, {false})) {
 					if (resource_directory.has()) {
+						if (!Storage::exist_directory(resource_directory.get())) {
+							Storage::create_directory(resource_directory.get());
+						}
 						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
 							Storage::create_file(resource_directory.get().push(resource_definition.path));
 						}

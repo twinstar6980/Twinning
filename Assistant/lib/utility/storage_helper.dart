@@ -23,7 +23,7 @@ class StorageHelper {
   static Future<Boolean> exist(
     StoragePath target,
   ) async {
-    if (target.type() == .nothing) {
+    if (target.type() == .detached) {
       return false;
     }
     var targetString = target.emitNative();
@@ -137,7 +137,7 @@ class StorageHelper {
   static Future<Boolean> existLink(
     StoragePath target,
   ) async {
-    if (target.type() == .nothing) {
+    if (target.type() == .detached) {
       return false;
     }
     var targetString = target.emitNative();
@@ -187,14 +187,14 @@ class StorageHelper {
   static Future<Boolean> existFile(
     StoragePath target,
   ) async {
-    if (target.type() == .nothing) {
+    if (target.type() == .detached) {
       return false;
     }
     var targetString = target.emitNative();
     return await FileSystemEntity.type(targetString, followLinks: true) == .file;
   }
 
-  // TODO: remove
+  // TODO: remove?
   static Boolean existFileSync(
     StoragePath target,
   ) {
@@ -272,14 +272,14 @@ class StorageHelper {
   static Future<Boolean> existDirectory(
     StoragePath target,
   ) async {
-    if (target.type() == .nothing) {
+    if (target.type() == .detached) {
       return false;
     }
     var targetString = target.emitNative();
     return await FileSystemEntity.type(targetString, followLinks: true) == .directory;
   }
 
-  // TODO: remove
+  // TODO: remove?
   static Boolean existDirectorySync(
     StoragePath target,
   ) {
@@ -341,7 +341,7 @@ class StorageHelper {
       }
       return null as Void;
     };
-    await iterate(iterate, target, .by(.relative), 0);
+    await iterate(iterate, target, .by(.detached), 0);
     return result;
   }
 

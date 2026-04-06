@@ -399,7 +399,7 @@ class SettingProvider with ChangeNotifier {
     this.data.storagePickerFallbackDirectory = homeDirectory.join('workspace');
     this.data.coreTaskWorker.kernel = homeDirectory.join('kernel');
     this.data.coreTaskWorker.script = homeDirectory.join('script').join('main.js');
-    this.data.coreTaskWorker.argument = [homeDirectory.emitGeneric()];
+    this.data.coreTaskWorker.argument = [homeDirectory.emit()];
     return;
   }
 

@@ -113,6 +113,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto & resource_manifest = subgroup_manifest.resource[resource_index];
 						auto & resource_manifest_information_structure = subgroup_manifest_information_structure.resource_information[resource_index];
 						auto & resource_detail_manifest_information_structure = resource_detail_manifest_information_structure_list.append();
+						assert_test(resource_manifest.path.type() == Storage::PathType::Constant::detached());
 						resource_manifest_information_structure.detail_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
 						resource_detail_manifest_information_structure.identifier_offset = set_string(resource_manifest.identifier);
 						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.emit_windows());
@@ -249,6 +250,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						for (auto & resource_index : SizeRange{subgroup_definition.resource.size()}) {
 							auto & resource_definition = subgroup_definition.resource[resource_index];
 							auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
+							assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 							resource_path_structure.key = resource_definition.path.emit_windows();
 							switch (resource_definition.additional.type().value) {
 								case ResourceType::Constant::general().value: {
@@ -434,6 +436,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto & resource_definition = subgroup_definition.resource[resource_index];
 						auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);
 						auto & packet_resource_definition = packet_package_definition.resource[resource_index];
+						assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 						resource_path_structure.key = resource_definition.path.emit_windows();
 						resource_path_structure.value = cbox<IntegerU32>(global_subgroup_index);
 						packet_resource_definition.path = resource_definition.path;

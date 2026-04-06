@@ -730,8 +730,8 @@ namespace Twinning.Script.Console {
 		};
 		let checker_proxy = (value: StoragePath): null | string => {
 			state_data.last_value = value;
-			if (value.type() === StoragePathType.nothing) {
-				return los('console:path_is_empty');
+			if (value.type() === StoragePathType.detached) {
+				return los('console:path_is_detached');
 			}
 			if (mode === 'input') {
 				if (!StorageHelper.exist(value)) {

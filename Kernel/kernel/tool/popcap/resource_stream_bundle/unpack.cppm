@@ -119,6 +119,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto resource_detail_manifest_information_structure = resource_manifest_information_data.read_of<Structure::ResourceDetailManifestInformation<t_version>>();
 						resource_manifest.identifier = get_string(resource_detail_manifest_information_structure.identifier_offset);
 						resource_manifest.path = Path{String{get_string(resource_detail_manifest_information_structure.path_offset)}};
+						assert_test(resource_manifest.path.type() == Storage::PathType::Constant::detached());
 						resource_manifest.type = cbox<Integer>(resource_detail_manifest_information_structure.type);
 						resource_manifest.property.allocate(resource_detail_manifest_information_structure.property_information.size() + (!resource_detail_manifest_information_structure.image_property_information.has() ? (0_sz) : (11_sz)));
 						if (resource_detail_manifest_information_structure.image_property_information.has()) {

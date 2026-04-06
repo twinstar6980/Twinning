@@ -18,10 +18,10 @@ class ExternalToolHelper {
     var processResult = await ProcessHelper.runProcess(
       await ProcessHelper.searchProgramEnsure('dotnet', true),
       [
-        (await ProcessHelper.searchProgramEnsure('Il2CppDumper.dll', false)).emitGeneric(),
-        programFile.emitGeneric(),
-        metadataFile.emitGeneric(),
-        dumpDirectory.emitGeneric(),
+        (await ProcessHelper.searchProgramEnsure('Il2CppDumper.dll', false)).emitNative(),
+        programFile.emitNative(),
+        metadataFile.emitNative(),
+        dumpDirectory.emitNative(),
       ],
       null,
     );
@@ -113,8 +113,8 @@ class ExternalToolHelper {
         '-P', '16',
         '-f',
         '4',
-        '${zipFile.emitGeneric()}',
-        '${alignedFile.emitGeneric()}',
+        '${zipFile.emitNative()}',
+        '${alignedFile.emitNative()}',
       ],
       null,
     );
@@ -140,9 +140,9 @@ class ExternalToolHelper {
         '--v2-signing-enabled', 'true',
         '--v3-signing-enabled', 'true',
         '--v4-signing-enabled', 'false',
-        '--ks', '${apkKeystoreFile.emitGeneric()}',
+        '--ks', '${apkKeystoreFile.emitNative()}',
         '--ks-pass', 'pass:${apkKeystorePassword}',
-        '${apkFile.emitGeneric()}',
+        '${apkFile.emitNative()}',
       ],
       null,
     );

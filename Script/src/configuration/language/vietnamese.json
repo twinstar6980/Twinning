@@ -15,7 +15,7 @@
 	"console:integer_format_error": "Định dạng số nguyên không hợp lệ, {}",
 	"console:floater_format_error": "Định dạng số thập phân không hợp lệ, {}",
 	"console:size_format_error": "Định dạng kích thước không hợp lệ, {}",
-	"console:path_is_empty": "Đường dẫn không được rỗng",
+	"console:path_is_detached": "Đường dẫn được chỉ định là đường dẫn tách rời, vui lòng cung cấp đường dẫn tuyệt đối hoặc tương đối rõ ràng",
 	"console:path_is_exist": "Đường dẫn đã được chỉ định đã tồn tại",
 	"console:path_is_exist_but_generate": "Đường dẫn đã được chỉ định đã tồn tại, giờ đã được thêm tiền tố",
 	"console:path_is_exist_but_move": "Đường dẫn đã được chỉ định đã tồn tại, đường dẫn gốc đã được di chuyển",

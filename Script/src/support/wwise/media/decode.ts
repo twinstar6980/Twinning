@@ -12,7 +12,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		let ripe_file_fallback_temporary: null | StoragePath = null;
 		let ripe_file_fallback = ripe_file;
 		if (ripe_file.extension()?.toLowerCase() !== 'wem') {
-			ripe_file_fallback_temporary = HomePath.new_temporary(null, 'directory');
+			ripe_file_fallback_temporary = StorageHelper.temporary('directory');
 			ripe_file_fallback = ripe_file_fallback_temporary.join('sample.wem');
 			StorageHelper.copy(ripe_file, ripe_file_fallback, false);
 		}
@@ -24,8 +24,8 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 			ProcessHelper.search_program_ensure('vgmstream-cli', true),
 			[
 				'-o',
-				raw_file.emit(),
-				ripe_file_fallback.emit(),
+				raw_file.emit_native(),
+				ripe_file_fallback.emit_native(),
 			],
 			null,
 		);
@@ -33,7 +33,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 			StorageHelper.remove(ripe_file_fallback_temporary);
 		}
 		if (vgmstream_result.code !== 0n) {
-			throw new Error(`execute failed by vgmstream-cli`);
+			throw new Error(`execute failed by vgmstream-cli: ${vgmstream_result.code}\n${vgmstream_result.output}\n${vgmstream_result.error}`);
 		}
 		let regex_result = /^encoding: (.+)$/m.exec(vgmstream_result.output);
 		assert_test(regex_result !== null);

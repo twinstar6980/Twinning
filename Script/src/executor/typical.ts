@@ -351,7 +351,8 @@ namespace Twinning.Script.Executor {
 						(item) => {
 							let item_argument = {...actual_argument};
 							for (let batch_argument of proto.batch!) {
-								item_argument[batch_argument.identifier] += '/' + batch_argument.item_mapper(actual_argument, item);
+								assert_test(item_argument[batch_argument.identifier] instanceof StoragePath);
+								item_argument[batch_argument.identifier] = (item_argument[batch_argument.identifier] as StoragePath).push(batch_argument.item_mapper(actual_argument, item));
 							}
 							proto.worker(item_argument as any, temporary_store);
 						},

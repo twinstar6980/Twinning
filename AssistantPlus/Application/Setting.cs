@@ -146,7 +146,7 @@ namespace Twinning.AssistantPlus {
 			}
 			// CoreTaskWorker.MessageFont
 			{
-				App.Instance.Resources["CoreTaskWorker.MessageFont"] = this.Data.CoreTaskWorker.MessageFont.Type() == StoragePathType.Nothing ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreTaskWorker.MessageFont.EmitGeneric());
+				App.Instance.Resources["CoreTaskWorker.MessageFont"] = this.Data.CoreTaskWorker.MessageFont.IsEmpty() ? FontFamily.XamlAutoFontFamily : new (this.Data.CoreTaskWorker.MessageFont);
 			}
 			return;
 		}
@@ -229,7 +229,7 @@ namespace Twinning.AssistantPlus {
 					Argument = [],
 					AutomaticScroll = true,
 					ImmediateLaunch = true,
-					MessageFont = new (),
+					MessageFont = "",
 				},
 				CoreCommandSender = new () {
 					ParallelForward = false,
@@ -272,7 +272,7 @@ namespace Twinning.AssistantPlus {
 			this.Data.ModuleConfigurationDirectory = homeDirectory.Join("assistant_plus");
 			this.Data.CoreTaskWorker.Kernel = homeDirectory.Join("kernel");
 			this.Data.CoreTaskWorker.Script = homeDirectory.Join("script").Join("main.js");
-			this.Data.CoreTaskWorker.Argument = [homeDirectory.EmitGeneric()];
+			this.Data.CoreTaskWorker.Argument = [homeDirectory.Emit()];
 			return;
 		}
 

@@ -288,7 +288,7 @@ namespace Twinning.AssistantPlus.View.CoreResourceShipper {
 			String?                     method,
 			Dictionary<String, Object>? argument
 		) {
-			var actualInput = !this.Resource.IsEmpty() ? this.Resource.Select((value) => value.Item1.EmitGeneric()).Cast<String?>() : [null];
+			var actualInput = !this.Resource.IsEmpty() ? this.Resource.Select((value) => value.Item1.Emit()).Cast<String?>() : [null];
 			var actualMethod = method == null ? null : CoreTaskWorker.ForwardHelper.MakeMethodMaybeBatch(method, this.EnableBatch);
 			var actualCommand = actualInput.Select((value) => CoreTaskWorker.ForwardHelper.MakeArgumentForCommand(value, actualMethod, argument)).ToList();
 			await CoreTaskWorker.ForwardHelper.ForwardMany(actualCommand, this.ParallelForward);

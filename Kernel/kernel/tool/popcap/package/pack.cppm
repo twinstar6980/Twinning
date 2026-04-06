@@ -39,6 +39,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
+					assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 					resource_information_structure.path = StringBlock8{resource_definition.path.emit_windows()};
 				}
 				information_data.resource_information = OutputByteStreamView{

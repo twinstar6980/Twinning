@@ -31,19 +31,14 @@ namespace Twinning.Script.StorageHelper {
 
 	// ----------------
 
-	export function rename_secure(
+	export function rename_case(
 		source: StoragePath,
 		destination: StoragePath,
 	): void {
 		// TODO: if dest exist
-		if (KernelX.is_android && AndroidHelper.fs_is_fuse_path(destination) && source.emit().toLowerCase() === destination.emit().toLowerCase()) {
-			let temporary = source.parent()!.join(source.name()! + '!');
-			KernelX.Storage.rename(source, temporary);
-			KernelX.Storage.rename(temporary, destination);
-		}
-		else {
-			KernelX.Storage.rename(source, destination);
-		}
+		let temporary = source.parent()!.join(source.name()! + '!');
+		KernelX.Storage.rename(source, temporary);
+		KernelX.Storage.rename(temporary, destination);
 		return;
 	}
 
@@ -186,49 +181,49 @@ namespace Twinning.Script.StorageHelper {
 	
 	// #endregion
 
+	// #region shell
+
+	export function temporary(
+		create: null | 'file' | 'directory',
+	): StoragePath {
+		let temporary_name = ConvertHelper.make_date_to_string_simple(new Date());
+		let temporary_path = StorageHelper.generate_suffix_path(HomePath.temporary().join(temporary_name), null);
+		if (create === 'file') {
+			StorageHelper.create_file(temporary_path);
+		}
+		if (create === 'directory') {
+			StorageHelper.create_directory(temporary_path);
+		}
+		return temporary_path;
+	}
+
+	// #endregion
+
 	// #region miscellaneous
 
-	export function regularize(
-		target: string,
-	): string {
-		return to_posix_style(target);
-	}
-
-	export function to_posix_style(
-		target: string,
-	): string {
-		return target.replaceAll('\\', '/');
-	}
-
-	export function to_windows_style(
-		target: string,
-	): string {
-		return target.replaceAll('/', '\\');
+	export function generate_suffix_path(
+		path: StoragePath,
+		infix: null | string,
+	): StoragePath {
+		infix = CheckHelper.not_null_or(infix, '.');
+		let result = path;
+		let suffix = 0;
+		while (StorageHelper.exist(result)) {
+			suffix += 1;
+			result = path.parent()!.join(path.name()! + `${infix}${suffix}`);
+		}
+		return result;
 	}
 
 	// ----------------
 
-	export function split(
-		target: string,
-	): Array<string> {
-		return regularize(target).split('/');
-	}
+	export type PathSegmentTree = {[key: string]: null | PathSegmentTree};
 
-	export function catenate(
-		target: Array<string>,
-	): string {
-		return regularize(target.join('/'));
-	}
-
-	// ----------------
-
-	export type Tree = {[key: string]: null | Tree};
-
-	export function tree(
-		target: Array<string>,
-	): Tree {
-		let tree: Tree = {};
-		let list = target.map(split);
+	export function resolve_segment_tree(
+		target: Array<StoragePath>,
+	): PathSegmentTree {
+		let tree: PathSegmentTree = {};
+		let list = target.map((it) => it.segment());
 		for (let path of list) {
 			let current = tree;
 			for (let index in path) {
@@ -244,22 +239,6 @@ namespace Twinning.Script.StorageHelper {
 			}
 		}
 		return tree;
-	}
-
-	// ----------------
-
-	export function generate_suffix_path(
-		path: StoragePath,
-		infix: null | string,
-	): StoragePath {
-		infix = CheckHelper.not_null_or(infix, '.');
-		let result = path;
-		let suffix = 0;
-		while (KernelX.Storage.exist(result)) {
-			suffix += 1;
-			result = path.parent()!.join(path.name()! + `${infix}${suffix}`);
-		}
-		return result;
 	}
 
 	// ----------------
@@ -286,6 +265,7 @@ namespace Twinning.Script.StorageHelper {
 		/^\/()$/,
 	];
 
+	// TODO: safty
 	export function is_dangerous(
 		target: string,
 	): boolean {

@@ -82,7 +82,7 @@ namespace Twinning.Script.Support.Pvz2.RemoteProject {
 			local_profile: project_directory.join('local.json'),
 			player_profile: project_directory.join('player.json'),
 		};
-		let local_temporary_directory = HomePath.new_temporary(null, 'directory');
+		let local_temporary_directory = StorageHelper.temporary('directory');
 		let local_temporary = {
 			content_delivery: local_temporary_directory.join('content_delivery'),
 			local_profile: local_temporary_directory.join('local_temporary_directory}/local.rton'),

@@ -15,7 +15,7 @@
 	"console:integer_format_error": "整数格式非法，{}",
 	"console:floater_format_error": "浮点格式非法，{}",
 	"console:size_format_error": "尺寸格式非法，{}",
-	"console:path_is_empty": "路径不可为空",
+	"console:path_is_detached": "指定路径是游离的，请提供显式的绝对或相对路径",
 	"console:path_is_exist": "指定路径已存在",
 	"console:path_is_exist_but_generate": "指定路径已存在，现已附加后缀",
 	"console:path_is_exist_but_move": "指定路径已存在，现已移动原路径",

@@ -87,7 +87,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						continue;
 					}
 					auto & resource_definition = definition.resource[resource_index];
-					resource_definition.path.parse(resource_information_structure.key);
+					resource_definition.path = Path{resource_information_structure.key};
+					assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 					switch (resource_information_structure.value.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template get_of_type<ResourceType::Constant::general()>();

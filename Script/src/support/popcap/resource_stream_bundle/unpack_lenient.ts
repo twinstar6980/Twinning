@@ -237,7 +237,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 					for (let packet_resource_path in packet_resource_information_list) {
 						let packet_resource_information = packet_resource_information_list[packet_resource_path];
 						let resource_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Resource = {
-							path: StorageHelper.regularize(packet_resource_path),
+							path: new StoragePath(packet_resource_path).emit(),
 							additional: undefined!,
 						};
 						subgroup_definition.resource.push(resource_definition);

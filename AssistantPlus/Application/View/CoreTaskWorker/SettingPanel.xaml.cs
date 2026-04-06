@@ -44,7 +44,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 				Argument = [],
 				AutomaticScroll = false,
 				ImmediateLaunch = false,
-				MessageFont = new (),
+				MessageFont = "",
 			})
 		);
 
@@ -248,7 +248,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<TextBox>();
-			this.Data.MessageFont = senders.Text.SelfLet((it) => new StoragePath(it));
+			this.Data.MessageFont = senders.Text;
 			this.NotifyPropertyChanged([
 				nameof(this.uMessageFontText_Text),
 			]);
@@ -257,7 +257,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 
 		public String uMessageFontText_Text {
 			get {
-				return this.Data.MessageFont.Emit();
+				return this.Data.MessageFont;
 			}
 		}
 
@@ -277,7 +277,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 					FontFamily = new (item),
 				}.SelfAlso((it) => {
 					it.Click += async (_, _) => {
-						this.Data.MessageFont = item.SelfLet((it) => new StoragePath(it));
+						this.Data.MessageFont = item;
 						this.NotifyPropertyChanged([
 							nameof(this.uMessageFontText_Text),
 						]);

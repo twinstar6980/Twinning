@@ -121,29 +121,31 @@ namespace Twinning.Script.Support.Pvz2.ResourceConvert {
 		if (option.recase_path) {
 			Console.information(los('support.pvz2.resource_convert:recase_resource_path'), [
 			]);
-			let resource_path_list: Array<string> = [];
+			let resource_path_list: Array<StoragePath> = [];
 			iterate_resource(false)((group, subgroup, resource) => {
 				assert_test(resource[1].additional.type !== 'dummy');
-				resource_path_list.push(`${resource[1].additional.value.path}${(resource[1].additional.type === 'texture' ? '.ptx' : '')}`);
+				let resource_path = new StoragePath(`${resource[1].additional.value.path}${(resource[1].additional.type === 'texture' ? '.ptx' : '')}`);
+				assert_test(resource_path.type() === StoragePathType.detached);
+				resource_path_list.push(resource_path);
 			});
-			let rename_tree = (
+			let resource_path_segment_tree = StorageHelper.resolve_segment_tree(resource_path_list);
+			let rename_resource = (
 				parent: StoragePath,
-				tree: StorageHelper.Tree,
+				tree: StorageHelper.PathSegmentTree,
 			) => {
 				for (let name in tree) {
 					try {
-						StorageHelper.rename_secure(parent.join(name.toUpperCase()), parent.join(name));
+						StorageHelper.rename_case(parent.join(name.toUpperCase()), parent.join(name));
 					}
 					catch (e) {
 						Console.error_of(e);
 					}
 					if (tree[name] !== null) {
-						rename_tree(parent.join(name), tree[name]!);
+						rename_resource(parent.join(name), tree[name]!);
 					}
 				}
 			};
-			let resource_path_tree = StorageHelper.tree(resource_path_list);
-			rename_tree(resource_directory, resource_path_tree);
+			rename_resource(resource_directory, resource_path_segment_tree);
 		}
 		Console.information(los('support.pvz2.resource_convert:convert_resource'), [
 		]);
