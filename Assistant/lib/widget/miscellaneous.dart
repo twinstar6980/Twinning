@@ -317,10 +317,10 @@ class StorageDropRegion extends StatelessWidget {
                 assertTest(uri.authority == '');
               }
               if (SystemChecker.isMacintosh) {
+                assertTest(uri.authority == '');
                 if (path.length > 1 && path[path.length - 1] == '/') {
                   path = path.substring(0, path.length - 1);
                 }
-                assertTest(uri.authority == '');
               }
               result.add(.of(path));
             })!;

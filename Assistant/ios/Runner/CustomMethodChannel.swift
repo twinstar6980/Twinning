@@ -78,8 +78,11 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     location: String,
     name: String,
   ) async throws -> String? {
-    guard type == "load_file" || type == "load_directory" else {
+    guard type == "load_file" || type == "load_directory" || type == "save_file" else {
       throw NSError(domain: "invalid type.", code: 0)
+    }
+    if type == "save_file" {
+      throw NSError(domain: "unsupported type.", code: 0)
     }
     let rootView = try! self.getCurrentSceneWindow().rootViewController as! FlutterViewController
     var pickerView: UIDocumentPickerViewController!

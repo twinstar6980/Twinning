@@ -153,7 +153,7 @@ namespace Twinning.Script {
 		public push(
 			other: StoragePath,
 		): StoragePath {
-			assert_test(other.m_type !== StoragePathType.absolute);
+			assert_test(other.m_type === StoragePathType.detached);
 			let result = new StoragePath();
 			result.m_type = this.m_type;
 			result.m_root = this.m_root;
@@ -173,39 +173,60 @@ namespace Twinning.Script {
 			this.m_root = null;
 			this.m_segment = [];
 			let position = 0;
-			if (text.length >= 2 && text[1] === ':' && ConvertHelper.is_letter(text[0])) {
-				this.m_root = text.substring(0, 2);
+			if (text.length >= 2 && ConvertHelper.is_letter(text[0]) && ConvertHelper.is_path_volume_separator(text[1])) {
 				position += 2;
-			}
-			if (text.length > position && ConvertHelper.is_path_dot(text[position])) {
-				let is_relative = false;
-				let is_parent = false;
-				let offset = 1;
-				if (text.length > position + offset && ConvertHelper.is_path_dot(text[position + offset])) {
-					is_parent = true;
-					offset += 1;
+				if (position < text.length && ConvertHelper.is_path_directory_separator(text[position])) {
+					this.m_type = StoragePathType.absolute;
+					this.m_root = text.substring(0, position);
+					position += 1;
 				}
-				if (text.length === position + offset) {
-					is_relative = true;
-				}
-				else if (ConvertHelper.is_path_separator(text[position + offset])) {
-					is_relative = true;
-					offset += 1;
-				}
-				if (is_relative) {
+				else {
 					this.m_type = StoragePathType.relative;
-					if (!is_parent) {
-						position += offset;
+					this.m_root = text.substring(0, position);
+				}
+			}
+			else if (text.length >= 2 && ConvertHelper.is_path_directory_separator(text[0]) && ConvertHelper.is_path_directory_separator(text[1])) {
+				position += 2;
+				for (; position < text.length; position++) {
+					if (ConvertHelper.is_path_directory_separator(text[position])) {
+						break;
 					}
 				}
-			}
-			else if (text.length > position && ConvertHelper.is_path_separator(text[position])) {
 				this.m_type = StoragePathType.absolute;
+				this.m_root = '//' + text.substring(2, position);
+				if (position < text.length && ConvertHelper.is_path_directory_separator(text[position])) {
+					position += 1;
+				}
+			}
+			else if (text.length >= 1 && ConvertHelper.is_path_directory_separator(text[position])) {
 				position += 1;
+				this.m_type = StoragePathType.absolute;
+				this.m_root = '';
+			}
+			else if (text.length >= 2 && ConvertHelper.is_path_dot(text[0]) && ConvertHelper.is_path_dot(text[1])) {
+				position += 2;
+				if (position == text.length || ConvertHelper.is_path_directory_separator(text[position])) {
+					this.m_type = StoragePathType.relative;
+					this.m_root = '';
+				}
+				position = 0;
+			}
+			else if (text.length >= 1 && ConvertHelper.is_path_dot(text[0])) {
+				position += 1;
+				if (position == text.length || ConvertHelper.is_path_directory_separator(text[position])) {
+					this.m_type = StoragePathType.relative;
+					this.m_root = '';
+					if (position < text.length) {
+						position += 1;
+					}
+				}
+				else {
+					position = 0;
+				}
 			}
 			let location = position;
 			for (; position <= text.length; position++) {
-				if (position === text.length || ConvertHelper.is_path_separator(text[position])) {
+				if (position === text.length || ConvertHelper.is_path_directory_separator(text[position])) {
 					let segment = text.substring(location, position);
 					if (segment.length !== 0) {
 						this.m_segment.push(segment);
@@ -221,22 +242,21 @@ namespace Twinning.Script {
 			rectify: boolean = false,
 		): string {
 			let text = '';
-			let dot = '.';
-			let separator = style === StoragePathStyle.posix ? '/' : '\\';
-			if (this.m_root !== null) {
-				text += this.m_root!;
-			}
-			if (this.m_type === StoragePathType.relative) {
-				text += dot;
-				text += separator;
-			}
-			if (this.m_type === StoragePathType.absolute) {
-				text += separator;
+			let pathDot = '.';
+			let pathDirectorySeparator = style === StoragePathStyle.posix ? '/' : '\\';
+			if (this.m_type !== StoragePathType.detached) {
+				for (let index = 0; index < this.m_root!.length; index++) {
+					text += !ConvertHelper.is_path_directory_separator(this.m_root![index]) ? this.m_root![index] : pathDirectorySeparator;
+				}
+				if (this.m_type === StoragePathType.relative) {
+					text += pathDot;
+				}
+				text += pathDirectorySeparator;
 			}
 			for (let segment_index = 0; segment_index < this.m_segment.length; segment_index++) {
 				let segment = this.m_segment[segment_index];
 				if (segment_index !== 0) {
-					text += separator;
+					text += pathDirectorySeparator;
 				}
 				if (!rectify) {
 					text += segment;

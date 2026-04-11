@@ -89,6 +89,18 @@ class ConvertHelper {
 
   // #region character
 
+  static Boolean isLetter(
+    String value,
+  ) {
+    if (value.length != 1) {
+      return false;
+    }
+    var code = value.codeUnitAt(0) | 0x20;
+    return 'a'.codeUnitAt(0) <= code && code <= 'z'.codeUnitAt(0);
+  }
+
+  // ----------------
+
   static Boolean isPathDot(
     String value,
   ) {
@@ -98,7 +110,7 @@ class ConvertHelper {
     return value == '.';
   }
 
-  static Boolean isPathSeparator(
+  static Boolean isPathDirectorySeparator(
     String value,
   ) {
     if (value.length != 1) {
@@ -107,14 +119,13 @@ class ConvertHelper {
     return value == '/' || value == '\\';
   }
 
-  static Boolean isLetter(
+  static Boolean isPathVolumeSeparator(
     String value,
   ) {
     if (value.length != 1) {
       return false;
     }
-    var code = value.codeUnitAt(0) | 0x20;
-    return 'a'.codeUnitAt(0) <= code && code <= 'z'.codeUnitAt(0);
+    return value == ':';
   }
 
   // #endregion

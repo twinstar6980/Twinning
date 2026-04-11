@@ -18,13 +18,15 @@ export namespace Twinning::Kernel::CharacterType {
 
 	inline constexpr auto k_escape_slash = Character{'\\'_c};
 
+	inline constexpr auto k_letter_case_offset = Character{'a'_c - 'A'_c};
+
 	inline constexpr auto k_path_dot = Character{'.'_c};
 
-	inline constexpr auto k_path_separator_poisx = Character{'/'_c};
+	inline constexpr auto k_path_directory_separator_poisx = Character{'/'_c};
 
-	inline constexpr auto k_path_separator_windows = Character{'\\'_c};
+	inline constexpr auto k_path_directory_separator_windows = Character{'\\'_c};
 
-	inline constexpr auto k_letter_case_offset = Character{'a'_c - 'A'_c};
+	inline constexpr auto k_path_volume_separator_windows = Character{':'_c};
 
 	#pragma endregion
 
@@ -56,18 +58,6 @@ export namespace Twinning::Kernel::CharacterType {
 		Character const & character
 	) -> Boolean {
 		return character == k_escape_slash;
-	}
-
-	inline constexpr auto is_path_dot(
-		Character const & character
-	) -> Boolean {
-		return character == k_path_dot;
-	}
-
-	inline constexpr auto is_path_separator(
-		Character const & character
-	) -> Boolean {
-		return character == k_path_separator_poisx || character == k_path_separator_windows;
 	}
 
 	#pragma endregion
@@ -247,6 +237,28 @@ export namespace Twinning::Kernel::CharacterType {
 		else {
 			return '0'_c + cbox<Character>(number);
 		}
+	}
+
+	#pragma endregion
+
+	#pragma region path
+
+	inline constexpr auto is_path_dot(
+		Character const & character
+	) -> Boolean {
+		return character == k_path_dot;
+	}
+
+	inline constexpr auto is_path_directory_separator(
+		Character const & character
+	) -> Boolean {
+		return character == k_path_directory_separator_poisx || character == k_path_directory_separator_windows;
+	}
+
+	inline constexpr auto is_path_volume_separator(
+		Character const & character
+	) -> Boolean {
+		return character == k_path_volume_separator_windows;
 	}
 
 	#pragma endregion

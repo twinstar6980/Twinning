@@ -86,7 +86,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					if (store.buffer === undefined) {
 						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					let relative_path = Support.Popcap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
+					let relative_path = Support.Popcap.ResourceStreamBundle.make_layout_path(layout_mode as any);
 					let definition_file = bundle_directory.join('definition.json');
 					let manifest_file = bundle_directory.join('manifest.json');
 					let resource_directory = bundle_directory.push(relative_path.resource_directory);
@@ -167,7 +167,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					}),
 				],
 				worker: ({data_file, bundle_directory, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, output_resource, output_packet}, store: {}) => {
-					let relative_path = Support.Popcap.ResourceStreamBundle.make_package_relative_path(layout_mode as any);
+					let relative_path = Support.Popcap.ResourceStreamBundle.make_layout_path(layout_mode as any);
 					let definition_file = bundle_directory.join('definition.json');
 					let manifest_file = bundle_directory.join('manifest.json');
 					let resource_directory = !output_resource ? null : bundle_directory.push(relative_path.resource_directory);

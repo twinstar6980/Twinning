@@ -195,6 +195,18 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #region character
 
+	export function is_letter(
+		value: string,
+	): boolean {
+		if (value.length !== 1) {
+			return false;
+		}
+		var code = value.charCodeAt(0) | 0x20;
+		return 'a'.charCodeAt(0) <= code && code <= 'z'.charCodeAt(0);
+	}
+
+	// ----------------
+
 	export function is_path_dot(
 		value: string,
 	): boolean {
@@ -204,7 +216,7 @@ namespace Twinning.Script.ConvertHelper {
 		return value === '.';
 	}
 
-	export function is_path_separator(
+	export function is_path_directory_separator(
 		value: string,
 	): boolean {
 		if (value.length !== 1) {
@@ -213,14 +225,13 @@ namespace Twinning.Script.ConvertHelper {
 		return value === '/' || value === '\\';
 	}
 
-	export function is_letter(
+	export function is_path_volume_separator(
 		value: string,
 	): boolean {
 		if (value.length !== 1) {
 			return false;
 		}
-		var code = value.charCodeAt(0) | 0x20;
-		return 'a'.charCodeAt(0) <= code && code <= 'z'.charCodeAt(0);
+		return value === ':';
 	}
 
 	// #endregion

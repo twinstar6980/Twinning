@@ -393,7 +393,6 @@ class StorageHelper {
     String?      name,
   ) async {
     assertTest(type == 'load_file' || type == 'load_directory' || type == 'save_file');
-    var targetString = null as String?;
     var target = null as StoragePath?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var locationTag = location == null ? null : !location.startsWith('@') ? null : location.substring(1);
@@ -410,53 +409,41 @@ class StorageHelper {
     name ??= '';
     if (SystemChecker.isWindows) {
       locationPath ??= .of('C:/');
-      if (type == 'load_file') {
-        targetString = (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path;
+      var targetString = switch (type) {
+        'load_file'      => (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path,
+        'load_directory' => (await lib.getDirectoryPath(initialDirectory: locationPath.emitNative())),
+        'save_file'      => (await lib.getSaveLocation(initialDirectory: locationPath.emitNative(), suggestedName: name))?.path,
+        _                => throw UnreachableException(),
+      };
+      if (targetString != null && targetString != '') {
+        target = .of(targetString);
       }
-      if (type == 'load_directory') {
-        targetString = (await lib.getDirectoryPath(initialDirectory: locationPath.emitNative()));
-      }
-      if (type == 'save_file') {
-        targetString = (await lib.getSaveLocation(initialDirectory: locationPath.emitNative(), suggestedName: name))?.path;
-      }
-      target = (targetString == null || targetString == '') ? null : .of(targetString);
     }
     if (SystemChecker.isLinux || SystemChecker.isMacintosh) {
       locationPath ??= .of('/');
-      if (type == 'load_file') {
-        targetString = (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path;
+      var targetString = switch (type) {
+        'load_file'      => (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path,
+        'load_directory' => (await lib.getDirectoryPath(initialDirectory: locationPath.emitNative())),
+        'save_file'      => (await lib.getSaveLocation(initialDirectory: locationPath.emitNative(), suggestedName: name))?.path,
+        _                => throw UnreachableException(),
+      };
+      if (targetString != null && targetString != '') {
+        target = .of(targetString);
       }
-      if (type == 'load_directory') {
-        targetString = (await lib.getDirectoryPath(initialDirectory: locationPath.emitNative()));
-      }
-      if (type == 'save_file') {
-        targetString = (await lib.getSaveLocation(initialDirectory: locationPath.emitNative(), suggestedName: name))?.path;
-      }
-      target = (targetString == null || targetString == '') ? null : .of(targetString);
     }
     if (SystemChecker.isAndroid) {
       locationPath ??= .of((await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path);
-      if (type == 'load_file') {
-        targetString = (await ApplicationPlatformMethod.instance.pickStorageItem('load_file', locationPath.emitNative(), name)).target;
+      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
+      if (targetString != null) {
+        var targetUri = Uri.parse(targetString);
+        target = await StorageHelper.parseAndroidContentUri(context, targetUri, true);
       }
-      if (type == 'load_directory') {
-        targetString = (await ApplicationPlatformMethod.instance.pickStorageItem('load_directory', locationPath.emitNative(), name)).target;
-      }
-      if (type == 'save_file') {
-        targetString = (await ApplicationPlatformMethod.instance.pickStorageItem('save_file', locationPath.emitNative(), name)).target;
-      }
-      target = (targetString == null || targetString == '') ? null : await StorageHelper.parseAndroidContentUri(context, Uri.parse(targetString), true);
     }
     if (SystemChecker.isIphone) {
       locationPath ??= await StorageHelper.queryApplicationSharedDirectory();
-      if (type == 'load_file') {
-        targetString = (await ApplicationPlatformMethod.instance.pickStorageItem('load_file', locationPath.emitNative(), name)).target;
-      }
-      if (type == 'load_directory') {
-        targetString = (await ApplicationPlatformMethod.instance.pickStorageItem('load_directory', locationPath.emitNative(), name)).target;
-      }
-      if (type == 'save_file') {
-        throw UnsupportedException();
+      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
+      if (targetString != null) {
+        target = .of(targetString);
       }
     }
     if (locationTag != null && target != null) {

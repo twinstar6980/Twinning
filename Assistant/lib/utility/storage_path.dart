@@ -163,7 +163,7 @@ class StoragePath {
   StoragePath push(
     StoragePath other,
   ) {
-    assertTest(other._type != .absolute);
+    assertTest(other._type == .detached);
     var result = StoragePath();
     result._type = this._type;
     result._root = this._root;
@@ -183,39 +183,60 @@ class StoragePath {
     this._root = null;
     this._segment = [];
     var position = 0;
-    if (text.length >= 2 && text[1] == ':' && ConvertHelper.isLetter(text[0])) {
-      this._root = text.substring(0, 2);
+    if (text.length >= 2 && ConvertHelper.isLetter(text[0]) && ConvertHelper.isPathVolumeSeparator(text[1])) {
       position += 2;
-    }
-    if (text.length > position && ConvertHelper.isPathDot(text[position])) {
-      var isRelative = false;
-      var isParent = false;
-      var offset = 1;
-      if (text.length > position + offset && ConvertHelper.isPathDot(text[position + offset])) {
-        isParent = true;
-        offset += 1;
+      if (position < text.length && ConvertHelper.isPathDirectorySeparator(text[position])) {
+        this._type = .absolute;
+        this._root = text.substring(0, position);
+        position += 1;
       }
-      if (text.length == position + offset) {
-        isRelative = true;
-      }
-      else if (ConvertHelper.isPathSeparator(text[position + offset])) {
-        isRelative = true;
-        offset += 1;
-      }
-      if (isRelative) {
+      else {
         this._type = .relative;
-        if (!isParent) {
-          position += offset;
+        this._root = text.substring(0, position);
+      }
+    }
+    else if (text.length >= 2 && ConvertHelper.isPathDirectorySeparator(text[0]) && ConvertHelper.isPathDirectorySeparator(text[1])) {
+      position += 2;
+      for (; position < text.length; position++) {
+        if (ConvertHelper.isPathDirectorySeparator(text[position])) {
+          break;
         }
       }
-    }
-    else if (text.length > position && ConvertHelper.isPathSeparator(text[position])) {
       this._type = .absolute;
+      this._root = '//' + text.substring(2, position);
+      if (position < text.length && ConvertHelper.isPathDirectorySeparator(text[position])) {
+        position += 1;
+      }
+    }
+    else if (text.length >= 1 && ConvertHelper.isPathDirectorySeparator(text[position])) {
       position += 1;
+      this._type = .absolute;
+      this._root = '';
+    }
+    else if (text.length >= 2 && ConvertHelper.isPathDot(text[0]) && ConvertHelper.isPathDot(text[1])) {
+      position += 2;
+      if (position == text.length || ConvertHelper.isPathDirectorySeparator(text[position])) {
+        this._type = .relative;
+        this._root = '';
+      }
+      position = 0;
+    }
+    else if (text.length >= 1 && ConvertHelper.isPathDot(text[0])) {
+      position += 1;
+      if (position == text.length || ConvertHelper.isPathDirectorySeparator(text[position])) {
+        this._type = .relative;
+        this._root = '';
+        if (position < text.length) {
+          position += 1;
+        }
+      }
+      else {
+        position = 0;
+      }
     }
     var location = position;
     for (; position <= text.length; position++) {
-      if (position == text.length || ConvertHelper.isPathSeparator(text[position])) {
+      if (position == text.length || ConvertHelper.isPathDirectorySeparator(text[position])) {
         var segment = text.substring(location, position);
         if (!segment.isEmpty) {
           this._segment.add(segment);
@@ -231,22 +252,21 @@ class StoragePath {
     Boolean          rectify = false,
   }) {
     var text = StringBuffer();
-    var dot = '.';
-    var separator = style == .posix ? '/' : '\\';
-    if (this._root != null) {
-      text.write(this._root!);
-    }
-    if (this._type == .relative) {
-      text.write(dot);
-      text.write(separator);
-    }
-    if (this._type == .absolute) {
-      text.write(separator);
+    var pathDot = '.';
+    var pathDirectorySeparator = style == .posix ? '/' : '\\';
+    if (this._type != .detached) {
+      for (var index = 0; index < this._root!.length; index++) {
+        text.write(!ConvertHelper.isPathDirectorySeparator(this._root![index]) ? this._root![index] : pathDirectorySeparator);
+      }
+      if (this._type == .relative) {
+        text.write(pathDot);
+      }
+      text.write(pathDirectorySeparator);
     }
     for (var segmentIndex = 0; segmentIndex < this._segment.length; segmentIndex++) {
       var segment = this._segment[segmentIndex];
       if (segmentIndex != 0) {
-        text.write(separator);
+        text.write(pathDirectorySeparator);
       }
       if (!rectify) {
         text.write(segment);

@@ -14,32 +14,32 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle {
 
 	// ----------------
 
-	export function make_package_relative_path(
+	export function make_layout_path(
 		layout_mode: LayoutMode,
 	): {
 		resource_directory: StoragePath;
 		packet_file: StoragePath;
 	} {
-		let result: ReturnType<typeof make_package_relative_path>;
+		let result: ReturnType<typeof make_layout_path>;
 		switch (layout_mode) {
 			case 'group': {
 				result = {
-					resource_directory: new StoragePath('./group/{0}/{1}/resource'),
-					packet_file: new StoragePath('./group/{0}/{1}/packet.rsg'),
+					resource_directory: new StoragePath('group/{0}/{1}/resource'),
+					packet_file: new StoragePath('group/{0}/{1}/packet.rsg'),
 				};
 				break;
 			}
 			case 'subgroup': {
 				result = {
-					resource_directory: new StoragePath('./subgroup/{1}/resource'),
-					packet_file: new StoragePath('./subgroup/{1}/packet.rsg'),
+					resource_directory: new StoragePath('subgroup/{1}/resource'),
+					packet_file: new StoragePath('subgroup/{1}/packet.rsg'),
 				};
 				break;
 			}
 			case 'resource': {
 				result = {
-					resource_directory: new StoragePath('./resource'),
-					packet_file: new StoragePath('./packet/{1}.rsg'),
+					resource_directory: new StoragePath('resource'),
+					packet_file: new StoragePath('packet/{1}.rsg'),
 				};
 				break;
 			}

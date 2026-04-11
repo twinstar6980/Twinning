@@ -11,13 +11,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	): StoragePath {
 		let path = new StoragePath();
 		if (platform === 'windows_intel32') {
-			path.parse('./GameAssembly.dll');
+			path.parse('GameAssembly.dll');
 		}
 		if (platform === 'android_arm32') {
-			path.parse('./lib/armeabi-v7a/libil2cpp.so');
+			path.parse('lib/armeabi-v7a/libil2cpp.so');
 		}
 		if (platform === 'android_arm64') {
-			path.parse('./lib/arm64-v8a/libil2cpp.so');
+			path.parse('lib/arm64-v8a/libil2cpp.so');
 		}
 		return path;
 	}
@@ -27,13 +27,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 	): StoragePath {
 		let path = new StoragePath();
 		if (platform === 'windows_intel32') {
-			path.parse('./KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat');
+			path.parse('KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat');
 		}
 		if (platform === 'android_arm32') {
-			path.parse('./assets/bin/Data/Managed/Metadata/global-metadata.dat');
+			path.parse('assets/bin/Data/Managed/Metadata/global-metadata.dat');
 		}
 		if (platform === 'android_arm64') {
-			path.parse('./assets/bin/Data/Managed/Metadata/global-metadata.dat');
+			path.parse('assets/bin/Data/Managed/Metadata/global-metadata.dat');
 		}
 		return path;
 	}
