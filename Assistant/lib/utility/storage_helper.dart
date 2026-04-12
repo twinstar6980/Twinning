@@ -393,7 +393,6 @@ class StorageHelper {
     String?      name,
   ) async {
     assertTest(type == 'load_file' || type == 'load_directory' || type == 'save_file');
-    var target = null as StoragePath?;
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var locationTag = location == null ? null : !location.startsWith('@') ? null : location.substring(1);
     var locationPath = null as StoragePath?;
@@ -407,6 +406,7 @@ class StorageHelper {
       locationPath = null;
     }
     name ??= '';
+    var target = null as StoragePath?;
     if (SystemChecker.isWindows) {
       locationPath ??= .of('C:/');
       var targetString = switch (type) {

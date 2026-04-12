@@ -1,5 +1,4 @@
 #pragma warning disable 0,
-// ReSharper disable CheckNamespace
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
@@ -7,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-namespace Twinning.AssistantPlus {
+namespace Twinning.AssistantPlus.Model {
 
 	public static class PopcapReflectionHelper {
 

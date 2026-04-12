@@ -1,5 +1,4 @@
 #pragma warning disable 0,
-// ReSharper disable
 
 using Twinning.AssistantPlus;
 using System.Text.Json;
@@ -290,7 +289,7 @@ namespace Twinning.AssistantPlus.Utility {
 					new FloaterJsonConverter<FloaterS64>(),
 					new TupleJsonConverterFactory(),
 					new StoragePathJsonConverter(),
-					new PopcapReflectionHelper.CompositeTypeJsonConverter(),
+					new Model.PopcapReflectionHelper.CompositeTypeJsonConverter(),
 				},
 			};
 		}

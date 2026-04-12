@@ -1,8 +1,8 @@
 #pragma warning disable 0,
-// ReSharper disable
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
+using Twinning.AssistantPlus.Model;
 using FluentIconGlyph = Twinning.AssistantPlus.Control.FluentIconGlyph;
 
 namespace Twinning.AssistantPlus {

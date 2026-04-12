@@ -1,5 +1,4 @@
-#pragma warning disable 0, CS0162
-// ReSharper disable HeuristicUnreachableCode
+#pragma warning disable 0,
 
 using Twinning.AssistantPlus;
 using Windows.UI.StartScreen;
@@ -42,9 +41,6 @@ namespace Twinning.AssistantPlus.Utility {
 		public async Task Apply(
 			List<JumpListItem> itemList
 		) {
-			#if DEBUG
-			return;
-			#endif
 			AssertTest(this.mInitialized);
 			if (!JumpList.IsSupported()) {
 				return;

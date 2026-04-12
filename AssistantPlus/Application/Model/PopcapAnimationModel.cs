@@ -1,10 +1,9 @@
 #pragma warning disable 0,
-// ReSharper disable CheckNamespace
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
 
-namespace Twinning.AssistantPlus {
+namespace Twinning.AssistantPlus.Model {
 
 	public static class PopcapAnimationModel {
 

@@ -1,5 +1,4 @@
 #pragma warning disable 0,
-// ReSharper disable CheckNamespace
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
@@ -7,7 +6,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace Twinning.AssistantPlus {
+namespace Twinning.AssistantPlus.Model {
 
 	public static class PopcapAnimationHelper {
 

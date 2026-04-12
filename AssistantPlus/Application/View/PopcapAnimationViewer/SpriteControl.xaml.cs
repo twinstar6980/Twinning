@@ -1,8 +1,8 @@
 #pragma warning disable 0,
-// ReSharper disable
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
+using Twinning.AssistantPlus.Model;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 
