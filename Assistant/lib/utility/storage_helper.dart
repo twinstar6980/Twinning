@@ -419,7 +419,7 @@ class StorageHelper {
         target = .of(targetString);
       }
     }
-    if (SystemChecker.isLinux || SystemChecker.isMacintosh) {
+    if (SystemChecker.isLinux) {
       locationPath ??= .of('/');
       var targetString = switch (type) {
         'load_file'      => (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path,
@@ -428,6 +428,13 @@ class StorageHelper {
         _                => throw UnreachableException(),
       };
       if (targetString != null && targetString != '') {
+        target = .of(targetString);
+      }
+    }
+    if (SystemChecker.isMacintosh) {
+      locationPath ??= .of('/');
+      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
+      if (targetString != null) {
         target = .of(targetString);
       }
     }

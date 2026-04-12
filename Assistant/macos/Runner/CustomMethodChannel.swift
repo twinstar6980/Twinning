@@ -1,33 +1,28 @@
-import UIKit
-import UniformTypeIdentifiers
-import Flutter
+import AppKit
+import FlutterMacOS
 
-class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
+class CustomMethodChannel: NSObject {
 
   // MARK: - variable
 
-  private let host: AppDelegate
-
-  private var continuation: CheckedContinuation<Any?, Never>?
+  private let host: MainFlutterWindow
 
   // MARK: - construct
 
   public init(
-    host: AppDelegate,
+    host: MainFlutterWindow,
   ) {
     self.host = host
-    self.continuation = nil
     return
   }
 
   // MARK: - register
 
-  public func register_didInitializeImplicitFlutterEngine(
-    _ engineBridge: FlutterImplicitEngineBridge,
+  public func register_awakeFromNib(
   ) -> Void {
     FlutterMethodChannel(
       name: "\(Bundle.main.bundleIdentifier!).CustomMethodChannel",
-      binaryMessenger: engineBridge.applicationRegistrar.messenger(),
+      binaryMessenger: (self.host.contentViewController as! FlutterViewController).engine.binaryMessenger,
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
         await self?.handle(call: call, result: result)
@@ -73,6 +68,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     return
   }
 
+  @MainActor
   private func handlePickStorageItem(
     type: String,
     location: String,
@@ -81,41 +77,37 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     guard type == "load_file" || type == "load_directory" || type == "save_file" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
-    if type == "save_file" {
-      throw NSError(domain: "unsupported type.", code: 0)
-    }
-    var picker: UIDocumentPickerViewController!
+    var picker: NSSavePanel!
     if type == "load_file" || type == "load_directory" {
-      picker = UIDocumentPickerViewController(forOpeningContentTypes: [type == "load_file" ? .item : .folder])
-      picker.allowsMultipleSelection = false
+      let pickerView = NSOpenPanel()
+      pickerView.resolvesAliases = true
+      pickerView.canResolveUbiquitousConflicts = true
+      pickerView.canDownloadUbiquitousContents = true
+      pickerView.isAccessoryViewDisclosed = false
+      pickerView.allowsMultipleSelection = false
+      pickerView.canChooseFiles = type == "load_file"
+      pickerView.canChooseDirectories = type == "load_directory"
+      picker = pickerView
     }
-    picker.shouldShowFileExtensions = true
+    if type == "save_file" {
+      let pickerView = NSSavePanel()
+      pickerView.canSelectHiddenExtension = false
+      pickerView.isExtensionHidden = false
+      pickerView.showsTagField = false
+      pickerView.nameFieldStringValue = name
+      picker = pickerView
+    }
+    picker.showsHiddenFiles = true
+    picker.treatsFilePackagesAsDirectories = true
+    picker.canCreateDirectories = true
+    picker.allowedContentTypes = []
     picker.directoryURL = URL(fileURLWithPath: location)
-    picker.delegate = self
-    (try self.getCurrentSceneWindow().rootViewController as! FlutterViewController).present(picker, animated: true)
-    let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as? URL
-    self.continuation = nil
+    var targetUrl = nil as URL?
+    if (picker.runModal() == .OK) {
+      targetUrl = picker.url
+    }
     let target = targetUrl == nil ? nil : try self.getFileActualPath(url: targetUrl!)
     return target
-  }
-
-  // MARK: - implement UIDocumentPickerDelegate
-
-  public func documentPicker(
-    _ controller: UIDocumentPickerViewController,
-    didPickDocumentAt url: URL,
-  ) -> Void {
-    controller.dismiss(animated: true)
-    self.continuation!.resume(returning: url)
-    return
-  }
-
-  public func documentPickerWasCancelled(
-    _ controller: UIDocumentPickerViewController,
-  ) -> Void {
-    controller.dismiss(animated: true)
-    self.continuation!.resume(returning: nil)
-    return
   }
 
   // MARK: - utility
@@ -134,17 +126,6 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       path.removeLast()
     }
     return path
-  }
-
-  private func getCurrentSceneWindow(
-  ) throws -> UIWindow {
-    guard let currentScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else {
-      throw NSError(domain: "invalid scene.", code: 0)
-    }
-    guard let currentWindow = currentScene.windows.first(where: { $0.isKeyWindow }) else {
-      throw NSError(domain: "invalid window.", code: 0)
-    }
-    return currentWindow
   }
 
 }

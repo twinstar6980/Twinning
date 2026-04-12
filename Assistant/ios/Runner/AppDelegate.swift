@@ -10,13 +10,13 @@ import app_links
 
   public override func application(
     _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
   ) -> Bool {
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
   public func didInitializeImplicitFlutterEngine(
-    _ engineBridge: FlutterImplicitEngineBridge
+    _ engineBridge: FlutterImplicitEngineBridge,
   ) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
