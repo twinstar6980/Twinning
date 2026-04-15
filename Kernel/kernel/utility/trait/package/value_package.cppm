@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Trait {
 		) -> ZBoolean {
 			auto result = false;
 			auto iterate =
-				[&] <typename TCurrentValue>(
+				[&]<typename TCurrentValue>(
 				TCurrentValue current_value
 			) {
 				if constexpr (IsSame<TCurrentValue, TValue>) {

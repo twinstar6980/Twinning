@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 		) -> Void {
 			Generalization::match<Texture::Encoding::FormatPackage>(
 				format,
-				[&] <auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
+				[&]<auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
 					process_image<t_format>(data, image);
 				}
 			);

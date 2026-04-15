@@ -28,8 +28,6 @@ ShowWindow
 SetForegroundWindow
 
 // COM
-CoInitialize
-CoUninitialize
 CoCreateInstance
 CoTaskMemFree
 

@@ -57,7 +57,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 		) -> Void {
 			auto has_case = k_false;
 			Generalization::each<typename EnumerationAttribute<TValue>::Index>(
-				[&] <auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
+				[&]<auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
 					if (t_value_index == index_value) {
 						value = mbox<TValue>(t_index);
 						has_case = k_true;
@@ -512,7 +512,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			bit_set.from_integer(raw_value);
 			auto current_index = k_begin_index;
 			Generalization::each_with<>(
-				[&] <auto t_index, typename TCurrentValue>(ValuePackage<t_index>, TCurrentValue & current_value) {
+				[&]<auto t_index, typename TCurrentValue>(ValuePackage<t_index>, TCurrentValue & current_value) {
 					if constexpr (IsSame<TCurrentValue, Boolean const>) {
 						assert_test(bit_set.get(current_index) == current_value);
 						++current_index;
@@ -615,7 +615,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					exchange_enumerated_fixed<IntegerU8>(data, type);
 					auto has_case = k_false;
 					Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
-						[&] <auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
+						[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
 							if (type == TAttribute::template Element<1_ixz>::template element<1_ixz>) {
 								element.key = mbox<TType>(t_index);
 								has_case = k_true;
@@ -627,7 +627,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				[](auto & data, auto & element) {
 					auto has_case = k_false;
 					Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
-						[&] <auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
+						[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
 							if (t_index == static_cast<ZSize>(element.key.value)) {
 								exchange_common_property_value<typename TAttribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<1_ix>());
 								has_case = k_true;
@@ -647,7 +647,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						exchange_enumerated_fixed<IntegerU8>(data, type);
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
-							[&] <auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
+							[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
 								if (type == TAttribute::template Element<1_ixz>::template element<1_ixz>) {
 									element.key = mbox<TType>(t_index);
 									has_case = k_true;
@@ -659,7 +659,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					[](auto & data, auto & element) {
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
-							[&] <auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
+							[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
 								if (t_index == static_cast<ZSize>(element.key.value)) {
 									exchange_common_property_value<typename TAttribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<1_ix>());
 									exchange_common_property_value<typename TAttribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<2_ix>());
@@ -4939,7 +4939,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						auto item_data = InputByteStreamView{data.forward_view(cbox<Size>(item_size))};
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<typename Definition::HierarchyType>::Index>(
-							[&] <auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
+							[&]<auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
 								constexpr auto variant_type = mbox<typename Definition::HierarchyType>(t_index);
 								if constexpr (variant_type != Definition::HierarchyType::Constant::unknown()) {
 									if (type == t_value_index) {

@@ -54,13 +54,14 @@ class ForwarderActionViewController: UIViewController {
   private func getApplicationIdentifier(
   ) throws -> String {
     guard let extensionIdentifier = Bundle.main.bundleIdentifier else {
-      throw NSError(domain: "failed to get extension identifier.", code: 0)
+      throw NSError(domain: "failed to get bundle identifier.", code: 0)
     }
     let extensionSuffix = ".Forwarder"
     guard extensionIdentifier.hasSuffix(extensionSuffix) else {
-      throw NSError(domain: "unknown extension identifier.", code: 0)
+      throw NSError(domain: "invalid bundle identifier.", code: 0)
     }
-    return String(extensionIdentifier.prefix(extensionIdentifier.count - extensionSuffix.count))
+    let identifier = String(extensionIdentifier.prefix(extensionIdentifier.count - extensionSuffix.count))
+    return identifier
   }
 
   // ----------------

@@ -88,7 +88,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename TPackage, template <typename ...> typename TTransformer> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
 	using AsTypePackageTransform = decltype([] {
-		return [&] <auto ... t_index>(
+		return [&]<auto ... t_index>(
 			std::index_sequence<t_index ...>
 		) -> TTransformer<typename TPackage::template Element<t_index> ...> {
 				return declare<TTransformer<typename TPackage::template Element<t_index> ...>>();

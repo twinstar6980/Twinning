@@ -53,7 +53,7 @@ class CustomMethodChannel {
   ): Unit {
     MethodChannel(
       flutterEngine.dartExecutor.binaryMessenger,
-      "${this.host.packageName}.CustomMethodChannel",
+      "${this.getApplicationIdentifier()}.CustomMethodChannel",
     ).setMethodCallHandler { call, result ->
       CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
       return@setMethodCallHandler
@@ -249,6 +249,13 @@ class CustomMethodChannel {
   private val requestCodeForPickStorageItem: Int = 1001
 
   private val requestForRequestExternalStoragePermission: Int = 1002
+
+  // ----------------
+
+  private fun getApplicationIdentifier(
+  ): String {
+    return this.host.packageName
+  }
 
   // ----------------
 

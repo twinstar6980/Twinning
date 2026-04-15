@@ -409,13 +409,8 @@ class StorageHelper {
     var target = null as StoragePath?;
     if (SystemChecker.isWindows) {
       locationPath ??= .of('C:/');
-      var targetString = switch (type) {
-        'load_file'      => (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path,
-        'load_directory' => (await lib.getDirectoryPath(initialDirectory: locationPath.emitNative())),
-        'save_file'      => (await lib.getSaveLocation(initialDirectory: locationPath.emitNative(), suggestedName: name))?.path,
-        _                => throw UnreachableException(),
-      };
-      if (targetString != null && targetString != '') {
+      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
+      if (targetString != null) {
         target = .of(targetString);
       }
     }
@@ -529,7 +524,7 @@ class StorageHelper {
   static Future<StoragePath?> parseAndroidContentUri(
     BuildContext context,
     Uri          uri,
-    Boolean      copyable,
+    Boolean      allowDuplicate,
   ) async {
     var result = null as StoragePath?;
     assertTest(uri.scheme == 'content');
@@ -605,7 +600,7 @@ class StorageHelper {
             onPressed: (context) => Navigator.pop(context, false),
           ),
           StyledButton.text(
-            enabled: copyable,
+            enabled: allowDuplicate,
             content: StyledText.inherit('Duplicate'),
             onPressed: (context) => Navigator.pop(context, true),
           ),

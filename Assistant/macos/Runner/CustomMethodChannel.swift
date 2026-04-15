@@ -21,7 +21,7 @@ class CustomMethodChannel: NSObject {
   public func register_awakeFromNib(
   ) -> Void {
     FlutterMethodChannel(
-      name: "\(Bundle.main.bundleIdentifier!).CustomMethodChannel",
+      name: "\(try! self.getApplicationIdentifier()).CustomMethodChannel",
       binaryMessenger: (self.host.contentViewController as! FlutterViewController).engine.binaryMessenger,
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
@@ -111,6 +111,16 @@ class CustomMethodChannel: NSObject {
   }
 
   // MARK: - utility
+
+  private func getApplicationIdentifier(
+  ) throws -> String {
+    guard let identifier = Bundle.main.bundleIdentifier else {
+      throw NSError(domain: "failed to get bundle identifier.", code: 0)
+    }
+    return identifier
+  }
+
+  // ----------------
 
   private func getFileActualPath(
     url: URL,

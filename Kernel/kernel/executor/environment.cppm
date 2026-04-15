@@ -255,7 +255,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto it = TClass{};
 					Generalization::match<TVersionPackage>(
 						version,
-						[&] <auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
+						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
 							json.to(it, mbox<Size>(t_index));
 						}
 					);
@@ -273,7 +273,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto json = Json::Value{};
 					Generalization::match<TVersionPackage>(
 						version,
-						[&] <auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
+						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
 							json.from(thix, mbox<Size>(t_index));
 						}
 					);
@@ -291,7 +291,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			) -> Void {
 					Generalization::match<TVersionPackage>(
 						version,
-						[&] <auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
+						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
 							json.to(thix, mbox<Size>(t_index));
 						}
 					);
@@ -707,7 +707,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Wwise::SoundBank::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), embedded_media_directory);
 									}
 								);
@@ -723,7 +723,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Wwise::SoundBank::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), embedded_media_directory);
 									}
 								);
@@ -758,7 +758,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Marmalade::Dzip::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
@@ -774,7 +774,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Marmalade::Dzip::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
@@ -803,7 +803,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Zlib::Compress<version>::process(raw, ripe, level, window_bits, memory_level, strategy);
 									}
 								);
@@ -819,7 +819,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Zlib::Compress<version>::estimate(raw_size, ripe_size_bound, window_bits, memory_level);
 									}
 								);
@@ -835,7 +835,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Zlib::Uncompress<version>::process(ripe, raw, window_bits);
 									}
 								);
@@ -849,7 +849,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Zlib::Uncompress<version>::estimate(ripe, raw_size);
 									}
 								);
@@ -872,7 +872,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::CryptData::Encrypt<version>::process(plain, cipher, limit, key);
 									}
 								);
@@ -887,7 +887,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::CryptData::Encrypt<version>::estimate(plain_size, cipher_size, limit);
 									}
 								);
@@ -904,7 +904,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::CryptData::Decrypt<version>::process(cipher, plain, limit, key);
 									}
 								);
@@ -919,7 +919,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::CryptData::Decrypt<version>::estimate(cipher, plain_size, limit);
 									}
 								);
@@ -942,7 +942,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ReflectionObjectNotation::Encode<version>::process(data, definition, enable_string_index, enable_reference);
 									}
 								);
@@ -957,7 +957,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ReflectionObjectNotation::Decode<version>::process(data, definition);
 									}
 								);
@@ -979,7 +979,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::UTexture::Encode<version>::process(data, image, format);
 									}
 								);
@@ -994,7 +994,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::UTexture::Encode<version>::estimate(data_size_bound, image_size, format);
 									}
 								);
@@ -1009,7 +1009,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::UTexture::Decode<version>::process(data, image);
 									}
 								);
@@ -1023,7 +1023,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::UTexture::Decode<version>::estimate(data, image_size);
 									}
 								);
@@ -1046,7 +1046,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::SexyTexture::Encode<version>::process(data, image, format, compress_texture_data);
 									}
 								);
@@ -1062,7 +1062,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::SexyTexture::Encode<version>::estimate(data_size_bound, image_size, format, compress_texture_data);
 									}
 								);
@@ -1077,7 +1077,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::SexyTexture::Decode<version>::process(data, image);
 									}
 								);
@@ -1091,7 +1091,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::SexyTexture::Decode<version>::estimate(data, image_size);
 									}
 								);
@@ -1126,7 +1126,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Animation::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1141,7 +1141,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Animation::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1174,7 +1174,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ReAnimation::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1189,7 +1189,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ReAnimation::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1222,7 +1222,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Particle::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1237,7 +1237,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Particle::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1270,7 +1270,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Trail::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1285,7 +1285,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Trail::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1317,7 +1317,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::RenderEffect::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1332,7 +1332,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::RenderEffect::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1362,7 +1362,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ParticleEffect::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1377,7 +1377,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ParticleEffect::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1407,7 +1407,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::CharacterFontWidget2::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1422,7 +1422,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::CharacterFontWidget2::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
 									}
 								);
@@ -1454,7 +1454,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Package::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
@@ -1470,7 +1470,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::Package::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
@@ -1503,7 +1503,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ResourceStreamGroup::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
@@ -1519,7 +1519,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ResourceStreamGroup::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), resource_directory);
 									}
 								);
@@ -1572,7 +1572,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ResourceStreamBundle::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), manifest.get_of_index<mbox<Size>(index)>(), resource_directory, packet_file, new_packet_file);
 									}
 								);
@@ -1590,7 +1590,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ResourceStreamBundle::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), manifest.set_of_index<mbox<Size>(index)>(), resource_directory, packet_file);
 									}
 								);
@@ -1613,7 +1613,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ResourceStreamBundlePatch::Encode<version>::process(before, after, patch, use_raw_packet);
 									}
 								);
@@ -1630,7 +1630,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
-									[&] <auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
+									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
 										Tool::Popcap::ResourceStreamBundlePatch::Decode<version>::process(before, after, patch, use_raw_packet);
 									}
 								);

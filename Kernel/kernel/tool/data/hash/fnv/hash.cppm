@@ -59,13 +59,13 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 				Mode::Constant::m_1a()
 			>>(
 				mode,
-				[&] <auto t_mode_index, auto t_mode>(ValuePackage<t_mode_index>, ValuePackage<t_mode>) {
+				[&]<auto t_mode_index, auto t_mode>(ValuePackage<t_mode_index>, ValuePackage<t_mode>) {
 					Generalization::match<ValuePackage<
 						BitCount::Constant::b_32(),
 						BitCount::Constant::b_64()
 					>>(
 						bit_count,
-						[&] <auto t_bit_count_index, auto t_bit_count>(ValuePackage<t_bit_count_index>, ValuePackage<t_bit_count>) {
+						[&]<auto t_bit_count_index, auto t_bit_count>(ValuePackage<t_bit_count_index>, ValuePackage<t_bit_count>) {
 							auto value_integer = typename Parameter<t_bit_count>::Value{};
 							process_whole_integer<t_mode, t_bit_count>(data, value_integer);
 							value.allocate(k_type_size<typename Parameter<t_bit_count>::Value>);

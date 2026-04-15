@@ -325,7 +325,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			auto has_case = k_false;
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					if (!has_case) {
 						if (TField::value == that.value) {
 							thix = make_string(TField::name.view());
@@ -347,7 +347,7 @@ export namespace Twinning::Kernel {
 			auto has_case = k_false;
 			auto thix_hash = thix.hash().value;
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					if (!has_case) {
 						constexpr auto name_hash = hash_std_string_view(TField::name.view());
 						if (name_hash == thix_hash) {

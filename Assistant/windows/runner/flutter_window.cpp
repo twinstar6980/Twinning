@@ -4,8 +4,10 @@
 
 #include "flutter/generated_plugin_registrant.h"
 
+#include "./custom_method_channel.hpp"
+
 FlutterWindow::FlutterWindow(const flutter::DartProject& project)
-    : project_(project) {}
+    : project_(project), channel_(std::make_unique<CustomMethodChannel>(this)) {}
 
 FlutterWindow::~FlutterWindow() {}
 
@@ -25,6 +27,7 @@ bool FlutterWindow::OnCreate() {
     return false;
   }
   RegisterPlugins(flutter_controller_->engine());
+  this->channel_->register_OnCreate();
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {

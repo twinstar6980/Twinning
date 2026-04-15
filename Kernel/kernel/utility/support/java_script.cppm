@@ -517,7 +517,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) -> Void {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					thix.from(that.template get_of_index<mbox<Size>(t_index)>());
 				}
 			);
@@ -531,7 +531,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) -> Void {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					thix.to(that.template set_of_index<mbox<Size>(t_index)>());
 				}
 			);
@@ -583,7 +583,7 @@ export namespace Twinning::Kernel::JavaScript {
 			auto variant_index = cbox<Size>(variant_type);
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					thix.from(that.template get_of_index<mbox<Size>(t_index)>());
 				}
 			);
@@ -598,7 +598,7 @@ export namespace Twinning::Kernel::JavaScript {
 			auto variant_index = cbox<Size>(variant_type);
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					thix.to(that.template set_of_index<mbox<Size>(t_index)>());
 				}
 			);
@@ -650,7 +650,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) -> Void {
 			thix.set_object_of_array();
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					thix.set_object_property(mbox<Size>(t_index), thix.new_value(that.template get<mbox<Size>(t_index)>()));
 				}
 			);
@@ -664,7 +664,7 @@ export namespace Twinning::Kernel::JavaScript {
 			auto thix_array = thix.collect_object_own_property_of_array();
 			assert_test(thix_array.size() == mbox<Size>(sizeof...(TValue)));
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					thix_array.at(mbox<Size>(t_index)).to(that.template get<mbox<Size>(t_index)>());
 				}
 			);
@@ -779,7 +779,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) -> Void {
 			thix.set_object_of_array();
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					thix.set_object_property(mbox<Size>(t_index), thix.new_value(TField::value_of(that)));
 				}
 			);
@@ -793,7 +793,7 @@ export namespace Twinning::Kernel::JavaScript {
 			auto thix_array = thix.collect_object_own_property_of_array();
 			assert_test(thix_array.size() == mbox<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					thix_array.at(mbox<Size>(t_index)).to(TField::value_of(that));
 				}
 			);
@@ -821,7 +821,7 @@ export namespace Twinning::Kernel::JavaScript {
 		) -> Void {
 			thix.set_object_of_object();
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					thix.set_object_property(make_string_view(TField::name.view()), thix.new_value(TField::value_of(that)));
 				}
 			);
@@ -835,7 +835,7 @@ export namespace Twinning::Kernel::JavaScript {
 			auto thix_object = thix.collect_object_own_property_of_object();
 			assert_test(thix_object.size() == mbox<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					assert_test(thix_object.at(mbox<Size>(t_index)).key == make_string_view(TField::name.view()));
 					thix_object.at(mbox<Size>(t_index)).value.to(TField::value_of(that));
 				}
@@ -872,10 +872,10 @@ export namespace Twinning::Kernel::JavaScript {
 			auto thix_array = thix.collect_object_own_property_of_array();
 			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
 				thix_array.size().value,
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					auto & that_value = that.template set_of_index<mbox<Size>(t_index)>();
 					Generalization::each<typename TypePackage<TValue ...>::template Element<t_index>::Reflection::MemberVariable>(
-						[&] <auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
+						[&]<auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
 							thix_array.at(mbox<Size>(t_field_index)).to(TField::value_of(that_value));
 						}
 					);
@@ -911,10 +911,10 @@ export namespace Twinning::Kernel::JavaScript {
 			auto thix_object = thix.collect_object_own_property_of_object();
 			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
 				thix_object.size().value,
-				[&] <auto t_index>(ValuePackage<t_index>, auto) {
+				[&]<auto t_index>(ValuePackage<t_index>, auto) {
 					auto & that_value = that.template set_of_index<mbox<Size>(t_index)>();
 					Generalization::each<typename TypePackage<TValue ...>::template Element<t_index>::Reflection::MemberVariable>(
-						[&] <auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
+						[&]<auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
 							assert_test(thix_object.at(mbox<Size>(t_field_index)).key == make_string_view(TField::name.view()));
 							thix_object.at(mbox<Size>(t_field_index)).value.to(TField::value_of(that_value));
 						}

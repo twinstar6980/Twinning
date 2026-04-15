@@ -549,7 +549,7 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			auto result = k_none_size;
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					result += bs_static_size<AsPure<decltype(TField::value_of(declare<That const &>()))>>();
 				}
 			);
@@ -561,7 +561,7 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			auto result = k_none_size;
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					result += bs_size(TField::value_of(that));
 				}
 			);
@@ -573,7 +573,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					thix.write(TField::value_of(that));
 				}
 			);
@@ -585,7 +585,7 @@ export namespace Twinning::Kernel {
 			That &      that
 		) -> Void {
 			Generalization::each<FieldPackage>(
-				[&] <auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					thix.read(TField::value_of(that));
 				}
 			);

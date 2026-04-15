@@ -174,7 +174,7 @@ export namespace Twinning::Kernel::JavaScript {
 			Value &       object,
 			List<Value> & argument
 		) -> CallableTraitOf<t_function>::Result {
-			return [&] <auto ... t_index>(ValuePackage<t_index ...>) -> CallableTraitOf<t_function>::Result {
+			return [&]<auto ... t_index>(ValuePackage<t_index ...>) -> CallableTraitOf<t_function>::Result {
 				if constexpr (!t_forward_object) {
 					using Argument = CallableTraitOf<t_function>::Argument;
 					return call_native_function_wrapper_inner<t_function>(

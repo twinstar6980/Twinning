@@ -272,7 +272,7 @@ export namespace Twinning::Kernel::Tool {
 		) -> Void {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				value.index().value,
-				[&] <auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
+				[&]<auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
 					value_exchanger(data, value.template get_of_index<mbox<Size>(t_value_index)>());
 				}
 			);

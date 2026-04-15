@@ -299,7 +299,7 @@ export namespace Twinning::Kernel {
 	) -> StaticArray<TElement, mbox<Size>(sizeof...(TArgument))> {
 		auto result = StaticArray<TElement, mbox<Size>(sizeof...(TArgument))>{};
 		Generalization::each_with<>(
-			[&] <auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
+			[&]<auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
 				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
 			as_forward<TArgument>(argument) ...

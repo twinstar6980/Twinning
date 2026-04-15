@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					assert_test(chunk_ok);
 					package_data_end_position = maximum(package_data_end_position, data.position());
 				}
-				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&] (auto & element) -> auto { return element == chunk_data_list.first(); }));
+				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&](auto & element) -> auto { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {
 					if (!Storage::exist_directory(resource_directory.get())) {
 						Storage::create_directory(resource_directory.get());

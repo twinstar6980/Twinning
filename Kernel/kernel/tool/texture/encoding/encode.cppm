@@ -156,7 +156,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		) -> Void {
 			Generalization::match<FormatPackage>(
 				format,
-				[&] <auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
+				[&]<auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
 					process_image<t_format>(data, image);
 				}
 			);

@@ -388,7 +388,7 @@ export namespace Twinning::Kernel::Range {
 		auto result = initial_value;
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				result += as_forward<TElement>(element);
 				return;
 			}
@@ -408,7 +408,7 @@ export namespace Twinning::Kernel::Range {
 		auto result = initial_value;
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				result += calculator(as_forward<TElement>(element));
 				return;
 			}
@@ -430,7 +430,7 @@ export namespace Twinning::Kernel::Range {
 		auto result = k_none_size;
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				if (element == value) {
 					++result;
 				}
@@ -450,7 +450,7 @@ export namespace Twinning::Kernel::Range {
 		auto result = k_none_size;
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				if (has(value_range, as_forward<TElement>(element))) {
 					++result;
 				}
@@ -471,7 +471,7 @@ export namespace Twinning::Kernel::Range {
 		auto result = k_none_size;
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				if (checker(as_forward<TElement>(element))) {
 					++result;
 				}
@@ -494,7 +494,7 @@ export namespace Twinning::Kernel::Range {
 	) -> Void {
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				Trait::restruct(element, argument ...);
 				return;
 			}
@@ -511,7 +511,7 @@ export namespace Twinning::Kernel::Range {
 	) -> Void {
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				element = value;
 				return;
 			}
@@ -530,7 +530,7 @@ export namespace Twinning::Kernel::Range {
 	) -> Void {
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				element = transformer(value);
 				return;
 			}
@@ -549,7 +549,7 @@ export namespace Twinning::Kernel::Range {
 	) -> Void {
 		each(
 			range,
-			[&] <typename TElement>(TElement && element) -> auto {
+			[&]<typename TElement>(TElement && element) -> auto {
 				converter(element, value);
 				return;
 			}
@@ -569,7 +569,7 @@ export namespace Twinning::Kernel::Range {
 		each_pair(
 			destination,
 			source,
-			[&] <typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
+			[&]<typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
 				Trait::restruct(destination_element, as_forward<TSourceElement>(source_element));
 				return;
 			}
@@ -587,7 +587,7 @@ export namespace Twinning::Kernel::Range {
 		each_pair(
 			destination,
 			source,
-			[&] <typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
+			[&]<typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
 				destination_element = as_forward<TSourceElement>(source_element);
 				return;
 			}
@@ -607,7 +607,7 @@ export namespace Twinning::Kernel::Range {
 		each_pair(
 			destination,
 			source,
-			[&] <typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
+			[&]<typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
 				destination_element = transformer(as_forward<TSourceElement>(source_element));
 				return;
 			}
@@ -627,7 +627,7 @@ export namespace Twinning::Kernel::Range {
 		each_pair(
 			destination,
 			source,
-			[&] <typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
+			[&]<typename TDestinationElement, typename TSourceElement>(TDestinationElement && destination_element, TSourceElement && source_element) -> auto {
 				converter(destination_element, as_forward<TSourceElement>(source_element));
 				return;
 			}

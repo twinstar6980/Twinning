@@ -20,7 +20,7 @@ class ApplicationPlatformMethod {
   ApplicationPlatformMethod._(
   ) :
     this._channel = null {
-    if (SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
+    if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
       this._channel = .new('${ApplicationInformation.identifier}.CustomMethodChannel');
     }
     return;
@@ -63,7 +63,7 @@ class ApplicationPlatformMethod {
     String location,
     String name,
   ) async {
-    assertTest(SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
+    assertTest(SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
     var detail = await this._channel!.invokeMapMethod<Object?, Object?>('pick_storage_item', <Object?, Object?>{
       'type': type,
       'location': location,

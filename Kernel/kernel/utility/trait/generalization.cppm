@@ -23,7 +23,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 	inline constexpr auto each(
 		TExecutor const & executor
 	) -> Void {
-		auto iterate = [&] <auto t_element_index>(
+		auto iterate = [&]<auto t_element_index>(
 			ValuePackage<t_element_index>
 		) {
 			executor(
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 				}(TPackage{}) ...
 			);
 		};
-		[&] <auto ... t_element_index>(
+		[&]<auto ... t_element_index>(
 			ValuePackage<t_element_index ...>
 		) {
 				(iterate(ValuePackage<t_element_index>{}), ...);
@@ -55,7 +55,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		TExecutor const & executor,
 		TArgument && ...  argument
 	) -> Void {
-		auto iterate = [&] <auto t_element_index, typename TCurrentArgument>(
+		auto iterate = [&]<auto t_element_index, typename TCurrentArgument>(
 			ValuePackage<t_element_index>,
 			TCurrentArgument && current_argument
 		) {
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 				as_forward<TCurrentArgument>(current_argument)
 			);
 		};
-		[&] <auto ... t_element_index>(
+		[&]<auto ... t_element_index>(
 			ValuePackage<t_element_index ...>
 		) {
 				(iterate(ValuePackage<t_element_index>{}, as_forward<TArgument>(argument)), ...);
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 	) -> Void {
 		auto has_case = false;
 		each<TPackage>(
-			[&] <auto t_index, auto t_element>(ValuePackage<t_index>, ValuePackage<t_element>) {
+			[&]<auto t_index, auto t_element>(ValuePackage<t_index>, ValuePackage<t_element>) {
 				if (t_element == condition) {
 					executor(ValuePackage<t_index>{}, ValuePackage<t_element>{});
 					has_case = true;
