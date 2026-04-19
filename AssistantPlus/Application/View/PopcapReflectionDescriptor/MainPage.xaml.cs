@@ -285,7 +285,7 @@ namespace Twinning.AssistantPlus.View.PopcapReflectionDescriptor {
 			var senders = sender.As<MenuFlyoutItem>();
 			switch (senders.Tag.As<String>()) {
 				case "Load": {
-					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.descriptor_file");
+					var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadFile, $"{ModuleHelper.Query(ModuleType.PopcapReflectionDescriptor).Identifier}.descriptor_file", null);
 					if (target != null) {
 						await this.ApplyLoad(target);
 					}

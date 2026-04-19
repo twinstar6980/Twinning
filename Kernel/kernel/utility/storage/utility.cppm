@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Storage {
 	inline auto exist(
 		Path const & target
 	) -> Boolean {
-		if (target.type() == PathType::Constant::detached()) {
+		if (target.type() != PathType::Constant::absolute()) {
 			return k_false;
 		}
 		auto type = Detail::resolve_type(target, false);
@@ -253,7 +253,7 @@ export namespace Twinning::Kernel::Storage {
 	inline auto exist_link(
 		Path const & target
 	) -> Boolean {
-		if (target.type() == PathType::Constant::detached()) {
+		if (target.type() != PathType::Constant::absolute()) {
 			return k_false;
 		}
 		auto type = Detail::resolve_type(target, false);
@@ -294,7 +294,7 @@ export namespace Twinning::Kernel::Storage {
 	inline auto exist_file(
 		Path const & target
 	) -> Boolean {
-		if (target.type() == PathType::Constant::detached()) {
+		if (target.type() != PathType::Constant::absolute()) {
 			return k_false;
 		}
 		auto type = Detail::resolve_type(target, true);
@@ -390,7 +390,7 @@ export namespace Twinning::Kernel::Storage {
 	inline auto exist_directory(
 		Path const & target
 	) -> Boolean {
-		if (target.type() == PathType::Constant::detached()) {
+		if (target.type() != PathType::Constant::absolute()) {
 			return k_false;
 		}
 		auto type = Detail::resolve_type(target, true);

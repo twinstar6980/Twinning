@@ -29,7 +29,7 @@ class ApplicationPermissionManager {
       state = true;
     }
     if (SystemChecker.isAndroid) {
-      state = (await ApplicationPlatformMethod.instance.checkExternalStoragePermission('check')).state;
+      state = (await ApplicationPlatformMethod.instance.checkStoragePermission('check')).state;
     }
     if (SystemChecker.isIphone) {
       state = true;
@@ -44,7 +44,7 @@ class ApplicationPermissionManager {
       state = true;
     }
     if (SystemChecker.isAndroid) {
-      state = (await ApplicationPlatformMethod.instance.checkExternalStoragePermission('request')).state;
+      state = (await ApplicationPlatformMethod.instance.checkStoragePermission('request')).state;
     }
     if (SystemChecker.isIphone) {
       state = true;

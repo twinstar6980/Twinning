@@ -2,7 +2,6 @@
 
 using Twinning.AssistantPlus;
 using Twinning.AssistantPlus.Utility;
-using Windows.ApplicationModel;
 using Microsoft.UI.Xaml.Media;
 
 namespace Twinning.AssistantPlus.View.CoreTaskWorker {
@@ -561,7 +560,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 						}
 						case "send_message": {
 							AssertTest(argument.Count >= 3);
-							await this.CallbackSendMessage(
+							var detail = await this.CallbackSendMessage(
 								argument[1],
 								argument[2],
 								argument[3..]
@@ -577,10 +576,27 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 							result.Add(detail.Item1);
 							break;
 						}
-						case "pick_storage_item": {
+						case "query_storage_item": {
 							AssertTest(argument.Count == 2);
-							var detail = await this.CallbackPickStorageItem(
+							var detail = await this.QueryPickStorageItem(
 								argument[1]
+							);
+							result.Add(detail.Item1);
+							break;
+						}
+						case "reveal_storage_item": {
+							AssertTest(argument.Count == 2);
+							var detail = await this.CallbackRevealStorageItem(
+								argument[1]
+							);
+							break;
+						}
+						case "pick_storage_item": {
+							AssertTest(argument.Count == 4);
+							var detail = await this.CallbackPickStorageItem(
+								argument[1],
+								argument[2],
+								argument[3]
 							);
 							result.Add(detail.Item1);
 							break;
@@ -623,15 +639,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			String       title,
 			List<String> description
 		) {
-			var typeValue = type switch {
-				"verbosity"   => MessageType.Verbosity,
-				"information" => MessageType.Information,
-				"warning"     => MessageType.Warning,
-				"error"       => MessageType.Error,
-				"success"     => MessageType.Success,
-				"input"       => MessageType.Input,
-				_             => throw new (),
-			};
+			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<MessageType>(type);
 			await this.mController.SendMessage(typeValue, title, description);
 			return new ();
 		}
@@ -641,17 +649,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			List<String> option
 		) {
 			var value = "";
-			var typeValue = type switch {
-				"pause"       => SubmissionType.Pause,
-				"boolean"     => SubmissionType.Boolean,
-				"integer"     => SubmissionType.Integer,
-				"floater"     => SubmissionType.Floater,
-				"string"      => SubmissionType.String,
-				"size"        => SubmissionType.Size,
-				"path"        => SubmissionType.Path,
-				"enumeration" => SubmissionType.Enumeration,
-				_             => throw new (),
-			};
+			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<SubmissionType>(type);
 			var valueData = await this.mController.ReceiveSubmission(typeValue, option);
 			if (valueData != null) {
 				value = ValueExpressionHelper.MakeString(valueData);
@@ -662,17 +660,37 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return new (value);
 		}
 
-		private async Task<ValueTuple<String>> CallbackPickStorageItem(
+		private async Task<ValueTuple<String>> QueryPickStorageItem(
 			String type
 		) {
 			var target = "";
-			var typeValue = type switch {
-				"load_file"      => "LoadFile",
-				"load_directory" => "LoadDirectory",
-				"save_file"      => "SaveFile",
-				_                => throw new (),
-			};
-			target = (await StorageHelper.Pick(typeValue, App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null))?.Emit() ?? "";
+			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<StorageQueryType>(type);
+			var targetValue = await StorageHelper.Query(typeValue);
+			target = targetValue.Emit();
+			return new (target);
+		}
+
+		private async Task<ValueTuple> CallbackRevealStorageItem(
+			String target
+		) {
+			var targetValue = new StoragePath(target);
+			await StorageHelper.Reveal(targetValue);
+			return new ();
+		}
+
+		private async Task<ValueTuple<String>> CallbackPickStorageItem(
+			String type,
+			String location,
+			String name
+		) {
+			var target = "";
+			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<StoragePickType>(type);
+			var locationValue = location.IsEmpty() ? null : new StoragePath(location);
+			var nameValue = name.IsEmpty() ? null : name;
+			var targetValue = await StorageHelper.Pick(typeValue, locationValue, nameValue, App.Instance.MainWindow);
+			if (targetValue != null) {
+				target = targetValue.Emit();
+			}
 			return new (target);
 		}
 

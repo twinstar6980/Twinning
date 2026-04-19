@@ -35,7 +35,7 @@ Future<Void> doAction(
       break;
     }
     case 'launch_game': {
-      await ProcessHelper.runProcess(information.path.join('KairoGames.exe'), [], null);
+      await ProcessHelper.runProcess(information.path.join('KairoGames.exe'), [], null, null);
       break;
     }
     case 'restore_program': {

@@ -40,7 +40,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszName
 		) override {
-			if (!SUCCEEDED(SHStrDupW(winrt::to_hstring(thiz.get_application_name()).data(), ppszName))) {
+			if (!SUCCEEDED(SHStrDupW(winrt::to_hstring(thiz.query_application_name()).data(), ppszName))) {
 				return S_FALSE;
 			}
 			return S_OK;
@@ -50,7 +50,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			IShellItemArray * psiItemArray,
 			LPWSTR *          ppszIcon
 		) override {
-			if (!SUCCEEDED(SHStrDupW(winrt::to_hstring(thiz.get_application_logo()).data(), ppszIcon))) {
+			if (!SUCCEEDED(SHStrDupW(winrt::to_hstring(thiz.query_application_logo()).data(), ppszIcon))) {
 				return S_FALSE;
 			}
 			return S_OK;
@@ -77,7 +77,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			EXPCMDSTATE *     pCmdState
 		) override {
 			*pCmdState = ECS_HIDDEN;
-			auto state_file = std::format("{}\\forwarder", thiz.get_application_shared_directory());
+			auto state_file = std::format("{}\\{}\\forwarder", thiz.query_known_folder_path(FOLDERID_RoamingAppData), thiz.query_application_identifier());
 			if (std::filesystem::exists(std::filesystem::path{reinterpret_cast<std::u8string const &>(state_file)})) {
 				*pCmdState = ECS_ENABLED;
 			}
@@ -91,7 +91,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			try {
 				auto state_h = HRESULT{};
 				if (psiItemArray == nullptr) {
-					throw std::runtime_error{"selection item is null"};
+					throw std::runtime_error{"Exception: selection item is null"};
 				}
 				auto resource = std::vector<std::string>{};
 				auto item_count = DWORD{};
@@ -102,8 +102,8 @@ export namespace Twinning::AssistantPlus::Forwarder {
 					auto item = winrt::com_ptr<IShellItem>{};
 					state_h = psiItemArray->GetItemAt(item_index, item.put());
 					winrt::check_hresult(state_h);
-					auto item_path = thiz.get_shell_item_path(item);
-					auto item_path_long = thiz.get_file_long_path(item_path);
+					auto item_path = thiz.resolve_shell_item_path(item);
+					auto item_path_long = thiz.resolve_storage_long_path(item_path);
 					resource.emplace_back(item_path_long);
 				}
 				thiz.forward_resource(resource);
@@ -136,48 +136,19 @@ export namespace Twinning::AssistantPlus::Forwarder {
 
 		#pragma region utility
 
-		auto get_application_identifier(
+		auto query_application_identifier(
 		) const -> std::string {
 			return winrt::to_string(winrt::Windows::ApplicationModel::Package::Current().Id().Name());
 		}
 
-		auto get_application_name(
+		auto query_application_name(
 		) const -> std::string {
 			return winrt::to_string(winrt::Windows::ApplicationModel::Package::Current().DisplayName());
 		}
 
-		auto get_application_logo(
+		auto query_application_logo(
 		) const -> std::string {
-			return std::format("{},0", thiz.get_extension_library_file());
-		}
-
-		auto get_application_shared_directory(
-		) const -> std::string {
-			auto state_h = HRESULT{};
-			auto parent_p = LPWSTR{};
-			state_h = SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &parent_p);
-			winrt::check_hresult(state_h);
-			auto parent_h = std::wstring{parent_p};
-			CoTaskMemFree(parent_p);
-			return std::format("{}\\{}", winrt::to_string(parent_h), thiz.get_application_identifier());
-		}
-
-		auto get_extension_library_file(
-		) const -> std::string {
-			auto state_d = DWORD{};
-			auto handle = reinterpret_cast<HMODULE>(&__ImageBase);
-			auto result_data = std::vector<wchar_t>{};
-			result_data.reserve(256);
-			while (true) {
-				state_d = GetModuleFileNameW(handle, result_data.data(), static_cast<DWORD>(result_data.capacity()));
-				if (state_d != 0 && state_d != result_data.capacity()) {
-					break;
-				}
-				assert_test(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
-				result_data.reserve(result_data.capacity() * 2);
-			}
-			auto result_h = std::wstring{result_data.data(), state_d};
-			return winrt::to_string(result_h);
+			return std::format("{},0", thiz.query_module_file_path(reinterpret_cast<HMODULE>(&__ImageBase)));
 		}
 
 		// ----------------
@@ -199,6 +170,65 @@ export namespace Twinning::AssistantPlus::Forwarder {
 				message = "UnknownException";
 			}
 			return message;
+		}
+
+		auto query_known_folder_path(
+			KNOWNFOLDERID const & type
+		) const -> std::string {
+			auto state_h = HRESULT{};
+			auto path_p = LPWSTR{};
+			state_h = SHGetKnownFolderPath(type, 0, nullptr, &path_p);
+			winrt::check_hresult(state_h);
+			auto path_h = std::wstring{path_p};
+			CoTaskMemFree(path_p);
+			return winrt::to_string(path_h);
+		}
+
+		auto query_module_file_path(
+			HMODULE const & handle
+		) const -> std::string {
+			auto state_d = DWORD{};
+			auto path_data = std::vector<wchar_t>{};
+			path_data.reserve(256);
+			while (true) {
+				state_d = GetModuleFileNameW(handle, path_data.data(), static_cast<DWORD>(path_data.capacity()));
+				if (state_d != 0 && state_d != path_data.capacity()) {
+					break;
+				}
+				assert_test(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
+				path_data.reserve(path_data.capacity() * 2);
+			}
+			auto path_h = std::wstring{path_data.data(), state_d};
+			return winrt::to_string(path_h);
+		}
+
+		auto resolve_storage_long_path(
+			std::string const & source
+		) const -> std::string {
+			auto state_d = DWORD{};
+			auto source_h = winrt::to_hstring(source);
+			auto destination_h = std::wstring{};
+			if (!source.empty()) {
+				state_d = GetLongPathNameW(source_h.data(), destination_h.data(), 0);
+				assert_test(state_d != 0);
+				destination_h.resize(state_d);
+				state_d = GetLongPathNameW(source_h.data(), destination_h.data(), static_cast<DWORD>(destination_h.size()));
+				assert_test(state_d == destination_h.size() - 1);
+				destination_h.resize(destination_h.size() - 1);
+			}
+			return winrt::to_string(destination_h);
+		}
+
+		auto resolve_shell_item_path(
+			winrt::com_ptr<IShellItem> const & item
+		) const -> std::string {
+			auto state_h = HRESULT{};
+			auto item_display = LPWSTR{};
+			state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &item_display);
+			winrt::check_hresult(state_h);
+			auto item_display_h = std::wstring{item_display};
+			CoTaskMemFree(item_display);
+			return winrt::to_string(item_display_h);
 		}
 
 		auto encode_percent_string(
@@ -227,37 +257,6 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			return destination;
 		}
 
-		// ----------------
-
-		auto get_file_long_path(
-			std::string const & source
-		) const -> std::string {
-			auto state_d = DWORD{};
-			auto source_h = winrt::to_hstring(source);
-			auto destination_h = std::wstring{};
-			if (!source.empty()) {
-				state_d = GetLongPathNameW(source_h.data(), destination_h.data(), 0);
-				assert_test(state_d != 0);
-				destination_h.resize(state_d);
-				state_d = GetLongPathNameW(source_h.data(), destination_h.data(), static_cast<DWORD>(destination_h.size()));
-				assert_test(state_d == destination_h.size() - 1);
-				destination_h.resize(destination_h.size() - 1);
-			}
-			return winrt::to_string(destination_h);
-		}
-
-		auto get_shell_item_path(
-			winrt::com_ptr<IShellItem> const & item
-		) const -> std::string {
-			auto state_h = HRESULT{};
-			auto item_display = LPWSTR{};
-			state_h = item->GetDisplayName(SIGDN_FILESYSPATH, &item_display);
-			winrt::check_hresult(state_h);
-			auto item_display_h = std::wstring{item_display};
-			CoTaskMemFree(item_display);
-			return winrt::to_string(item_display_h);
-		}
-
 		auto open_link(
 			std::string const & link
 		) const -> void {
@@ -273,7 +272,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 		auto show_exception(
 			std::string const & exception
 		) const -> void {
-			auto title_h = winrt::to_hstring(thiz.get_application_name());
+			auto title_h = winrt::to_hstring(thiz.query_application_name());
 			auto message_h = winrt::to_hstring(exception);
 			auto original_thread_dpi_awareness_context = GetThreadDpiAwarenessContext();
 			SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
@@ -290,7 +289,7 @@ export namespace Twinning::AssistantPlus::Forwarder {
 			command.append_range(resource);
 			auto link = std::format(
 				"{}:/application?{}",
-				thiz.get_application_identifier(),
+				thiz.query_application_identifier(),
 				command
 				| std::views::transform(
 					[&](auto & item) {

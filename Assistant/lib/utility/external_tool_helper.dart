@@ -24,6 +24,7 @@ class ExternalToolHelper {
         dumpDirectory.emitNative(),
       ],
       null,
+      null,
     );
     assertTest(processResult.output.replaceAll('\r\n', '\n').endsWith('Done!\nPress any key to exit...\n'));
     var result = (await StorageHelper.readFileText(dumpDirectory.join('dump.cs'))).split('\n');
@@ -117,6 +118,7 @@ class ExternalToolHelper {
         '${alignedFile.emitNative()}',
       ],
       null,
+      null,
     );
     assertTest(processResult.code == 0);
     await StorageHelper.remove(zipFile);
@@ -144,6 +146,7 @@ class ExternalToolHelper {
         '--ks-pass', 'pass:${apkKeystorePassword}',
         '${apkFile.emitNative()}',
       ],
+      null,
       null,
     );
     assertTest(processResult.code == 0);

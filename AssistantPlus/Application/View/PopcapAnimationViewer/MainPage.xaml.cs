@@ -998,7 +998,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 						this.View.uSprite.State = SpriteControl.StateType.Paused;
 					}
 					var isReloaded = false;
-					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
+					var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadFile, $"{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source", null);
 					if (target != null) {
 						await this.ApplyLoad(target, null, null, null, null, null, null);
 						isReloaded = true;
@@ -1014,7 +1014,7 @@ namespace Twinning.AssistantPlus.View.PopcapAnimationViewer {
 						this.View.uSprite.State = SpriteControl.StateType.Paused;
 					}
 					var isReloaded = false;
-					var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, $"@{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source");
+					var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadDirectory, $"{ModuleHelper.Query(ModuleType.PopcapAnimationViewer).Identifier}.source", null);
 					if (target != null) {
 						target = await PopcapAnimationHelper.CheckAnimationDirectoryPath(target);
 						if (target == null) {

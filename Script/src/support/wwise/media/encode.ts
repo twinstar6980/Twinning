@@ -320,6 +320,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 					'iOS',
 				],
 				null,
+				null,
 			);
 			if (wwise_result.code !== 0n) {
 				throw new Error(`execute failed by Wwise: ${wwise_result.code}\n${wwise_result.output}\n${wwise_result.error}`);
@@ -360,6 +361,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				'--source-file',
 				wwise_wsources_file.emit_native(),
 			],
+			null,
 			null,
 		);
 		if (wwise_result.code !== 0n) {

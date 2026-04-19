@@ -31,7 +31,6 @@ class SettingData {
   Boolean                         windowSizeState;
   Integer                         windowSizeWidth;
   Integer                         windowSizeHeight;
-  StoragePath                     storagePickerFallbackDirectory;
   Map<String, StoragePath>        storagePickerHistoryLocation;
   ModuleType                      forwarderDefaultTarget;
   Boolean                         forwarderImmediateJump;
@@ -56,7 +55,6 @@ class SettingData {
     required this.windowSizeState,
     required this.windowSizeWidth,
     required this.windowSizeHeight,
-    required this.storagePickerFallbackDirectory,
     required this.storagePickerHistoryLocation,
     required this.forwarderDefaultTarget,
     required this.forwarderImmediateJump,
@@ -147,7 +145,7 @@ class SettingProvider with ChangeNotifier {
   // #region storage
 
   Future<StoragePath> get file async {
-    return (await StorageHelper.queryApplicationSharedDirectory()).join('setting.json');
+    return (await StorageHelper.query(.applicationShared)).join('setting.json');
   }
 
   // ----------------
@@ -195,7 +193,6 @@ class SettingProvider with ChangeNotifier {
       windowSizeState: true,
       windowSizeWidth: 480,
       windowSizeHeight: 840,
-      storagePickerFallbackDirectory: .new(),
       storagePickerHistoryLocation: {},
       forwarderDefaultTarget: .coreResourceShipper,
       forwarderImmediateJump: false,
@@ -273,7 +270,6 @@ class SettingProvider with ChangeNotifier {
       'window_size_state': data.windowSizeState,
       'window_size_width': data.windowSizeWidth,
       'window_size_height': data.windowSizeHeight,
-      'storage_picker_fallback_directory': data.storagePickerFallbackDirectory.emit(),
       'storage_picker_history_location': data.storagePickerHistoryLocation.map((key, value) => .new(key, value.emit())),
       'forwarder_default_target': data.forwarderDefaultTarget.selfLet((it) => ModuleHelper.query(it).identifier),
       'forwarder_immediate_jump': data.forwarderImmediateJump,
@@ -340,7 +336,6 @@ class SettingProvider with ChangeNotifier {
       windowSizeState: (json['window_size_state'] as Boolean),
       windowSizeWidth: (json['window_size_width'] as Integer),
       windowSizeHeight: (json['window_size_height'] as Integer),
-      storagePickerFallbackDirectory: (json['storage_picker_fallback_directory'] as String).selfLet((it) => StoragePath.of(it)),
       storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>().map((key, value) => .new(key, StoragePath.of(value))),
       forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
       forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
@@ -396,7 +391,6 @@ class SettingProvider with ChangeNotifier {
     StoragePath homeDirectory,
   ) async {
     this.data.moduleConfigurationDirectory = homeDirectory.join('assistant');
-    this.data.storagePickerFallbackDirectory = homeDirectory.join('workspace');
     this.data.coreTaskWorker.kernel = homeDirectory.join('kernel');
     this.data.coreTaskWorker.script = homeDirectory.join('script').join('main.js');
     this.data.coreTaskWorker.argument = [homeDirectory.emit()];

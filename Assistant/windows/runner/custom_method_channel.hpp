@@ -68,7 +68,7 @@ public:
 	) -> void {
 		auto channel = flutter::MethodChannel<>{
 			thiz.m_host->flutter_controller_->engine()->messenger(),
-			std::format("{}.CustomMethodChannel", thiz.get_application_identifier()),
+			std::format("{}.CustomMethodChannel", thiz.query_application_identifier()),
 			&flutter::StandardMethodCodec::GetInstance(),
 		};
 		channel.SetMethodCallHandler(
@@ -94,53 +94,56 @@ private:
 		std::unique_ptr<flutter::MethodResult<>> result
 	) -> void {
 		try {
+			auto argument_map = std::get<flutter::EncodableMap>(*call.arguments());
+			auto result_map = flutter::EncodableMap{};
 			auto get_argument = [&]<typename TValue>(std::string_view const & name) -> TValue {
-				auto map = std::get<flutter::EncodableMap>(*call.arguments());
-				auto item = map.find(flutter::EncodableValue{name.data()});
-				assert_test(item != map.end());
-				return std::get<TValue>(item->second);
+				auto item_f = argument_map.find(flutter::EncodableValue{name.data()});
+				assert_test(item_f != argument_map.end());
+				auto value = TValue{};
+				if constexpr (std::is_same_v<TValue, std::string>) {
+					value = std::get<TValue>(item_f->second);
+				}
+				return value;
 			};
-			auto set_result = [&]<auto t_optional, typename TValue>(std::string_view const & name, TValue && value) -> std::pair<flutter::EncodableValue, flutter::EncodableValue> {
-				auto result_value = flutter::EncodableValue{};
-				if constexpr (t_optional) {
+			auto set_result = [&]<typename TValue>(std::string_view const & name, TValue const & value) -> void {
+				auto value_f = flutter::EncodableValue{};
+				if constexpr (std::is_same_v<TValue, std::string>) {
+					value_f.emplace<std::string>(value.data());
+				}
+				if constexpr (std::is_same_v<TValue, std::optional<std::string>>) {
 					if (value.has_value()) {
-						result_value.emplace<typename std::decay_t<TValue>::value_type>(value.value());
+						value_f.emplace<std::string>(value.value().data());
 					}
 				}
-				else {
-					result_value.emplace<std::decay_t<TValue>>(std::forward<TValue>(value));
-				}
-				return std::make_tuple(flutter::EncodableValue{name.data()}, result_value);
+				result_map.emplace(name.data(), value_f);
+				return;
 			};
-			switch (thiz.hash_string(call.method_name())) {
-				case thiz.hash_string("query_application_shared_path"): {
-					auto detail = thiz.handle_query_application_shared_path(
+			switch (hash_string(call.method_name())) {
+				case hash_string("query_storage_item"): {
+					auto detail = thiz.handle_query_storage_item(
+						get_argument.operator ()<std::string>("type")
 					);
-					result->Success(
-						flutter::EncodableMap{{
-							set_result.operator ()<false>("path", std::get<0>(detail)),
-						}}
+					set_result("target", std::get<0>(detail));
+					break;
+				}
+				case hash_string("reveal_storage_item"): {
+					auto detail = thiz.handle_reveal_storage_item(
+						get_argument.operator ()<std::string>("target")
 					);
 					break;
 				}
-				case thiz.hash_string("pick_storage_item"): {
+				case hash_string("pick_storage_item"): {
 					auto detail = thiz.handle_pick_storage_item(
 						get_argument.operator ()<std::string>("type"),
 						get_argument.operator ()<std::string>("location"),
 						get_argument.operator ()<std::string>("name")
 					);
-					result->Success(
-						flutter::EncodableMap{{
-							set_result.operator ()<true>("target", std::get<0>(detail)),
-						}}
-					);
+					set_result("target", std::get<0>(detail));
 					break;
 				}
-				default: {
-					result->NotImplemented();
-					break;
-				}
+				default: throw std::runtime_error{"Exception: invalid method"};
 			}
+			result->Success(result_map);
 		}
 		catch (...) {
 			result->Error("", thiz.parse_current_exception());
@@ -148,9 +151,28 @@ private:
 		return;
 	}
 
-	auto handle_query_application_shared_path(
+	auto handle_query_storage_item(
+		std::string const & type
 	) -> std::tuple<std::string> {
-		return std::make_tuple(thiz.get_application_shared_directory());
+		assert_test(type == "user_home" || type == "application_shared" || type == "application_cache");
+		auto target = std::string{};
+		if (type == "user_home") {
+			target = thiz.query_known_folder_path(FOLDERID_Profile);
+		}
+		if (type == "application_shared") {
+			target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier();
+		}
+		if (type == "application_cache") {
+			target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\cache";
+		}
+		return std::make_tuple(target);
+	}
+
+	auto handle_reveal_storage_item(
+		std::string const & target
+	) -> std::tuple<> {
+		thiz.open_link(std::format("file://{}", target));
+		return std::make_tuple();
 	}
 
 	auto handle_pick_storage_item(
@@ -205,7 +227,7 @@ private:
 			auto target_item = winrt::com_ptr<IShellItem>{};
 			state_h = dialog->GetResult(target_item.put());
 			winrt::check_hresult(state_h);
-			target = thiz.get_shell_item_path(target_item);
+			target = thiz.resolve_shell_item_path(target_item);
 		}
 		return std::make_tuple(target);
 	}
@@ -214,7 +236,7 @@ private:
 
 	#pragma region utility
 
-	auto get_application_identifier(
+	auto query_application_identifier(
 	) const -> std::string {
 		auto identifier = std::string{};
 		try {
@@ -224,17 +246,6 @@ private:
 			identifier = "com.twinstar.twinning.assistant";
 		}
 		return identifier;
-	}
-
-	auto get_application_shared_directory(
-	) const -> std::string {
-		auto state_h = HRESULT{};
-		auto parent_p = LPWSTR{};
-		state_h = SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &parent_p);
-		winrt::check_hresult(state_h);
-		auto parent_h = std::wstring{parent_p};
-		CoTaskMemFree(parent_p);
-		return std::format("{}\\{}", winrt::to_string(parent_h), thiz.get_application_identifier());
 	}
 
 	// ----------------
@@ -258,9 +269,19 @@ private:
 		return message;
 	}
 
-	// ----------------
+	auto query_known_folder_path(
+		KNOWNFOLDERID const & type
+	) const -> std::string {
+		auto state_h = HRESULT{};
+		auto path_p = LPWSTR{};
+		state_h = SHGetKnownFolderPath(type, 0, nullptr, &path_p);
+		winrt::check_hresult(state_h);
+		auto path_h = std::wstring{path_p};
+		CoTaskMemFree(path_p);
+		return winrt::to_string(path_h);
+	}
 
-	auto get_file_long_path(
+	auto resolve_storage_long_path(
 		std::string const & source
 	) const -> std::string {
 		auto state_d = DWORD{};
@@ -277,7 +298,7 @@ private:
 		return winrt::to_string(destination_h);
 	}
 
-	auto get_shell_item_path(
+	auto resolve_shell_item_path(
 		winrt::com_ptr<IShellItem> const & item
 	) const -> std::string {
 		auto state_h = HRESULT{};
@@ -289,19 +310,14 @@ private:
 		return winrt::to_string(item_display_h);
 	}
 
-	// ----------------
-
-	constexpr auto hash_string(
-		std::string_view const & string
-	) const -> std::uint64_t {
-		auto offset = std::uint64_t{14695981039346656037ull};
-		auto prime = std::uint64_t{1099511628211ull};
-		auto result = offset;
-		for (auto & element : string) {
-			result ^= static_cast<std::uint8_t>(element);
-			result *= prime;
-		}
-		return result;
+	auto open_link(
+		std::string const & link
+	) const -> void {
+		auto state_hi = HINSTANCE{};
+		auto link_h = winrt::to_hstring(link);
+		state_hi = ShellExecuteW(nullptr, L"open", link_h.data(), nullptr, nullptr, SW_SHOWNORMAL);
+		assert_test(reinterpret_cast<INT_PTR>(state_hi) > 32);
+		return;
 	}
 
 	#pragma endregion

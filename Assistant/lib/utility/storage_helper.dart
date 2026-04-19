@@ -1,18 +1,26 @@
 import '/common.dart';
-import '/setting.dart';
 import '/utility/storage_path.dart';
+import '/utility/convert_helper.dart';
 import '/utility/application_platform_method.dart';
-import '/widget/export.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart' as lib;
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
-import 'package:path/path.dart' as lib;
-import 'package:path_provider/path_provider.dart' as lib;
-import 'package:file_selector/file_selector.dart' as lib;
-import 'package:url_launcher/url_launcher.dart' as lib;
 import 'package:win32/win32.dart' as lib;
+import 'package:file_selector_platform_interface/file_selector_platform_interface.dart' as lib;
+
+// ----------------
+
+enum StorageQueryType {
+  userHome,
+  applicationShared,
+  applicationCache,
+}
+
+enum StoragePickType {
+  loadFile,
+  loadDirectory,
+  saveFile,
+}
 
 // ----------------
 
@@ -23,7 +31,7 @@ class StorageHelper {
   static Future<Boolean> exist(
     StoragePath target,
   ) async {
-    if (target.type() == .detached) {
+    if (target.type() != .absolute) {
       return false;
     }
     var targetString = target.emitNative();
@@ -71,7 +79,7 @@ class StorageHelper {
     else if (type == .directory) {
       await StorageHelper.createDirectory(placement);
       await for (var item in Directory(targetString).list(recursive: false, followLinks: false)) {
-        var itemName = lib.basename(item.path);
+        var itemName = item.path.substring(item.path.lastIndexOf(r'[\/]'));
         await StorageHelper.copy(target.join(itemName), placement.join(itemName), followLink);
       }
     }
@@ -137,7 +145,7 @@ class StorageHelper {
   static Future<Boolean> existLink(
     StoragePath target,
   ) async {
-    if (target.type() == .detached) {
+    if (target.type() != .absolute) {
       return false;
     }
     var targetString = target.emitNative();
@@ -187,7 +195,7 @@ class StorageHelper {
   static Future<Boolean> existFile(
     StoragePath target,
   ) async {
-    if (target.type() == .detached) {
+    if (target.type() != .absolute) {
       return false;
     }
     var targetString = target.emitNative();
@@ -198,6 +206,9 @@ class StorageHelper {
   static Boolean existFileSync(
     StoragePath target,
   ) {
+    if (target.type() != .absolute) {
+      return false;
+    }
     var targetString = target.emitNative();
     return FileSystemEntity.typeSync(targetString, followLinks: true) == .file;
   }
@@ -272,7 +283,7 @@ class StorageHelper {
   static Future<Boolean> existDirectory(
     StoragePath target,
   ) async {
-    if (target.type() == .detached) {
+    if (target.type() != .absolute) {
       return false;
     }
     var targetString = target.emitNative();
@@ -283,6 +294,9 @@ class StorageHelper {
   static Boolean existDirectorySync(
     StoragePath target,
   ) {
+    if (target.type() != .absolute) {
+      return false;
+    }
     var targetString = target.emitNative();
     return FileSystemEntity.typeSync(targetString, followLinks: true) == .directory;
   }
@@ -317,7 +331,7 @@ class StorageHelper {
         var currentTargetString = currentTarget.emitNative();
         await for (var item in Directory(currentTargetString).list(recursive: false, followLinks: false)) {
           var itemType = await FileSystemEntity.type(item.path, followLinks: false);
-          var itemName = lib.basename(item.path);
+          var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[\/]')));
           var itemPath = currentItem.join(itemName);
           if (followLink && itemType == .link) {
             var referentType = await FileSystemEntity.type(item.path, followLinks: true);
@@ -349,267 +363,63 @@ class StorageHelper {
 
   // #region shell
 
+  static Future<StoragePath> query(
+    StorageQueryType type,
+  ) async {
+    return .of((await ApplicationPlatformMethod.instance.queryStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type))).target);
+  }
+
+  static Future<Void> reveal(
+    StoragePath target,
+  ) async {
+    assertTest(await StorageHelper.exist(target));
+    var targetString = target.emitNative();
+    await ApplicationPlatformMethod.instance.revealStorageItem(targetString);
+    return;
+  }
+
+  static Future<StoragePath?> pick(
+    StoragePickType type,
+    StoragePath?    location,
+    String?         name,
+  ) async {
+    if (location == null || !await StorageHelper.existDirectory(location)) {
+      location = await StorageHelper.query(.userHome);
+    }
+    if (name == null) {
+      name = '';
+    }
+    var target = null as StoragePath?;
+    if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
+      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), location.emitNative(), name)).target;
+      if (targetString != null) {
+        target = .of(targetString);
+      }
+    }
+    if (SystemChecker.isLinux) {
+      var targetString = switch (type) {
+        .loadFile      => (await lib.FileSelectorPlatform.instance.openFile(initialDirectory: location.emitNative()))?.path,
+        .loadDirectory => (await lib.FileSelectorPlatform.instance.getDirectoryPathWithOptions(.new(initialDirectory: location.emitNative()))),
+        .saveFile      => (await lib.FileSelectorPlatform.instance.getSaveLocation(options: .new(initialDirectory: location.emitNative(), suggestedName: name)))?.path,
+      };
+      if (targetString != null && targetString != '') {
+        target = .of(targetString);
+      }
+    }
+    return target;
+  }
+
+  // ----------------
+
   static Future<StoragePath> temporary(
   ) async {
-    var parent = await StorageHelper.queryApplicationCacheDirectory();
+    var parent = await StorageHelper.query(.applicationCache);
     var name = DateTime.now().millisecondsSinceEpoch.toString();
     var result = parent.join(name);
     var suffix = 0;
     while (await exist(result)) {
       suffix += 1;
       result = parent.join('${name}.${suffix}');
-    }
-    return result;
-  }
-
-  // ----------------
-
-  static Future<Void> reveal(
-    StoragePath target,
-  ) async {
-    assertTest(await StorageHelper.exist(target));
-    var revealed = false;
-    var targetString = target.emitNative();
-    if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isLinux) {
-      revealed = await lib.launchUrl(.file(targetString), mode: .externalApplication);
-    }
-    if (SystemChecker.isAndroid) {
-      await ApplicationPlatformMethod.instance.revealStorageFile(target.emitNative());
-      revealed = true;
-    }
-    if (SystemChecker.isIphone) {
-      revealed = await lib.launchUrl(.file(targetString).replace(scheme: 'shareddocuments'), mode: .externalApplication);
-    }
-    assertTest(revealed);
-    return;
-  }
-
-  // ----------------
-
-  static Future<StoragePath?> pick(
-    String       type,
-    BuildContext context,
-    String?      location,
-    String?      name,
-  ) async {
-    assertTest(type == 'load_file' || type == 'load_directory' || type == 'save_file');
-    var setting = Provider.of<SettingProvider>(context, listen: false);
-    var locationTag = location == null ? null : !location.startsWith('@') ? null : location.substring(1);
-    var locationPath = null as StoragePath?;
-    if (locationTag != null) {
-      locationPath = setting.data.storagePickerHistoryLocation[locationTag];
-    }
-    else {
-      locationPath = location == null ? null : .of(location);
-    }
-    if (locationPath != null && !await StorageHelper.existDirectory(locationPath)) {
-      locationPath = null;
-    }
-    name ??= '';
-    var target = null as StoragePath?;
-    if (SystemChecker.isWindows) {
-      locationPath ??= .of('C:/');
-      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
-      if (targetString != null) {
-        target = .of(targetString);
-      }
-    }
-    if (SystemChecker.isLinux) {
-      locationPath ??= .of('/');
-      var targetString = switch (type) {
-        'load_file'      => (await lib.openFile(initialDirectory: locationPath.emitNative()))?.path,
-        'load_directory' => (await lib.getDirectoryPath(initialDirectory: locationPath.emitNative())),
-        'save_file'      => (await lib.getSaveLocation(initialDirectory: locationPath.emitNative(), suggestedName: name))?.path,
-        _                => throw UnreachableException(),
-      };
-      if (targetString != null && targetString != '') {
-        target = .of(targetString);
-      }
-    }
-    if (SystemChecker.isMacintosh) {
-      locationPath ??= .of('/');
-      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
-      if (targetString != null) {
-        target = .of(targetString);
-      }
-    }
-    if (SystemChecker.isAndroid) {
-      locationPath ??= .of((await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path);
-      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
-      if (targetString != null) {
-        var targetUri = Uri.parse(targetString);
-        target = await StorageHelper.parseAndroidContentUri(context, targetUri, true);
-      }
-    }
-    if (SystemChecker.isIphone) {
-      locationPath ??= await StorageHelper.queryApplicationSharedDirectory();
-      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(type, locationPath.emitNative(), name)).target;
-      if (targetString != null) {
-        target = .of(targetString);
-      }
-    }
-    if (locationTag != null && target != null) {
-      setting.data.storagePickerHistoryLocation[locationTag] = switch (type) {
-        'load_file'      => target.parent()!,
-        'load_directory' => target,
-        'save_file'      => target.parent()!,
-        _                => throw UnreachableException(),
-      };
-      await setting.save(apply: false);
-    }
-    return target;
-  }
-
-  static Future<StoragePath?> pickLoadFile(
-    BuildContext context,
-    String?      location,
-  ) async {
-    return StorageHelper.pick('load_file', context, location, null);
-  }
-
-  static Future<StoragePath?> pickLoadDirectory(
-    BuildContext context,
-    String?      location,
-  ) async {
-    return StorageHelper.pick('load_directory', context, location, null);
-  }
-
-  static Future<StoragePath?> pickSaveFile(
-    BuildContext context,
-    String?      location,
-    String?      name,
-  ) async {
-    return StorageHelper.pick('save_file', context, location, name);
-  }
-
-  // #endregion
-
-  // #region miscellaneous
-
-  static Future<StoragePath> queryApplicationSharedDirectory(
-  ) async {
-    var result = null as StoragePath?;
-    if (SystemChecker.isWindows) {
-      result = .of((await lib.getApplicationSupportDirectory()).path);
-    }
-    if (SystemChecker.isLinux) {
-      result = .of((await lib.getApplicationSupportDirectory()).path);
-    }
-    if (SystemChecker.isMacintosh) {
-      result = .of((await lib.getApplicationSupportDirectory()).path);
-    }
-    if (SystemChecker.isAndroid) {
-      result = .of((await lib.getExternalStorageDirectory())!.path);
-    }
-    if (SystemChecker.isIphone) {
-      result = .of((await lib.getApplicationDocumentsDirectory()).path);
-    }
-    return result!;
-  }
-
-  static Future<StoragePath> queryApplicationCacheDirectory(
-  ) async {
-    var result = null as StoragePath?;
-    if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isIphone) {
-      result = (await StorageHelper.queryApplicationSharedDirectory()).join('cache');
-    }
-    if (SystemChecker.isAndroid) {
-      result = .of((await lib.getApplicationCacheDirectory()).path);
-    }
-    return result!;
-  }
-
-  // ----------------
-
-  static Future<StoragePath?> parseAndroidContentUri(
-    BuildContext context,
-    Uri          uri,
-    Boolean      allowDuplicate,
-  ) async {
-    var result = null as StoragePath?;
-    assertTest(uri.scheme == 'content');
-    var provider = uri.authority;
-    var path = Uri.decodeComponent(uri.path);
-    switch (provider) {
-      // AOSP DocumentsUI
-      case 'com.android.externalstorage.documents': {
-        // /document/primary:<path-relative-external-storage>
-        if (path.startsWith('/document/primary:')) {
-          result = .of((await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path).join(path.substring('/document/primary:'.length));
-        }
-        // /tree/primary:<path-relative-external-storage>
-        if (path.startsWith('/tree/primary:')) {
-          result = .of((await ApplicationPlatformMethod.instance.queryExternalStoragePath()).path).join(path.substring('/tree/primary:'.length));
-        }
-        break;
-      }
-      // Material Files
-      case 'me.zhanghai.android.files.file_provider': {
-        path = Uri.decodeComponent(path);
-        // /file://<path-absolute>
-        if (path.startsWith('/file://')) {
-          result = .of(Uri.decodeComponent(Uri.parse(path.substring('/'.length)).path));
-        }
-        break;
-      }
-      // Root Explorer
-      case 'com.speedsoftware.rootexplorer.fileprovider': {
-        // /root/<path-relative-root>
-        if (path.startsWith('/root/')) {
-          result = .of(path.substring('/root'.length));
-        }
-        break;
-      }
-      // Solid Explorer
-      case 'pl.solidexplorer2.files': {
-        result = .of(path);
-        break;
-      }
-      // MT Manager
-      case 'bin.mt.plus.fp': {
-        result = .of(path);
-        break;
-      }
-      // NMM
-      case 'in.mfile.files': {
-        result = .of(path);
-        break;
-      }
-      default: {
-        if (path.startsWith('/') && await StorageHelper.exist(.of(path))) {
-          result = .of(path);
-        }
-        break;
-      }
-    }
-    if (result == null) {
-      var canDuplicate = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-        title: 'Unknown Content Uri',
-        contentBuilder: (context, setStateForPanel) => [
-          FlexContainer.horizontal([
-            StyledText.custom(
-              uri.toString(),
-              overflow: .clip,
-            ).withSelectableArea(
-            ).withFlexExpanded(),
-          ]),
-        ],
-        actionBuilder: (context) => [
-          StyledButton.text(
-            content: StyledText.inherit('Ignore'),
-            onPressed: (context) => Navigator.pop(context, false),
-          ),
-          StyledButton.text(
-            enabled: allowDuplicate,
-            content: StyledText.inherit('Duplicate'),
-            onPressed: (context) => Navigator.pop(context, true),
-          ),
-        ],
-      )) ?? false;
-      if (canDuplicate) {
-        var setting = Provider.of<SettingProvider>(context, listen: false);
-        result = .of((await ApplicationPlatformMethod.instance.copyStorageFile(uri.toString(), setting.data.storagePickerFallbackDirectory.emitNative())).placement);
-      }
     }
     return result;
   }

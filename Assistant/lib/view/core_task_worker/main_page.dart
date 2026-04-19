@@ -1,8 +1,8 @@
 import '/common.dart';
 import '/setting.dart';
-import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/application_notification_manager.dart';
 import '/utility/command_line_reader.dart';
@@ -415,10 +415,28 @@ class _MainPageBridgeClient extends bridge.Client {
         result.add(detail.value);
         break;
       }
-      case 'pick_storage_item': {
+      case 'query_storage_item': {
         assertTest(argument.length == 2);
+        var detail = await this.callbackQueryStorageItem(
+          argument[1],
+        );
+        result.add(detail.target);
+        break;
+      }
+      case 'reveal_storage_item': {
+        assertTest(argument.length == 2);
+        // ignore: unused_local_variable
+        var detail = await this.callbackRevealStorageItem(
+          argument[1],
+        );
+        break;
+      }
+      case 'pick_storage_item': {
+        assertTest(argument.length == 4);
         var detail = await this.callbackPickStorageItem(
           argument[1],
+          argument[2],
+          argument[3],
         );
         result.add(detail.target);
         break;
@@ -454,15 +472,7 @@ class _MainPageBridgeClient extends bridge.Client {
     String       title,
     List<String> description,
   ) async {
-    var typeValue = switch (type) {
-      'verbosity'   => MessageType.verbosity,
-      'information' => MessageType.information,
-      'warning'     => MessageType.warning,
-      'error'       => MessageType.error,
-      'success'     => MessageType.success,
-      'input'       => MessageType.input,
-      _             => throw Exception(),
-    };
+    var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, MessageType.values);
     this._controller._sendMessage(typeValue, title, description);
     return ();
   }
@@ -472,38 +482,48 @@ class _MainPageBridgeClient extends bridge.Client {
     List<String> option,
   ) async {
     var value = '';
-    var typeValue = switch (type) {
-      'pause'       => SubmissionType.pause,
-      'boolean'     => SubmissionType.boolean,
-      'integer'     => SubmissionType.integer,
-      'floater'     => SubmissionType.floater,
-      'string'      => SubmissionType.string,
-      'size'        => SubmissionType.size,
-      'path'        => SubmissionType.path,
-      'enumeration' => SubmissionType.enumeration,
-      _             => throw Exception(),
-    };
-    var valueData = await this._controller._receiveSubmission(typeValue, option);
-    if (valueData != null) {
-      value = ValueExpressionHelper.makeString(valueData);
-      if (valueData.macro == null) {
+    var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, SubmissionType.values);
+    var valueValue = await this._controller._receiveSubmission(typeValue, option);
+    if (valueValue != null) {
+      value = ValueExpressionHelper.makeString(valueValue);
+      if (valueValue.macro == null) {
         value = '??${value}';
       }
     }
     return (value: value);
   }
 
-  Future<({String target})> callbackPickStorageItem(
+  Future<({String target})> callbackQueryStorageItem(
     String type,
   ) async {
     var target = '';
-    var typeValue = switch (type) {
-      'load_file'      => 'load_file',
-      'load_directory' => 'load_directory',
-      'save_file'      => 'save_file',
-      _                => throw Exception(),
-    };
-    target = (await StorageHelper.pick(typeValue, this._controller.context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.generic', null))?.emit() ?? '';
+    var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, StorageQueryType.values);
+    var targetValue = await StorageHelper.query(typeValue);
+    target = targetValue.emit();
+    return (target: target);
+  }
+
+  Future<()> callbackRevealStorageItem(
+    String target,
+  ) async {
+    var targetValue = StoragePath.of(target);
+    StorageHelper.reveal(targetValue);
+    return ();
+  }
+
+  Future<({String target})> callbackPickStorageItem(
+    String type,
+    String location,
+    String name,
+  ) async {
+    var target = '';
+    var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, StoragePickType.values);
+    var locationValue = location.isEmpty ? null : StoragePath.of(location);
+    var nameValue = name.isEmpty ? null : name;
+    var targetValue = await StorageHelper.pick(typeValue, locationValue, nameValue);
+    if (targetValue != null) {
+      target = targetValue.emit();
+    }
     return (target: target);
   }
 

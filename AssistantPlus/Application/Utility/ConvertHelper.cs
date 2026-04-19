@@ -294,7 +294,7 @@ namespace Twinning.AssistantPlus.Utility {
 			DataPackageView view
 		) {
 			return (await view.GetStorageItemsAsync())
-				.Select((it) => StorageHelper.GetLongPath(it.Path))
+				.Select((it) => StorageHelper.ResolveLongPath(it.Path))
 				.ToList();
 		}
 

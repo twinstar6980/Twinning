@@ -39,19 +39,19 @@ class ForwarderActionViewController: UIViewController {
             resource.append(url)
           }
         }
-        try self.forwardResource(resource: resource)
-        self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
+        try await self.forwardResource(resource: resource)
       }
       catch {
-        self.showException(exception: error, action: { () in self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil) })
+        await self.showException(exception: error)
       }
+      self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
     }
     return
   }
 
   // MARK: - utility
 
-  private func getApplicationIdentifier(
+  private func queryApplicationIdentifier(
   ) throws -> String {
     guard let extensionIdentifier = Bundle.main.bundleIdentifier else {
       throw NSError(domain: "failed to get bundle identifier.", code: 0)
@@ -60,13 +60,13 @@ class ForwarderActionViewController: UIViewController {
     guard extensionIdentifier.hasSuffix(extensionSuffix) else {
       throw NSError(domain: "invalid bundle identifier.", code: 0)
     }
-    let identifier = String(extensionIdentifier.prefix(extensionIdentifier.count - extensionSuffix.count))
+    let identifier = String(extensionIdentifier.dropLast(extensionSuffix.count))
     return identifier
   }
 
   // ----------------
 
-  private func getFileActualPath(
+  private func resolveFileUrl(
     url: URL,
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -96,23 +96,20 @@ class ForwarderActionViewController: UIViewController {
 
   private func openLink(
     link: URL,
-  ) throws -> Void {
-    var accepted = false
+  ) async throws -> Void {
+    var application: UIApplication? = nil
     var responder = self as UIResponder?
     while responder != nil {
-      if let application = responder as? UIApplication {
-        if application.canOpenURL(link) {
-          let selector_openURL = sel_registerName("openURL:")
-          if application.responds(to: selector_openURL) {
-            application.perform(selector_openURL, with: link)
-            accepted = true
-          }
-        }
+      if responder is UIApplication {
+        application = responder as? UIApplication
         break
       }
       responder = responder!.next
     }
-    if !accepted {
+    if application == nil {
+      throw NSError(domain: "failed to get application.", code: 0)
+    }
+    guard await application!.open(link) else {
       throw NSError(domain: "failed to open link.", code: 0)
     }
     return
@@ -122,22 +119,23 @@ class ForwarderActionViewController: UIViewController {
 
   private func showException(
     exception: Error,
-    action: @escaping (() -> Void),
-  ) -> Void {
-    let alter = UIAlertController(title: "Exception", message: exception.localizedDescription, preferredStyle: .alert)
-    alter.addAction(UIAlertAction(title: "Close", style: .destructive, handler: { (_) in action() }))
-    self.present(alter, animated: true, completion: nil)
+  ) async -> Void {
+    await withCheckedContinuation { (continuation) in
+      let alter = UIAlertController(title: "Exception", message: exception.localizedDescription, preferredStyle: .alert)
+      alter.addAction(UIAlertAction(title: "Close", style: .destructive, handler: { (_) in continuation.resume(returning: 0) }))
+      self.present(alter, animated: true, completion: nil)
+    }
     return
   }
 
   private func forwardResource(
     resource: Array<URL>,
-  ) throws -> Void {
+  ) async throws -> Void {
     var command: Array<String> = []
     command.append("-forward")
-    command.append(contentsOf: try resource.map({ (item) in try self.getFileActualPath(url: item) }))
-    let link = URL(string: "\(try self.getApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
-    try self.openLink(link: link)
+    command.append(contentsOf: try resource.map({ (item) in try self.resolveFileUrl(url: item) }))
+    let link = URL(string: "\(try self.queryApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
+    try await self.openLink(link: link)
     return
   }
 

@@ -446,7 +446,7 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			var target = await StorageHelper.PickLoadDirectory(App.Instance.MainWindow, "@application.module_configuration_directory");
+			var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadDirectory, "application.module_configuration_directory", null);
 			if (target != null) {
 				App.Instance.Setting.Data.ModuleConfigurationDirectory = target;
 				this.NotifyPropertyChanged([
@@ -511,7 +511,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					break;
 				}
 				case "Import": {
-					var target = await StorageHelper.PickLoadFile(App.Instance.MainWindow, $"@application.setting_file");
+					var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadFile, $"application.setting_file", null);
 					if (target != null) {
 						await App.Instance.Setting.Load(target);
 						await App.Instance.Setting.Save();
@@ -520,7 +520,7 @@ namespace Twinning.AssistantPlus.View.Home {
 					break;
 				}
 				case "Export": {
-					var target = await StorageHelper.PickSaveFile(App.Instance.MainWindow, $"@application.setting_file", "setting.json");
+					var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.SaveFile, $"application.setting_file", "setting.json");
 					if (target != null) {
 						await App.Instance.Setting.Save(target, false);
 						changed = true;

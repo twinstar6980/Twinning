@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
 import 'package:flutter/widgets.dart';
@@ -360,32 +361,32 @@ extension StorageDropRegionExtension on StorageDropRegion {
     required String       location,
     TextStyle?            textStyle = null, // TODO: remove?
   }) async {
-    var type = null as String?;
+    var type = null as StoragePickType?;
     var allowedTypeCount = [allowLoadFile, allowLoadDirectory, allowSaveFile].where((value) => value).length;
     assertTest(allowedTypeCount != 0);
     if (allowedTypeCount == 1) {
       if (allowLoadFile) {
-        type = 'load_file';
+        type = .loadFile;
       }
       if (allowLoadDirectory) {
-        type = 'load_directory';
+        type = .loadDirectory;
       }
       if (allowSaveFile) {
-        type = 'save_file';
+        type = .saveFile;
       }
     }
     else {
-      type = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
+      type = await StyledMenuExtension.show<StoragePickType>(context, StyledMenu.standard(
         position: .under,
-        content: <({String value, String text})>[
+        content: <({StoragePickType value, String text})>[
           if (allowLoadFile) ...[
-            (value: 'load_file', text: 'Load File'),
+            (value: .loadFile, text: 'Load File'),
           ],
           if (allowLoadDirectory) ...[
-            (value: 'load_directory', text: 'Load Directory'),
+            (value: .loadDirectory, text: 'Load Directory'),
           ],
           if (allowSaveFile) ...[
-            (value: 'save_file', text: 'Save File'),
+            (value: .saveFile, text: 'Save File'),
           ],
         ].map((value) => StyledMenuItem.standard(
           value: value.value,
@@ -396,7 +397,7 @@ extension StorageDropRegionExtension on StorageDropRegion {
         )),
       ));
     }
-    return type == null ? null : await StorageHelper.pick(type, context, location, null);
+    return type == null ? null : await MiscellaneousHelper.pickStorageItem(context, type, location, null);
   }
 
 }

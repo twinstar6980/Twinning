@@ -21,7 +21,7 @@ class CustomMethodChannel: NSObject {
   public func register_awakeFromNib(
   ) -> Void {
     FlutterMethodChannel(
-      name: "\(try! self.getApplicationIdentifier()).CustomMethodChannel",
+      name: "\(try! self.queryApplicationIdentifier()).CustomMethodChannel",
       binaryMessenger: (self.host.contentViewController as! FlutterViewController).engine.binaryMessenger,
     ).setMethodCallHandler({ [weak self] (call, result) in
       Task {
@@ -39,32 +39,72 @@ class CustomMethodChannel: NSObject {
     result: @escaping FlutterResult,
   ) async -> Void {
     do {
-      guard let argument = call.arguments as? [String: Any?] else {
+      guard let argumentMap = call.arguments as? [String: Any?] else {
         throw NSError(domain: "invalid argument.", code: 0)
       }
+      var resultMap: [String: Any] = [:]
       switch call.method {
-      case "pick_storage_item":
-        let detail = try await self.handlePickStorageItem(
-          type: argument["type"] as? String ?? {
-            throw NSError(domain: "invalid argument.", code: 0)
-          }(),
-          location: argument["location"] as? String ?? {
-            throw NSError(domain: "invalid argument.", code: 0)
-          }(),
-          name: argument["name"] as? String ?? {
+      case "query_storage_item":
+        let detail = try await self.handleQueryStorageItem(
+          type: argumentMap["type"] as? String ?? {
             throw NSError(domain: "invalid argument.", code: 0)
           }(),
         )
-        result([
-          "target": detail,
-        ])
+        resultMap["target"] = detail
+      case "reveal_storage_item":
+        let _ = try await self.handleRevealStorageItem(
+          target: argumentMap["target"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
+      case "pick_storage_item":
+        let detail = try await self.handlePickStorageItem(
+          type: argumentMap["type"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+          location: argumentMap["location"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+          name: argumentMap["name"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
+        resultMap["target"] = detail
       default:
-        result(FlutterMethodNotImplemented)
+        throw NSError(domain: "invalid method.", code: 0)
       }
+      result(resultMap)
     }
     catch {
       result(FlutterError(code: "", message: error.localizedDescription, details: nil))
     }
+    return
+  }
+
+  private func handleQueryStorageItem(
+    type: String,
+  ) async throws -> String {
+    guard type == "user_home" || type == "application_shared" || type == "application_cache" else {
+      throw NSError(domain: "invalid type.", code: 0)
+    }
+    var target: String? = nil
+    if type == "user_home" {
+      target = "\(try self.resolveFileUrl(url: FileManager.default.homeDirectoryForCurrentUser))"
+    }
+    if type == "application_shared" {
+      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())"
+    }
+    if type == "application_cache" {
+      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/cache"
+    }
+    return target!
+  }
+
+  private func handleRevealStorageItem(
+    target: String,
+  ) async throws -> Void {
+    let link = URL(fileURLWithPath: target)
+    try await self.openLink(link: link)
     return
   }
 
@@ -106,13 +146,13 @@ class CustomMethodChannel: NSObject {
     if (picker.runModal() == .OK) {
       targetUrl = picker.url
     }
-    let target = targetUrl == nil ? nil : try self.getFileActualPath(url: targetUrl!)
+    let target = targetUrl == nil ? nil : try self.resolveFileUrl(url: targetUrl!)
     return target
   }
 
   // MARK: - utility
 
-  private func getApplicationIdentifier(
+  private func queryApplicationIdentifier(
   ) throws -> String {
     guard let identifier = Bundle.main.bundleIdentifier else {
       throw NSError(domain: "failed to get bundle identifier.", code: 0)
@@ -122,7 +162,7 @@ class CustomMethodChannel: NSObject {
 
   // ----------------
 
-  private func getFileActualPath(
+  private func resolveFileUrl(
     url: URL,
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -136,6 +176,15 @@ class CustomMethodChannel: NSObject {
       path.removeLast()
     }
     return path
+  }
+
+  private func openLink(
+    link: URL,
+  ) async throws -> Void {
+    guard NSWorkspace.shared.open(link) else {
+      throw NSError(domain: "failed to open link.", code: 0)
+    }
+    return
   }
 
 }

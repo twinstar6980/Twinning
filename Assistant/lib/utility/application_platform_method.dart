@@ -19,38 +19,44 @@ class ApplicationPlatformMethod {
 
   ApplicationPlatformMethod._(
   ) :
-    this._channel = null {
-    if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
-      this._channel = .new('${ApplicationInformation.identifier}.CustomMethodChannel');
-    }
-    return;
-  }
+    this._channel = .new('${ApplicationInformation.identifier}.CustomMethodChannel');
 
   // #endregion
 
   // #region interface
 
-  Future<({String placement})> copyStorageFile(
-    String target,
-    String location,
+  Future<({Boolean state})> checkStoragePermission(
+    String mode,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('copy_storage_file', <Object?, Object?>{
-      'target': target,
-      'location': location,
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_storage_permission', <Object?, Object?>{
+      'mode': mode,
     });
     detail!;
     return (
-      placement: detail['placement'] as String,
+      state: detail['state'] as Boolean,
     );
   }
 
-  Future<()> revealStorageFile(
+  Future<({String target})> queryStorageItem(
+    String type,
+  ) async {
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('query_storage_item', <Object?, Object?>{
+      'type': type,
+    });
+    detail!;
+    return (
+      target: detail['target'] as String,
+    );
+  }
+
+  Future<()> revealStorageItem(
     String target,
   ) async {
-    assertTest(SystemChecker.isAndroid);
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
     // ignore: unused_local_variable
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('reveal_storage_file', <Object?, Object?>{
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('reveal_storage_item', <Object?, Object?>{
       'target': target,
     });
     detail!;
@@ -63,7 +69,7 @@ class ApplicationPlatformMethod {
     String location,
     String name,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
     var detail = await this._channel!.invokeMapMethod<Object?, Object?>('pick_storage_item', <Object?, Object?>{
       'type': type,
       'location': location,
@@ -75,27 +81,18 @@ class ApplicationPlatformMethod {
     );
   }
 
-  Future<({Boolean state})> checkExternalStoragePermission(
-    String mode,
+  Future<({String? path})> resolveContentUri(
+    String  uri,
+    String? fallback,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_external_storage_permission', <Object?, Object?>{
-      'mode': mode,
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('resolve_content_uri', <Object?, Object?>{
+      'uri': uri,
+      'fallback': fallback,
     });
     detail!;
     return (
-      state: detail['state'] as Boolean,
-    );
-  }
-
-  Future<({String path})> queryExternalStoragePath(
-  ) async {
-    assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('query_external_storage_path', <Object?, Object?>{
-    });
-    detail!;
-    return (
-      path: detail['path'] as String,
+      path: detail['path'] as String?,
     );
   }
 

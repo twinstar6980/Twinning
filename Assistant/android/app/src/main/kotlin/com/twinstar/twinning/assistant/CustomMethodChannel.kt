@@ -5,12 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
-import android.provider.OpenableColumns
 import android.provider.Settings
-import androidx.core.database.getFloatOrNull
-import androidx.core.database.getLongOrNull
-import androidx.core.database.getStringOrNull
 import androidx.core.net.toUri
+import androidx.documentfile.provider.DocumentFile
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -53,7 +50,7 @@ class CustomMethodChannel {
   ): Unit {
     MethodChannel(
       flutterEngine.dartExecutor.binaryMessenger,
-      "${this.getApplicationIdentifier()}.CustomMethodChannel",
+      "${this.queryApplicationIdentifier()}.CustomMethodChannel",
     ).setMethodCallHandler { call, result ->
       CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
       return@setMethodCallHandler
@@ -90,52 +87,44 @@ class CustomMethodChannel {
     result: MethodChannel.Result,
   ): Unit {
     try {
+      val argumentMap = call.arguments as Map<*, *>
+      val resultMap = mutableMapOf<Any?, Any?>()
       when (call.method) {
-        "copy_storage_file" -> {
-          val detail = this.handleCopyStorageFile(
-            call.argument<String>("target")!!,
-            call.argument<String>("location")!!,
+        "check_storage_permission" -> {
+          val detail = this.handleCheckStoragePermission(
+            argumentMap["mode"] as String,
           )
-          result.success(mapOf<Any?, Any?>(
-            "placement" to detail,
-          ))
+          resultMap["state"] = detail
         }
-        "reveal_storage_file" -> {
-          val detail = this.handleRevealPickStorageItem(
-            call.argument<String>("target")!!,
+        "query_storage_item" -> {
+          val detail = this.handleQueryStorageItem(
+            argumentMap["type"] as String,
           )
-          result.success(mapOf<Any?, Any?>(
-          ))
+          resultMap["target"] = detail
+        }
+        "reveal_storage_item" -> {
+          val detail = this.handleRevealStorageItem(
+            argumentMap["target"] as String,
+          )
         }
         "pick_storage_item" -> {
           val detail = this.handlePickStorageItem(
-            call.argument<String>("type")!!,
-            call.argument<String>("location")!!,
-            call.argument<String>("name")!!,
+            argumentMap["type"] as String,
+            argumentMap["location"] as String,
+            argumentMap["name"] as String,
           )
-          result.success(mapOf<Any?, Any?>(
-            "target" to detail,
-          ))
+          resultMap["target"] = detail
         }
-        "check_external_storage_permission" -> {
-          val detail = this.handleCheckExternalStoragePermission(
-            call.argument<String>("mode")!!,
+        "resolve_content_uri" -> {
+          val detail = this.handleResolveContentUri(
+            argumentMap["uri"] as String,
+            argumentMap["fallback"] as String?,
           )
-          result.success(mapOf<Any?, Any?>(
-            "state" to detail,
-          ))
+          resultMap["path"] = detail
         }
-        "query_external_storage_path" -> {
-          val detail = this.handleQueryExternalStoragePath(
-          )
-          result.success(mapOf<Any?, Any?>(
-            "path" to detail,
-          ))
-        }
-        else -> {
-          result.notImplemented()
-        }
+        else -> throw Exception("invalid method")
       }
+      result.success(resultMap)
     }
     catch (e: Exception) {
       result.error("", e.stackTraceToString(), null)
@@ -143,30 +132,35 @@ class CustomMethodChannel {
     return
   }
 
-  private suspend fun handleCopyStorageFile(
-    target: String,
-    location: String,
-  ): String {
-    check(File(location).isDirectory)
-    val targetUri = target.toUri()
-    check(targetUri.scheme == "content")
-    val placementName = this.queryDatabaseOfContentUri<String>(targetUri, OpenableColumns.DISPLAY_NAME)
-    check(placementName != null)
-    var placement = "${location}/${placementName}"
-    var placementSuffix = 0
-    while (File(placement).exists()) {
-      placementSuffix += 1
-      placement = "${location}/${placementName}.${placementSuffix}"
+  private suspend fun handleCheckStoragePermission(
+    mode: String,
+  ): Boolean {
+    check(mode == "check" || mode == "request")
+    if (mode == "request") {
+      this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), this.requestForRequestExternalStoragePermission)
+      this.continuation.receive()
     }
-    this.host.contentResolver.openInputStream(targetUri)!!.use { input ->
-      FileOutputStream(placement, false).use { output ->
-        input.copyTo(output)
-      }
-    }
-    return placement
+    return Environment.isExternalStorageManager()
   }
 
-  private suspend fun handleRevealPickStorageItem(
+  private suspend fun handleQueryStorageItem(
+    type: String,
+  ): String {
+    check(type == "user_home" || type == "application_shared" || type == "application_cache")
+    var target = null as String?
+    if (type == "user_home") {
+      target = "${Environment.getExternalStorageDirectory().absolutePath}"
+    }
+    if (type == "application_shared") {
+      target = "${this.host.getExternalFilesDir(null)!!.absolutePath}"
+    }
+    if (type == "application_cache") {
+      target = "${this.host.getCacheDir().absolutePath}"
+    }
+    return target!!
+  }
+
+  private suspend fun handleRevealStorageItem(
     target: String,
   ): Unit {
     val primaryDirectory = Environment.getExternalStorageDirectory().absolutePath
@@ -217,29 +211,21 @@ class CustomMethodChannel {
     val timeBeforePick = Date().time
     this.host.startActivityForResult(intent, this.requestCodeForPickStorageItem)
     val targetUri = this.continuation.receive() as Uri?
-    if (type == "save_file") {
-      if (targetUri != null && queryDatabaseOfContentUri<Long>(targetUri, DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
-        check(DocumentsContract.deleteDocument(this.host.contentResolver, targetUri))
+    if (type == "save_file" && targetUri != null) {
+      val targetDocument = DocumentFile.fromSingleUri(this.host, targetUri)!!
+      if (targetDocument.lastModified() > timeBeforePick) {
+        check(targetDocument.delete())
       }
     }
-    val target = targetUri?.toString()
+    val target = if (targetUri == null) null else this.resolveContentUri(targetUri, null)!!
     return target
   }
 
-  private suspend fun handleCheckExternalStoragePermission(
-    mode: String,
-  ): Boolean {
-    check(mode == "check" || mode == "request")
-    if (mode == "request") {
-      this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), this.requestForRequestExternalStoragePermission)
-      this.continuation.receive()
-    }
-    return Environment.isExternalStorageManager()
-  }
-
-  private suspend fun handleQueryExternalStoragePath(
-  ): String {
-    return Environment.getExternalStorageDirectory().absolutePath
+  private suspend fun handleResolveContentUri(
+    uri: String,
+    fallback: String?,
+  ): String? {
+    return this.resolveContentUri(uri.toUri(), fallback)
   }
 
   // endregion
@@ -252,30 +238,106 @@ class CustomMethodChannel {
 
   // ----------------
 
-  private fun getApplicationIdentifier(
+  private fun queryApplicationIdentifier(
   ): String {
     return this.host.packageName
   }
 
   // ----------------
 
-  private inline fun <reified TValue> queryDatabaseOfContentUri(
+  private fun resolveContentUri(
     uri: Uri,
-    name: String,
-  ): TValue? {
-    var value = null as TValue?
-    this.host.contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
-      check(cursor != null)
-      check(cursor.columnCount == 1)
-      check(cursor.moveToFirst())
-      value = when (TValue::class) {
-        Long::class -> cursor.getLongOrNull(0) as TValue?
-        Float::class -> cursor.getFloatOrNull(0) as TValue?
-        String::class -> cursor.getStringOrNull(0) as TValue?
-        else -> throw Exception()
+    fallback: String?,
+  ): String? {
+    var result = null as String?
+    check(uri.scheme == "content")
+    val provider = uri.authority
+    var path = Uri.decode(uri.path)
+    when (provider) {
+      // AOSP DocumentsUI
+      "com.android.externalstorage.documents" -> {
+        // /document/primary:<path-relative-external-storage>
+        if (path.startsWith("/document/primary:")) {
+          result = "${Environment.getExternalStorageDirectory()}/${path.substring("/document/primary:".length)}"
+        }
+        // /tree/primary:<path-relative-external-storage>
+        if (path.startsWith("/tree/primary:")) {
+          result = "${Environment.getExternalStorageDirectory()}/${path.substring("/tree/primary:".length)}"
+        }
+      }
+      // Material Files
+      "me.zhanghai.android.files.file_provider" -> {
+        path = Uri.decode(path)
+        // /file://<path-absolute>
+        if (path.startsWith("/file://")) {
+          result = Uri.decode(Uri.parse(path.substring("/".length)).path)
+        }
+      }
+      // Root Explorer
+      "com.speedsoftware.rootexplorer.fileprovider" -> {
+        // /root/<path-relative-root>
+        if (path.startsWith("/root/")) {
+          result = path.substring("/root".length)
+        }
+      }
+      // Solid Explorer
+     "pl.solidexplorer2.files" -> {
+       result = path
+     }
+      // MT Manager
+      "bin.mt.plus.fp" -> {
+        result = path
+      }
+      // NMM
+      "in.mfile.files" -> {
+        result = path
       }
     }
-    return value
+    if (result == null && fallback != null) {
+      val document = if (!DocumentsContract.isTreeUri(uri)) DocumentFile.fromSingleUri(this.host, uri)!! else DocumentFile.fromTreeUri(this.host, uri)!!
+      if (document.exists()) {
+        val placementName = document.name!!
+        var placementSuffix = 0
+        var placement = "${fallback}/${placementName}"
+        while (File(placement).exists()) {
+          placementSuffix += 1
+          placement = "${fallback}/${placementName}.${placementSuffix}"
+        }
+        this.duplicateContentUri(uri, placement)
+        result = placement
+      }
+    }
+    return result
+  }
+
+  private fun duplicateContentUri(
+    target: Uri,
+    placement: String,
+  ): Unit {
+    check(!File(placement).exists())
+    val destinationParent = File(placement).parentFile
+    if (destinationParent != null && !destinationParent.isDirectory()) {
+      destinationParent.mkdirs()
+    }
+    val targetDocument = if (!DocumentsContract.isTreeUri(target)) DocumentFile.fromSingleUri(this.host, target)!! else DocumentFile.fromTreeUri(this.host, target)!!
+    if (targetDocument.isFile) {
+      File(placement).createNewFile()
+      this.host.contentResolver.openInputStream(target)!!.use { input ->
+        FileOutputStream(placement, false).use { output ->
+          input.copyTo(output)
+        }
+      }
+    }
+    else if (targetDocument.isDirectory) {
+      File(placement).mkdirs()
+      for (item in targetDocument.listFiles()) {
+        this.duplicateContentUri(item.uri, "${placement}/${item.name}")
+      }
+    }
+    else {
+      throw UnsupportedOperationException()
+    }
+    return
   }
 
   // endregion

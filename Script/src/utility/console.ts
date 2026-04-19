@@ -726,12 +726,18 @@ namespace Twinning.Script.Console {
 					}
 				}
 			}
+			if (value.type() === StoragePathType.detached) {
+				value = HomePath.workspace().push(value);
+			}
+			else if (value.type() === StoragePathType.relative && value.root() === null) {
+				value = HomePath.workspace().push(new StoragePath(value.emit().substring(2)));
+			}
 			return [value];
 		};
 		let checker_proxy = (value: StoragePath): null | string => {
 			state_data.last_value = value;
-			if (value.type() === StoragePathType.detached) {
-				return los('console:path_is_detached');
+			if (value.type() !== StoragePathType.absolute) {
+				return los('console:path_not_absolute');
 			}
 			if (mode === 'input') {
 				if (!StorageHelper.exist(value)) {
@@ -908,25 +914,54 @@ namespace Twinning.Script.Console {
 
 	// #region advanced feature
 
+	export function query_storage_item(
+		type: 'user_home' | 'application_shared' | 'application_cache',
+	): null | StoragePath {
+		let target: null | StoragePath = undefined!;
+		if (Shell.is_basic) {
+			// unavailable, silently fail
+			target = null;
+		}
+		if (Shell.is_assistant) {
+			let target_value = Shell.assistant_query_storage_item(type).target;
+			target = new StoragePath(target_value);
+		}
+		return target;
+	}
+
+	export function reveal_storage_item(
+		target: StoragePath,
+	): void {
+		if (Shell.is_basic) {
+			// unavailable, silently fail
+		}
+		if (Shell.is_assistant) {
+			Shell.assistant_reveal_storage_item(target.emit());
+		}
+		return;
+	}
+
 	export function pick_storage_item(
 		type: null | 'load_file' | 'load_directory' | 'save_file',
+		location: null | StoragePath,
+		name: null | string,
 	): null | StoragePath {
-		let result: null | StoragePath = undefined!;
+		let target: null | StoragePath = undefined!;
 		if (type === null) {
 			information(los('console:pick_path_type'), []);
 			type = enumeration(option_string(['load_file', 'load_directory', 'save_file']), null, null) as 'load_file' | 'load_directory' | 'save_file';
 		}
 		if (Shell.is_basic) {
 			// unavailable, silently fail
-			result = null;
+			target = null;
 		}
 		if (Shell.is_assistant) {
-			let result_value = Shell.assistant_pick_storage_item(type).target;
-			if (result_value !== '') {
-				result = new StoragePath(result_value);
+			let target_value = Shell.assistant_pick_storage_item(type, location === null ? '' : location.emit(), name === null ? '' : name).target;
+			if (target_value !== '') {
+				target = new StoragePath(target_value);
 			}
 		}
-		return result;
+		return target;
 	}
 
 	export function push_system_notification(

@@ -5,6 +5,7 @@ import '/utility/command_line_writer.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/popcap_animation_viewer/setting.dart';
@@ -1027,7 +1028,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     icon: IconView.of(IconSet.file_open),
                     content: StyledText.inherit('Load File'),
                     onPressed: (context) async {
-                      var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.popcapAnimationViewer).identifier}.source');
+                      var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, '${ModuleHelper.query(.popcapAnimationViewer).identifier}.source', null);
                       if (target != null) {
                         Navigator.pop(context);
                         await this._applyLoad(target, null, null, null, null, null, null, null);
@@ -1039,7 +1040,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     icon: IconView.of(IconSet.folder_open),
                     content: StyledText.inherit('Load Directory'),
                     onPressed: (context) async {
-                      var target = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.popcapAnimationViewer).identifier}.source');
+                      var target = await MiscellaneousHelper.pickStorageItem(context, .loadDirectory, '${ModuleHelper.query(.popcapAnimationViewer).identifier}.source', null);
                       if (target != null) {
                         Navigator.pop(context);
                         target = await VisualHelper.checkAnimationDirectoryPath(target);

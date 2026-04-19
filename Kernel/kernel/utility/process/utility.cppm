@@ -247,6 +247,7 @@ export namespace Twinning::Kernel::Process {
 	inline auto run_process(
 		Path const &           program,
 		List<String> const &   argument,
+		Path const &           workspace,
 		List<String> const &   environment,
 		Optional<Path> const & input,
 		Optional<Path> const & output,
@@ -259,6 +260,7 @@ export namespace Twinning::Kernel::Process {
 		auto null_device = Path{"/NUL"_s};
 		auto program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(program.emit_native())));
 		auto argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_command_string(program, argument))));
+		auto workspace_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(workspace.emit_native())));
 		auto environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_environment_string(environment))));
 		auto input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).emit_native())));
 		auto output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).emit_native())));
@@ -309,7 +311,7 @@ export namespace Twinning::Kernel::Process {
 			Third::system::windows::$TRUE,
 			Third::system::windows::$CREATE_UNICODE_ENVIRONMENT | Third::system::windows::$DETACHED_PROCESS,
 			cast_pointer<Third::system::windows::$WCHAR>(environment_string.begin()).value,
-			nullptr,
+			cast_pointer<Third::system::windows::$WCHAR>(workspace_string.begin()).value,
 			&startup_information,
 			&process_information
 		);
@@ -347,6 +349,7 @@ export namespace Twinning::Kernel::Process {
 			argument_string_list.append(element.begin().value);
 		}
 		argument_string_list.append(nullptr);
+		auto workspace_string = make_null_terminated_string(workspace.emit_native());
 		auto environment_string = List<String>{};
 		environment_string.allocate(environment.size());
 		for (auto & element : environment) {

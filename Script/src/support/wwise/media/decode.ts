@@ -28,6 +28,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 				ripe_file_fallback.emit_native(),
 			],
 			null,
+			null,
 		);
 		if (ripe_file_fallback_temporary !== null) {
 			StorageHelper.remove(ripe_file_fallback_temporary);

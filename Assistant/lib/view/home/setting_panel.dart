@@ -4,6 +4,7 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/utility/application_permission_manager.dart';
 import '/utility/application_extension_manager.dart';
 import '/widget/export.dart';
@@ -344,51 +345,6 @@ class _SettingPanelState extends State<SettingPanel> {
         },
         panelBuilder: null,
       ),
-      SettingListItem(
-        enabled: SystemChecker.isAndroid,
-        icon: IconSet.snippet_folder,
-        label: 'Storage Picker Fallback Directory',
-        comment: [
-          StyledText.inherit(!StorageHelper.existDirectorySync(setting.data.storagePickerFallbackDirectory) ? 'Invalid' : 'Available'),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          StyledListTile.standardTight(
-            content: StyledInput.outlined(
-              type: .text,
-              format: null,
-              hint: null,
-              prefix: null,
-              suffix: [
-                StyledIconButton.standard(
-                  tooltip: 'Pick',
-                  icon: IconView.of(IconSet.open_in_new),
-                  onPressed: (context) async {
-                    var target = await StorageDropRegionExtension.pick(
-                      context: context,
-                      allowLoadDirectory: true,
-                      location: '@application.storage_picker_fallback_directory',
-                    );
-                    if (target != null) {
-                      setting.data.storagePickerFallbackDirectory = target;
-                      await refreshState(setStateForPanel);
-                      await refreshState(this.setState);
-                      await setting.save();
-                    }
-                  },
-                ),
-              ],
-              value: setting.data.storagePickerFallbackDirectory.emit(),
-              onChanged: (context, value) async {
-                setting.data.storagePickerFallbackDirectory = .of(value);
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-          ),
-        ],
-      ),
       SettingListLabel(
         label: 'Forwarder',
         action: null,
@@ -562,7 +518,7 @@ class _SettingPanelState extends State<SettingPanel> {
             leading: IconView.of(IconSet.download),
             content: StyledText.inherit('Import'),
             onPressed: (context) async {
-              var target = await StorageHelper.pickLoadFile(context, '@application.setting_file');
+              var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, 'application.setting_file', null);
               if (target != null) {
                 Navigator.pop(context);
                 await setting.load(file: target);
@@ -575,7 +531,7 @@ class _SettingPanelState extends State<SettingPanel> {
             leading: IconView.of(IconSet.upload),
             content: StyledText.inherit('Export'),
             onPressed: (context) async {
-              var target = await StorageHelper.pickSaveFile(context, '@application.setting_file', 'setting.json');
+              var target = await MiscellaneousHelper.pickStorageItem(context, .saveFile, 'application.setting_file', 'setting.json');
               if (target != null) {
                 Navigator.pop(context);
                 await setting.save(file: target, apply: false);
@@ -596,7 +552,7 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Reveal'),
             onPressed: (context) async {
               Navigator.pop(context);
-              await MoreModalDialogExtension.showForRevealStoragePath(context, 'Shared Directory', await StorageHelper.queryApplicationSharedDirectory());
+              await MoreModalDialogExtension.showForRevealStoragePath(context, 'Shared Directory', await StorageHelper.query(.applicationShared));
             },
           ),
         ],
@@ -612,7 +568,7 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Clear'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var cacheDirectory = await StorageHelper.queryApplicationCacheDirectory();
+              var cacheDirectory = await StorageHelper.query(.applicationCache);
               if (await StorageHelper.exist(cacheDirectory)) {
                 await StorageHelper.remove(cacheDirectory);
               }

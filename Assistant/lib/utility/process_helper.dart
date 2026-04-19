@@ -7,9 +7,18 @@ import 'dart:io';
 
 class ProcessHelper {
 
+  // #region workspace
+
+  static StoragePath getWorkspace(
+  ) {
+    return .of(Directory.current.path);
+  }
+
+  // #endregion
+
   // #region environment
 
-  static String? queryEnvironment(
+  static String? getEnvironment(
     String name,
   ) {
     return Platform.environment[name];
@@ -29,14 +38,19 @@ class ProcessHelper {
   static Future<({Integer code, String output, String error})> runProcess(
     StoragePath          program,
     List<String>         argument,
+    StoragePath?         workspace,
     Map<String, String>? environment,
   ) async {
+    if (workspace == null) {
+      workspace = ProcessHelper.getWorkspace();
+    }
     if (environment == null) {
       environment = ProcessHelper.listEnvironment();
     }
     var process = await Process.run(
       program.emitNative(),
       argument,
+      workingDirectory: workspace.emitNative(),
       environment: environment,
     );
     return (
@@ -56,12 +70,12 @@ class ProcessHelper {
   ) async {
     var result = null as StoragePath?;
     var itemDelimiter = SystemChecker.isWindows ? ';' : ':';
-    var pathEnvironment = ProcessHelper.queryEnvironment('PATH');
+    var pathEnvironment = ProcessHelper.getEnvironment('PATH');
     assertTest(pathEnvironment != null);
     var pathList = pathEnvironment!.split(itemDelimiter).map(StoragePath.of);
     var pathExtensionList = [''];
     if (SystemChecker.isWindows && allowExtension) {
-      var pathExtensionEnvironment = ProcessHelper.queryEnvironment('PATHEXT');
+      var pathExtensionEnvironment = ProcessHelper.getEnvironment('PATHEXT');
       assertTest(pathExtensionEnvironment != null);
       pathExtensionList.addAll(pathExtensionEnvironment!.split(itemDelimiter).map((it) => it.toLowerCase()));
     }

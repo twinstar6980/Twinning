@@ -72,6 +72,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.ModifyProgram {
 				dump_directory.emit_native(),
 			],
 			null,
+			null,
 		);
 		if (!ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output).endsWith(`Done!\nPress any key to exit...\n`)) {
 			throw new Error(`execute failed by Il2CppDumpe: ${il2cppdumper_result.code}\n${il2cppdumper_result.output}\n${il2cppdumper_result.error}r`);

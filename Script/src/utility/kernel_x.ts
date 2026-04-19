@@ -195,12 +195,13 @@ namespace Twinning.Script.KernelX {
 		export function run_process(
 			program: StoragePath,
 			argument: Array<string>,
+			workspace: StoragePath,
 			environment: Array<string>,
 			input: null | StoragePath,
 			output: null | StoragePath,
 			error: null | StoragePath,
 		): bigint {
-			return Kernel.Process.run_process(Kernel.Path.value(program.emit()), Kernel.StringList.value(argument), Kernel.StringList.value(environment), Kernel.PathOptional.value(input === null ? null : input.emit()), Kernel.PathOptional.value(output === null ? null : output.emit()), Kernel.PathOptional.value(error === null ? null : error.emit())).value;
+			return Kernel.Process.run_process(Kernel.Path.value(program.emit()), Kernel.StringList.value(argument), Kernel.Path.value(workspace.emit()), Kernel.StringList.value(environment), Kernel.PathOptional.value(input === null ? null : input.emit()), Kernel.PathOptional.value(output === null ? null : output.emit()), Kernel.PathOptional.value(error === null ? null : error.emit())).value;
 		}
 
 		// ----------------

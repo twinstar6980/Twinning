@@ -45,7 +45,7 @@ class ForwarderFinderSync: FIFinderSync {
   }
 
   public override var toolbarItemName: String {
-    return (try? self.getApplicationName()) ?? ""
+    return (try? self.queryApplicationName()) ?? ""
   }
 
   public override var toolbarItemToolTip: String {
@@ -53,7 +53,7 @@ class ForwarderFinderSync: FIFinderSync {
   }
 
   public override var toolbarItemImage: NSImage {
-    return (try? self.getApplicationLogo()) ?? NSImage()
+    return (try? self.queryApplicationLogo()) ?? NSImage()
   }
 
   // MARK: - action
@@ -62,19 +62,21 @@ class ForwarderFinderSync: FIFinderSync {
   private func actionForward(
     _ sender: AnyObject?,
   ) -> Void {
-    do {
-      let resource = FIFinderSyncController.default().selectedItemURLs()!
-      try self.forwardResource(resource: resource)
-    }
-    catch {
-      self.showException(exception: error, action: { () in })
+    let resource = FIFinderSyncController.default().selectedItemURLs()!
+    Task {
+      do {
+        try await self.forwardResource(resource: resource)
+      }
+      catch {
+        await self.showException(exception: error)
+      }
     }
     return
   }
 
   // MARK: - utility
 
-  private func getApplicationIdentifier(
+  private func queryApplicationIdentifier(
   ) throws -> String {
     guard let extensionIdentifier = Bundle.main.bundleIdentifier else {
       throw NSError(domain: "failed to get bundle identifier.", code: 0)
@@ -83,11 +85,11 @@ class ForwarderFinderSync: FIFinderSync {
     guard extensionIdentifier.hasSuffix(extensionSuffix) else {
       throw NSError(domain: "invalid bundle identifier.", code: 0)
     }
-    let identifier = String(extensionIdentifier.prefix(extensionIdentifier.count - extensionSuffix.count))
+    let identifier = String(extensionIdentifier.dropLast(extensionSuffix.count))
     return identifier
   }
 
-  private func getApplicationName(
+  private func queryApplicationName(
   ) throws -> String {
     guard let extensionName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String else {
       throw NSError(domain: "failed to get bundle name.", code: 0)
@@ -96,14 +98,14 @@ class ForwarderFinderSync: FIFinderSync {
     return name
   }
 
-  private func getApplicationLogo(
+  private func queryApplicationLogo(
   ) throws -> NSImage {
     return NSImage(named: "Logo")!
   }
 
   // ----------------
 
-  private func getFileActualPath(
+  private func resolveFileUrl(
     url: URL,
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -133,8 +135,10 @@ class ForwarderFinderSync: FIFinderSync {
 
   private func openLink(
     link: URL,
-  ) throws -> Void {
-    NSWorkspace.shared.open(link)
+  ) async throws -> Void {
+    guard NSWorkspace.shared.open(link) else {
+      throw NSError(domain: "failed to open link.", code: 0)
+    }
     return
   }
 
@@ -142,28 +146,26 @@ class ForwarderFinderSync: FIFinderSync {
 
   private func showException(
     exception: Error,
-    action: @escaping (() -> Void),
-  ) -> Void {
-    DispatchQueue.main.async {
+  ) async -> Void {
+    await MainActor.run {
       let alert = NSAlert()
       alert.messageText = "Exception"
       alert.informativeText = exception.localizedDescription
       alert.addButton(withTitle: "Close")
       alert.alertStyle = .critical
       alert.runModal()
-      action()
     }
     return
   }
 
   private func forwardResource(
     resource: Array<URL>,
-  ) throws -> Void {
+  ) async throws -> Void {
     var command: Array<String> = []
     command.append("-forward")
-    command.append(contentsOf: try resource.map({ (item) in try self.getFileActualPath(url: item) }))
-    let link = URL(string: "\(try self.getApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
-    try self.openLink(link: link)
+    command.append(contentsOf: try resource.map({ (item) in try self.resolveFileUrl(url: item) }))
+    let link = URL(string: "\(try self.queryApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
+    try await self.openLink(link: link)
     return
   }
 

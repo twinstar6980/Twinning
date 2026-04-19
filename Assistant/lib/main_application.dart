@@ -4,7 +4,7 @@ import '/setting.dart';
 import '/application.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
-import '/utility/storage_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
 import '/utility/application_exception_manager.dart';
@@ -208,7 +208,7 @@ class MainApplication {
       var convertedCommand = <String>[];
       for (var commandItem in command) {
         if (commandItem.startsWith('content://')) {
-          var referent = await StorageHelper.parseAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem), true);
+          var referent = await MiscellaneousHelper.resolveAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem));
           if (referent != null) {
             commandItem = referent.emit();
           }

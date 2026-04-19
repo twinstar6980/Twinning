@@ -40,7 +40,7 @@ class ForwarderActivity : Activity() {
 
   // region utility
 
-  private fun getApplicationIdentifier(
+  private fun queryApplicationIdentifier(
   ): String {
     return this.packageName
   }
@@ -103,7 +103,7 @@ class ForwarderActivity : Activity() {
     val command = mutableListOf<String>()
     command.add("-forward")
     command.addAll(resource.map() { item -> item.toString() })
-    val link = Uri.parse("${this.getApplicationIdentifier()}:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
+    val link = Uri.parse("${this.queryApplicationIdentifier()}:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
     this.openLink(link, resource)
     return
   }

@@ -62,10 +62,26 @@ namespace Twinning.Script.Shell {
 
 	// ----------------
 
+	export function assistant_query_storage_item(
+		type: 'user_home' | 'application_shared' | 'application_cache',
+	): {target: string} {
+		let result = callback(['query_storage_item', type]);
+		return {target: result[0]};
+	}
+
+	export function assistant_reveal_storage_item(
+		target: string,
+	): {} {
+		let result = callback(['reveal_storage_item', target]);
+		return {};
+	}
+
 	export function assistant_pick_storage_item(
 		type: 'load_file' | 'load_directory' | 'save_file',
+		location: string,
+		name: string,
 	): {target: string} {
-		let result = callback(['pick_storage_item', type]);
+		let result = callback(['pick_storage_item', type, location, name]);
 		return {target: result[0]};
 	}
 

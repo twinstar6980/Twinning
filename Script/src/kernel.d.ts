@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 114
+ * @version 122
  */
 declare namespace Twinning.Kernel {
 
@@ -1241,15 +1241,17 @@ declare namespace Twinning.Kernel {
 		 * 运行子进程
 		 * @param program 程序
 		 * @param argument 参数
-		 * @param environment 环境
-		 * @param input 输入
-		 * @param output 输出
-		 * @param error 错误
+		 * @param workspace 工作目录
+		 * @param environment 环境变量
+		 * @param input 输入文件
+		 * @param output 输出文件
+		 * @param error 错误文件
 		 * @returns 程序正常退出时，返回其退出码
 		 */
 		function run_process(
 			program: Path,
 			argument: StringList,
+			workspace: Path,
 			environment: StringList,
 			input: PathOptional,
 			output: PathOptional,

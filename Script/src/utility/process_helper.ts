@@ -1,8 +1,17 @@
 namespace Twinning.Script.ProcessHelper {
 
+	// #region workspace
+
+	export function get_workspace(
+	): StoragePath {
+		return KernelX.Process.get_workspace();
+	}
+
+	// #endregion
+
 	// #region environment
 
-	export function query_environment(
+	export function get_environment(
 		name: string,
 	): null | string {
 		return KernelX.Process.get_environment(name);
@@ -28,12 +37,16 @@ namespace Twinning.Script.ProcessHelper {
 	export function run_process(
 		program: StoragePath,
 		argument: Array<string>,
+		workspace: null | StoragePath,
 		environment: null | Record<string, string>,
 	): {
 		code: bigint;
 		output: string;
 		error: string;
 	} {
+		if (workspace === null) {
+			workspace = get_workspace();
+		}
 		if (environment === null) {
 			environment = list_environment();
 		}
@@ -53,7 +66,7 @@ namespace Twinning.Script.ProcessHelper {
 			StorageHelper.create_file(output_file);
 			StorageHelper.create_file(error_file);
 		}
-		let code = KernelX.Process.run_process(program, argument, ConvertHelper.record_to_array(environment, (key, value) => `${key}=${value}`), input_file, output_file, error_file);
+		let code = KernelX.Process.run_process(program, argument, workspace, ConvertHelper.record_to_array(environment, (key, value) => `${key}=${value}`), input_file, output_file, error_file);
 		let read_file = (path: StoragePath): string => {
 			let data = StorageHelper.read_file_text(path);
 			return ConvertHelper.normalize_string_line_feed(data);
@@ -88,12 +101,12 @@ namespace Twinning.Script.ProcessHelper {
 		}
 		let result: null | StoragePath = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
-		let path_environment = query_environment('PATH');
+		let path_environment = get_environment('PATH');
 		assert_test(path_environment !== null);
 		let path_list = path_environment.split(item_delimiter).map((it) => new StoragePath(it));
 		let path_extension_list = [''];
 		if (KernelX.is_windows && allow_extension) {
-			let path_extension_environment = query_environment('PATHEXT');
+			let path_extension_environment = get_environment('PATHEXT');
 			assert_test(path_extension_environment !== null);
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
 		}

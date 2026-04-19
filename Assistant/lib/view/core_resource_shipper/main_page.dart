@@ -3,6 +3,7 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
 import '/widget/export.dart';
@@ -347,7 +348,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
-                        var target = await StorageHelper.pickLoadFile(context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.resource');
+                        var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, '${ModuleHelper.query(.coreResourceShipper).identifier}.resource', null);
                         if (target != null) {
                           await this._appendResource([target]);
                           await refreshState(setStateForPanel);
@@ -359,7 +360,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
-                        var target = await StorageHelper.pickLoadDirectory(context, '@${ModuleHelper.query(.coreResourceShipper).identifier}.resource');
+                        var target = await MiscellaneousHelper.pickStorageItem(context, .loadDirectory, '${ModuleHelper.query(.coreResourceShipper).identifier}.resource', null);
                         if (target != null) {
                           await this._appendResource([target]);
                           await refreshState(setStateForPanel);

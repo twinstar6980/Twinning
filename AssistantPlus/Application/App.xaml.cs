@@ -17,13 +17,13 @@ namespace Twinning.AssistantPlus {
 
 		#region life
 
-		public StoragePath PackageDirectory { get; }
+		public StoragePath PackageDirectory { get; private set; }
 
-		public StoragePath ProgramFile { get; }
+		public StoragePath ProgramFile { get; private set; }
 
-		public StoragePath SharedDirectory { get; }
+		public StoragePath SharedDirectory { get; private set; }
 
-		public StoragePath CacheDirectory { get; }
+		public StoragePath CacheDirectory { get; private set; }
 
 		public SettingProvider Setting { get; }
 
@@ -43,10 +43,10 @@ namespace Twinning.AssistantPlus {
 			// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 			AssertTest(App.Instance == null);
 			App.Instance = this;
-			this.PackageDirectory = StorageHelper.QueryApplicationPackageDirectory();
-			this.ProgramFile = this.PackageDirectory.Join("Application.exe");
-			this.SharedDirectory = StorageHelper.QueryApplicationUnpackageSharedDirectory().Join(ApplicationInformation.Identifier);
-			this.CacheDirectory = this.SharedDirectory.Join("cache");
+			this.PackageDirectory = null!;
+			this.ProgramFile = null!;
+			this.SharedDirectory = null!;
+			this.CacheDirectory = null!;
 			this.Setting = new ();
 			this.MainWindow = null!;
 			this.InitializeComponent();
@@ -60,6 +60,10 @@ namespace Twinning.AssistantPlus {
 		) {
 			try {
 				var argument = Environment.GetCommandLineArgs()[1..];
+				this.PackageDirectory = await StorageHelper.Query(StorageQueryType.ApplicationPackage);
+				this.ProgramFile = this.PackageDirectory.Join("Application.exe");
+				this.SharedDirectory = await StorageHelper.Query(StorageQueryType.ApplicationShared);
+				this.CacheDirectory = this.SharedDirectory.Join("cache");
 				await ApplicationExceptionManager.Instance.Initialize(this);
 				await ApplicationExceptionManager.Instance.Listen(async (exception) => {
 					await this.HandleException(exception, this.MainWindow);
@@ -145,7 +149,7 @@ namespace Twinning.AssistantPlus {
 				await this.MainWindow.InsertPage(launcher);
 			}
 			else {
-				await ProcessHelper.RunProcess(this.ProgramFile, ModuleHelper.GenerateArgument(launcher), null, false);
+				await ProcessHelper.RunProcess(this.ProgramFile, ModuleHelper.GenerateArgument(launcher), null, null, false);
 			}
 			return;
 		}

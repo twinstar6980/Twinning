@@ -27,7 +27,7 @@ class ApplicationExtensionManager {
   ) async {
     var result = null as Boolean?;
     if (SystemChecker.isWindows) {
-      var stateFile = (await StorageHelper.queryApplicationSharedDirectory()).join('forwarder');
+      var stateFile = (await StorageHelper.query(.applicationShared)).join('forwarder');
       result = await StorageHelper.exist(stateFile);
     }
     if (SystemChecker.isLinux) {
@@ -40,6 +40,7 @@ class ApplicationExtensionManager {
           '-m',
           '-i', '${ApplicationInformation.identifier}.Forwarder',
         ],
+        null,
         null,
       );
       result = pluginkitResult.code == 0 && pluginkitResult.output.startsWith('+');
@@ -60,7 +61,7 @@ class ApplicationExtensionManager {
       return;
     }
     if (SystemChecker.isWindows) {
-      var stateFile = (await StorageHelper.queryApplicationSharedDirectory()).join('forwarder');
+      var stateFile = (await StorageHelper.query(.applicationShared)).join('forwarder');
       var exist = await StorageHelper.exist(stateFile);
       if (!state && exist) {
         await StorageHelper.remove(stateFile);
@@ -79,6 +80,7 @@ class ApplicationExtensionManager {
           '-e', '${!state ? 'ignore' : 'use'}',
           '-i', '${ApplicationInformation.identifier}.Forwarder',
         ],
+        null,
         null,
       );
       assertTest(pluginkitResult.code == 0);
