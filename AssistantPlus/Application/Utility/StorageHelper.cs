@@ -10,7 +10,8 @@ namespace Twinning.AssistantPlus.Utility {
 		ApplicationShared,
 		ApplicationCache,
 		ApplicationPackage,
-		ApplicationPackageShared,
+		ApplicationPackagedShared,
+		ApplicationPackagedCache,
 	}
 
 	public enum StoragePickType {
@@ -399,8 +400,12 @@ namespace Twinning.AssistantPlus.Utility {
 					path = new ($"{Package.Current.InstalledPath}");
 					break;
 				}
-				case StorageQueryType.ApplicationPackageShared: {
+				case StorageQueryType.ApplicationPackagedShared: {
 					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}");
+					break;
+				}
+				case StorageQueryType.ApplicationPackagedCache: {
+					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}\\cache");
 					break;
 				}
 				default: throw new UnreachableException();

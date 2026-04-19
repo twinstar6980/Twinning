@@ -63,7 +63,7 @@ namespace Twinning.AssistantPlus {
 				this.PackageDirectory = await StorageHelper.Query(StorageQueryType.ApplicationPackage);
 				this.ProgramFile = this.PackageDirectory.Join("Application.exe");
 				this.SharedDirectory = await StorageHelper.Query(StorageQueryType.ApplicationShared);
-				this.CacheDirectory = this.SharedDirectory.Join("cache");
+				this.CacheDirectory = await StorageHelper.Query(StorageQueryType.ApplicationCache);
 				await ApplicationExceptionManager.Instance.Initialize(this);
 				await ApplicationExceptionManager.Instance.Listen(async (exception) => {
 					await this.HandleException(exception, this.MainWindow);
