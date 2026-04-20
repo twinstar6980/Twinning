@@ -78,7 +78,7 @@ static void my_application_activate(GApplication* application) {
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
-  self->channel = new CustomMethodChannel{application};
+  self->channel = new CustomMethodChannel{&self->parent_instance};
   self->channel->register_activate(application, view);
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
@@ -126,7 +126,10 @@ static void my_application_shutdown(GApplication* application) {
 // Implements GObject::dispose.
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
+
+  self->channel->register_dispose(object);
   delete self->channel;
+
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
 }

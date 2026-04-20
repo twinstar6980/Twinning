@@ -1,14 +1,14 @@
 #pragma once
 
+#include <gtk/gtk.h>
+#include <flutter_linux/flutter_linux.h>
 #include "./common.hpp"
-#include <iostream>
 
 class CustomMethodChannel {
 
 private:
 
-	[[maybe_unused]]
-	GApplication * m_host;
+	GtkApplication * m_host;
 
 	FlMethodChannel * m_channel;
 
@@ -35,7 +35,7 @@ public:
 	// ----------------
 
 	explicit CustomMethodChannel(
-		GApplication * host
+		GtkApplication * host
 	) :
 		m_host{host},
 		m_channel{nullptr} {
@@ -60,7 +60,6 @@ public:
 
 	#pragma region register
 
-	// ReSharper disable once CppInconsistentNaming
 	auto register_activate(
 		GApplication * application,
 		FlView *       view
@@ -87,9 +86,16 @@ public:
 				}
 				return;
 			},
-			this,
+			&thiz,
 			nullptr
 		);
+		return;
+	}
+
+	auto register_dispose(
+		GObject * object
+	) -> void {
+		g_clear_object(&thiz.m_channel);
 		return;
 	}
 
@@ -192,6 +198,42 @@ private:
 	) -> std::tuple<std::optional<std::string>> {
 		assert_test(type == "load_file" || type == "load_directory" || type == "save_file");
 		auto target = std::optional<std::string>{};
+		auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_host), 0));
+		auto dialog_action = GtkFileChooserAction{};
+		if (type == "load_file") {
+			dialog_action = GTK_FILE_CHOOSER_ACTION_OPEN;
+		}
+		if (type == "load_directory") {
+			dialog_action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
+		}
+		if (type == "save_file") {
+			dialog_action = GTK_FILE_CHOOSER_ACTION_SAVE;
+		}
+		g_autoptr(GtkFileChooserNative) dialog = gtk_file_chooser_native_new(
+			"File Chooser",
+			window,
+			dialog_action,
+			"_Accept",
+			"_Cancel"
+		);
+		gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), FALSE);
+		gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
+		gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
+		gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(dialog), FALSE);
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), location.data());
+		if (type == "load_directory" || type == "save_file") {
+			gtk_file_chooser_set_create_folders(GTK_FILE_CHOOSER(dialog), TRUE);
+		}
+		if (type == "save_file") {
+			gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
+			gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), name.data());
+		}
+		auto dialog_response = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
+		if (dialog_response == GTK_RESPONSE_ACCEPT) {
+			g_autoptr(GSList) selection = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
+			assert_test(selection != nullptr && selection->next == nullptr);
+			target.emplace(std::string{static_cast<gchar *>(selection->data)});
+		}
 		return std::make_tuple(target);
 	}
 

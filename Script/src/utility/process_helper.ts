@@ -56,16 +56,8 @@ namespace Twinning.Script.ProcessHelper {
 		let output_file = temporary_directory.join('output');
 		let error_file = temporary_directory.join('error');
 		StorageHelper.write_file_text(input_file, '');
-		if (KernelX.is_android && !Shell.is_basic) {
-			temporary_directory_fallback = AndroidHelper.k_temporary_directory.join(temporary_directory.name()!);
-			output_file = temporary_directory_fallback.join('output');
-			error_file = temporary_directory_fallback.join('error');
-			assert_test(KernelX.Process.execute_command(`su -c "mkdir -p -m 777 ${temporary_directory_fallback.emit_native()} ; touch ${output_file.emit_native()} ; chmod 777 ${output_file.emit_native()} ; touch ${error_file.emit_native()} ; chmod 777 ${error_file.emit_native()}"`) === 0n);
-		}
-		else {
-			StorageHelper.create_file(output_file);
-			StorageHelper.create_file(error_file);
-		}
+		StorageHelper.create_file(output_file);
+		StorageHelper.create_file(error_file);
 		let code = KernelX.Process.run_process(program, argument, workspace, ConvertHelper.record_to_array(environment, (key, value) => `${key}=${value}`), input_file, output_file, error_file);
 		let read_file = (path: StoragePath): string => {
 			let data = StorageHelper.read_file_text(path);
@@ -77,10 +69,6 @@ namespace Twinning.Script.ProcessHelper {
 			error: read_file(error_file),
 		};
 		StorageHelper.remove(temporary_directory);
-		if (KernelX.is_android && !Shell.is_basic) {
-			assert_test(temporary_directory_fallback !== null);
-			assert_test(KernelX.Process.execute_command(`su -c "rm -rf ${temporary_directory_fallback}"`) === 0n);
-		}
 		return result;
 	}
 

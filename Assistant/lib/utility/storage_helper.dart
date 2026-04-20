@@ -6,7 +6,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart' as lib;
 import 'package:win32/win32.dart' as lib;
-import 'package:file_selector_platform_interface/file_selector_platform_interface.dart' as lib;
 
 // ----------------
 
@@ -389,23 +388,8 @@ class StorageHelper {
     if (name == null) {
       name = '';
     }
-    var target = null as StoragePath?;
-    if (SystemChecker.isWindows || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
-      var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), location.emitNative(), name)).target;
-      if (targetString != null) {
-        target = .of(targetString);
-      }
-    }
-    if (SystemChecker.isLinux) {
-      var targetString = switch (type) {
-        .loadFile      => (await lib.FileSelectorPlatform.instance.openFile(initialDirectory: location.emitNative()))?.path,
-        .loadDirectory => (await lib.FileSelectorPlatform.instance.getDirectoryPathWithOptions(.new(initialDirectory: location.emitNative()))),
-        .saveFile      => (await lib.FileSelectorPlatform.instance.getSaveLocation(options: .new(initialDirectory: location.emitNative(), suggestedName: name)))?.path,
-      };
-      if (targetString != null && targetString != '') {
-        target = .of(targetString);
-      }
-    }
+    var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), location.emitNative(), name)).target;
+    var target = targetString == null ? null : StoragePath.of(targetString);
     return target;
   }
 

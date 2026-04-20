@@ -25,6 +25,7 @@
 
 #pragma region import
 
+#include <exception>
 #include <cstdint>
 #include <memory>
 #include <string>

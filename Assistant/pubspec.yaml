@@ -1,5 +1,5 @@
 name: assistant
-version: 172.0.0+172
+version: 173.0.0+173
 environment:
   sdk: ^3.11.5
 dependencies:
@@ -21,8 +21,6 @@ dependencies:
   dynamic_color: 1.8.1
   window_manager: 0.5.1
   app_links: 7.0.0
-  file_selector_platform_interface: 2.7.0
-  file_selector_linux: 0.9.4
   flutter_local_notifications: 21.0.0
 dev_dependencies:
   flutter_test:

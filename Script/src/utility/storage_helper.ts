@@ -183,11 +183,63 @@ namespace Twinning.Script.StorageHelper {
 
 	// #region shell
 
+	export function query_storage_item(
+		type: 'user_home' | 'application_shared' | 'application_cache',
+	): null | StoragePath {
+		let target: null | StoragePath = undefined!;
+		if (Shell.is_basic) {
+			// unavailable, silently fail
+			target = null;
+		}
+		if (Shell.is_assistant) {
+			let target_value = Shell.assistant_query_storage_item(type).target;
+			target = new StoragePath(target_value);
+		}
+		return target;
+	}
+
+	export function reveal_storage_item(
+		target: StoragePath,
+	): void {
+		if (Shell.is_basic) {
+			// unavailable, silently fail
+		}
+		if (Shell.is_assistant) {
+			Shell.assistant_reveal_storage_item(target.emit());
+		}
+		return;
+	}
+
+	export function pick_storage_item(
+		type: 'load_file' | 'load_directory' | 'save_file',
+		location: null | StoragePath,
+		name: null | string,
+	): null | StoragePath {
+		let target: null | StoragePath = undefined!;
+		if (Shell.is_basic) {
+			// unavailable, silently fail
+			target = null;
+		}
+		if (Shell.is_assistant) {
+			let target_value = Shell.assistant_pick_storage_item(type, location === null ? '' : location.emit(), name === null ? '' : name).target;
+			if (target_value !== '') {
+				target = new StoragePath(target_value);
+			}
+		}
+		return target;
+	}
+
+	// ----------------
+
 	export function temporary(
 		create: null | 'file' | 'directory',
 	): StoragePath {
+		let temporary_parent = HomePath.temporary();
+		if (Shell.is_assistant) {
+			temporary_parent = StorageHelper.query_storage_item('application_cache')!;
+		}
 		let temporary_name = ConvertHelper.make_date_to_string_simple(new Date());
-		let temporary_path = StorageHelper.generate_suffix_path(HomePath.temporary().join(temporary_name), null);
+		let temporary_path = StorageHelper.generate_suffix_path(temporary_parent.join(temporary_name), null);
 		if (create === 'file') {
 			StorageHelper.create_file(temporary_path);
 		}

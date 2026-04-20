@@ -276,13 +276,7 @@ namespace Twinning.Script.Console {
 			basic_set_message_text_attribute('input');
 			basic_common_output(leading + ' ', true, 0, false);
 			basic_set_message_text_attribute('verbosity');
-			if (KernelX.is_windows) {
-				KernelX.Process.execute_command(`pause > NUL`);
-				Shell.basic_output_text('\n');
-			}
-			if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {
-				Shell.basic_input_text();
-			}
+			Shell.basic_input_text();
 		}
 		if (Shell.is_assistant) {
 			Shell.assistant_receive_submission('pause', []);
@@ -913,56 +907,6 @@ namespace Twinning.Script.Console {
 	// #endregion
 
 	// #region advanced feature
-
-	export function query_storage_item(
-		type: 'user_home' | 'application_shared' | 'application_cache',
-	): null | StoragePath {
-		let target: null | StoragePath = undefined!;
-		if (Shell.is_basic) {
-			// unavailable, silently fail
-			target = null;
-		}
-		if (Shell.is_assistant) {
-			let target_value = Shell.assistant_query_storage_item(type).target;
-			target = new StoragePath(target_value);
-		}
-		return target;
-	}
-
-	export function reveal_storage_item(
-		target: StoragePath,
-	): void {
-		if (Shell.is_basic) {
-			// unavailable, silently fail
-		}
-		if (Shell.is_assistant) {
-			Shell.assistant_reveal_storage_item(target.emit());
-		}
-		return;
-	}
-
-	export function pick_storage_item(
-		type: null | 'load_file' | 'load_directory' | 'save_file',
-		location: null | StoragePath,
-		name: null | string,
-	): null | StoragePath {
-		let target: null | StoragePath = undefined!;
-		if (type === null) {
-			information(los('console:pick_path_type'), []);
-			type = enumeration(option_string(['load_file', 'load_directory', 'save_file']), null, null) as 'load_file' | 'load_directory' | 'save_file';
-		}
-		if (Shell.is_basic) {
-			// unavailable, silently fail
-			target = null;
-		}
-		if (Shell.is_assistant) {
-			let target_value = Shell.assistant_pick_storage_item(type, location === null ? '' : location.emit(), name === null ? '' : name).target;
-			if (target_value !== '') {
-				target = new StoragePath(target_value);
-			}
-		}
-		return target;
-	}
 
 	export function push_system_notification(
 		title: string,

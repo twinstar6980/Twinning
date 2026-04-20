@@ -2,7 +2,7 @@ namespace Twinning.Script.AndroidHelper {
 
 	// #region common
 
-	export const k_temporary_directory = new StoragePath(`/data/local/tmp/twinning`);
+	const k_temporary_directory = new StoragePath(`/data/local/tmp/twinning`);
 
 	// ----------------
 
