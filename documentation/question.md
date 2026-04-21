@@ -82,11 +82,7 @@
 
 ## Android Content URI 处理方式
 
-由于 Android 的系统限制，用户所转发或选择的文件以 Content URI（而非绝对路径）的形式传递给应用，`Assistant` 接收到 Content URI 后，会对其依次进行以下转换：
-
-* 尝试解析 URI ，得到其对应的绝对路径。
-
-* 若无法解析出绝对路径，应用会弹出确认对话框：若选择“复制”，应用会将 URI 对应的文件复制到用户定义的回退目录中，并返回副本文件的绝对路径；若选择“忽略”，应用会返回 null ，视为用户取消了选择。
+由于 Android 的系统限制，用户所转发或选择的文件以 Content URI（而非绝对路径）的形式传递给应用，`Assistant` 接收到 Content URI 后，会尝试解析其对应的绝对路径，若失败，将抛出异常以中断当前流程。
 
 下表列出了受支持的 Content URI 格式，应用能够从以下几类 Content URI 中解析出绝对路径：
 
@@ -99,8 +95,6 @@
 |  Solid Explorer  |           pl.solidexplorer2.files           |         /...          |
 |    MT Manager    |               bin.mt.plus.fp                |         /...          |
 |       NMM        |               in.mfile.files                |         /...          |
-
-> 建议使用上表中提及的第三方文件管理器应用，以避免不必要的文件复制开销。
 
 ## Shell 对宿主终端的要求
 

@@ -6,8 +6,10 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.Settings
+import androidx.core.database.getFloatOrNull
+import androidx.core.database.getLongOrNull
+import androidx.core.database.getStringOrNull
 import androidx.core.net.toUri
-import androidx.documentfile.provider.DocumentFile
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -17,8 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.io.FileOutputStream
 import java.util.Date
 
 class CustomMethodChannel {
@@ -90,12 +90,6 @@ class CustomMethodChannel {
       val argumentMap = call.arguments as Map<*, *>
       val resultMap = mutableMapOf<Any?, Any?>()
       when (call.method) {
-        "check_storage_permission" -> {
-          val detail = this.handleCheckStoragePermission(
-            argumentMap["mode"] as String,
-          )
-          resultMap["state"] = detail
-        }
         "query_storage_item" -> {
           val detail = this.handleQueryStorageItem(
             argumentMap["type"] as String,
@@ -115,12 +109,11 @@ class CustomMethodChannel {
           )
           resultMap["target"] = detail
         }
-        "resolve_content_uri" -> {
-          val detail = this.handleResolveContentUri(
-            argumentMap["uri"] as String,
-            argumentMap["fallback"] as String?,
+        "check_storage_permission" -> {
+          val detail = this.handleCheckStoragePermission(
+            argumentMap["mode"] as String,
           )
-          resultMap["path"] = detail
+          resultMap["state"] = detail
         }
         else -> throw Exception("invalid method")
       }
@@ -130,17 +123,6 @@ class CustomMethodChannel {
       result.error("", e.stackTraceToString(), null)
     }
     return
-  }
-
-  private suspend fun handleCheckStoragePermission(
-    mode: String,
-  ): Boolean {
-    check(mode == "check" || mode == "request")
-    if (mode == "request") {
-      this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), this.requestForRequestExternalStoragePermission)
-      this.continuation.receive()
-    }
-    return Environment.isExternalStorageManager()
   }
 
   private suspend fun handleQueryStorageItem(
@@ -212,20 +194,23 @@ class CustomMethodChannel {
     this.host.startActivityForResult(intent, this.requestCodeForPickStorageItem)
     val targetUri = this.continuation.receive() as Uri?
     if (type == "save_file" && targetUri != null) {
-      val targetDocument = DocumentFile.fromSingleUri(this.host, targetUri)!!
-      if (targetDocument.lastModified() > timeBeforePick) {
-        check(targetDocument.delete())
+      if (this.queryDatabaseOfContentUri<Long>(targetUri, DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
+        check(DocumentsContract.deleteDocument(this.host.contentResolver, targetUri))
       }
     }
-    val target = if (targetUri == null) null else this.resolveContentUri(targetUri, null)!!
+    val target = if (targetUri == null) null else this.resolveContentUri(targetUri)
     return target
   }
 
-  private suspend fun handleResolveContentUri(
-    uri: String,
-    fallback: String?,
-  ): String? {
-    return this.resolveContentUri(uri.toUri(), fallback)
+  private suspend fun handleCheckStoragePermission(
+    mode: String,
+  ): Boolean {
+    check(mode == "check" || mode == "request")
+    if (mode == "request") {
+      this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), this.requestForRequestExternalStoragePermission)
+      this.continuation.receive()
+    }
+    return Environment.isExternalStorageManager()
   }
 
   // endregion
@@ -245,10 +230,28 @@ class CustomMethodChannel {
 
   // ----------------
 
+  private inline fun <reified TValue> queryDatabaseOfContentUri(
+    uri: Uri,
+    name: String,
+  ): TValue? {
+    var value = null as TValue?
+    this.host.contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
+      check(cursor != null)
+      check(cursor.columnCount == 1)
+      check(cursor.moveToFirst())
+      value = when (TValue::class) {
+        Long::class -> cursor.getLongOrNull(0) as TValue?
+        Float::class -> cursor.getFloatOrNull(0) as TValue?
+        String::class -> cursor.getStringOrNull(0) as TValue?
+        else -> throw Exception()
+      }
+    }
+    return value
+  }
+
   private fun resolveContentUri(
     uri: Uri,
-    fallback: String?,
-  ): String? {
+  ): String {
     var result = null as String?
     check(uri.scheme == "content")
     val provider = uri.authority
@@ -281,9 +284,9 @@ class CustomMethodChannel {
         }
       }
       // Solid Explorer
-     "pl.solidexplorer2.files" -> {
-       result = path
-     }
+      "pl.solidexplorer2.files" -> {
+        result = path
+      }
       // MT Manager
       "bin.mt.plus.fp" -> {
         result = path
@@ -293,51 +296,10 @@ class CustomMethodChannel {
         result = path
       }
     }
-    if (result == null && fallback != null) {
-      val document = if (!DocumentsContract.isTreeUri(uri)) DocumentFile.fromSingleUri(this.host, uri)!! else DocumentFile.fromTreeUri(this.host, uri)!!
-      if (document.exists()) {
-        val placementName = document.name!!
-        var placementSuffix = 0
-        var placement = "${fallback}/${placementName}"
-        while (File(placement).exists()) {
-          placementSuffix += 1
-          placement = "${fallback}/${placementName}.${placementSuffix}"
-        }
-        this.duplicateContentUri(uri, placement)
-        result = placement
-      }
-    }
-    return result
-  }
-
-  private fun duplicateContentUri(
-    target: Uri,
-    placement: String,
-  ): Unit {
-    check(!File(placement).exists())
-    val destinationParent = File(placement).parentFile
-    if (destinationParent != null && !destinationParent.isDirectory()) {
-      destinationParent.mkdirs()
-    }
-    val targetDocument = if (!DocumentsContract.isTreeUri(target)) DocumentFile.fromSingleUri(this.host, target)!! else DocumentFile.fromTreeUri(this.host, target)!!
-    if (targetDocument.isFile) {
-      File(placement).createNewFile()
-      this.host.contentResolver.openInputStream(target)!!.use { input ->
-        FileOutputStream(placement, false).use { output ->
-          input.copyTo(output)
-        }
-      }
-    }
-    else if (targetDocument.isDirectory) {
-      File(placement).mkdirs()
-      for (item in targetDocument.listFiles()) {
-        this.duplicateContentUri(item.uri, "${placement}/${item.name}")
-      }
-    }
-    else {
+    if (result == null) {
       throw UnsupportedOperationException()
     }
-    return
+    return result
   }
 
   // endregion

@@ -1,10 +1,10 @@
 package com.twinstar.twinning.assistant
 
 import android.app.Activity
-import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.widget.Toast
 
 class ForwarderActivity : Activity() {
@@ -47,6 +47,59 @@ class ForwarderActivity : Activity() {
 
   // ----------------
 
+  private fun resolveContentUri(
+    uri: Uri,
+  ): String {
+    var result = null as String?
+    check(uri.scheme == "content")
+    val provider = uri.authority
+    var path = Uri.decode(uri.path)
+    when (provider) {
+      // AOSP DocumentsUI
+      "com.android.externalstorage.documents" -> {
+        // /document/primary:<path-relative-external-storage>
+        if (path.startsWith("/document/primary:")) {
+          result = "${Environment.getExternalStorageDirectory()}/${path.substring("/document/primary:".length)}"
+        }
+        // /tree/primary:<path-relative-external-storage>
+        if (path.startsWith("/tree/primary:")) {
+          result = "${Environment.getExternalStorageDirectory()}/${path.substring("/tree/primary:".length)}"
+        }
+      }
+      // Material Files
+      "me.zhanghai.android.files.file_provider" -> {
+        path = Uri.decode(path)
+        // /file://<path-absolute>
+        if (path.startsWith("/file://")) {
+          result = Uri.decode(Uri.parse(path.substring("/".length)).path)
+        }
+      }
+      // Root Explorer
+      "com.speedsoftware.rootexplorer.fileprovider" -> {
+        // /root/<path-relative-root>
+        if (path.startsWith("/root/")) {
+          result = path.substring("/root".length)
+        }
+      }
+      // Solid Explorer
+      "pl.solidexplorer2.files" -> {
+        result = path
+      }
+      // MT Manager
+      "bin.mt.plus.fp" -> {
+        result = path
+      }
+      // NMM
+      "in.mfile.files" -> {
+        result = path
+      }
+    }
+    if (result == null) {
+      throw UnsupportedOperationException()
+    }
+    return result
+  }
+
   private fun encodePercentString(
     source: String,
   ): String {
@@ -73,15 +126,10 @@ class ForwarderActivity : Activity() {
 
   private fun openLink(
     link: Uri,
-    attachment: List<Uri>,
   ): Unit {
     this.startActivity(Intent().also { intent ->
       intent.setAction(Intent.ACTION_VIEW)
       intent.setData(link)
-      intent.setClipData(ClipData.newPlainText("", "").also { clip ->
-        attachment.forEach() { item -> clip.addItem(ClipData.Item(item)) }
-      })
-      intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     })
@@ -102,9 +150,9 @@ class ForwarderActivity : Activity() {
   ): Unit {
     val command = mutableListOf<String>()
     command.add("-forward")
-    command.addAll(resource.map() { item -> item.toString() })
+    command.addAll(resource.map() { item -> this.resolveContentUri(item) })
     val link = Uri.parse("${this.queryApplicationIdentifier()}:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
-    this.openLink(link, resource)
+    this.openLink(link)
     return
   }
 

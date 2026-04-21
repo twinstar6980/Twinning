@@ -4,7 +4,6 @@ import '/setting.dart';
 import '/application.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
-import '/utility/miscellaneous_helper.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
 import '/utility/application_exception_manager.dart';
@@ -204,19 +203,6 @@ class MainApplication {
   Future<Void> _handleCommand(
     List<String> command,
   ) async {
-    if (SystemChecker.isAndroid) {
-      var convertedCommand = <String>[];
-      for (var commandItem in command) {
-        if (commandItem.startsWith('content://')) {
-          var referent = await MiscellaneousHelper.resolveAndroidContentUri(this._setting.state.applicationNavigatorKey.currentContext!, .parse(commandItem));
-          if (referent != null) {
-            commandItem = referent.emit();
-          }
-        }
-        convertedCommand.add(commandItem);
-      }
-      command = convertedCommand;
-    }
     var optionLaunch = null as ({String title, ModuleType type, List<String> option})?;
     var optionForward = null as ({List<StoragePath> resource})?;
     var option = CommandLineReader(command);

@@ -66,12 +66,11 @@ public:
 	// ReSharper disable once CppInconsistentNaming
 	auto register_OnCreate(
 	) -> void {
-		auto channel = flutter::MethodChannel<>{
+		flutter::MethodChannel<>{
 			thiz.m_host->flutter_controller_->engine()->messenger(),
 			std::format("{}.CustomMethodChannel", thiz.query_application_identifier()),
 			&flutter::StandardMethodCodec::GetInstance(),
-		};
-		channel.SetMethodCallHandler(
+		}.SetMethodCallHandler(
 			[&](
 			flutter::MethodCall<> const &            call,
 			std::unique_ptr<flutter::MethodResult<>> result

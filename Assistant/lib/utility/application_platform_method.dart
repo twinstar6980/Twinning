@@ -25,23 +25,9 @@ class ApplicationPlatformMethod {
 
   // #region interface
 
-  Future<({Boolean state})> checkStoragePermission(
-    String mode,
-  ) async {
-    assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_storage_permission', <Object?, Object?>{
-      'mode': mode,
-    });
-    detail!;
-    return (
-      state: detail['state'] as Boolean,
-    );
-  }
-
   Future<({String target})> queryStorageItem(
     String type,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
     var detail = await this._channel!.invokeMapMethod<Object?, Object?>('query_storage_item', <Object?, Object?>{
       'type': type,
     });
@@ -54,7 +40,6 @@ class ApplicationPlatformMethod {
   Future<()> revealStorageItem(
     String target,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
     // ignore: unused_local_variable
     var detail = await this._channel!.invokeMapMethod<Object?, Object?>('reveal_storage_item', <Object?, Object?>{
       'target': target,
@@ -69,7 +54,6 @@ class ApplicationPlatformMethod {
     String location,
     String name,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone);
     var detail = await this._channel!.invokeMapMethod<Object?, Object?>('pick_storage_item', <Object?, Object?>{
       'type': type,
       'location': location,
@@ -81,18 +65,18 @@ class ApplicationPlatformMethod {
     );
   }
 
-  Future<({String? path})> resolveContentUri(
-    String  uri,
-    String? fallback,
+  // ----------------
+
+  Future<({Boolean state})> checkStoragePermission(
+    String mode,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('resolve_content_uri', <Object?, Object?>{
-      'uri': uri,
-      'fallback': fallback,
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_storage_permission', <Object?, Object?>{
+      'mode': mode,
     });
     detail!;
     return (
-      path: detail['path'] as String?,
+      state: detail['state'] as Boolean,
     );
   }
 

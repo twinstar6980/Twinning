@@ -2,8 +2,6 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import '/utility/application_platform_method.dart';
-import '/widget/export.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -31,44 +29,6 @@ class MiscellaneousHelper {
       await setting.save(apply: false);
     }
     return target;
-  }
-
-  // ----------------
-
-  static Future<StoragePath?> resolveAndroidContentUri(
-    BuildContext context,
-    Uri          uri,
-  ) async {
-    var result = (await ApplicationPlatformMethod.instance.resolveContentUri(uri.toString(), null)).path;
-    if (result == null) {
-      var canDuplicate = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-        title: 'Unknown Content Uri',
-        contentBuilder: (context, setStateForPanel) => [
-          FlexContainer.horizontal([
-            StyledText.custom(
-              uri.toString(),
-              overflow: .clip,
-            ).withSelectableArea(
-            ).withFlexExpanded(),
-          ]),
-        ],
-        actionBuilder: (context) => [
-          StyledButton.text(
-            content: StyledText.inherit('Ignore'),
-            onPressed: (context) => Navigator.pop(context, false),
-          ),
-          StyledButton.text(
-            content: StyledText.inherit('Duplicate'),
-            onPressed: (context) => Navigator.pop(context, true),
-          ),
-        ],
-      )) ?? false;
-      if (canDuplicate) {
-        var fallback = await StorageHelper.query(.applicationCache);
-        result = (await ApplicationPlatformMethod.instance.resolveContentUri(uri.toString(), fallback.emitNative())).path;
-      }
-    }
-    return result == null ? null : .of(result);
   }
 
   // #endregion

@@ -42,7 +42,6 @@ flutter {
 }
 
 dependencies {
-    implementation("androidx.documentfile:documentfile:1.1.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
