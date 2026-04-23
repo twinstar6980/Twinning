@@ -377,8 +377,9 @@ class StorageHelper {
     return;
   }
 
-  static Future<StoragePath?> pick(
+  static Future<List<StoragePath>> pick(
     StoragePickType type,
+    Boolean         multiply,
     StoragePath?    location,
     String?         name,
   ) async {
@@ -388,8 +389,8 @@ class StorageHelper {
     if (name == null) {
       name = '';
     }
-    var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), location.emitNative(), name)).target;
-    var target = targetString == null ? null : StoragePath.of(targetString);
+    var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), multiply, location.emitNative(), name)).target;
+    var target = targetString.map((it) => StoragePath.of(it)).toList();
     return target;
   }
 

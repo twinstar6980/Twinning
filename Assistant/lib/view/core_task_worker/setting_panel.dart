@@ -3,6 +3,7 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/setting.dart';
 import 'package:flutter/widgets.dart';
@@ -48,11 +49,7 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await StorageDropRegionExtension.pick(
-                        context: context,
-                        allowLoadFile: true,
-                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.kernel',
-                      );
+                      var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.kernel', [.loadFile], false, null, null)).firstOrNull;
                       if (target != null) {
                         this.data.kernel = target;
                         await refreshState(setStateForPanel);
@@ -92,11 +89,7 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await StorageDropRegionExtension.pick(
-                        context: context,
-                        allowLoadFile: true,
-                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.script',
-                      );
+                      var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.script', [.loadFile], false, null, null)).firstOrNull;
                       if (target != null) {
                         this.data.script = target;
                         await refreshState(setStateForPanel);
@@ -136,15 +129,9 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await StorageDropRegionExtension.pick(
-                        context: context,
-                        allowLoadFile: true,
-                        allowLoadDirectory: true,
-                        allowSaveFile: true,
-                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.argument',
-                      );
-                      if (target != null) {
-                        this.data.argument = [...this.data.argument, target.emit()];
+                      var target = await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.argument', [.loadFile, .loadDirectory, .saveFile], true, null, null);
+                      if (!target.isEmpty) {
+                        this.data.argument = [...this.data.argument, ...target.map((it) => it.emit())];
                         await refreshState(setStateForPanel);
                         await refreshState(setState);
                         this.onUpdate();
@@ -204,13 +191,9 @@ class SettingPanel extends StatelessWidget {
                     tooltip: 'Pick',
                     icon: IconView.of(IconSet.open_in_new),
                     onPressed: (context) async {
-                      var target = await StorageDropRegionExtension.pick(
-                        context: context,
-                        allowLoadFile: true,
-                        location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.message_font',
-                      );
-                      if (target != null) {
-                        this.data.messageFont = [...this.data.messageFont, target];
+                      var target = await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.message_font', [.loadFile], true, null, null);
+                      if (!target.isEmpty) {
+                        this.data.messageFont = [...this.data.messageFont, ...target];
                         await refreshState(setStateForPanel);
                         await refreshState(setState);
                         this.onUpdate();

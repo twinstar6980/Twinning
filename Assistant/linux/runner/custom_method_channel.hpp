@@ -116,6 +116,10 @@ private:
 			auto get_argument = [&]<typename TValue>(std::string_view const & name) -> TValue {
 				auto value_f = fl_value_lookup_string(argument_map, name.data());
 				auto value = TValue{};
+				if constexpr (std::is_same_v<TValue, bool>) {
+					assert_test(fl_value_get_type(value_f) == FL_VALUE_TYPE_BOOL);
+					value = fl_value_get_bool(value_f);
+				}
 				if constexpr (std::is_same_v<TValue, std::string>) {
 					assert_test(fl_value_get_type(value_f) == FL_VALUE_TYPE_STRING);
 					value = std::string{fl_value_get_string(value_f)};
@@ -127,8 +131,11 @@ private:
 				if constexpr (std::is_same_v<TValue, std::string>) {
 					value_f = fl_value_new_string(value.data());
 				}
-				if constexpr (std::is_same_v<TValue, std::optional<std::string>>) {
-					value_f = !value.has_value() ? fl_value_new_null() : fl_value_new_string(value.value().data());
+				if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
+					value_f = fl_value_new_list();
+					for (auto & value_item : value) {
+						fl_value_append(value_f, fl_value_new_string(value_item.data()));
+					}
 				}
 				fl_value_set_string_take(result_map, name.data(), value_f);
 				return;
@@ -151,6 +158,7 @@ private:
 				case hash_string("pick_storage_item"): {
 					auto detail = thiz.handle_pick_storage_item(
 						get_argument.operator ()<std::string>("type"),
+						get_argument.operator ()<bool>("multiply"),
 						get_argument.operator ()<std::string>("location"),
 						get_argument.operator ()<std::string>("name")
 					);
@@ -193,11 +201,11 @@ private:
 
 	auto handle_pick_storage_item(
 		std::string const & type,
+		bool const &        multiply,
 		std::string const & location,
 		std::string const & name
-	) -> std::tuple<std::optional<std::string>> {
+	) -> std::tuple<std::vector<std::string>> {
 		assert_test(type == "load_file" || type == "load_directory" || type == "save_file");
-		auto target = std::optional<std::string>{};
 		auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_host), 0));
 		auto dialog_action = GtkFileChooserAction{};
 		if (type == "load_file") {
@@ -216,7 +224,7 @@ private:
 			"_Accept",
 			"_Cancel"
 		);
-		gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), FALSE);
+		gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), multiply ? TRUE : FALSE);
 		gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 		gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
 		gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(dialog), FALSE);
@@ -228,11 +236,13 @@ private:
 			gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
 			gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), name.data());
 		}
+		auto target = std::vector<std::string>{};
 		auto dialog_response = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
 		if (dialog_response == GTK_RESPONSE_ACCEPT) {
-			g_autoptr(GSList) selection = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
-			assert_test(selection != nullptr && selection->next == nullptr);
-			target.emplace(std::string{static_cast<gchar *>(selection->data)});
+			g_autoptr(GSList) target_list = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
+			for (auto target_item = target_list; target_item != nullptr; target_item = target_item->next) {
+				target.emplace_back(static_cast<gchar *>(target_item->data));
+			}
 		}
 		return std::make_tuple(target);
 	}

@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import '/utility/miscellaneous_helper.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
 import 'package:flutter/widgets.dart';
@@ -347,57 +346,6 @@ extension StorageDropRegionWidgetExtension on Widget {
       onDrop: onDrop,
       child: this,
     );
-  }
-
-}
-
-extension StorageDropRegionExtension on StorageDropRegion {
-
-  static Future<StoragePath?> pick({
-    required BuildContext context,
-    Boolean               allowLoadFile = false,
-    Boolean               allowLoadDirectory = false,
-    Boolean               allowSaveFile = false,
-    required String       location,
-    TextStyle?            textStyle = null, // TODO: remove?
-  }) async {
-    var type = null as StoragePickType?;
-    var allowedTypeCount = [allowLoadFile, allowLoadDirectory, allowSaveFile].where((value) => value).length;
-    assertTest(allowedTypeCount != 0);
-    if (allowedTypeCount == 1) {
-      if (allowLoadFile) {
-        type = .loadFile;
-      }
-      if (allowLoadDirectory) {
-        type = .loadDirectory;
-      }
-      if (allowSaveFile) {
-        type = .saveFile;
-      }
-    }
-    else {
-      type = await StyledMenuExtension.show<StoragePickType>(context, StyledMenu.standard(
-        position: .under,
-        content: <({StoragePickType value, String text})>[
-          if (allowLoadFile) ...[
-            (value: .loadFile, text: 'Load File'),
-          ],
-          if (allowLoadDirectory) ...[
-            (value: .loadDirectory, text: 'Load Directory'),
-          ],
-          if (allowSaveFile) ...[
-            (value: .saveFile, text: 'Save File'),
-          ],
-        ].map((value) => StyledMenuItem.standard(
-          value: value.value,
-          content: StyledText.custom(
-            value.text,
-            style: textStyle,
-          ),
-        )),
-      ));
-    }
-    return type == null ? null : await MiscellaneousHelper.pickStorageItem(context, type, location, null);
   }
 
 }

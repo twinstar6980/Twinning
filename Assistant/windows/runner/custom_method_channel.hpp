@@ -99,6 +99,9 @@ private:
 				auto item_f = argument_map.find(flutter::EncodableValue{name.data()});
 				assert_test(item_f != argument_map.end());
 				auto value = TValue{};
+				if constexpr (std::is_same_v<TValue, bool>) {
+					value = std::get<TValue>(item_f->second);
+				}
 				if constexpr (std::is_same_v<TValue, std::string>) {
 					value = std::get<TValue>(item_f->second);
 				}
@@ -109,9 +112,10 @@ private:
 				if constexpr (std::is_same_v<TValue, std::string>) {
 					value_f.emplace<std::string>(value.data());
 				}
-				if constexpr (std::is_same_v<TValue, std::optional<std::string>>) {
-					if (value.has_value()) {
-						value_f.emplace<std::string>(value.value().data());
+				if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
+					value_f.emplace<flutter::EncodableList>();
+					for (auto & value_item : value) {
+						std::get<flutter::EncodableList>(value_f).emplace_back<std::string>(value_item.data());
 					}
 				}
 				result_map.emplace(name.data(), value_f);
@@ -134,6 +138,7 @@ private:
 				case hash_string("pick_storage_item"): {
 					auto detail = thiz.handle_pick_storage_item(
 						get_argument.operator ()<std::string>("type"),
+						get_argument.operator ()<bool>("multiply"),
 						get_argument.operator ()<std::string>("location"),
 						get_argument.operator ()<std::string>("name")
 					);
@@ -176,14 +181,14 @@ private:
 
 	auto handle_pick_storage_item(
 		std::string const & type,
+		bool const &        multiply,
 		std::string const & location,
 		std::string const & name
-	) -> std::tuple<std::optional<std::string>> {
+	) -> std::tuple<std::vector<std::string>> {
 		assert_test(type == "load_file" || type == "load_directory" || type == "save_file");
 		auto state_h = HRESULT{};
 		auto location_h = winrt::to_hstring(location);
 		auto name_h = winrt::to_hstring(name);
-		auto target = std::optional<std::string>{};
 		auto dialog = winrt::com_ptr<IFileDialog>{};
 		if (type == "load_file" || type == "load_directory") {
 			state_h = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(dialog.put()));
@@ -200,6 +205,9 @@ private:
 		if (type == "load_file" || type == "load_directory") {
 			option |= FOS_PATHMUSTEXIST;
 			option |= FOS_FILEMUSTEXIST;
+			if (multiply) {
+				option |= FOS_ALLOWMULTISELECT;
+			}
 		}
 		if (type == "load_directory") {
 			option |= FOS_PICKFOLDERS;
@@ -220,13 +228,30 @@ private:
 			state_h = dialog->SetFileName(name_h.data());
 			winrt::check_hresult(state_h);
 		}
+		auto target = std::vector<std::string>{};
 		state_h = dialog->Show(thiz.m_host->GetHandle());
 		if (state_h != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
 			winrt::check_hresult(state_h);
-			auto target_item = winrt::com_ptr<IShellItem>{};
-			state_h = dialog->GetResult(target_item.put());
-			winrt::check_hresult(state_h);
-			target = thiz.resolve_shell_item_path(target_item);
+			if (type == "load_file" || type == "load_directory") {
+				auto target_list = winrt::com_ptr<IShellItemArray>{};
+				state_h = dialog.as<IFileOpenDialog>()->GetResults(target_list.put());
+				winrt::check_hresult(state_h);
+				auto target_count = DWORD{};
+				state_h = target_list->GetCount(&target_count);
+				winrt::check_hresult(state_h);
+				for (auto target_index = DWORD{0}; target_index < target_count; ++target_index) {
+					auto target_item = winrt::com_ptr<IShellItem>{};
+					state_h = target_list->GetItemAt(target_index, target_item.put());
+					winrt::check_hresult(state_h);
+					target.emplace_back(thiz.resolve_shell_item_path(target_item));
+				}
+			}
+			if (type == "save_file") {
+				auto target_item = winrt::com_ptr<IShellItem>{};
+				state_h = dialog->GetResult(target_item.put());
+				winrt::check_hresult(state_h);
+				target.emplace_back(thiz.resolve_shell_item_path(target_item));
+			}
 		}
 		return std::make_tuple(target);
 	}

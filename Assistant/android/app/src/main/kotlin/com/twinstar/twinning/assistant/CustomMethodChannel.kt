@@ -51,10 +51,10 @@ class CustomMethodChannel {
     MethodChannel(
       flutterEngine.dartExecutor.binaryMessenger,
       "${this.queryApplicationIdentifier()}.CustomMethodChannel",
-    ).setMethodCallHandler { call, result ->
+    ).setMethodCallHandler({ call, result ->
       CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
       return@setMethodCallHandler
-    }
+    })
     return
   }
 
@@ -66,7 +66,18 @@ class CustomMethodChannel {
     when (requestCode) {
       this.requestCodeForPickStorageItem -> {
         runBlocking {
-          this@CustomMethodChannel.continuation.send(data?.data)
+          val value = mutableListOf<Uri>()
+          if (data != null) {
+            if (data.data != null) {
+              value.add(data.data!!)
+            }
+            else if (data.clipData != null) {
+              for (index in 0 until data.clipData!!.itemCount) {
+                value.add(data.clipData!!.getItemAt(index).uri)
+              }
+            }
+          }
+          this@CustomMethodChannel.continuation.send(value)
         }
       }
       this.requestForRequestExternalStoragePermission -> {
@@ -104,6 +115,7 @@ class CustomMethodChannel {
         "pick_storage_item" -> {
           val detail = this.handlePickStorageItem(
             argumentMap["type"] as String,
+            argumentMap["multiply"] as Boolean,
             argumentMap["location"] as String,
             argumentMap["name"] as String,
           )
@@ -150,26 +162,30 @@ class CustomMethodChannel {
       throw UnsupportedOperationException()
     }
     val targetSegment = target.substring(primaryDirectory.length + if (target.length == primaryDirectory.length) 0 else 1)
-    val intent = Intent().also {
-      it.setAction(Intent.ACTION_VIEW)
-      it.setComponent(ComponentName("com.android.documentsui", "com.android.documentsui.files.FilesActivity"))
-      it.setData("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(targetSegment)}".toUri())
-      it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-    }
+    val intent = Intent()
+    intent.setComponent(ComponentName("com.android.documentsui", "com.android.documentsui.files.FilesActivity"))
+    intent.setAction(Intent.ACTION_VIEW)
+    intent.setData("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(targetSegment)}".toUri())
+    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
     this.host.startActivity(intent)
     return
   }
 
   private suspend fun handlePickStorageItem(
     type: String,
+    multiply: Boolean,
     location: String,
     name: String,
-  ): String? {
+  ): List<String> {
     check(type == "load_file" || type == "load_directory" || type == "save_file")
     val intent = Intent()
+    intent.setComponent(ComponentName("com.android.documentsui", "com.android.documentsui.picker.PickActivity"))
     if (type == "load_file") {
       intent.setAction(Intent.ACTION_OPEN_DOCUMENT)
       intent.addCategory(Intent.CATEGORY_OPENABLE)
+      if (multiply) {
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+      }
       intent.setType("*/*")
     }
     if (type == "load_directory") {
@@ -192,13 +208,13 @@ class CustomMethodChannel {
     }
     val timeBeforePick = Date().time
     this.host.startActivityForResult(intent, this.requestCodeForPickStorageItem)
-    val targetUri = this.continuation.receive() as Uri?
-    if (type == "save_file" && targetUri != null) {
-      if (this.queryDatabaseOfContentUri<Long>(targetUri, DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
-        check(DocumentsContract.deleteDocument(this.host.contentResolver, targetUri))
+    val targetUri = this.continuation.receive() as List<Uri>
+    if (type == "save_file" && !targetUri.isEmpty()) {
+      if (this.queryDatabaseOfContentUri<Long>(targetUri.first(), DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
+        check(DocumentsContract.deleteDocument(this.host.contentResolver, targetUri.first()))
       }
     }
-    val target = if (targetUri == null) null else this.resolveContentUri(targetUri)
+    val target = targetUri.map({ item -> this.resolveContentUri(item) })
     return target
   }
 

@@ -189,13 +189,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   tooltip: 'Pick',
                   icon: IconView.of(IconSet.open_in_new),
                   onPressed: (context) async {
-                    var target = await StorageDropRegionExtension.pick(
-                      context: context,
-                      allowLoadFile: true,
-                      location: '@application.theme_font',
-                    );
-                    if (target != null) {
-                      setting.data.themeFontPath = [...setting.data.themeFontPath, target];
+                    var target = await MiscellaneousHelper.pickStorageItem(context, 'application.theme_font', [.loadFile], true, null, null);
+                    if (!target.isEmpty) {
+                      setting.data.themeFontPath = [...setting.data.themeFontPath, ...target];
                       await refreshState(setStateForPanel);
                       await refreshState(this.setState);
                       await setting.save();
@@ -439,11 +435,7 @@ class _SettingPanelState extends State<SettingPanel> {
                   tooltip: 'Pick',
                   icon: IconView.of(IconSet.open_in_new),
                   onPressed: (context) async {
-                    var target = await StorageDropRegionExtension.pick(
-                      context: context,
-                      allowLoadDirectory: true,
-                      location: '@application.module_configuration_directory',
-                    );
+                    var target = (await MiscellaneousHelper.pickStorageItem(context, 'application.module_configuration_directory', [.loadDirectory], false, null, null)).firstOrNull;
                     if (target != null) {
                       setting.data.moduleConfigurationDirectory = target;
                       await refreshState(setStateForPanel);
@@ -518,7 +510,7 @@ class _SettingPanelState extends State<SettingPanel> {
             leading: IconView.of(IconSet.download),
             content: StyledText.inherit('Import'),
             onPressed: (context) async {
-              var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, 'application.setting_file', null);
+              var target = (await MiscellaneousHelper.pickStorageItem(context, 'application.setting_file', [.loadFile], false, null, null)).firstOrNull;
               if (target != null) {
                 Navigator.pop(context);
                 await setting.load(file: target);
@@ -531,7 +523,7 @@ class _SettingPanelState extends State<SettingPanel> {
             leading: IconView.of(IconSet.upload),
             content: StyledText.inherit('Export'),
             onPressed: (context) async {
-              var target = await MiscellaneousHelper.pickStorageItem(context, .saveFile, 'application.setting_file', 'setting.json');
+              var target = (await MiscellaneousHelper.pickStorageItem(context, 'application.setting_file', [.saveFile], false, null, 'setting.json')).firstOrNull;
               if (target != null) {
                 Navigator.pop(context);
                 await setting.save(file: target, apply: false);

@@ -78,11 +78,12 @@ namespace Twinning.Script.Shell {
 
 	export function assistant_pick_storage_item(
 		type: 'load_file' | 'load_directory' | 'save_file',
+		multiply: boolean,
 		location: string,
 		name: string,
-	): {target: string} {
-		let result = callback(['pick_storage_item', type, location, name]);
-		return {target: result[0]};
+	): {target: Array<string>} {
+		let result = callback(['pick_storage_item', type, multiply.toString(), location, name]);
+		return {target: [...result]};
 	}
 
 	export function assistant_push_system_notification(

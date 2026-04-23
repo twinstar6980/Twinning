@@ -110,7 +110,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var value = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadFile, $"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.kernel", null);
+			var value = (await MiscellaneousHelper.PickStorageItem($"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.kernel", StoragePickType.LoadFile, false, null, null)).FirstOrDefault();
 			if (value != null) {
 				this.Data.Kernel = value;
 				this.NotifyPropertyChanged([
@@ -147,7 +147,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var value = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadFile, $"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.script", null);
+			var value = (await MiscellaneousHelper.PickStorageItem($"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.script", StoragePickType.LoadFile, false, null, null)).FirstOrDefault();
 			if (value != null) {
 				this.Data.Script = value;
 				this.NotifyPropertyChanged([
@@ -184,9 +184,9 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<MenuFlyoutItem>();
-			var value = await MiscellaneousHelper.PickStorageItem(Enum.Parse<StoragePickType>(senders.Tag.As<String>()), $"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.argument", null);
-			if (value != null) {
-				this.Data.Argument = [..this.Data.Argument, value.Emit()];
+			var value = await MiscellaneousHelper.PickStorageItem($"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.argument", Enum.Parse<StoragePickType>(senders.Tag.As<String>()), true, null, null);
+			if (!value.IsEmpty()) {
+				this.Data.Argument = [..this.Data.Argument, ..value.Select((it) => it.Emit())];
 				this.NotifyPropertyChanged([
 					nameof(this.uArgumentText_Text),
 				]);

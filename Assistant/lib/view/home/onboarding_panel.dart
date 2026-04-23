@@ -28,7 +28,7 @@ class OnboardingPanel extends StatelessWidget {
         leading: IconView.of(IconSet.settings),
         content: StyledText.inherit('Import Setting'),
         onPressed: (context) async {
-          var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, 'application.setting_file', null);
+          var target = (await MiscellaneousHelper.pickStorageItem(context, 'application.setting_file', [.loadFile], false, null, null)).firstOrNull;
           if (target != null) {
             await setting.load(file: target);
             await setting.save();
@@ -41,7 +41,7 @@ class OnboardingPanel extends StatelessWidget {
         leading: IconView.of(IconSet.build_circle),
         content: StyledText.inherit('Quick Setup'),
         onPressed: (context) async {
-          var target = await MiscellaneousHelper.pickStorageItem(context, .loadDirectory, 'application.home_directory', null);
+          var target = (await MiscellaneousHelper.pickStorageItem(context, 'application.home_directory', [.loadDirectory], false, null, null)).firstOrNull;
           if (target != null) {
             await setting.quickSetup(target);
             await setting.save();

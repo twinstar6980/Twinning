@@ -3,6 +3,7 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/kairosoft_game_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
@@ -131,12 +132,7 @@ class FunctionPanel extends StatelessWidget {
                       tooltip: 'Pick',
                       icon: IconView.of(IconSet.open_in_new),
                       onPressed: (context) async {
-                        var target = await StorageDropRegionExtension.pick(
-                          context: context,
-                          allowLoadFile: true,
-                          allowLoadDirectory: true,
-                          location: '@${ModuleHelper.query(.coreResourceShipper).identifier}.function.program.target',
-                        );
+                        var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreResourceShipper).identifier}.function.program.target', [.loadFile, .loadDirectory], true, null, null)).firstOrNull;
                         if (target != null) {
                           this.data.programTarget = target;
                           await refreshState(setState);
@@ -246,12 +242,7 @@ class FunctionPanel extends StatelessWidget {
                       tooltip: 'Pick',
                       icon: IconView.of(IconSet.open_in_new),
                       onPressed: (context) async {
-                        var target = await StorageDropRegionExtension.pick(
-                          context: context,
-                          allowLoadFile: true,
-                          allowLoadDirectory: true,
-                          location: '@${ModuleHelper.query(.coreResourceShipper).identifier}.function.record.target_directory',
-                        );
+                        var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreResourceShipper).identifier}.function.record.target_directory', [.loadDirectory], true, null, null)).firstOrNull;
                         if (target != null) {
                           this.data.recordTargetDirectory = target;
                           await refreshState(setState);
@@ -283,12 +274,7 @@ class FunctionPanel extends StatelessWidget {
                       tooltip: 'Pick',
                       icon: IconView.of(IconSet.open_in_new),
                       onPressed: (context) async {
-                        var target = await StorageDropRegionExtension.pick(
-                          context: context,
-                          allowLoadFile: true,
-                          allowLoadDirectory: true,
-                          location: '@${ModuleHelper.query(.coreResourceShipper).identifier}.function.record.archive_file',
-                        );
+                        var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreResourceShipper).identifier}.function.record.archive_file', [.loadFile], true, null, null)).firstOrNull;
                         if (target != null) {
                           this.data.recordArchiveFile = target;
                           await refreshState(setState);

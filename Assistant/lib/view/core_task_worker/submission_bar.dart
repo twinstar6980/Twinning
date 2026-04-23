@@ -2,6 +2,7 @@ import '/common.dart';
 import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/submission_type.dart';
 import '/view/core_task_worker/value_expression.dart';
@@ -698,14 +699,7 @@ class _PathSubmissionBar extends StatelessWidget {
               tooltip: 'Pick',
               icon: IconView.of(IconSet.open_in_new),
               onPressed: (context) async {
-                var target = await StorageDropRegionExtension.pick(
-                  context: context,
-                  allowLoadFile: true,
-                  allowLoadDirectory: true,
-                  allowSaveFile: true,
-                  location: '@${ModuleHelper.query(.coreTaskWorker).identifier}.generic',
-                  textStyle: getSpecialFontTextStyle(context, listen: false),
-                );
+                var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.generic', [.loadFile, .loadDirectory, .saveFile], false, null, null, textStyle: getSpecialFontTextStyle(context, listen: false))).firstOrNull;
                 if (target != null) {
                   this.value.value = .new(null, target);
                   await refreshState(setState);

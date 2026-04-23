@@ -67,6 +67,9 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
           type: argumentMap["type"] as? String ?? {
             throw NSError(domain: "invalid argument.", code: 0)
           }(),
+          multiply: argumentMap["multiply"] as? Bool ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
           location: argumentMap["location"] as? String ?? {
             throw NSError(domain: "invalid argument.", code: 0)
           }(),
@@ -118,9 +121,10 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   private func handlePickStorageItem(
     type: String,
+    multiply: Bool,
     location: String,
     name: String,
-  ) async throws -> String? {
+  ) async throws -> Array<String> {
     guard type == "load_file" || type == "load_directory" || type == "save_file" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
@@ -130,15 +134,15 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     var picker: UIDocumentPickerViewController!
     if type == "load_file" || type == "load_directory" {
       picker = UIDocumentPickerViewController(forOpeningContentTypes: [type == "load_file" ? .item : .folder])
-      picker.allowsMultipleSelection = false
+      picker.allowsMultipleSelection = multiply
     }
     picker.shouldShowFileExtensions = true
     picker.directoryURL = URL(fileURLWithPath: location)
     picker.delegate = self
     (try self.getCurrentSceneWindow().rootViewController as! FlutterViewController).present(picker, animated: true)
-    let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as? URL
+    let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as! [URL]
     self.continuation = nil
-    let target = targetUrl == nil ? nil : try self.resolveFileUrl(url: targetUrl!)
+    let target = try targetUrl.map({ (item) in try self.resolveFileUrl(url: item) })
     return target
   }
 
@@ -146,10 +150,10 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
 
   public func documentPicker(
     _ controller: UIDocumentPickerViewController,
-    didPickDocumentAt url: URL,
+    didPickDocumentsAt urls: [URL],
   ) -> Void {
     controller.dismiss(animated: true)
-    self.continuation!.resume(returning: url)
+    self.continuation!.resume(returning: [URL](urls))
     return
   }
 
@@ -157,7 +161,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     _ controller: UIDocumentPickerViewController,
   ) -> Void {
     controller.dismiss(animated: true)
-    self.continuation!.resume(returning: nil)
+    self.continuation!.resume(returning: [URL]())
     return
   }
 

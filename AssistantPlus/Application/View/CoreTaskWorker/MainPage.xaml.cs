@@ -592,13 +592,14 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 							break;
 						}
 						case "pick_storage_item": {
-							AssertTest(argument.Count == 4);
+							AssertTest(argument.Count == 5);
 							var detail = await this.CallbackPickStorageItem(
 								argument[1],
 								argument[2],
-								argument[3]
+								argument[3],
+								argument[4]
 							);
-							result.Add(detail.Item1);
+							result.AddRange(detail.Item1);
 							break;
 						}
 						case "push_system_notification": {
@@ -648,9 +649,9 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			String       type,
 			List<String> option
 		) {
-			var value = "";
 			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<SubmissionType>(type);
 			var valueData = await this.mController.ReceiveSubmission(typeValue, option);
+			var value = "";
 			if (valueData != null) {
 				value = ValueExpressionHelper.MakeString(valueData);
 				if (valueData.Macro == null) {
@@ -663,10 +664,9 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 		private async Task<ValueTuple<String>> QueryPickStorageItem(
 			String type
 		) {
-			var target = "";
 			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<StorageQueryType>(type);
 			var targetValue = await StorageHelper.Query(typeValue);
-			target = targetValue.Emit();
+			var target = targetValue.Emit();
 			return new (target);
 		}
 
@@ -678,19 +678,18 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			return new ();
 		}
 
-		private async Task<ValueTuple<String>> CallbackPickStorageItem(
+		private async Task<ValueTuple<List<String>>> CallbackPickStorageItem(
 			String type,
+			String multiply,
 			String location,
 			String name
 		) {
-			var target = "";
 			var typeValue = ConvertHelper.ParseEnumerationFromStringOfSnakeCase<StoragePickType>(type);
+			var multiplyValue = Boolean.Parse(multiply);
 			var locationValue = location.IsEmpty() ? null : new StoragePath(location);
 			var nameValue = name.IsEmpty() ? null : name;
-			var targetValue = await StorageHelper.Pick(typeValue, locationValue, nameValue, App.Instance.MainWindow);
-			if (targetValue != null) {
-				target = targetValue.Emit();
-			}
+			var targetValue = await StorageHelper.Pick(typeValue, multiplyValue, locationValue, nameValue, App.Instance.MainWindow);
+			var target = targetValue.Select((it) => it.Emit()).ToList();
 			return new (target);
 		}
 

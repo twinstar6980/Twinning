@@ -2,6 +2,7 @@ import '/common.dart';
 import '/module.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/core_command_sender/configuration.dart';
 import '/view/core_command_sender/value_expression.dart';
@@ -419,13 +420,7 @@ class _PathArgumentBar extends StatelessWidget {
               tooltip: 'Pick',
               icon: IconView.of(IconSet.open_in_new),
               onPressed: (context) async {
-                var target = await StorageDropRegionExtension.pick(
-                  context: context,
-                  allowLoadFile: true,
-                  allowLoadDirectory: true,
-                  allowSaveFile: true,
-                  location: '@${ModuleHelper.query(.coreCommandSender).identifier}.generic',
-                );
+                var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreCommandSender).identifier}.generic', [.loadFile, .loadDirectory, .saveFile], false, null, null)).firstOrNull;
                 if (target != null) {
                   this.value.value = .new(target);
                   await refreshState(setState);

@@ -33,7 +33,7 @@ class ApplicationPlatformMethod {
     });
     detail!;
     return (
-      target: detail['target'] as String,
+      target: detail['target']!.as<String>(),
     );
   }
 
@@ -49,19 +49,21 @@ class ApplicationPlatformMethod {
     );
   }
 
-  Future<({String? target})> pickStorageItem(
-    String type,
-    String location,
-    String name,
+  Future<({List<String> target})> pickStorageItem(
+    String  type,
+    Boolean multiply,
+    String  location,
+    String  name,
   ) async {
     var detail = await this._channel!.invokeMapMethod<Object?, Object?>('pick_storage_item', <Object?, Object?>{
       'type': type,
+      'multiply': multiply,
       'location': location,
       'name': name,
     });
     detail!;
     return (
-      target: detail['target'] as String?,
+      target: detail['target']!.as<List<Object?>>().cast<String>(),
     );
   }
 
@@ -76,7 +78,7 @@ class ApplicationPlatformMethod {
     });
     detail!;
     return (
-      state: detail['state'] as Boolean,
+      state: detail['state']!.as<Boolean>(),
     );
   }
 

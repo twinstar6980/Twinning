@@ -432,13 +432,14 @@ class _MainPageBridgeClient extends bridge.Client {
         break;
       }
       case 'pick_storage_item': {
-        assertTest(argument.length == 4);
+        assertTest(argument.length == 5);
         var detail = await this.callbackPickStorageItem(
           argument[1],
           argument[2],
           argument[3],
+          argument[4],
         );
-        result.add(detail.target);
+        result.addAll(detail.target);
         break;
       }
       case 'push_system_notification': {
@@ -481,9 +482,9 @@ class _MainPageBridgeClient extends bridge.Client {
     String       type,
     List<String> option,
   ) async {
-    var value = '';
     var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, SubmissionType.values);
     var valueValue = await this._controller._receiveSubmission(typeValue, option);
+    var value = '';
     if (valueValue != null) {
       value = ValueExpressionHelper.makeString(valueValue);
       if (valueValue.macro == null) {
@@ -496,10 +497,9 @@ class _MainPageBridgeClient extends bridge.Client {
   Future<({String target})> callbackQueryStorageItem(
     String type,
   ) async {
-    var target = '';
     var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, StorageQueryType.values);
     var targetValue = await StorageHelper.query(typeValue);
-    target = targetValue.emit();
+    var target = targetValue.emit();
     return (target: target);
   }
 
@@ -511,19 +511,18 @@ class _MainPageBridgeClient extends bridge.Client {
     return ();
   }
 
-  Future<({String target})> callbackPickStorageItem(
+  Future<({List<String> target})> callbackPickStorageItem(
     String type,
+    String multiply,
     String location,
     String name,
   ) async {
-    var target = '';
     var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, StoragePickType.values);
+    var multiplyValue = Boolean.parse(multiply);
     var locationValue = location.isEmpty ? null : StoragePath.of(location);
     var nameValue = name.isEmpty ? null : name;
-    var targetValue = await StorageHelper.pick(typeValue, locationValue, nameValue);
-    if (targetValue != null) {
-      target = targetValue.emit();
-    }
+    var targetValue = await StorageHelper.pick(typeValue, multiplyValue, locationValue, nameValue);
+    var target = targetValue.map((it) => it.emit()).toList();
     return (target: target);
   }
 

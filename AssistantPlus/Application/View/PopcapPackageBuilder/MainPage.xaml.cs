@@ -1192,7 +1192,7 @@ namespace Twinning.AssistantPlus.View.PopcapPackageBuilder {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			var target = await MiscellaneousHelper.PickStorageItem(StoragePickType.LoadDirectory, $"{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.project_directory", null);
+			var target = (await MiscellaneousHelper.PickStorageItem($"{ModuleHelper.Query(ModuleType.PopcapPackageBuilder).Identifier}.project_directory", StoragePickType.LoadDirectory, false, null, null)).FirstOrDefault();
 			if (target != null) {
 				await this.ApplyLoad(target);
 			}

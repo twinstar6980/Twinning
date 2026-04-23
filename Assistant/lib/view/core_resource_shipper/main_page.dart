@@ -348,9 +348,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.note_add),
                       content: StyledText.inherit('Pick File'),
                       onPressed: (context) async {
-                        var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, '${ModuleHelper.query(.coreResourceShipper).identifier}.resource', null);
-                        if (target != null) {
-                          await this._appendResource([target]);
+                        var target = await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreResourceShipper).identifier}.resource', [.loadFile], true, null, null);
+                        if (!target.isEmpty) {
+                          await this._appendResource(target);
                           await refreshState(setStateForPanel);
                         }
                       },
@@ -360,9 +360,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.create_new_folder),
                       content: StyledText.inherit('Pick Directory'),
                       onPressed: (context) async {
-                        var target = await MiscellaneousHelper.pickStorageItem(context, .loadDirectory, '${ModuleHelper.query(.coreResourceShipper).identifier}.resource', null);
-                        if (target != null) {
-                          await this._appendResource([target]);
+                        var target = await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreResourceShipper).identifier}.resource', [.loadDirectory], true, null, null);
+                        if (!target.isEmpty) {
+                          await this._appendResource(target);
                           await refreshState(setStateForPanel);
                         }
                       },

@@ -614,7 +614,7 @@ namespace Twinning.AssistantPlus.View.CoreCommandSender {
 			if (this.Type != ArgumentType.Path || this.Option != null) {
 				return;
 			}
-			var value = await MiscellaneousHelper.PickStorageItem(Enum.Parse<StoragePickType>(senders.Tag.As<String>()), $"{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.generic", null);
+			var value = (await MiscellaneousHelper.PickStorageItem($"{ModuleHelper.Query(ModuleType.CoreCommandSender).Identifier}.generic", Enum.Parse<StoragePickType>(senders.Tag.As<String>()), false, null, null)).FirstOrDefault();
 			if (value != null) {
 				this.ValueOfPath = new () { Content = value };
 				this.NotifyPropertyChanged([

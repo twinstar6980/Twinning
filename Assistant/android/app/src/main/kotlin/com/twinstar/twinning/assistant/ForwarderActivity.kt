@@ -150,8 +150,8 @@ class ForwarderActivity : Activity() {
   ): Unit {
     val command = mutableListOf<String>()
     command.add("-forward")
-    command.addAll(resource.map() { item -> this.resolveContentUri(item) })
-    val link = Uri.parse("${this.queryApplicationIdentifier()}:/application?${command.joinToString("&") { item -> "command=${this.encodePercentString(item)}" }}")
+    command.addAll(resource.map({ item -> this.resolveContentUri(item) }))
+    val link = Uri.parse("${this.queryApplicationIdentifier()}:/application?${command.joinToString("&", transform = { item -> "command=${this.encodePercentString(item)}" })}")
     this.openLink(link)
     return
   }

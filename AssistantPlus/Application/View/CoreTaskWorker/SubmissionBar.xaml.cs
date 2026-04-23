@@ -766,7 +766,7 @@ namespace Twinning.AssistantPlus.View.CoreTaskWorker {
 			if (this.Type != SubmissionType.Path) {
 				return;
 			}
-			var value = await MiscellaneousHelper.PickStorageItem(Enum.Parse<StoragePickType>(senders.Tag.As<String>()), $"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", null);
+			var value = (await MiscellaneousHelper.PickStorageItem($"{ModuleHelper.Query(ModuleType.CoreTaskWorker).Identifier}.generic", Enum.Parse<StoragePickType>(senders.Tag.As<String>()), false, null, null)).FirstOrDefault();
 			if (value != null) {
 				this.ValueOfPath = new () { Macro = null, Content = value };
 				this.NotifyPropertyChanged([

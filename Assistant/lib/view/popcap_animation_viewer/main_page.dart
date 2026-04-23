@@ -1028,7 +1028,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     icon: IconView.of(IconSet.file_open),
                     content: StyledText.inherit('Load File'),
                     onPressed: (context) async {
-                      var target = await MiscellaneousHelper.pickStorageItem(context, .loadFile, '${ModuleHelper.query(.popcapAnimationViewer).identifier}.source', null);
+                      var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.popcapAnimationViewer).identifier}.source', [.loadFile], false, null, null)).firstOrNull;
                       if (target != null) {
                         Navigator.pop(context);
                         await this._applyLoad(target, null, null, null, null, null, null, null);
@@ -1040,7 +1040,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     icon: IconView.of(IconSet.folder_open),
                     content: StyledText.inherit('Load Directory'),
                     onPressed: (context) async {
-                      var target = await MiscellaneousHelper.pickStorageItem(context, .loadDirectory, '${ModuleHelper.query(.popcapAnimationViewer).identifier}.source', null);
+                      var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.popcapAnimationViewer).identifier}.source', [.loadDirectory], false, null, null)).firstOrNull;
                       if (target != null) {
                         Navigator.pop(context);
                         target = await VisualHelper.checkAnimationDirectoryPath(target);

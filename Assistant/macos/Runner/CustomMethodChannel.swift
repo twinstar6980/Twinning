@@ -62,6 +62,9 @@ class CustomMethodChannel: NSObject {
           type: argumentMap["type"] as? String ?? {
             throw NSError(domain: "invalid argument.", code: 0)
           }(),
+          multiply: argumentMap["multiply"] as? Bool ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
           location: argumentMap["location"] as? String ?? {
             throw NSError(domain: "invalid argument.", code: 0)
           }(),
@@ -111,9 +114,10 @@ class CustomMethodChannel: NSObject {
   @MainActor
   private func handlePickStorageItem(
     type: String,
+    multiply: Bool,
     location: String,
     name: String,
-  ) async throws -> String? {
+  ) async throws -> Array<String> {
     guard type == "load_file" || type == "load_directory" || type == "save_file" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
@@ -124,7 +128,7 @@ class CustomMethodChannel: NSObject {
       pickerView.canResolveUbiquitousConflicts = true
       pickerView.canDownloadUbiquitousContents = true
       pickerView.isAccessoryViewDisclosed = false
-      pickerView.allowsMultipleSelection = false
+      pickerView.allowsMultipleSelection = multiply
       pickerView.canChooseFiles = type == "load_file"
       pickerView.canChooseDirectories = type == "load_directory"
       picker = pickerView
@@ -142,11 +146,20 @@ class CustomMethodChannel: NSObject {
     picker.canCreateDirectories = true
     picker.allowedContentTypes = []
     picker.directoryURL = URL(fileURLWithPath: location)
-    var targetUrl = nil as URL?
+    var targetUrl: [URL] = []
     if (picker.runModal() == .OK) {
-      targetUrl = picker.url
+      if type == "load_file" || type == "load_directory" {
+        let pickerView = picker as! NSOpenPanel
+        targetUrl.append(contentsOf: pickerView.urls)
+      }
+      if type == "save_file" {
+        let pickerView = picker!
+        if pickerView.url != nil {
+          targetUrl.append(pickerView.url!)
+        }
+      }
     }
-    let target = targetUrl == nil ? nil : try self.resolveFileUrl(url: targetUrl!)
+    let target = try targetUrl.map({ (item) in try self.resolveFileUrl(url: item) })
     return target
   }
 

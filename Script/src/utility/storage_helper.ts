@@ -212,19 +212,18 @@ namespace Twinning.Script.StorageHelper {
 
 	export function pick_storage_item(
 		type: 'load_file' | 'load_directory' | 'save_file',
+		multiply: boolean,
 		location: null | StoragePath,
 		name: null | string,
-	): null | StoragePath {
-		let target: null | StoragePath = undefined!;
+	): Array<StoragePath> {
+		let target: Array<StoragePath> = undefined!;
 		if (Shell.is_basic) {
 			// unavailable, silently fail
-			target = null;
+			target = [];
 		}
 		if (Shell.is_assistant) {
-			let target_value = Shell.assistant_pick_storage_item(type, location === null ? '' : location.emit(), name === null ? '' : name).target;
-			if (target_value !== '') {
-				target = new StoragePath(target_value);
-			}
+			let target_value = Shell.assistant_pick_storage_item(type, multiply, location === null ? '' : location.emit(), name === null ? '' : name).target;
+			target = target_value.map((it) => new StoragePath(it));
 		}
 		return target;
 	}
