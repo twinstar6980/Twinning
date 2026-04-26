@@ -489,7 +489,7 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Reveal'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var target = await setting.file;
+              var target = await setting.file();
               await MoreModalDialogExtension.showForRevealStoragePath(context, 'Setting File', target);
             },
           ),
