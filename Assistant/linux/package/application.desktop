@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Twinning Assistant
+Icon=application
+Exec=assistant %F
+Categories=Utility;

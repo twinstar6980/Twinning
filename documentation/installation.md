@@ -87,7 +87,7 @@
 
 * 安装主目录内 `Assistant` 、`Assistant Plus` 模块的应用安装包。
 
-  应用安装包文件以 `msix` 、`dmg` 、`apk` 、`ipa` 等作为扩展名。
+  应用安装包文件以 `msix` 、`AppImage` 、`dmg` 、`apk` 、`ipa` 作为扩展名。
 
   > @ `Windows` \
   > 安装前需要先信任 `msix` 中的签名证书。\

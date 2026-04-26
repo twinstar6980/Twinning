@@ -57,13 +57,13 @@ def build(
 		utility.fs_copy(
 			f'{source}/build/linux/x64/release/bundle',
 			f'{temporary}/artifact',
+			follow_link=True,
 		)
-		utility.pack_zip(
+		utility.pack_linux_appimage(
 			f'{temporary}/artifact',
-			f'{temporary}/artifact.zip',
-			'assistant',
+			f'{temporary}/artifact.AppImage',
 		)
-		destination = ('.zip', f'{temporary}/artifact.zip')
+		destination = ('.AppImage', f'{temporary}/artifact.AppImage')
 	if utility.check_platform(platform, ['macintosh.arm64']):
 		utility.setup_project_library(
 			platform,

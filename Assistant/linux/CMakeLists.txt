@@ -126,3 +126,28 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
   install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endif()
+
+
+# === Custom ===
+
+# package
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/package/application.desktop"
+  "${CMAKE_CURRENT_BINARY_DIR}/package/application.desktop"
+  @ONLY
+)
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/package/application.desktop"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime
+)
+install(
+  FILES "${CMAKE_CURRENT_SOURCE_DIR}/package/application.svg"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime
+)
+install(
+  PROGRAMS "${CMAKE_CURRENT_SOURCE_DIR}/package/AppRun"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime
+)
