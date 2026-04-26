@@ -59,7 +59,7 @@ def build(
 		},
 		'assistant': {
 			'windows.amd64': '.msix',
-			'linux.amd64': '.zip',
+			'linux.amd64': '.AppImage',
 			'macintosh.arm64': '.dmg',
 			'android.arm64': '.apk',
 			'iphone.arm64': '.ipa',
