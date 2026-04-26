@@ -158,7 +158,7 @@ private:
 	auto handle_query_storage_item(
 		std::string const & type
 	) -> std::tuple<std::string> {
-		assert_test(type == "user_home" || type == "application_shared" || type == "application_cache");
+		assert_test(type == "user_home" || type == "application_shared" || type == "application_temporary");
 		auto target = std::string{};
 		if (type == "user_home") {
 			target = thiz.query_known_folder_path(FOLDERID_Profile);
@@ -166,8 +166,8 @@ private:
 		if (type == "application_shared") {
 			target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier();
 		}
-		if (type == "application_cache") {
-			target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\cache";
+		if (type == "application_temporary") {
+			target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\temporary";
 		}
 		return std::make_tuple(target);
 	}

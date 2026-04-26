@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 			Boolean const &             disable_object_trailing_comma,
 			Boolean const &             disable_object_line_breaking
 		) -> Void {
-			process_value(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, k_begin_index);
+			process_value(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, 0_sz);
 			return;
 		}
 

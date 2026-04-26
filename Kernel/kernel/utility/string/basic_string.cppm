@@ -316,13 +316,13 @@ export namespace Twinning::Kernel {
 		auto result = List<TResult>{};
 		if (!source.empty()) {
 			result.allocate_full(Range::count_many(source, separator) + 1_sz);
-			auto sub_count = k_none_size;
-			auto sub_begin = k_begin_index;
-			auto sub_end = k_begin_index;
+			auto sub_count = 0_sz;
+			auto sub_begin = 0_sz;
+			auto sub_end = 0_sz;
 			auto get_next_sub_range = [&](
 			) -> Void {
 				result[sub_count] = source.sub(sub_begin, sub_end - sub_begin);
-				sub_begin = sub_end + k_next_index;
+				sub_begin = sub_end + 1_sz;
 				++sub_count;
 				return;
 			};
@@ -345,7 +345,7 @@ export namespace Twinning::Kernel {
 	inline auto compute_catenate_string_size(
 		TSource const & source
 	) -> Size {
-		auto size = k_none_size;
+		auto size = 0_sz;
 		if (!source.empty()) {
 			for (auto & element : source) {
 				size += element.size();

@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		// ----------------
 
 		inline static constexpr auto k_field_data_size = [] {
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		}();
 
 		inline static constexpr auto k_emitter_data_size = [] {
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerU32>();
 			size += bs_static_size<IntegerU32>();

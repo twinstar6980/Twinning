@@ -124,11 +124,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			if (!map.empty()) {
 				work_option[1_ix].set(
 					WorkOption{
-						.inherit_length = k_none_size,
+						.inherit_length = 0_sz,
 					}
 				);
 			}
-			auto block_count = k_none_size;
+			auto block_count = 0_sz;
 			for (auto & index : SizeRange{map.size()}) {
 				auto & element = map.at(index);
 				{
@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 						}
 					}
 				}
-				auto character_index = k_begin_index;
+				auto character_index = 0_sz;
 				if (work_option[index].has()) {
 					character_index += work_option[index].get().inherit_length;
 					work_option[index].reset();
@@ -175,14 +175,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			if (!map.empty()) {
 				work_option.first().set(
 					WorkOption{
-						.inherit_length = k_none_size,
-						.parent_offset = k_begin_index,
+						.inherit_length = 0_sz,
+						.parent_offset = 0_sz,
 					}
 				);
 				for (auto & index : SizeRange{map.size()}) {
 					auto & element = map.at(index);
 					auto   current_string_has_child = Array<Boolean>{element.key.size() + 1_sz};
-					for (auto & index_1 : SizeRange{index + k_next_index, map.size()}) {
+					for (auto & index_1 : SizeRange{index + 1_sz, map.size()}) {
 						if (!work_option[index_1].has()) {
 							auto common_size = Range::common_size(element.key, map.at(index_1).key);
 							if (!current_string_has_child[common_size] && common_size >= work_option[index].get().inherit_length) {
@@ -196,7 +196,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 							}
 						}
 					}
-					auto character_index = k_begin_index;
+					auto character_index = 0_sz;
 					if (work_option[index].has()) {
 						character_index += work_option[index].get().inherit_length;
 						auto current_position = stream.position();
@@ -232,7 +232,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			while (!stream.full()) {
 				map.append();
 				auto & element = map.last();
-				auto   string_length_in_next_stream = k_none_size;
+				auto   string_length_in_next_stream = 0_sz;
 				{
 					auto string_begin_position = stream.position();
 					while (cbox<Character>(clip_bit(stream.read_of<IntegerU32>(), 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>)) != CharacterType::k_null) {

@@ -1540,7 +1540,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 4_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -1582,7 +1582,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {140})) {
 					return 4_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 140})) {
@@ -1640,7 +1640,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -1671,7 +1671,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {145})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 128})) {
@@ -1729,7 +1729,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {145})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112, 145})) {
@@ -1765,7 +1765,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -1788,7 +1788,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -1814,7 +1814,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {132})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 132})) {
@@ -1848,7 +1848,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {128})) {
 					return 3_sz; // NOTE: EXPLAIN: use 3 byte even only need 2 byte
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {128})) {
@@ -1876,7 +1876,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {140})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {132, 140})) {
@@ -1910,7 +1910,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72, 132})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 132})) {
@@ -1936,7 +1936,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 112})) {
@@ -1968,7 +1968,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {134})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {134})) {
@@ -1995,7 +1995,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2022,7 +2022,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {88})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {88})) {
@@ -2045,7 +2045,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112})) {
@@ -2068,7 +2068,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112})) {
@@ -2091,7 +2091,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2114,7 +2114,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2137,7 +2137,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2160,7 +2160,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 140})) {
@@ -2198,7 +2198,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2223,7 +2223,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2249,7 +2249,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 112})) {
@@ -2285,7 +2285,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2308,7 +2308,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2331,7 +2331,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2365,7 +2365,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {128})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112, 128})) {
@@ -2422,7 +2422,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112})) {
@@ -2447,7 +2447,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2470,7 +2470,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2496,7 +2496,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {125})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 125})) {
@@ -2534,7 +2534,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2557,7 +2557,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112})) {
@@ -2584,7 +2584,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112})) {
@@ -2607,7 +2607,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {112, 125})) {
@@ -2653,7 +2653,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72})) {
@@ -2679,7 +2679,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 2_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 112})) {
@@ -2720,7 +2720,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {112})) {
 					return 3_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 112})) {
@@ -2762,7 +2762,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {72})) {
 					return 8_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {72, 112})) {
@@ -2966,7 +2966,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 				if constexpr (check_version(t_version, {145})) {
 					return 1_sz;
 				}
-				return k_none_size;
+				return 0_sz;
 			}()};
 			using Index = decltype([] {
 				if constexpr (check_version(t_version, {145})) {

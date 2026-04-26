@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 			Size &       cipher_size,
 			Size const & limit
 		) -> Void {
-			cipher_size = k_none_size;
+			cipher_size = 0_sz;
 			if (plain_size >= limit) {
 				cipher_size += bs_static_size<MagicMarker>();
 				cipher_size += bs_static_size<Header>();

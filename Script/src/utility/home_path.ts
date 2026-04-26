@@ -39,7 +39,6 @@ namespace Twinning.Script.HomePath {
 		if (!StorageHelper.exist_directory(temporary())) {
 			StorageHelper.create_directory(temporary());
 		}
-		KernelX.Process.set_workspace(workspace());
 		return;
 	}
 

@@ -315,8 +315,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			data.read_constant(cbox<VersionNumber>(t_version.number));
-			auto native_string_upper_bound = k_none_size;
-			auto unicode_string_upper_bound = k_none_size;
+			auto native_string_upper_bound = 0_sz;
+			auto unicode_string_upper_bound = 0_sz;
 			for (auto & element : data.reserve_view()) {
 				switch (self_cast<TypeIdentifier>(element).value) {
 					case TypeIdentifier::Value::string_native_indexing: {

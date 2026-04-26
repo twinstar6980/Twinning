@@ -83,10 +83,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			auto information_section_before_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			auto information_section_after_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			read_package_information_structure(as_left(InputByteStreamView{before.view()}), information_section_before_structure);
-			auto information_section_before = before.sub_view(k_begin_index, cbox<Size>(information_section_before_structure.header.information_section_size));
+			auto information_section_before = before.sub_view(0_sz, cbox<Size>(information_section_before_structure.header.information_section_size));
 			test_hash(information_section_before, package_information.before_hash);
 			if (!information_section_patch_exist) {
-				assert_test(information_section_patch_size == k_none_size);
+				assert_test(information_section_patch_size == 0_sz);
 				after.write(information_section_before);
 			}
 			else {
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				test_hash(packet_before, packet_information.before_hash);
 				auto packet_after = ConstantByteListView{};
 				if (!packet_patch_exist) {
-					assert_test(packet_patch_size == k_none_size);
+					assert_test(packet_patch_size == 0_sz);
 					packet_after = packet_before;
 				}
 				else {

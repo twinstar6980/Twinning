@@ -182,7 +182,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamGroup::Structure;
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_size(up_cast<ResourceBasicInformation<t_version>>(that));
 			if (that.type == ResourceTypeFlag<t_version>::general) {
 				size += bs_size(that.additional.template get<GeneralResourceAdditionalInformation<t_version>>());

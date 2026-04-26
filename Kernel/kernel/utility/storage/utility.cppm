@@ -335,7 +335,7 @@ export namespace Twinning::Kernel::Storage {
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "rb", handler);
 		auto count = std::fread(data.begin().value, size.value, 1, handler.value);
-		assert_test(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == 0_sz);
 		return data;
 	}
 
@@ -348,7 +348,7 @@ export namespace Twinning::Kernel::Storage {
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "wb", handler);
 		auto count = std::fwrite(data.begin().value, size.value, 1, handler.value);
-		assert_test(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == 0_sz);
 		return;
 	}
 
@@ -364,7 +364,7 @@ export namespace Twinning::Kernel::Storage {
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "rb", handler);
 		auto count = std::fread(data.current_pointer().value, size.value, 1, handler.value);
-		assert_test(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == 0_sz);
 		data.forward(size);
 		return size;
 	}
@@ -378,7 +378,7 @@ export namespace Twinning::Kernel::Storage {
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "wb", handler);
 		auto count = std::fwrite(data.current_pointer().value, size.value, 1, handler.value);
-		assert_test(count == 1 || size == k_none_size);
+		assert_test(count == 1 || size == 0_sz);
 		data.forward(size);
 		return size;
 	}
@@ -416,7 +416,7 @@ export namespace Twinning::Kernel::Storage {
 		Boolean const &        allow_directory
 	) -> List<Path> {
 		assert_test(exist_directory(target));
-		auto result_count = k_none_size;
+		auto result_count = 0_sz;
 		auto result = List<Path>{};
 		auto iterate_count = [&]<typename TSelf>(
 			TSelf const & self,
@@ -443,7 +443,7 @@ export namespace Twinning::Kernel::Storage {
 						++result_count;
 					}
 					if (item_type == Detail::FileType::Constant::directory()) {
-						self(self, current_target.join(item_name), current_depth + k_next_index);
+						self(self, current_target.join(item_name), current_depth + 1_sz);
 					}
 				}
 			}
@@ -476,15 +476,15 @@ export namespace Twinning::Kernel::Storage {
 						result.append(item_path);
 					}
 					if (item_type == Detail::FileType::Constant::directory()) {
-						self(self, current_target.join(item_name), item_path, current_depth + k_next_index);
+						self(self, current_target.join(item_name), item_path, current_depth + 1_sz);
 					}
 				}
 			}
 			return;
 		};
-		iterate_count(iterate_count, target, k_begin_index);
+		iterate_count(iterate_count, target, 0_sz);
 		result.allocate(result_count);
-		iterate(iterate, target, Path{PathType::Constant::detached()}, k_begin_index);
+		iterate(iterate, target, Path{PathType::Constant::detached()}, 0_sz);
 		return result;
 	}
 

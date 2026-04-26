@@ -82,7 +82,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				auto resource_data_section_view = VariableByteListView{};
 				auto resource_data_section_container = ByteArray{};
 				auto resource_data_section_offset = data.position();
-				auto resource_data_section_size_original = k_none_size;
+				auto resource_data_section_size_original = 0_sz;
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					if (resource_definition.additional.type() != current_resource_type) {
@@ -142,7 +142,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 					resource_data_section_stream.write_space(k_null_byte, compute_padding_size(resource_data_section_stream.position(), k_padding_unit_size));
 				}
-				if (!compress_resource_data_section || (current_resource_type == ResourceType::Constant::texture() && resource_data_section_size_original == k_none_size)) {
+				if (!compress_resource_data_section || (current_resource_type == ResourceType::Constant::texture() && resource_data_section_size_original == 0_sz)) {
 					data.forward(resource_data_section_view.size());
 				}
 				else {

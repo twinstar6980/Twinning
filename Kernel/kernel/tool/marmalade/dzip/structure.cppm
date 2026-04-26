@@ -190,7 +190,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Size {
 			using namespace Tool::Marmalade::Dzip::Structure;
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_size(that.directory_index);
 			size += bs_size(that.chunk_index);
 			size += bs_static_size<IntegerU16>();

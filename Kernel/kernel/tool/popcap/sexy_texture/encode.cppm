@@ -82,7 +82,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
 				texture_data_view = data.forward_view(texture_data_size);
-				compress_texture_data_size = k_none_size;
+				compress_texture_data_size = 0_sz;
 			}
 			else {
 				texture_data_container.allocate(texture_data_size);
@@ -114,7 +114,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			Texture::Encoding::Format const & format,
 			Boolean const &                   compress_texture_data
 		) -> Void {
-			data_size_bound = k_none_size;
+			data_size_bound = 0_sz;
 			data_size_bound += bs_static_size<MagicMarker>();
 			data_size_bound += bs_static_size<VersionNumber>();
 			data_size_bound += bs_static_size<Header>();

@@ -269,7 +269,7 @@ export namespace Twinning::Kernel {
 		inline static auto size(
 			That const & that
 		) -> Size {
-			auto result = k_none_size;
+			auto result = 0_sz;
 			for (auto & element : that) {
 				result += bs_size(element);
 			}
@@ -547,7 +547,7 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto static_size(
 		) -> Size {
-			auto result = k_none_size;
+			auto result = 0_sz;
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					result += bs_static_size<AsPure<decltype(TField::value_of(declare<That const &>()))>>();
@@ -559,7 +559,7 @@ export namespace Twinning::Kernel {
 		inline static auto size(
 			That const & that
 		) -> Size {
-			auto result = k_none_size;
+			auto result = 0_sz;
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
 					result += bs_size(TField::value_of(that));
@@ -611,7 +611,7 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto static_size(
 		) -> Size {
-			auto result = k_none_size;
+			auto result = 0_sz;
 			result += bs_static_size<decltype(That::first)>();
 			result += bs_static_size<decltype(That::second)>();
 			result += bs_static_size<decltype(That::third)>();
@@ -622,7 +622,7 @@ export namespace Twinning::Kernel {
 		inline static constexpr auto size(
 			That const & that
 		) -> Size {
-			auto result = k_none_size;
+			auto result = 0_sz;
 			result += bs_size(that.first);
 			result += bs_size(that.second);
 			result += bs_size(that.third);

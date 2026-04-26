@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 			data.read_constant(cbox<Structure::VersionNumber>(t_version.number));
 			auto information_structure = Structure::Information<t_version>{};
 			{
-				information_structure.resource_information.allocate(k_none_size);
+				information_structure.resource_information.allocate(0_sz);
 				while (k_true) {
 					auto flag = data.read_of<IntegerU8>();
 					if (flag == Structure::ResourceInformationListStateFlag<t_version>::done) {

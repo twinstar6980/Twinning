@@ -411,8 +411,8 @@ export namespace Twinning::Kernel {
 		auto unbind(
 		) -> Void {
 			thiz.m_data = k_null_pointer;
-			thiz.m_size = k_none_size;
-			thiz.m_capacity = k_none_size;
+			thiz.m_size = 0_sz;
+			thiz.m_capacity = 0_sz;
 			return;
 		}
 
@@ -451,8 +451,8 @@ export namespace Twinning::Kernel {
 			if (thiz.m_data != k_null_pointer) {
 				free_instance_array(thiz.m_data);
 			}
-			thiz.m_size = k_none_size;
-			thiz.m_capacity = k_none_size;
+			thiz.m_size = 0_sz;
+			thiz.m_capacity = 0_sz;
 			return;
 		}
 
@@ -461,7 +461,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			thiz.reset();
 			thiz.m_data = allocate_instance_array<Element>(capacity);
-			thiz.m_size = k_none_size;
+			thiz.m_size = 0_sz;
 			thiz.m_capacity = capacity;
 			return;
 		}
@@ -658,7 +658,7 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) -> VariableElement & {
 			if (index >= thiz.end_index()) {
-				auto new_size = index + k_next_index;
+				auto new_size = index + 1_sz;
 				if (new_size > thiz.capacity()) {
 					thiz.allocate_retain(new_size);
 				}
@@ -697,7 +697,7 @@ export namespace Twinning::Kernel {
 			auto shift_begin = thiz.end_index();
 			auto shift_count = thiz.end_index() - position;
 			thiz.m_size += size;
-			if (shift_count != k_none_size) {
+			if (shift_count != 0_sz) {
 				Range::assign_from(Range::make_reverse_range_n(thiz.end(), shift_count), Range::make_moveable_range_of(Range::make_reverse_range_n(thiz.iterator(shift_begin), shift_count)));
 			}
 			return;

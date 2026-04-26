@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			Definition::Block3 const &                         value,
 			VariableOptionalView<OutputByteStreamView> const & string_chunk_data
 		) -> Void {
-			auto string_offset = k_begin_index;
+			auto string_offset = 0_sz;
 			auto string_size = value.string.size();
 			if (string_chunk_data.has()) {
 				string_offset = string_chunk_data.get().position();
@@ -159,7 +159,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			OutputByteStreamView &     data,
 			Definition::Effect const & value
 		) -> Void {
-			auto section_count = k_none_size;
+			auto section_count = 0_sz;
 			if constexpr (check_version(t_version, {}, {1, 3})) {
 				section_count = 7_sz;
 			}

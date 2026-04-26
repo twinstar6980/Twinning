@@ -47,10 +47,10 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				information_structure.resource_file.allocate(definition.resource.size());
 				information_structure.resource_directory.allocate(definition.resource.size() + 1_sz);
 				information_structure.resource_information.allocate_full(definition.resource.size());
-				information_structure.chunk_information.allocate_full(k_none_size);
-				information_structure.archive_resource_information.allocate_full(k_none_size);
+				information_structure.chunk_information.allocate_full(0_sz);
+				information_structure.archive_resource_information.allocate_full(0_sz);
 				information_structure.resource_directory.append(""_sv);
-				auto global_chunk_index = k_begin_index;
+				auto global_chunk_index = 0_sz;
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					auto & resource_information_structure = information_structure.resource_information[resource_index];
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				information_data.resource_file = OutputByteStreamView{
 					data.forward_view(
 						[&] {
-							auto size = k_none_size;
+							auto size = 0_sz;
 							for (auto & element : information_structure.resource_file) {
 								size += bs_size(element);
 								size += bs_size(CharacterType::k_null);
@@ -86,7 +86,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				information_data.resource_directory = OutputByteStreamView{
 					data.forward_view(
 						[&] {
-							auto size = k_none_size;
+							auto size = 0_sz;
 							for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
 								size += bs_size(element);
 								size += bs_size(CharacterType::k_null);
@@ -113,10 +113,10 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			information_structure.resource_file.allocate(definition.resource.size());
 			information_structure.resource_directory.allocate(definition.resource.size() + 1_sz);
 			information_structure.resource_information.allocate_full(definition.resource.size());
-			information_structure.chunk_information.allocate_full(k_none_size);
-			information_structure.archive_resource_information.allocate_full(k_none_size);
+			information_structure.chunk_information.allocate_full(0_sz);
+			information_structure.archive_resource_information.allocate_full(0_sz);
 			information_structure.resource_directory.append(""_sv);
-			auto global_chunk_index = k_begin_index;
+			auto global_chunk_index = 0_sz;
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
@@ -193,7 +193,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						throw UnimplementedException{};
 						// TODO
 						// chunk_size_uncompressed = ;
-						// chunk_size_compressed = k_none_size;
+						// chunk_size_compressed = 0_sz;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::copy_coded)) {
 						chunk_size_uncompressed = Storage::read_file_stream(resource_path, data);

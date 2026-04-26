@@ -92,7 +92,7 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
   private func handleQueryStorageItem(
     type: String,
   ) async throws -> String {
-    guard type == "user_home" || type == "application_shared" || type == "application_cache" else {
+    guard type == "user_home" || type == "application_shared" || type == "application_temporary" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     var target: String? = nil
@@ -102,8 +102,8 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     if type == "application_shared" {
       target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!))"
     }
-    if type == "application_cache" {
-      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!))/cache"
+    if type == "application_temporary" {
+      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!))/temporary"
     }
     return target!
   }

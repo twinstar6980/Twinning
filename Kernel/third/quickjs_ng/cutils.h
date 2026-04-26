@@ -110,7 +110,8 @@ extern "C" {
 
 /* Borrowed from Folly */
 #ifndef JS_PRINTF_FORMAT
-#ifdef _MSC_VER
+/* Clang on Windows doesn't seem to support _Printf_format_string_ */
+#if defined(_MSC_VER) && !defined(__clang__)
 #include <sal.h>
 #define JS_PRINTF_FORMAT _Printf_format_string_
 #define JS_PRINTF_FORMAT_ATTR(format_param, dots_param)
@@ -193,6 +194,16 @@ static inline int64_t min_int64(int64_t a, int64_t b)
         return a;
     else
         return b;
+}
+
+static inline uint32_t hash32(uint32_t a)
+{
+    // use the negative of the golden ratio, it spreads out the bits nicely
+    // and is what the linux kernel does
+    //
+    // the golden ratio phi is defined as (1+sqrt(5))/2 or 1 + (sqrt(5)-1)/2
+    // (approx. 1.618033988), and negated is round(2**32/phi**2) = 0x61c88647
+    return a * 0x61c88647;
 }
 
 /* WARNING: undefined if a = 0 */
@@ -350,14 +361,6 @@ static inline uint64_t bswap64(uint64_t v)
         ((v & ((uint64_t)0xff << (0 * 8))) << (7 * 8));
 }
 #endif
-
-static inline void inplace_bswap16(uint8_t *tab) {
-    put_u16(tab, bswap16(get_u16(tab)));
-}
-
-static inline void inplace_bswap32(uint8_t *tab) {
-    put_u32(tab, bswap32(get_u32(tab)));
-}
 
 static inline double fromfp16(uint16_t v) {
     double d, s;

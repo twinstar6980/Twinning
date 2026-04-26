@@ -73,7 +73,7 @@ export namespace Twinning::Kernel {
 
 		explicit StreamView(
 			ListView const & view,
-			Size const &     position = k_begin_index
+			Size const &     position = 0_sz
 		) :
 			m_view{view},
 			m_position{position} {
@@ -112,13 +112,13 @@ export namespace Twinning::Kernel {
 		auto reset(
 		) -> Void {
 			thiz.m_view.reset();
-			thiz.m_position = k_begin_index;
+			thiz.m_position = 0_sz;
 			return;
 		}
 
 		auto set(
 			ListView const & view,
-			Size const &     position = k_begin_index
+			Size const &     position = 0_sz
 		) -> Void {
 			assert_test(position <= view.size());
 			thiz.m_view = view;
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel {
 
 		auto backward_to_begin(
 		) -> Void {
-			return thiz.set_position(k_begin_index);
+			return thiz.set_position(0_sz);
 		}
 
 		auto forward_to_end(
@@ -242,7 +242,7 @@ export namespace Twinning::Kernel {
 
 		auto stream_view(
 		) -> ListView {
-			return thiz.sub_view(k_begin_index, thiz.position());
+			return thiz.sub_view(0_sz, thiz.position());
 		}
 
 		auto reserve_view(

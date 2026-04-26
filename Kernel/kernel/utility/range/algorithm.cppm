@@ -226,7 +226,7 @@ export namespace Twinning::Kernel::Range {
 		TRange2 && range_2
 	) -> Size {
 		auto maximum_common_size = minimum(size(range_1), size(range_2));
-		auto size = k_none_size;
+		auto size = 0_sz;
 		auto current_1 = range_1.begin();
 		auto current_2 = range_2.begin();
 		auto end_1 = range_1.begin() + maximum_common_size;
@@ -291,7 +291,7 @@ export namespace Twinning::Kernel::Range {
 		TRange &&      range,
 		TValue const & value
 	) -> Optional<Size> {
-		auto index = k_begin_index;
+		auto index = 0_sz;
 		auto current = range.begin();
 		auto end = range.end();
 		while (current != end) {
@@ -312,7 +312,7 @@ export namespace Twinning::Kernel::Range {
 		TRange &&       range,
 		TFinder const & finder
 	) -> Optional<Size> {
-		auto index = k_begin_index;
+		auto index = 0_sz;
 		auto current = range.begin();
 		auto end = range.end();
 		while (current != end) {
@@ -427,7 +427,7 @@ export namespace Twinning::Kernel::Range {
 		TRange &&      range,
 		TValue const & value
 	) -> Size {
-		auto result = k_none_size;
+		auto result = 0_sz;
 		each(
 			range,
 			[&]<typename TElement>(TElement && element) -> auto {
@@ -447,7 +447,7 @@ export namespace Twinning::Kernel::Range {
 		TRange &&      range,
 		TValueRange && value_range
 	) -> Size {
-		auto result = k_none_size;
+		auto result = 0_sz;
 		each(
 			range,
 			[&]<typename TElement>(TElement && element) -> auto {
@@ -468,7 +468,7 @@ export namespace Twinning::Kernel::Range {
 		TRange &&        range,
 		TChecker const & checker
 	) -> Size {
-		auto result = k_none_size;
+		auto result = 0_sz;
 		each(
 			range,
 			[&]<typename TElement>(TElement && element) -> auto {
@@ -648,7 +648,7 @@ export namespace Twinning::Kernel::Range {
 		TSorter const & sorter
 	) -> Void {
 		for (auto current_1 = range.begin(); current_1 != range.end(); ++current_1) {
-			for (auto current_2 = current_1 + k_next_index; current_2 != range.end(); ++current_2) {
+			for (auto current_2 = current_1 + 1_sz; current_2 != range.end(); ++current_2) {
 				if (sorter(*current_1, *current_2)) {
 					swap(*current_1, *current_2);
 				}

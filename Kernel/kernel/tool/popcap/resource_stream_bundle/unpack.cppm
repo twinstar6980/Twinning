@@ -85,7 +85,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				StringParser::read_string_until(string_manifest_information_data, result, CharacterType::k_null);
 				return result;
 			};
-			manifest.group.allocate_full(k_none_size);
+			manifest.group.allocate_full(0_sz);
 			while (!group_manifest_information_data.full()) {
 				auto   group_manifest_information_structure = group_manifest_information_data.read_of<Structure::GroupManifestInformation<t_version>>();
 				auto & group_manifest = manifest.group.append();

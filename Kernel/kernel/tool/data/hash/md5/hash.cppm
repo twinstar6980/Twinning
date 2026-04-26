@@ -21,7 +21,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Md5 {
 			ByteArray &                  value
 		) -> Void {
 			auto generator = Third::cpp_md5_lib::MD5{};
-			for (auto part_position = k_none_size; part_position < data.size();) {
+			for (auto part_position = 0_sz; part_position < data.size();) {
 				auto part_size = minimum(data.size() - part_position, 0x7FFFFFFF_sz);
 				generator.update(cast_pointer<unsigned char>(data.begin() + part_position).value, static_cast<unsigned int>(part_size.value));
 				part_position += part_size;

@@ -21,7 +21,7 @@ export namespace Twinning::Kernel {
 		Size const & size,
 		Size const & unit
 	) -> Boolean {
-		return size % unit == k_none_size;
+		return size % unit == 0_sz;
 	}
 
 	inline constexpr auto compute_padded_size(

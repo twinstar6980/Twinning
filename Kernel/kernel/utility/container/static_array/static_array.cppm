@@ -147,14 +147,14 @@ export namespace Twinning::Kernel {
 
 		constexpr auto empty(
 		) const -> Boolean {
-			return thiz.size() == k_none_size;
+			return thiz.size() == 0_sz;
 		}
 
 		// ----------------
 
 		constexpr auto begin_index(
 		) const -> Size {
-			return k_begin_index;
+			return 0_sz;
 		}
 
 		constexpr auto end_index(
@@ -173,7 +173,7 @@ export namespace Twinning::Kernel {
 		constexpr auto last_index(
 		) const -> Size {
 			assert_test(!thiz.empty());
-			return thiz.end_index() - k_next_index;
+			return thiz.end_index() - 1_sz;
 		}
 
 		#pragma endregion

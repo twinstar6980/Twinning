@@ -565,13 +565,13 @@ namespace Twinning.AssistantPlus.View.Home {
 
 		// ----------------
 
-		public async void uStorageCacheDirectory_Click(
+		public async void uStorageTemporaryDirectory_Click(
 			Object          sender,
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (await StorageHelper.Exist(App.Instance.CacheDirectory)) {
-				await StorageHelper.Remove(App.Instance.CacheDirectory);
+			if (await StorageHelper.Exist(App.Instance.TemporaryDirectory)) {
+				await StorageHelper.Remove(App.Instance.TemporaryDirectory);
 			}
 			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;

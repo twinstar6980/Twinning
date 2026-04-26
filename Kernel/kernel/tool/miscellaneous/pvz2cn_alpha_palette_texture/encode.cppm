@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 						auto first_block_size = bit_reserve;
 						auto second_block_size = bit_count - first_block_size;
 						auto first_block = clip_bit(index_value, second_block_size, first_block_size);
-						auto second_block = clip_bit(index_value, k_begin_index, second_block_size);
+						auto second_block = clip_bit(index_value, 0_sz, second_block_size);
 						index_data.current() |= first_block;
 						index_data.forward();
 						index_data.current() |= second_block << (k_type_bit_count<Byte> - second_block_size);

@@ -12,22 +12,20 @@ namespace Twinning.Script.ProcessHelper {
 	// #region environment
 
 	export function get_environment(
-		name: string,
-	): null | string {
-		return KernelX.Process.get_environment(name);
-	}
-
-	// ----------------
-
-	export function list_environment(
 	): Record<string, string> {
 		return ConvertHelper.record_from_array(
-			KernelX.Process.list_environment(),
+			KernelX.Process.get_environment(),
 			(index, element) => {
 				let split_index = element.indexOf('=');
 				return [element.slice(0, split_index), element.slice(split_index + 1)];
 			},
 		);
+	}
+
+	export function find_environment(
+		name: string,
+	): null | string {
+		return KernelX.Process.find_environment(name);
 	}
 
 	// #endregion
@@ -48,7 +46,7 @@ namespace Twinning.Script.ProcessHelper {
 			workspace = get_workspace();
 		}
 		if (environment === null) {
-			environment = list_environment();
+			environment = get_environment();
 		}
 		let temporary_directory = StorageHelper.temporary('directory');
 		let temporary_directory_fallback: null | StoragePath = null;
@@ -89,12 +87,12 @@ namespace Twinning.Script.ProcessHelper {
 		}
 		let result: null | StoragePath = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
-		let path_environment = get_environment('PATH');
+		let path_environment = find_environment('PATH');
 		assert_test(path_environment !== null);
 		let path_list = path_environment.split(item_delimiter).map((it) => new StoragePath(it));
 		let path_extension_list = [''];
 		if (KernelX.is_windows && allow_extension) {
-			let path_extension_environment = get_environment('PATHEXT');
+			let path_extension_environment = find_environment('PATHEXT');
 			assert_test(path_extension_environment !== null);
 			path_extension_list.push(...path_extension_environment.split(item_delimiter).map((value) => (value.toLowerCase())));
 		}

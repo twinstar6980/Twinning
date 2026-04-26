@@ -441,7 +441,7 @@ export namespace Twinning::Kernel::StringParser {
 		Size const &               size
 	) -> Void {
 		auto string_stream = InputCharacterStreamView{stream.next_view(size)};
-		length = k_none_size;
+		length = 0_sz;
 		while (!string_stream.full()) {
 			auto current = self_cast<Character8>(string_stream.read_of());
 			auto extra_size = compute_utf8_character_extra_size(current);
@@ -572,7 +572,7 @@ export namespace Twinning::Kernel::StringParser {
 		InputCharacterStreamView & stream
 	) -> ConstantStringView {
 		auto begin = stream.current_pointer();
-		auto length = k_none_size;
+		auto length = 0_sz;
 		while (!stream.full()) {
 			if (stream.read_of() == '\n'_c) {
 				break;
@@ -586,7 +586,7 @@ export namespace Twinning::Kernel::StringParser {
 		InputCharacterStreamView & stream
 	) -> ConstantStringView {
 		auto begin = stream.current_pointer();
-		auto length = k_none_size;
+		auto length = 0_sz;
 		while (!stream.full()) {
 			if (stream.read_of() == '*'_c) {
 				if (stream.read_of() == '/'_c) {

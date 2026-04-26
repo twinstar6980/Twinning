@@ -358,7 +358,7 @@ export namespace Twinning::Kernel {
 		auto unbind(
 		) -> Void {
 			thiz.m_data = k_null_pointer;
-			thiz.m_size = k_none_size;
+			thiz.m_size = 0_sz;
 			return;
 		}
 
@@ -387,7 +387,7 @@ export namespace Twinning::Kernel {
 			if (thiz.m_data != k_null_pointer) {
 				free_instance_array(thiz.m_data);
 			}
-			thiz.m_size = k_none_size;
+			thiz.m_size = 0_sz;
 			return;
 		}
 
@@ -475,7 +475,7 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) -> VariableElement & {
 			if (index >= thiz.end_index()) {
-				thiz.allocate_retain(index + k_next_index);
+				thiz.allocate_retain(index + 1_sz);
 			}
 			return thiz.at(index);
 		}

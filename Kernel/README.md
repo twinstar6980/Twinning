@@ -10,15 +10,15 @@
 
 	* [xmake 3.0](https://xmake.io/#/)
 
-	* [LLVM 21.1 (LLVM-MinGW-ucrt 20251216)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
+	* [LLVM 22.1 (LLVM-MinGW-ucrt 20260421)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 
-	* [LLVM 21.1](https://llvm.org/) for `Linux`
+	* [LLVM 22.1](https://llvm.org/) for `Linux`
 
-	* [LLVM 21.1 (SDK 26.4)](https://llvm.org/) for `Macintosh`
+	* [LLVM 22.1 (SDK 26.4)](https://llvm.org/) for `Macintosh`
 
 	* [LLVM 21.0 (NDK 29.0)](https://developer.android.com/ndk/downloads) for `Android`
 
-	* [LLVM 21.1 (SDK 26.4)](https://llvm.org/) for `Iphone`
+	* [LLVM 22.1 (SDK 26.4)](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
@@ -33,10 +33,10 @@
 |            [lzma 26.00](https://github.com/ip7z/7zip)            |   Lzma 压缩与解压   |
 |    [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)    |  VCDiff 差异分析   |
 |           [avir 3.1](https://github.com/avaneev/avir)            |      图像缩放      |
-|         [etcpak 2.0](https://github.com/wolfpld/etcpak)          |    ETC1 压缩     |
+|         [etcpak 2.1](https://github.com/wolfpld/etcpak)          |    ETC1 压缩     |
 | [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor) |  PVRTC4 压缩与解压  |
-|       [libpng 1.6.55](https://github.com/pnggroup/libpng)        |     PNG 读写     |
-|    [quickjs_ng 0.12.1](https://github.com/quickjs-ng/quickjs)    |     JS 引擎      |
+|       [libpng 1.6.58](https://github.com/pnggroup/libpng)        |     PNG 读写     |
+|    [quickjs_ng 0.14.0](https://github.com/quickjs-ng/quickjs)    |     JS 引擎      |
 
 ## 说明
 

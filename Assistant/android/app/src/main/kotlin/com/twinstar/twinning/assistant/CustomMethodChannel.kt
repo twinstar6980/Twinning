@@ -140,7 +140,7 @@ class CustomMethodChannel {
   private suspend fun handleQueryStorageItem(
     type: String,
   ): String {
-    check(type == "user_home" || type == "application_shared" || type == "application_cache")
+    check(type == "user_home" || type == "application_shared" || type == "application_temporary")
     var target = null as String?
     if (type == "user_home") {
       target = "${Environment.getExternalStorageDirectory().absolutePath}"
@@ -148,8 +148,8 @@ class CustomMethodChannel {
     if (type == "application_shared") {
       target = "${this.host.getExternalFilesDir(null)!!.absolutePath}"
     }
-    if (type == "application_cache") {
-      target = "${this.host.getCacheDir().absolutePath}"
+    if (type == "application_temporary") {
+      target = "${this.host.getCacheDir().absolutePath}/temporary"
     }
     return target!!
   }

@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Size const &    memory_level,
 			Wrapper const & wrapper
 		) -> Void {
-			auto wrap_size = k_none_size;
+			auto wrap_size = 0_sz;
 			switch (wrapper.value) {
 				case Wrapper::Constant::none().value: {
 					wrap_size = 0_sz;

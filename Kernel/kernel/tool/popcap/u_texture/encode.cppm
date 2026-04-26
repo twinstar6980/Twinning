@@ -86,7 +86,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			Image::ImageSize const &          image_size,
 			Texture::Encoding::Format const & format
 		) -> Void {
-			data_size_bound = k_none_size;
+			data_size_bound = 0_sz;
 			data_size_bound += bs_static_size<MagicMarker>();
 			data_size_bound += bs_static_size<Header>();
 			auto texture_data_size = image_size.area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;

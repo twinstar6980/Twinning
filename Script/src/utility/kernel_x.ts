@@ -164,30 +164,17 @@ namespace Twinning.Script.KernelX {
 			return new StoragePath(Kernel.Process.get_workspace().value);
 		}
 
-		export function set_workspace(
-			target: StoragePath,
-		): void {
-			return Kernel.Process.set_workspace(Kernel.Path.value(target.emit()));
-		}
-
 		// ----------------
 
 		export function get_environment(
+		): Array<string> {
+			return Kernel.Process.get_environment().value;
+		}
+
+		export function find_environment(
 			name: string,
 		): null | string {
-			return Kernel.Process.get_environment(Kernel.String.value(name)).value;
-		}
-
-		export function set_environment(
-			name: string,
-			value: null | string,
-		): void {
-			return Kernel.Process.set_environment(Kernel.String.value(name), Kernel.StringOptional.value(value));
-		}
-
-		export function list_environment(
-		): Array<string> {
-			return Kernel.Process.list_environment().value;
+			return Kernel.Process.find_environment(Kernel.String.value(name)).value;
 		}
 
 		// ----------------

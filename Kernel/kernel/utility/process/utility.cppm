@@ -53,7 +53,7 @@ export namespace Twinning::Kernel::Process {
 			String const & source,
 			String &       destination
 		) -> Void {
-			auto current_backslash_count = k_none_size;
+			auto current_backslash_count = 0_sz;
 			destination.append('"'_c);
 			for (auto & element : source) {
 				if (element == '"'_c) {
@@ -67,7 +67,7 @@ export namespace Twinning::Kernel::Process {
 					current_backslash_count += 1_sz;
 				}
 				else {
-					current_backslash_count = k_none_size;
+					current_backslash_count = 0_sz;
 				}
 			}
 			for (auto & index : SizeRange{current_backslash_count}) {
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel::Process {
 			Path const &         program,
 			List<String> const & argument
 		) -> String {
-			auto destination_size = k_none_size;
+			auto destination_size = 0_sz;
 			destination_size += 256_sz + 2_sz;
 			for (auto & element : argument) {
 				destination_size += element.size() * 2_sz + 2_sz;
@@ -106,7 +106,7 @@ export namespace Twinning::Kernel::Process {
 		inline auto encode_windows_environment_string(
 			List<String> const & environment
 		) -> String {
-			auto destination_size = k_none_size;
+			auto destination_size = 0_sz;
 			for (auto & element : environment) {
 				destination_size += element.size() + 1_sz;
 			}
@@ -134,18 +134,34 @@ export namespace Twinning::Kernel::Process {
 		return Path{make_string(self_cast<std::string>(target.generic_u8string()))};
 	}
 
-	inline auto set_workspace(
-		Path const & target
-	) -> Void {
-		std::filesystem::current_path(Storage::Detail::emit_path(target));
-		return;
-	}
-
 	#pragma endregion
 
 	#pragma region environment
 
 	inline auto get_environment(
+	) -> List<String> {
+		auto result = List<String>{};
+		#if defined M_system_windows
+		if (Third::system::windows::$_wenviron() == nullptr) {
+			Third::system::windows::$_wgetenv(L"");
+		}
+		for (auto element_pointer_raw = Third::system::windows::$_wenviron(); *element_pointer_raw != nullptr; ++element_pointer_raw) {
+			auto element_pointer = cast_pointer<CharacterW>(make_pointer(*element_pointer_raw));
+			auto element = self_cast<String>(SystemNativeString::wide_to_utf8(ConstantBasicStringView<CharacterW>{element_pointer, null_terminated_string_size_of(element_pointer)}));
+			result.append(as_moveable(element));
+		}
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		for (auto element_pointer_raw = Third::system::posix::$environ; *element_pointer_raw != nullptr; ++element_pointer_raw) {
+			auto element_pointer = cast_pointer<Character>(make_pointer(*element_pointer_raw));
+			auto element = String{element_pointer, null_terminated_string_size_of(element_pointer)};
+			result.append(as_moveable(element));
+		}
+		#endif
+		return result;
+	}
+
+	inline auto find_environment(
 		String const & name
 	) -> Optional<String> {
 		auto value = Optional<String>{};
@@ -174,60 +190,6 @@ export namespace Twinning::Kernel::Process {
 		}
 		#endif
 		return value;
-	}
-
-	inline auto set_environment(
-		String const &           name,
-		Optional<String> const & value
-	) -> Void {
-		#if defined M_system_windows
-		auto state_b = Third::system::windows::$BOOL{};
-		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(name)));
-		if (!value.has()) {
-			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, nullptr);
-		}
-		else {
-			auto value_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(value.get())));
-			state_b = Third::system::windows::$SetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(value_w.begin()).value);
-		}
-		assert_test(state_b != Third::system::windows::$FALSE);
-		#endif
-		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		auto state_i = int{};
-		if (!value.has()) {
-			state_i = Third::system::posix::$unsetenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value);
-		}
-		else {
-			state_i = Third::system::posix::$setenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value, cast_pointer<char>(make_null_terminated_string(value.get()).begin()).value, 1);
-		}
-		assert_test(state_i == 0);
-		#endif
-		return;
-	}
-
-	// ----------------
-
-	inline auto list_environment(
-	) -> List<String> {
-		auto result = List<String>{};
-		#if defined M_system_windows
-		if (Third::system::windows::$_wenviron() == nullptr) {
-			Third::system::windows::$_wgetenv(L"");
-		}
-		for (auto element_pointer_raw = Third::system::windows::$_wenviron(); *element_pointer_raw != nullptr; ++element_pointer_raw) {
-			auto element_pointer = cast_pointer<CharacterW>(make_pointer(*element_pointer_raw));
-			auto element = self_cast<String>(SystemNativeString::wide_to_utf8(ConstantBasicStringView<CharacterW>{element_pointer, null_terminated_string_size_of(element_pointer)}));
-			result.append(as_moveable(element));
-		}
-		#endif
-		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		for (auto element_pointer_raw = Third::system::posix::$environ; *element_pointer_raw != nullptr; ++element_pointer_raw) {
-			auto element_pointer = cast_pointer<Character>(make_pointer(*element_pointer_raw));
-			auto element = String{element_pointer, null_terminated_string_size_of(element_pointer)};
-			result.append(as_moveable(element));
-		}
-		#endif
-		return result;
 	}
 
 	#pragma endregion

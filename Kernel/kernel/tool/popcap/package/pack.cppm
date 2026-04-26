@@ -45,7 +45,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				information_data.resource_information = OutputByteStreamView{
 					data.forward_view(
 						[&] {
-							auto size = k_none_size;
+							auto size = 0_sz;
 							for (auto & element : information_structure.resource_information) {
 								size += bs_size(Structure::ResourceInformationListStateFlag<t_version>::next);
 								size += bs_size(element);

@@ -17,20 +17,20 @@ namespace Twinning.AssistantPlus.Utility {
 
 		#region environment
 
-		public static String? GetEnvironment(
-			String name
-		) {
-			return Environment.GetEnvironmentVariable(name);
-		}
-
-		// ----------------
-
-		public static Dictionary<String, String> ListEnvironment(
+		public static Dictionary<String, String> GetEnvironment(
 		) {
 			return Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().ToDictionary(
 				(item) => item.Key.As<String>(),
 				(item) => item.Value.AsNotNull().As<String>()
 			);
+		}
+
+		// ----------------
+
+		public static String? FindEnvironment(
+			String name
+		) {
+			return Environment.GetEnvironmentVariable(name);
 		}
 
 		#endregion
@@ -48,7 +48,7 @@ namespace Twinning.AssistantPlus.Utility {
 				workspace = ProcessHelper.GetWorkspace();
 			}
 			if (environment == null) {
-				environment = ProcessHelper.ListEnvironment();
+				environment = ProcessHelper.GetEnvironment();
 			}
 			using var process = new Process();
 			process.StartInfo.UseShellExecute = false;
@@ -84,12 +84,12 @@ namespace Twinning.AssistantPlus.Utility {
 		) {
 			var result = null as StoragePath;
 			var itemDelimiter = ';';
-			var pathEnvironment = ProcessHelper.GetEnvironment("PATH");
+			var pathEnvironment = ProcessHelper.FindEnvironment("PATH");
 			AssertTest(pathEnvironment != null);
 			var pathList = pathEnvironment.Split(itemDelimiter).Select((it) => new StoragePath(it)).ToList();
 			var pathExtensionList = new List<String>([""]);
 			if (allowExtension) {
-				var pathExtensionEnvironment = ProcessHelper.GetEnvironment("PATHEXT");
+				var pathExtensionEnvironment = ProcessHelper.FindEnvironment("PATHEXT");
 				AssertTest(pathExtensionEnvironment != null);
 				pathExtensionList.AddRange(pathExtensionEnvironment.Split(itemDelimiter).Select((it) => it.ToLower()));
 			}

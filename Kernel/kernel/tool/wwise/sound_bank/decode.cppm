@@ -501,7 +501,8 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPureInstance<TRawValue> && IsInstance<TValue ...>>
 			&& (IsIntegerBox<TRawValue>)
 			&& (IsSameOf<t_ignore_reserve, Boolean>)
-			&& ((IsSame<TValue, Boolean const> || IsSame<TValue, Boolean> || IsEnumerationBox<TValue>) && ...)
+		// NOTE: avoid clang bug since v22
+		// && ((IsSame<TValue, Boolean const> || IsSame<TValue, Boolean> || IsEnumerationBox<TValue>) && ...)
 		inline static auto exchange_bit_multi(
 			InputByteStreamView & data,
 			TValue & ...          value
@@ -510,7 +511,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			data.read(raw_value);
 			auto bit_set = BitSet<k_type_bit_count<TRawValue>>{};
 			bit_set.from_integer(raw_value);
-			auto current_index = k_begin_index;
+			auto current_index = 0_sz;
 			Generalization::each_with<>(
 				[&]<auto t_index, typename TCurrentValue>(ValuePackage<t_index>, TCurrentValue & current_value) {
 					if constexpr (IsSame<TCurrentValue, Boolean const>) {

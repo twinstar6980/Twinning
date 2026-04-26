@@ -54,7 +54,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			Size const & window_bits,
 			Size const & memory_level
 		) -> Void {
-			ripe_size_bound = k_none_size;
+			ripe_size_bound = 0_sz;
 			ripe_size_bound += bs_static_size<MagicMarker>();
 			if constexpr (check_version(t_version, {true})) {
 				ripe_size_bound += bs_static_size<IntegerU32>();

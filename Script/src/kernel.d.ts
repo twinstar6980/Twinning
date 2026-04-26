@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 122
+ * @version 123
  */
 declare namespace Twinning.Kernel {
 
@@ -1197,43 +1197,23 @@ declare namespace Twinning.Kernel {
 		function get_workspace(
 		): Path;
 
-		/**
-		 * 设置工作目录
-		 * @param target 工作目录
-		 * @returns 无
-		 */
-		function set_workspace(
-			target: Path,
-		): Void;
-
 		// ----------------
 
 		/**
 		 * 获取环境变量
+		 * @returns 环境变量列表
+		 */
+		function get_environment(
+		): StringList;
+
+		/**
+		 * 获取指定名称的环境变量
 		 * @param name 变量名
 		 * @returns 变量值
 		 */
-		function get_environment(
+		function find_environment(
 			name: String,
 		): StringOptional;
-
-		/**
-		 * 设置环境变量
-		 * @param name 变量名
-		 * @param value 变量值
-		 * @returns 无
-		 */
-		function set_environment(
-			name: String,
-			value: StringOptional,
-		): Void;
-
-		/**
-		 * 列出环境变量
-		 * @returns 环境变量列表
-		 */
-		function list_environment(
-		): StringList;
 
 		// ----------------
 

@@ -9,10 +9,10 @@ module;
 #include "third/etcpak/ProcessRGB.hpp"
 
 // ReSharper disable once CppEnforceFunctionDeclarationStyle
-extern "C++" void DecodeRGBPart(uint64_t d, uint32_t * dst, uint32_t w);
+extern "C++" void Public_DecodeRGBPart(uint64_t d, uint32_t * dst, uint32_t w);
 
 // ReSharper disable once CppEnforceFunctionDeclarationStyle
-extern "C++" void DecodeRGBAPart(uint64_t d, uint64_t alpha, uint32_t * dst, uint32_t w);
+extern "C++" void Public_DecodeRGBAPart(uint64_t d, uint64_t alpha, uint32_t * dst, uint32_t w);
 
 #pragma clang diagnostic pop
 
@@ -26,8 +26,8 @@ export namespace Twinning::Kernel::Third::etcpak {
 
 	using ::CompressEtc2Rgba;
 
-	using ::DecodeRGBPart;
+	using ::Public_DecodeRGBPart;
 
-	using ::DecodeRGBAPart;
+	using ::Public_DecodeRGBAPart;
 
 }

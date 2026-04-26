@@ -27,7 +27,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				auto & node_value = node.get_element();
 				node_value.name = make_string_view(raw_element->Name());
 				{
-					auto attribute_count = k_none_size;
+					auto attribute_count = 0_sz;
 					for (auto raw_attribute = raw_element->FirstAttribute(); raw_attribute; raw_attribute = raw_attribute->Next()) {
 						++attribute_count;
 					}
@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 					}
 				}
 				{
-					auto child_count = k_none_size;
+					auto child_count = 0_sz;
 					for (auto raw_child = raw_element->FirstChild(); raw_child; raw_child = raw_child->NextSibling()) {
 						++child_count;
 					}

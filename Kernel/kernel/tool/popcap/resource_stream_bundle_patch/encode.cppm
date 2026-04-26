@@ -83,14 +83,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			auto information_section_after_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			read_package_information_structure(as_left(InputByteStreamView{before.view()}), information_section_before_structure);
 			read_package_information_structure(as_left(InputByteStreamView{after.view()}), information_section_after_structure);
-			auto information_section_before = before.sub_view(k_begin_index, cbox<Size>(information_section_before_structure.header.information_section_size));
-			auto information_section_after = after.sub_view(k_begin_index, cbox<Size>(information_section_after_structure.header.information_section_size));
+			auto information_section_before = before.sub_view(0_sz, cbox<Size>(information_section_before_structure.header.information_section_size));
+			auto information_section_after = after.sub_view(0_sz, cbox<Size>(information_section_after_structure.header.information_section_size));
 			test_hash(information_section_before, package_information.before_hash);
 			auto information_section_patch_exist = Boolean{};
 			auto information_section_patch_size = Size{};
 			information_section_patch_exist = information_section_after != information_section_before;
 			if (!information_section_patch_exist) {
-				information_section_patch_size = k_none_size;
+				information_section_patch_size = 0_sz;
 			}
 			else {
 				process_sub(information_section_before, information_section_after, patch, information_section_patch_size);
@@ -152,7 +152,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				}
 				packet_patch_exist = packet_after != packet_before;
 				if (!packet_patch_exist) {
-					packet_patch_size = k_none_size;
+					packet_patch_size = 0_sz;
 				}
 				else {
 					process_sub(packet_before, packet_after, patch, packet_patch_size);

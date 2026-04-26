@@ -581,16 +581,6 @@ export namespace Twinning::Kernel {
 
 	#pragma region constant
 
-	inline constexpr auto k_none_size = Size{0_sz};
-
-	// ----------------
-
-	inline constexpr auto k_begin_index = Size{1_ix};
-
-	inline constexpr auto k_next_index = Size{2_ix};
-
-	// ----------------
-
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 	inline constexpr auto k_type_size = Size{mbox<Size>(sizeof(TIt))};

@@ -504,11 +504,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 			s_Process
 				// workspace
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_workspace>>("get_workspace"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_workspace>>("set_workspace"_s)
 				// environment
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_environment>>("get_environment"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::set_environment>>("set_environment"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::list_environment>>("list_environment"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::find_environment>>("find_environment"_s)
 				// process
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::run_process>>("run_process"_s)
 				// command

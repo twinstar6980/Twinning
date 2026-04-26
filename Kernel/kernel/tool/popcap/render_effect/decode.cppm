@@ -166,7 +166,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			InputByteStreamView & data,
 			Definition::Effect &  value
 		) -> Void {
-			auto section_count = k_none_size;
+			auto section_count = 0_sz;
 			if constexpr (check_version(t_version, {}, {1, 3})) {
 				section_count = 7_sz;
 			}

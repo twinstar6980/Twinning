@@ -8,10 +8,10 @@ namespace Twinning.AssistantPlus.Utility {
 	public enum StorageQueryType {
 		UserHome,
 		ApplicationShared,
-		ApplicationCache,
+		ApplicationTemporary,
 		ApplicationPackage,
 		ApplicationPackagedShared,
-		ApplicationPackagedCache,
+		ApplicationPackagedTemporary,
 	}
 
 	public enum StoragePickType {
@@ -392,8 +392,8 @@ namespace Twinning.AssistantPlus.Utility {
 					path = new ($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\{ApplicationInformation.Identifier}");
 					break;
 				}
-				case StorageQueryType.ApplicationCache: {
-					path = new ($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\{ApplicationInformation.Identifier}\\cache");
+				case StorageQueryType.ApplicationTemporary: {
+					path = new ($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\{ApplicationInformation.Identifier}\\temporary");
 					break;
 				}
 				case StorageQueryType.ApplicationPackage: {
@@ -404,8 +404,8 @@ namespace Twinning.AssistantPlus.Utility {
 					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}");
 					break;
 				}
-				case StorageQueryType.ApplicationPackagedCache: {
-					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}\\cache");
+				case StorageQueryType.ApplicationPackagedTemporary: {
+					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}\\temporary");
 					break;
 				}
 				default: throw new UnreachableException();
@@ -528,15 +528,15 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public static async Task<StoragePath> Temporary(
 		) {
-			var parent = App.Instance.CacheDirectory;
+			var parent = App.Instance.TemporaryDirectory;
 			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
-			var result = parent.Join(name);
+			var target = parent.Join(name);
 			var suffix = 0;
-			while (await StorageHelper.Exist(result)) {
+			while (await StorageHelper.Exist(target)) {
 				suffix += 1;
-				result = parent.Join($"{name}.{suffix}");
+				target = parent.Join($"{name}.{suffix}");
 			}
-			return result;
+			return target;
 		}
 
 		public static async Task Trash(

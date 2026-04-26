@@ -18,17 +18,17 @@ class ProcessHelper {
 
   // #region environment
 
-  static String? getEnvironment(
-    String name,
+  static Map<String, String> getEnvironment(
   ) {
-    return Platform.environment[name];
+    return {...Platform.environment};
   }
 
   // ----------------
 
-  static Map<String, String> listEnvironment(
+  static String? findEnvironment(
+    String name,
   ) {
-    return {...Platform.environment};
+    return Platform.environment[name];
   }
 
   // #endregion
@@ -45,7 +45,7 @@ class ProcessHelper {
       workspace = ProcessHelper.getWorkspace();
     }
     if (environment == null) {
-      environment = ProcessHelper.listEnvironment();
+      environment = ProcessHelper.getEnvironment();
     }
     var process = await Process.run(
       program.emitNative(),
@@ -70,12 +70,12 @@ class ProcessHelper {
   ) async {
     var result = null as StoragePath?;
     var itemDelimiter = SystemChecker.isWindows ? ';' : ':';
-    var pathEnvironment = ProcessHelper.getEnvironment('PATH');
+    var pathEnvironment = ProcessHelper.findEnvironment('PATH');
     assertTest(pathEnvironment != null);
     var pathList = pathEnvironment!.split(itemDelimiter).map(StoragePath.of);
     var pathExtensionList = [''];
     if (SystemChecker.isWindows && allowExtension) {
-      var pathExtensionEnvironment = ProcessHelper.getEnvironment('PATHEXT');
+      var pathExtensionEnvironment = ProcessHelper.findEnvironment('PATHEXT');
       assertTest(pathExtensionEnvironment != null);
       pathExtensionList.addAll(pathExtensionEnvironment!.split(itemDelimiter).map((it) => it.toLowerCase()));
     }

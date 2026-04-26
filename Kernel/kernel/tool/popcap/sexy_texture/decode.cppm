@@ -101,7 +101,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
 				texture_data_view = data.forward_view(texture_data_size);
-				assert_test(compress_texture_data_size == k_none_size);
+				assert_test(compress_texture_data_size == 0_sz);
 			}
 			else {
 				texture_data_container.allocate(texture_data_size);

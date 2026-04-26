@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Image {
 
 		auto size(
 		) const -> ImageSize {
-			return thiz.m_data.empty() ? (k_none_image_size) : (ImageSize{thiz.m_data.first().size(), thiz.m_data.size()});
+			return thiz.m_data.empty() ? (ImageSize{0_sz, 0_sz}) : (ImageSize{thiz.m_data.first().size(), thiz.m_data.size()});
 		}
 
 		#pragma endregion

@@ -12,7 +12,7 @@ import 'package:win32/win32.dart' as lib;
 enum StorageQueryType {
   userHome,
   applicationShared,
-  applicationCache,
+  applicationTemporary,
 }
 
 enum StoragePickType {
@@ -398,15 +398,15 @@ class StorageHelper {
 
   static Future<StoragePath> temporary(
   ) async {
-    var parent = await StorageHelper.query(.applicationCache);
+    var parent = await StorageHelper.query(.applicationTemporary);
     var name = DateTime.now().millisecondsSinceEpoch.toString();
-    var result = parent.join(name);
+    var target = parent.join(name);
     var suffix = 0;
-    while (await exist(result)) {
+    while (await exist(target)) {
       suffix += 1;
-      result = parent.join('${name}.${suffix}');
+      target = parent.join('${name}.${suffix}');
     }
-    return result;
+    return target;
   }
 
   // #endregion

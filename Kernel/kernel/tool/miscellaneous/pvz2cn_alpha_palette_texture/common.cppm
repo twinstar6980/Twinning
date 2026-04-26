@@ -17,7 +17,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 			List<Image::Color> const & palette
 		) -> Size {
 			assert_test(0b1_sz < palette.size() && palette.size() <= 0b1_sz << k_maximum_bit_count);
-			auto bit_count = k_none_size;
+			auto bit_count = 0_sz;
 			for (auto & index : SizeRange{k_maximum_bit_count}) {
 				++bit_count;
 				if (palette.size() <= 0b1_sz << bit_count) {

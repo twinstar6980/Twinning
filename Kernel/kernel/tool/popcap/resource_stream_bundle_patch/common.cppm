@@ -111,7 +111,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					)
 				)
 			);
-			ripe.write(raw.sub_view(k_begin_index, cbox<Size>(information_structure.header.information_section_size)));
+			ripe.write(raw.sub_view(0_sz, cbox<Size>(information_structure.header.information_section_size)));
 			ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 			auto resource_data_section_compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			{
@@ -129,7 +129,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			{
 				information_structure.header.texture_resource_data_section_offset = cbox<IntegerU32>(ripe.position());
 				auto resource_data_section_view = raw.sub_view(cbox<Size>(information_structure.header.texture_resource_data_section_offset), cbox<Size>(information_structure.header.texture_resource_data_section_size_original));
-				if (!resource_data_section_compression.texture || cbox<Size>(information_structure.header.texture_resource_data_section_size_original) == k_none_size) {
+				if (!resource_data_section_compression.texture || cbox<Size>(information_structure.header.texture_resource_data_section_size_original) == 0_sz) {
 					ripe.write(resource_data_section_view);
 				}
 				else {
@@ -166,7 +166,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					)
 				)
 			);
-			raw.write(ripe.sub_view(k_begin_index, cbox<Size>(information_structure.header.information_section_size)));
+			raw.write(ripe.sub_view(0_sz, cbox<Size>(information_structure.header.information_section_size)));
 			raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
 			auto resource_data_section_compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			{
@@ -181,7 +181,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			}
 			{
 				auto resource_data_section_view = ripe.sub_view(cbox<Size>(information_structure.header.texture_resource_data_section_offset), cbox<Size>(information_structure.header.texture_resource_data_section_size));
-				if (!resource_data_section_compression.texture || cbox<Size>(information_structure.header.texture_resource_data_section_size_original) == k_none_size) {
+				if (!resource_data_section_compression.texture || cbox<Size>(information_structure.header.texture_resource_data_section_size_original) == 0_sz) {
 					raw.write(resource_data_section_view);
 				}
 				else {

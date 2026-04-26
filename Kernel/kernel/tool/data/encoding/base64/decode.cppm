@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 			Size &                            raw_size
 		) -> Void {
 			assert_test(is_padded_size(ripe.size(), k_ripe_block_size));
-			auto padding_size = k_none_size;
+			auto padding_size = 0_sz;
 			if (!ripe.empty()) {
 				if (ripe[ripe.last_index() - 1_ix] == k_padding_character) {
 					++padding_size;

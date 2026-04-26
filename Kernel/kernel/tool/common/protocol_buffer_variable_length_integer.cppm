@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		InputByteStreamView & stream
 	) -> IntegerU32 {
 		auto value = 0_iu32;
-		for (auto & shift_count : SizeRange{k_begin_index, k_type_bit_count<IntegerU32>, 7_sz}) {
+		for (auto & shift_count : SizeRange{0_sz, k_type_bit_count<IntegerU32>, 7_sz}) {
 			auto byte = stream.read_of();
 			if ((byte & k_b) != k_z) {
 				value |= cbox<IntegerU32>(byte & k_x) << shift_count;
@@ -104,7 +104,7 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		InputByteStreamView & stream
 	) -> IntegerU64 {
 		auto value = 0_iu64;
-		for (auto & shift_count : SizeRange{k_begin_index, k_type_bit_count<IntegerU64>, 7_sz}) {
+		for (auto & shift_count : SizeRange{0_sz, k_type_bit_count<IntegerU64>, 7_sz}) {
 			auto byte = stream.read_of();
 			if ((byte & k_b) != k_z) {
 				value |= cbox<IntegerU64>(byte & k_x) << shift_count;

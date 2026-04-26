@@ -13,6 +13,9 @@ export module twinning.kernel.third.quickjs_ng;
 
 export namespace Twinning::Kernel::Third::quickjs_ng {
 
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-WTU-local-entity-exposure"
+
 	using $JSRuntime = JSRuntime;
 
 	using $JSContext = JSContext;
@@ -188,5 +191,7 @@ export namespace Twinning::Kernel::Third::quickjs_ng {
 	) -> void * {
 		return JS_VALUE_GET_PTR(v);
 	}
+
+	#pragma clang diagnostic pop
 
 }

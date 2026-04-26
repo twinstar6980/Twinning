@@ -119,7 +119,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zerod_out)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
-						assert_test(chunk_size_compressed == k_none_size);
+						assert_test(chunk_size_compressed == 0_sz);
 						chunk_definition.flag = "zerod_out"_s;
 						Range::assign(chunk_data, k_null_byte);
 					}

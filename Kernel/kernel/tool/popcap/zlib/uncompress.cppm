@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			ConstantByteListView const & ripe,
 			Size &                       raw_size
 		) -> Void {
-			raw_size = k_none_size;
+			raw_size = 0_sz;
 			auto ripe_stream = InputByteStreamView{ripe};
 			ripe_stream.read_constant(k_magic_marker);
 			if constexpr (check_version(t_version, {true})) {

@@ -48,7 +48,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			Size const & plain_size,
 			Size &       cipher_size
 		) -> Void {
-			cipher_size = k_none_size;
+			cipher_size = 0_sz;
 			cipher_size += bs_static_size<MagicMarker>();
 			cipher_size += compute_padded_size(plain_size, k_crypt_block_size);
 			return;

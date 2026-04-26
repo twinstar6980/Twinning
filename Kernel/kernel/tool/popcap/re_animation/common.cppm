@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static constexpr auto k_transform_data_size = [] {
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_static_size<FloaterS32>();
 			size += bs_static_size<FloaterS32>();
 			size += bs_static_size<FloaterS32>();
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		}();
 
 		inline static constexpr auto k_track_data_size = [] {
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_static_size<IntegerOfPlatform>();
 			size += bs_static_size<IntegerOfPlatform>();
 			if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {

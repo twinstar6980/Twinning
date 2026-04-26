@@ -55,8 +55,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			Structure::Header<t_version> & header_structure,
 			Manifest::Package const &      manifest
 		) -> Void {
-			auto resource_manifest_information_data_size = k_none_size;
-			auto string_manifest_information_data_size = k_none_size;
+			auto resource_manifest_information_data_size = 0_sz;
+			auto string_manifest_information_data_size = 0_sz;
 			auto group_manifest_information_structure_list = List<Structure::GroupManifestInformation<t_version>>{};
 			auto resource_detail_manifest_information_structure_list = List<Structure::ResourceDetailManifestInformation<t_version>>{};
 			auto string_map = std::unordered_map<String, Size>{};
@@ -201,11 +201,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<t_version>{};
-				auto global_group_count = k_none_size;
-				auto global_subgroup_count = k_none_size;
-				auto global_resource_count = k_none_size;
-				auto global_general_resource_count = k_none_size;
-				auto global_texture_resource_count = k_none_size;
+				auto global_group_count = 0_sz;
+				auto global_subgroup_count = 0_sz;
+				auto global_resource_count = 0_sz;
+				auto global_general_resource_count = 0_sz;
+				auto global_texture_resource_count = 0_sz;
 				global_group_count += definition.group.size();
 				for (auto & group_definition : definition.group) {
 					global_subgroup_count += group_definition.subgroup.size();
@@ -233,11 +233,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				information_structure.pool_information.allocate_full(global_subgroup_count);
 				information_structure.resource_path.allocate_full(global_resource_count);
 				information_structure.texture_resource_information.allocate_full(global_texture_resource_count);
-				auto global_group_index = k_begin_index;
-				auto global_subgroup_index = k_begin_index;
-				auto global_resource_index = k_begin_index;
-				auto global_general_resource_index = k_begin_index;
-				auto global_texture_resource_index = k_begin_index;
+				auto global_group_index = 0_sz;
+				auto global_subgroup_index = 0_sz;
+				auto global_resource_index = 0_sz;
+				auto global_general_resource_index = 0_sz;
+				auto global_texture_resource_index = 0_sz;
 				for (auto & group_index : SizeRange{definition.group.size()}) {
 					auto & group_definition = definition.group[group_index];
 					auto & group_identifier_structure = information_structure.group_identifier.at(global_group_index);
@@ -314,11 +314,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			if constexpr (check_version(t_version, {3}, {})) {
 				information_structure.header.unknown_1 = 0_iu32;
 			}
-			auto global_group_count = k_none_size;
-			auto global_subgroup_count = k_none_size;
-			auto global_resource_count = k_none_size;
-			auto global_general_resource_count = k_none_size;
-			auto global_texture_resource_count = k_none_size;
+			auto global_group_count = 0_sz;
+			auto global_subgroup_count = 0_sz;
+			auto global_resource_count = 0_sz;
+			auto global_general_resource_count = 0_sz;
+			auto global_texture_resource_count = 0_sz;
 			global_group_count += definition.group.size();
 			for (auto & group_definition : definition.group) {
 				global_subgroup_count += group_definition.subgroup.size();
@@ -365,9 +365,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				process_package_manifest(data, information_structure.header, manifest.get());
 			}
 			else {
-				information_structure.header.group_manifest_information_section_offset = cbox<IntegerU32>(k_none_size);
-				information_structure.header.resource_manifest_information_section_offset = cbox<IntegerU32>(k_none_size);
-				information_structure.header.string_manifest_information_section_offset = cbox<IntegerU32>(k_none_size);
+				information_structure.header.group_manifest_information_section_offset = cbox<IntegerU32>(0_sz);
+				information_structure.header.resource_manifest_information_section_offset = cbox<IntegerU32>(0_sz);
+				information_structure.header.string_manifest_information_section_offset = cbox<IntegerU32>(0_sz);
 			}
 			data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
 			information_structure.header.information_section_size = cbox<IntegerU32>(data.position());
@@ -378,11 +378,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			information_structure.pool_information.allocate_full(global_subgroup_count);
 			information_structure.resource_path.allocate_full(global_resource_count);
 			information_structure.texture_resource_information.allocate_full(global_texture_resource_count);
-			auto global_group_index = k_begin_index;
-			auto global_subgroup_index = k_begin_index;
-			auto global_resource_index = k_begin_index;
-			auto global_general_resource_index = k_begin_index;
-			auto global_texture_resource_index = k_begin_index;
+			auto global_group_index = 0_sz;
+			auto global_subgroup_index = 0_sz;
+			auto global_resource_index = 0_sz;
+			auto global_general_resource_index = 0_sz;
+			auto global_texture_resource_index = 0_sz;
 			for (auto & group_index : SizeRange{definition.group.size()}) {
 				auto & group_definition = definition.group[group_index];
 				auto & group_identifier_structure = information_structure.group_identifier.at(global_group_index);
@@ -431,7 +431,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						return Path{format_string(path_format.emit(), group_definition.identifier, subgroup_definition.identifier)};
 					};
 					auto texture_resource_begin = global_texture_resource_index;
-					auto texture_resource_count = k_none_size;
+					auto texture_resource_count = 0_sz;
 					for (auto & resource_index : SizeRange{subgroup_definition.resource.size()}) {
 						auto & resource_definition = subgroup_definition.resource[resource_index];
 						auto & resource_path_structure = information_structure.resource_path.at(global_resource_index);

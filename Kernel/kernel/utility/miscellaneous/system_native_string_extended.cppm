@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 					nullptr
 				)
 			);
-			assert_test(destination_size != k_none_size);
+			assert_test(destination_size != 0_sz);
 			destination.allocate_full(destination_size);
 			destination_size = mbox<Size>(
 				Third::system::windows::$WideCharToMultiByte(
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 					0
 				)
 			);
-			assert_test(destination_size != k_none_size);
+			assert_test(destination_size != 0_sz);
 			destination.allocate_full(destination_size);
 			destination_size = mbox<Size>(
 				Third::system::windows::$MultiByteToWideChar(
@@ -107,7 +107,7 @@ export namespace Twinning::Kernel::SystemNativeString {
 					0
 				)
 			);
-			assert_test(destination_size != k_none_size);
+			assert_test(destination_size != 0_sz);
 			destination.allocate_full(destination_size);
 			destination_size = mbox<Size>(
 				Third::system::windows::$MultiByteToWideChar(

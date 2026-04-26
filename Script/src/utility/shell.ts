@@ -63,7 +63,7 @@ namespace Twinning.Script.Shell {
 	// ----------------
 
 	export function assistant_query_storage_item(
-		type: 'user_home' | 'application_shared' | 'application_cache',
+		type: 'user_home' | 'application_shared' | 'application_temporary',
 	): {target: string} {
 		let result = callback(['query_storage_item', type]);
 		return {target: result[0]};

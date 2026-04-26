@@ -157,7 +157,7 @@ export namespace Twinning::Kernel::Storage {
 				auto & segment = thiz.m_segment.last();
 				auto   position = Range::find_index(Range::make_reverse_range_of(segment), CharacterType::k_path_dot);
 				if (position.has()) {
-					result.set(segment.head(segment.size() - k_next_index - position.get()));
+					result.set(segment.head(segment.size() - 1_sz - position.get()));
 				}
 				else {
 					result.set(segment);
@@ -230,7 +230,7 @@ export namespace Twinning::Kernel::Storage {
 			thiz.m_type = PathType::Constant::detached();
 			thiz.m_root.reset();
 			thiz.m_segment.reset();
-			auto position = k_begin_index;
+			auto position = 0_sz;
 			if (text.size() >= 2_sz && CharacterType::is_letter(text[1_ix]) && CharacterType::is_path_volume_separator(text[2_ix])) {
 				position += 2_sz;
 				if (position < text.size() && CharacterType::is_path_directory_separator(text[position])) {
@@ -313,7 +313,7 @@ export namespace Twinning::Kernel::Storage {
 			}
 			for (auto & segment_index : SizeRange{thiz.m_segment.size()}) {
 				auto & segment = thiz.m_segment[segment_index];
-				if (segment_index != k_begin_index) {
+				if (segment_index != 0_sz) {
 					text.append(path_directory_separator);
 				}
 				if (!rectify) {
@@ -325,7 +325,7 @@ export namespace Twinning::Kernel::Storage {
 					}
 					if (style == PathStyle::Constant::windows()) {
 						auto segment_size = segment.size();
-						while (segment_size != k_none_size) {
+						while (segment_size != 0_sz) {
 							if (segment[segment_size - 1_sz] == ' '_c) {
 								segment_size -= 1_sz;
 								continue;

@@ -519,7 +519,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_size(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
 				size += bs_size(that.image_property_information.get());
@@ -579,7 +579,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_size(up_cast<ResourceBasicManifestInformation<t_version>>(that));
 			return size;
 		}
@@ -622,7 +622,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_size(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
 			size += bs_size(that.resource_information);
 			return size;
@@ -668,7 +668,7 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
-			auto size = k_none_size;
+			auto size = 0_sz;
 			size += bs_size(up_cast<GroupBasicManifestInformation<t_version>>(that));
 			size += bs_size(that.subgroup_information);
 			return size;

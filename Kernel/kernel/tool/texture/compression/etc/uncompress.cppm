@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 			auto image_block = Array<Image::Pixel>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
-					Third::etcpak::DecodeRGBPart(*cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
+					Third::etcpak::Public_DecodeRGBPart(*cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
 					data.forward(k_block_width * k_block_width * k_bpp_rgb / k_type_bit_count<Byte>);
 					for (auto & pixel_y : SizeRange{k_block_width}) {
 						for (auto & pixel_x : SizeRange{k_block_width}) {
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 			auto image_block = Array<Image::Pixel>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
-					Third::etcpak::DecodeRGBPart(*cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
+					Third::etcpak::Public_DecodeRGBPart(*cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
 					data.forward(k_block_width * k_block_width * k_bpp_rgb / k_type_bit_count<Byte>);
 					for (auto & pixel_y : SizeRange{k_block_width}) {
 						for (auto & pixel_x : SizeRange{k_block_width}) {
@@ -75,7 +75,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 			auto image_block = Array<Image::Pixel>{k_block_width * k_block_width};
 			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
 				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
-					Third::etcpak::DecodeRGBAPart(*(cast_pointer<std::uint64_t>(data.current_pointer()) + 1_sz).value, *cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
+					Third::etcpak::Public_DecodeRGBAPart(*(cast_pointer<std::uint64_t>(data.current_pointer()) + 1_sz).value, *cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
 					data.forward(k_block_width * k_block_width * k_bpp_rgba / k_type_bit_count<Byte>);
 					for (auto & pixel_y : SizeRange{k_block_width}) {
 						for (auto & pixel_x : SizeRange{k_block_width}) {

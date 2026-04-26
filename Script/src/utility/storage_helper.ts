@@ -184,7 +184,7 @@ namespace Twinning.Script.StorageHelper {
 	// #region shell
 
 	export function query_storage_item(
-		type: 'user_home' | 'application_shared' | 'application_cache',
+		type: 'user_home' | 'application_shared' | 'application_temporary',
 	): null | StoragePath {
 		let target: null | StoragePath = undefined!;
 		if (Shell.is_basic) {
@@ -233,19 +233,19 @@ namespace Twinning.Script.StorageHelper {
 	export function temporary(
 		create: null | 'file' | 'directory',
 	): StoragePath {
-		let temporary_parent = HomePath.temporary();
+		let parent = HomePath.temporary();
 		if (Shell.is_assistant) {
-			temporary_parent = StorageHelper.query_storage_item('application_cache')!;
+			parent = StorageHelper.query_storage_item('application_temporary')!;
 		}
-		let temporary_name = ConvertHelper.make_date_to_string_simple(new Date());
-		let temporary_path = StorageHelper.generate_suffix_path(temporary_parent.join(temporary_name), null);
+		let name = ConvertHelper.make_date_to_string_simple(new Date());
+		let target = StorageHelper.generate_suffix_path(parent.join(name), null);
 		if (create === 'file') {
-			StorageHelper.create_file(temporary_path);
+			StorageHelper.create_file(target);
 		}
 		if (create === 'directory') {
-			StorageHelper.create_directory(temporary_path);
+			StorageHelper.create_directory(target);
 		}
-		return temporary_path;
+		return target;
 	}
 
 	// #endregion

@@ -1,5 +1,5 @@
 -- etcpak
--- 2.0 a43d6925bee49277945cf3e311e4a022ae0c2073
+-- 2.1 7f15da4739cc5f8562311bdbb800436986d268ca
 -- https://github.com/wolfpld/etcpak
 
 target('third.etcpak', function()
@@ -7,13 +7,13 @@ target('third.etcpak', function()
 	set_kind('static')
 	add_headerfiles(
 		'getopt/getopt.h',
-		'lz4/lz4.h',
 		'Bitmap.hpp',
 		'BitmapDownsampled.hpp',
 		'BlockData.hpp',
 		'ColorSpace.hpp',
 		'DataProvider.hpp',
 		'Debug.hpp',
+		'Decode.hpp',
 		'Dither.hpp',
 		'Error.hpp',
 		'ForceInline.hpp',
@@ -26,6 +26,7 @@ target('third.etcpak', function()
 		'System.hpp',
 		'Tables.hpp',
 		'TaskDispatch.hpp',
+		'TextureHeader.hpp',
 		'Timing.hpp',
 		'Vector.hpp',
 		'bc7enc.h',
@@ -35,7 +36,6 @@ target('third.etcpak', function()
 	)
 	add_files(
 		'getopt/getopt.c',
-		'lz4/lz4.c',
 		'Application.cpp',
 		'Bitmap.cpp',
 		'BitmapDownsampled.cpp',
@@ -43,6 +43,7 @@ target('third.etcpak', function()
 		'ColorSpace.cpp',
 		'DataProvider.cpp',
 		'Debug.cpp',
+		'Decode.cpp',
 		'Dither.cpp',
 		'Error.cpp',
 		'ProcessDxtc.cpp',
@@ -50,6 +51,7 @@ target('third.etcpak', function()
 		'System.cpp',
 		'Tables.cpp',
 		'TaskDispatch.cpp',
+		'TextureHeader.cpp',
 		'Timing.cpp',
 		'bc7enc.cpp',
 		'bcdec.c',
@@ -57,7 +59,7 @@ target('third.etcpak', function()
 		{}
 	)
 	add_includedirs(
-		'..',
+		'../libpng',
 		{ public = true }
 	)
 	add_deps(

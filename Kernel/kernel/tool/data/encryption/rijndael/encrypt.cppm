@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 			assert_test(is_padded_size(bs_size(iv) * k_type_bit_count<Character>, block_size));
 			auto iv_view = mode == Mode::Constant::ecb() ? (k_empty_iv.view().head(block_size)) : (iv.view());
 			auto plain_size = plain.reserve();
-			if (plain_size != k_none_size) {
+			if (plain_size != 0_sz) {
 				auto rijndael = Third::Rijndael::CRijndael{};
 				rijndael.MakeKey(cast_pointer<char>(key.begin()).value, cast_pointer<char>(iv_view.begin()).value, static_cast<int>(key_size.value), static_cast<int>(block_size.value));
 				rijndael.Encrypt(cast_pointer<char>(plain.current_pointer()).value, cast_pointer<char>(cipher.current_pointer()).value, plain.reserve().value, static_cast<int>(mode.value));

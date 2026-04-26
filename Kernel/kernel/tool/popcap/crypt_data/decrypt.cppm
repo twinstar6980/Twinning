@@ -53,7 +53,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 			Size &                       plain_size,
 			Size const &                 limit
 		) -> Void {
-			plain_size = k_none_size;
+			plain_size = 0_sz;
 			if (cipher.size() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
 				auto cipher_stream = InputByteStreamView{cipher};
 				cipher_stream.read_constant(k_magic_marker);

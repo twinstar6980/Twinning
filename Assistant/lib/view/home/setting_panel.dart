@@ -551,7 +551,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         icon: IconSet.folder_delete,
-        label: 'Cache Directory',
+        label: 'Temporary Directory',
         comment: [],
         onPressed: null,
         panelBuilder: (context, setStateForPanel) => [
@@ -560,9 +560,9 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Clear'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var cacheDirectory = await StorageHelper.query(.applicationCache);
-              if (await StorageHelper.exist(cacheDirectory)) {
-                await StorageHelper.remove(cacheDirectory);
+              var temporaryDirectory = await StorageHelper.query(.applicationTemporary);
+              if (await StorageHelper.exist(temporaryDirectory)) {
+                await StorageHelper.remove(temporaryDirectory);
               }
               await StyledSnackExtension.show(context, 'Done!');
             },

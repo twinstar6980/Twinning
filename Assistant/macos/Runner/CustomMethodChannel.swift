@@ -87,7 +87,7 @@ class CustomMethodChannel: NSObject {
   private func handleQueryStorageItem(
     type: String,
   ) async throws -> String {
-    guard type == "user_home" || type == "application_shared" || type == "application_cache" else {
+    guard type == "user_home" || type == "application_shared" || type == "application_temporary" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     var target: String? = nil
@@ -97,8 +97,8 @@ class CustomMethodChannel: NSObject {
     if type == "application_shared" {
       target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())"
     }
-    if type == "application_cache" {
-      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/cache"
+    if type == "application_temporary" {
+      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/temporary"
     }
     return target!
   }
