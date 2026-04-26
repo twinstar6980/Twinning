@@ -484,7 +484,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			SplitButtonClickEventArgs args
 		) {
 			var senders = sender.As<SplitButton>();
-			await StorageHelper.Reveal(App.Instance.Setting.File);
+			var target = await App.Instance.Setting.File();
+			await StorageHelper.Reveal(target);
 			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
@@ -558,7 +559,8 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			await StorageHelper.Reveal(App.Instance.SharedDirectory);
+			var target = await StorageHelper.Query(StorageQueryType.ApplicationShared);
+			await StorageHelper.Reveal(target);
 			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;
 		}
@@ -570,8 +572,9 @@ namespace Twinning.AssistantPlus.View.Home {
 			RoutedEventArgs args
 		) {
 			var senders = sender.As<Button>();
-			if (await StorageHelper.Exist(App.Instance.TemporaryDirectory)) {
-				await StorageHelper.Remove(App.Instance.TemporaryDirectory);
+			var target = await StorageHelper.Query(StorageQueryType.ApplicationTemporary);
+			if (await StorageHelper.Exist(target)) {
+				await StorageHelper.Remove(target);
 			}
 			await App.Instance.MainWindow.PushNotification(InfoBarSeverity.Success, "Done!", "");
 			return;

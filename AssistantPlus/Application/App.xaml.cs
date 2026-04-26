@@ -21,10 +21,6 @@ namespace Twinning.AssistantPlus {
 
 		public StoragePath ProgramFile { get; private set; }
 
-		public StoragePath SharedDirectory { get; private set; }
-
-		public StoragePath TemporaryDirectory { get; private set; }
-
 		public SettingProvider Setting { get; }
 
 		public View.Home.MainWindow MainWindow { get; private set; }
@@ -45,8 +41,6 @@ namespace Twinning.AssistantPlus {
 			App.Instance = this;
 			this.PackageDirectory = null!;
 			this.ProgramFile = null!;
-			this.SharedDirectory = null!;
-			this.TemporaryDirectory = null!;
 			this.Setting = new ();
 			this.MainWindow = null!;
 			this.InitializeComponent();
@@ -62,8 +56,6 @@ namespace Twinning.AssistantPlus {
 				var argument = Environment.GetCommandLineArgs()[1..];
 				this.PackageDirectory = await StorageHelper.Query(StorageQueryType.ApplicationPackage);
 				this.ProgramFile = this.PackageDirectory.Join("Application.exe");
-				this.SharedDirectory = await StorageHelper.Query(StorageQueryType.ApplicationShared);
-				this.TemporaryDirectory = await StorageHelper.Query(StorageQueryType.ApplicationTemporary);
 				await ApplicationExceptionManager.Instance.Initialize(this);
 				await ApplicationExceptionManager.Instance.Listen(async (exception) => {
 					await this.HandleException(exception, this.MainWindow);

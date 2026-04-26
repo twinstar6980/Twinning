@@ -485,6 +485,15 @@ class _SettingPanelState extends State<SettingPanel> {
         onPressed: null,
         panelBuilder: (context, setStateForPanel) => [
           StyledListTile.standard(
+            leading: IconView.of(IconSet.file_open),
+            content: StyledText.inherit('Reveal'),
+            onPressed: (context) async {
+              Navigator.pop(context);
+              var target = await setting.file;
+              await MoreModalDialogExtension.showForRevealStoragePath(context, 'Setting File', target);
+            },
+          ),
+          StyledListTile.standard(
             leading: IconView.of(IconSet.refresh),
             content: StyledText.inherit('Reload'),
             onPressed: (context) async {
@@ -544,7 +553,8 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Reveal'),
             onPressed: (context) async {
               Navigator.pop(context);
-              await MoreModalDialogExtension.showForRevealStoragePath(context, 'Shared Directory', await StorageHelper.query(.applicationShared));
+              var target = await StorageHelper.query(.applicationShared);
+              await MoreModalDialogExtension.showForRevealStoragePath(context, 'Shared Directory', target);
             },
           ),
         ],
@@ -560,9 +570,9 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Clear'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var temporaryDirectory = await StorageHelper.query(.applicationTemporary);
-              if (await StorageHelper.exist(temporaryDirectory)) {
-                await StorageHelper.remove(temporaryDirectory);
+              var target = await StorageHelper.query(.applicationTemporary);
+              if (await StorageHelper.exist(target)) {
+                await StorageHelper.remove(target);
               }
               await StyledSnackExtension.show(context, 'Done!');
             },

@@ -144,7 +144,8 @@ class SettingProvider with ChangeNotifier {
 
   // #region storage
 
-  Future<StoragePath> get file async {
+  Future<StoragePath> file(
+  ) async {
     return (await StorageHelper.query(.applicationShared)).join('setting.json');
   }
 
@@ -153,7 +154,9 @@ class SettingProvider with ChangeNotifier {
   Future<Void> load({
     StoragePath? file = null,
   }) async {
-    file ??= await this.file;
+    if (file == null) {
+      file = await this.file();
+    }
     this.data = SettingProvider._parseDataFromJson(await JsonHelper.decodeFile(file));
     return;
   }
@@ -162,7 +165,9 @@ class SettingProvider with ChangeNotifier {
     StoragePath? file = null,
     Boolean      apply = true,
   }) async {
-    file ??= await this.file;
+    if (file == null) {
+      file = await this.file();
+    }
     if (apply) {
       await this.apply();
     }

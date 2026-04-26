@@ -27,14 +27,14 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public async Task<Boolean> CheckForwarder(
 		) {
-			var stateFile = App.Instance.SharedDirectory.Join("forwarder");
+			var stateFile = (await StorageHelper.Query(StorageQueryType.ApplicationShared)).Join("forwarder");
 			return await StorageHelper.Exist(stateFile);
 		}
 
 		public async Task ToggleForwarder(
 			Boolean state
 		) {
-			var stateFile = App.Instance.SharedDirectory.Join("forwarder");
+			var stateFile = (await StorageHelper.Query(StorageQueryType.ApplicationShared)).Join("forwarder");
 			var exist = await StorageHelper.Exist(stateFile);
 			if (!state && exist) {
 				await StorageHelper.Remove(stateFile);

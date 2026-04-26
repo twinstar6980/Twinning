@@ -10,8 +10,6 @@ namespace Twinning.AssistantPlus.Utility {
 		ApplicationShared,
 		ApplicationTemporary,
 		ApplicationPackage,
-		ApplicationPackagedShared,
-		ApplicationPackagedTemporary,
 	}
 
 	public enum StoragePickType {
@@ -400,14 +398,6 @@ namespace Twinning.AssistantPlus.Utility {
 					path = new ($"{Package.Current.InstalledPath}");
 					break;
 				}
-				case StorageQueryType.ApplicationPackagedShared: {
-					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}");
-					break;
-				}
-				case StorageQueryType.ApplicationPackagedTemporary: {
-					path = new ($"{Windows.Storage.ApplicationData.Current.LocalFolder.Path}\\temporary");
-					break;
-				}
 				default: throw new UnreachableException();
 			}
 			return path;
@@ -528,7 +518,7 @@ namespace Twinning.AssistantPlus.Utility {
 
 		public static async Task<StoragePath> Temporary(
 		) {
-			var parent = App.Instance.TemporaryDirectory;
+			var parent = await StorageHelper.Query(StorageQueryType.ApplicationTemporary);
 			var name = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
 			var target = parent.Join(name);
 			var suffix = 0;
