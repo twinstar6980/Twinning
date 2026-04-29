@@ -36,8 +36,6 @@
 
 `Assistant` 基于 `Kernel` 、`Script` 等模块实现了多种子功能模块。
 
-`Assistant Plus` 是 `Assistant` 在 `Windows` 平台的特化版本，界面样式与 `Windows 11` 系统更加契合。
-
 可以通过命令行参数传递命令，这在 `Windows` 、`Linux` 、`Macintosh` 系统中可用：
 
 * ***`application`***
@@ -81,8 +79,6 @@
 	  命令参数。可以多次指定，所有查询值被视作字符串数组。
 
 > 通过应用链接启动应用时，只会在不存在应用实例时才会创建新的应用实例，如果系统中已存在的应用实例，会将其切换至前台并应用新的命令参数。
-
-> `Assistant Plus` 的命令格式与 `Assistant` 类似，但指令名使用驼峰风格 *CamelCase* 而非蛇形风格 *snack_case* 。
 
 应用还提供了文件的转发器扩展支持，这在 `Windows` 、`Macintosh` 、`Android` 、`Iphone` 系统中可用：
 
@@ -130,19 +126,17 @@
 
   > 将解码 `*.pam` 文件所得的 `*.pam.json` 文件与动画中引用到的纹理分解图 `*.png` 放置在同一目录内，并在页面中导入 `*.pam.json` 文件即可查看动画。
 
-  > 在 *`Plus`* 版本中，不支持逆序播放、通过参数指定当前播放进度功能，但额外实现了视图缩放、组件的快速过滤与名称正则过滤功能。
-
 * `PopCap Reflection Descriptor`
 
   该模块能够查看 RTON 对象结构定义文件。
 
-  > 仅在 *`Plus`* 版本中实现该模块。
+  > 尚未实现，目前不可用。
 
 * `PopCap Package Builder`
 
   该模块能够可视化地管理 `PvZ-2 Package Project` 项目。
 
-  > 仅在 *`Plus`* 版本中实现该模块。
+  > 尚未实现，目前不可用。
 
 * `Kairosoft Game Manager`
 

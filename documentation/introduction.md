@@ -136,6 +136,4 @@
 
 ![x](./media/preview/assistant.1.png) ![x](./media/preview/assistant.2.png)
 
-![x](./media/preview/assistant_plus.1.png) ![x](./media/preview/assistant_plus.2.png)
-
 ![x](./media/preview/forwarder.1.png)

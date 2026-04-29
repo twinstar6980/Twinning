@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '176';
+	export const k_version = '177';
 
 	// ----------------
 
@@ -91,7 +91,7 @@ namespace Twinning.Script {
 					Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `  ${description_item}\n`]));
 				}
 			}
-			if (shell_name === 'assistant' || shell_name === 'assistant_plus') {
+			if (shell_name === 'assistant') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['send_message', 'verbosity', title, ...description]));
 			}
 			return;
@@ -217,7 +217,7 @@ namespace Twinning.Script {
 		export async function run(
 			argument: Array<string>,
 		): Promise<Array<string>> {
-			if (!['basic', 'assistant', 'assistant_plus'].includes(query_environment('shell_name'))) {
+			if (!['basic', 'assistant'].includes(query_environment('shell_name'))) {
 				throw new Error(`shell client unsupported`);
 			}
 			console_output_text([

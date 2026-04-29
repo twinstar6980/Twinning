@@ -2,6 +2,8 @@
 
 - [已知问题](#已知问题)
 
+- [26-04-29](#26-04-29)
+
 - [26-04-26](#26-04-26)
 
 - [26-04-26](#26-04-26)
@@ -4454,6 +4456,14 @@
 
 	* `Linux` 现在将使用 `AppImage` 格式打包应用。
 
+## 26-04-29
+
+> 考虑到功能上的重叠、需要付出的额外维护成本、WindowsAppSdk 框架存在诸多 BUG 等因素，现在删除 `Assistant Plus` 模块，其核心功能会在后续集成至 `Assistant` 中。
+
+* `Script` 177
+
+* `Assistant` 180
+
 ## 已知问题
 
 * `Kernel`
@@ -4489,31 +4499,3 @@
 	* **`OK` `Task Worker`** 在消息列表中，每个文本控件都有各自独立的选择域，无法跨多个文本控件选择文本。
 
 	* **`TODO` `PopCap Animation Viewer`** 目前无法缩放视图，应在未来进行补全。
-
-* `Assistant Plus`
-
-	* **`OK`** 由于开发框架的设计，在进行拖拽文件操作时，只有将鼠标移动至可交互元素上时，程序才能接收文件。
-
-	* **`OK`** 由于写死了部分对话框的尺寸，在低尺寸窗口的情况下无法显示完整的对话框。
-
-	* **`OK`** 由于系统通知行为的限制，若点击应用推送的系统通知时存在多个应用实例，将会由首个实例处理该通知，而不论该通知是否由首个实例自身推送。
-
-	* **`BUG`** 由于 `WindowsAppSDK` 疑似存在的 BUG ，有时，标题栏顶部的一部分区域（高度为标准标题栏的高度）会错误地变为可拖拽区域，同时区域中的图标等控件无法响应鼠标输入。
-
-	* **`BUG`** 由于 `WindowsAppSDK` 疑似存在的 BUG ，有时，可滚动的 UI 控件无法滚动到最底部，而是会呈现出一种混乱的滚动效果，且有可能导致程序崩溃。
-
-	* **`BUG`** 由于 `WindowsAppSDK` 的 [issue #6829](https://github.com/microsoft/microsoft-ui-xaml/pull/6829) ，暗色模式下，`SplitButton` 的边框与 `Button` 等常规图标不一致。
-
-	* **`BUG`** 由于 `WindowsAppSDK` 的 [issue #8298](https://github.com/microsoft/microsoft-ui-xaml/issues/8298) ，应用内的 `TreeViewItem` 可能在禁用状态下的文本并未呈现出禁用颜色，目前暂时通过覆盖默认样式的方式解决该问题。
-
-	* **`BUG`** 由于 `WindowsAppSDK` 的 [issue #10881](https://github.com/microsoft/microsoft-ui-xaml/issues/10881) ，在启用 AOT 的情况下，通过 `CollectionViewSource` 显示的列表元素将无法显示任何内容，因此暂时禁用 AOT 构建。
-
-	* **`BUG`** 由于 `WindowsAppSDK 1.6` 的 [issue #10309](https://github.com/microsoft/microsoft-ui-xaml/issues/10309) ，应用内的 `TreeViewItem` 可能不遵循所设定的初始 `IsExpanded` 值，致使本应展开的项目呈现为折叠状态。
-
-	* **`BUG`** 由于 `WindowsAppSDK 1.7` 的 BUG ，当程序在在 Visual Studio 调试环境下运行并调用了 `JumpList.LoadCurrentAsync` 接口，大概率在终止程序后抛出未知异常 `0xc000027b` ，故暂时在 DEBUG 模式下避免该接口的调用。
-
-	* **`BUG` `Forwarder Extension`** 由于系统方面的问题，扩展所在的 COM Surrogate 进程有时会一直在后台运行，导致无法卸载应用，需要手动在任务管理器中终止。
-
-	* **`BUG` `Forwarder Extension`** 由于系统方面的问题，在一些低版本的系统（如 Windows 10 2004）中，扩展启动了应用后，应用窗口可能不会被置于前台。
-
-	* **`OK` `Task Worker`** 在消息列表中，每个文本控件都有各自独立的选择域，无法跨多个文本控件选择文本。

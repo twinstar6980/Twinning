@@ -28,13 +28,13 @@
 
   > `Kernel` 模块实现了这一层级。
 
-* `Shell` 层：前端，负责用户交互，不会进行任何数据处理；`Shell` 被分发为面向各平台的本机应用程序，会加载内核动态库，并以用户提供的脚本作为参数调用内核动态库的接口函数。
-
-  > `Shell` 、`Assistant` 、`Assistant Plus` 模块实现了这一层级。
-
 * `Script` 层：前后端的桥梁，通过调用内核与外壳提供的接口函数进行数据处理与用户交互；`Script` 被分发为不依赖平台的 JavaScript 脚本。
 
   > `Script` 模块实现了这一层级。
+
+* `Shell` 层：前端，负责用户交互，不会进行任何数据处理；`Shell` 被分发为面向各平台的本机应用程序，会加载内核动态库，并以用户提供的脚本作为参数调用内核动态库的接口函数。
+
+  > `Shell` 、`Assistant` 模块实现了这一层级。
 
 通过前后端分离的方式，工具能够方便地进行跨平台适配与多客户端集成。
 
@@ -62,13 +62,11 @@
 
 2. 调用 `Kernel` 的接口函数，接口函数中的 `callback` 参数是自定义项目所需要提供的外壳回调实现。
 
-具体参照本工具内的几个外壳实现：
+具体参照本工具内的外壳实现：
 
 * [`Shell`](../Shell/shell/bridge) with `C++`
 
 * [`Assistant`](../Assistant/lib/bridge) with `Dart`
-
-* [`Assistant Plus`](../AssistantPlus/Application/Bridge) with `C#`
 
 下面以 [`Shell`](../Shell/shell/bridge) 模块为例介绍应如何集成 `Kernel` ：
 

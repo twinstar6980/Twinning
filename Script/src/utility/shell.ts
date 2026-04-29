@@ -20,7 +20,7 @@ namespace Twinning.Script.Shell {
 
 	export const is_basic = name === 'basic';
 
-	export const is_assistant = name === 'assistant' || name === 'assistant_plus';
+	export const is_assistant = name === 'assistant';
 
 	// #endregion
 

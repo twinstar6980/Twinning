@@ -26,18 +26,13 @@ def test(
 			False,
 		)
 		utility.fs_create_link(
-			f'{test}/shell.exe',
-			f'{source}/Shell/.build/windows/x64/release/shell.exe',
-			False,
-		)
-		utility.fs_create_link(
 			f'{test}/script',
 			f'{source}/Script/dist',
 			True,
 		)
 		utility.fs_create_link(
-			f'{test}/launch.cmd',
-			f'{source}/common/unembedded/launch.cmd',
+			f'{test}/shell.exe',
+			f'{source}/Shell/.build/windows/x64/release/shell.exe',
 			False,
 		)
 		utility.fs_create_link(
@@ -46,9 +41,9 @@ def test(
 			True,
 		)
 		utility.fs_create_link(
-			f'{test}/assistant_plus',
-			f'{source}/common/unembedded/assistant_plus',
-			True,
+			f'{test}/launch.cmd',
+			f'{source}/common/unembedded/launch.cmd',
+			False,
 		)
 	if utility.check_platform(platform, ['linux.amd64']):
 		utility.fs_create_link(
@@ -57,24 +52,24 @@ def test(
 			False,
 		)
 		utility.fs_create_link(
-			f'{test}/shell',
-			f'{source}/Shell/.build/linux/x86_64/release/shell',
-			False,
-		)
-		utility.fs_create_link(
 			f'{test}/script',
 			f'{source}/Script/dist',
 			True,
 		)
 		utility.fs_create_link(
-			f'{test}/launch.sh',
-			f'{source}/common/unembedded/launch.sh',
+			f'{test}/shell',
+			f'{source}/Shell/.build/linux/x86_64/release/shell',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/assistant',
 			f'{source}/common/unembedded/assistant',
 			True,
+		)
+		utility.fs_create_link(
+			f'{test}/launch.sh',
+			f'{source}/common/unembedded/launch.sh',
+			False,
 		)
 	if utility.check_platform(platform, ['macintosh.arm64']):
 		utility.fs_create_link(
@@ -83,24 +78,24 @@ def test(
 			False,
 		)
 		utility.fs_create_link(
-			f'{test}/shell',
-			f'{source}/Shell/.build/macosx/arm64/release/shell',
-			False,
-		)
-		utility.fs_create_link(
 			f'{test}/script',
 			f'{source}/Script/dist',
 			True,
 		)
 		utility.fs_create_link(
-			f'{test}/launch.sh',
-			f'{source}/common/unembedded/launch.sh',
+			f'{test}/shell',
+			f'{source}/Shell/.build/macosx/arm64/release/shell',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/assistant',
 			f'{source}/common/unembedded/assistant',
 			True,
+		)
+		utility.fs_create_link(
+			f'{test}/launch.sh',
+			f'{source}/common/unembedded/launch.sh',
+			False,
 		)
 	if True:
 		utility.fs_create_link(

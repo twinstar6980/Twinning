@@ -22,17 +22,9 @@
 
 * `Kernel`
 
-  内核，负责内部功能的实现。
+  内核，负责核心功能的实现。
 
   必需模块，分发为动态库。
-
-* `Shell`
-
-  外壳，提供基本的用户界面。
-
-  可选模块，分发为可执行程序。
-
-  > 在 `Android` 与 `Iphone` 系统中使用 `Shell` 需要 ROOT 权限，若你的设备未获取 ROOT ，请使用 `Assistant` 。
 
 * `Script`
 
@@ -40,19 +32,19 @@
 
   必需模块，发为脚本包。
 
+* `Shell`
+
+  外壳，提供基本的命令行交互。
+
+  可选模块，分发为可执行程序。
+
+  > 在 `Android` 与 `Iphone` 系统中使用 `Shell` 需要 ROOT 权限，若你的设备未获取 ROOT ，请使用 `Assistant` 。
+
 * `Assistant`
 
-  助理，实现了额外的高级辅助功能。
+  助理，实现了图像用户界面与额外的高级辅助功能。
 
   可选模块，分发为应用安装包。
-
-* `Assistant Plus`
-
-  助理+，面向 Windows 平台的特化版本。
-
-  可选模块，分发为应用安装包。
-
-  > 该模块仅适用于 `Windows` 系统。
 
 ## 分步流程
 
@@ -85,7 +77,7 @@
 
   在系统终端中运行命令：`> chmod +x ./shell` 。
 
-* 安装主目录内 `Assistant` 、`Assistant Plus` 模块的应用安装包。
+* 安装主目录内 `Assistant` 模块的应用安装包。
 
   应用安装包文件以 `msix` 、`AppImage` 、`dmg` 、`apk` 、`ipa` 作为扩展名。
 
@@ -121,22 +113,6 @@
 	  > 对于 `Android` ，系统将始终启用转发器扩展，应用无法自行更改启用状态。
 
 	  > 对于 `Iphone` ，系统默认启用转发器扩展，应用无法自行更改启用状态，如果需要更改，请打开 ⌈ 文件 ⌋ ，选择任意文件后点击 ⌈ 共享 ⌋ - ⌈ 编辑操作... ⌋ - ⌈ Twinning Assistant ⌋ ，勾选右侧的开关按钮。
-
-	* `Forwarder Default Target` 转发器扩展的默认转发目标模块。
-
-	* `Forwarder Immediate Jump` 转发器扩展是否立即转发至默认目标模块，而非等待用户选择。
-
-* 配置 `Assistant Plus` 设置项。
-
-  > 如果不需要 `Assistant Plus` 模块，可以跳过该步骤。
-
-  打开应用，将会弹出配置引导对话框，点击 `Quick Setup` ，在弹出的文件选择对话框中选中主目录 `<home>` 即可。
-
-  > 配置引导对话框只会在初次运行或应用更新的情况下才会主动显示，可用在设置页面中点击 `Onboarding` 来调出该页面。
-
-  除此以外，还可以进行以下可选配置：
-
-	* `Forwarder Extension` 点击以启用转发器扩展。
 
 	* `Forwarder Default Target` 转发器扩展的默认转发目标模块。
 

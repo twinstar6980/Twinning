@@ -31,6 +31,8 @@ enum ModuleType {
   coreCommandSender,
   coreResourceShipper,
   popcapAnimationViewer,
+  // TODO: popcapReflectionDescriptor,
+  // TODO: popcapPackageBuilder,
   kairosoftGameManager,
 }
 
