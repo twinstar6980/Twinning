@@ -7,12 +7,12 @@
 
 #include "flutter/generated_plugin_registrant.h"
 
-#include "./custom_method_channel.hpp"
+#include "./platform_integration_manager.hpp"
 
 struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
-  CustomMethodChannel* channel;
+  PlatformIntegrationManager* platform_integration_manager;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -78,8 +78,8 @@ static void my_application_activate(GApplication* application) {
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
-  self->channel = new CustomMethodChannel{&self->parent_instance};
-  self->channel->register_activate(application, view);
+  self->platform_integration_manager = new PlatformIntegrationManager{&self->parent_instance};
+  self->platform_integration_manager->register_activate(application, view);
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
@@ -127,8 +127,8 @@ static void my_application_shutdown(GApplication* application) {
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
 
-  self->channel->register_dispose(object);
-  delete self->channel;
+  self->platform_integration_manager->register_dispose(object);
+  delete self->platform_integration_manager;
 
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);

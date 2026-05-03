@@ -124,7 +124,7 @@ class ForwarderActivity : Activity() {
     return destination.toString()
   }
 
-  private fun openLink(
+  private fun openExternalLink(
     link: Uri,
   ): Unit {
     this.startActivity(Intent().also { intent ->
@@ -152,7 +152,7 @@ class ForwarderActivity : Activity() {
     command.add("-forward")
     command.addAll(resource.map({ item -> this.resolveContentUri(item) }))
     val link = Uri.parse("${this.queryApplicationIdentifier()}:/application?${command.joinToString("&", transform = { item -> "command=${this.encodePercentString(item)}" })}")
-    this.openLink(link)
+    this.openExternalLink(link)
     return
   }
 

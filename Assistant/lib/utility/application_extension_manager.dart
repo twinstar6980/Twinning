@@ -1,6 +1,6 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
-import '/utility/application_platform_method.dart';
+import '/utility/platform_integration_manager.dart';
 
 // ----------------
 
@@ -32,7 +32,7 @@ class ApplicationExtensionManager {
   Future<Boolean> check(
     ApplicationExtensionName name,
   ) async {
-    var platformResult = await ApplicationPlatformMethod.instance.checkApplicationExtension(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
+    var platformResult = await PlatformIntegrationManager.instance.invokeCheckApplicationExtension(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
     return platformResult.state;
   }
 
@@ -41,7 +41,7 @@ class ApplicationExtensionManager {
     Boolean                  state,
   ) async {
     // ignore: unused_local_variable
-    var platformResult = await ApplicationPlatformMethod.instance.updateApplicationExtension(ConvertHelper.makeEnumerationToStringOfSnakeCase(name), state);
+    var platformResult = await PlatformIntegrationManager.instance.invokeUpdateApplicationExtension(ConvertHelper.makeEnumerationToStringOfSnakeCase(name), state);
     return;
   }
 

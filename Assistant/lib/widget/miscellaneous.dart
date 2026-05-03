@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import '/utility/application_platform_method.dart';
+import '/utility/platform_integration_manager.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
 import 'package:flutter/widgets.dart';
@@ -322,7 +322,7 @@ class StorageDropRegion extends StatelessWidget {
               if (uri.authority != '') {
                 path = '//${uri.authority}/${path}';
               }
-              path = (await ApplicationPlatformMethod.instance.onWindowsQueryStorageLongPath(path)).destination;
+              path = (await PlatformIntegrationManager.instance.invokeOnWindowsQueryStorageLongPath(path)).destination;
             }
             if (SystemChecker.isLinux) {
               assertTest(uri.authority == '');

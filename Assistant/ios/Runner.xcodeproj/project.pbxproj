@@ -17,7 +17,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		E20CBD3B790DF9AE161A727D /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB26E441549CAF1F6290A315 /* Pods_RunnerTests.framework */; };
-		F8370BFD2B5AC78B00533937 /* CustomMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8370BFC2B5AC78B00533937 /* CustomMethodChannel.swift */; };
+		F8370BFD2B5AC78B00533937 /* PlatformIntegrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8370BFC2B5AC78B00533937 /* PlatformIntegrationManager.swift */; };
 		F87A55752C28C7DE006E35C0 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F87A55742C28C7DE006E35C0 /* UniformTypeIdentifiers.framework */; };
 		F87A55802C28C7DE006E35C0 /* Forwarder.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F87A55732C28C7DE006E35C0 /* Forwarder.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F87A55892C28C84D006E35C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F87A55882C28C84D006E35C0 /* Assets.xcassets */; };
@@ -90,7 +90,7 @@
 		DC801C174FF0C5A809EE42CB /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF294E77A66B70AF0C115B4A /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		EB290B945DDDE22E064987BA /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
-		F8370BFC2B5AC78B00533937 /* CustomMethodChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMethodChannel.swift; sourceTree = "<group>"; };
+		F8370BFC2B5AC78B00533937 /* PlatformIntegrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformIntegrationManager.swift; sourceTree = "<group>"; };
 		F87A55732C28C7DE006E35C0 /* Forwarder.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Forwarder.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F87A55742C28C7DE006E35C0 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		F87A55862C28C83D006E35C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -203,7 +203,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
-				F8370BFC2B5AC78B00533937 /* CustomMethodChannel.swift */,
+				F8370BFC2B5AC78B00533937 /* PlatformIntegrationManager.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -464,7 +464,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
-				F8370BFD2B5AC78B00533937 /* CustomMethodChannel.swift in Sources */,
+				F8370BFD2B5AC78B00533937 /* PlatformIntegrationManager.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
 			);

@@ -32,7 +32,7 @@
 		F87A55632C28C5D1006E35C0 /* Forwarder.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F87A555B2C28C5D1006E35C0 /* Forwarder.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F87A556C2C28C668006E35C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F87A556B2C28C668006E35C0 /* Assets.xcassets */; };
 		F87A556E2C28C689006E35C0 /* ForwarderFinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87A556D2C28C689006E35C0 /* ForwarderFinderSync.swift */; };
-		F89338B22F8BAB98001F99F6 /* CustomMethodChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89338B12F8BAB98001F99F6 /* CustomMethodChannel.swift */; };
+		F89338B22F8BAB98001F99F6 /* PlatformIntegrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89338B12F8BAB98001F99F6 /* PlatformIntegrationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,7 +115,7 @@
 		F87A55692C28C657006E35C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F87A556B2C28C668006E35C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F87A556D2C28C689006E35C0 /* ForwarderFinderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwarderFinderSync.swift; sourceTree = "<group>"; };
-		F89338B12F8BAB98001F99F6 /* CustomMethodChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMethodChannel.swift; sourceTree = "<group>"; };
+		F89338B12F8BAB98001F99F6 /* PlatformIntegrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformIntegrationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,7 +218,7 @@
 				33E51914231749380026EE4D /* Release.entitlements */,
 				33CC11242044D66E0003C045 /* Resources */,
 				33BA886A226E78AF003329D5 /* Configs */,
-				F89338B12F8BAB98001F99F6 /* CustomMethodChannel.swift */,
+				F89338B12F8BAB98001F99F6 /* PlatformIntegrationManager.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -518,7 +518,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
-				F89338B22F8BAB98001F99F6 /* CustomMethodChannel.swift in Sources */,
+				F89338B22F8BAB98001F99F6 /* PlatformIntegrationManager.swift in Sources */,
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 			);

@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/convert_helper.dart';
-import '/utility/application_platform_method.dart';
+import '/utility/platform_integration_manager.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart' as lib;
@@ -365,7 +365,7 @@ class StorageHelper {
   static Future<StoragePath> query(
     StorageQueryType type,
   ) async {
-    return .of((await ApplicationPlatformMethod.instance.queryStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type))).target);
+    return .of((await PlatformIntegrationManager.instance.invokeQueryStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type))).target);
   }
 
   static Future<Void> reveal(
@@ -373,7 +373,7 @@ class StorageHelper {
   ) async {
     assertTest(await StorageHelper.exist(target));
     var targetString = target.emitNative();
-    await ApplicationPlatformMethod.instance.revealStorageItem(targetString);
+    await PlatformIntegrationManager.instance.invokeRevealStorageItem(targetString);
     return;
   }
 
@@ -389,7 +389,7 @@ class StorageHelper {
     if (name == null) {
       name = '';
     }
-    var targetString = (await ApplicationPlatformMethod.instance.pickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), multiply, location.emitNative(), name)).target;
+    var targetString = (await PlatformIntegrationManager.instance.invokePickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), multiply, location.emitNative(), name)).target;
     var target = targetString.map((it) => StoragePath.of(it)).toList();
     return target;
   }

@@ -155,10 +155,9 @@ export namespace Twinning::Assistant::Forwarder {
 
 		auto parse_current_exception(
 		) const -> std::string {
-			auto exception = std::current_exception();
 			auto message = std::string{};
 			try {
-				std::rethrow_exception(exception);
+				std::rethrow_exception(std::current_exception());
 			}
 			catch (std::exception & e) {
 				message = e.what();
@@ -257,7 +256,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return destination;
 		}
 
-		auto open_link(
+		auto open_external_link(
 			std::string const & link
 		) const -> void {
 			auto state_hi = HINSTANCE{};
@@ -299,7 +298,7 @@ export namespace Twinning::Assistant::Forwarder {
 				| std::views::join_with('&')
 				| std::ranges::to<std::string>()
 			);
-			thiz.open_link(link);
+			thiz.open_external_link(link);
 			return;
 		}
 

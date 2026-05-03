@@ -32,6 +32,7 @@
 #include <format>
 #include <optional>
 #include <vector>
+#include <map>
 #include <filesystem>
 
 // ----------------

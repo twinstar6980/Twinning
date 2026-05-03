@@ -8,13 +8,13 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity : FlutterActivity() {
 
-  private val customMethodChannel: CustomMethodChannel = CustomMethodChannel(this)
+  private val platformIntegrationManager: PlatformIntegrationManager = PlatformIntegrationManager(this)
 
   protected override fun onCreate(
     savedInstanceState: Bundle?,
   ): Unit {
     super.onCreate(savedInstanceState)
-    this.customMethodChannel.register_onCreate(savedInstanceState)
+    this.platformIntegrationManager.register_onCreate(savedInstanceState)
     return
   }
 
@@ -24,7 +24,7 @@ class MainActivity : FlutterActivity() {
     data: Intent?,
   ): Unit {
     super.onActivityResult(requestCode, resultCode, data)
-    this.customMethodChannel.register_onActivityResult(requestCode, resultCode, data)
+    this.platformIntegrationManager.register_onActivityResult(requestCode, resultCode, data)
     return
   }
 
@@ -33,7 +33,7 @@ class MainActivity : FlutterActivity() {
   ): Unit {
     super.configureFlutterEngine(flutterEngine)
     GeneratedPluginRegistrant.registerWith(flutterEngine)
-    this.customMethodChannel.register_configureFlutterEngine(flutterEngine)
+    this.platformIntegrationManager.register_configureFlutterEngine(flutterEngine)
     return
   }
 

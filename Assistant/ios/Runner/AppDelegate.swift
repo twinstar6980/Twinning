@@ -4,7 +4,7 @@ import UIKit
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
 
-  private lazy var customMethodChannel: CustomMethodChannel = CustomMethodChannel(host: self)
+  private lazy var platformIntegrationManager: PlatformIntegrationManager = PlatformIntegrationManager(host: self)
 
   public override func application(
     _ application: UIApplication,
@@ -17,7 +17,7 @@ import UIKit
     _ engineBridge: FlutterImplicitEngineBridge,
   ) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
-    self.customMethodChannel.register_didInitializeImplicitFlutterEngine(engineBridge)
+    self.platformIntegrationManager.register_didInitializeImplicitFlutterEngine(engineBridge)
     return
   }
 

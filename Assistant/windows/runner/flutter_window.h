@@ -8,7 +8,7 @@
 
 #include "win32_window.h"
 
-class CustomMethodChannel;
+class PlatformIntegrationManager;
 
 // A window that does nothing but host a Flutter view.
 class FlutterWindow : public Win32Window {
@@ -31,8 +31,8 @@ class FlutterWindow : public Win32Window {
   // The Flutter instance hosted by this window.
   std::unique_ptr<flutter::FlutterViewController> flutter_controller_;
 
-  friend CustomMethodChannel;
-  std::unique_ptr<CustomMethodChannel> channel_;
+  friend PlatformIntegrationManager;
+  std::unique_ptr<PlatformIntegrationManager> platform_integration_manager_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

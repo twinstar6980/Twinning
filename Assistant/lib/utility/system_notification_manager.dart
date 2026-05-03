@@ -1,5 +1,5 @@
 import '/common.dart';
-import '/utility/application_platform_method.dart';
+import '/utility/platform_integration_manager.dart';
 
 // ----------------
 
@@ -26,7 +26,7 @@ class SystemNotificationManager {
     String title,
     String description,
   ) async {
-    await ApplicationPlatformMethod.instance.pushSystemNotification(title, description);
+    await PlatformIntegrationManager.instance.invokePushSystemNotification(title, description);
     return;
   }
 

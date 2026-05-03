@@ -1,6 +1,6 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
-import '/utility/application_platform_method.dart';
+import '/utility/platform_integration_manager.dart';
 
 // ----------------
 
@@ -33,7 +33,7 @@ class ApplicationPermissionManager {
   Future<Boolean> check(
     ApplicationPermissionName name,
   ) async {
-    var platformResult = await ApplicationPlatformMethod.instance.checkApplicationPermission(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
+    var platformResult = await PlatformIntegrationManager.instance.invokeCheckApplicationPermission(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
     return platformResult.state;
   }
 
@@ -41,7 +41,7 @@ class ApplicationPermissionManager {
     ApplicationPermissionName name,
   ) async {
     // ignore: unused_local_variable
-    var platformResult = await ApplicationPlatformMethod.instance.updateApplicationPermission(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
+    var platformResult = await PlatformIntegrationManager.instance.invokeUpdateApplicationPermission(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
     return;
   }
 

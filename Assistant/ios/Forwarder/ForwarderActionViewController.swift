@@ -94,7 +94,7 @@ class ForwarderActionViewController: UIViewController {
     return destination
   }
 
-  private func openLink(
+  private func openExternalLink(
     link: URL,
   ) async throws -> Void {
     var application: UIApplication? = nil
@@ -135,7 +135,7 @@ class ForwarderActionViewController: UIViewController {
     command.append("-forward")
     command.append(contentsOf: try resource.map({ (item) in try self.resolveFileUrl(url: item) }))
     let link = URL(string: "\(try self.queryApplicationIdentifier()):/application?\(try command.map({ (item) in "command=\(try self.encodePercentString(source: item))" }).joined(separator: "&"))")!
-    try await self.openLink(link: link)
+    try await self.openExternalLink(link: link)
     return
   }
 
