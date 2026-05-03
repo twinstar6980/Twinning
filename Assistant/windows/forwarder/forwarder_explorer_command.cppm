@@ -103,7 +103,7 @@ export namespace Twinning::Assistant::Forwarder {
 					state_h = psiItemArray->GetItemAt(item_index, item.put());
 					winrt::check_hresult(state_h);
 					auto item_path = thiz.resolve_shell_item_path(item);
-					auto item_path_long = thiz.resolve_storage_long_path(item_path);
+					auto item_path_long = thiz.query_storage_long_path(item_path);
 					resource.emplace_back(item_path_long);
 				}
 				thiz.forward_resource(resource);
@@ -202,7 +202,7 @@ export namespace Twinning::Assistant::Forwarder {
 			return winrt::to_string(path_h);
 		}
 
-		auto resolve_storage_long_path(
+		auto query_storage_long_path(
 			std::string const & source
 		) const -> std::string {
 			auto state_d = DWORD{};

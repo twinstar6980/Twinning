@@ -198,6 +198,7 @@ private:
 					break;
 				}
 				case hash_string("push_system_notification"): {
+					[[maybe_unused]]
 					auto detail = thiz.handle_push_system_notification(
 						get_argument.operator ()<std::string>("title"),
 						get_argument.operator ()<std::string>("description")

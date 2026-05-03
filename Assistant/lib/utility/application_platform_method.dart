@@ -135,6 +135,21 @@ class ApplicationPlatformMethod {
     );
   }
 
+  // ----------------
+
+  Future<({String destination})> onWindowsQueryStorageLongPath(
+    String source,
+  ) async {
+    assertTest(SystemChecker.isWindows);
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('on_windows_query_storage_long_path', <Object?, Object?>{
+      'source': source,
+    });
+    detail!;
+    return (
+      destination: detail['destination']!.as<String>(),
+    );
+  }
+
   // #endregion
 
 }

@@ -188,6 +188,13 @@ private:
 					);
 					break;
 				}
+				case hash_string("on_windows_query_storage_long_path"): {
+					auto detail = thiz.handle_on_windows_query_storage_long_path(
+						get_argument.operator ()<std::string>("source")
+					);
+					set_result("destination", std::get<0>(detail));
+					break;
+				}
 				default: throw std::runtime_error{"Exception: invalid method"};
 			}
 			result->Success(result_map);
@@ -345,14 +352,22 @@ private:
 					auto target_item = winrt::com_ptr<IShellItem>{};
 					state_h = target_list->GetItemAt(target_index, target_item.put());
 					winrt::check_hresult(state_h);
-					target.emplace_back(thiz.resolve_shell_item_path(target_item));
+					auto target_item_path = thiz.resolve_shell_item_path(target_item);
+					auto target_item_path_long = thiz.query_storage_long_path(target_item_path);
+					target.emplace_back(target_item_path_long);
 				}
 			}
 			if (type == "save_file") {
 				auto target_item = winrt::com_ptr<IShellItem>{};
 				state_h = dialog->GetResult(target_item.put());
 				winrt::check_hresult(state_h);
-				target.emplace_back(thiz.resolve_shell_item_path(target_item));
+				auto target_item_path = thiz.resolve_shell_item_path(target_item);
+				auto target_item_parent_end = target_item_path.find_last_of("\\");
+				assert_test(target_item_parent_end != std::string::npos);
+				auto target_item_parent = target_item_path.substr(0, target_item_parent_end);
+				auto target_item_name = target_item_path.substr(target_item_parent_end + 1);
+				auto target_item_path_long = thiz.query_storage_long_path(target_item_parent) + "\\" + target_item_name;
+				target.emplace_back(target_item_path_long);
 			}
 		}
 		return std::make_tuple(target);
@@ -399,6 +414,13 @@ private:
 		auto notifier = winrt::Windows::UI::Notifications::ToastNotificationManager::CreateToastNotifier();
 		notifier.Show(notification);
 		return std::make_tuple();
+	}
+
+	auto handle_on_windows_query_storage_long_path(
+		std::string const & source
+	) -> std::tuple<std::string> {
+		auto destination = thiz.query_storage_long_path(source);
+		return std::make_tuple(destination);
 	}
 
 	#pragma endregion
@@ -453,7 +475,7 @@ private:
 		return winrt::to_string(path_h);
 	}
 
-	auto resolve_storage_long_path(
+	auto query_storage_long_path(
 		std::string const & source
 	) const -> std::string {
 		auto state_d = DWORD{};

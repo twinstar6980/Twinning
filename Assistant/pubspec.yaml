@@ -1,5 +1,5 @@
 name: assistant
-version: 181.0.0+181
+version: 182.0.0+182
 environment:
   sdk: ^3.11.5
 dependencies:
@@ -27,5 +27,4 @@ dev_dependencies:
   flutter_lints: 6.0.0
 flutter:
   uses-material-design: true
-  assets:
-    - asset/
+  assets: []

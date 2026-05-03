@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/application_platform_method.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
 import 'package:flutter/widgets.dart';
@@ -301,32 +302,38 @@ class StorageDropRegion extends StatelessWidget {
           return .none;
         },
         onPerformDrop: (event) async {
-          var result = <StoragePath>[];
+          var itemList = <Uri>[];
           for (var item in event.session.items) {
-            var progress = item.dataReader!.getValue(lib.Formats.fileUri, (uri) async {
-              uri!;
-              var path = Uri.decodeComponent(uri.path);
-              assertTest(path.startsWith('/'));
-              if (SystemChecker.isWindows) {
-                path = path.substring(1);
-                if (uri.authority != '') {
-                  path = '//${uri.authority}/${path}';
-                }
-              }
-              if (SystemChecker.isLinux) {
-                assertTest(uri.authority == '');
-              }
-              if (SystemChecker.isMacintosh) {
-                assertTest(uri.authority == '');
-                if (path.length > 1 && path[path.length - 1] == '/') {
-                  path = path.substring(0, path.length - 1);
-                }
-              }
-              result.add(.of(path));
+            var progress = item.dataReader!.getValue(lib.Formats.fileUri, (value) {
+              value!;
+              itemList.add(value);
+              return;
             })!;
             while (progress.fraction.value != 1.0) {
               await Future.delayed(.zero);
             }
+          }
+          var result = <StoragePath>[];
+          for (var uri in itemList) {
+            var path = Uri.decodeComponent(uri.path);
+            assertTest(path.startsWith('/'));
+            if (SystemChecker.isWindows) {
+              path = path.substring(1);
+              if (uri.authority != '') {
+                path = '//${uri.authority}/${path}';
+              }
+              path = (await ApplicationPlatformMethod.instance.onWindowsQueryStorageLongPath(path)).destination;
+            }
+            if (SystemChecker.isLinux) {
+              assertTest(uri.authority == '');
+            }
+            if (SystemChecker.isMacintosh) {
+              assertTest(uri.authority == '');
+              if (path.length > 1 && path[path.length - 1] == '/') {
+                path = path.substring(0, path.length - 1);
+              }
+            }
+            result.add(.of(path));
           }
           this.onDrop!(result);
           return;
