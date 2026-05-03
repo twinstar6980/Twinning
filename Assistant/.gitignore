@@ -1,6 +1,7 @@
 /build
 /.metadata
 /windows/flutter/ephemeral
+/windows/out
 /linux/flutter/ephemeral
 /macos/Flutter/ephemeral
 /macos/Pods

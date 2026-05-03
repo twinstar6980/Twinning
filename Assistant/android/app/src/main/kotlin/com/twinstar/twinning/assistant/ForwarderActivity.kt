@@ -117,8 +117,8 @@ class ForwarderActivity : Activity() {
       }
       else {
         destination.append('%')
-        destination.append((character / 0x10).toString(16))
-        destination.append((character % 0x10).toString(16))
+        destination.append((character.toUByte() / 0x10u).toString(16))
+        destination.append((character.toUByte() % 0x10u).toString(16))
       }
     }
     return destination.toString()

@@ -128,6 +128,9 @@ private:
 			};
 			auto set_result = [&]<typename TValue>(std::string_view const & name, TValue const & value) -> void {
 				auto value_f = std::add_pointer_t<FlValue>{nullptr};
+				if constexpr (std::is_same_v<TValue, bool>) {
+					value_f = fl_value_new_bool(value);
+				}
 				if constexpr (std::is_same_v<TValue, std::string>) {
 					value_f = fl_value_new_string(value.data());
 				}
@@ -141,6 +144,35 @@ private:
 				return;
 			};
 			switch (hash_string(fl_method_call_get_name(call))) {
+				case hash_string("check_application_permission"): {
+					auto detail = thiz.handle_check_application_permission(
+						get_argument.operator ()<std::string>("name")
+					);
+					set_result("state", std::get<0>(detail));
+					break;
+				}
+				case hash_string("update_application_permission"): {
+					[[maybe_unused]]
+					auto detail = thiz.handle_update_application_permission(
+						get_argument.operator ()<std::string>("name")
+					);
+					break;
+				}
+				case hash_string("check_application_extension"): {
+					auto detail = thiz.handle_check_application_extension(
+						get_argument.operator ()<std::string>("name")
+					);
+					set_result("state", std::get<0>(detail));
+					break;
+				}
+				case hash_string("update_application_extension"): {
+					[[maybe_unused]]
+					auto detail = thiz.handle_update_application_extension(
+						get_argument.operator ()<std::string>("name"),
+						get_argument.operator ()<bool>("state")
+					);
+					break;
+				}
 				case hash_string("query_storage_item"): {
 					auto detail = thiz.handle_query_storage_item(
 						get_argument.operator ()<std::string>("type")
@@ -165,6 +197,13 @@ private:
 					set_result("target", std::get<0>(detail));
 					break;
 				}
+				case hash_string("push_system_notification"): {
+					auto detail = thiz.handle_push_system_notification(
+						get_argument.operator ()<std::string>("title"),
+						get_argument.operator ()<std::string>("description")
+					);
+					break;
+				}
 				default: throw std::runtime_error{"Exception: invalid method"};
 			}
 			response = FL_METHOD_RESPONSE(fl_method_success_response_new(result_map));
@@ -173,6 +212,52 @@ private:
 			response = FL_METHOD_RESPONSE(fl_method_error_response_new("", thiz.parse_current_exception().data(), nullptr));
 		}
 		return;
+	}
+
+	auto handle_check_application_permission(
+		std::string const & name
+	) -> std::tuple<bool> {
+		assert_test(name == "storage" || name == "notification");
+		auto state = false;
+		if (name == "storage") {
+			state = true;
+		}
+		if (name == "notification") {
+			state = true;
+		}
+		return std::make_tuple(state);
+	}
+
+	auto handle_update_application_permission(
+		std::string const & name
+	) -> std::tuple<> {
+		assert_test(name == "storage" || name == "notification");
+		if (name == "storage") {
+		}
+		if (name == "notification") {
+		}
+		return std::make_tuple();
+	}
+
+	auto handle_check_application_extension(
+		std::string const & name
+	) -> std::tuple<bool> {
+		assert_test(name == "forwarder");
+		auto state = false;
+		if (name == "forwarder") {
+			state = false;
+		}
+		return std::make_tuple(state);
+	}
+
+	auto handle_update_application_extension(
+		std::string const & name,
+		bool const &        state
+	) -> std::tuple<> {
+		assert_test(name == "forwarder");
+		if (name == "forwarder") {
+		}
+		return std::make_tuple();
 	}
 
 	auto handle_query_storage_item(
@@ -245,6 +330,14 @@ private:
 			}
 		}
 		return std::make_tuple(target);
+	}
+
+	auto handle_push_system_notification(
+		std::string const & title,
+		std::string const & description
+	) -> std::tuple<> {
+		// TODO
+		return std::make_tuple();
 	}
 
 	#pragma endregion

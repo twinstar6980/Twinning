@@ -1,8 +1,9 @@
 import UIKit
 import UniformTypeIdentifiers
+import UserNotifications
 import Flutter
 
-class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
+class CustomMethodChannel: NSObject, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate {
 
   // MARK: - variable
 
@@ -34,6 +35,8 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       }
       return
     })
+    UNUserNotificationCenter.current().delegate = self
+    UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
     return
   }
 
@@ -49,6 +52,35 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
       }
       var resultMap: [String: Any] = [:]
       switch call.method {
+      case "check_application_permission":
+        let detail = try await self.handleCheckApplicationPermission(
+          name: argumentMap["name"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
+        resultMap["state"] = detail
+      case "update_application_permission":
+        let _ = try await self.handleUpdateApplicationPermission(
+          name: argumentMap["name"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
+      case "check_application_extension":
+        let detail = try await self.handleCheckApplicationExtension(
+          name: argumentMap["name"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
+        resultMap["state"] = detail
+      case "update_application_extension":
+        let _ = try await self.handleUpdateApplicationExtension(
+          name: argumentMap["name"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+          state: argumentMap["state"] as? Bool ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
       case "query_storage_item":
         let detail = try await self.handleQueryStorageItem(
           type: argumentMap["type"] as? String ?? {
@@ -78,6 +110,15 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
           }(),
         )
         resultMap["target"] = detail
+      case "push_system_notification":
+        let _ = try await self.handlePushSystemNotification(
+          title: argumentMap["title"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+          description: argumentMap["description"] as? String ?? {
+            throw NSError(domain: "invalid argument.", code: 0)
+          }(),
+        )
       default:
         throw NSError(domain: "invalid method.", code: 0)
       }
@@ -85,6 +126,62 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     }
     catch {
       result(FlutterError(code: "", message: error.localizedDescription, details: nil))
+    }
+    return
+  }
+
+  private func handleCheckApplicationPermission(
+    name: String,
+  ) async throws -> Bool {
+    guard name == "storage" || name == "notification" else {
+      throw NSError(domain: "invalid name.", code: 0)
+    }
+    var state = false
+    if name == "storage" {
+      state = true
+    }
+    if name == "notification" {
+      let settings = await UNUserNotificationCenter.current().notificationSettings()
+      state = settings.authorizationStatus == .authorized
+    }
+    return state
+  }
+
+  private func handleUpdateApplicationPermission(
+    name: String,
+  ) async throws -> Void {
+    guard name == "storage" || name == "notification" else {
+      throw NSError(domain: "invalid name.", code: 0)
+    }
+    if name == "storage" {
+    }
+    if name == "notification" {
+      try await self.openLink(link: URL(string: UIApplication.openSettingsURLString)!)
+    }
+    return
+  }
+
+  private func handleCheckApplicationExtension(
+    name: String,
+  ) async throws -> Bool {
+    guard name == "forwarder" else {
+      throw NSError(domain: "invalid name.", code: 0)
+    }
+    var state = false
+    if name == "forwarder" {
+      state = true
+    }
+    return state
+  }
+
+  private func handleUpdateApplicationExtension(
+    name: String,
+    state: Bool,
+  ) async throws -> Void {
+    guard name == "forwarder" else {
+      throw NSError(domain: "invalid name.", code: 0)
+    }
+    if name == "forwarder" {
     }
     return
   }
@@ -146,6 +243,19 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     return target
   }
 
+  private func handlePushSystemNotification(
+    title: String,
+    description: String,
+  ) async throws -> Void {
+    let content = UNMutableNotificationContent()
+    content.title = title
+    content.body = description
+    content.sound = .default
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+    try await UNUserNotificationCenter.current().add(request)
+    return
+  }
+
   // MARK: - implement UIDocumentPickerDelegate
 
   public func documentPicker(
@@ -163,6 +273,15 @@ class CustomMethodChannel: NSObject, UIDocumentPickerDelegate {
     controller.dismiss(animated: true)
     self.continuation!.resume(returning: [URL]())
     return
+  }
+
+  // MARK: - implement UNUserNotificationCenterDelegate
+
+  public func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+  ) async -> UNNotificationPresentationOptions {
+    return [.sound, .list, .banner]
   }
 
   // MARK: - utility

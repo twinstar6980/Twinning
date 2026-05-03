@@ -31,19 +31,19 @@ class SettingPanel extends StatefulWidget {
 
 class _SettingPanelState extends State<SettingPanel> {
 
-  late Boolean  _storagePermissionState;
-  late Boolean? _forwarderExtensionState;
+  late List<Boolean> _permissionState;
+  late List<Boolean> _extensionState;
 
   // ----------------
 
   @override
   initState() {
     super.initState();
-    this._storagePermissionState = false;
-    this._forwarderExtensionState = null;
+    this._permissionState = ApplicationPermissionName.values.map((it) => false).toList();
+    this._extensionState = ApplicationExtensionName.values.map((it) => false).toList();
     postTask(() async {
-      this._storagePermissionState = await ApplicationPermissionManager.instance.checkStorage();
-      this._forwarderExtensionState = await ApplicationExtensionManager.instance.checkForwarder();
+      this._permissionState = await ApplicationPermissionName.values.map((it) async => await ApplicationPermissionManager.instance.check(it)).wait;
+      this._extensionState = await ApplicationExtensionName.values.map((it) async => await ApplicationExtensionManager.instance.check(it)).wait;
       await refreshState(this.setState);
     });
     return;
@@ -72,7 +72,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         icon: IconSet.brightness_4,
-        label: 'Theme Mode',
+        label: 'Mode',
         comment: [
           StyledText.inherit(['System', 'Light', 'Dark'][setting.data.themeMode.index]),
         ],
@@ -94,7 +94,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         icon: IconSet.colorize,
-        label: 'Theme Color',
+        label: 'Color',
         comment: [
           StyledText.inherit(!setting.data.themeColorState ? 'Default' : 'Custom'),
         ],
@@ -160,7 +160,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         icon: IconSet.text_fields,
-        label: 'Theme Font',
+        label: 'Font',
         comment: [
           StyledText.inherit(!setting.data.themeFontState ? 'Default' : 'Custom'),
         ],
@@ -217,7 +217,7 @@ class _SettingPanelState extends State<SettingPanel> {
       SettingListItem(
         enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
         icon: IconSet.recenter,
-        label: 'Window Position',
+        label: 'Position',
         comment: [
           StyledText.inherit(!setting.data.windowPositionState ? 'Default' : 'Custom'),
         ],
@@ -272,7 +272,7 @@ class _SettingPanelState extends State<SettingPanel> {
       SettingListItem(
         enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
         icon: IconSet.fit_screen,
-        label: 'Window Size',
+        label: 'Size',
         comment: [
           StyledText.inherit(!setting.data.windowSizeState ? 'Default' : 'Custom'),
         ],
@@ -325,52 +325,12 @@ class _SettingPanelState extends State<SettingPanel> {
         ],
       ),
       SettingListLabel(
-        label: 'Storage',
-        action: null,
-      ),
-      SettingListItem(
-        enabled: SystemChecker.isAndroid,
-        icon: IconSet.storage,
-        label: 'Storage Permission',
-        comment: [
-          StyledText.inherit(!this._storagePermissionState ? 'Denied' : 'Granted'),
-        ],
-        onPressed: (context) async {
-          this._storagePermissionState = await ApplicationPermissionManager.instance.requestStorage();
-          await refreshState(this.setState);
-        },
-        panelBuilder: null,
-      ),
-      SettingListLabel(
         label: 'Forwarder',
         action: null,
       ),
       SettingListItem(
-        enabled: SystemChecker.isWindows || SystemChecker.isMacintosh,
-        icon: IconSet.send_time_extension,
-        label: 'Forwarder Extension',
-        comment: [
-          StyledText.inherit(this._forwarderExtensionState == null ? 'Unknown' : !this._forwarderExtensionState! ? 'Disabled' : 'Enabled'),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          StyledListTile.standardTight(
-            leading: StyledSwitch.standard(
-              value: this._forwarderExtensionState!,
-              onChanged: (context, value) async {
-                await ApplicationExtensionManager.instance.toggleForwarder(!this._forwarderExtensionState!);
-                this._forwarderExtensionState = await ApplicationExtensionManager.instance.checkForwarder();
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-              },
-            ),
-            content: StyledText.inherit('Enable'),
-          ),
-        ],
-      ),
-      SettingListItem(
         icon: IconSet.nearby,
-        label: 'Forwarder Default Target',
+        label: 'Default Target',
         comment: [
           StyledText.inherit(ModuleHelper.query(setting.data.forwarderDefaultTarget).name),
         ],
@@ -392,7 +352,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         icon: IconSet.touch_app,
-        label: 'Forwarder Immediate Jump',
+        label: 'Immediate Jump',
         comment: [
           StyledText.inherit(!setting.data.forwarderImmediateJump ? 'Disabled' : 'Enabled'),
         ],
@@ -418,7 +378,7 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         icon: IconSet.description,
-        label: 'Module Configuration Directory',
+        label: 'Configuration Directory',
         comment: [
           StyledText.inherit(!StorageHelper.existDirectorySync(setting.data.moduleConfigurationDirectory) ? 'Invalid' : 'Available'),
         ],
@@ -456,6 +416,63 @@ class _SettingPanelState extends State<SettingPanel> {
           ),
         ],
       ),
+      SettingListLabel(
+        label: 'Permission',
+        action: null,
+      ),
+      ...<({ApplicationPermissionName name, String label, IconData icon})>[
+        (name: .storage, label: 'Storage', icon: IconSet.storage),
+        (name: .notification, label: 'Notification', icon: IconSet.notification_sound),
+      ].map((it) => SettingListItem(
+        icon: it.icon,
+        label: it.label,
+        comment: [
+          StyledText.inherit(!this._permissionState[it.name.index] ? 'Denied' : 'Granted'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: this._permissionState[it.name.index],
+              onChanged: (context, value) async {
+                await ApplicationPermissionManager.instance.update(it.name);
+                this._permissionState[it.name.index] = await ApplicationPermissionManager.instance.check(it.name);
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+              },
+            ),
+            content: StyledText.inherit('Grant'),
+          ),
+        ],
+      )),
+      SettingListLabel(
+        label: 'Extension',
+        action: null,
+      ),
+      ...<({ApplicationExtensionName name, String label, IconData icon})>[
+        (name: .forwarder, label: 'Forwarder', icon: IconSet.send_time_extension),
+      ].map((it) => SettingListItem(
+        icon: it.icon,
+        label: it.label,
+        comment: [
+          StyledText.inherit(!this._extensionState[it.name.index] ? 'Disabled' : 'Enabled'),
+        ],
+        onPressed: null,
+        panelBuilder: (context, setStateForPanel) => [
+          StyledListTile.standardTight(
+            leading: StyledSwitch.standard(
+              value: this._extensionState[it.name.index],
+              onChanged: (context, value) async {
+                await ApplicationExtensionManager.instance.update(it.name, !this._extensionState[it.name.index]);
+                this._extensionState[it.name.index] = await ApplicationExtensionManager.instance.check(it.name);
+                await refreshState(setStateForPanel);
+                await refreshState(this.setState);
+              },
+            ),
+            content: StyledText.inherit('Enable'),
+          ),
+        ],
+      )),
       SettingListLabel(
         label: 'Other',
         action: null,

@@ -1,6 +1,12 @@
 import '/common.dart';
-import '/utility/storage_helper.dart';
-import '/utility/process_helper.dart';
+import '/utility/convert_helper.dart';
+import '/utility/application_platform_method.dart';
+
+// ----------------
+
+enum ApplicationExtensionName {
+  forwarder,
+}
 
 // ----------------
 
@@ -23,74 +29,19 @@ class ApplicationExtensionManager {
 
   // #region utility
 
-  Future<Boolean?> checkForwarder(
+  Future<Boolean> check(
+    ApplicationExtensionName name,
   ) async {
-    var result = null as Boolean?;
-    if (SystemChecker.isWindows) {
-      var stateFile = (await StorageHelper.query(.applicationShared)).join('forwarder');
-      result = await StorageHelper.exist(stateFile);
-    }
-    if (SystemChecker.isLinux) {
-      result = false;
-    }
-    if (SystemChecker.isMacintosh) {
-      var pluginkitResult = await ProcessHelper.runProcess(
-        .of('/usr/bin/pluginkit'),
-        [
-          '-m',
-          '-i', '${ApplicationInformation.identifier}.Forwarder',
-        ],
-        null,
-        null,
-      );
-      result = pluginkitResult.code == 0 && pluginkitResult.output.startsWith('+');
-    }
-    if (SystemChecker.isAndroid) {
-      result = true;
-    }
-    if (SystemChecker.isIphone) {
-      result = null;
-    }
-    return result;
+    var platformResult = await ApplicationPlatformMethod.instance.checkApplicationExtension(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
+    return platformResult.state;
   }
 
-  Future<Void> toggleForwarder(
-    Boolean? state,
+  Future<Void> update(
+    ApplicationExtensionName name,
+    Boolean                  state,
   ) async {
-    if (state == null) {
-      return;
-    }
-    if (SystemChecker.isWindows) {
-      var stateFile = (await StorageHelper.query(.applicationShared)).join('forwarder');
-      var exist = await StorageHelper.exist(stateFile);
-      if (!state && exist) {
-        await StorageHelper.remove(stateFile);
-      }
-      if (state && !exist) {
-        await StorageHelper.createFile(stateFile);
-      }
-    }
-    if (SystemChecker.isLinux) {
-      throw UnsupportedException();
-    }
-    if (SystemChecker.isMacintosh) {
-      var pluginkitResult = await ProcessHelper.runProcess(
-        .of('/usr/bin/pluginkit'),
-        [
-          '-e', '${!state ? 'ignore' : 'use'}',
-          '-i', '${ApplicationInformation.identifier}.Forwarder',
-        ],
-        null,
-        null,
-      );
-      assertTest(pluginkitResult.code == 0);
-    }
-    if (SystemChecker.isAndroid) {
-      throw UnsupportedException();
-    }
-    if (SystemChecker.isIphone) {
-      throw UnsupportedException();
-    }
+    // ignore: unused_local_variable
+    var platformResult = await ApplicationPlatformMethod.instance.updateApplicationExtension(ConvertHelper.makeEnumerationToStringOfSnakeCase(name), state);
     return;
   }
 

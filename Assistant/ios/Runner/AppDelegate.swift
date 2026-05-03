@@ -1,7 +1,5 @@
 import Flutter
 import UIKit
-import flutter_local_notifications
-import app_links
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -19,12 +17,6 @@ import app_links
     _ engineBridge: FlutterImplicitEngineBridge,
   ) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-      GeneratedPluginRegistrant.register(with: registry)
-    }
-    if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-    }
     self.customMethodChannel.register_didInitializeImplicitFlutterEngine(engineBridge)
     return
   }

@@ -32,7 +32,7 @@ STDAPI DllGetClassObject(
 		return E_NOINTERFACE;
 	}
 	try {
-		if (rclsid == __uuidof(ForwarderExplorerCommandClassFactory)) {
+		if (rclsid == winrt::guid{"9992EC48-22A5-86FA-EA42-72DA1A53F23D"}.operator GUID const &()) {
 			return winrt::make<ForwarderExplorerCommandClassFactory>()->QueryInterface(riid, ppv);
 		}
 		return E_INVALIDARG;

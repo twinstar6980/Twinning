@@ -1,8 +1,15 @@
 package com.twinstar.twinning.assistant
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.Settings
@@ -45,16 +52,15 @@ class CustomMethodChannel {
 
   // region register
 
-  public fun register_configureFlutterEngine(
-    flutterEngine: FlutterEngine,
+  public fun register_onCreate(
+    savedInstanceState: Bundle?,
   ): Unit {
-    MethodChannel(
-      flutterEngine.dartExecutor.binaryMessenger,
-      "${this.queryApplicationIdentifier()}.CustomMethodChannel",
-    ).setMethodCallHandler({ call, result ->
-      CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
-      return@setMethodCallHandler
-    })
+    val notificationManager = this.host.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.createNotificationChannel(
+      NotificationChannel("main", "Main", NotificationManager.IMPORTANCE_DEFAULT).also {
+        it.setShowBadge(false)
+      },
+    )
     return
   }
 
@@ -80,12 +86,30 @@ class CustomMethodChannel {
           this@CustomMethodChannel.continuation.send(value)
         }
       }
-      this.requestForRequestExternalStoragePermission -> {
+      this.requestForToggleStoragePermission -> {
+        runBlocking {
+          this@CustomMethodChannel.continuation.send(null)
+        }
+      }
+      this.requestForToggleNotificationPermission -> {
         runBlocking {
           this@CustomMethodChannel.continuation.send(null)
         }
       }
     }
+    return
+  }
+
+  public fun register_configureFlutterEngine(
+    flutterEngine: FlutterEngine,
+  ): Unit {
+    MethodChannel(
+      flutterEngine.dartExecutor.binaryMessenger,
+      "${this.queryApplicationIdentifier()}.CustomMethodChannel",
+    ).setMethodCallHandler({ call, result ->
+      CoroutineScope(Dispatchers.Main).launch { this@CustomMethodChannel.handle(call, result) }
+      return@setMethodCallHandler
+    })
     return
   }
 
@@ -101,6 +125,29 @@ class CustomMethodChannel {
       val argumentMap = call.arguments as Map<*, *>
       val resultMap = mutableMapOf<Any?, Any?>()
       when (call.method) {
+        "check_application_permission" -> {
+          val detail = this.handleCheckApplicationPermission(
+            argumentMap["name"] as String,
+          )
+          resultMap["state"] = detail
+        }
+        "update_application_permission" -> {
+          val detail = this.handleUpdateApplicationPermission(
+            argumentMap["name"] as String,
+          )
+        }
+        "check_application_extension" -> {
+          val detail = this.handleCheckApplicationExtension(
+            argumentMap["name"] as String,
+          )
+          resultMap["state"] = detail
+        }
+        "update_application_extension" -> {
+          val detail = this.handleUpdateApplicationExtension(
+            argumentMap["name"] as String,
+            argumentMap["state"] as Boolean,
+          )
+        }
         "query_storage_item" -> {
           val detail = this.handleQueryStorageItem(
             argumentMap["type"] as String,
@@ -121,11 +168,11 @@ class CustomMethodChannel {
           )
           resultMap["target"] = detail
         }
-        "check_storage_permission" -> {
-          val detail = this.handleCheckStoragePermission(
-            argumentMap["mode"] as String,
+        "push_system_notification" -> {
+          val detail = this.handlePushSystemNotification(
+            argumentMap["title"] as String,
+            argumentMap["description"] as String,
           )
-          resultMap["state"] = detail
         }
         else -> throw Exception("invalid method")
       }
@@ -133,6 +180,77 @@ class CustomMethodChannel {
     }
     catch (e: Exception) {
       result.error("", e.stackTraceToString(), null)
+    }
+    return
+  }
+
+  private suspend fun handleCheckApplicationPermission(
+    name: String,
+  ): Boolean {
+    check(name == "storage" || name == "notification")
+    var state = false
+    if (name == "storage") {
+      state = Environment.isExternalStorageManager()
+    }
+    if (name == "notification") {
+      val notificationManager = this.host.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+      state = notificationManager.areNotificationsEnabled()
+    }
+    return state
+  }
+
+  private suspend fun handleUpdateApplicationPermission(
+    name: String,
+  ): Unit {
+    check(name == "storage" || name == "notification")
+    if (name == "storage") {
+      this.host.startActivityForResult(
+        Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).also {
+          it.setData("package:${this.host.packageName}".toUri())
+        },
+        this.requestForToggleStoragePermission,
+      )
+      this.continuation.receive()
+    }
+    if (name == "notification") {
+      this.host.startActivityForResult(
+        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).also {
+          it.putExtra(Settings.EXTRA_APP_PACKAGE, this.host.packageName)
+        },
+        this.requestForToggleNotificationPermission,
+      )
+      this.continuation.receive()
+    }
+    return
+  }
+
+  private suspend fun handleCheckApplicationExtension(
+    name: String,
+  ): Boolean {
+    check(name == "forwarder")
+    var state = false
+    if (name == "forwarder") {
+      val packageManager = this.host.context.packageManager
+      val componentName = ComponentName(this.host.context, ForwarderActivity::class.qualifiedName!!)
+      state = when (packageManager.getComponentEnabledSetting(componentName)) {
+        PackageManager.COMPONENT_ENABLED_STATE_ENABLED -> true
+        PackageManager.COMPONENT_ENABLED_STATE_DISABLED -> false
+        else -> packageManager.getActivityInfo(componentName, PackageManager.MATCH_DISABLED_COMPONENTS).enabled
+      }
+    }
+    return state
+  }
+
+  private suspend fun handleUpdateApplicationExtension(
+    name: String,
+    state: Boolean,
+  ): Unit {
+    check(name == "forwarder")
+    if (name == "forwarder") {
+      val packageManager = this.host.context.packageManager
+      val componentName = ComponentName(this.host.context, ForwarderActivity::class.qualifiedName!!)
+      val newState = if (state) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+      packageManager.setComponentEnabledSetting(componentName, newState, PackageManager.DONT_KILL_APP)
     }
     return
   }
@@ -218,15 +336,27 @@ class CustomMethodChannel {
     return target
   }
 
-  private suspend fun handleCheckStoragePermission(
-    mode: String,
-  ): Boolean {
-    check(mode == "check" || mode == "request")
-    if (mode == "request") {
-      this.host.startActivityForResult(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, "package:${this.host.packageName}".toUri()), this.requestForRequestExternalStoragePermission)
-      this.continuation.receive()
-    }
-    return Environment.isExternalStorageManager()
+  private suspend fun handlePushSystemNotification(
+    title: String,
+    description: String,
+  ): Unit {
+    val intent = PendingIntent.getActivity(
+      this.host.context,
+      0,
+      Intent(this.host.context, MainActivity::class.java).also {
+        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+      },
+      PendingIntent.FLAG_IMMUTABLE,
+    )
+    val builder = Notification.Builder(this.host.context, "main")
+      .setSmallIcon(R.mipmap.ic_launcher_foreground)
+      .setContentTitle(title)
+      .setContentText(description)
+      .setContentIntent(intent)
+      .setAutoCancel(true)
+    val manager = this.host.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    manager.notify((System.currentTimeMillis() % Int.MAX_VALUE).toInt(), builder.build())
+    return
   }
 
   // endregion
@@ -235,7 +365,9 @@ class CustomMethodChannel {
 
   private val requestCodeForPickStorageItem: Int = 1001
 
-  private val requestForRequestExternalStoragePermission: Int = 1002
+  private val requestForToggleStoragePermission: Int = 1002
+
+  private val requestForToggleNotificationPermission: Int = 1003
 
   // ----------------
 

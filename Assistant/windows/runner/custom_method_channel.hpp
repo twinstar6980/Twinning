@@ -2,7 +2,12 @@
 
 #include <ShlObj_core.h>
 #include <Windows.h>
+#include <appmodel.h>
+#include <NotificationActivationCallback.h>
 #include <winrt/base.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Data.Xml.Dom.h>
+#include <winrt/Windows.UI.Notifications.h>
 #include <winrt/windows.applicationmodel.h>
 #include <flutter/flutter_view_controller.h>
 #include <flutter/method_channel.h>
@@ -75,10 +80,11 @@ public:
 			flutter::MethodCall<> const &            call,
 			std::unique_ptr<flutter::MethodResult<>> result
 		) -> void {
-				thiz.handle(call, std::move(result));
+				thiz.handle(call, result);
 				return;
 			}
 		);
+		thiz.register_notification_activation_callback();
 		return;
 	}
 
@@ -89,8 +95,8 @@ private:
 	#pragma region handle
 
 	auto handle(
-		flutter::MethodCall<> const &            call,
-		std::unique_ptr<flutter::MethodResult<>> result
+		flutter::MethodCall<> const &              call,
+		std::unique_ptr<flutter::MethodResult<>> & result
 	) -> void {
 		try {
 			auto argument_map = std::get<flutter::EncodableMap>(*call.arguments());
@@ -109,6 +115,9 @@ private:
 			};
 			auto set_result = [&]<typename TValue>(std::string_view const & name, TValue const & value) -> void {
 				auto value_f = flutter::EncodableValue{};
+				if constexpr (std::is_same_v<TValue, bool>) {
+					value_f.emplace<bool>(value);
+				}
 				if constexpr (std::is_same_v<TValue, std::string>) {
 					value_f.emplace<std::string>(value.data());
 				}
@@ -122,6 +131,33 @@ private:
 				return;
 			};
 			switch (hash_string(call.method_name())) {
+				case hash_string("check_application_permission"): {
+					auto detail = thiz.handle_check_application_permission(
+						get_argument.operator ()<std::string>("name")
+					);
+					set_result("state", std::get<0>(detail));
+					break;
+				}
+				case hash_string("update_application_permission"): {
+					auto detail = thiz.handle_update_application_permission(
+						get_argument.operator ()<std::string>("name")
+					);
+					break;
+				}
+				case hash_string("check_application_extension"): {
+					auto detail = thiz.handle_check_application_extension(
+						get_argument.operator ()<std::string>("name")
+					);
+					set_result("state", std::get<0>(detail));
+					break;
+				}
+				case hash_string("update_application_extension"): {
+					auto detail = thiz.handle_update_application_extension(
+						get_argument.operator ()<std::string>("name"),
+						get_argument.operator ()<bool>("state")
+					);
+					break;
+				}
 				case hash_string("query_storage_item"): {
 					auto detail = thiz.handle_query_storage_item(
 						get_argument.operator ()<std::string>("type")
@@ -145,6 +181,13 @@ private:
 					set_result("target", std::get<0>(detail));
 					break;
 				}
+				case hash_string("push_system_notification"): {
+					auto detail = thiz.handle_push_system_notification(
+						get_argument.operator ()<std::string>("title"),
+						get_argument.operator ()<std::string>("description")
+					);
+					break;
+				}
 				default: throw std::runtime_error{"Exception: invalid method"};
 			}
 			result->Success(result_map);
@@ -153,6 +196,65 @@ private:
 			result->Error("", thiz.parse_current_exception());
 		}
 		return;
+	}
+
+	auto handle_check_application_permission(
+		std::string const & name
+	) -> std::tuple<bool> {
+		assert_test(name == "storage" || name == "notification");
+		auto state = false;
+		if (name == "storage") {
+			state = true;
+		}
+		if (name == "notification") {
+			state = true;
+		}
+		return std::make_tuple(state);
+	}
+
+	auto handle_update_application_permission(
+		std::string const & name
+	) -> std::tuple<> {
+		assert_test(name == "storage" || name == "notification");
+		if (name == "storage") {
+		}
+		if (name == "notification") {
+			thiz.open_link(std::string{"ms-settings:notifications"});
+		}
+		return std::make_tuple();
+	}
+
+	auto handle_check_application_extension(
+		std::string const & name
+	) -> std::tuple<bool> {
+		assert_test(name == "forwarder");
+		auto state = false;
+		if (name == "forwarder") {
+			auto state_path_string = std::format("{}\\{}\\extension\\forwarder", thiz.query_known_folder_path(FOLDERID_RoamingAppData), thiz.query_application_identifier());
+			auto state_path = std::filesystem::path{reinterpret_cast<std::u8string const &>(state_path_string)};
+			auto state_exist = std::filesystem::exists(state_path);
+			state = state_exist;
+		}
+		return std::make_tuple(state);
+	}
+
+	auto handle_update_application_extension(
+		std::string const & name,
+		bool const &        state
+	) -> std::tuple<> {
+		assert_test(name == "forwarder");
+		if (name == "forwarder") {
+			auto state_path_string = std::format("{}\\{}\\extension\\forwarder", thiz.query_known_folder_path(FOLDERID_RoamingAppData), thiz.query_application_identifier());
+			auto state_path = std::filesystem::path{reinterpret_cast<std::u8string const &>(state_path_string)};
+			auto state_exist = std::filesystem::exists(state_path);
+			if (!state && state_exist) {
+				std::filesystem::remove_all(state_path);
+			}
+			if (state && !state_exist) {
+				std::filesystem::create_directories(state_path);
+			}
+		}
+		return std::make_tuple();
 	}
 
 	auto handle_query_storage_item(
@@ -256,20 +358,66 @@ private:
 		return std::make_tuple(target);
 	}
 
+	auto handle_push_system_notification(
+		std::string const & title,
+		std::string const & description
+	) -> std::tuple<> {
+		if (!thiz.check_application_packaged()) {
+			return std::make_tuple();
+		}
+		auto toast = winrt::Windows::Data::Xml::Dom::XmlDocument{};
+		auto xml_toast = toast.CreateElement(L"toast");
+		auto xml_visual = toast.CreateElement(L"visual");
+		auto xml_binding = toast.CreateElement(L"binding");
+		xml_binding.SetAttribute(L"template", L"ToastGeneric");
+		auto xml_text_title = toast.CreateElement(L"text");
+		xml_text_title.AppendChild(toast.CreateTextNode(winrt::to_hstring(title)));
+		xml_binding.AppendChild(xml_text_title);
+		auto xml_text_description = toast.CreateElement(L"text");
+		xml_text_description.AppendChild(toast.CreateTextNode(winrt::to_hstring(description)));
+		xml_binding.AppendChild(xml_text_description);
+		xml_visual.AppendChild(xml_binding);
+		xml_toast.AppendChild(xml_visual);
+		toast.AppendChild(xml_toast);
+		auto notification = winrt::Windows::UI::Notifications::ToastNotification{toast};
+		notification.ExpiresOnReboot(false);
+		notification.Activated(
+			[&](
+			winrt::Windows::UI::Notifications::ToastNotification const & sender,
+			winrt::Windows::Foundation::IInspectable const &             args
+		) -> auto {
+				auto window = thiz.m_host->GetHandle();
+				if (IsIconic(window)) {
+					ShowWindow(window, SW_RESTORE);
+				}
+				keybd_event(VK_MENU, 0, 0, 0);
+				keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0);
+				SetForegroundWindow(window);
+				return;
+			}
+		);
+		auto notifier = winrt::Windows::UI::Notifications::ToastNotificationManager::CreateToastNotifier();
+		notifier.Show(notification);
+		return std::make_tuple();
+	}
+
 	#pragma endregion
 
 	#pragma region utility
 
+	auto check_application_packaged(
+	) const -> bool {
+		auto length = UINT32{};
+		auto state_l = GetCurrentPackageFullName(&length, nullptr);
+		return state_l != APPMODEL_ERROR_NO_PACKAGE;
+	}
+
 	auto query_application_identifier(
 	) const -> std::string {
-		auto identifier = std::string{};
-		try {
-			identifier = winrt::to_string(winrt::Windows::ApplicationModel::Package::Current().Id().Name());
+		if (!thiz.check_application_packaged()) {
+			return std::string{"com.twinstar.twinning.assistant"};
 		}
-		catch (...) {
-			identifier = "com.twinstar.twinning.assistant";
-		}
-		return identifier;
+		return winrt::to_string(winrt::Windows::ApplicationModel::Package::Current().Id().Name());
 	}
 
 	// ----------------
@@ -343,6 +491,100 @@ private:
 		assert_test(reinterpret_cast<INT_PTR>(state_hi) > 32);
 		return;
 	}
+
+	// ----------------
+
+	auto register_notification_activation_callback(
+	) const -> void {
+		if (!thiz.check_application_packaged()) {
+			return;
+		}
+		auto state_h = HRESULT{};
+		auto rclsid = winrt::guid{"3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A"};
+		auto factory = winrt::make_self<NotificationActivationCallbackFactory>();
+		auto registration = DWORD{};
+		state_h = CoRegisterClassObject(rclsid, factory.get(), CLSCTX_LOCAL_SERVER, REGCLS_MULTIPLEUSE, &registration);
+		winrt::check_hresult(state_h);
+		return;
+	}
+
+	class NotificationActivationCallback :
+		public winrt::implements<NotificationActivationCallback, INotificationActivationCallback> {
+
+	public:
+
+		#pragma region constructor
+
+		explicit NotificationActivationCallback(
+		) :
+			winrt::implements<NotificationActivationCallback, INotificationActivationCallback>{} {
+			return;
+		}
+
+		#pragma endregion
+
+		#pragma region implement INotificationActivationCallback
+
+		// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+		virtual IFACEMETHODIMP Activate(
+			LPCWSTR                              appUserModelId,
+			LPCWSTR                              invokedArgs,
+			NOTIFICATION_USER_INPUT_DATA const * data,
+			ULONG                                count
+		) override {
+			return S_OK;
+		}
+
+		// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+		#pragma endregion
+
+	};
+
+	class NotificationActivationCallbackFactory :
+		public winrt::implements<NotificationActivationCallbackFactory, IClassFactory> {
+
+	public:
+
+		#pragma region constructor
+
+		explicit NotificationActivationCallbackFactory(
+		) :
+			winrt::implements<NotificationActivationCallbackFactory, IClassFactory>{} {
+			return;
+		}
+
+		#pragma endregion
+
+		#pragma region implement IClassFactory
+
+		// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+		virtual IFACEMETHODIMP CreateInstance(
+			IUnknown * pUnkOuter,
+			REFIID     riid,
+			void * *   ppvObject
+		) override {
+			try {
+				return winrt::make<NotificationActivationCallback>()->QueryInterface(riid, ppvObject);
+			}
+			catch (...) {
+				return winrt::to_hresult();
+			}
+		}
+
+		virtual IFACEMETHODIMP LockServer(
+			BOOL fLock
+		) override {
+			return S_OK;
+		}
+
+		// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+		#pragma endregion
+
+	};
 
 	#pragma endregion
 

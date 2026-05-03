@@ -1,5 +1,13 @@
 import '/common.dart';
+import '/utility/convert_helper.dart';
 import '/utility/application_platform_method.dart';
+
+// ----------------
+
+enum ApplicationPermissionName {
+  storage,
+  notification,
+}
 
 // ----------------
 
@@ -22,34 +30,19 @@ class ApplicationPermissionManager {
 
   // #region utility
 
-  Future<Boolean> checkStorage(
+  Future<Boolean> check(
+    ApplicationPermissionName name,
   ) async {
-    var state = true;
-    if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-      state = true;
-    }
-    if (SystemChecker.isAndroid) {
-      state = (await ApplicationPlatformMethod.instance.checkStoragePermission('check')).state;
-    }
-    if (SystemChecker.isIphone) {
-      state = true;
-    }
-    return state;
+    var platformResult = await ApplicationPlatformMethod.instance.checkApplicationPermission(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
+    return platformResult.state;
   }
 
-  Future<Boolean> requestStorage(
+  Future<Void> update(
+    ApplicationPermissionName name,
   ) async {
-    var state = true;
-    if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-      state = true;
-    }
-    if (SystemChecker.isAndroid) {
-      state = (await ApplicationPlatformMethod.instance.checkStoragePermission('request')).state;
-    }
-    if (SystemChecker.isIphone) {
-      state = true;
-    }
-    return state;
+    // ignore: unused_local_variable
+    var platformResult = await ApplicationPlatformMethod.instance.updateApplicationPermission(ConvertHelper.makeEnumerationToStringOfSnakeCase(name));
+    return;
   }
 
   // #endregion

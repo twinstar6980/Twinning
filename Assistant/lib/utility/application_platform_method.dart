@@ -25,6 +25,58 @@ class ApplicationPlatformMethod {
 
   // #region interface
 
+  Future<({Boolean state})> checkApplicationPermission(
+    String  name,
+  ) async {
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_application_permission', <Object?, Object?>{
+      'name': name,
+    });
+    detail!;
+    return (
+      state: detail['state']!.as<Boolean>(),
+    );
+  }
+
+  Future<()> updateApplicationPermission(
+    String  name,
+  ) async {
+    // ignore: unused_local_variable
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('update_application_permission', <Object?, Object?>{
+      'name': name,
+    });
+    detail!;
+    return (
+    );
+  }
+
+  Future<({Boolean state})> checkApplicationExtension(
+    String  name,
+  ) async {
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_application_extension', <Object?, Object?>{
+      'name': name,
+    });
+    detail!;
+    return (
+      state: detail['state']!.as<Boolean>(),
+    );
+  }
+
+  Future<()> updateApplicationExtension(
+    String  name,
+    Boolean state,
+  ) async {
+    // ignore: unused_local_variable
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('update_application_extension', <Object?, Object?>{
+      'name': name,
+      'state': state,
+    });
+    detail!;
+    return (
+    );
+  }
+
+  // ----------------
+
   Future<({String target})> queryStorageItem(
     String type,
   ) async {
@@ -69,16 +121,17 @@ class ApplicationPlatformMethod {
 
   // ----------------
 
-  Future<({Boolean state})> checkStoragePermission(
-    String mode,
+  Future<()> pushSystemNotification(
+    String title,
+    String description,
   ) async {
-    assertTest(SystemChecker.isAndroid);
-    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('check_storage_permission', <Object?, Object?>{
-      'mode': mode,
+    // ignore: unused_local_variable
+    var detail = await this._channel!.invokeMapMethod<Object?, Object?>('push_system_notification', <Object?, Object?>{
+      'title': title,
+      'description': description,
     });
     detail!;
     return (
-      state: detail['state']!.as<Boolean>(),
     );
   }
 

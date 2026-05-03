@@ -98,11 +98,15 @@
 
   除此以外，还可以进行以下可选配置：
 
-	* `Storage Permission` 点击以授予应用存储空间读写权限。
+	* `Forwarder - Default Target` 转发器扩展的默认转发目标模块。
 
-	  > 该项仅适用于 `Android` 。
+	* `Forwarder - Immediate Jump` 转发器扩展是否立即转发至默认目标模块，而非等待用户选择。
 
-	* `Forwarder Extension` 点击以启用转发器扩展。
+	* `Permission - Storage` 授予应用存储空间读写权限。
+
+	* `Permission - Notification` 授予应用推送系统通知的权限。
+
+	* `Extension - Forwarder` 启用转发器扩展。
 
 	  > 对于 `Windows` ，应用默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
 
@@ -110,13 +114,9 @@
 
 	  > 对于 `Macintosh` ，系统默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
 
-	  > 对于 `Android` ，系统将始终启用转发器扩展，应用无法自行更改启用状态。
+	  > 对于 `Android` ，应用默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
 
 	  > 对于 `Iphone` ，系统默认启用转发器扩展，应用无法自行更改启用状态，如果需要更改，请打开 ⌈ 文件 ⌋ ，选择任意文件后点击 ⌈ 共享 ⌋ - ⌈ 编辑操作... ⌋ - ⌈ Twinning Assistant ⌋ ，勾选右侧的开关按钮。
-
-	* `Forwarder Default Target` 转发器扩展的默认转发目标模块。
-
-	* `Forwarder Immediate Jump` 转发器扩展是否立即转发至默认目标模块，而非等待用户选择。
 
 * 设置脚本交互语言。
 

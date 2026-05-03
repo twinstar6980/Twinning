@@ -7,8 +7,6 @@ module;
 #include <winrt/windows.applicationmodel.h>
 #include "./common.hpp"
 
-#define M_forwarder_explorer_command_class_factory_uuid "9992EC48-22A5-86FA-EA42-72DA1A53F23D"
-
 export module twinning.assistant.forwarder.forwarder_explorer_command;
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
@@ -77,8 +75,10 @@ export namespace Twinning::Assistant::Forwarder {
 			EXPCMDSTATE *     pCmdState
 		) override {
 			*pCmdState = ECS_HIDDEN;
-			auto state_file = std::format("{}\\{}\\forwarder", thiz.query_known_folder_path(FOLDERID_RoamingAppData), thiz.query_application_identifier());
-			if (std::filesystem::exists(std::filesystem::path{reinterpret_cast<std::u8string const &>(state_file)})) {
+			auto state_path_string = std::format("{}\\{}\\extension\\forwarder", thiz.query_known_folder_path(FOLDERID_RoamingAppData), thiz.query_application_identifier());
+			auto state_path = std::filesystem::path{reinterpret_cast<std::u8string const &>(state_path_string)};
+			auto state_exist = std::filesystem::exists(state_path);
+			if (state_exist) {
 				*pCmdState = ECS_ENABLED;
 			}
 			return S_OK;
@@ -307,9 +307,7 @@ export namespace Twinning::Assistant::Forwarder {
 
 	};
 
-	// ----------------
-
-	class __declspec(uuid(M_forwarder_explorer_command_class_factory_uuid)) ForwarderExplorerCommandClassFactory :
+	class ForwarderExplorerCommandClassFactory :
 		public winrt::implements<ForwarderExplorerCommandClassFactory, IClassFactory> {
 
 	public:

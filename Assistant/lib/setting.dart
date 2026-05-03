@@ -31,10 +31,10 @@ class SettingData {
   Boolean                         windowSizeState;
   Integer                         windowSizeWidth;
   Integer                         windowSizeHeight;
-  Map<String, StoragePath>        storagePickerHistoryLocation;
   ModuleType                      forwarderDefaultTarget;
   Boolean                         forwarderImmediateJump;
   StoragePath                     moduleConfigurationDirectory;
+  Map<String, StoragePath>        storagePickerHistoryLocation;
   ModuleLauncherSetting           moduleLauncher;
   core_task_worker.Setting        coreTaskWorker;
   core_command_sender.Setting     coreCommandSender;
@@ -55,10 +55,10 @@ class SettingData {
     required this.windowSizeState,
     required this.windowSizeWidth,
     required this.windowSizeHeight,
-    required this.storagePickerHistoryLocation,
     required this.forwarderDefaultTarget,
     required this.forwarderImmediateJump,
     required this.moduleConfigurationDirectory,
+    required this.storagePickerHistoryLocation,
     required this.moduleLauncher,
     required this.coreTaskWorker,
     required this.coreCommandSender,
@@ -198,10 +198,10 @@ class SettingProvider with ChangeNotifier {
       windowSizeState: true,
       windowSizeWidth: 480,
       windowSizeHeight: 840,
-      storagePickerHistoryLocation: {},
       forwarderDefaultTarget: .coreResourceShipper,
       forwarderImmediateJump: false,
       moduleConfigurationDirectory: .new(),
+      storagePickerHistoryLocation: {},
       moduleLauncher: .new(
         module: ModuleType.values.map(ModuleHelper.query).map((it) => ModuleLauncherConfiguration(
           title: it.name,
@@ -275,10 +275,10 @@ class SettingProvider with ChangeNotifier {
       'window_size_state': data.windowSizeState,
       'window_size_width': data.windowSizeWidth,
       'window_size_height': data.windowSizeHeight,
-      'storage_picker_history_location': data.storagePickerHistoryLocation.map((key, value) => .new(key, value.emit())),
       'forwarder_default_target': data.forwarderDefaultTarget.selfLet((it) => ModuleHelper.query(it).identifier),
       'forwarder_immediate_jump': data.forwarderImmediateJump,
       'module_configuration_directory': data.moduleConfigurationDirectory.emit(),
+      'storage_picker_history_location': data.storagePickerHistoryLocation.map((key, value) => .new(key, value.emit())),
       'module_launcher': {
         'module': data.moduleLauncher.module.map((dataItem) => {
           'title': dataItem.title,
@@ -341,10 +341,10 @@ class SettingProvider with ChangeNotifier {
       windowSizeState: (json['window_size_state'] as Boolean),
       windowSizeWidth: (json['window_size_width'] as Integer),
       windowSizeHeight: (json['window_size_height'] as Integer),
-      storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>().map((key, value) => .new(key, StoragePath.of(value))),
       forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
       forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
       moduleConfigurationDirectory: (json['module_configuration_directory'] as String).selfLet((it) => StoragePath.of(it)),
+      storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>().map((key, value) => .new(key, StoragePath.of(value))),
       moduleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
         module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
           title: (jsonItem['title'] as String),

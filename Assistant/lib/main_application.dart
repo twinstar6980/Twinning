@@ -7,7 +7,6 @@ import '/utility/storage_path.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/window_helper.dart';
 import '/utility/application_exception_manager.dart';
-import '/utility/application_notification_manager.dart';
 import '/utility/application_link_manager.dart';
 import '/utility/system_ui_helper.dart';
 import 'dart:async';
@@ -62,7 +61,6 @@ class MainApplication {
       this._setting.state.handleForward = this._handleForward;
       this._setting.state.handleCommand = this._handleCommand;
       this._setting.state.handleLink = this._handleLink;
-      await ApplicationNotificationManager.instance.initialize();
       await ApplicationLinkManager.instance.initialize();
       await SystemUiHelper.applyMode(.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
@@ -83,12 +81,6 @@ class MainApplication {
         if (needShowOnboarding) {
           await this._setting.state.homeShowOnboarding!();
         }
-        await ApplicationNotificationManager.instance.listen(() async {
-          if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-            await WindowHelper.show();
-          }
-          return;
-        });
         await ApplicationLinkManager.instance.listen((link) async {
           await this._handleLink(link);
           return;

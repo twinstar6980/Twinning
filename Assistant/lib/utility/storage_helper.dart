@@ -330,7 +330,7 @@ class StorageHelper {
         var currentTargetString = currentTarget.emitNative();
         await for (var item in Directory(currentTargetString).list(recursive: false, followLinks: false)) {
           var itemType = await FileSystemEntity.type(item.path, followLinks: false);
-          var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[\/]')));
+          var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[\/\\]')));
           var itemPath = currentItem.join(itemName);
           if (followLink && itemType == .link) {
             var referentType = await FileSystemEntity.type(item.path, followLinks: true);
