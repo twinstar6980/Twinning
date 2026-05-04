@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'package:app_links/app_links.dart' as lib;
+import '/utility/platform_integration_manager.dart';
 
 // ----------------
 
@@ -15,7 +15,9 @@ class ApplicationLinkManager {
 
   Boolean _initialized;
 
-  lib.AppLinks? _plugin;
+  Stream<String>? _stream;
+
+  Integer _count;
 
   Future<Void> Function(Uri link)? _handler;
 
@@ -24,7 +26,8 @@ class ApplicationLinkManager {
   ApplicationLinkManager._(
   ) :
     this._initialized = false,
-    this._plugin = null,
+    this._stream = null,
+    this._count = 0,
     this._handler = null;
 
   // #endregion
@@ -34,35 +37,30 @@ class ApplicationLinkManager {
   Future<Void> initialize(
   ) async {
     assertTest(!this._initialized);
-    this._plugin = lib.AppLinks();
+    this._stream = PlatformIntegrationManager.instance.getStreamForLink();
     this._initialized = true;
     return;
   }
+
+  // ----------------
 
   Future<Void> listen(
     Future<Void> Function(Uri link) handler,
   ) async {
     assertTest(this._initialized);
     this._handler = handler;
-    this._plugin!.uriLinkStream.listen((link) {
-      this._handler!.call(link);
+    this._stream!.listen((link) {
+      this._count += 1;
+      this._handler!.call(.parse(link));
       return;
     });
     return;
   }
 
-  // ----------------
-
-  Future<Uri?> getFirst(
+  Future<Integer> count(
   ) async {
     assertTest(this._initialized);
-    return await this._plugin!.getInitialLink();
-  }
-
-  Future<Uri?> getLast(
-  ) async {
-    assertTest(this._initialized);
-    return await this._plugin!.getLatestLink();
+    return this._count;
   }
 
   // #endregion

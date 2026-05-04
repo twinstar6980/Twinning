@@ -6,31 +6,51 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   // MARK: - variable
 
-  private let host: MainFlutterWindow
-
-  private var channel: FlutterMethodChannel?
+  private var channel: FlutterMethodChannel!
 
   // MARK: - construct
 
-  public init(
-    host: MainFlutterWindow,
+  private override init(
   ) {
-    self.host = host
     self.channel = nil
     return
   }
 
-  // MARK: - register
+  // MARK: - singleton
 
-  public func register_awakeFromNib(
+  public static func instance(
+  ) -> PlatformIntegrationManager {
+    struct Holder {
+      static let instance = PlatformIntegrationManager()
+    }
+    return Holder.instance
+  }
+
+  // MARK: - inject
+
+  public func inject_AppDelegate_applicationWillFinishLaunching(
+    _ host: AppDelegate,
+    _ with_notification: Notification,
+  ) -> Void {
+    NSAppleEventManager.shared().setEventHandler(
+      self,
+      andSelector: #selector(self.resolveAppleEventForUrl(_:withReplyEvent:)),
+      forEventClass: AEEventClass(kInternetEventClass),
+      andEventID: AEEventID(kAEGetURL),
+    )
+    return
+  }
+
+  public func inject_MainFlutterWindow_awakeFromNib(
+    _ host: MainFlutterWindow,
   ) -> Void {
     self.channel = FlutterMethodChannel(
       name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
-      binaryMessenger: (self.host.contentViewController as! FlutterViewController).engine.binaryMessenger,
+      binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
     )
-    self.channel!.setMethodCallHandler({ [weak self] (call, result) in
+    self.channel.setMethodCallHandler({ [weak self] (call, result) in
       Task {
-        await self?.handle(call: call, result: result)
+        await self?.handle(call, result)
       }
       return
     })
@@ -42,8 +62,8 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // MARK: - handle
 
   private func handle(
-    call: FlutterMethodCall,
-    result: @escaping FlutterResult,
+    _ call: FlutterMethodCall,
+    _ result: @escaping FlutterResult,
   ) async -> Void {
     do {
       let method = call.method
@@ -52,53 +72,53 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         throw NSError(domain: "invalid argument.", code: 0)
       }
       let getArgument = { (name: String) in
-        return try self.extractFlutterValueMap(map: &rawArgument!, name: name)
+        return try self.extractFlutterValueMap(&rawArgument!, name)
       }
       var rawResult: [String: Any?] = [:]
       let setResult = { (name: String, value: Any?) in
-        return try self.infuseFlutterValueMap(map: &rawResult, name: name, value: value)
+        return try self.infuseFlutterValueMap(&rawResult, name, value)
       }
       switch method {
       case "check_application_permission":
         let detail = try await self.handleCheckApplicationPermission(
-          name: try self.decodeFlutterValue(raw: try getArgument("name")),
+          try self.decodeFlutterValue(try getArgument("name")),
         )
-        try setResult("state", try self.encodeFlutterValue(ripe: detail))
+        try setResult("state", try self.encodeFlutterValue(detail))
       case "update_application_permission":
         let _ = try await self.handleUpdateApplicationPermission(
-          name: try self.decodeFlutterValue(raw: try getArgument("name")),
+          try self.decodeFlutterValue(try getArgument("name")),
         )
       case "check_application_extension":
         let detail = try await self.handleCheckApplicationExtension(
-          name: try self.decodeFlutterValue(raw: try getArgument("name")),
+          try self.decodeFlutterValue(try getArgument("name")),
         )
-        try setResult("state", try self.encodeFlutterValue(ripe: detail))
+        try setResult("state", try self.encodeFlutterValue(detail))
       case "update_application_extension":
         let _ = try await self.handleUpdateApplicationExtension(
-          name: try self.decodeFlutterValue(raw: try getArgument("name")),
-          state: try self.decodeFlutterValue(raw: try getArgument("state")),
+          try self.decodeFlutterValue(try getArgument("name")),
+          try self.decodeFlutterValue(try getArgument("state")),
         )
       case "query_storage_item":
         let detail = try await self.handleQueryStorageItem(
-          type: try self.decodeFlutterValue(raw: try getArgument("type")),
+          try self.decodeFlutterValue(try getArgument("type")),
         )
-        try setResult("target", try self.encodeFlutterValue(ripe: detail))
+        try setResult("target", try self.encodeFlutterValue(detail))
       case "reveal_storage_item":
         let _ = try await self.handleRevealStorageItem(
-          target: try self.decodeFlutterValue(raw: try getArgument("target")),
+          try self.decodeFlutterValue(try getArgument("target")),
         )
       case "pick_storage_item":
         let detail = try await self.handlePickStorageItem(
-          type: try self.decodeFlutterValue(raw: try getArgument("type")),
-          multiply: try self.decodeFlutterValue(raw: try getArgument("multiply")),
-          location: try self.decodeFlutterValue(raw: try getArgument("location")),
-          name: try self.decodeFlutterValue(raw: try getArgument("name")),
+          try self.decodeFlutterValue(try getArgument("type")),
+          try self.decodeFlutterValue(try getArgument("multiply")),
+          try self.decodeFlutterValue(try getArgument("location")),
+          try self.decodeFlutterValue(try getArgument("name")),
         )
-        try setResult("target", try self.encodeFlutterValue(ripe: detail))
+        try setResult("target", try self.encodeFlutterValue(detail))
       case "push_system_notification":
         let _ = try await self.handlePushSystemNotification(
-          title: try self.decodeFlutterValue(raw: try getArgument("title")),
-          description: try self.decodeFlutterValue(raw: try getArgument("description")),
+          try self.decodeFlutterValue(try getArgument("title")),
+          try self.decodeFlutterValue(try getArgument("description")),
         )
       default:
         throw NSError(domain: "invalid method.", code: 0)
@@ -114,7 +134,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // ----------------
 
   private func handleCheckApplicationPermission(
-    name: String,
+    _ name: String,
   ) async throws -> Bool {
     guard name == "storage" || name == "notification" else {
       throw NSError(domain: "invalid name.", code: 0)
@@ -131,7 +151,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func handleUpdateApplicationPermission(
-    name: String,
+    _ name: String,
   ) async throws -> Void {
     guard name == "storage" || name == "notification" else {
       throw NSError(domain: "invalid name.", code: 0)
@@ -139,7 +159,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     if name == "storage" {
     }
     if name == "notification" {
-      try await self.openExternalLink(link: URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=\(self.queryApplicationIdentifier())")!)
+      try await self.openExternalLink(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=\(self.queryApplicationIdentifier())")!)
     }
     return
   }
@@ -147,7 +167,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // ----------------
 
   private func handleCheckApplicationExtension(
-    name: String,
+    _ name: String,
   ) async throws -> Bool {
     guard name == "forwarder" else {
       throw NSError(domain: "invalid name.", code: 0)
@@ -174,8 +194,8 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func handleUpdateApplicationExtension(
-    name: String,
-    state: Bool,
+    _ name: String,
+    _ state: Bool,
   ) async throws -> Void {
     guard name == "forwarder" else {
       throw NSError(domain: "invalid name.", code: 0)
@@ -201,38 +221,38 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // ----------------
 
   private func handleQueryStorageItem(
-    type: String,
+    _ type: String,
   ) async throws -> String {
     guard type == "user_home" || type == "application_shared" || type == "application_temporary" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     var target: String? = nil
     if type == "user_home" {
-      target = "\(try self.resolveFileUrl(url: FileManager.default.homeDirectoryForCurrentUser))"
+      target = "\(try self.resolveFileUrl(FileManager.default.homeDirectoryForCurrentUser))"
     }
     if type == "application_shared" {
-      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())"
+      target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())"
     }
     if type == "application_temporary" {
-      target = "\(try self.resolveFileUrl(url: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/temporary"
+      target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/temporary"
     }
     return target!
   }
 
   private func handleRevealStorageItem(
-    target: String,
+    _ target: String,
   ) async throws -> Void {
     let link = URL(fileURLWithPath: target)
-    try await self.openExternalLink(link: link)
+    try await self.openExternalLink(link)
     return
   }
 
   @MainActor
   private func handlePickStorageItem(
-    type: String,
-    multiply: Bool,
-    location: String,
-    name: String,
+    _ type: String,
+    _ multiply: Bool,
+    _ location: String,
+    _ name: String,
   ) async throws -> Array<String> {
     guard type == "load_file" || type == "load_directory" || type == "save_file" else {
       throw NSError(domain: "invalid type.", code: 0)
@@ -275,15 +295,15 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         }
       }
     }
-    let target = try targetUrl.map({ (item) in try self.resolveFileUrl(url: item) })
+    let target = try targetUrl.map({ (item) in try self.resolveFileUrl(item) })
     return target
   }
 
   // ----------------
 
   private func handlePushSystemNotification(
-    title: String,
-    description: String,
+    _ title: String,
+    _ description: String,
   ) async throws -> Void {
     let content = UNMutableNotificationContent()
     content.title = title
@@ -297,33 +317,33 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // MARK: - invoke
 
   private func invoke(
-    method: String,
-    argument: [String: Any?],
+    _ method: String,
+    _ argument: [String: Any?],
   ) async throws -> Void {
-    self.channel?.invokeMethod(method, arguments: argument)
+    self.channel.invokeMethod(method, arguments: argument)
     return
   }
 
   // ----------------
 
   private func invokeReceiveApplicationLink(
-    target: String,
+    _ target: String,
   ) async throws -> Void {
-    return try await self.invoke(method: "receive_application_link", argument: [
-      "target": target,
+    return try await self.invoke("receive_application_link", [
+      "target": self.encodeFlutterValue(target),
     ])
   }
 
   // MARK: - utility
 
   private func encodeFlutterValue<TValue>(
-    ripe: TValue,
+    _ ripe: TValue,
   ) throws -> Any? {
     return ripe
   }
 
   private func decodeFlutterValue<TValue>(
-    raw: Any?,
+    _ raw: Any?,
   ) throws -> TValue {
     let ripe = raw as? TValue
     let nilValue = Optional<Any>.none as? TValue 
@@ -334,8 +354,8 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func extractFlutterValueMap(
-    map: inout [String: Any?],
-    name: String,
+    _ map: inout [String: Any?],
+    _ name: String,
   ) throws -> Any? {
     guard map.index(forKey: name) != nil else {
       throw NSError(domain: "invalid name.", code: 0)
@@ -344,9 +364,9 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func infuseFlutterValueMap(
-    map: inout [String: Any?],
-    name: String,
-    value: Any?,
+    _ map: inout [String: Any?],
+    _ name: String,
+    _ value: Any?,
   ) throws -> Void {
     map[name] = value
     return
@@ -365,7 +385,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // ----------------
 
   private func resolveFileUrl(
-    url: URL,
+    _ url: URL,
   ) throws -> String {
     guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
       throw NSError(domain: "invalid url.", code: 0)
@@ -381,10 +401,26 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func openExternalLink(
-    link: URL,
+    _ link: URL,
   ) async throws -> Void {
     guard NSWorkspace.shared.open(link) else {
       throw NSError(domain: "failed to open link.", code: 0)
+    }
+    return
+  }
+
+  // MARK: - resolve AppleEvent
+
+  @objc
+  private func resolveAppleEventForUrl(
+    _ event: NSAppleEventDescriptor,
+    withReplyEvent replyEvent: NSAppleEventDescriptor,
+  ) {
+    let link = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
+    if link != nil {
+      Task {
+        _ = try? await self.invokeReceiveApplicationLink(link!)
+      }
     }
     return
   }

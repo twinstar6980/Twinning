@@ -44,6 +44,8 @@ class ApplicationExceptionManager {
     return;
   }
 
+  // ----------------
+
   Future<Void> listen(
     Future<Void> Function(Object exception, StackTrace? stack)? handler,
   ) async {

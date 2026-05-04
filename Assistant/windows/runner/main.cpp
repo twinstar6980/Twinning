@@ -5,57 +5,13 @@
 #include "flutter_window.h"
 #include "utils.h"
 
-#include <regex>
-#include "app_links/app_links_plugin_c_api.h"
-
-bool SendAppLinkToInstance(const std::wstring& title) {
-  std::vector<std::string> command_line_arguments = GetCommandLineArguments();
-  if (command_line_arguments.size() != 1) {
-    return false;
-  }
-  if (!std::regex_search(command_line_arguments.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
-    return false;
-  }
-
-  // Find our exact window
-  HWND hwnd = ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", title.c_str());
-
-  if (hwnd) {
-    // Dispatch new link to current window
-    SendAppLink(hwnd);
-
-    // (Optional) Restore our window to front in same state
-    WINDOWPLACEMENT place = { sizeof(WINDOWPLACEMENT) };
-    GetWindowPlacement(hwnd, &place);
-
-    switch(place.showCmd) {
-      case SW_SHOWMAXIMIZED:
-          ShowWindow(hwnd, SW_SHOWMAXIMIZED);
-          break;
-      case SW_SHOWMINIMIZED:
-          ShowWindow(hwnd, SW_RESTORE);
-          break;
-      default:
-          ShowWindow(hwnd, SW_NORMAL);
-          break;
-    }
-
-    SetWindowPos(0, HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOMOVE);
-    SetForegroundWindow(hwnd);
-    // END (Optional) Restore
-
-    // Window has been found, don't create another one.
-    return true;
-  }
-
-  return false;
-}
+import platform_integration_manager;
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
-  SetProcessPreferredUILanguages(MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
-  std::locale::global(std::locale::classic());
-  if (SendAppLinkToInstance(L"Twinning Assistant")) {
+  auto inject_exit = false;
+  PlatformIntegrationManager::instance().inject_wWinMain(nullptr, instance, prev, command_line, show_command, inject_exit);
+  if (inject_exit) {
     return EXIT_SUCCESS;
   }
 
@@ -79,7 +35,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.Create(L"Twinning Assistant", origin, size)) {
+  if (!window.Create(PlatformIntegrationManager::instance().exposed_application_name(), origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

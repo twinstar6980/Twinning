@@ -1,5 +1,6 @@
 package com.twinstar.twinning.assistant
 
+import android.app.ComponentCaller
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -17,7 +18,6 @@ import androidx.core.database.getFloatOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import androidx.core.net.toUri
-import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -27,64 +27,121 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Date
+import kotlin.properties.Delegates
 
 class PlatformIntegrationManager {
 
   // region variable
 
-  private val host: FlutterActivity
+  private var channel: MethodChannel by Delegates.notNull()
 
-  private var channel: MethodChannel?
+  private var activity: MainActivity by Delegates.notNull()
 
-  private var continuation: Channel<Any?>
+  private val continuation: Channel<Any?>
 
   // endregion
 
   // region construct
 
-  public constructor(
-    host: FlutterActivity,
+  private constructor(
   ) {
-    this.host = host
-    this.channel = null
     this.continuation = Channel()
     return
   }
 
   // endregion
 
+  // region singleton
+
+  public companion object {
+
+    private var instance: PlatformIntegrationManager = PlatformIntegrationManager()
+
+    public fun instance(
+    ): PlatformIntegrationManager {
+      return instance
+    }
+
+  }
+
+  // endregion
+
   // region register
 
-  @Suppress("FunctionName")
-  public fun register_onCreate(
-    savedInstanceState: Bundle?,
+  @Suppress("FunctionName", "LocalVariableName")
+  public fun inject_MainActivity_configureFlutterEngine(
+    host: MainActivity,
+    with_flutterEngine: FlutterEngine,
   ): Unit {
-    val notificationManager = this.host.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    this.activity = host
+    this.channel = MethodChannel(
+      with_flutterEngine.dartExecutor.binaryMessenger,
+      "${this.queryApplicationIdentifier()}/PlatformIntegrationManager",
+    )
+    this.channel.setMethodCallHandler({ call, result ->
+      CoroutineScope(Dispatchers.Main).launch {
+        this@PlatformIntegrationManager.handle(call, result)
+      }
+      return@setMethodCallHandler
+    })
+    return
+  }
+
+  @Suppress("FunctionName", "LocalVariableName")
+  public fun inject_MainActivity_onCreate(
+    host: MainActivity,
+    with_savedInstanceState: Bundle?,
+  ): Unit {
+    val notificationManager = this.activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(
       NotificationChannel("main", "Main", NotificationManager.IMPORTANCE_DEFAULT).also {
         it.setShowBadge(false)
       },
     )
+    val intent = this.activity.intent
+    if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
+      runBlocking {
+        val link = intent.data!!.toString()
+        this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
+      }
+    }
     return
   }
 
-  @Suppress("FunctionName")
-  public fun register_onActivityResult(
-    requestCode: Int,
-    resultCode: Int,
-    data: Intent?,
+  @Suppress("FunctionName", "LocalVariableName")
+  public fun inject_MainActivity_onNewIntent(
+    host: MainActivity,
+    with_intent: Intent,
+    with_caller: ComponentCaller,
   ): Unit {
-    when (requestCode) {
+    val intent = with_intent
+    if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
+      runBlocking {
+        val link = intent.data!!.toString()
+        this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
+      }
+    }
+    return
+  }
+
+  @Suppress("FunctionName", "LocalVariableName")
+  public fun inject_MainActivity_onActivityResult(
+    host: MainActivity,
+    with_requestCode: Int,
+    with_resultCode: Int,
+    with_data: Intent?,
+  ): Unit {
+    when (with_requestCode) {
       this.requestCodeForPickStorageItem -> {
         runBlocking {
           val value = mutableListOf<Uri>()
-          if (data != null) {
-            if (data.data != null) {
-              value.add(data.data!!)
+          if (with_data != null) {
+            if (with_data.data != null) {
+              value.add(with_data.data!!)
             }
-            else if (data.clipData != null) {
-              for (index in 0 until data.clipData!!.itemCount) {
-                value.add(data.clipData!!.getItemAt(index).uri)
+            else if (with_data.clipData != null) {
+              for (index in 0 until with_data.clipData!!.itemCount) {
+                value.add(with_data.clipData!!.getItemAt(index).uri)
               }
             }
           }
@@ -102,23 +159,6 @@ class PlatformIntegrationManager {
         }
       }
     }
-    return
-  }
-
-  @Suppress("FunctionName")
-  public fun register_configureFlutterEngine(
-    flutterEngine: FlutterEngine,
-  ): Unit {
-    this.channel = MethodChannel(
-      flutterEngine.dartExecutor.binaryMessenger,
-      "${this.queryApplicationIdentifier()}/PlatformIntegrationManager",
-    )
-    this.channel!!.setMethodCallHandler({ call, result ->
-      CoroutineScope(Dispatchers.Main).launch {
-        this@PlatformIntegrationManager.handle(call, result)
-      }
-      return@setMethodCallHandler
-    })
     return
   }
 
@@ -212,7 +252,7 @@ class PlatformIntegrationManager {
       state = Environment.isExternalStorageManager()
     }
     if (name == "notification") {
-      val notificationManager = this.host.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+      val notificationManager = this.activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       state = notificationManager.areNotificationsEnabled()
     }
     return state
@@ -223,18 +263,18 @@ class PlatformIntegrationManager {
   ): Unit {
     check(name == "storage" || name == "notification")
     if (name == "storage") {
-      this.host.startActivityForResult(
+      this.activity.startActivityForResult(
         Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).also {
-          it.setData("package:${this.host.packageName}".toUri())
+          it.setData("package:${this.activity.packageName}".toUri())
         },
         this.requestForToggleStoragePermission,
       )
       this.continuation.receive()
     }
     if (name == "notification") {
-      this.host.startActivityForResult(
+      this.activity.startActivityForResult(
         Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).also {
-          it.putExtra(Settings.EXTRA_APP_PACKAGE, this.host.packageName)
+          it.putExtra(Settings.EXTRA_APP_PACKAGE, this.activity.packageName)
         },
         this.requestForToggleNotificationPermission,
       )
@@ -252,8 +292,8 @@ class PlatformIntegrationManager {
     var state = false
     @Suppress("KotlinConstantConditions")
     if (name == "forwarder") {
-      val packageManager = this.host.context.packageManager
-      val componentName = ComponentName(this.host.context, ForwarderActivity::class.qualifiedName!!)
+      val packageManager = this.activity.context.packageManager
+      val componentName = ComponentName(this.activity.context, ForwarderActivity::class.qualifiedName!!)
       state = when (packageManager.getComponentEnabledSetting(componentName)) {
         PackageManager.COMPONENT_ENABLED_STATE_ENABLED -> true
         PackageManager.COMPONENT_ENABLED_STATE_DISABLED -> false
@@ -270,8 +310,8 @@ class PlatformIntegrationManager {
     check(name == "forwarder")
     @Suppress("KotlinConstantConditions")
     if (name == "forwarder") {
-      val packageManager = this.host.context.packageManager
-      val componentName = ComponentName(this.host.context, ForwarderActivity::class.qualifiedName!!)
+      val packageManager = this.activity.context.packageManager
+      val componentName = ComponentName(this.activity.context, ForwarderActivity::class.qualifiedName!!)
       val newState = if (state) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
       packageManager.setComponentEnabledSetting(componentName, newState, PackageManager.DONT_KILL_APP)
     }
@@ -289,10 +329,10 @@ class PlatformIntegrationManager {
       target = "${Environment.getExternalStorageDirectory().absolutePath}"
     }
     if (type == "application_shared") {
-      target = "${this.host.getExternalFilesDir(null)!!.absolutePath}"
+      target = "${this.activity.getExternalFilesDir(null)!!.absolutePath}"
     }
     if (type == "application_temporary") {
-      target = "${this.host.getCacheDir().absolutePath}/temporary"
+      target = "${this.activity.getCacheDir().absolutePath}/temporary"
     }
     return target!!
   }
@@ -310,7 +350,7 @@ class PlatformIntegrationManager {
     intent.setAction(Intent.ACTION_VIEW)
     intent.setData("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(targetSegment)}".toUri())
     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-    this.host.startActivity(intent)
+    this.activity.startActivity(intent)
     return
   }
 
@@ -350,12 +390,12 @@ class PlatformIntegrationManager {
       intent.putExtra(Intent.EXTRA_TITLE, name)
     }
     val timeBeforePick = Date().time
-    this.host.startActivityForResult(intent, this.requestCodeForPickStorageItem)
+    this.activity.startActivityForResult(intent, this.requestCodeForPickStorageItem)
     @Suppress("UNCHECKED_CAST")
     val targetUri = this.continuation.receive() as List<Uri>
     if (type == "save_file" && !targetUri.isEmpty()) {
       if (this.queryDatabaseOfContentUri<Long>(targetUri.first(), DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
-        check(DocumentsContract.deleteDocument(this.host.contentResolver, targetUri.first()))
+        check(DocumentsContract.deleteDocument(this.activity.contentResolver, targetUri.first()))
       }
     }
     val target = targetUri.map({ item -> this.resolveContentUri(item) })
@@ -369,20 +409,20 @@ class PlatformIntegrationManager {
     description: String,
   ): Unit {
     val intent = PendingIntent.getActivity(
-      this.host.context,
+      this.activity.context,
       0,
-      Intent(this.host.context, MainActivity::class.java).also {
+      Intent(this.activity.context, MainActivity::class.java).also {
         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
       },
       PendingIntent.FLAG_IMMUTABLE,
     )
-    val builder = Notification.Builder(this.host.context, "main")
+    val builder = Notification.Builder(this.activity.context, "main")
       .setSmallIcon(R.mipmap.ic_launcher_foreground)
       .setContentTitle(title)
       .setContentText(description)
       .setContentIntent(intent)
       .setAutoCancel(true)
-    val manager = this.host.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val manager = this.activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     manager.notify((System.currentTimeMillis() % Int.MAX_VALUE).toInt(), builder.build())
     return
   }
@@ -395,7 +435,7 @@ class PlatformIntegrationManager {
     method: String,
     argument: Map<String, Any?>,
   ): Unit {
-    val result = this.channel!!.invokeMethod(method, argument)
+    val result = this.channel.invokeMethod(method, argument)
     return result
   }
 
@@ -453,7 +493,7 @@ class PlatformIntegrationManager {
 
   private fun queryApplicationIdentifier(
   ): String {
-    return this.host.packageName
+    return this.activity.packageName
   }
 
   // ----------------
@@ -463,7 +503,7 @@ class PlatformIntegrationManager {
     name: String,
   ): TValue? {
     var value = null as TValue?
-    this.host.contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
+    this.activity.contentResolver.query(uri, arrayOf(name), null, null, null, null).use { cursor ->
       check(cursor != null)
       check(cursor.columnCount == 1)
       check(cursor.moveToFirst())

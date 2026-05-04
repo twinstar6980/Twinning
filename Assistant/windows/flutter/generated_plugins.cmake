@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  app_links
   dynamic_color
   irondash_engine_context
   screen_retriever_windows

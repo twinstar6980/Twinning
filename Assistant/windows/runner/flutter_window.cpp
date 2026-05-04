@@ -4,10 +4,10 @@
 
 #include "flutter/generated_plugin_registrant.h"
 
-#include "./platform_integration_manager.hpp"
+import platform_integration_manager;
 
 FlutterWindow::FlutterWindow(const flutter::DartProject& project)
-    : project_(project), platform_integration_manager_(std::make_unique<PlatformIntegrationManager>(this)) {}
+    : project_(project) {}
 
 FlutterWindow::~FlutterWindow() {}
 
@@ -27,7 +27,9 @@ bool FlutterWindow::OnCreate() {
     return false;
   }
   RegisterPlugins(flutter_controller_->engine());
-  this->platform_integration_manager_->register_OnCreate();
+
+  PlatformIntegrationManager::instance().inject_FlutterWindow_OnCreate(*this, this->flutter_controller_);
+
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {

@@ -1,11 +1,10 @@
-// twinning.assistant.forwarder.main
+// main
 
 #include <unknwn.h>
 #include <winrt/base.h>
 #include "./common.hpp"
 
-import twinning.assistant.forwarder.forwarder_explorer_command;
-using Twinning::Assistant::Forwarder::ForwarderExplorerCommandClassFactory;
+import forwarder_explorer_command;
 
 #pragma region main
 

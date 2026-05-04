@@ -16,4 +16,11 @@ class AppDelegate: FlutterAppDelegate {
     return true
   }
 
+  public override func applicationWillFinishLaunching(
+    _ notification: Notification,
+  ) -> Void {
+    PlatformIntegrationManager.instance().inject_AppDelegate_applicationWillFinishLaunching(self, notification)
+    return
+  }
+
 }

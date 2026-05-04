@@ -1,4 +1,5 @@
 import '/common.dart';
+import 'dart:async';
 import 'package:flutter/services.dart';
 
 // ----------------
@@ -15,11 +16,14 @@ class PlatformIntegrationManager {
 
   MethodChannel _channel;
 
+  StreamController<String> _streamControllerForLink;
+
   // ----------------
 
   PlatformIntegrationManager._(
   ) :
-    this._channel = .new('${ApplicationInformation.identifier}/PlatformIntegrationManager') {
+    this._channel = .new('${ApplicationInformation.identifier}/PlatformIntegrationManager'),
+    this._streamControllerForLink = .new() {
     this._channel.setMethodCallHandler((call) async => await this._handle(call));
   }
 
@@ -58,8 +62,7 @@ class PlatformIntegrationManager {
   Future<()> _handleReceiveApplicationLink(
     String target,
   ) async {
-    // TODO
-    print(target);
+    this._streamControllerForLink.sink.add(target);
     return (
     );
   }
@@ -193,6 +196,15 @@ class PlatformIntegrationManager {
     return (
       destination: detail['destination']!.as<String>(),
     );
+  }
+
+  // #endregion
+
+  // #region utility
+
+  Stream<String> getStreamForLink(
+  ) {
+    return this._streamControllerForLink.stream;
   }
 
   // #endregion

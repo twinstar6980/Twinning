@@ -3,16 +3,14 @@ import FlutterMacOS
 
 class MainFlutterWindow: NSWindow {
 
-  private lazy var platformIntegrationManager: PlatformIntegrationManager = PlatformIntegrationManager(host: self)
-
   public override func awakeFromNib(
-  ) {
+  ) -> Void {
     let flutterViewController = FlutterViewController()
     let windowFrame = self.frame
     self.contentViewController = flutterViewController
     self.setFrame(windowFrame, display: true)
     RegisterGeneratedPlugins(registry: flutterViewController)
-    self.platformIntegrationManager.register_awakeFromNib()
+    PlatformIntegrationManager.instance().inject_MainFlutterWindow_awakeFromNib(self)
     super.awakeFromNib()
     return
   }

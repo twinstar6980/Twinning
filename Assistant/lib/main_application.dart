@@ -85,7 +85,7 @@ class MainApplication {
           await this._handleLink(link);
           return;
         });
-        if (await ApplicationLinkManager.instance.getFirst() == null) {
+        if (await ApplicationLinkManager.instance.count() == 0) {
           if (argument.length >= 1 && argument[0] == 'application') {
             await this._handleCommand(argument.slice(1));
           }

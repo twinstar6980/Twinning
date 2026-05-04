@@ -7,13 +7,11 @@ module;
 #include <winrt/windows.applicationmodel.h>
 #include "./common.hpp"
 
-export module twinning.assistant.forwarder.forwarder_explorer_command;
+export module forwarder_explorer_command;
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
-export namespace Twinning::Assistant::Forwarder {
-
-	#pragma region type
+export {
 
 	class ForwarderExplorerCommand :
 		public winrt::implements<ForwarderExplorerCommand, IExplorerCommand> {
@@ -171,6 +169,42 @@ export namespace Twinning::Assistant::Forwarder {
 			return message;
 		}
 
+		auto encode_percent_string(
+			std::string const & source
+		) const -> std::string {
+			auto destination = std::string{};
+			destination.reserve(source.size() * 3);
+			for (auto & character : source) {
+				if (('0' <= character && character <= '9') ||
+					('a' <= character && character <= 'z') ||
+					('A' <= character && character <= 'Z') ||
+					(character == '-') ||
+					(character == '.') ||
+					(character == '_') ||
+					(character == '~')) {
+					destination.push_back(character);
+				}
+				else {
+					auto high_digit = static_cast<std::uint8_t>(character) / 0x10u;
+					auto low_digit = static_cast<std::uint8_t>(character) % 0x10u;
+					destination.push_back('%');
+					destination.push_back(static_cast<char>((high_digit < 0xAu) ? ('0' + high_digit) : ('A' + high_digit - 0xAu)));
+					destination.push_back(static_cast<char>((low_digit < 0xAu) ? ('0' + low_digit) : ('A' + low_digit - 0xAu)));
+				}
+			}
+			return destination;
+		}
+
+		auto open_external_link(
+			std::string const & link
+		) const -> void {
+			auto state_hi = HINSTANCE{};
+			auto link_h = winrt::to_hstring(link);
+			state_hi = ShellExecuteW(nullptr, L"open", link_h.data(), nullptr, nullptr, SW_SHOWNORMAL);
+			assert_test(reinterpret_cast<INT_PTR>(state_hi) > 32);
+			return;
+		}
+
 		auto query_known_folder_path(
 			KNOWNFOLDERID const & type
 		) const -> std::string {
@@ -228,42 +262,6 @@ export namespace Twinning::Assistant::Forwarder {
 			auto item_display_h = std::wstring{item_display};
 			CoTaskMemFree(item_display);
 			return winrt::to_string(item_display_h);
-		}
-
-		auto encode_percent_string(
-			std::string const & source
-		) const -> std::string {
-			auto destination = std::string{};
-			destination.reserve(source.size() * 3);
-			for (auto & character : source) {
-				if (('0' <= character && character <= '9') ||
-					('a' <= character && character <= 'z') ||
-					('A' <= character && character <= 'Z') ||
-					(character == '-') ||
-					(character == '.') ||
-					(character == '_') ||
-					(character == '~')) {
-					destination.push_back(character);
-				}
-				else {
-					auto high_digit = static_cast<std::uint8_t>(character) / 0x10u;
-					auto low_digit = static_cast<std::uint8_t>(character) % 0x10u;
-					destination.push_back('%');
-					destination.push_back(static_cast<char>((high_digit < 0xAu) ? ('0' + high_digit) : ('A' + high_digit - 0xAu)));
-					destination.push_back(static_cast<char>((low_digit < 0xAu) ? ('0' + low_digit) : ('A' + low_digit - 0xAu)));
-				}
-			}
-			return destination;
-		}
-
-		auto open_external_link(
-			std::string const & link
-		) const -> void {
-			auto state_hi = HINSTANCE{};
-			auto link_h = winrt::to_hstring(link);
-			state_hi = ShellExecuteW(nullptr, L"open", link_h.data(), nullptr, nullptr, SW_SHOWNORMAL);
-			assert_test(reinterpret_cast<INT_PTR>(state_hi) > 32);
-			return;
 		}
 
 		// ----------------
@@ -355,7 +353,5 @@ export namespace Twinning::Assistant::Forwarder {
 		#pragma endregion
 
 	};
-
-	#pragma endregion
 
 }

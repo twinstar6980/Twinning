@@ -5,6 +5,8 @@
 
 #include "resource.h"
 
+import platform_integration_manager;
+
 namespace {
 
 /// Window attribute that enables dark mode window decorations.
@@ -217,6 +219,8 @@ Win32Window::MessageHandler(HWND hwnd,
       UpdateTheme(hwnd);
       return 0;
   }
+
+  PlatformIntegrationManager::instance().inject_Win32Window_MessageHandler(*this, hwnd, message, wparam, lparam);
 
   return DefWindowProc(window_handle_, message, wparam, lparam);
 }

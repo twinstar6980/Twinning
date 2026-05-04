@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.28)
 project(runner LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -12,8 +12,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 add_executable(${BINARY_NAME}
   "main.cc"
   "my_application.cc"
+  "platform_integration_manager.cppm"
   "${FLUTTER_MANAGED_DIR}/generated_plugin_registrant.cc"
 )
+target_sources(${BINARY_NAME}
+  PUBLIC
+  FILE_SET CXX_MODULES FILES
+  "platform_integration_manager.cppm"
+)
+target_compile_options(${BINARY_NAME} PRIVATE)
 
 # Apply the standard set of build settings. This can be removed for applications
 # that need different build settings.

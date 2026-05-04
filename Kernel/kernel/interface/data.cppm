@@ -11,7 +11,7 @@ export namespace Twinning::Kernel::Interface {
 
 	struct Message {
 
-		std::uint8_t * data{nullptr};
+		std::add_pointer_t<std::uint8_t> data{nullptr};
 
 		std::size_t size{0};
 
