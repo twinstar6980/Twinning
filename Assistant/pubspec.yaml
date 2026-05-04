@@ -1,5 +1,5 @@
 name: assistant
-version: 184.0.0+184
+version: 185.0.0+185
 environment:
   sdk: ^3.11.5
 dependencies:

@@ -8,6 +8,7 @@ class SceneDelegate: FlutterSceneDelegate {
     willConnectTo session: UISceneSession,
     options connectionOptions: UIScene.ConnectionOptions,
   ) -> Void {
+    super.scene(scene, willConnectTo: session, options: connectionOptions)
     PlatformIntegrationManager.instance().inject_SceneDelegate_scene(self, scene, session, connectionOptions)
     return
   }
@@ -16,6 +17,7 @@ class SceneDelegate: FlutterSceneDelegate {
     _ scene: UIScene,
     openURLContexts URLContexts: Set<UIOpenURLContext>,
   ) -> Void {
+    super.scene(scene, openURLContexts: URLContexts)
     PlatformIntegrationManager.instance().inject_SceneDelegate_scene(self, scene, URLContexts)
     return
   }

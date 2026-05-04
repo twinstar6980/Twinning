@@ -130,7 +130,7 @@ export {
 			also_exit = false;
 			auto argument = GetCommandLineArguments();
 			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
-				auto window = ::FindWindowW(L"FLUTTER_RUNNER_WIN32_WINDOW", thiz.exposed_application_name().data());
+				auto window = FindWindowW(L"FLUTTER_RUNNER_WIN32_WINDOW", thiz.exposed_application_name().data());
 				if (window != nullptr) {
 					auto data = COPYDATASTRUCT{};
 					data.dwData = WM_USER + 1;
@@ -186,6 +186,10 @@ export {
 				}
 			);
 			thiz.register_notification_activation_callback();
+			auto argument = GetCommandLineArguments();
+			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
+				thiz.invoke_receive_application_link(argument.front());
+			}
 			return;
 		}
 

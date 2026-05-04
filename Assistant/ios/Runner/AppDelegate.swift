@@ -13,7 +13,7 @@ import UIKit
 
   public func didInitializeImplicitFlutterEngine(
     _ engineBridge: FlutterImplicitEngineBridge,
-  ) {
+  ) -> Void {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     PlatformIntegrationManager.instance().inject_AppDelegate_didInitializeImplicitFlutterEngine(self, engineBridge)
     return
