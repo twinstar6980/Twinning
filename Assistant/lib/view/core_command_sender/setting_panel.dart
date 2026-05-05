@@ -25,27 +25,15 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => FlexContainer.vertical([
         Gap.vertical(8),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.shuffle,
           label: 'Parallel Forward',
-          comment: [
-            StyledText.inherit(!this.data.parallelForward ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.parallelForward,
-                onChanged: (context, value) async {
-                  this.data.parallelForward = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.parallelForward,
+          setValue: (value) => this.data.parallelForward = value,
+          onUpdate: this.onUpdate,
         ),
         Gap.vertical(8),
       ]),

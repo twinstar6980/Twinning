@@ -70,27 +70,16 @@ class _SettingPanelState extends State<SettingPanel> {
         label: 'Theme',
         action: null,
       ),
-      SettingListItem(
+      SettingListItemExtension.buildForEnumerationVariable<StyledThemeMode>(
+        context: context,
+        setStateForOuter: setState,
         icon: IconSet.brightness_4,
         label: 'Mode',
-        comment: [
-          StyledText.inherit(['System', 'Light', 'Dark'][setting.data.themeMode.index]),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          ...StyledThemeMode.values.map((item) => StyledListTile.standardTight(
-            leading: StyledRadio.standard(
-              value: setting.data.themeMode == item,
-              onChanged: (context) async {
-                setting.data.themeMode = item;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-            content: StyledText.inherit(['System', 'Light', 'Dark'][item.index]),
-          )),
-        ],
+        optionValue: StyledThemeMode.values,
+        renderValue: (value) => ConvertHelper.changeStringFromCamelCaseToHeadlineStyle(value.name),
+        getValue: () => setting.data.themeMode,
+        setValue: (value) => setting.data.themeMode = value,
+        onUpdate: setting.save,
       ),
       SettingListItem(
         icon: IconSet.colorize,
@@ -328,93 +317,43 @@ class _SettingPanelState extends State<SettingPanel> {
         label: 'Forwarder',
         action: null,
       ),
-      SettingListItem(
+      SettingListItemExtension.buildForEnumerationVariable<ModuleType>(
+        context: context,
+        setStateForOuter: setState,
         icon: IconSet.nearby,
         label: 'Default Target',
-        comment: [
-          StyledText.inherit(ModuleHelper.query(setting.data.forwarderDefaultTarget).name),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          ...ModuleType.values.map((item) => StyledListTile.standardTight(
-            leading: StyledRadio.standard(
-              value: setting.data.forwarderDefaultTarget == item,
-              onChanged: (context) async {
-                setting.data.forwarderDefaultTarget = item;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-            content: StyledText.inherit(ModuleHelper.query(item).name),
-          )),
-        ],
+        optionValue: ModuleType.values,
+        renderValue: (value) => ModuleHelper.query(value).name,
+        getValue: () => setting.data.forwarderDefaultTarget,
+        setValue: (value) => setting.data.forwarderDefaultTarget = value,
+        onUpdate: setting.save,
       ),
-      SettingListItem(
+      SettingListItemExtension.buildForBooleanVariable(
+        context: context,
+        setStateForOuter: setState,
         icon: IconSet.touch_app,
         label: 'Immediate Jump',
-        comment: [
-          StyledText.inherit(!setting.data.forwarderImmediateJump ? 'Disabled' : 'Enabled'),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          StyledListTile.standardTight(
-            leading: StyledSwitch.standard(
-              value: setting.data.forwarderImmediateJump,
-              onChanged: (context, value) async {
-                setting.data.forwarderImmediateJump = value;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-            content: StyledText.inherit('Enable'),
-          ),
-        ],
+        comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+        getValue: () => setting.data.forwarderImmediateJump,
+        setValue: (value) => setting.data.forwarderImmediateJump = value,
+        onUpdate: setting.save,
       ),
       SettingListLabel(
         label: 'Module',
         action: null,
       ),
-      SettingListItem(
+      SettingListItemExtension.buildForStoragePathVariable(
+        context: context,
+        setStateForOuter: setState,
         icon: IconSet.description,
         label: 'Configuration Directory',
-        comment: [
-          StyledText.inherit(!StorageHelper.existDirectorySync(setting.data.moduleConfigurationDirectory) ? 'Invalid' : 'Available'),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          StyledListTile.standardTight(
-            content: StyledInput.outlined(
-              type: .text,
-              format: null,
-              hint: null,
-              prefix: null,
-              suffix: [
-                StyledIconButton.standard(
-                  tooltip: 'Pick',
-                  icon: IconView.of(IconSet.open_in_new),
-                  onPressed: (context) async {
-                    var target = (await MiscellaneousHelper.pickStorageItem(context, 'application.module_configuration_directory', [.loadDirectory], false, null, null)).firstOrNull;
-                    if (target != null) {
-                      setting.data.moduleConfigurationDirectory = target;
-                      await refreshState(setStateForPanel);
-                      await refreshState(this.setState);
-                      await setting.save();
-                    }
-                  },
-                ),
-              ],
-              value: setting.data.moduleConfigurationDirectory.emit(),
-              onChanged: (context, value) async {
-                setting.data.moduleConfigurationDirectory = .of(value);
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-          ),
-        ],
+        comment: (negative: 'Invalid', positive: 'Available'),
+        getValue: () => setting.data.moduleConfigurationDirectory,
+        setValue: (value) => setting.data.moduleConfigurationDirectory = value,
+        checkValue: (value) => StorageHelper.existDirectorySync(value),
+        pickerTag: 'application.module_configuration_directory',
+        pickerType: [.loadDirectory],
+        onUpdate: setting.save,
       ),
       SettingListLabel(
         label: 'Permission',

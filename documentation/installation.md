@@ -166,6 +166,8 @@
 
   如果需要编码 `AAC` 格式的 `WEM` ，请确保 `QuickTime` 已正确安装至系统中，该程序会被 `WwiseConsole` 调用。
 
+  > 该程序仅支持 `Windows` 、`Macintosh` 系统。
+
 * [dotnet](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) `=7.0.20`
 
   用于 **开罗游戏程序修改** 。

@@ -1,7 +1,10 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/convert_helper.dart';
+import '/utility/miscellaneous_helper.dart';
 import '/utility/platform_integration_manager.dart';
+import '/widget/common.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
 import 'package:flutter/widgets.dart';
@@ -101,6 +104,244 @@ class SettingListItem extends StatelessWidget {
           ));
         }
       },
+    );
+  }
+
+}
+
+extension SettingListItemExtension on SettingListItem {
+
+  static SettingListItem buildForBooleanVariable({
+    required BuildContext                                        context,
+    required Void Function(Void Function() action)               setStateForOuter,
+    required IconData                                            icon,
+    required String                                              label,
+    required ({String negative, String positive, String action}) comment,
+    required Boolean Function()                                  getValue,
+    required Void Function(Boolean value)                        setValue,
+    required Void Function()                                     onUpdate,
+  }) {
+    return SettingListItem(
+      icon: icon,
+      label: label,
+      comment: [
+        StyledText.inherit(!getValue() ? comment.negative : comment.positive),
+      ],
+      onPressed: null,
+      panelBuilder: (context, setStateForPanel) => [
+        StyledListTile.standardTight(
+          leading: StyledSwitch.standard(
+            value: getValue(),
+            onChanged: (context, value) async {
+              setValue(value);
+              await refreshState(setStateForPanel);
+              await refreshState(setStateForOuter);
+              onUpdate();
+            },
+          ),
+          content: StyledText.inherit(comment.action),
+        ),
+      ],
+    );
+  }
+
+  static SettingListItem buildForEnumerationVariable<TValue>({
+    required BuildContext                          context,
+    required Void Function(Void Function() action) setStateForOuter,
+    required IconData                              icon,
+    required String                                label,
+    required List<TValue>                          optionValue,
+    required String Function(TValue value)         renderValue,
+    required TValue Function()                     getValue,
+    required Void Function(TValue value)           setValue,
+    required Void Function()                       onUpdate,
+  }) {
+    return SettingListItem(
+      icon: icon,
+      label: label,
+      comment: [
+        StyledText.inherit(renderValue(getValue())),
+      ],
+      onPressed: null,
+      panelBuilder: (context, setStateForPanel) => [
+        ...optionValue.map((item) => StyledListTile.standardTight(
+          leading: StyledRadio.standard(
+            value: getValue() == item,
+            onChanged: (context) async {
+              setValue(item);
+              await refreshState(setStateForPanel);
+              await refreshState(setStateForOuter);
+              onUpdate();
+            },
+          ),
+          content: StyledText.inherit(renderValue(item)),
+        )),
+      ],
+    );
+  }
+
+  static SettingListItem buildForStringListVariable({
+    required BuildContext                          context,
+    required Void Function(Void Function() action) setStateForOuter,
+    required IconData                              icon,
+    required String                                label,
+    required ({String negative, String positive})  comment,
+    required List<String> Function()               getValue,
+    required Void Function(List<String> value)     setValue,
+    required String?                               pickerTag,
+    required List<StoragePickType>?                pickerType,
+    required Void Function()                       onUpdate,
+  }) {
+    return SettingListItem(
+      icon: icon,
+      label: label,
+      comment: [
+        StyledText.inherit(getValue().isEmpty ? comment.negative : comment.positive),
+      ],
+      onPressed: null,
+      panelBuilder: (context, setStateForPanel) => [
+        StyledListTile.standardTight(
+          content: StyledInput.outlined(
+            type: .multiline,
+            format: null,
+            hint: null,
+            prefix: null,
+            suffix: [
+              if (pickerTag != null && pickerType != null) ...[
+                StyledIconButton.standard(
+                  tooltip: 'Pick',
+                  icon: IconView.of(IconSet.open_in_new),
+                  onPressed: (context) async {
+                    var target = await MiscellaneousHelper.pickStorageItem(context, pickerTag, pickerType, true, null, null);
+                    if (!target.isEmpty) {
+                      setValue([...getValue(), ...target.map((it) => it.emit())]);
+                      await refreshState(setStateForPanel);
+                      await refreshState(setStateForOuter);
+                      onUpdate();
+                    }
+                  },
+                ),
+              ],
+            ],
+            value: ConvertHelper.makeStringListToStringWithLine(getValue()),
+            onChanged: (context, value) async {
+              setValue(ConvertHelper.parseStringListFromStringWithLine(value));
+              await refreshState(setStateForPanel);
+              await refreshState(setStateForOuter);
+              onUpdate();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  static SettingListItem buildForStoragePathVariable({
+    required BuildContext                          context,
+    required Void Function(Void Function() action) setStateForOuter,
+    required IconData                              icon,
+    required String                                label,
+    required ({String negative, String positive})  comment,
+    required StoragePath Function()                getValue,
+    required Void Function(StoragePath value)      setValue,
+    required Boolean Function(StoragePath value)   checkValue,
+    required String                                pickerTag,
+    required List<StoragePickType>                 pickerType,
+    required Void Function()                       onUpdate,
+  }) {
+    return SettingListItem(
+      icon: icon,
+      label: label,
+      comment: [
+        StyledText.inherit(!checkValue(getValue()) ? comment.negative : comment.positive),
+      ],
+      onPressed: null,
+      panelBuilder: (context, setStateForPanel) => [
+        StyledListTile.standardTight(
+          content: StyledInput.outlined(
+            type: .text,
+            format: null,
+            hint: null,
+            prefix: null,
+            suffix: [
+              StyledIconButton.standard(
+                tooltip: 'Pick',
+                icon: IconView.of(IconSet.open_in_new),
+                onPressed: (context) async {
+                  var target = (await MiscellaneousHelper.pickStorageItem(context, pickerTag, pickerType, false, null, null)).firstOrNull;
+                  if (target != null) {
+                    setValue(target);
+                    await refreshState(setStateForPanel);
+                    await refreshState(setStateForOuter);
+                    onUpdate();
+                  }
+                },
+              ),
+            ],
+            value: getValue().emit(),
+            onChanged: (context, value) async {
+              setValue(.of(value));
+              await refreshState(setStateForPanel);
+              await refreshState(setStateForOuter);
+              onUpdate();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  static SettingListItem buildForStoragePathListVariable({
+    required BuildContext                           context,
+    required Void Function(Void Function() action)  setStateForOuter,
+    required IconData                               icon,
+    required String                                 label,
+    required ({String negative, String positive})   comment,
+    required List<StoragePath> Function()           getValue,
+    required Void Function(List<StoragePath> value) setValue,
+    required String                                 pickerTag,
+    required List<StoragePickType>                  pickerType,
+    required Void Function()                        onUpdate,
+  }) {
+    return SettingListItem(
+      icon: icon,
+      label: label,
+      comment: [
+        StyledText.inherit(getValue().isEmpty ? comment.negative : comment.positive),
+      ],
+      onPressed: null,
+      panelBuilder: (context, setStateForPanel) => [
+        StyledListTile.standardTight(
+          content: StyledInput.outlined(
+            type: .multiline,
+            format: null,
+            hint: null,
+            prefix: null,
+            suffix: [
+              StyledIconButton.standard(
+                tooltip: 'Pick',
+                icon: IconView.of(IconSet.open_in_new),
+                onPressed: (context) async {
+                  var target = await MiscellaneousHelper.pickStorageItem(context, pickerTag, pickerType, true, null, null);
+                  if (!target.isEmpty) {
+                    setValue([...getValue(), ...target]);
+                    await refreshState(setStateForPanel);
+                    await refreshState(setStateForOuter);
+                    onUpdate();
+                  }
+                },
+              ),
+            ],
+            value: ConvertHelper.makeStringListToStringWithLine(getValue().map((it) => it.emit()).toList()),
+            onChanged: (context, value) async {
+              setValue(ConvertHelper.parseStringListFromStringWithLine(value).map(StoragePath.of).toList());
+              await refreshState(setStateForPanel);
+              await refreshState(setStateForOuter);
+              onUpdate();
+            },
+          ),
+        ),
+      ],
     );
   }
 

@@ -25,137 +25,65 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => FlexContainer.vertical([
         Gap.vertical(8),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.ads_click,
           label: 'Immediate Select',
-          comment: [
-            StyledText.inherit(!this.data.immediateSelect ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.immediateSelect,
-                onChanged: (context, value) async {
-                  this.data.immediateSelect = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.immediateSelect,
+          setValue: (value) => this.data.immediateSelect = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.autoplay,
           label: 'Automatic Play',
-          comment: [
-            StyledText.inherit(!this.data.automaticPlay ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.automaticPlay,
-                onChanged: (context, value) async {
-                  this.data.automaticPlay = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.automaticPlay,
+          setValue: (value) => this.data.automaticPlay = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.repeat,
           label: 'Repeat Play',
-          comment: [
-            StyledText.inherit(!this.data.repeatPlay ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.repeatPlay,
-                onChanged: (context, value) async {
-                  this.data.repeatPlay = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.repeatPlay,
+          setValue: (value) => this.data.repeatPlay = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.settings_backup_restore,
           label: 'Reverse Play',
-          comment: [
-            StyledText.inherit(!this.data.reversePlay ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.reversePlay,
-                onChanged: (context, value) async {
-                  this.data.reversePlay = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.reversePlay,
+          setValue: (value) => this.data.reversePlay = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.lock_clock,
           label: 'Keep Speed',
-          comment: [
-            StyledText.inherit(!this.data.keepSpeed ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.keepSpeed,
-                onChanged: (context, value) async {
-                  this.data.keepSpeed = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.keepSpeed,
+          setValue: (value) => this.data.keepSpeed = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.frame_source,
           label: 'Show Boundary',
-          comment: [
-            StyledText.inherit(!this.data.showBoundary ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.showBoundary,
-                onChanged: (context, value) async {
-                  this.data.showBoundary = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.showBoundary,
+          setValue: (value) => this.data.showBoundary = value,
+          onUpdate: this.onUpdate,
         ),
         Gap.vertical(8),
       ]),

@@ -146,7 +146,13 @@ class ConvertHelper {
   static String changeStringFromCamelCaseToSnakeCase(
     String source,
   ) {
-    return ConvertHelper.splitStringOfCamelCase(source).join('_').toLowerCase();
+    return ConvertHelper.splitStringOfCamelCase(source).map((it) => it.toLowerCase()).join('_');
+  }
+
+  static String changeStringFromCamelCaseToHeadlineStyle(
+    String source,
+  ) {
+    return ConvertHelper.splitStringOfCamelCase(source).map((it) => '${it.substring(0, 1).toUpperCase()}${it.substring(1).toLowerCase()}').join(' ');
   }
 
   // #endregion

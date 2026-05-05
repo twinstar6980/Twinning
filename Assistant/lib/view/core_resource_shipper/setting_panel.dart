@@ -25,71 +25,35 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => FlexContainer.vertical([
         Gap.vertical(8),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.shuffle,
           label: 'Parallel Forward',
-          comment: [
-            StyledText.inherit(!this.data.parallelForward ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.parallelForward,
-                onChanged: (context, value) async {
-                  this.data.parallelForward = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.parallelForward,
+          setValue: (value) => this.data.parallelForward = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.filter_alt,
           label: 'Enable Filter',
-          comment: [
-            StyledText.inherit(!this.data.enableFilter ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.enableFilter,
-                onChanged: (context, value) async {
-                  this.data.enableFilter = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.enableFilter,
+          setValue: (value) => this.data.enableFilter = value,
+          onUpdate: this.onUpdate,
         ),
-        SettingListItem(
+        SettingListItemExtension.buildForBooleanVariable(
+          context: context,
+          setStateForOuter: setState,
           icon: IconSet.stacks,
           label: 'Enable Batch',
-          comment: [
-            StyledText.inherit(!this.data.enableBatch ? 'Disabled' : 'Enabled'),
-          ],
-          onPressed: null,
-          panelBuilder: (context, setStateForPanel) => [
-            StyledListTile.standardTight(
-              leading: StyledSwitch.standard(
-                value: this.data.enableBatch,
-                onChanged: (context, value) async {
-                  this.data.enableBatch = value;
-                  await refreshState(setStateForPanel);
-                  await refreshState(setState);
-                  this.onUpdate();
-                },
-              ),
-              content: StyledText.inherit('Enable'),
-            ),
-          ],
+          comment: (negative: 'Disabled', positive: 'Enabled', action: 'Enable'),
+          getValue: () => this.data.enableBatch,
+          setValue: (value) => this.data.enableBatch = value,
+          onUpdate: this.onUpdate,
         ),
         Gap.vertical(8),
       ]),
