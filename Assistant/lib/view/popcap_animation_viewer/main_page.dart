@@ -602,16 +602,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                     horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
                     vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                   ),
-                  child: this._animationVisual == null ? null : StackContainer.of(fit: .passthrough, [
-                    BoxContainer.of(
-                      constraints: .tightFor(
-                        width: this._animation?.size.$1 ?? 0.0,
-                        height: this._animation?.size.$2 ?? 0.0,
+                  child: StackContainer.of(fit: .passthrough, [
+                    this._animation == null
+                      ? BoxContainer.none()
+                      : BoxContainer.of(
+                        constraints: .tightFor(
+                          width: this._animation!.size.$1,
+                          height: this._animation!.size.$2,
+                        ),
+                        color: !this._showBoundary ? null : StyledColor.surfaceContainerHighest.query(context),
+                        child: null,
                       ),
-                      color: !this._showBoundary ? null : StyledColor.surfaceContainerHighest.query(context),
-                      child: null,
-                    ),
-                    this._animationVisual!,
+                    this._animationVisual == null
+                      ? BoxContainer.none()
+                      : this._animationVisual!,
                   ]),
                 ).withScrollableArea(
                   horizontal: this._stageHorizontalScrollSontroller,

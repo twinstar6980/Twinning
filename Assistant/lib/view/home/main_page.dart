@@ -204,16 +204,22 @@ class _MainPageState extends State<MainPage> {
   @override
   build(context) {
     return StyledScaffold.standard(
-      title: StyledTitleBar.standard(
-        title: this._pageList.isEmpty ? 'Home' : this._pageList[this._pageIndex].title,
-        leading: StyledIconButton.standard(
-          tooltip: 'Navigation',
-          icon: IconView.of(IconSet.menu),
-          onPressed: (context) async {
-            await StyledNavigationDrawerExtension.show(context);
-          },
+      title: StorageDropRegion(
+        onDrop: (item) async {
+          var setting = Provider.of<SettingProvider>(this.context, listen: false);
+          await setting.state.handleForward!(item);
+        },
+        child: StyledTitleBar.standard(
+          title: this._pageList.isEmpty ? 'Home' : this._pageList[this._pageIndex].title,
+          leading: StyledIconButton.standard(
+            tooltip: 'Navigation',
+            icon: IconView.of(IconSet.menu),
+            onPressed: (context) async {
+              await StyledNavigationDrawerExtension.show(context);
+            },
+          ),
+          trailing: null,
         ),
-        trailing: null,
       ),
       body: StackContainer.at(this._pageIndex + 1, [
         BlankPage(),
