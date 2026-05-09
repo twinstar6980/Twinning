@@ -598,16 +598,21 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
               color: StyledColor.surfaceContainer.query(context),
               child: LayoutBuilder(
                 builder: (context, constraints) => BoxContainer.of(
-                  constraints: .tightFor(
-                    width: this._animation?.size.$1 ?? 0.0,
-                    height: this._animation?.size.$2 ?? 0.0,
-                  ),
                   margin: .symmetric(
                     horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
                     vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                   ),
-                  color: !this._showBoundary ? null : StyledColor.surfaceContainerHighest.query(context),
-                  child: this._animationVisual,
+                  child: this._animationVisual == null ? null : StackContainer.of(fit: .passthrough, [
+                    BoxContainer.of(
+                      constraints: .tightFor(
+                        width: this._animation?.size.$1 ?? 0.0,
+                        height: this._animation?.size.$2 ?? 0.0,
+                      ),
+                      color: !this._showBoundary ? null : StyledColor.surfaceContainerHighest.query(context),
+                      child: null,
+                    ),
+                    this._animationVisual!,
+                  ]),
                 ).withScrollableArea(
                   horizontal: this._stageHorizontalScrollSontroller,
                   vertical: this._stageVerticalScrollSontroller,
