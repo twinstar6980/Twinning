@@ -371,7 +371,37 @@ export {
 			std::string const & title,
 			std::string const & description
 		) -> std::tuple<> {
-			// TODO
+			g_autoptr(GDBusConnection) connection = nullptr;
+			g_autoptr(GError) error = nullptr;
+			connection = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, &error);
+			if (connection == nullptr) {
+				throw std::runtime_error{std::string{"Exception: "} + error->message};
+			}
+			auto notification = g_variant_new(
+				"(susssasa{sv}i)",
+				thiz.exposed_application_name(),
+				0,
+				"",
+				title.data(),
+				description.data(),
+				nullptr,
+				nullptr,
+				-1
+			);
+			g_dbus_connection_call(
+				connection,
+				"org.freedesktop.Notifications",
+				"/org/freedesktop/Notifications",
+				"org.freedesktop.Notifications",
+				"Notify",
+				notification,
+				nullptr,
+				G_DBUS_CALL_FLAGS_NONE,
+				-1,
+				nullptr,
+				nullptr,
+				nullptr
+			);
 			return std::make_tuple();
 		}
 
