@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 126
+ * @version 128
  */
 declare namespace Twinning.Kernel {
 
@@ -1978,13 +1978,13 @@ declare namespace Twinning.Kernel {
 			/** 压缩 */
 			namespace Compression {
 
-				/** Etc */
-				namespace Etc {
+				/** Dxtc */
+				namespace Dxtc {
 
 					/** 代际 */
 					class Generation {
 
-						private _Tool_Texture_Compression_Etc_Generation;
+						private _Tool_Texture_Compression_Dxtc_Generation;
 
 						// ----------------
 
@@ -1994,7 +1994,7 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static Value: 'v1' | 'v2' | 'eac';
+						static Value: 'v1' | 'v3' | 'v5';
 
 						static value(it: typeof Generation.Value): Generation;
 
@@ -2013,16 +2013,14 @@ declare namespace Twinning.Kernel {
 						 * @param image 图像
 						 * @param generation 代际
 						 * @param block_size 区块大小
-						 * @param with_alpha_eac Etc2模式下，是否以Eac的方式编码A
-						 * @param with_green_eac Eac模式下，是否包含G
+						 * @param with_alpha 是否包含A
 						 */
 						function process(
 							data: OutputByteStreamView,
 							image: Image.ConstantImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
-							with_alpha_eac: Boolean,
-							with_green_eac: Boolean,
+							with_alpha: Boolean,
 						): Void;
 
 					}
@@ -2036,16 +2034,14 @@ declare namespace Twinning.Kernel {
 						 * @param image 图像
 						 * @param generation 代际
 						 * @param block_size 区块大小
-						 * @param with_alpha_eac Etc2模式下，是否以Eac的方式编码A
-						 * @param with_green_eac Eac模式下，是否包含G
+						 * @param with_alpha 是否包含A
 						 */
 						function process(
 							data: InputByteStreamView,
 							image: Image.VariableImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
-							with_alpha_eac: Boolean,
-							with_green_eac: Boolean,
+							with_alpha: Boolean,
 						): Void;
 
 					}
@@ -2120,6 +2116,80 @@ declare namespace Twinning.Kernel {
 							block_size: Image.ImageSize,
 							use_bpp4: Boolean,
 							with_alpha: Boolean,
+						): Void;
+
+					}
+
+				}
+
+				/** Etc */
+				namespace Etc {
+
+					/** 代际 */
+					class Generation {
+
+						private _Tool_Texture_Compression_Etc_Generation;
+
+						// ----------------
+
+						static default(): Generation;
+
+						static copy(it: Generation): Generation;
+
+						// ----------------
+
+						static Value: 'v1' | 'v2' | 'eac';
+
+						static value(it: typeof Generation.Value): Generation;
+
+						get value(): typeof Generation.Value;
+
+						set value(it: typeof Generation.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param data 数据
+						 * @param image 图像
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param with_alpha_eac Etc2模式下，是否以Eac的方式编码A
+						 * @param with_green_eac Eac模式下，是否包含G
+						 */
+						function process(
+							data: OutputByteStreamView,
+							image: Image.ConstantImageView,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							with_alpha_eac: Boolean,
+							with_green_eac: Boolean,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param data 数据
+						 * @param image 图像
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param with_alpha_eac Etc2模式下，是否以Eac的方式编码A
+						 * @param with_green_eac Eac模式下，是否包含G
+						 */
+						function process(
+							data: InputByteStreamView,
+							image: Image.VariableImageView,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							with_alpha_eac: Boolean,
+							with_green_eac: Boolean,
 						): Void;
 
 					}

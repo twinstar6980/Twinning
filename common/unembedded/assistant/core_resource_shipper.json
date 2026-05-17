@@ -669,6 +669,38 @@
 						},
 						null,
 						{
+							"name": "RGBA-DXTC1",
+							"argument": {
+								"format": "rgba_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3",
+							"argument": {
+								"format": "rgba_dxtc3",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5",
+							"argument": {
+								"format": "rgba_dxtc5",
+							},
+						},
+						null,
+						{
+							"name": "RGB-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGBA-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
 							"name": "RGB-ETC1",
 							"argument": {
 								"format": "rgb_etc1",
@@ -684,19 +716,6 @@
 							"name": "RGBA-ETC2-EAC",
 							"argument": {
 								"format": "rgba_etc2_eac",
-							},
-						},
-						null,
-						{
-							"name": "RGB-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgb_pvrtc1_4bpp",
-							},
-						},
-						{
-							"name": "RGBA-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						null,
@@ -925,6 +944,38 @@
 						},
 						null,
 						{
+							"name": "RGBA-DXTC1",
+							"argument": {
+								"format": "rgba_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3",
+							"argument": {
+								"format": "rgba_dxtc3",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5",
+							"argument": {
+								"format": "rgba_dxtc5",
+							},
+						},
+						null,
+						{
+							"name": "RGB-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGBA-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
 							"name": "RGB-ETC1",
 							"argument": {
 								"format": "rgb_etc1",
@@ -940,19 +991,6 @@
 							"name": "RGBA-ETC2-EAC",
 							"argument": {
 								"format": "rgba_etc2_eac",
-							},
-						},
-						null,
-						{
-							"name": "RGB-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgb_pvrtc1_4bpp",
-							},
-						},
-						{
-							"name": "RGBA-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						null,

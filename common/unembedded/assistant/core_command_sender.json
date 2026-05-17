@@ -1046,11 +1046,14 @@
 								"rgba_8888_r",
 								"argb_8888_o",
 								"argb_8888_r",
+								"rgba_dxtc1",
+								"rgba_dxtc3",
+								"rgba_dxtc5",
+								"rgb_pvrtc1_4bpp",
+								"rgba_pvrtc1_4bpp",
 								"rgb_etc1",
 								"rgb_etc2",
 								"rgba_etc2_eac",
-								"rgb_pvrtc1_4bpp",
-								"rgba_pvrtc1_4bpp",
 								"rgba_astc_4x4",
 								"rgba_astc_5x4",
 								"rgba_astc_5x5",
@@ -1199,6 +1202,38 @@
 						},
 						null,
 						{
+							"name": "RGBA-DXTC1",
+							"argument": {
+								"format": "rgba_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3",
+							"argument": {
+								"format": "rgba_dxtc3",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5",
+							"argument": {
+								"format": "rgba_dxtc5",
+							},
+						},
+						null,
+						{
+							"name": "RGB-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGBA-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
 							"name": "RGB-ETC1",
 							"argument": {
 								"format": "rgb_etc1",
@@ -1214,19 +1249,6 @@
 							"name": "RGBA-ETC2-EAC",
 							"argument": {
 								"format": "rgba_etc2_eac",
-							},
-						},
-						null,
-						{
-							"name": "RGB-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgb_pvrtc1_4bpp",
-							},
-						},
-						{
-							"name": "RGBA-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						null,
@@ -1358,11 +1380,14 @@
 								"rgba_8888_r",
 								"argb_8888_o",
 								"argb_8888_r",
+								"rgba_dxtc1",
+								"rgba_dxtc3",
+								"rgba_dxtc5",
+								"rgb_pvrtc1_4bpp",
+								"rgba_pvrtc1_4bpp",
 								"rgb_etc1",
 								"rgb_etc2",
 								"rgba_etc2_eac",
-								"rgb_pvrtc1_4bpp",
-								"rgba_pvrtc1_4bpp",
 								"rgba_astc_4x4",
 								"rgba_astc_5x4",
 								"rgba_astc_5x5",
@@ -1523,6 +1548,38 @@
 						},
 						null,
 						{
+							"name": "RGBA-DXTC1",
+							"argument": {
+								"format": "rgba_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3",
+							"argument": {
+								"format": "rgba_dxtc3",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5",
+							"argument": {
+								"format": "rgba_dxtc5",
+							},
+						},
+						null,
+						{
+							"name": "RGB-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGBA-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
 							"name": "RGB-ETC1",
 							"argument": {
 								"format": "rgb_etc1",
@@ -1538,19 +1595,6 @@
 							"name": "RGBA-ETC2-EAC",
 							"argument": {
 								"format": "rgba_etc2_eac",
-							},
-						},
-						null,
-						{
-							"name": "RGB-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgb_pvrtc1_4bpp",
-							},
-						},
-						{
-							"name": "RGBA-PVRTC1-4BPP",
-							"argument": {
-								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						null,

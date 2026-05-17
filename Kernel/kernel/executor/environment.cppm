@@ -41,12 +41,15 @@ import twinning.kernel.tool.texture.transformation.scale;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.encode;
 import twinning.kernel.tool.texture.encoding.decode;
-import twinning.kernel.tool.texture.compression.etc.common;
-import twinning.kernel.tool.texture.compression.etc.compress;
-import twinning.kernel.tool.texture.compression.etc.uncompress;
+import twinning.kernel.tool.texture.compression.dxtc.common;
+import twinning.kernel.tool.texture.compression.dxtc.compress;
+import twinning.kernel.tool.texture.compression.dxtc.uncompress;
 import twinning.kernel.tool.texture.compression.pvrtc.common;
 import twinning.kernel.tool.texture.compression.pvrtc.compress;
 import twinning.kernel.tool.texture.compression.pvrtc.uncompress;
+import twinning.kernel.tool.texture.compression.etc.common;
+import twinning.kernel.tool.texture.compression.etc.compress;
+import twinning.kernel.tool.texture.compression.etc.uncompress;
 import twinning.kernel.tool.texture.compression.astc.common;
 import twinning.kernel.tool.texture.compression.astc.compress;
 import twinning.kernel.tool.texture.compression.astc.uncompress;
@@ -641,12 +644,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Compression = s_Texture.add_space("Compression"_s);
 					{
-						auto s_Etc = s_Compression.add_space("Etc"_s);
-						define_generic_class<Tool::Texture::Compression::Etc::Generation>(s_Etc, "Generation"_s);
-						s_Etc.add_space("Compress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Compress::process>>("process"_s);
-						s_Etc.add_space("Uncompress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Uncompress::process>>("process"_s);
+						auto s_Dxtc = s_Compression.add_space("Dxtc"_s);
+						define_generic_class<Tool::Texture::Compression::Dxtc::Generation>(s_Dxtc, "Generation"_s);
+						s_Dxtc.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Dxtc::Compress::process>>("process"_s);
+						s_Dxtc.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Dxtc::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_Pvrtc = s_Compression.add_space("Pvrtc"_s);
@@ -655,6 +658,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Pvrtc::Compress::process>>("process"_s);
 						s_Pvrtc.add_space("Uncompress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Pvrtc::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Etc = s_Compression.add_space("Etc"_s);
+						define_generic_class<Tool::Texture::Compression::Etc::Generation>(s_Etc, "Generation"_s);
+						s_Etc.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Compress::process>>("process"_s);
+						s_Etc.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Uncompress::process>>("process"_s);
 					}
 					{
 						auto s_Astc = s_Compression.add_space("Astc"_s);

@@ -776,11 +776,14 @@ namespace Twinning.Script.KernelX {
 				export const FormatE = FormatX as unknown as Format[];
 
 				const CompressionX = [
+					'rgba_dxtc1',
+					'rgba_dxtc3',
+					'rgba_dxtc5',
+					'rgb_pvrtc1_4bpp',
+					'rgba_pvrtc1_4bpp',
 					'rgb_etc1',
 					'rgb_etc2',
 					'rgba_etc2_eac',
-					'rgb_pvrtc1_4bpp',
-					'rgba_pvrtc1_4bpp',
 					'rgba_astc_4x4',
 					'rgba_astc_5x4',
 					'rgba_astc_5x5',
@@ -840,14 +843,20 @@ namespace Twinning.Script.KernelX {
 							result = [1n, 1n];
 							break;
 						}
-						case 'rgb_etc1':
-						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
+						case 'rgba_dxtc1':
+						case 'rgba_dxtc3':
+						case 'rgba_dxtc5': {
 							result = [4n, 4n];
 							break;
 						}
 						case 'rgb_pvrtc1_4bpp':
 						case 'rgba_pvrtc1_4bpp': {
+							result = [4n, 4n];
+							break;
+						}
+						case 'rgb_etc1':
+						case 'rgb_etc2':
+						case 'rgba_etc2_eac': {
 							result = [4n, 4n];
 							break;
 						}
@@ -958,16 +967,27 @@ namespace Twinning.Script.KernelX {
 							result = 32n;
 							break;
 						}
-						case 'rgb_etc1':
-						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
-							let with_alpha_eac = format === 'rgba_etc2_eac';
-							result = 64n + (!with_alpha_eac ? 0n : 64n);
+						case 'rgba_dxtc1':
+						case 'rgba_dxtc3':
+						case 'rgba_dxtc5': {
+							result = 64n;
+							if (format === 'rgba_dxtc3' || format === 'rgba_dxtc5') {
+								result += 64n;
+							}
 							break;
 						}
 						case 'rgb_pvrtc1_4bpp':
 						case 'rgba_pvrtc1_4bpp': {
 							result = 64n;
+							break;
+						}
+						case 'rgb_etc1':
+						case 'rgb_etc2':
+						case 'rgba_etc2_eac': {
+							result = 64n;
+							if (format === 'rgba_etc2_eac') {
+								result += 64n;
+							}
 							break;
 						}
 						case 'rgba_astc_4x4':
@@ -1037,9 +1057,10 @@ namespace Twinning.Script.KernelX {
 						'l_8',
 						'rgb_888_o',
 						'rgb_888_r',
+						'rgba_dxtc1',
+						'rgb_pvrtc1_4bpp',
 						'rgb_etc1',
 						'rgb_etc2',
-						'rgb_pvrtc1_4bpp',
 					].includes(format);
 				}
 
@@ -1078,31 +1099,56 @@ namespace Twinning.Script.KernelX {
 							);
 							break;
 						}
-						case 'rgb_etc1':
-						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
-							let is_v1 = format === 'rgb_etc1';
-							let with_alpha_eac = format === 'rgba_etc2_eac';
-							Kernel.Tool.Texture.Compression.Etc.Compress.process(
+						case 'rgba_dxtc1':
+						case 'rgba_dxtc3':
+						case 'rgba_dxtc5': {
+							let generation = ({
+								'rgba_dxtc1': 'v1',
+								'rgba_dxtc3': 'v3',
+								'rgba_dxtc5': 'v5',
+							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Dxtc.Generation.Value>)[format];
+							Kernel.Tool.Texture.Compression.Dxtc.Compress.process(
 								data,
 								image,
-								Kernel.Tool.Texture.Compression.Etc.Generation.value(is_v1 ? 'v1' : 'v2'),
+								Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
-								Kernel.Boolean.value(with_alpha_eac),
-								Kernel.Boolean.value(false),
+								Kernel.Boolean.value(true),
 							);
 							break;
 						}
 						case 'rgb_pvrtc1_4bpp':
 						case 'rgba_pvrtc1_4bpp': {
+							let generation = ({
+								'rgb_pvrtc1_4bpp': 'v1',
+								'rgba_pvrtc1_4bpp': 'v1',
+							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Pvrtc.Generation.Value>)[format];
 							let with_alpha = format === 'rgba_pvrtc1_4bpp';
 							Kernel.Tool.Texture.Compression.Pvrtc.Compress.process(
 								data,
 								image,
-								Kernel.Tool.Texture.Compression.Pvrtc.Generation.value('v1'),
+								Kernel.Tool.Texture.Compression.Pvrtc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
 								Kernel.Boolean.value(true),
 								Kernel.Boolean.value(with_alpha),
+							);
+							break;
+						}
+						case 'rgb_etc1':
+						case 'rgb_etc2':
+						case 'rgba_etc2_eac': {
+							let generation = ({
+								'rgb_etc1': 'v1',
+								'rgb_etc2': 'v2',
+								'rgba_etc2_eac': 'v2',
+							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Etc.Generation.Value>)[format];
+							let with_alpha_eac = format === 'rgba_etc2_eac';
+							Kernel.Tool.Texture.Compression.Etc.Compress.process(
+								data,
+								image,
+								Kernel.Tool.Texture.Compression.Etc.Generation.value(generation),
+								Kernel.Image.ImageSize.value(get_block_size(format)),
+								Kernel.Boolean.value(with_alpha_eac),
+								Kernel.Boolean.value(false),
 							);
 							break;
 						}
@@ -1120,10 +1166,11 @@ namespace Twinning.Script.KernelX {
 						case 'rgba_astc_10x10':
 						case 'rgba_astc_12x10':
 						case 'rgba_astc_12x12': {
+							let generation = 'v0' as typeof Kernel.Tool.Texture.Compression.Astc.Generation.Value;
 							Kernel.Tool.Texture.Compression.Astc.Compress.process(
 								data,
 								image,
-								Kernel.Tool.Texture.Compression.Astc.Generation.value('v0'),
+								Kernel.Tool.Texture.Compression.Astc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
 								Kernel.Integer.value(60n),
 							);
@@ -1162,31 +1209,56 @@ namespace Twinning.Script.KernelX {
 							);
 							break;
 						}
-						case 'rgb_etc1':
-						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
-							let is_v1 = format === 'rgb_etc1';
-							let with_alpha_eac = format === 'rgba_etc2_eac';
-							Kernel.Tool.Texture.Compression.Etc.Uncompress.process(
+						case 'rgba_dxtc1':
+						case 'rgba_dxtc3':
+						case 'rgba_dxtc5': {
+							let generation = ({
+								'rgba_dxtc1': 'v1',
+								'rgba_dxtc3': 'v3',
+								'rgba_dxtc5': 'v5',
+							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Dxtc.Generation.Value>)[format];
+							Kernel.Tool.Texture.Compression.Dxtc.Uncompress.process(
 								data,
 								image,
-								Kernel.Tool.Texture.Compression.Etc.Generation.value(is_v1 ? 'v1' : 'v2'),
+								Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
-								Kernel.Boolean.value(with_alpha_eac),
-								Kernel.Boolean.value(false),
+								Kernel.Boolean.value(true),
 							);
 							break;
 						}
 						case 'rgb_pvrtc1_4bpp':
 						case 'rgba_pvrtc1_4bpp': {
+							let generation = ({
+								'rgb_pvrtc1_4bpp': 'v1',
+								'rgba_pvrtc1_4bpp': 'v1',
+							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Pvrtc.Generation.Value>)[format];
 							let with_alpha = format === 'rgba_pvrtc1_4bpp';
 							Kernel.Tool.Texture.Compression.Pvrtc.Uncompress.process(
 								data,
 								image,
-								Kernel.Tool.Texture.Compression.Pvrtc.Generation.value('v1'),
+								Kernel.Tool.Texture.Compression.Pvrtc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
 								Kernel.Boolean.value(true),
 								Kernel.Boolean.value(with_alpha),
+							);
+							break;
+						}
+						case 'rgb_etc1':
+						case 'rgb_etc2':
+						case 'rgba_etc2_eac': {
+							let generation = ({
+								'rgb_etc1': 'v1',
+								'rgb_etc2': 'v2',
+								'rgba_etc2_eac': 'v2',
+							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Etc.Generation.Value>)[format];
+							let with_alpha_eac = format === 'rgba_etc2_eac';
+							Kernel.Tool.Texture.Compression.Etc.Uncompress.process(
+								data,
+								image,
+								Kernel.Tool.Texture.Compression.Etc.Generation.value(generation),
+								Kernel.Image.ImageSize.value(get_block_size(format)),
+								Kernel.Boolean.value(with_alpha_eac),
+								Kernel.Boolean.value(false),
 							);
 							break;
 						}
@@ -1204,10 +1276,11 @@ namespace Twinning.Script.KernelX {
 						case 'rgba_astc_10x10':
 						case 'rgba_astc_12x10':
 						case 'rgba_astc_12x12': {
+							let generation = 'v0' as typeof Kernel.Tool.Texture.Compression.Astc.Generation.Value;
 							Kernel.Tool.Texture.Compression.Astc.Uncompress.process(
 								data,
 								image,
-								Kernel.Tool.Texture.Compression.Astc.Generation.value('v0'),
+								Kernel.Tool.Texture.Compression.Astc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
 							);
 							break;

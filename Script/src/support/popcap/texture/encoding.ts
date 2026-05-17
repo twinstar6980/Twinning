@@ -62,6 +62,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_4444_tiled':
 			case 'rgb_565_tiled':
 			case 'rgba_5551_tiled': {
+				// TODO
 				result = [32n, 32n];
 				break;
 			}
@@ -344,8 +345,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		let image_data = StorageHelper.read_file(image_file);
 		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
 		let image_size = KernelX.Tool.Texture.File.Png.size(image_stream.view());
-		let padded_image_size = compute_padded_image_size(image_size, format);
-		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
+		let image_size_padded = compute_padded_image_size(image_size, format);
+		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 		let image_view = image.view();
 		KernelX.Tool.Texture.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		let option: EncodeOption = {
@@ -356,7 +357,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 				palette: KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.evaluate_palette(image_view),
 			};
 		}
-		let data_size = compute_data_size(padded_image_size, format, option);
+		let data_size = compute_data_size(image_size_padded, format, option);
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 		let data_stream = Kernel.ByteStreamView.watch(data.view());
 		encode(data_stream, image_view, format, option);
@@ -372,8 +373,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	): void {
 		let data = StorageHelper.read_file(data_file);
 		let data_stream = Kernel.ByteStreamView.watch(data.view());
-		let padded_image_size = compute_padded_image_size(image_size, format);
-		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
+		let image_size_padded = compute_padded_image_size(image_size, format);
+		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 		let image_view = image.view();
 		decode(data_stream, image_view, format);
 		KernelX.Tool.Texture.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
