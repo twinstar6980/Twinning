@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Texture {
 				],
 				batch: null,
 				worker: ({image_file, data_file, format}, store: {}) => {
-					Support.Popcap.Texture.Encoding.encode_fs(image_file, data_file, format as any);
+					Support.Popcap.Texture.Encoding.encode_fs(data_file, image_file, format as any);
 					return;
 				},
 			}),

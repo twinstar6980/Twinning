@@ -15,8 +15,8 @@ namespace Twinning.Script {
 		language: string;
 		executor_typical_method_disable_name_filter: boolean;
 		executor_typical_method_configuration: Record<string, Record<string, Executor.TypicalMethodConfiguration>>;
-		executor_pvz2_resource_convert_ptx_format_map_list: Record<string, Support.Pvz2.ResourceConvert.PtxFormatMap>;
-		executor_pvz2_package_project_conversion_setting: Support.Pvz2.PackageProject.ConversionSetting;
+		executor_popcap_pvz2_resource_convert_ptx_format_map_list: Record<string, Support.Popcap.Pvz2.ResourceConvert.PtxFormatMap>;
+		executor_popcap_pvz2_package_project_conversion_setting: Support.Popcap.Pvz2.PackageProject.ConversionSetting;
 		command_notification_time_limit: null | bigint;
 	};
 
@@ -63,9 +63,9 @@ namespace Twinning.Script {
 			executor_typical_method_configuration: (value) => {
 				Executor.g_typical_method_configuration = value;
 			},
-			executor_pvz2_resource_convert_ptx_format_map_list: (value) => {
+			executor_popcap_pvz2_resource_convert_ptx_format_map_list: (value) => {
 			},
-			executor_pvz2_package_project_conversion_setting: (value) => {
+			executor_popcap_pvz2_package_project_conversion_setting: (value) => {
 			},
 			command_notification_time_limit: (value) => {
 				Runner.g_command_notification_time_limit = value;

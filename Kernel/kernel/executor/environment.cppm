@@ -30,11 +30,11 @@ import twinning.kernel.tool.data.differentiation.vcdiff.common;
 import twinning.kernel.tool.data.differentiation.vcdiff.encode;
 import twinning.kernel.tool.data.differentiation.vcdiff.decode;
 import twinning.kernel.tool.data.serialization.json.common;
-import twinning.kernel.tool.data.serialization.json.write;
-import twinning.kernel.tool.data.serialization.json.read;
+import twinning.kernel.tool.data.serialization.json.encode;
+import twinning.kernel.tool.data.serialization.json.decode;
 import twinning.kernel.tool.data.serialization.xml.common;
-import twinning.kernel.tool.data.serialization.xml.write;
-import twinning.kernel.tool.data.serialization.xml.read;
+import twinning.kernel.tool.data.serialization.xml.encode;
+import twinning.kernel.tool.data.serialization.xml.decode;
 import twinning.kernel.tool.texture.transformation.common;
 import twinning.kernel.tool.texture.transformation.flip;
 import twinning.kernel.tool.texture.transformation.scale;
@@ -47,6 +47,9 @@ import twinning.kernel.tool.texture.compression.etc.uncompress;
 import twinning.kernel.tool.texture.compression.pvrtc.common;
 import twinning.kernel.tool.texture.compression.pvrtc.compress;
 import twinning.kernel.tool.texture.compression.pvrtc.uncompress;
+import twinning.kernel.tool.texture.compression.astc.common;
+import twinning.kernel.tool.texture.compression.astc.compress;
+import twinning.kernel.tool.texture.compression.astc.uncompress;
 import twinning.kernel.tool.texture.file.png.common;
 import twinning.kernel.tool.texture.file.png.write;
 import twinning.kernel.tool.texture.file.png.read;
@@ -388,6 +391,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 		// Boolean
 		define_generic_class<Boolean>(s_Kernel, "Boolean"_s);
 		// Integer
+		define_generic_class<Integer>(s_Kernel, "Integer"_s);
 		define_generic_class<IntegerU32>(s_Kernel, "IntegerU32"_s);
 		// Size
 		define_generic_class<Size>(s_Kernel, "Size"_s);
@@ -602,17 +606,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_Serialization = s_Data.add_space("Serialization"_s);
 					{
 						auto s_Json = s_Serialization.add_space("Json"_s);
-						s_Json.add_space("Write"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Json::Write::process>>("process"_s);
-						s_Json.add_space("Read"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Json::Read::process>>("process"_s);
+						s_Json.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Json::Encode::process>>("process"_s);
+						s_Json.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Json::Decode::process>>("process"_s);
 					}
 					{
 						auto s_Xml = s_Serialization.add_space("Xml"_s);
-						s_Xml.add_space("Write"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Xml::Write::process>>("process"_s);
-						s_Xml.add_space("Read"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Xml::Read::process>>("process"_s);
+						s_Xml.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Xml::Encode::process>>("process"_s);
+						s_Xml.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Serialization::Xml::Decode::process>>("process"_s);
 					}
 				}
 			}
@@ -638,7 +642,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_Compression = s_Texture.add_space("Compression"_s);
 					{
 						auto s_Etc = s_Compression.add_space("Etc"_s);
-						define_generic_class<Tool::Texture::Compression::Etc::Format>(s_Etc, "Format"_s);
+						define_generic_class<Tool::Texture::Compression::Etc::Generation>(s_Etc, "Generation"_s);
 						s_Etc.add_space("Compress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Etc::Compress::process>>("process"_s);
 						s_Etc.add_space("Uncompress"_s)
@@ -646,11 +650,19 @@ export namespace Twinning::Kernel::Executor::Environment {
 					}
 					{
 						auto s_Pvrtc = s_Compression.add_space("Pvrtc"_s);
-						define_generic_class<Tool::Texture::Compression::Pvrtc::Format>(s_Pvrtc, "Format"_s);
+						define_generic_class<Tool::Texture::Compression::Pvrtc::Generation>(s_Pvrtc, "Generation"_s);
 						s_Pvrtc.add_space("Compress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Pvrtc::Compress::process>>("process"_s);
 						s_Pvrtc.add_space("Uncompress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Pvrtc::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Astc = s_Compression.add_space("Astc"_s);
+						define_generic_class<Tool::Texture::Compression::Astc::Generation>(s_Astc, "Generation"_s);
+						s_Astc.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Astc::Compress::process>>("process"_s);
+						s_Astc.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Compression::Astc::Uncompress::process>>("process"_s);
 					}
 				}
 				{
@@ -793,16 +805,16 @@ export namespace Twinning::Kernel::Executor::Environment {
 							[](
 							InputByteStreamView &                              raw,
 							OutputByteStreamView &                             ripe,
-							Size const &                                       level,
-							Size const &                                       window_bits,
-							Size const &                                       memory_level,
+							Integer const &                                    level,
+							Integer const &                                    window_exponent,
+							Integer const &                                    memory_level,
 							Tool::Data::Compression::Deflate::Strategy const & strategy,
 							Version const &                                    version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Zlib::Compress<version>::process(raw, ripe, level, window_bits, memory_level, strategy);
+										Tool::Popcap::Zlib::Compress<version>::process(raw, ripe, level, window_exponent, memory_level, strategy);
 									}
 								);
 							}
@@ -811,14 +823,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 							[](
 							Size const &    raw_size,
 							Size &          ripe_size_bound,
-							Size const &    window_bits,
-							Size const &    memory_level,
+							Integer const & window_exponent,
+							Integer const & memory_level,
 							Version const & version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Zlib::Compress<version>::estimate(raw_size, ripe_size_bound, window_bits, memory_level);
+										Tool::Popcap::Zlib::Compress<version>::estimate(raw_size, ripe_size_bound, window_exponent, memory_level);
 									}
 								);
 							}
@@ -828,13 +840,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 							[](
 							InputByteStreamView &  ripe,
 							OutputByteStreamView & raw,
-							Size const &           window_bits,
+							Integer const &        window_exponent,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Zlib::Uncompress<version>::process(ripe, raw, window_bits);
+										Tool::Popcap::Zlib::Uncompress<version>::process(ripe, raw, window_exponent);
 									}
 								);
 							}

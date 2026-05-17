@@ -44,6 +44,8 @@ namespace Twinning.Script.Executor {
 		activate: () => void;
 	};
 
+	export type TypicalMethodModule = TypicalMethodImplementation | {[key: string]: TypicalMethodModule};
+
 	// #endregion
 
 	// #region basic

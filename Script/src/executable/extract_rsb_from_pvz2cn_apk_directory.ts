@@ -4,10 +4,10 @@ namespace Twinning.Script.Executable.ExtractRsbFromPvz2cnApkDirectory {
 
 	export function run(
 	): void {
-		Console.information(los('executable.extract_rsb_from_pvz2cn_apk_directory:provide_input_directory'), [
+		Console.information(los('executable.extract_rsb_from_pvz2cn_apk_directory:please_input_input_directory'), [
 		]);
 		let input_directory = Console.path('directory', 'input', null, null);
-		Console.information(los('executable.extract_rsb_from_pvz2cn_apk_directory:provide_output_directory'), [
+		Console.information(los('executable.extract_rsb_from_pvz2cn_apk_directory:please_input_output_directory'), [
 		]);
 		let output_directory = Console.path('directory', 'output', null, null);
 		Console.information(los('executable.extract_rsb_from_pvz2cn_apk_directory:extract_start'), [

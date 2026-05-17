@@ -43,8 +43,8 @@ namespace Twinning.Script.Executor.Implementation.Text.Xml {
 					}),
 				],
 				worker: ({source_file, destination_file}, store: {}) => {
-					let data = KernelX.Tool.Data.Serialization.Json.read_fs(source_file);
-					KernelX.Tool.Data.Serialization.Json.write_fs(destination_file, data);
+					let data = KernelX.Tool.Data.Serialization.Xml.decode_fs(source_file);
+					KernelX.Tool.Data.Serialization.Xml.encode_fs(destination_file, data);
 					return;
 				},
 			}),

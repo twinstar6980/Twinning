@@ -29,6 +29,7 @@ target('kernel', function()
 		'third.avir',
 		'third.etcpak',
 		'third.PVRTCCompressor',
+		'third.astc_encoder',
 		'third.libpng',
 		'third.quickjs_ng',
 		{}

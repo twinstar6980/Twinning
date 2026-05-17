@@ -11,10 +11,14 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		'rgba_4444_tiled',
 		'rgb_565_tiled',
 		'rgba_5551_tiled',
-		'rgba_pvrtc4',
-		'rgb_pvrtc4_a_8',
+		'rgba_pvrtc1_4bpp',
+		'rgb_pvrtc1_4bpp_a_8',
 		'rgb_etc1_a_8',
 		'rgb_etc1_a_palette',
+		'rgba_astc_4x4',
+		'rgba_astc_5x5',
+		'rgba_astc_6x6',
+		'rgba_astc_8x8',
 	] as const;
 
 	export type Format = typeof FormatX[number];
@@ -42,31 +46,56 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 
 	// ----------------
 
-	export function compute_padded_image_size(
-		origin_size: KernelX.Image.ImageSize,
+	export function get_block_size(
 		format: Format,
 	): KernelX.Image.ImageSize {
-		let compute = (t: bigint) => {
-			let r = 0b1n << 1n;
-			while (r < t) {
-				r <<= 1n;
+		let result: KernelX.Image.ImageSize;
+		switch (format) {
+			case 'rgba_8888_o':
+			case 'argb_8888':
+			case 'rgba_4444':
+			case 'rgb_565':
+			case 'rgba_5551': {
+				result = [1n, 1n];
+				break;
 			}
-			return r;
-		};
-		let padded_size: KernelX.Image.ImageSize;
-		if (format.includes('etc1')) {
-			padded_size = [compute(origin_size[0]), compute(origin_size[1])];
+			case 'rgba_4444_tiled':
+			case 'rgb_565_tiled':
+			case 'rgba_5551_tiled': {
+				result = [32n, 32n];
+				break;
+			}
+			case 'rgba_pvrtc1_4bpp':
+			case 'rgb_pvrtc1_4bpp_a_8': {
+				result = [4n, 4n];
+				break;
+			}
+			case 'rgb_etc1_a_8':
+			case 'rgb_etc1_a_palette': {
+				result = [4n, 4n];
+				break;
+			}
+			case 'rgba_astc_4x4':
+			case 'rgba_astc_5x5':
+			case 'rgba_astc_6x6':
+			case 'rgba_astc_8x8': {
+				if (format === 'rgba_astc_4x4') {
+					result = [4n, 4n];
+				}
+				if (format === 'rgba_astc_5x5') {
+					result = [5n, 5n];
+				}
+				if (format === 'rgba_astc_6x6') {
+					result = [6n, 6n];
+				}
+				if (format === 'rgba_astc_8x8') {
+					result = [8n, 8n];
+				}
+				result = result!;
+				break;
+			}
 		}
-		else if (format.includes('pvrtc')) {
-			let padded_width = compute(origin_size[0]);
-			let padded_height = compute(origin_size[1]);
-			let maximum_size = padded_width > padded_height ? padded_width : padded_height;
-			padded_size = [maximum_size, maximum_size];
-		}
-		else {
-			padded_size = [origin_size[0], origin_size[1]];
-		}
-		return padded_size;
+		return result;
 	}
 
 	export function compute_data_size(
@@ -74,44 +103,79 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		format: Format,
 		option: EncodeOption,
 	): bigint {
-		let data_size = 0n;
+		let result = 0n;
 		switch (format) {
 			case 'rgba_8888_o':
 			case 'argb_8888':
 			case 'rgba_4444':
 			case 'rgb_565':
 			case 'rgba_5551': {
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, format);
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, format);
 				break;
 			}
 			case 'rgba_4444_tiled':
 			case 'rgb_565_tiled':
 			case 'rgba_5551_tiled': {
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
 				break;
 			}
-			case 'rgba_pvrtc4': {
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgba_pvrtc4');
+			case 'rgba_pvrtc1_4bpp': {
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgba_pvrtc1_4bpp');
 				break;
 			}
-			case 'rgb_pvrtc4_a_8': {
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_pvrtc4');
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'a_8');
+			case 'rgb_pvrtc1_4bpp_a_8': {
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_pvrtc1_4bpp');
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'a_8');
 				break;
 			}
 			case 'rgb_etc1_a_8': {
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1');
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'a_8');
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1');
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'a_8');
 				break;
 			}
 			case 'rgb_etc1_a_palette': {
 				assert_test(option.rgb_etc1_a_palette !== null);
-				data_size += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1');
-				data_size += KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, 'rgb_etc1');
+				result += KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.compute_data_size_with_palette(size, option.rgb_etc1_a_palette.palette.length);
+				break;
+			}
+			case 'rgba_astc_4x4':
+			case 'rgba_astc_5x5':
+			case 'rgba_astc_6x6':
+			case 'rgba_astc_8x8': {
+				result += KernelX.Tool.Texture.Encoding.compute_data_size(size, format);
 				break;
 			}
 		}
-		return data_size;
+		return result;
+	}
+
+	export function compute_padded_image_size(
+		origin_size: KernelX.Image.ImageSize,
+		format: Format,
+	): KernelX.Image.ImageSize {
+		let compute_block = (t: bigint, n: bigint) => {
+			return t % n === 0n ? (t) : ((t / n + 1n) * n);
+		};
+		let compute_exponent_of_2 = (t: bigint) => {
+			let r = 0b1n << 1n;
+			while (r < t) {
+				r <<= 1n;
+			}
+			return r;
+		};
+		let block_size = get_block_size(format);
+		let padded_size: KernelX.Image.ImageSize = [compute_block(origin_size[0], block_size[0]), compute_block(origin_size[1], block_size[1])];
+		if (format.includes('etc')) {
+			padded_size = [compute_exponent_of_2(padded_size[0]), compute_exponent_of_2(padded_size[1])];
+		}
+		else if (format.includes('pvrtc')) {
+			let padded_width = compute_exponent_of_2(padded_size[0]);
+			let padded_height = compute_exponent_of_2(padded_size[1]);
+			let maximum_size = padded_width > padded_height ? padded_width : padded_height;
+			padded_size = [maximum_size, maximum_size];
+		}
+		return padded_size;
 	}
 
 	export function get_bpp_for_pitch(
@@ -124,27 +188,37 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_4444':
 			case 'rgb_565':
 			case 'rgba_5551': {
-				result += KernelX.Tool.Texture.Encoding.get_bpp(format);
+				result += KernelX.Tool.Texture.Encoding.get_block_bit_count(format);
 				break;
 			}
 			case 'rgba_4444_tiled':
 			case 'rgb_565_tiled':
 			case 'rgba_5551_tiled': {
-				result += KernelX.Tool.Texture.Encoding.get_bpp(format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
+				result += KernelX.Tool.Texture.Encoding.get_block_bit_count(format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
 				break;
 			}
-			case 'rgba_pvrtc4': {
-				result += KernelX.Tool.Texture.Encoding.get_bpp('rgba_pvrtc4');
+			case 'rgba_pvrtc1_4bpp': {
+				let block_size = get_block_size(format);
+				result += KernelX.Tool.Texture.Encoding.get_block_bit_count('rgba_pvrtc1_4bpp') / (block_size[0] * block_size[1]);
 				break;
 			}
-			case 'rgb_pvrtc4_a_8': {
+			case 'rgb_pvrtc1_4bpp_a_8': {
 				// TODO
-				result += KernelX.Tool.Texture.Encoding.get_bpp('rgb_pvrtc4');
+				let block_size = get_block_size(format);
+				result += KernelX.Tool.Texture.Encoding.get_block_bit_count('rgb_pvrtc1_4bpp') / (block_size[0] * block_size[1]);
 				break;
 			}
 			case 'rgb_etc1_a_8':
 			case 'rgb_etc1_a_palette': {
-				result += KernelX.Tool.Texture.Encoding.get_bpp('rgba_8888_o');
+				result += KernelX.Tool.Texture.Encoding.get_block_bit_count('rgba_8888_o');
+				break;
+			}
+			case 'rgba_astc_4x4':
+			case 'rgba_astc_5x5':
+			case 'rgba_astc_6x6':
+			case 'rgba_astc_8x8': {
+				// TODO
+				result += 0n;
 				break;
 			}
 		}
@@ -156,8 +230,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	// #region utility
 
 	export function encode(
-		image: Kernel.Image.ConstantImageView,
 		data: Kernel.OutputByteStreamView,
+		image: Kernel.Image.ConstantImageView,
 		format: Format,
 		option: EncodeOption,
 	): void {
@@ -176,12 +250,12 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 				KernelX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.Format);
 				break;
 			}
-			case 'rgba_pvrtc4': {
-				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgba_pvrtc4');
+			case 'rgba_pvrtc1_4bpp': {
+				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgba_pvrtc1_4bpp');
 				break;
 			}
-			case 'rgb_pvrtc4_a_8': {
-				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgb_pvrtc4');
+			case 'rgb_pvrtc1_4bpp_a_8': {
+				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgb_pvrtc1_4bpp');
 				KernelX.Tool.Texture.Encoding.encode(data, image, 'a_8');
 				break;
 			}
@@ -194,6 +268,13 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 				assert_test(option.rgb_etc1_a_palette !== null);
 				KernelX.Tool.Texture.Encoding.encode(data, image, 'rgb_etc1');
 				KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.encode_with_palette(data, image, option.rgb_etc1_a_palette.palette);
+				break;
+			}
+			case 'rgba_astc_4x4':
+			case 'rgba_astc_5x5':
+			case 'rgba_astc_6x6':
+			case 'rgba_astc_8x8': {
+				KernelX.Tool.Texture.Encoding.encode(data, image, format);
 				break;
 			}
 		}
@@ -223,12 +304,12 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 				KernelX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.Format);
 				break;
 			}
-			case 'rgba_pvrtc4': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgba_pvrtc4');
+			case 'rgba_pvrtc1_4bpp': {
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgba_pvrtc1_4bpp');
 				break;
 			}
-			case 'rgb_pvrtc4_a_8': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_pvrtc4');
+			case 'rgb_pvrtc1_4bpp_a_8': {
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_pvrtc1_4bpp');
 				KernelX.Tool.Texture.Encoding.decode(data, image, 'a_8');
 				break;
 			}
@@ -242,6 +323,13 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 				KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.decode_with_palette(data, image);
 				break;
 			}
+			case 'rgba_astc_4x4':
+			case 'rgba_astc_5x5':
+			case 'rgba_astc_6x6':
+			case 'rgba_astc_8x8': {
+				KernelX.Tool.Texture.Encoding.decode(data, image, format);
+				break;
+			}
 		}
 		return;
 	}
@@ -249,8 +337,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	// ----------------
 
 	export function encode_fs(
-		image_file: StoragePath,
 		data_file: StoragePath,
+		image_file: StoragePath,
 		format: Format,
 	): void {
 		let image_data = StorageHelper.read_file(image_file);
@@ -270,9 +358,9 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		}
 		let data_size = compute_data_size(padded_image_size, format, option);
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
-		let stream = Kernel.ByteStreamView.watch(data.view());
-		encode(image_view, stream, format, option);
-		StorageHelper.write_file(data_file, stream.stream_view());
+		let data_stream = Kernel.ByteStreamView.watch(data.view());
+		encode(data_stream, image_view, format, option);
+		StorageHelper.write_file(data_file, data_stream.stream_view());
 		return;
 	}
 
@@ -283,11 +371,11 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		format: Format,
 	): void {
 		let data = StorageHelper.read_file(data_file);
-		let stream = Kernel.ByteStreamView.watch(data.view());
+		let data_stream = Kernel.ByteStreamView.watch(data.view());
 		let padded_image_size = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(padded_image_size));
 		let image_view = image.view();
-		decode(stream, image_view, format);
+		decode(data_stream, image_view, format);
 		KernelX.Tool.Texture.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		return;
 	}

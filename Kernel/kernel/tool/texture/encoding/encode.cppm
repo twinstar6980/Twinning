@@ -123,10 +123,33 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
 			}
+			if constexpr (t_format == Format::Constant::rgb_888_r()) {
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
+			}
 			if constexpr (t_format == Format::Constant::rgba_8888_o()) {
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 8_sz)));
+			}
+			if constexpr (t_format == Format::Constant::rgba_8888_r()) {
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
+			}
+			if constexpr (t_format == Format::Constant::argb_8888_o()) {
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
+			}
+			if constexpr (t_format == Format::Constant::argb_8888_r()) {
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.blue, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.green, 8_sz)));
+				data.write(cbox<IntegerU8>(Image::compress_color(pixel.red, 8_sz)));
 				data.write(cbox<IntegerU8>(Image::compress_color(pixel.alpha, 8_sz)));
 			}
 			return;

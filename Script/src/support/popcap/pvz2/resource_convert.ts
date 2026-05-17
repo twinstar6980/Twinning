@@ -1,0 +1,338 @@
+namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
+
+	// #region utility
+
+	export type PtxFormatMap = Array<{
+		index: bigint;
+		format: Support.Popcap.Texture.Encoding.Format;
+	}>;
+
+	export type Option = {
+		recase_path: boolean,
+		rton: null | {
+			directory: StoragePath;
+			version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
+			crypt: null | {
+				key: string;
+			};
+		},
+		ptx: null | {
+			directory: StoragePath;
+			format: PtxFormatMap;
+			atlas: null | {
+				resize: boolean;
+			};
+			sprite: null | {
+			};
+		},
+		pam: null | {
+			directory: StoragePath;
+			version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
+			json: null | {
+			};
+			flash: null | {
+			};
+		},
+		bnk: null | {
+			directory: StoragePath;
+			version: typeof Kernel.Tool.Wwise.SoundBank.Version.Value,
+		},
+		wem: null | {
+			directory: StoragePath;
+		},
+	};
+
+	// ----------------
+
+	export function convert(
+		resource_directory: StoragePath,
+		package_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package,
+		resource_manifest: RegularResourceManifest.Package,
+		option: Option,
+	): void {
+		let find_item_by_identifier_ignore_case = <Item extends {identifier: string}>(list: Array<Item>, value: string): null | Item => {
+			let value_lower = value.toLowerCase();
+			for (let item of list) {
+				let item_value = item.identifier;
+				if (item_value.toLowerCase() === value_lower) {
+					return item;
+				}
+			}
+			return null;
+		};
+		let find_item_by_path_ignore_case = <Item extends RegularResourceManifest.Resource>(list: Array<Item>, value: string): null | Item => {
+			let value_lower = value.toLowerCase();
+			for (let item of list) {
+				if (item.additional.type === 'dummy') {
+					continue;
+				}
+				let item_value = item.additional.value.path;
+				if (item_value.toLowerCase() === value_lower) {
+					return item;
+				}
+			}
+			return null;
+		};
+		let iterate_resource = (show_group_progress: boolean) => (worker: (
+			group: [string, RegularResourceManifest.Group, Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Group],
+			subgroup: [string, RegularResourceManifest.Subgroup, Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Subgroup],
+			resource: [string, RegularResourceManifest.Resource, Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Resource],
+		) => void): void => {
+			let group_progress = new TextGenerator.Progress('fraction', false, 40, Object.keys(package_definition.group).length);
+			for (let package_group of package_definition.group) {
+				group_progress.increase();
+				if (show_group_progress) {
+					Console.information(`${group_progress} - ${package_group.identifier}`, []);
+				}
+				if (/__MANIFESTGROUP__(.+)?/.test(package_group.identifier)) {
+					continue;
+				}
+				let group = find_item_by_identifier_ignore_case(resource_manifest.group, package_group.identifier);
+				if (group === null) {
+					Console.warning(`group not found in resource manifest '${package_group.identifier}'`, []);
+					continue;
+				}
+				for (let package_subgroup of package_group.subgroup) {
+					let subgroup = find_item_by_identifier_ignore_case(group.subgroup, package_subgroup.identifier);
+					if (subgroup === null) {
+						Console.warning(`subgroup not found in resource manifest '${package_subgroup.identifier}'`, []);
+						continue;
+					}
+					for (let package_resource of package_subgroup.resource) {
+						let resource_path = package_resource.path.toLowerCase();
+						if (resource_path.endsWith('.ptx')) {
+							resource_path = resource_path.slice(0, -4);
+						}
+						let resource = find_item_by_path_ignore_case(subgroup.resource, resource_path);
+						if (resource === null) {
+							Console.warning(`resource not found in resource manifest '${resource_path}'`, []);
+							continue;
+						}
+						worker(
+							[group.identifier, group, package_group],
+							[subgroup.identifier, subgroup, package_subgroup],
+							[resource.identifier, resource, package_resource],
+						);
+					}
+				}
+			}
+			return;
+		};
+		if (option.recase_path) {
+			Console.information(los('support.popcap.pvz2.resource_convert:recase_resource_path'), [
+			]);
+			let resource_path_list: Array<StoragePath> = [];
+			iterate_resource(false)((group, subgroup, resource) => {
+				assert_test(resource[1].additional.type !== 'dummy');
+				let resource_path = new StoragePath(`${resource[1].additional.value.path}${(resource[1].additional.type === 'texture' ? '.ptx' : '')}`);
+				assert_test(resource_path.type() === StoragePathType.detached);
+				resource_path_list.push(resource_path);
+			});
+			let resource_path_segment_tree = StorageHelper.resolve_segment_tree(resource_path_list);
+			let rename_resource = (
+				parent: StoragePath,
+				tree: StorageHelper.PathSegmentTree,
+			) => {
+				for (let name in tree) {
+					try {
+						StorageHelper.rename_case(parent.join(name.toUpperCase()), parent.join(name));
+					}
+					catch (e) {
+						Console.error_of(e);
+					}
+					if (tree[name] !== null) {
+						rename_resource(parent.join(name), tree[name]!);
+					}
+				}
+			};
+			rename_resource(resource_directory, resource_path_segment_tree);
+		}
+		Console.information(los('support.popcap.pvz2.resource_convert:convert_resource'), [
+		]);
+		iterate_resource(true)((group, subgroup, resource) => {
+			assert_test(resource[1].additional.type !== 'dummy');
+			let path = new StoragePath(resource[1].additional.value.path);
+			if (option.rton !== null && path.extension()?.toLowerCase() === 'rton') {
+				Console.verbosity(`  ${path.emit()}`, []);
+				try {
+					KernelX.Tool.Popcap.ReflectionObjectNotation.decode_cipher_fs(
+						resource_directory.push(path),
+						option.rton.directory.push(path.parent()!).join(path.stem()! + '.json'),
+						option.rton.version,
+						option.rton.crypt === null ? null : option.rton.crypt.key,
+					);
+				}
+				catch (e) {
+					Console.error_of(e);
+				}
+			}
+			if (option.ptx !== null && resource[1].additional.type === 'texture') {
+				Console.verbosity(`  ${path.emit()}`, []);
+				try {
+					if (resource[2].additional.type !== 'texture') {
+						throw new Error(`not a texture resource`);
+					}
+					let atlas_image_additional = resource[1].additional.value;
+					let texture_additional_source = resource[2].additional.value;
+					let size = atlas_image_additional.size;
+					let actual_size = texture_additional_source.size;
+					let format = option.ptx.format.find((value) => (value.index === texture_additional_source.format))?.format;
+					if (format === undefined) {
+						throw new Error(`unknown texture format '${texture_additional_source.format}'`);
+					}
+					actual_size = Support.Popcap.Texture.Encoding.compute_padded_image_size(actual_size, format);
+					Console.verbosity(`    size = [ ${size[0].toString().padStart(4, ' ')}, ${size[1].toString().padStart(4, ' ')} ] of [ ${actual_size[0].toString().padStart(4, ' ')}, ${actual_size[1].toString().padStart(4, ' ')} ], format = ${format}`, []);
+					let data = StorageHelper.read_file(resource_directory.push(path.parent()!).join(path.name()! + '.ptx'));
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
+					let image_view = image.view();
+					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, format);
+					assert_test(data_stream.position().value === data_stream.size().value);
+					if (option.ptx.atlas !== null) {
+						let atlas_view = image_view;
+						if (option.ptx.atlas.resize) {
+							atlas_view = atlas_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(size));
+						}
+						KernelX.Tool.Texture.File.Png.write_fs(option.ptx.directory.push(path.parent()!).join(path.name() + '.png'), atlas_view);
+					}
+					if (option.ptx.sprite !== null) {
+						Support.Atlas.Pack.unpack_fsh({
+							size: atlas_image_additional.size,
+							sprite: atlas_image_additional.sprite.map((value) => ({
+								name: value.path,
+								position: value.position,
+								size: value.size,
+							})),
+						}, image_view, option.ptx.directory);
+					}
+				}
+				catch (e) {
+					Console.error_of(e);
+				}
+			}
+			if (option.pam !== null && path.extension()?.toLowerCase() === 'pam') {
+				Console.verbosity(`  ${path.emit()}`, []);
+				try {
+					let data = StorageHelper.read_file(resource_directory.push(path));
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let version_c = Kernel.Tool.Popcap.Animation.Version.value(option.pam.version);
+					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.default();
+					Kernel.Tool.Popcap.Animation.Decode.process(data_stream, definition, version_c);
+					let definition_json = definition.get_json(version_c);
+					let definition_js = definition_json.value;
+					if (option.pam.json !== null) {
+						KernelX.Tool.Data.Serialization.Json.encode_fs(option.pam.directory.push(path.parent()!).join(path.name() + '.json'), definition_json);
+					}
+					if (option.pam.flash !== null) {
+						let flash_package = Support.Popcap.Animation.Convert.Flash.From.from(definition_js, option.pam.version);
+						Support.Popcap.Animation.Convert.Flash.save_flash_package(option.pam.directory.push(path.parent()!).join(path.name() + '.xfl'), flash_package);
+						Support.Popcap.Animation.Convert.Flash.SourceManager.create_fsh(option.pam.directory.push(path.parent()!).join(path.name() + '.xfl'), definition_js, null);
+						Support.Popcap.Animation.Convert.Flash.create_xfl_content_file(option.pam.directory.push(path.parent()!).join(path.name() + '.xfl'));
+					}
+				}
+				catch (e) {
+					Console.error_of(e);
+				}
+			}
+			if (option.bnk !== null && path.extension()?.toLowerCase() === 'bnk') {
+				Console.verbosity(`  ${path.emit()}`, []);
+				try {
+					KernelX.Tool.Wwise.SoundBank.decode_fs(
+						resource_directory.push(path),
+						option.bnk.directory.push(path.parent()!).join(path.name() + '.bundle').join('definition.json'),
+						option.bnk.directory.push(path.parent()!).join(path.name() + '.bundle').join('embedded_media'),
+						option.bnk.version,
+					);
+				}
+				catch (e) {
+					Console.error_of(e);
+				}
+			}
+			if (option.wem !== null && path.extension()?.toLowerCase() === 'wem') {
+				Console.verbosity(`  ${path.emit()}`, []);
+				try {
+					Support.Wwise.Media.Decode.decode_fs(
+						resource_directory.push(path),
+						option.wem.directory.push(path.parent()!).join(path.stem() + '.wav'),
+					);
+				}
+				catch (e) {
+					Console.error_of(e);
+				}
+			}
+		});
+		return;
+	}
+
+	export function convert_fs(
+		resource_directory: StoragePath,
+		package_definition_file: StoragePath,
+		resource_manifest_file: StoragePath,
+		option: Option,
+	): void {
+		let package_definition = JsonHelper.decode_file(package_definition_file) as Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package;
+		Console.information(los('support.popcap.pvz2.resource_convert:extract_resource_manifest'), []);
+		let resource_manifest: ResourceManifest.Package;
+		{
+			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.identifier)));
+			if (group_list.length !== 1) {
+				throw new Error(`package must contain unique MANIFEST group`);
+			}
+			let group = group_list[0];
+			if (group.subgroup.length !== 1) {
+				throw new Error(`MANIFEST group must contain unique subgroup`);
+			}
+			let subgroup = group.subgroup[0];
+			if (subgroup.identifier !== group.identifier) {
+				throw new Error(`MANIFEST subgroup identifier must equal the group identifier`);
+			}
+			let resource_list = subgroup.resource.filter((value) => (/^properties\/resources(.+)?\.(rton|newton)$/i.test(value.path)));
+			if (resource_list.length === 0) {
+				throw new Error(`MANIFEST subgroup must contain manifest file`);
+			}
+			let resource_path_list = resource_list.map((value) => (value.path));
+			let resource_path: string;
+			if (resource_list.length === 1) {
+				Console.information(los('support.popcap.pvz2.resource_convert:resource_manifest_found_single'), [resource_path_list[0]]);
+				resource_path = resource_path_list[0];
+			}
+			else {
+				Console.information(los('support.popcap.pvz2.resource_convert:resource_manifest_found_multi'), []);
+				resource_path = Console.enumeration(Console.option_string(resource_path_list), null, null);
+			}
+			Console.information(los('support.popcap.pvz2.resource_convert:parse_resource_manifest'), []);
+			if (resource_path.toLowerCase().endsWith('rton')) {
+				let data = StorageHelper.read_file(resource_directory.push(new StoragePath(resource_path)));
+				let stream = Kernel.ByteStreamView.watch(data.view());
+				let result = Kernel.Json.Value.default<ResourceManifest.Package>();
+				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(
+					stream,
+					result as any,
+					Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true}),
+				);
+				resource_manifest = result.value;
+			}
+			if (resource_path.toLowerCase().endsWith('newton')) {
+				let data = StorageHelper.read_file(resource_directory.push(new StoragePath(resource_path)));
+				let stream = new ByteStreamView(data.view().value);
+				let result = ResourceManifest.NewTypeObjectNotation.Decode.process(
+					stream,
+				);
+				resource_manifest = result;
+			}
+			resource_manifest = resource_manifest!;
+		}
+		let regular_resource_manifest = RegularResourceManifest.Convert.from_official(resource_manifest);
+		KernelX.Tool.Data.Serialization.Json.encode_fs(resource_manifest_file, Kernel.Json.Value.value(regular_resource_manifest));
+		convert(
+			resource_directory,
+			package_definition,
+			regular_resource_manifest,
+			option,
+		);
+		return;
+	}
+
+	// #endregion
+
+}

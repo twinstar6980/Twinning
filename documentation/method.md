@@ -562,16 +562,6 @@
 
 	* `key` : `string` = `?input`
 
-* `decode_lenient` `*`
-
-	* `data_file` : `*.rton`
-
-	* `value_file` : `path` ~ `*.json` = `?automatic`
-
-	* `version_number` : `integer` = `1`
-
-	* `version_native_string_encoding_use_utf8` : `boolean` = `true`
-
 ## `popcap.texture`
 
 * `encode`
@@ -911,12 +901,6 @@
 	* `output_resource` : `boolean` = `?input`
 
 	* `output_packet` : `boolean` = `?input`
-
-* `unpack_lenient` `*`
-
-	* `data_file` : `*.rsb`
-
-	* `bundle_directory` : `path` ~ `*.rsb.bundle` = `?automatic`
 
 * `resource_convert` `*`
 

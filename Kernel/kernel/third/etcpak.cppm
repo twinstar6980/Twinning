@@ -5,14 +5,8 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include <stddef.h>
 #include "third/etcpak/ProcessRGB.hpp"
-
-// ReSharper disable once CppEnforceFunctionDeclarationStyle
-extern "C++" void Public_DecodeRGBPart(uint64_t d, uint32_t * dst, uint32_t w);
-
-// ReSharper disable once CppEnforceFunctionDeclarationStyle
-extern "C++" void Public_DecodeRGBAPart(uint64_t d, uint64_t alpha, uint32_t * dst, uint32_t w);
+#include "third/etcpak/Decode.hpp"
 
 #pragma clang diagnostic pop
 
@@ -26,8 +20,16 @@ export namespace Twinning::Kernel::Third::etcpak {
 
 	using ::CompressEtc2Rgba;
 
-	using ::Public_DecodeRGBPart;
+	using ::CompressEacR;
 
-	using ::Public_DecodeRGBAPart;
+	using ::CompressEacRg;
+
+	using ::DecodeRGB;
+
+	using ::DecodeRGBA;
+
+	using ::DecodeR;
+
+	using ::DecodeRG;
 
 }

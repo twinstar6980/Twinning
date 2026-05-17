@@ -53,7 +53,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle.UnpackLenient {
 			if (size !== 0) {
 				let ripe_stream = Kernel.ByteStreamView.watch(Kernel.ByteListView.value(ripe.sub(0, ripe.size())));
 				let raw_stream = Kernel.ByteStreamView.watch(Kernel.ByteListView.value(raw.sub(0, raw.size())));
-				Kernel.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Kernel.Size.value(15n), Kernel.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
+				Kernel.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Kernel.Integer.value(15n), Kernel.Tool.Data.Compression.Deflate.Wrapper.value('zlib'));
 			}
 		}
 		for (let item in list) {

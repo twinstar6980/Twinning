@@ -607,19 +607,6 @@
 					"definition_file": "?automatic",
 				},
 			},
-			"decode_lenient": {
-				"filter": "(\\.rton)$",
-				"argument": {
-					"data_file": "?input",
-					"definition_file": "?automatic",
-					"version_number": 1,
-					"version_native_string_encoding_use_utf8": true,
-				},
-				"batch": {
-					"data_file": "?input",
-					"definition_file": "?automatic",
-				},
-			},
 		},
 		"popcap.texture": {
 			"encode": {
@@ -1048,17 +1035,6 @@
 					"bundle_directory": "?automatic",
 				},
 			},
-			"unpack_lenient": {
-				"filter": "(\\.rsb)$",
-				"argument": {
-					"data_file": "?input",
-					"bundle_directory": "?automatic",
-				},
-				"batch": {
-					"data_file": "?input",
-					"bundle_directory": "?automatic",
-				},
-			},
 			"resource_convert": {
 				"filter": "(\\.rsb\\.bundle)$",
 				"argument": {
@@ -1113,7 +1089,7 @@
 				"batch": null,
 			},
 		},
-		"pvz2.text_table": {
+		"popcap.pvz2.text_table": {
 			"convert": {
 				"filter": "(\\.(txt|json))$",
 				"argument": {
@@ -1124,7 +1100,7 @@
 				"batch": null,
 			},
 		},
-		"pvz2.resource_manifest": {
+		"popcap.pvz2.resource_manifest": {
 			"new_type_object_notation.encode": {
 				"filter": "(\\.json)$",
 				"argument": {
@@ -1160,7 +1136,7 @@
 				"batch": null,
 			},
 		},
-		"pvz2.package_project": {
+		"popcap.pvz2.package_project": {
 			"transpile": {
 				"filter": "(\\.pvz2_package_project)$",
 				"argument": {
@@ -1211,7 +1187,7 @@
 				"batch": null,
 			},
 		},
-		"pvz2.remote_project": {
+		"popcap.pvz2.remote_project": {
 			"execute": {
 				"filter": "(\\.pvz2_remote_project)$",
 				"argument": {
@@ -1226,7 +1202,7 @@
 			},
 		},
 		"kairosoft.game": {
-			"modify_program": {
+			"program.modify": {
 				"filter": "()$",
 				"argument": {
 					"target_directory": "?input",
@@ -1235,7 +1211,7 @@
 				},
 				"batch": null,
 			},
-			"encrypt_record": {
+			"record.encrypt": {
 				"filter": "()$",
 				"argument": {
 					"target_directory": "?input",
@@ -1244,8 +1220,33 @@
 				"batch": null,
 			},
 		},
+		"nitrome.twin_shot_deluxe": {
+			"record.encode": {
+				"filter": "(\\.dat\\.json)$",
+				"argument": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+					"buffer_size": "1.0m",
+				},
+				"batch": {
+					"definition_file": "?input",
+					"data_file": "?automatic",
+				},
+			},
+			"record.decode": {
+				"filter": "(\\.dat)$",
+				"argument": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+				"batch": {
+					"data_file": "?input",
+					"definition_file": "?automatic",
+				},
+			},
+		},
 	},
-	"executor_pvz2_resource_convert_ptx_format_map_list": {
+	"executor_popcap_pvz2_resource_convert_ptx_format_map_list": {
 		"iphone": [
 			{
 				"index": 0,
@@ -1277,11 +1278,11 @@
 			},
 			{
 				"index": 30,
-				"format": "rgba_pvrtc4",
+				"format": "rgba_pvrtc1_4bpp",
 			},
 			{
 				"index": 148,
-				"format": "rgb_pvrtc4_a_8",
+				"format": "rgb_pvrtc1_4bpp_a_8",
 			},
 		],
 		"android": [
@@ -1327,9 +1328,25 @@
 				"index": 147,
 				"format": "rgb_etc1_a_palette",
 			},
+			{
+				"index": 160,
+				"format": "rgba_astc_4x4",
+			},
+			{
+				"index": 161,
+				"format": "rgba_astc_5x5",
+			},
+			{
+				"index": 162,
+				"format": "rgba_astc_6x6",
+			},
+			{
+				"index": 163,
+				"format": "rgba_astc_8x8",
+			},
 		],
 	},
-	"executor_pvz2_package_project_conversion_setting": {
+	"executor_popcap_pvz2_package_project_conversion_setting": {
 		"rton": [
 			{
 				"name": "@:default",
@@ -1424,13 +1441,13 @@
 				"index": 23,
 			},
 			{
-				"name": "#:rgba_pvrtc4",
-				"format": "rgba_pvrtc4",
+				"name": "#:rgba_pvrtc1_4bpp",
+				"format": "rgba_pvrtc1_4bpp",
 				"index": 30,
 			},
 			{
-				"name": "#:rgb_pvrtc4_a_8",
-				"format": "rgb_pvrtc4_a_8",
+				"name": "#:rgb_pvrtc1_4bpp_a_8",
+				"format": "rgb_pvrtc1_4bpp_a_8",
 				"index": 148,
 			},
 			{

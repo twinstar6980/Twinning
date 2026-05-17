@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 	): void {
 		push_typical_method('kairosoft.game', [
 			typical_method({
-				identifier: 'modify_program',
+				identifier: 'program.modify',
 				filter: ['directory', /()$/i],
 				argument: [
 					typical_argument_path({
@@ -31,12 +31,12 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 				],
 				batch: null,
 				worker: ({target_directory, disable_record_encryption, enable_debug_mode}, store: {}) => {
-					Support.Kairosoft.Game.ModifyProgram.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
+					Support.Kairosoft.Game.Program.Modify.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
 					return;
 				},
 			}),
 			typical_method({
-				identifier: 'encrypt_record',
+				identifier: 'record.encrypt',
 				filter: ['directory', /()$/i],
 				argument: [
 					typical_argument_path({
@@ -66,7 +66,7 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 					else {
 						key_value = ConvertHelper.make_string_to_byte_array(key);
 					}
-					Support.Kairosoft.Game.EncryptRecord.process_fs(target_directory, key_value);
+					Support.Kairosoft.Game.Record.Encrypt.process_fs(target_directory, key_value);
 					return;
 				},
 			}),

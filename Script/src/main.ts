@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '178';
+	export const k_version = '179';
 
 	// ----------------
 
@@ -139,25 +139,27 @@ namespace Twinning.Script {
 			`support/popcap/package/pack_automatic`,
 			`support/popcap/resource_stream_bundle/common`,
 			`support/popcap/resource_stream_bundle/unpack_lenient`,
-			`support/pvz2/text_table/convert`,
-			`support/pvz2/json_generic_getter`,
-			`support/pvz2/resource_manifest/common`,
-			`support/pvz2/resource_manifest/new_type_object_notation/common`,
-			`support/pvz2/resource_manifest/new_type_object_notation/decode`,
-			`support/pvz2/resource_manifest/new_type_object_notation/encode`,
-			`support/pvz2/regular_resource_manifest/common`,
-			`support/pvz2/regular_resource_manifest/convert`,
-			`support/pvz2/package_project/common`,
-			`support/pvz2/package_project/setting`,
-			`support/pvz2/package_project/diagnose`,
-			`support/pvz2/package_project/transpile`,
-			`support/pvz2/package_project/compile`,
-			`support/pvz2/package_project/link`,
-			`support/pvz2/package_project/parse`,
-			`support/pvz2/remote_project/execute`,
-			`support/pvz2/resource_convert`,
-			`support/kairosoft/game/modify_program`,
-			`support/kairosoft/game/encrypt_record`,
+			`support/popcap/pvz2/text_table/convert`,
+			`support/popcap/pvz2/json_generic_getter`,
+			`support/popcap/pvz2/resource_manifest/common`,
+			`support/popcap/pvz2/resource_manifest/new_type_object_notation/common`,
+			`support/popcap/pvz2/resource_manifest/new_type_object_notation/decode`,
+			`support/popcap/pvz2/resource_manifest/new_type_object_notation/encode`,
+			`support/popcap/pvz2/regular_resource_manifest/common`,
+			`support/popcap/pvz2/regular_resource_manifest/convert`,
+			`support/popcap/pvz2/package_project/common`,
+			`support/popcap/pvz2/package_project/setting`,
+			`support/popcap/pvz2/package_project/diagnose`,
+			`support/popcap/pvz2/package_project/transpile`,
+			`support/popcap/pvz2/package_project/compile`,
+			`support/popcap/pvz2/package_project/link`,
+			`support/popcap/pvz2/package_project/parse`,
+			`support/popcap/pvz2/remote_project/execute`,
+			`support/popcap/pvz2/resource_convert`,
+			`support/kairosoft/game/program/modify`,
+			`support/kairosoft/game/record/encrypt`,
+			`support/nitrome/twin_shot_deluxe/record/encode`,
+			`support/nitrome/twin_shot_deluxe/record/decode`,
 			`executor/generic`,
 			`executor/typical`,
 			`executor/implementation/common.utility`,
@@ -191,15 +193,18 @@ namespace Twinning.Script {
 			`executor/implementation/popcap.resource_stream_group`,
 			`executor/implementation/popcap.resource_stream_bundle`,
 			`executor/implementation/popcap.resource_stream_bundle_patch`,
-			`executor/implementation/pvz2.text_table`,
-			`executor/implementation/pvz2.resource_manifest`,
-			`executor/implementation/pvz2.package_project`,
-			`executor/implementation/pvz2.remote_project`,
+			`executor/implementation/popcap.pvz2.text_table`,
+			`executor/implementation/popcap.pvz2.resource_manifest`,
+			`executor/implementation/popcap.pvz2.package_project`,
+			`executor/implementation/popcap.pvz2.remote_project`,
 			`executor/implementation/kairosoft.game`,
+			`executor/implementation/nitrome.twin_shot_deluxe`,
 			`executable/script_console`,
 			`executable/compare_language_file`,
 			`executable/compute_wwise_short_identifier`,
 			`executable/extract_rsb_from_pvz2cn_apk_directory`,
+			`executable/decode_rton_lenient`,
+			`executable/unpack_rsb_lenient`,
 			`runner/runner`,
 			`setting`,
 		];
@@ -254,14 +259,20 @@ namespace Twinning.Script {
 			g_setting = setting_data as Setting;
 			update_setting(g_setting, g_setting);
 			// activate executor
-			let executor_implementation = Executor.Implementation as Record<string, Record<string, Executor.TypicalMethodImplementation>>;
-			for (let major_name of Object.keys(executor_implementation)) {
-				let major_module = executor_implementation[major_name];
-				for (let minor_name of Object.keys(major_module)) {
-					let minor_module = major_module[minor_name];
-					minor_module.activate();
+			let activate_executor = (current_module: Executor.TypicalMethodModule) => {
+				if (current_module.activate !== undefined) {
+					current_module = current_module as Executor.TypicalMethodImplementation;
+					current_module.activate();
 				}
+				else {
+					current_module = current_module as {[key: string]: Executor.TypicalMethodModule};
+					for (let child_name in current_module) {
+						activate_executor(current_module[child_name]);
+					}
+				}
+				return;
 			}
+			activate_executor(Executor.Implementation as Executor.TypicalMethodModule);
 			let load_timer_end = Date.now();
 			// execute runner
 			let result = null as null | string;

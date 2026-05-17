@@ -118,7 +118,7 @@ namespace Twinning.Script.XmlHelper {
 		value: TValue,
 	): string {
 		let data = Kernel.String.default();
-		Kernel.Tool.Data.Serialization.Xml.Write.process(data, Kernel.Xml.Node.value(value));
+		Kernel.Tool.Data.Serialization.Xml.Encode.process(data, Kernel.Xml.Node.value(value));
 		return data.value;
 	}
 
@@ -126,7 +126,7 @@ namespace Twinning.Script.XmlHelper {
 		text: string,
 	): TValue {
 		let value = Kernel.Xml.Node.default<TValue>();
-		Kernel.Tool.Data.Serialization.Xml.Read.process(Kernel.String.value(text), value);
+		Kernel.Tool.Data.Serialization.Xml.Decode.process(Kernel.String.value(text), value);
 		return value.value;
 	}
 
@@ -137,7 +137,7 @@ namespace Twinning.Script.XmlHelper {
 		value: TValue,
 	): void {
 		let data = Kernel.String.default();
-		Kernel.Tool.Data.Serialization.Xml.Write.process(data, Kernel.Xml.Node.value(value));
+		Kernel.Tool.Data.Serialization.Xml.Encode.process(data, Kernel.Xml.Node.value(value));
 		let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
 		StorageHelper.write_file(path, data_byte);
 		return;
@@ -149,7 +149,7 @@ namespace Twinning.Script.XmlHelper {
 		let data_byte = StorageHelper.read_file(path);
 		let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
 		let value = Kernel.Xml.Node.default<TValue>();
-		Kernel.Tool.Data.Serialization.Xml.Read.process(data, value);
+		Kernel.Tool.Data.Serialization.Xml.Decode.process(data, value);
 		return value.value;
 	}
 

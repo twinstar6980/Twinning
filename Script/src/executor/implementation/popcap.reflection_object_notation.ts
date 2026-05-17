@@ -357,61 +357,6 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 					return;
 				},
 			}),
-			typical_method({
-				identifier: 'decode_lenient',
-				filter: ['file', /(\.rton)$/i],
-				argument: [
-					typical_argument_path({
-						identifier: 'data_file',
-						rule: ['file', 'input'],
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-					typical_argument_path({
-						identifier: 'definition_file',
-						rule: ['file', 'output'],
-						checker: null,
-						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.rton)?$/i, '.json'),
-						condition: null,
-					}),
-					typical_argument_integer({
-						identifier: 'version_number',
-						option: KernelX.Tool.Popcap.ReflectionObjectNotation.VersionNumberE,
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-					typical_argument_boolean({
-						identifier: 'version_native_string_encoding_use_utf8',
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-				],
-				batch: [
-					typical_argument_batch({
-						identifier: 'data_file',
-						rule: 'input',
-						checker: null,
-						automatic: null,
-						condition: null,
-						item_mapper: (argument: {}, value) => (value),
-					}),
-					typical_argument_batch({
-						identifier: 'definition_file',
-						rule: 'output',
-						checker: null,
-						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.decode_lenient'),
-						condition: null,
-						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.rton)?$/i, '.json'),
-					}),
-				],
-				worker: ({data_file, definition_file, version_number, version_native_string_encoding_use_utf8}, store: {}) => {
-					Support.Popcap.ReflectionObjectNotation.DecodeLenient.process_fs(data_file, definition_file, {number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8});
-					return;
-				},
-			}),
 		]);
 		return;
 	}

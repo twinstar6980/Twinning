@@ -28,13 +28,13 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::XboxTiledTexture {
 			auto image_size = image.size();
 			auto block_height = image_size.width / k_block_width;
 			auto chunk_height = image_size.height / k_chunk_width;
-			auto data_view = data.forward_view(image_size.area() * Texture::Encoding::bpp_of(t_format) / k_type_bit_count<Byte>);
+			auto data_view = data.forward_view(image_size.area() * Texture::Encoding::Common::get_pixel_byte_count(t_format));
 			for (auto & block_y : SizeRange{chunk_height}) {
 				for (auto & block_x : SizeRange{k_chunk_width}) {
 					auto image_row = InputStreamView<Image::Pixel>{image[block_y * k_chunk_width + block_x]};
 					for (auto & block_row : SizeRange{block_height}) {
 						auto position = (block_y * block_height + block_row) * (k_block_width * k_chunk_width) + (block_x * k_block_width);
-						auto block_data = OutputByteStreamView{data_view.sub(position * bpp_of(t_format) / k_type_bit_count<Byte>, k_block_width * bpp_of(t_format) / k_type_bit_count<Byte>)};
+						auto block_data = OutputByteStreamView{data_view.sub(position * Texture::Encoding::Common::get_pixel_byte_count(t_format), k_block_width * Texture::Encoding::Common::get_pixel_byte_count(t_format))};
 						for (auto & block_column : SizeRange{k_block_width}) {
 							Texture::Encoding::Encode::process_pixel<t_format>(block_data, image_row.next());
 						}

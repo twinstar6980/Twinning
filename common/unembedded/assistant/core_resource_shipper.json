@@ -128,6 +128,18 @@
 								"target_name": "ExtractRsbFromPvz2cnApkDirectory",
 							},
 						},
+						{
+							"name": "DecodeRtonLenient",
+							"argument": {
+								"target_name": "DecodeRtonLenient",
+							},
+						},
+						{
+							"name": "UnpackRsbLenient",
+							"argument": {
+								"target_name": "UnpackRsbLenient",
+							},
+						},
 					],
 				},
 				{
@@ -626,9 +638,33 @@
 							},
 						},
 						{
+							"name": "RGB-888-R",
+							"argument": {
+								"format": "rgb_888_r",
+							},
+						},
+						{
 							"name": "RGBA-8888-O",
 							"argument": {
 								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "RGBA-8888-R",
+							"argument": {
+								"format": "rgba_8888_r",
+							},
+						},
+						{
+							"name": "ARGB-8888-O",
+							"argument": {
+								"format": "argb_8888_o",
+							},
+						},
+						{
+							"name": "ARGB-8888-R",
+							"argument": {
+								"format": "argb_8888_r",
 							},
 						},
 						null,
@@ -645,22 +681,107 @@
 							},
 						},
 						{
-							"name": "RGBA-ETC2",
+							"name": "RGBA-ETC2-EAC",
 							"argument": {
-								"format": "rgba_etc2",
+								"format": "rgba_etc2_eac",
 							},
 						},
 						null,
 						{
-							"name": "RGB-PVRTC4",
+							"name": "RGB-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgb_pvrtc4",
+								"format": "rgb_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGBA-PVRTC4",
+							"name": "RGBA-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x4",
+							"argument": {
+								"format": "rgba_astc_5x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x5",
+							"argument": {
+								"format": "rgba_astc_6x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x5",
+							"argument": {
+								"format": "rgba_astc_8x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x6",
+							"argument": {
+								"format": "rgba_astc_8x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x5",
+							"argument": {
+								"format": "rgba_astc_10x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x6",
+							"argument": {
+								"format": "rgba_astc_10x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x8",
+							"argument": {
+								"format": "rgba_astc_10x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x10",
+							"argument": {
+								"format": "rgba_astc_10x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x10",
+							"argument": {
+								"format": "rgba_astc_12x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x12",
+							"argument": {
+								"format": "rgba_astc_12x12",
 							},
 						},
 					],
@@ -773,9 +894,33 @@
 							},
 						},
 						{
+							"name": "RGB-888-R",
+							"argument": {
+								"format": "rgb_888_r",
+							},
+						},
+						{
 							"name": "RGBA-8888-O",
 							"argument": {
 								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "RGBA-8888-R",
+							"argument": {
+								"format": "rgba_8888_r",
+							},
+						},
+						{
+							"name": "ARGB-8888-O",
+							"argument": {
+								"format": "argb_8888_o",
+							},
+						},
+						{
+							"name": "ARGB-8888-R",
+							"argument": {
+								"format": "argb_8888_r",
 							},
 						},
 						null,
@@ -792,22 +937,107 @@
 							},
 						},
 						{
-							"name": "RGBA-ETC2",
+							"name": "RGBA-ETC2-EAC",
 							"argument": {
-								"format": "rgba_etc2",
+								"format": "rgba_etc2_eac",
 							},
 						},
 						null,
 						{
-							"name": "RGB-PVRTC4",
+							"name": "RGB-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgb_pvrtc4",
+								"format": "rgb_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGBA-PVRTC4",
+							"name": "RGBA-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x4",
+							"argument": {
+								"format": "rgba_astc_5x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x5",
+							"argument": {
+								"format": "rgba_astc_6x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x5",
+							"argument": {
+								"format": "rgba_astc_8x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x6",
+							"argument": {
+								"format": "rgba_astc_8x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x5",
+							"argument": {
+								"format": "rgba_astc_10x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x6",
+							"argument": {
+								"format": "rgba_astc_10x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x8",
+							"argument": {
+								"format": "rgba_astc_10x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x10",
+							"argument": {
+								"format": "rgba_astc_10x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x10",
+							"argument": {
+								"format": "rgba_astc_12x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x12",
+							"argument": {
+								"format": "rgba_astc_12x12",
 							},
 						},
 					],
@@ -1390,32 +1620,6 @@
 						},
 					],
 				},
-				{
-					"name": "Decode by lenient",
-					"icon": "skip_previous",
-					"filter": {
-						"type": "file",
-						"name": "(\\.rton)$",
-					},
-					"batch": true,
-					"method": "popcap.reflection_object_notation.decode_lenient",
-					"preset": [
-						{
-							"name": "1 | E-ASCII",
-							"argument": {
-								"version_number": 1,
-								"version_native_string_encoding_use_utf8": false,
-							},
-						},
-						{
-							"name": "1 | UTF-8",
-							"argument": {
-								"version_number": 1,
-								"version_native_string_encoding_use_utf8": true,
-							},
-						},
-					],
-				},
 			],
 		},
 		{
@@ -1484,28 +1688,53 @@
 						},
 						null,
 						{
-							"name": "RGBA-PVRTC-4",
+							"name": "RGBA-PVRTC1-4",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGB-PVRTC-4 + A-8",
+							"name": "RGB-PVRTC1-4 + A-8",
 							"argument": {
-								"format": "rgb_pvrtc4_a_8",
+								"format": "rgb_pvrtc1_4bpp_a_8",
 							},
 						},
 						null,
 						{
-							"name": "ETC-1 + A-8",
+							"name": "RGB-ETC1 + A-8",
 							"argument": {
 								"format": "rgb_etc1_a_8",
 							},
 						},
 						{
-							"name": "ETC-1 + A-P",
+							"name": "RGB-ETC1 + A-P",
 							"argument": {
 								"format": "rgb_etc1_a_palette",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
 							},
 						},
 					],
@@ -1572,28 +1801,53 @@
 						},
 						null,
 						{
-							"name": "RGBA-PVRTC-4",
+							"name": "RGBA-PVRTC1-4",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGB-PVRTC-4 + A-8",
+							"name": "RGB-PVRTC1-4 + A-8",
 							"argument": {
-								"format": "rgb_pvrtc4_a_8",
+								"format": "rgb_pvrtc1_4bpp_a_8",
 							},
 						},
 						null,
 						{
-							"name": "ETC-1 + A-8",
+							"name": "RGB-ETC1 + A-8",
 							"argument": {
 								"format": "rgb_etc1_a_8",
 							},
 						},
 						{
-							"name": "ETC-1 + A-P",
+							"name": "RGB-ETC1 + A-P",
 							"argument": {
 								"format": "rgb_etc1_a_palette",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
 							},
 						},
 					],
@@ -2964,18 +3218,6 @@
 					],
 				},
 				{
-					"name": "Unpack by lenient",
-					"icon": "orders",
-					"filter": {
-						"type": "file",
-						"name": "(\\.rsb)$",
-					},
-					"batch": true,
-					"method": "popcap.resource_stream_bundle.unpack_lenient",
-					"preset": [
-					],
-				},
-				{
 					"name": "Resource convert",
 					"icon": "lightning_stand",
 					"filter": {
@@ -3235,7 +3477,7 @@
 			],
 		},
 		{
-			"name": "PvZ-2 Text-Table",
+			"name": "PopCap PvZ-2 Text-Table",
 			"icon": "description",
 			"item": [
 				{
@@ -3246,7 +3488,7 @@
 						"name": "(\\.(txt|json))$",
 					},
 					"batch": false,
-					"method": "pvz2.text_table.convert",
+					"method": "popcap.pvz2.text_table.convert",
 					"preset": [
 						{
 							"name": "Text",
@@ -3271,7 +3513,7 @@
 			],
 		},
 		{
-			"name": "PvZ-2 Resource-Manifest",
+			"name": "PopCap PvZ-2 Resource-Manifest",
 			"icon": "description",
 			"item": [
 				{
@@ -3282,7 +3524,7 @@
 						"name": "(\\.json)$",
 					},
 					"batch": false,
-					"method": "pvz2.resource_manifest.new_type_object_notation.encode",
+					"method": "popcap.pvz2.resource_manifest.new_type_object_notation.encode",
 					"preset": [
 					],
 				},
@@ -3294,7 +3536,7 @@
 						"name": "(\\.newton)$",
 					},
 					"batch": false,
-					"method": "pvz2.resource_manifest.new_type_object_notation.decode",
+					"method": "popcap.pvz2.resource_manifest.new_type_object_notation.decode",
 					"preset": [
 					],
 				},
@@ -3306,7 +3548,7 @@
 						"name": "(\\.json)$",
 					},
 					"batch": false,
-					"method": "pvz2.resource_manifest.regular.from",
+					"method": "popcap.pvz2.resource_manifest.regular.from",
 					"preset": [
 					],
 				},
@@ -3318,7 +3560,7 @@
 						"name": "(\\.json)$",
 					},
 					"batch": false,
-					"method": "pvz2.resource_manifest.regular.to",
+					"method": "popcap.pvz2.resource_manifest.regular.to",
 					"preset": [
 						{
 							"name": "String path",
@@ -3337,7 +3579,7 @@
 			],
 		},
 		{
-			"name": "PvZ-2 Package-Project",
+			"name": "PopCap PvZ-2 Package-Project",
 			"icon": "deployed_code",
 			"item": [
 				{
@@ -3348,7 +3590,7 @@
 						"name": "(\\.pvz2_package_project)$",
 					},
 					"batch": false,
-					"method": "pvz2.package_project.transpile",
+					"method": "popcap.pvz2.package_project.transpile",
 					"preset": [
 						{
 							"name": "Generalize",
@@ -3491,7 +3733,7 @@
 						"name": "(\\.pvz2_package_project)$",
 					},
 					"batch": false,
-					"method": "pvz2.package_project.compile",
+					"method": "popcap.pvz2.package_project.compile",
 					"preset": [
 					],
 				},
@@ -3503,7 +3745,7 @@
 						"name": "(\\.pvz2_package_project)$",
 					},
 					"batch": false,
-					"method": "pvz2.package_project.link",
+					"method": "popcap.pvz2.package_project.link",
 					"preset": [
 						{
 							"name": "Legacy",
@@ -3527,7 +3769,7 @@
 						"name": "(\\.pvz2_package_project)$",
 					},
 					"batch": false,
-					"method": "pvz2.package_project.parse",
+					"method": "popcap.pvz2.package_project.parse",
 					"preset": [
 						{
 							"name": "1 | 0",
@@ -3577,7 +3819,7 @@
 			],
 		},
 		{
-			"name": "PvZ-2 Remote-Project",
+			"name": "PopCap PvZ-2 Remote-Project",
 			"icon": "cloud",
 			"item": [
 				{
@@ -3588,7 +3830,7 @@
 						"name": "(\\.pvz2_remote_project)$",
 					},
 					"batch": false,
-					"method": "pvz2.remote_project.execute",
+					"method": "popcap.pvz2.remote_project.execute",
 					"preset": [
 						{
 							"name": "Launch",
@@ -3699,14 +3941,14 @@
 			"icon": "sports_esports",
 			"item": [
 				{
-					"name": "Modify program",
+					"name": "Program Modify",
 					"icon": "build",
 					"filter": {
 						"type": "directory",
 						"name": "()$",
 					},
 					"batch": false,
-					"method": "kairosoft.game.modify_program",
+					"method": "kairosoft.game.program.modify",
 					"preset": [
 						{
 							"name": "Disable record encryption",
@@ -3740,14 +3982,44 @@
 					],
 				},
 				{
-					"name": "Encrypt record",
+					"name": "Record Encrypt",
 					"icon": "lock_open",
 					"filter": {
 						"type": "directory",
 						"name": "()$",
 					},
 					"batch": false,
-					"method": "kairosoft.game.encrypt_record",
+					"method": "kairosoft.game.record.encrypt",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"name": "Nitrome Twin-Shot-Deluxe",
+			"icon": "sports_esports",
+			"item": [
+				{
+					"name": "Record Encode",
+					"icon": "skip_next",
+					"filter": {
+						"type": "file",
+						"name": "(\\.dat\\.json)$",
+					},
+					"batch": true,
+					"method": "nitrome.twin_shot_deluxe.record.encode",
+					"preset": [
+					],
+				},
+				{
+					"name": "Record Decode",
+					"icon": "skip_previous",
+					"filter": {
+						"type": "file",
+						"name": "(\\.dat)$",
+					},
+					"batch": true,
+					"method": "nitrome.twin_shot_deluxe.record.decode",
 					"preset": [
 					],
 				},

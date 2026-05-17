@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 					auto resource_data = Storage::read_file(resource_path);
 					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_offset = data.position();
-					Data::Compression::Deflate::Compress::process(resource_data_stream, data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(resource_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					resource_information_structure.size = cbox<IntegerU32>(data.position() - resource_offset);
 					resource_information_structure.size_original = cbox<IntegerU32>(resource_data.size());
 				}

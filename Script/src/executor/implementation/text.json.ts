@@ -67,8 +67,8 @@ namespace Twinning.Script.Executor.Implementation.Text.Json {
 					}),
 				],
 				worker: ({source_file, destination_file, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking}, store: {}) => {
-					let data = KernelX.Tool.Data.Serialization.Json.read_fs(source_file);
-					KernelX.Tool.Data.Serialization.Json.write_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
+					let data = KernelX.Tool.Data.Serialization.Json.decode_fs(source_file);
+					KernelX.Tool.Data.Serialization.Json.encode_fs(destination_file, data, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 					return;
 				},
 			}),

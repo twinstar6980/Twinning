@@ -19,15 +19,16 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 		inline static auto process_whole(
 			InputByteStreamView &  raw,
 			OutputByteStreamView & ripe,
-			Size const &           level
+			Integer const &        level
 		) -> Void {
-			assert_test(Math::between(level, 0_sz, 9_sz));
+			assert_test(Math::between(level, 0_i, 9_i));
 			auto property = ripe.forward_view(mbox<Size>(Third::lzma::$LZMA_PROPS_SIZE));
 			ripe.write(cbox<IntegerU64>(raw.reserve()));
 			auto raw_size = raw.reserve().value;
 			auto ripe_size = ripe.reserve().value;
 			auto property_size = property.size().value;
-			auto state = Third::lzma::$LzmaCompress(
+			auto lz_state = int{};
+			lz_state = Third::lzma::$LzmaCompress(
 				cast_pointer<Third::lzma::$Byte>(ripe.current_pointer()).value,
 				&ripe_size,
 				cast_pointer<Third::lzma::$Byte>(raw.current_pointer()).value,
@@ -42,7 +43,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 				-1,
 				-1
 			);
-			assert_test(state == Third::lzma::$SZ_OK);
+			assert_test(lz_state == Third::lzma::$SZ_OK);
 			assert_test(property_size == property.size().value);
 			raw.forward(mbox<Size>(raw_size));
 			ripe.forward(mbox<Size>(ripe_size));
@@ -54,7 +55,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 		inline static auto process(
 			InputByteStreamView &  raw_,
 			OutputByteStreamView & ripe_,
-			Size const &           level
+			Integer const &        level
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);

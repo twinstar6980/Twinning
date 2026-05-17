@@ -20,19 +20,19 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 			InputByteStreamView &  before,
 			OutputByteStreamView & after,
 			InputByteStreamView &  patch,
-			Size const &           maximum_window_size
+			Integer const &        maximum_window_size
 		) -> Void {
-			auto state = bool{};
+			auto v_state = bool{};
 			auto after_container = std::string{};
 			auto decoder = Third::open_vcdiff::VCDiffStreamingDecoder{};
 			decoder.SetAllowVcdTarget(true);
-			decoder.SetMaximumTargetFileSize(std::numeric_limits<std::int32_t>::max());
-			decoder.SetMaximumTargetWindowSize(maximum_window_size.value);
+			decoder.SetMaximumTargetFileSize(static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()));
+			decoder.SetMaximumTargetWindowSize(static_cast<std::size_t>(maximum_window_size.value));
 			decoder.StartDecoding(cast_pointer<char>(as_variable_pointer(before.current_pointer())).value, before.reserve().value);
-			state = decoder.DecodeChunk(cast_pointer<char>(as_variable_pointer(patch.current_pointer())).value, patch.reserve().value, &after_container);
-			assert_test(state);
-			state = decoder.FinishDecoding();
-			assert_test(state);
+			v_state = decoder.DecodeChunk(cast_pointer<char>(as_variable_pointer(patch.current_pointer())).value, patch.reserve().value, &after_container);
+			assert_test(v_state);
+			v_state = decoder.FinishDecoding();
+			assert_test(v_state);
 			before.forward(before.reserve());
 			patch.forward(patch.reserve());
 			for (auto & element : after_container) {
@@ -47,7 +47,7 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 			InputByteStreamView &  before_,
 			OutputByteStreamView & after_,
 			InputByteStreamView &  patch_,
-			Size const &           maximum_window_size
+			Integer const &        maximum_window_size
 		) -> Void {
 			M_use_zps_of(before);
 			M_use_zps_of(after);

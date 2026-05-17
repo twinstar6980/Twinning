@@ -8,25 +8,26 @@ import twinning.kernel.utility;
 export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 	M_enumeration(
-		M_wrap(Format),
+		M_wrap(Generation),
 		M_wrap(
-			v1_4bpp_rgb,
-			v1_4bpp_rgba,
+			v1,
+			v2,
 		),
 	);
-
-	using FormatPackage = ValuePackage<
-		Format::Constant::v1_4bpp_rgb(),
-		Format::Constant::v1_4bpp_rgba()
-	>;
 
 	// ----------------
 
 	struct Common {
 
-		inline static constexpr auto k_block_width = Size{4_sz};
+		inline static constexpr auto k_block_bit_count_2 = Size{32_sz};
 
-		inline static constexpr auto k_bpp_4 = Size{4_sz};
+		inline static constexpr auto k_block_bit_count_4 = Size{64_sz};
+
+		inline static constexpr auto is_valid_block_size(
+			Image::ImageSize const & block_size
+		) -> Boolean {
+			return (block_size.width == 4_sz && block_size.height == 4_sz);
+		}
 
 	};
 

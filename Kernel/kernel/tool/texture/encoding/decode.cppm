@@ -119,10 +119,33 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 				pixel.green = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
 				pixel.blue = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
 			}
+			if constexpr (t_format == Format::Constant::rgb_888_r()) {
+				pixel.blue = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.green = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.red = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+			}
 			if constexpr (t_format == Format::Constant::rgba_8888_o()) {
 				pixel.red = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
 				pixel.green = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
 				pixel.blue = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.alpha = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+			}
+			if constexpr (t_format == Format::Constant::rgba_8888_r()) {
+				pixel.alpha = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.blue = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.green = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.red = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+			}
+			if constexpr (t_format == Format::Constant::argb_8888_o()) {
+				pixel.alpha = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.red = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.green = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.blue = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+			}
+			if constexpr (t_format == Format::Constant::argb_8888_r()) {
+				pixel.blue = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.green = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+				pixel.red = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
 				pixel.alpha = Image::uncompress_color(cbox<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
 			}
 			return;

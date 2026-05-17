@@ -19,22 +19,23 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		inline static auto process_whole(
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
-			Size const &           window_bits,
+			Integer const &        window_exponent,
 			Wrapper const &        wrapper
 		) -> Void {
-			assert_test(Math::between(window_bits, 8_sz, mbox<Size>(Third::zlib::$MAX_WBITS)));
-			auto actual_window_bits = static_cast<int>(window_bits.value);
+			assert_test(Math::between(window_exponent, 8_i, mbox<Integer>(Third::zlib::$MAX_WBITS)));
+			auto z_state = int{};
+			auto z_window_exponent = static_cast<int>(window_exponent.value);
 			switch (wrapper.value) {
 				case Wrapper::Constant::none().value: {
-					actual_window_bits = -actual_window_bits;
+					z_window_exponent = -z_window_exponent;
 					break;
 				}
 				case Wrapper::Constant::zlib().value: {
-					actual_window_bits = +actual_window_bits;
+					z_window_exponent = +z_window_exponent;
 					break;
 				}
 				case Wrapper::Constant::gzip().value: {
-					actual_window_bits = +actual_window_bits + 16;
+					z_window_exponent = +z_window_exponent + 16;
 					break;
 				}
 				default: throw UnreachableException{};
@@ -55,23 +56,22 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				.adler = 0,
 				.reserved = 0,
 			};
-			auto state = int{};
-			state = Third::zlib::$inflateInit2_(
+			z_state = Third::zlib::$inflateInit2_(
 				&z_stream,
-				actual_window_bits,
+				z_window_exponent,
 				Third::zlib::$ZLIB_VERSION,
 				static_cast<int>(sizeof(z_stream))
 			);
-			assert_test(state == Third::zlib::$Z_OK);
-			state = Third::zlib::$inflate(
+			assert_test(z_state == Third::zlib::$Z_OK);
+			z_state = Third::zlib::$inflate(
 				&z_stream,
 				Third::zlib::$Z_NO_FLUSH
 			);
-			assert_test(state == Third::zlib::$Z_STREAM_END);
-			state = Third::zlib::$inflateEnd(
+			assert_test(z_state == Third::zlib::$Z_STREAM_END);
+			z_state = Third::zlib::$inflateEnd(
 				&z_stream
 			);
-			assert_test(state == Third::zlib::$Z_OK);
+			assert_test(z_state == Third::zlib::$Z_OK);
 			ripe.forward(mbox<Size>(z_stream.total_in));
 			raw.forward(mbox<Size>(z_stream.total_out));
 			return;
@@ -82,12 +82,12 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		inline static auto process(
 			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
-			Size const &           window_bits,
+			Integer const &        window_exponent,
 			Wrapper const &        wrapper
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
-			return process_whole(ripe, raw, window_bits, wrapper);
+			return process_whole(ripe, raw, window_exponent, wrapper);
 		}
 
 	};

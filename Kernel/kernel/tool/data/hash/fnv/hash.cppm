@@ -31,11 +31,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 				value = Parameter::offset;
 			}
 			for (auto & element : data) {
-				if constexpr (t_mode == Mode::Constant::m_0()) {
-					value *= Parameter::prime;
-					value ^= cbox<typename Parameter::Value>(element);
-				}
-				if constexpr (t_mode == Mode::Constant::m_1()) {
+				if constexpr (t_mode == Mode::Constant::m_0() || t_mode == Mode::Constant::m_1()) {
 					value *= Parameter::prime;
 					value ^= cbox<typename Parameter::Value>(element);
 				}

@@ -77,7 +77,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 				default: throw UnsupportedException{};
 			}
 			auto compress_texture_data_size = Size{};
-			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
+			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
 			auto texture_data_view = VariableByteListView{};
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			if (compress_texture_data) {
 				auto texture_data_stream = InputByteStreamView{texture_data_container};
 				auto ripe_texture_data_stream = OutputByteStreamView{data.reserve_view()};
-				Data::Compression::Deflate::Compress::process(texture_data_stream, ripe_texture_data_stream, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Compress::process(texture_data_stream, ripe_texture_data_stream, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 				compress_texture_data_size = ripe_texture_data_stream.position();
 				data.forward(ripe_texture_data_stream.position());
 			}
@@ -118,13 +118,13 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			data_size_bound += bs_static_size<MagicMarker>();
 			data_size_bound += bs_static_size<VersionNumber>();
 			data_size_bound += bs_static_size<Header>();
-			auto texture_data_size = image_size.area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
+			auto texture_data_size = image_size.area() * Texture::Encoding::Common::get_pixel_byte_count(format);
 			auto texture_data_size_bound = Size{};
 			if (!compress_texture_data) {
 				texture_data_size_bound = texture_data_size;
 			}
 			else {
-				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_sz, 9_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_i, 9_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			}
 			data_size_bound += texture_data_size_bound;
 			return;

@@ -1280,8 +1280,3 @@ void DecodeRG(const uint64_t* src, uint32_t* dst, int32_t width, int32_t height,
         dst += width*3;
     }
 }
-
-// TwinStar: insert
-extern "C++" void Public_DecodeRGBPart( uint64_t d, uint32_t* dst, uint32_t w ) { return DecodeRGBPart(d, dst, w); }
-// TwinStar: insert
-extern "C++" void Public_DecodeRGBAPart( uint64_t d, uint64_t alpha, uint32_t* dst, uint32_t w ) { return DecodeRGBAPart(d, alpha, dst, w); }

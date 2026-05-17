@@ -5,7 +5,10 @@ module;
 export module twinning.kernel.tool.texture.compression.pvrtc.uncompress;
 import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.pvrtc.common;
+import twinning.kernel.tool.texture.encoding.common;
+import twinning.kernel.tool.texture.encoding.encode;
 import twinning.kernel.third.PVRTCCompressor;
+import twinning.kernel.tool.texture.encoding.decode;
 
 export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
@@ -16,61 +19,52 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 
 		// ----------------
 
-		inline static auto process_image_v1_4bpp_rgb(
-			InputByteStreamView &            data,
-			Image::VariableImageView const & image
-		) -> Void {
-			assert_test(is_padded_size(image.size().width, k_block_width));
-			assert_test(is_padded_size(image.size().height, k_block_width));
-			auto proxy_image_data = Array<Third::PVRTCCompressor::ColorRgb<unsigned char>>{image.size().area()};
-			Third::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(proxy_image_data.begin().value, Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)}, data.current_pointer().value);
-			for (auto & pixel_y : SizeRange{image.size().height}) {
-				for (auto & pixel_x : SizeRange{image.size().width}) {
-					auto & pixel = image[pixel_y][pixel_x];
-					auto & proxy_pixel = proxy_image_data[pixel_y * image.size().width + pixel_x];
-					pixel.red.value = proxy_pixel.r;
-					pixel.green.value = proxy_pixel.g;
-					pixel.blue.value = proxy_pixel.b;
-				}
-			}
-			data.forward(image.size().area() * k_bpp_4 / k_type_bit_count<Byte>);
-			return;
-		}
-
-		inline static auto process_image_v1_4bpp_rgba(
-			InputByteStreamView &            data,
-			Image::VariableImageView const & image
-		) -> Void {
-			assert_test(is_padded_size(image.size().width, k_block_width));
-			assert_test(is_padded_size(image.size().height, k_block_width));
-			auto proxy_image_data = Array<Third::PVRTCCompressor::ColorRgba<unsigned char>>{image.size().area()};
-			Third::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(proxy_image_data.begin().value, Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)}, data.current_pointer().value);
-			for (auto & pixel_y : SizeRange{image.size().height}) {
-				for (auto & pixel_x : SizeRange{image.size().width}) {
-					auto & pixel = image[pixel_y][pixel_x];
-					auto & proxy_pixel = proxy_image_data[pixel_y * image.size().width + pixel_x];
-					pixel.red.value = proxy_pixel.r;
-					pixel.green.value = proxy_pixel.g;
-					pixel.blue.value = proxy_pixel.b;
-					pixel.alpha.value = proxy_pixel.a;
-				}
-			}
-			data.forward(image.size().area() * k_bpp_4 / k_type_bit_count<Byte>);
-			return;
-		}
-
-		// ----------------
-
 		inline static auto process_image(
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image,
-			Format const &                   format
+			Generation const &               generation,
+			Image::ImageSize const &         block_size,
+			Boolean const &                  use_bpp4,
+			Boolean const &                  with_alpha
 		) -> Void {
-			if (format == Format::Constant::v1_4bpp_rgb()) {
-				process_image_v1_4bpp_rgb(data, image);
+			assert_test(is_valid_block_size(block_size));
+			assert_test(is_padded_size(image.size().width, block_size.width) && is_padded_size(image.size().height, block_size.height));
+			auto block_count = image.size().area() / block_size.area();
+			if (generation == Generation::Constant::v1()) {
+				if (!use_bpp4) {
+					throw UnsupportedException{};
+				}
+				else {
+					if (!with_alpha) {
+						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
+						assert_test(ripe_data_size <= data.reserve());
+						auto raw_format = Encoding::Format::Constant::rgb_888_r();
+						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(
+							cast_pointer<Third::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.begin()).value,
+							Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)},
+							data.current_pointer().value
+						);
+						data.forward(ripe_data_size);
+						Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+					}
+					else {
+						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
+						assert_test(ripe_data_size <= data.reserve());
+						auto raw_format = Encoding::Format::Constant::argb_8888_r();
+						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(
+							cast_pointer<Third::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.begin()).value,
+							Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)},
+							data.current_pointer().value
+						);
+						data.forward(ripe_data_size);
+						Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+					}
+				}
 			}
-			if (format == Format::Constant::v1_4bpp_rgba()) {
-				process_image_v1_4bpp_rgba(data, image);
+			if (generation == Generation::Constant::v2()) {
+				throw UnsupportedException{};
 			}
 			return;
 		}
@@ -80,10 +74,13 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 		inline static auto process(
 			InputByteStreamView &            data_,
 			Image::VariableImageView const & image,
-			Format const &                   format
+			Generation const &               generation,
+			Image::ImageSize const &         block_size,
+			Boolean const &                  use_bpp4,
+			Boolean const &                  with_alpha
 		) -> Void {
 			M_use_zps_of(data);
-			return process_image(data, image, format);
+			return process_image(data, image, generation, block_size, use_bpp4, with_alpha);
 		}
 
 	};

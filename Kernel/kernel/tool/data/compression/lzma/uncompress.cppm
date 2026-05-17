@@ -27,7 +27,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 			auto ripe_size = ripe.reserve().value;
 			auto raw_size = cbox<Size>(raw_size_recorded).value;
 			auto property_size = property.size().value;
-			auto state = Third::lzma::$LzmaUncompress(
+			auto lz_state = int{};
+			lz_state = Third::lzma::$LzmaUncompress(
 				cast_pointer<Third::lzma::$Byte>(raw.current_pointer()).value,
 				&raw_size,
 				cast_pointer<Third::lzma::$Byte>(ripe.current_pointer()).value,
@@ -35,7 +36,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 				cast_pointer<Third::lzma::$Byte>(property.begin()).value,
 				property_size
 			);
-			assert_test(state == Third::lzma::$SZ_OK);
+			assert_test(lz_state == Third::lzma::$SZ_OK);
 			assert_test(raw_size == cbox<Size>(raw_size_recorded).value);
 			ripe.forward(mbox<Size>(ripe_size));
 			raw.forward(mbox<Size>(raw_size));

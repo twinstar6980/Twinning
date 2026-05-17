@@ -172,14 +172,14 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zlib)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
+						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
 						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::Bzip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz, 0_sz);
+						Data::Compression::Bzip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 0_i);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::lzma)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::Lzma::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_sz);
+						Data::Compression::Lzma::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i);
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}

@@ -96,7 +96,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			}
 			auto compress_texture_data = cbox<Boolean>(header.compress_data);
 			auto compress_texture_data_size = cbox<Size>(header.compress_data_size);
-			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
+			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
 			auto texture_data_view = ConstantByteListView{};
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
@@ -110,7 +110,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			if (compress_texture_data) {
 				auto texture_data_stream = OutputByteStreamView{texture_data_container};
 				auto ripe_texture_data_stream = InputByteStreamView{data.reserve_view()};
-				Data::Compression::Deflate::Uncompress::process(ripe_texture_data_stream, texture_data_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Uncompress::process(ripe_texture_data_stream, texture_data_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(ripe_texture_data_stream.position() == compress_texture_data_size);
 				assert_test(texture_data_stream.full());
 				data.forward(ripe_texture_data_stream.position());

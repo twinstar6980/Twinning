@@ -335,4 +335,106 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #endregion
 
+	// #region stream
+
+	export function read_utf8_character(
+		data: ByteStreamView,
+		size: {value: number},
+	): bigint {
+		let value = 0n;
+		let current = data.u8();
+		let extra_size: number;
+		if (current < 0b10000000n) {
+			value = current;
+			extra_size = 0;
+		}
+		else if (current < 0b11000000n) {
+			throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 first character`);
+		}
+		else if (current < 0b11100000n) {
+			value = current & 0b00011111n;
+			extra_size = 1;
+		}
+		else if (current < 0b11110000n) {
+			value = current & 0b00001111n;
+			extra_size = 2;
+		}
+		else if (current < 0b11111000n) {
+			value = current & 0b00000111n;
+			extra_size = 3;
+		}
+		else {
+			throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 first character`);
+		}
+		size.value = 1 + extra_size;
+		while (extra_size > 0) {
+			--extra_size;
+			current = data.u8();
+			if ((current & 0b11000000n) !== 0b10000000n) {
+				throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 extra character`);
+			}
+			value = value << 6n | (current & 0b00111111n);
+		}
+		return value;
+	}
+
+	export function read_utf8_string(
+		data: ByteStreamView,
+		length: bigint,
+		size: {value: number},
+	): string {
+		let value = ``;
+		let character_size = {value: undefined!};
+		size.value = 0;
+		for (let index = 0n; index < length; index++) {
+			let character = read_utf8_character(data, character_size);
+			value += String.fromCodePoint(Number(character));
+			size.value += character_size.value;
+		}
+		return value;
+	}
+
+	export function read_utf8_string_by_size(
+		data: ByteStreamView,
+		size: bigint,
+	): string {
+		let value = ``;
+		let character_size = {value: undefined!};
+		let count = 0;
+		while (count < Number(size)) {
+			let character = read_utf8_character(data, character_size);
+			value += String.fromCodePoint(Number(character));
+			count += character_size.value;
+		}
+		if (count > Number(size)) {
+			throw new Error(`data@${data.p().toString(16)}h: utf-8 string too long`);
+		}
+		return value;
+	}
+
+	export function read_eascii_string(
+		data: ByteStreamView,
+		length: bigint,
+	): string {
+		let value = ``;
+		for (let index = 0n; index < length; index++) {
+			let character = data.u8();
+			value += String.fromCodePoint(Number(character));
+		}
+		return value;
+	}
+
+	export function write_eascii_string(
+		data: ByteStreamView,
+		value: string,
+	): void {
+		for (let index = 0; index < value.length; index++) {
+			let character = value.codePointAt(index)!;
+			data.u8(BigInt(character));
+		}
+		return;
+	}
+
+	// #endregion
+
 }

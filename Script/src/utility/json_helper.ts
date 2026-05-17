@@ -11,13 +11,13 @@ namespace Twinning.Script.JsonHelper {
 		disable_object_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking,
 		data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(KernelX.g_common_buffer.view()),
 	): ArrayBuffer {
-		return KernelX.Tool.Data.Serialization.Json.write(Kernel.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+		return KernelX.Tool.Data.Serialization.Json.encode(Kernel.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 	}
 
 	export function decode_data<TValue extends Kernel.Json.JS_Value>(
 		data: ArrayBuffer,
 	): TValue {
-		return KernelX.Tool.Data.Serialization.Json.read<TValue>(data).value;
+		return KernelX.Tool.Data.Serialization.Json.decode<TValue>(data).value;
 	}
 
 	// ----------------
@@ -30,13 +30,13 @@ namespace Twinning.Script.JsonHelper {
 		disable_object_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking,
 		data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(KernelX.g_common_buffer.view()),
 	): string {
-		return KernelX.Tool.Data.Serialization.Json.write_s(Kernel.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+		return KernelX.Tool.Data.Serialization.Json.encode_s(Kernel.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 	}
 
 	export function decode_text<TValue extends Kernel.Json.JS_Value>(
 		text: string,
 	): TValue {
-		return KernelX.Tool.Data.Serialization.Json.read_s<TValue>(text).value;
+		return KernelX.Tool.Data.Serialization.Json.decode_s<TValue>(text).value;
 	}
 
 	// ----------------
@@ -50,13 +50,13 @@ namespace Twinning.Script.JsonHelper {
 		disable_object_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking,
 		data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(KernelX.g_common_buffer.view()),
 	): void {
-		return KernelX.Tool.Data.Serialization.Json.write_fs(path, Kernel.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
+		return KernelX.Tool.Data.Serialization.Json.encode_fs(path, Kernel.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 	}
 
 	export function decode_file<TValue extends Kernel.Json.JS_Value>(
 		path: StoragePath,
 	): TValue {
-		return KernelX.Tool.Data.Serialization.Json.read_fs<TValue>(path).value;
+		return KernelX.Tool.Data.Serialization.Json.decode_fs<TValue>(path).value;
 	}
 
 	// #endregion

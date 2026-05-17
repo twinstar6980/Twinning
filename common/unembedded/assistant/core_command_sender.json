@@ -92,6 +92,8 @@
 								"CompareLanguageFile",
 								"ComputeWwiseShortIdentifier",
 								"ExtractRsbFromPvz2cnApkDirectory",
+								"DecodeRtonLenient",
+								"UnpackRsbLenient",
 							],
 						},
 					],
@@ -119,6 +121,18 @@
 							"name": "ExtractRsbFromPvz2cnApkDirectory",
 							"argument": {
 								"target_name": "ExtractRsbFromPvz2cnApkDirectory",
+							},
+						},
+						{
+							"name": "DecodeRtonLenient",
+							"argument": {
+								"target_name": "DecodeRtonLenient",
+							},
+						},
+						{
+							"name": "UnpackRsbLenient",
+							"argument": {
+								"target_name": "UnpackRsbLenient",
 							},
 						},
 					],
@@ -1027,12 +1041,30 @@
 								"al_44",
 								"al_88",
 								"rgb_888_o",
+								"rgb_888_r",
 								"rgba_8888_o",
+								"rgba_8888_r",
+								"argb_8888_o",
+								"argb_8888_r",
 								"rgb_etc1",
 								"rgb_etc2",
-								"rgba_etc2",
-								"rgb_pvrtc4",
-								"rgba_pvrtc4",
+								"rgba_etc2_eac",
+								"rgb_pvrtc1_4bpp",
+								"rgba_pvrtc1_4bpp",
+								"rgba_astc_4x4",
+								"rgba_astc_5x4",
+								"rgba_astc_5x5",
+								"rgba_astc_6x5",
+								"rgba_astc_6x6",
+								"rgba_astc_8x5",
+								"rgba_astc_8x6",
+								"rgba_astc_8x8",
+								"rgba_astc_10x5",
+								"rgba_astc_10x6",
+								"rgba_astc_10x8",
+								"rgba_astc_10x10",
+								"rgba_astc_12x10",
+								"rgba_astc_12x12",
 							],
 						},
 					],
@@ -1136,9 +1168,33 @@
 							},
 						},
 						{
+							"name": "RGB-888-R",
+							"argument": {
+								"format": "rgb_888_r",
+							},
+						},
+						{
 							"name": "RGBA-8888-O",
 							"argument": {
 								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "RGBA-8888-R",
+							"argument": {
+								"format": "rgba_8888_r",
+							},
+						},
+						{
+							"name": "ARGB-8888-O",
+							"argument": {
+								"format": "argb_8888_o",
+							},
+						},
+						{
+							"name": "ARGB-8888-R",
+							"argument": {
+								"format": "argb_8888_r",
 							},
 						},
 						null,
@@ -1155,22 +1211,107 @@
 							},
 						},
 						{
-							"name": "RGBA-ETC2",
+							"name": "RGBA-ETC2-EAC",
 							"argument": {
-								"format": "rgba_etc2",
+								"format": "rgba_etc2_eac",
 							},
 						},
 						null,
 						{
-							"name": "RGB-PVRTC4",
+							"name": "RGB-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgb_pvrtc4",
+								"format": "rgb_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGBA-PVRTC4",
+							"name": "RGBA-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x4",
+							"argument": {
+								"format": "rgba_astc_5x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x5",
+							"argument": {
+								"format": "rgba_astc_6x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x5",
+							"argument": {
+								"format": "rgba_astc_8x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x6",
+							"argument": {
+								"format": "rgba_astc_8x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x5",
+							"argument": {
+								"format": "rgba_astc_10x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x6",
+							"argument": {
+								"format": "rgba_astc_10x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x8",
+							"argument": {
+								"format": "rgba_astc_10x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x10",
+							"argument": {
+								"format": "rgba_astc_10x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x10",
+							"argument": {
+								"format": "rgba_astc_12x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x12",
+							"argument": {
+								"format": "rgba_astc_12x12",
 							},
 						},
 					],
@@ -1212,12 +1353,30 @@
 								"al_44",
 								"al_88",
 								"rgb_888_o",
+								"rgb_888_r",
 								"rgba_8888_o",
+								"rgba_8888_r",
+								"argb_8888_o",
+								"argb_8888_r",
 								"rgb_etc1",
 								"rgb_etc2",
-								"rgba_etc2",
-								"rgb_pvrtc4",
-								"rgba_pvrtc4",
+								"rgba_etc2_eac",
+								"rgb_pvrtc1_4bpp",
+								"rgba_pvrtc1_4bpp",
+								"rgba_astc_4x4",
+								"rgba_astc_5x4",
+								"rgba_astc_5x5",
+								"rgba_astc_6x5",
+								"rgba_astc_6x6",
+								"rgba_astc_8x5",
+								"rgba_astc_8x6",
+								"rgba_astc_8x8",
+								"rgba_astc_10x5",
+								"rgba_astc_10x6",
+								"rgba_astc_10x8",
+								"rgba_astc_10x10",
+								"rgba_astc_12x10",
+								"rgba_astc_12x12",
 							],
 						},
 						{
@@ -1333,9 +1492,33 @@
 							},
 						},
 						{
+							"name": "RGB-888-R",
+							"argument": {
+								"format": "rgb_888_r",
+							},
+						},
+						{
 							"name": "RGBA-8888-O",
 							"argument": {
 								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "RGBA-8888-R",
+							"argument": {
+								"format": "rgba_8888_r",
+							},
+						},
+						{
+							"name": "ARGB-8888-O",
+							"argument": {
+								"format": "argb_8888_o",
+							},
+						},
+						{
+							"name": "ARGB-8888-R",
+							"argument": {
+								"format": "argb_8888_r",
 							},
 						},
 						null,
@@ -1352,22 +1535,107 @@
 							},
 						},
 						{
-							"name": "RGBA-ETC2",
+							"name": "RGBA-ETC2-EAC",
 							"argument": {
-								"format": "rgba_etc2",
+								"format": "rgba_etc2_eac",
 							},
 						},
 						null,
 						{
-							"name": "RGB-PVRTC4",
+							"name": "RGB-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgb_pvrtc4",
+								"format": "rgb_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGBA-PVRTC4",
+							"name": "RGBA-PVRTC1-4BPP",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x4",
+							"argument": {
+								"format": "rgba_astc_5x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x5",
+							"argument": {
+								"format": "rgba_astc_6x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x5",
+							"argument": {
+								"format": "rgba_astc_8x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x6",
+							"argument": {
+								"format": "rgba_astc_8x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x5",
+							"argument": {
+								"format": "rgba_astc_10x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x6",
+							"argument": {
+								"format": "rgba_astc_10x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x8",
+							"argument": {
+								"format": "rgba_astc_10x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x10",
+							"argument": {
+								"format": "rgba_astc_10x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x10",
+							"argument": {
+								"format": "rgba_astc_12x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x12",
+							"argument": {
+								"format": "rgba_astc_12x12",
 							},
 						},
 					],
@@ -2441,59 +2709,6 @@
 						},
 					],
 				},
-				{
-					"identifier": "popcap.reflection_object_notation.decode_lenient",
-					"name": "Decode by lenient",
-					"icon": "skip_previous",
-					"argument": [
-						{
-							"identifier": "data_file",
-							"name": "Data file",
-							"type": "path",
-							"option": null,
-						},
-						{
-							"identifier": "definition_file",
-							"name": "Definition file",
-							"type": "path",
-							"option": null,
-						},
-						{
-							"identifier": "version_number",
-							"name": "Version number",
-							"type": "integer",
-							"option": [
-								1,
-							],
-						},
-						{
-							"identifier": "version_native_string_encoding_use_utf8",
-							"name": "Native string encoding use UTF-8",
-							"type": "boolean",
-							"option": null,
-						},
-					],
-					"batch": [
-						"data_file",
-						"definition_file",
-					],
-					"preset": [
-						{
-							"name": "1 | E-ASCII",
-							"argument": {
-								"version_number": 1,
-								"version_native_string_encoding_use_utf8": false,
-							},
-						},
-						{
-							"name": "1 | UTF-8",
-							"argument": {
-								"version_number": 1,
-								"version_native_string_encoding_use_utf8": true,
-							},
-						},
-					],
-				},
 			],
 		},
 		{
@@ -2531,10 +2746,14 @@
 								"rgba_4444_tiled",
 								"rgb_565_tiled",
 								"rgba_5551_tiled",
-								"rgba_pvrtc4",
-								"rgb_pvrtc4_a_8",
+								"rgba_pvrtc1_4bpp",
+								"rgb_pvrtc1_4bpp_a_8",
 								"rgb_etc1_a_8",
 								"rgb_etc1_a_palette",
+								"rgba_astc_4x4",
+								"rgba_astc_5x5",
+								"rgba_astc_6x6",
+								"rgba_astc_8x8",
 							],
 						},
 					],
@@ -2592,28 +2811,53 @@
 						},
 						null,
 						{
-							"name": "RGBA-PVRTC-4",
+							"name": "RGBA-PVRTC1-4",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGB-PVRTC-4 + A-8",
+							"name": "RGB-PVRTC1-4 + A-8",
 							"argument": {
-								"format": "rgb_pvrtc4_a_8",
+								"format": "rgb_pvrtc1_4bpp_a_8",
 							},
 						},
 						null,
 						{
-							"name": "ETC-1 + A-8",
+							"name": "RGB-ETC1 + A-8",
 							"argument": {
 								"format": "rgb_etc1_a_8",
 							},
 						},
 						{
-							"name": "ETC-1 + A-P",
+							"name": "RGB-ETC1 + A-P",
 							"argument": {
 								"format": "rgb_etc1_a_palette",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
 							},
 						},
 					],
@@ -2648,10 +2892,14 @@
 								"rgba_4444_tiled",
 								"rgb_565_tiled",
 								"rgba_5551_tiled",
-								"rgba_pvrtc4",
-								"rgb_pvrtc4_a_8",
+								"rgba_pvrtc1_4bpp",
+								"rgb_pvrtc1_4bpp_a_8",
 								"rgb_etc1_a_8",
 								"rgb_etc1_a_palette",
+								"rgba_astc_4x4",
+								"rgba_astc_5x5",
+								"rgba_astc_6x6",
+								"rgba_astc_8x8",
 							],
 						},
 						{
@@ -2721,28 +2969,53 @@
 						},
 						null,
 						{
-							"name": "RGBA-PVRTC-4",
+							"name": "RGBA-PVRTC1-4",
 							"argument": {
-								"format": "rgba_pvrtc4",
+								"format": "rgba_pvrtc1_4bpp",
 							},
 						},
 						{
-							"name": "RGB-PVRTC-4 + A-8",
+							"name": "RGB-PVRTC1-4 + A-8",
 							"argument": {
-								"format": "rgb_pvrtc4_a_8",
+								"format": "rgb_pvrtc1_4bpp_a_8",
 							},
 						},
 						null,
 						{
-							"name": "ETC-1 + A-8",
+							"name": "RGB-ETC1 + A-8",
 							"argument": {
 								"format": "rgb_etc1_a_8",
 							},
 						},
 						{
-							"name": "ETC-1 + A-P",
+							"name": "RGB-ETC1 + A-P",
 							"argument": {
 								"format": "rgb_etc1_a_palette",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
 							},
 						},
 					],
@@ -4984,31 +5257,6 @@
 					],
 				},
 				{
-					"identifier": "popcap.resource_stream_bundle.unpack_lenient",
-					"name": "Unpack by lenient",
-					"icon": "orders",
-					"argument": [
-						{
-							"identifier": "data_file",
-							"name": "Data file",
-							"type": "path",
-							"option": null,
-						},
-						{
-							"identifier": "bundle_directory",
-							"name": "Bundle directory",
-							"type": "path",
-							"option": null,
-						},
-					],
-					"batch": [
-						"data_file",
-						"bundle_directory",
-					],
-					"preset": [
-					],
-				},
-				{
 					"identifier": "popcap.resource_stream_bundle.resource_convert",
 					"name": "Resource convert",
 					"icon": "lightning_stand",
@@ -5483,12 +5731,12 @@
 			],
 		},
 		{
-			"identifier": "pvz2.text_table",
-			"name": "PvZ-2 Text-Table",
+			"identifier": "popcap.pvz2.text_table",
+			"name": "PopCap PvZ-2 Text-Table",
 			"icon": "description",
 			"item": [
 				{
-					"identifier": "pvz2.text_table.convert",
+					"identifier": "popcap.pvz2.text_table.convert",
 					"name": "Convert",
 					"icon": "repeat",
 					"argument": [
@@ -5540,12 +5788,12 @@
 			],
 		},
 		{
-			"identifier": "pvz2.resource_manifest",
-			"name": "PvZ-2 Resource-Manifest",
+			"identifier": "popcap.pvz2.resource_manifest",
+			"name": "PopCap PvZ-2 Resource-Manifest",
 			"icon": "description",
 			"item": [
 				{
-					"identifier": "pvz2.resource_manifest.new_type_object_notation.encode",
+					"identifier": "popcap.pvz2.resource_manifest.new_type_object_notation.encode",
 					"name": "New-Type-Object-Notation Encode",
 					"icon": "skip_next",
 					"argument": [
@@ -5573,7 +5821,7 @@
 					],
 				},
 				{
-					"identifier": "pvz2.resource_manifest.new_type_object_notation.decode",
+					"identifier": "popcap.pvz2.resource_manifest.new_type_object_notation.decode",
 					"name": "New-Type-Object-Notation Decode",
 					"icon": "skip_previous",
 					"argument": [
@@ -5595,7 +5843,7 @@
 					],
 				},
 				{
-					"identifier": "pvz2.resource_manifest.regular.from",
+					"identifier": "popcap.pvz2.resource_manifest.regular.from",
 					"name": "Regular Convert from official data",
 					"icon": "swipe_right_alt",
 					"argument": [
@@ -5617,7 +5865,7 @@
 					],
 				},
 				{
-					"identifier": "pvz2.resource_manifest.regular.to",
+					"identifier": "popcap.pvz2.resource_manifest.regular.to",
 					"name": "Regular Convert to official data",
 					"icon": "swipe_left_alt",
 					"argument": [
@@ -5659,12 +5907,12 @@
 			],
 		},
 		{
-			"identifier": "pvz2.package_project",
-			"name": "PvZ-2 Package-Project",
+			"identifier": "popcap.pvz2.package_project",
+			"name": "PopCap PvZ-2 Package-Project",
 			"icon": "deployed_code",
 			"item": [
 				{
-					"identifier": "pvz2.package_project.transpile",
+					"identifier": "popcap.pvz2.package_project.transpile",
 					"name": "Transpile",
 					"icon": "repeat",
 					"argument": [
@@ -5877,7 +6125,7 @@
 					],
 				},
 				{
-					"identifier": "pvz2.package_project.compile",
+					"identifier": "popcap.pvz2.package_project.compile",
 					"name": "Compile",
 					"icon": "sound_sampler",
 					"argument": [
@@ -5911,7 +6159,7 @@
 					],
 				},
 				{
-					"identifier": "pvz2.package_project.link",
+					"identifier": "popcap.pvz2.package_project.link",
 					"name": "link",
 					"icon": "linked_services",
 					"argument": [
@@ -5957,7 +6205,7 @@
 					],
 				},
 				{
-					"identifier": "pvz2.package_project.parse",
+					"identifier": "popcap.pvz2.package_project.parse",
 					"name": "Parse",
 					"icon": "barcode_reader",
 					"argument": [
@@ -6051,12 +6299,12 @@
 			],
 		},
 		{
-			"identifier": "pvz2.remote_project",
-			"name": "PvZ-2 Remote-Project",
+			"identifier": "popcap.pvz2.remote_project",
+			"name": "PopCap PvZ-2 Remote-Project",
 			"icon": "cloud",
 			"item": [
 				{
-					"identifier": "pvz2.remote_project.execute",
+					"identifier": "popcap.pvz2.remote_project.execute",
 					"name": "Execute",
 					"icon": "sound_sampler",
 					"argument": [
@@ -6222,8 +6470,8 @@
 			"icon": "sports_esports",
 			"item": [
 				{
-					"identifier": "kairosoft.game.modify_program",
-					"name": "Modify program",
+					"identifier": "kairosoft.game.program.modify",
+					"name": "Program Modify",
 					"icon": "build",
 					"argument": [
 						{
@@ -6279,8 +6527,8 @@
 					],
 				},
 				{
-					"identifier": "kairosoft.game.encrypt_record",
-					"name": "Encrypt record",
+					"identifier": "kairosoft.game.record.encrypt",
+					"name": "Record Encrypt",
 					"icon": "lock_open",
 					"argument": [
 						{
@@ -6297,6 +6545,69 @@
 						},
 					],
 					"batch": null,
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "nitrome.twin_shot_deluxe",
+			"name": "Nitrome Twin-Shot-Deluxe",
+			"icon": "sports_esports",
+			"item": [
+				{
+					"identifier": "nitrome.twin_shot_deluxe.record.encode",
+					"name": "Record Encode",
+					"icon": "skip_next",
+					"argument": [
+						{
+							"identifier": "definition_file",
+							"name": "Definition file",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "data_file",
+							"name": "Data file",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "buffer_size",
+							"name": "Buffer memory size",
+							"type": "size",
+							"option": null,
+						},
+					],
+					"batch": [
+						"definition_file",
+						"data_file",
+					],
+					"preset": [
+					],
+				},
+				{
+					"identifier": "nitrome.twin_shot_deluxe.record.decode",
+					"name": "Record Decode",
+					"icon": "skip_previous",
+					"argument": [
+						{
+							"identifier": "data_file",
+							"name": "Data file",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "definition_file",
+							"name": "Definition file",
+							"type": "path",
+							"option": null,
+						},
+					],
+					"batch": [
+						"data_file",
+						"definition_file",
+					],
 					"preset": [
 					],
 				},

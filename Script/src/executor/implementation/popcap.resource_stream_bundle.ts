@@ -177,51 +177,6 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 				},
 			}),
 			typical_method({
-				identifier: 'unpack_lenient',
-				filter: ['file', /(\.rsb)$/i],
-				argument: [
-					typical_argument_path({
-						identifier: 'data_file',
-						rule: ['file', 'input'],
-						checker: null,
-						automatic: null,
-						condition: null,
-					}),
-					typical_argument_path({
-						identifier: 'bundle_directory',
-						rule: ['directory', 'output'],
-						checker: null,
-						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.rsb)?$/i, '.rsb.bundle'),
-						condition: null,
-					}),
-				],
-				batch: [
-					typical_argument_batch({
-						identifier: 'data_file',
-						rule: 'input',
-						checker: null,
-						automatic: null,
-						condition: null,
-						item_mapper: (argument: {}, value) => (value),
-					}),
-					typical_argument_batch({
-						identifier: 'bundle_directory',
-						rule: 'output',
-						checker: null,
-						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.unpack_lenient'),
-						condition: null,
-						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.rsb)?$/i, '.rsb.bundle'),
-					}),
-				],
-				worker: ({data_file, bundle_directory}, store: {}) => {
-					let definition_file = bundle_directory.join('definition.json');
-					let manifest_file = bundle_directory.join('manifest.json');
-					let resource_directory = bundle_directory.join('resource');
-					Support.Popcap.ResourceStreamBundle.UnpackLenient.process_fs(data_file, definition_file, manifest_file, resource_directory);
-					return;
-				},
-			}),
-			typical_method({
 				identifier: 'resource_convert',
 				filter: ['directory', /(\.rsb\.bundle)$/i],
 				argument: [
@@ -278,7 +233,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					}),
 					typical_argument_string({
 						identifier: 'option_ptx_format',
-						option: Object.keys(MainScript.g_setting.executor_pvz2_resource_convert_ptx_format_map_list),
+						option: Object.keys(MainScript.g_setting.executor_popcap_pvz2_resource_convert_ptx_format_map_list),
 						checker: null,
 						automatic: null,
 						condition: (argument: {option_ptx: boolean}) => (argument.option_ptx ? null : ''),
@@ -378,7 +333,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 					option_wem,
 				}) => {
 					let convert_directory = bundle_directory.join('convert');
-					let option: Support.Pvz2.ResourceConvert.Option = {
+					let option: Support.Popcap.Pvz2.ResourceConvert.Option = {
 						recase_path: option_recase_path,
 						rton: !option_rton ? null : {
 							directory: convert_directory,
@@ -392,7 +347,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						},
 						ptx: !option_ptx ? null : {
 							directory: convert_directory,
-							format: MainScript.g_setting.executor_pvz2_resource_convert_ptx_format_map_list[option_ptx_format],
+							format: MainScript.g_setting.executor_popcap_pvz2_resource_convert_ptx_format_map_list[option_ptx_format],
 							atlas: !option_ptx_atlas ? null : {
 								resize: option_ptx_atlas_resize,
 							},
@@ -419,7 +374,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 							directory: convert_directory,
 						},
 					};
-					Support.Pvz2.ResourceConvert.convert_fs(
+					Support.Popcap.Pvz2.ResourceConvert.convert_fs(
 						bundle_directory.join('resource'),
 						bundle_directory.join('definition.json'),
 						bundle_directory.join('resource_manifest.json'),

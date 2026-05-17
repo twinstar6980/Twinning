@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 					break;
 				}
 			}
-			auto texture_data_size = image.size().area() * Texture::Encoding::bpp_of(format) / k_type_bit_count<Byte>;
+			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
 			auto texture_data_view = ConstantByteListView{};
 			auto texture_data_container = ByteArray{};
 			if constexpr (check_version(t_version, {false})) {
@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			}
 			if constexpr (check_version(t_version, {true})) {
 				auto texture_data_stream = OutputByteStreamView{texture_data_container};
-				Data::Compression::Deflate::Uncompress::process(data, texture_data_stream, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Uncompress::process(data, texture_data_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(texture_data_stream.full());
 			}
 			Texture::Encoding::Decode::process(as_left(InputByteStreamView{texture_data_view}), image, format);

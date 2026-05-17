@@ -121,7 +121,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					ripe.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
 				information_structure.header.general_resource_data_section_size = cbox<IntegerU32>(ripe.position()) - information_structure.header.general_resource_data_section_offset;
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					ripe.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_sz, 15_sz, 9_sz, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
 					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
 				information_structure.header.texture_resource_data_section_size = cbox<IntegerU32>(ripe.position()) - information_structure.header.texture_resource_data_section_offset;
@@ -175,7 +175,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					raw.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Uncompress::process(as_left(InputByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Uncompress::process(as_left(InputByteStreamView{resource_data_section_view}), raw, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				}
 				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
 			}
@@ -185,7 +185,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					raw.write(resource_data_section_view);
 				}
 				else {
-					Data::Compression::Deflate::Uncompress::process(as_left(InputByteStreamView{resource_data_section_view}), raw, 15_sz, Data::Compression::Deflate::Wrapper::Constant::zlib());
+					Data::Compression::Deflate::Uncompress::process(as_left(InputByteStreamView{resource_data_section_view}), raw, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				}
 				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
 			}

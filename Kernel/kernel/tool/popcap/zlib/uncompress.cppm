@@ -30,7 +30,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		inline static auto process_whole(
 			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
-			Size const &           window_bits
+			Integer const &        window_exponent
 		) -> Void {
 			ripe.read_constant(k_magic_marker);
 			if constexpr (check_version(t_version, {true})) {
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			}
 			auto header = Header{};
 			ripe.read(header);
-			Data::Compression::Deflate::Uncompress::process(ripe, raw, window_bits, Data::Compression::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Uncompress::process(ripe, raw, window_exponent, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			assert_test(raw.position() == cbox<Size>(header.raw_size));
 			return;
 		}
@@ -66,11 +66,11 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		inline static auto process(
 			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
-			Size const &           window_bits
+			Integer const &        window_exponent
 		) -> Void {
 			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
-			return process_whole(ripe, raw, window_bits);
+			return process_whole(ripe, raw, window_exponent);
 		}
 
 		inline static auto estimate(

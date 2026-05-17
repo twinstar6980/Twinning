@@ -63,7 +63,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 		) -> Void {
 			auto before_stream = InputByteStreamView{before};
 			auto patch_stream = InputByteStreamView{patch.forward_view(patch_size)};
-			Data::Differentiation::Vcdiff::Decode::process(before_stream, after, patch_stream, 0x7FFFFFFF_sz);
+			Data::Differentiation::Vcdiff::Decode::process(before_stream, after, patch_stream, 0x7FFFFFFF_i);
 			return;
 		}
 

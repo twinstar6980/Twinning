@@ -25,7 +25,11 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			al_44,
 			al_88,
 			rgb_888_o,
+			rgb_888_r,
 			rgba_8888_o,
+			rgba_8888_r,
+			argb_8888_o,
+			argb_8888_r,
 		),
 	);
 
@@ -45,87 +49,106 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		Format::Constant::al_44(),
 		Format::Constant::al_88(),
 		Format::Constant::rgb_888_o(),
-		Format::Constant::rgba_8888_o()
+		Format::Constant::rgb_888_r(),
+		Format::Constant::rgba_8888_o(),
+		Format::Constant::rgba_8888_r(),
+		Format::Constant::argb_8888_o(),
+		Format::Constant::argb_8888_r()
 	>;
-
-	// TODO
-	inline constexpr auto bpp_of(
-		Format const & format
-	) -> Size {
-		auto result = Size{};
-		switch (format.value) {
-			case Format::Constant::a_8().value: {
-				result = 8_sz;
-				break;
-			}
-			case Format::Constant::rgb_332().value: {
-				result = 8_sz;
-				break;
-			}
-			case Format::Constant::rgb_565().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::rgba_5551().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::rgba_4444().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::rgba_8888().value: {
-				result = 32_sz;
-				break;
-			}
-			case Format::Constant::argb_1555().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::argb_4444().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::argb_8888().value: {
-				result = 32_sz;
-				break;
-			}
-			case Format::Constant::l_8().value: {
-				result = 8_sz;
-				break;
-			}
-			case Format::Constant::la_44().value: {
-				result = 8_sz;
-				break;
-			}
-			case Format::Constant::la_88().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::al_44().value: {
-				result = 8_sz;
-				break;
-			}
-			case Format::Constant::al_88().value: {
-				result = 16_sz;
-				break;
-			}
-			case Format::Constant::rgb_888_o().value: {
-				result = 24_sz;
-				break;
-			}
-			case Format::Constant::rgba_8888_o().value: {
-				result = 32_sz;
-				break;
-			}
-			default: throw UnreachableException{};
-		}
-		return result;
-	}
 
 	// ----------------
 
 	struct Common {
+
+		inline static constexpr auto get_pixel_byte_count(
+			Format const & format
+		) -> Size {
+			auto bit_count = Size{};
+			switch (format.value) {
+				case Format::Constant::a_8().value: {
+					bit_count = 8_sz;
+					break;
+				}
+				case Format::Constant::rgb_332().value: {
+					bit_count = 8_sz;
+					break;
+				}
+				case Format::Constant::rgb_565().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::rgba_5551().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::rgba_4444().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::rgba_8888().value: {
+					bit_count = 32_sz;
+					break;
+				}
+				case Format::Constant::argb_1555().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::argb_4444().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::argb_8888().value: {
+					bit_count = 32_sz;
+					break;
+				}
+				case Format::Constant::l_8().value: {
+					bit_count = 8_sz;
+					break;
+				}
+				case Format::Constant::la_44().value: {
+					bit_count = 8_sz;
+					break;
+				}
+				case Format::Constant::la_88().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::al_44().value: {
+					bit_count = 8_sz;
+					break;
+				}
+				case Format::Constant::al_88().value: {
+					bit_count = 16_sz;
+					break;
+				}
+				case Format::Constant::rgb_888_o().value: {
+					bit_count = 24_sz;
+					break;
+				}
+				case Format::Constant::rgb_888_r().value: {
+					bit_count = 24_sz;
+					break;
+				}
+				case Format::Constant::rgba_8888_o().value: {
+					bit_count = 32_sz;
+					break;
+				}
+				case Format::Constant::rgba_8888_r().value: {
+					bit_count = 32_sz;
+					break;
+				}
+				case Format::Constant::argb_8888_o().value: {
+					bit_count = 32_sz;
+					break;
+				}
+				case Format::Constant::argb_8888_r().value: {
+					bit_count = 32_sz;
+					break;
+				}
+				default: throw UnreachableException{};
+			}
+			return bit_count / k_type_bit_count<Byte>;
+		}
 
 	};
 

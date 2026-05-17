@@ -22,18 +22,18 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 			OutputByteStreamView & patch,
 			Boolean const &        interleaved
 		) -> Void {
-			auto state = bool{};
+			auto v_state = bool{};
 			auto patch_container = std::string{};
 			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{cast_pointer<char>(as_variable_pointer(before.current_pointer())).value, before.reserve().value};
 			auto encoder = Third::open_vcdiff::VCDiffStreamingEncoder{&hashed_dictionary, !interleaved ? (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_STANDARD_FORMAT) : (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_FORMAT_INTERLEAVED), true};
-			state = hashed_dictionary.Init();
-			assert_test(state);
-			state = encoder.StartEncoding(&patch_container);
-			assert_test(state);
-			state = encoder.EncodeChunk(cast_pointer<char>(as_variable_pointer(after.current_pointer())).value, after.reserve().value, &patch_container);
-			assert_test(state);
-			state = encoder.FinishEncoding(&patch_container);
-			assert_test(state);
+			v_state = hashed_dictionary.Init();
+			assert_test(v_state);
+			v_state = encoder.StartEncoding(&patch_container);
+			assert_test(v_state);
+			v_state = encoder.EncodeChunk(cast_pointer<char>(as_variable_pointer(after.current_pointer())).value, after.reserve().value, &patch_container);
+			assert_test(v_state);
+			v_state = encoder.FinishEncoding(&patch_container);
+			assert_test(v_state);
 			before.forward(before.reserve());
 			after.forward(after.reserve());
 			for (auto & element : patch_container) {

@@ -284,19 +284,19 @@
 
 	  指定可能会调用的外部程序的路径，若为 `null` ，则将在运行时检索 `PATH` 环境变量。
 
-		* `sh` 用于 `/utility/AndroidHelper.ts` 。
+		* `sh` 用于 `/utility/android_helper.ts` 。
 
-		* `adb` 用于 `/utility/AndroidHelper.ts` 。
+		* `adb` 用于 `/utility/android_helper.ts` 。
 
-		* `WwiseConsole.exe` 用于 `/Support/Wwise/Media/Encode.ts` 。
+		* `WwiseConsole.exe` 用于 `/support/wwise/media/encode.ts` 。
 
-		* `WwiseConsole.sh` 用于 `/Support/Wwise/Media/Encode.ts` 。
+		* `WwiseConsole.sh` 用于 `/support/wwise/media/encode.ts` 。
 
-		* `vgmstream-cli` 用于 `/Support/Wwise/Media/Decode.ts` 。
+		* `vgmstream-cli` 用于 `/support/wwise/media/decode.ts` 。
 
-		* `dotnet` 用于 `/Support/Kairosoft/Game/ModifyProgram.ts` 。
+		* `dotnet` 用于 `/support/kairosoft/game/program/modify.ts` 。
 
-		* `Il2CppDumper.dll` 用于 `/Support/Kairosoft/Game/ModifyProgram.ts` 。
+		* `Il2CppDumper.dll` 用于 `/support/kairosoft/game/program/modify.ts` 。
 
 	* `console_basic_disable_virtual_terminal_sequence` : `boolean` = `false`
 
@@ -314,13 +314,13 @@
 
 	  各项功能的名称过滤规则与参数默认值。可以修改以符合自己的使用习惯。
 
-	* `executor_pvz2_resource_convert_ptx_format_map_list` : `...` = `...`
+	* `executor_popcap_pvz2_resource_convert_ptx_format_map_list` : `...` = `...`
 
-	  特定功能需要使用的配置数据。用于 `popcap.resource_stream_bundle.resource_convert` 。
+	  特定功能需要使用的配置数据。用于 `popcap.pvz2.resource_stream_bundle.resource_convert` 。
 
-	* `executor_pvz2_package_project_conversion_setting` : `...` = `...`
+	* `executor_popcap_pvz2_package_project_conversion_setting` : `...` = `...`
 
-	  特定功能需要使用的配置数据。用于 `pvz2.package_project.parse` 。
+	  特定功能需要使用的配置数据。用于 `popcap.pvz2.package_project.parse` 。
 
 	* `command_notification_time_limit` : `null | bigint` = `15000`
 

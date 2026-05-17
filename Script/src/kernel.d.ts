@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 123
+ * @version 125
  */
 declare namespace Twinning.Kernel {
 
@@ -69,6 +69,31 @@ declare namespace Twinning.Kernel {
 		get value(): typeof Boolean.Value;
 
 		set value(it: typeof Boolean.Value);
+
+	}
+
+	// ----------------
+
+	/** 整数 */
+	class Integer {
+
+		private _Integer;
+
+		// ----------------
+
+		static default(): Integer;
+
+		static copy(it: Integer): Integer;
+
+		// ----------------
+
+		static Value: bigint;
+
+		static value(it: typeof Integer.Value): Integer;
+
+		get value(): typeof Integer.Value;
+
+		set value(it: typeof Integer.Value);
 
 	}
 
@@ -1579,7 +1604,7 @@ declare namespace Twinning.Kernel {
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
 						 * @param level 压缩级别(0~9)
-						 * @param window_bits 窗口尺寸(8~15)
+						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param memory_level 内存级别(1~9)
 						 * @param strategy 策略
 						 * @param wrapper 封装
@@ -1587,9 +1612,9 @@ declare namespace Twinning.Kernel {
 						function process(
 							raw: InputByteStreamView,
 							ripe: OutputByteStreamView,
-							level: Size,
-							window_bits: Size,
-							memory_level: Size,
+							level: Integer,
+							window_exponent: Integer,
+							memory_level: Integer,
 							strategy: Strategy,
 							wrapper: Wrapper,
 						): Void;
@@ -1598,15 +1623,15 @@ declare namespace Twinning.Kernel {
 						 * 计算成品数据尺寸上限
 						 * @param raw_size 原始数据尺寸
 						 * @param ripe_size_bound 成品数据尺寸上限
-						 * @param window_bits 窗口尺寸(8~15)
+						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param memory_level 内存级别(1~9)
 						 * @param wrapper 封装
 						 */
 						function estimate(
 							raw_size: Size,
 							ripe_size_bound: Size,
-							window_bits: Size,
-							memory_level: Size,
+							window_exponent: Integer,
+							memory_level: Integer,
 							wrapper: Wrapper,
 						): Void;
 
@@ -1619,13 +1644,13 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param ripe 成品数据
 						 * @param raw 原始数据
-						 * @param window_bits 窗口尺寸(8~15)
+						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param wrapper 封装
 						 */
 						function process(
 							ripe: InputByteStreamView,
 							raw: OutputByteStreamView,
-							window_bits: Size,
+							window_exponent: Integer,
 							wrapper: Wrapper,
 						): Void;
 
@@ -1649,8 +1674,8 @@ declare namespace Twinning.Kernel {
 						function process(
 							raw: InputByteStreamView,
 							ripe: OutputByteStreamView,
-							block_size: Size,
-							work_factor: Size,
+							block_size: Integer,
+							work_factor: Integer,
 						): Void;
 
 					}
@@ -1689,7 +1714,7 @@ declare namespace Twinning.Kernel {
 						function process(
 							raw: InputByteStreamView,
 							ripe: OutputByteStreamView,
-							level: Size,
+							level: Integer,
 						): Void;
 
 					}
@@ -1746,13 +1771,13 @@ declare namespace Twinning.Kernel {
 						 * @param before 变动前数据
 						 * @param after 变动后数据
 						 * @param patch 补丁数据
-						 * @param maximum_window_size 最大窗口尺寸
+						 * @param maximum_window_size 最大窗口尺寸，最大为 2^31 - 1
 						 */
 						function process(
 							before: InputByteStreamView,
 							after: OutputByteStreamView,
 							patch: InputByteStreamView,
-							maximum_window_size: Size,
+							maximum_window_size: Integer,
 						): Void;
 
 					}
@@ -1767,11 +1792,11 @@ declare namespace Twinning.Kernel {
 				/** Json */
 				namespace Json {
 
-					/** 写 */
-					namespace Write {
+					/** 编码 */
+					namespace Encode {
 
 						/**
-						 * 写
+						 * 编码
 						 * @param data 数据
 						 * @param value 值
 						 * @param disable_array_trailing_comma 禁用数组尾随逗号
@@ -1790,11 +1815,11 @@ declare namespace Twinning.Kernel {
 
 					}
 
-					/** 读 */
-					namespace Read {
+					/** 解码 */
+					namespace Decode {
 
 						/**
-						 * 读
+						 * 解码
 						 * @param data 数据
 						 * @param value 值
 						 * @param buffer 缓冲区
@@ -1812,11 +1837,11 @@ declare namespace Twinning.Kernel {
 				/** Xml */
 				namespace Xml {
 
-					/** 写 */
-					namespace Write {
+					/** 编码 */
+					namespace Encode {
 
 						/**
-						 * 写
+						 * 编码
 						 * @param data 数据
 						 * @param value 值
 						 */
@@ -1827,11 +1852,11 @@ declare namespace Twinning.Kernel {
 
 					}
 
-					/** 读 */
-					namespace Read {
+					/** 解码 */
+					namespace Decode {
 
 						/**
-						 * 读
+						 * 解码
 						 * @param data 数据
 						 * @param value 值
 						 */
@@ -1904,7 +1929,7 @@ declare namespace Twinning.Kernel {
 
 					// ----------------
 
-					static Value: 'a_8' | 'rgb_332' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_1555' | 'argb_4444' | 'argb_8888' | 'l_8' | 'la_44' | 'la_88' | 'al_44' | 'al_88' | 'rgb_888_o' | 'rgba_8888_o';
+					static Value: 'a_8' | 'rgb_332' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_1555' | 'argb_4444' | 'argb_8888' | 'l_8' | 'la_44' | 'la_88' | 'al_44' | 'al_88' | 'rgb_888_o' | 'rgb_888_r' | 'rgba_8888_o' | 'rgba_8888_r' | 'argb_8888_o' | 'argb_8888_r';
 
 					static value(it: typeof Format.Value): Format;
 
@@ -1956,26 +1981,26 @@ declare namespace Twinning.Kernel {
 				/** Etc */
 				namespace Etc {
 
-					/** 格式 */
-					class Format {
+					/** 代际 */
+					class Generation {
 
-						private _Tool_Texture_Compression_Etc_Format;
-
-						// ----------------
-
-						static default(): Format;
-
-						static copy(it: Format): Format;
+						private _Tool_Texture_Compression_Etc_Generation;
 
 						// ----------------
 
-						static Value: 'v1_rgb' | 'v2_rgb' | 'v2_rgba';
+						static default(): Generation;
 
-						static value(it: typeof Format.Value): Format;
+						static copy(it: Generation): Generation;
 
-						get value(): typeof Format.Value;
+						// ----------------
 
-						set value(it: typeof Format.Value);
+						static Value: 'v1' | 'v2' | 'eac';
+
+						static value(it: typeof Generation.Value): Generation;
+
+						get value(): typeof Generation.Value;
+
+						set value(it: typeof Generation.Value);
 
 					}
 
@@ -1986,12 +2011,18 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param data 数据
 						 * @param image 图像
-						 * @param format 格式
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param with_alpha_eac Etc2模式下，是否以Eac的方式编码A
+						 * @param with_green_eac Eac模式下，是否包含G
 						 */
 						function process(
 							data: OutputByteStreamView,
 							image: Image.ConstantImageView,
-							format: Format,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							with_alpha_eac: Boolean,
+							with_green_eac: Boolean,
 						): Void;
 
 					}
@@ -2003,12 +2034,18 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param data 数据
 						 * @param image 图像
-						 * @param format 格式
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param with_alpha_eac Etc2模式下，是否以Eac的方式编码A
+						 * @param with_green_eac Eac模式下，是否包含G
 						 */
 						function process(
 							data: InputByteStreamView,
 							image: Image.VariableImageView,
-							format: Format,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							with_alpha_eac: Boolean,
+							with_green_eac: Boolean,
 						): Void;
 
 					}
@@ -2018,26 +2055,26 @@ declare namespace Twinning.Kernel {
 				/** Pvrtc */
 				namespace Pvrtc {
 
-					/** 格式 */
-					class Format {
+					/** 代际 */
+					class Generation {
 
-						private _Tool_Texture_Compression_Pvrtc_Format;
-
-						// ----------------
-
-						static default(): Format;
-
-						static copy(it: Format): Format;
+						private _Tool_Texture_Compression_Pvrtc_Generation;
 
 						// ----------------
 
-						static Value: 'v1_4bpp_rgb' | 'v1_4bpp_rgba';
+						static default(): Generation;
 
-						static value(it: typeof Format.Value): Format;
+						static copy(it: Generation): Generation;
 
-						get value(): typeof Format.Value;
+						// ----------------
 
-						set value(it: typeof Format.Value);
+						static Value: 'v1';
+
+						static value(it: typeof Generation.Value): Generation;
+
+						get value(): typeof Generation.Value;
+
+						set value(it: typeof Generation.Value);
 
 					}
 
@@ -2048,12 +2085,18 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param data 数据
 						 * @param image 图像
-						 * @param format 格式
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param use_bpp4 是否使用4bpp而非2bpp
+						 * @param with_alpha 是否包含A
 						 */
 						function process(
 							data: OutputByteStreamView,
 							image: Image.ConstantImageView,
-							format: Format,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							use_bpp4: Boolean,
+							with_alpha: Boolean,
 						): Void;
 
 					}
@@ -2065,12 +2108,86 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param data 数据
 						 * @param image 图像
-						 * @param format 格式
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param use_bpp4 是否使用4bpp而非2bpp
+						 * @param with_alpha 是否包含A
 						 */
 						function process(
 							data: InputByteStreamView,
 							image: Image.VariableImageView,
-							format: Format,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							use_bpp4: Boolean,
+							with_alpha: Boolean,
+						): Void;
+
+					}
+
+				}
+
+				/** Astc */
+				namespace Astc {
+
+					/** 代际 */
+					class Generation {
+
+						private _Tool_Texture_Compression_Astc_Generation;
+
+						// ----------------
+
+						static default(): Generation;
+
+						static copy(it: Generation): Generation;
+
+						// ----------------
+
+						static Value: 'v0';
+
+						static value(it: typeof Generation.Value): Generation;
+
+						get value(): typeof Generation.Value;
+
+						set value(it: typeof Generation.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param data 数据
+						 * @param image 图像
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 * @param quality 压缩质量
+						 */
+						function process(
+							data: OutputByteStreamView,
+							image: Image.ConstantImageView,
+							generation: Generation,
+							block_size: Image.ImageSize,
+							quality: Integer,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param data 数据
+						 * @param image 图像
+						 * @param generation 代际
+						 * @param block_size 区块大小
+						 */
+						function process(
+							data: InputByteStreamView,
+							image: Image.VariableImageView,
+							generation: Generation,
+							block_size: Image.ImageSize,
 						): Void;
 
 					}
@@ -2404,7 +2521,7 @@ declare namespace Twinning.Kernel {
 					 * @param raw 原始数据
 					 * @param ripe 成品数据
 					 * @param level 压缩级别(0~9)
-					 * @param window_bits 窗口尺寸(8~15)
+					 * @param window_exponent 窗口尺寸幂次(8~15)
 					 * @param memory_level 内存级别(1~9)
 					 * @param strategy 策略
 					 * @param version 版本
@@ -2412,9 +2529,9 @@ declare namespace Twinning.Kernel {
 					function process(
 						raw: InputByteStreamView,
 						ripe: OutputByteStreamView,
-						level: Size,
-						window_bits: Size,
-						memory_level: Size,
+						level: Integer,
+						window_exponent: Integer,
+						memory_level: Integer,
 						strategy: Data.Compression.Deflate.Strategy,
 						version: Version,
 					): Void;
@@ -2423,15 +2540,15 @@ declare namespace Twinning.Kernel {
 					 * 计算成品数据尺寸上限
 					 * @param raw_size 原始数据尺寸
 					 * @param ripe_size_bound 成品数据尺寸上限
-					 * @param window_bits 窗口尺寸(8~15)
+					 * @param window_exponent 窗口尺寸幂次(8~15)
 					 * @param memory_level 内存级别(1~9)
 					 * @param version 版本
 					 */
 					function estimate(
 						raw_size: Size,
 						ripe_size_bound: Size,
-						window_bits: Size,
-						memory_level: Size,
+						window_exponent: Integer,
+						memory_level: Integer,
 						version: Version,
 					): Void;
 
@@ -2444,13 +2561,13 @@ declare namespace Twinning.Kernel {
 					 * 解压
 					 * @param ripe 成品数据
 					 * @param raw 原始数据
-					 * @param window_bits 窗口尺寸(8~15)
+					 * @param window_exponent 窗口尺寸幂次(8~15)
 					 * @param version 版本
 					 */
 					function process(
 						ripe: InputByteStreamView,
 						raw: OutputByteStreamView,
-						window_bits: Size,
+						window_exponent: Integer,
 						version: Version,
 					): Void;
 

@@ -5,6 +5,8 @@ module;
 export module twinning.kernel.tool.texture.compression.etc.uncompress;
 import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.etc.common;
+import twinning.kernel.tool.texture.encoding.common;
+import twinning.kernel.tool.texture.encoding.decode;
 import twinning.kernel.third.etcpak;
 
 export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
@@ -16,97 +18,90 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
 		// ----------------
 
-		inline static auto process_image_v1_rgb(
-			InputByteStreamView &            data,
-			Image::VariableImageView const & image
-		) -> Void {
-			assert_test(is_padded_size(image.size().width, k_block_width));
-			assert_test(is_padded_size(image.size().height, k_block_width));
-			auto image_block = Array<Image::Pixel>{k_block_width * k_block_width};
-			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
-				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
-					Third::etcpak::Public_DecodeRGBPart(*cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
-					data.forward(k_block_width * k_block_width * k_bpp_rgb / k_type_bit_count<Byte>);
-					for (auto & pixel_y : SizeRange{k_block_width}) {
-						for (auto & pixel_x : SizeRange{k_block_width}) {
-							auto & pixel = image[block_y * k_block_width + pixel_y][block_x * k_block_width + pixel_x];
-							auto & block_pixel = image_block[pixel_y * k_block_width + pixel_x];
-							pixel.red = block_pixel.red;
-							pixel.green = block_pixel.green;
-							pixel.blue = block_pixel.blue;
-						}
-					}
-				}
-			}
-			return;
-		}
-
-		inline static auto process_image_v2_rgb(
-			InputByteStreamView &            data,
-			Image::VariableImageView const & image
-		) -> Void {
-			assert_test(is_padded_size(image.size().width, k_block_width));
-			assert_test(is_padded_size(image.size().height, k_block_width));
-			auto image_block = Array<Image::Pixel>{k_block_width * k_block_width};
-			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
-				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
-					Third::etcpak::Public_DecodeRGBPart(*cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
-					data.forward(k_block_width * k_block_width * k_bpp_rgb / k_type_bit_count<Byte>);
-					for (auto & pixel_y : SizeRange{k_block_width}) {
-						for (auto & pixel_x : SizeRange{k_block_width}) {
-							auto & pixel = image[block_y * k_block_width + pixel_y][block_x * k_block_width + pixel_x];
-							auto & block_pixel = image_block[pixel_y * k_block_width + pixel_x];
-							pixel.red = block_pixel.red;
-							pixel.green = block_pixel.green;
-							pixel.blue = block_pixel.blue;
-						}
-					}
-				}
-			}
-			return;
-		}
-
-		inline static auto process_image_v2_rgba(
-			InputByteStreamView &            data,
-			Image::VariableImageView const & image
-		) -> Void {
-			assert_test(is_padded_size(image.size().width, k_block_width));
-			assert_test(is_padded_size(image.size().height, k_block_width));
-			auto image_block = Array<Image::Pixel>{k_block_width * k_block_width};
-			for (auto & block_y : SizeRange{image.size().height / k_block_width}) {
-				for (auto & block_x : SizeRange{image.size().width / k_block_width}) {
-					Third::etcpak::Public_DecodeRGBAPart(*(cast_pointer<std::uint64_t>(data.current_pointer()) + 1_sz).value, *cast_pointer<std::uint64_t>(data.current_pointer()).value, cast_pointer<std::uint32_t>(image_block.begin()).value, static_cast<std::uint32_t>(k_block_width.value));
-					data.forward(k_block_width * k_block_width * k_bpp_rgba / k_type_bit_count<Byte>);
-					for (auto & pixel_y : SizeRange{k_block_width}) {
-						for (auto & pixel_x : SizeRange{k_block_width}) {
-							auto & pixel = image[block_y * k_block_width + pixel_y][block_x * k_block_width + pixel_x];
-							auto & block_pixel = image_block[pixel_y * k_block_width + pixel_x];
-							pixel.red = block_pixel.red;
-							pixel.green = block_pixel.green;
-							pixel.blue = block_pixel.blue;
-							pixel.alpha = block_pixel.alpha;
-						}
-					}
-				}
-			}
-			return;
-		}
-
-		// ----------------
-
 		inline static auto process_image(
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image,
-			Format const &                   format
+			Generation const &               generation,
+			Image::ImageSize const &         block_size,
+			Boolean const &                  with_alpha_eac,
+			Boolean const &                  with_green_eac
 		) -> Void {
-			if (format == Format::Constant::v1_rgb()) {
-				process_image_v1_rgb(data, image);
+			assert_test(is_valid_block_size(block_size));
+			assert_test(is_padded_size(image.size().width, block_size.width) && is_padded_size(image.size().height, block_size.height));
+			auto block_count = image.size().area() / block_size.area();
+			if (generation == Generation::Constant::v1()) {
+				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+				assert_test(ripe_data_size <= data.reserve());
+				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
+				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+				Third::etcpak::DecodeRGB(
+					cast_pointer<std::uint64_t>(data.current_pointer()).value,
+					cast_pointer<std::uint32_t>(raw_data.begin()).value,
+					static_cast<std::int32_t>(image.size().width.value),
+					static_cast<std::int32_t>(image.size().height.value)
+				);
+				data.forward(ripe_data_size);
+				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
 			}
-			if (format == Format::Constant::v2_rgb()) {
-				process_image_v2_rgb(data, image);
+			if (generation == Generation::Constant::v2()) {
+				if (!with_alpha_eac) {
+					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+					assert_test(ripe_data_size <= data.reserve());
+					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
+					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					Third::etcpak::DecodeRGB(
+						cast_pointer<std::uint64_t>(data.current_pointer()).value,
+						cast_pointer<std::uint32_t>(raw_data.begin()).value,
+						static_cast<std::int32_t>(image.size().width.value),
+						static_cast<std::int32_t>(image.size().height.value)
+					);
+					data.forward(ripe_data_size);
+					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				}
+				else {
+					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
+					assert_test(ripe_data_size <= data.reserve());
+					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
+					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					Third::etcpak::DecodeRGBA(
+						cast_pointer<std::uint64_t>(data.current_pointer()).value,
+						cast_pointer<std::uint32_t>(raw_data.begin()).value,
+						static_cast<std::int32_t>(image.size().width.value),
+						static_cast<std::int32_t>(image.size().height.value)
+					);
+					data.forward(ripe_data_size);
+					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				}
 			}
-			if (format == Format::Constant::v2_rgba()) {
-				process_image_v2_rgba(data, image);
+			if (generation == Generation::Constant::eac()) {
+				if (!with_green_eac) {
+					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+					assert_test(ripe_data_size <= data.reserve());
+					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
+					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					Third::etcpak::DecodeR(
+						cast_pointer<std::uint64_t>(data.current_pointer()).value,
+						cast_pointer<std::uint32_t>(raw_data.begin()).value,
+						static_cast<std::int32_t>(image.size().width.value),
+						static_cast<std::int32_t>(image.size().height.value)
+					);
+					data.forward(ripe_data_size);
+					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				}
+				else {
+					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
+					assert_test(ripe_data_size <= data.reserve());
+					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
+					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					Third::etcpak::DecodeRG(
+						cast_pointer<std::uint64_t>(data.current_pointer()).value,
+						cast_pointer<std::uint32_t>(raw_data.begin()).value,
+						static_cast<std::int32_t>(image.size().width.value),
+						static_cast<std::int32_t>(image.size().height.value)
+					);
+					data.forward(ripe_data_size);
+					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				}
 			}
 			return;
 		}
@@ -116,10 +111,13 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 		inline static auto process(
 			InputByteStreamView &            data_,
 			Image::VariableImageView const & image,
-			Format const &                   format
+			Generation const &               generation,
+			Image::ImageSize const &         block_size,
+			Boolean const &                  with_alpha_eac,
+			Boolean const &                  with_green_eac
 		) -> Void {
 			M_use_zps_of(data);
-			return process_image(data, image, format);
+			return process_image(data, image, generation, block_size, with_alpha_eac, with_green_eac);
 		}
 
 	};

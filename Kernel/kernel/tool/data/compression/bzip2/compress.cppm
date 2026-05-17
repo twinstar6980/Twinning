@@ -19,11 +19,12 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 		inline static auto process_whole(
 			InputByteStreamView &  raw,
 			OutputByteStreamView & ripe,
-			Size const &           block_size,
-			Size const &           work_factor
+			Integer const &        block_size,
+			Integer const &        work_factor
 		) -> Void {
-			assert_test(Math::between(block_size, 1_sz, 9_sz));
-			assert_test(Math::between(work_factor, 0_sz, 250_sz));
+			assert_test(Math::between(block_size, 1_i, 9_i));
+			assert_test(Math::between(work_factor, 0_i, 250_i));
+			auto bz_state = int{};
 			auto bz_stream = Third::bzip2::$bz_stream{
 				.next_in = cast_pointer<char>(as_variable_pointer(raw.current_pointer())).value,
 				.avail_in = static_cast<unsigned int>(raw.reserve().value),
@@ -38,23 +39,22 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 				.bzfree = nullptr,
 				.opaque = nullptr,
 			};
-			auto state = int{};
-			state = Third::bzip2::$BZ2_bzCompressInit(
+			bz_state = Third::bzip2::$BZ2_bzCompressInit(
 				&bz_stream,
 				static_cast<int>(block_size.value),
 				0,
 				static_cast<int>(work_factor.value)
 			);
-			assert_test(state == Third::bzip2::$BZ_OK);
-			state = Third::bzip2::$BZ2_bzCompress(
+			assert_test(bz_state == Third::bzip2::$BZ_OK);
+			bz_state = Third::bzip2::$BZ2_bzCompress(
 				&bz_stream,
 				Third::bzip2::$BZ_FINISH
 			);
-			assert_test(state == Third::bzip2::$BZ_STREAM_END);
-			state = Third::bzip2::$BZ2_bzCompressEnd(
+			assert_test(bz_state == Third::bzip2::$BZ_STREAM_END);
+			bz_state = Third::bzip2::$BZ2_bzCompressEnd(
 				&bz_stream
 			);
-			assert_test(state == Third::bzip2::$BZ_OK);
+			assert_test(bz_state == Third::bzip2::$BZ_OK);
 			assert_test(bz_stream.avail_in == 0);
 			raw.forward(mbox<Size>((static_cast<std::uint64_t>(bz_stream.total_in_hi32) << 32) + static_cast<std::uint64_t>(bz_stream.total_in_lo32)));
 			ripe.forward(mbox<Size>((static_cast<std::uint64_t>(bz_stream.total_out_hi32) << 32) + static_cast<std::uint64_t>(bz_stream.total_out_lo32)));
@@ -67,8 +67,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 		inline static auto process(
 			InputByteStreamView &  raw_,
 			OutputByteStreamView & ripe_,
-			Size const &           block_size,
-			Size const &           work_factor
+			Integer const &        block_size,
+			Integer const &        work_factor
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);
