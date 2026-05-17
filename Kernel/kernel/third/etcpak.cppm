@@ -5,6 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
+#include <cstddef>
 #include "third/etcpak/ProcessRGB.hpp"
 #include "third/etcpak/Decode.hpp"
 

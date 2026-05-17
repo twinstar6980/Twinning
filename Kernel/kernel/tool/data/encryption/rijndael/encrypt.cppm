@@ -20,17 +20,17 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 			InputByteStreamView &  plain,
 			OutputByteStreamView & cipher,
 			Mode const &           mode,
-			Size const &           block_size,
-			Size const &           key_size,
+			Integer const &        block_size,
+			Integer const &        key_size,
 			String const &         key,
 			String const &         iv
 		) -> Void {
-			assert_test(is_padded_size(plain.reserve(), block_size));
+			assert_test(is_padded_size(plain.reserve(), cbox<Size>(block_size)));
 			assert_test(is_valid_block_size(block_size));
 			assert_test(is_valid_block_size(key_size));
-			assert_test(is_padded_size(bs_size(key) * k_type_bit_count<Character>, key_size));
-			assert_test(is_padded_size(bs_size(iv) * k_type_bit_count<Character>, block_size));
-			auto iv_view = mode == Mode::Constant::ecb() ? (k_empty_iv.view().head(block_size)) : (iv.view());
+			assert_test(is_padded_size(bs_size(key) * k_type_bit_count<Character>, cbox<Size>(key_size)));
+			assert_test(is_padded_size(bs_size(iv) * k_type_bit_count<Character>, cbox<Size>(block_size)));
+			auto iv_view = mode == Mode::Constant::ecb() ? (k_empty_iv.view().head(cbox<Size>(block_size))) : (iv.view());
 			auto plain_size = plain.reserve();
 			if (plain_size != 0_sz) {
 				auto rijndael = Third::Rijndael::CRijndael{};
@@ -48,8 +48,8 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 			InputByteStreamView &  plain_,
 			OutputByteStreamView & cipher_,
 			Mode const &           mode,
-			Size const &           block_size,
-			Size const &           key_size,
+			Integer const &        block_size,
+			Integer const &        key_size,
 			String const &         key,
 			String const &         iv
 		) -> Void {

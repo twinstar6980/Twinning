@@ -972,7 +972,7 @@
 
 	* `buffer_size` : `size` = `1024.0m`
 
-## `pvz2.text_table`
+## `popcap.pvz2.text_table`
 
 * `convert`
 
@@ -982,7 +982,7 @@
 
 	* `destination_file` : `path` ~ `*.convert.txt|json` = `?automatic`
 
-## `pvz2.resource_manifest`
+## `popcap.pvz2.resource_manifest`
 
 * `new_type_object_notation.encode`
 
@@ -1012,7 +1012,7 @@
 
 	* `use_array_style_path` : `boolean` = `?input`
 
-## `pvz2.package_project`
+## `popcap.pvz2.package_project`
 
 * `transpile`
 
@@ -1072,7 +1072,7 @@
 
 	* `package_version_extended_texture_information_for_pvz2_cn` : `integer` = `?input`
 
-## `pvz2.remote_project`
+## `popcap.pvz2.remote_project`
 
 * `execute`
 
@@ -1090,16 +1090,32 @@
 
 ## `kairosoft.game`
 
-* `encrypt_record`
+* `record.encrypt`
 
 	* `target_directory` : `*`
 
 	* `key` : `string` = `?input`
 
-* `modify_program`
+* `program.modify`
 
 	* `target_directory` : `*`
 
 	* `disable_record_encryption` : `boolean` = `?input`
 
 	* `enable_debug_mode` : `boolean` = `?input`
+
+## `nitrome.twin_shot_deluxe`
+
+* `record.encode` `*`
+
+	* `definition_file` : `*.dat.json`
+
+	* `data_file` : `path` ~ `*.dat` = `?automatic`
+
+	* `buffer_size` : `size` = `1.0m`
+
+* `record.decode` `*`
+
+	* `data_file` : `*.dat`
+
+	* `definition_file` : `path` ~ `*.dat.json` = `?automatic`

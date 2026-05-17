@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 125
+ * @version 126
  */
 declare namespace Twinning.Kernel {
 
@@ -1507,8 +1507,8 @@ declare namespace Twinning.Kernel {
 							plain: InputByteStreamView,
 							cipher: OutputByteStreamView,
 							mode: Mode,
-							block_size: Size,
-							key_size: Size,
+							block_size: Integer,
+							key_size: Integer,
 							key: String,
 							iv: String,
 						): Void;
@@ -1532,8 +1532,8 @@ declare namespace Twinning.Kernel {
 							cipher: InputByteStreamView,
 							plain: OutputByteStreamView,
 							mode: Mode,
-							block_size: Size,
-							key_size: Size,
+							block_size: Integer,
+							key_size: Integer,
 							key: String,
 							iv: String,
 						): Void;

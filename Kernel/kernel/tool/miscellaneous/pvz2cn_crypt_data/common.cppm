@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 
 		// ----------------
 
-		inline static constexpr auto k_crypt_block_size = Size{24_sz};
+		inline static constexpr auto k_crypt_block_size = Integer{24_i};
 
-		inline static constexpr auto k_crypt_key_size = Size{32_sz};
+		inline static constexpr auto k_crypt_key_size = Integer{32_i};
 
 		// ----------------
 

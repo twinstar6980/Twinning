@@ -112,21 +112,25 @@
 
 	* 编码、解码
 
-* `PvZ-2 Resource-Manifest` (resources.rton|newton)
+* `PopCap PvZ-2 Resource-Manifest` (resources.rton|newton)
 
 	* 编码、解码
 
 	* 转换
 
-* `PvZ-2 Text-Table` (.txt|json)
+* `PopCap PvZ-2 Text-Table` (.txt|json)
 
 	* 转换
 
 * `Kairosoft Game` (.*)
 
-	* 加密存档
+	* 程序修改
 
-	* 修改程序
+	* 存档加密
+
+* `Nitrome Twin-Shot-Deluxe` (.*)
+
+	* 存档编码、解码
 
 * ......
 

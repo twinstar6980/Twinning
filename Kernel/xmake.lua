@@ -1,7 +1,7 @@
 add_moduledirs('..')
 includes('../common/xmake/utility.lua')
 
-define_project('Kernel', '125')
+define_project('Kernel', '126')
 
 includes('third/mscharconv')
 includes('third/tinyxml2')

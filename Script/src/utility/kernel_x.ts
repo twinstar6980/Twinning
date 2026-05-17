@@ -339,7 +339,7 @@ namespace Twinning.Script.KernelX {
 						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
 						let cipher = Kernel.ByteArray.allocate(plain.size());
 						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-						Kernel.Tool.Data.Encryption.Rijndael.Encrypt.process(plain_stream, cipher_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Size.value(block_size), Kernel.Size.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
+						Kernel.Tool.Data.Encryption.Rijndael.Encrypt.process(plain_stream, cipher_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), Kernel.Integer.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
 						StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
 						return;
 					}
@@ -357,7 +357,7 @@ namespace Twinning.Script.KernelX {
 						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 						let plain = Kernel.ByteArray.allocate(cipher.size());
 						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(cipher_stream, plain_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Size.value(block_size), Kernel.Size.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
+						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(cipher_stream, plain_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), Kernel.Integer.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
 						StorageHelper.write_file(plain_file, plain_stream.stream_view());
 						return;
 					}
