@@ -294,42 +294,68 @@
 			},
 		},
 		"texture.transformation": {
-			"flip": {
+			"flipping.encode": {
 				"filter": "(\\.png)$",
 				"argument": {
-					"source_file": "?input",
-					"destination_file": "?automatic",
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
 					"horizontal": "?input",
 					"vertical": "?input",
 				},
 				"batch": {
-					"source_file": "?input",
-					"destination_file": "?automatic",
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
 				},
 			},
-			"scale": {
+			"scaling.encode": {
 				"filter": "(\\.png)$",
 				"argument": {
-					"source_file": "?input",
-					"destination_file": "?automatic",
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
 					"size_width": "?input",
 					"size_height": "?input",
 				},
 				"batch": {
-					"source_file": "?input",
-					"destination_file": "?automatic",
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
 				},
 			},
-			"scale_rate": {
+			"scaling.encode_rate": {
 				"filter": "(\\.png)$",
 				"argument": {
-					"source_file": "?input",
-					"destination_file": "?automatic",
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
 					"size_rate": "?input",
 				},
 				"batch": {
-					"source_file": "?input",
-					"destination_file": "?automatic",
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"tiling.encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"tile_width": "?input",
+					"tile_height": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"tiling.decode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"tile_width": "?input",
+					"tile_height": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
 				},
 			},
 		},

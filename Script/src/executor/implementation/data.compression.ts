@@ -95,7 +95,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 					if (store.buffer === undefined) {
 						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'none', store.buffer.view());
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(raw_file, ripe_file, 15n, 'none', store.buffer.view());
 					return;
 				},
 			}),
@@ -189,7 +189,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 					if (store.buffer === undefined) {
 						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'zlib', store.buffer.view());
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(raw_file, ripe_file, 15n, 'zlib', store.buffer.view());
 					return;
 				},
 			}),
@@ -283,7 +283,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 					if (store.buffer === undefined) {
 						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(ripe_file, raw_file, 15n, 'gzip', store.buffer.view());
+					KernelX.Tool.Data.Compression.Deflate.uncompress_fs(raw_file, ripe_file, 15n, 'gzip', store.buffer.view());
 					return;
 				},
 			}),
@@ -377,7 +377,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 					if (store.buffer === undefined) {
 						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Bzip2.uncompress_fs(ripe_file, raw_file, store.buffer.view());
+					KernelX.Tool.Data.Compression.Bzip2.uncompress_fs(raw_file, ripe_file, store.buffer.view());
 					return;
 				},
 			}),
@@ -471,7 +471,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Compression {
 					if (store.buffer === undefined) {
 						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
 					}
-					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(ripe_file, raw_file, store.buffer.view());
+					KernelX.Tool.Data.Compression.Lzma.uncompress_fs(raw_file, ripe_file, store.buffer.view());
 					return;
 				},
 			}),

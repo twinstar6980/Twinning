@@ -190,7 +190,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					}),
 				],
 				worker: ({cipher_file, plain_file, mode, block_size, key, iv}, store: {}) => {
-					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(cipher_file, plain_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
+					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
 					return;
 				},
 			}),

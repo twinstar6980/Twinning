@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
+			InputByteStreamView &  ripe,
 			Integer const &        window_exponent,
 			Wrapper const &        wrapper
 		) -> Void {
@@ -80,14 +80,14 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
+			InputByteStreamView &  ripe_,
 			Integer const &        window_exponent,
 			Wrapper const &        wrapper
 		) -> Void {
-			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
-			return process_whole(ripe, raw, window_exponent, wrapper);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, window_exponent, wrapper);
 		}
 
 	};

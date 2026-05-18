@@ -110,7 +110,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			if (compress_texture_data) {
 				auto texture_data_stream = OutputByteStreamView{texture_data_container};
 				auto ripe_texture_data_stream = InputByteStreamView{data.reserve_view()};
-				Data::Compression::Deflate::Uncompress::process(ripe_texture_data_stream, texture_data_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Uncompress::process(texture_data_stream, ripe_texture_data_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(ripe_texture_data_stream.position() == compress_texture_data_size);
 				assert_test(texture_data_stream.full());
 				data.forward(ripe_texture_data_stream.position());

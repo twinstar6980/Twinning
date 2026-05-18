@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
+			InputByteStreamView &  ripe,
 			Boolean const &        small
 		) -> Void {
 			auto bz_state = int{};
@@ -58,13 +58,13 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
+			InputByteStreamView &  ripe_,
 			Boolean const &        small
 		) -> Void {
-			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
-			return process_whole(ripe, raw, small);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, small);
 		}
 
 	};

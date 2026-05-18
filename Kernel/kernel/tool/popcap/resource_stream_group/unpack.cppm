@@ -77,7 +77,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					if (resource_data_section_size_original != 0_sz) {
 						auto resource_data_section_stored_stream = InputByteStreamView{resource_data_section_view_stored};
 						auto resource_data_section_original_stream = OutputByteStreamView{resource_data_section_container};
-						Data::Compression::Deflate::Uncompress::process(resource_data_section_stored_stream, resource_data_section_original_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
+						Data::Compression::Deflate::Uncompress::process(resource_data_section_original_stream, resource_data_section_stored_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 					}
 					resource_data_section_view = resource_data_section_container.view();
 				}

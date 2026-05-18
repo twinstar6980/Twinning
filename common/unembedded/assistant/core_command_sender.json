@@ -867,19 +867,19 @@
 			"icon": "imagesmode",
 			"item": [
 				{
-					"identifier": "texture.transformation.flip",
-					"name": "Flip",
+					"identifier": "texture.transformation.flipping.encode",
+					"name": "Flipping",
 					"icon": "settings_backup_restore",
 					"argument": [
 						{
-							"identifier": "source_file",
-							"name": "Source file",
+							"identifier": "raw_file",
+							"name": "Original file",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "destination_file",
-							"name": "Destination file",
+							"identifier": "ripe_file",
+							"name": "Finished file",
 							"type": "path",
 							"option": null,
 						},
@@ -897,8 +897,8 @@
 						},
 					],
 					"batch": [
-						"source_file",
-						"destination_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 						{
@@ -925,19 +925,19 @@
 					],
 				},
 				{
-					"identifier": "texture.transformation.scale",
-					"name": "Scale",
+					"identifier": "texture.transformation.scaling.encode",
+					"name": "Scaling",
 					"icon": "branding_watermark",
 					"argument": [
 						{
-							"identifier": "source_file",
-							"name": "Source file",
+							"identifier": "raw_file",
+							"name": "Original file",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "destination_file",
-							"name": "Destination file",
+							"identifier": "ripe_file",
+							"name": "Finished file",
 							"type": "path",
 							"option": null,
 						},
@@ -955,26 +955,26 @@
 						},
 					],
 					"batch": [
-						"source_file",
-						"destination_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 					],
 				},
 				{
-					"identifier": "texture.transformation.scale_rate",
-					"name": "Scale by rate",
+					"identifier": "texture.transformation.scaling.encode_rate",
+					"name": "Scaling by rate",
 					"icon": "branding_watermark",
 					"argument": [
 						{
-							"identifier": "source_file",
-							"name": "Source file",
+							"identifier": "raw_file",
+							"name": "Original file",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "destination_file",
-							"name": "Destination file",
+							"identifier": "ripe_file",
+							"name": "Finished file",
 							"type": "path",
 							"option": null,
 						},
@@ -986,8 +986,8 @@
 						},
 					],
 					"batch": [
-						"source_file",
-						"destination_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 						{
@@ -1000,6 +1000,94 @@
 							"name": "× 2",
 							"argument": {
 								"size_rate": 2.0,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.tiling.encode",
+					"name": "Tiling",
+					"icon": "view_module",
+					"argument": [
+						{
+							"identifier": "raw_file",
+							"name": "Original File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "ripe_file",
+							"name": "Finished file",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "tile_width",
+							"name": "Tile width",
+							"type": "integer",
+							"option": null,
+						},
+						{
+							"identifier": "tile_height",
+							"name": "Tile height",
+							"type": "integer",
+							"option": null,
+						},
+					],
+					"batch": [
+						"raw_file",
+						"ripe_file",
+					],
+					"preset": [
+						{
+							"name": "32x32",
+							"argument": {
+								"tile_width": 32,
+								"tile_height": 32,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.tiling.decode",
+					"name": "Detiling",
+					"icon": "grid_3x3_off",
+					"argument": [
+						{
+							"identifier": "ripe_file",
+							"name": "Finished file",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "raw_file",
+							"name": "Original File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "tile_width",
+							"name": "Tile width",
+							"type": "integer",
+							"option": null,
+						},
+						{
+							"identifier": "tile_height",
+							"name": "Tile height",
+							"type": "integer",
+							"option": null,
+						},
+					],
+					"batch": [
+						"ripe_file",
+						"raw_file",
+					],
+					"preset": [
+						{
+							"name": "32x32",
+							"argument": {
+								"tile_width": 32,
+								"tile_height": 32,
 							},
 						},
 					],

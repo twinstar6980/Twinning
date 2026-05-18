@@ -18,26 +18,26 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  cipher,
 			OutputByteStreamView & plain,
+			InputByteStreamView &  cipher,
 			String const &         key
 		) -> Void {
 			auto rijndael_data_size = Size{};
-			estimate_whole(cipher.reserve(), rijndael_data_size);
+			estimate_whole(rijndael_data_size, cipher.reserve());
 			cipher.read_constant(k_magic_marker);
 			auto rijndael_cipher = InputByteStreamView{cipher.forward_view(rijndael_data_size)};
 			auto rijndael_plain = OutputByteStreamView{plain.forward_view(rijndael_data_size)};
 			auto rijndael_key = compute_rijndael_key(key);
 			auto rijndael_iv = compute_rijndael_iv(rijndael_key);
-			Data::Encryption::Rijndael::Decrypt::process(rijndael_cipher, rijndael_plain, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
+			Data::Encryption::Rijndael::Decrypt::process(rijndael_plain, rijndael_cipher, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
 			return;
 		}
 
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size const & cipher_size,
-			Size &       plain_size
+			Size &       plain_size,
+			Size const & cipher_size
 		) -> Void {
 			plain_size = 0_sz;
 			assert_test(cipher_size >= bs_static_size<MagicMarker>());
@@ -50,21 +50,21 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  cipher_,
 			OutputByteStreamView & plain_,
+			InputByteStreamView &  cipher_,
 			String const &         key
 		) -> Void {
-			M_use_zps_of(cipher);
 			M_use_zps_of(plain);
-			return process_whole(cipher, plain, key);
+			M_use_zps_of(cipher);
+			return process_whole(plain, cipher, key);
 		}
 
 		inline static auto estimate(
-			Size const & cipher_size,
-			Size &       plain_size
+			Size &       plain_size,
+			Size const & cipher_size
 		) -> Void {
 			restruct(plain_size);
-			return estimate_whole(cipher_size, plain_size);
+			return estimate_whole(plain_size, cipher_size);
 		}
 
 	};

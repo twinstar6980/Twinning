@@ -85,7 +85,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 					}),
 				],
 				worker: ({ripe_file, raw_file}, store: {}) => {
-					KernelX.Tool.Data.Encoding.Base64.decode_fs(ripe_file, raw_file);
+					KernelX.Tool.Data.Encoding.Base64.decode_fs(raw_file, ripe_file);
 					return;
 				},
 			}),

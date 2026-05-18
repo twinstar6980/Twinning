@@ -62,7 +62,6 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_4444_tiled':
 			case 'rgb_565_tiled':
 			case 'rgba_5551_tiled': {
-				// TODO
 				result = [32n, 32n];
 				break;
 			}
@@ -80,19 +79,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_astc_5x5':
 			case 'rgba_astc_6x6':
 			case 'rgba_astc_8x8': {
-				if (format === 'rgba_astc_4x4') {
-					result = [4n, 4n];
-				}
-				if (format === 'rgba_astc_5x5') {
-					result = [5n, 5n];
-				}
-				if (format === 'rgba_astc_6x6') {
-					result = [6n, 6n];
-				}
-				if (format === 'rgba_astc_8x8') {
-					result = [8n, 8n];
-				}
-				result = result!;
+				let block_size_expression = format.substring('rgba_astc_'.length).split('x');
+				result = [BigInt(block_size_expression[0]), BigInt(block_size_expression[1])];
 				break;
 			}
 		}
@@ -248,7 +236,10 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_4444_tiled':
 			case 'rgb_565_tiled':
 			case 'rgba_5551_tiled': {
-				KernelX.Tool.Miscellaneous.XboxTiledTexture.encode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.Format);
+				let tiled_image = Kernel.Image.Image.allocate(image.size());
+				let tiled_image_view = tiled_image.view();
+				KernelX.Tool.Texture.Transformation.Tiling.encode(image, tiled_image_view, get_block_size(format));
+				KernelX.Tool.Texture.Encoding.encode(data, tiled_image_view, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
 				break;
 			}
 			case 'rgba_pvrtc1_4bpp': {
@@ -302,7 +293,11 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_4444_tiled':
 			case 'rgb_565_tiled':
 			case 'rgba_5551_tiled': {
-				KernelX.Tool.Miscellaneous.XboxTiledTexture.decode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.Format);
+				let original_image = Kernel.Image.Image.allocate(image.size());
+				let original_image_view = original_image.view();
+				KernelX.Tool.Texture.Encoding.decode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
+				KernelX.Tool.Texture.Transformation.Tiling.decode(original_image_view, image, get_block_size(format));
+				image.draw(original_image_view);
 				break;
 			}
 			case 'rgba_pvrtc1_4bpp': {

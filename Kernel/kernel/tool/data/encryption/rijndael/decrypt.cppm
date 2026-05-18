@@ -17,8 +17,8 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  cipher,
 			OutputByteStreamView & plain,
+			InputByteStreamView &  cipher,
 			Mode const &           mode,
 			Integer const &        block_size,
 			Integer const &        key_size,
@@ -45,17 +45,17 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  cipher_,
 			OutputByteStreamView & plain_,
+			InputByteStreamView &  cipher_,
 			Mode const &           mode,
 			Integer const &        block_size,
 			Integer const &        key_size,
 			String const &         key,
 			String const &         iv
 		) -> Void {
-			M_use_zps_of(cipher);
 			M_use_zps_of(plain);
-			return process_whole(cipher, plain, mode, block_size, key_size, key, iv);
+			M_use_zps_of(cipher);
+			return process_whole(plain, cipher, mode, block_size, key_size, key, iv);
 		}
 
 	};

@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			}
 			if constexpr (check_version(t_version, {true})) {
 				auto texture_data_stream = OutputByteStreamView{texture_data_container};
-				Data::Compression::Deflate::Uncompress::process(data, texture_data_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Uncompress::process(texture_data_stream, data, 15_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
 				assert_test(texture_data_stream.full());
 			}
 			Texture::Encoding::Decode::process(as_left(InputByteStreamView{texture_data_view}), image, format);

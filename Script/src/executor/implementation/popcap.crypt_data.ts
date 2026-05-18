@@ -113,7 +113,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 					}),
 				],
 				worker: ({cipher_file, plain_file, limit, key}, store: {}) => {
-					KernelX.Tool.Popcap.CryptData.decrypt_fs(cipher_file, plain_file, limit, key, {});
+					KernelX.Tool.Popcap.CryptData.decrypt_fs(plain_file, cipher_file, limit, key, {});
 					return;
 				},
 			}),

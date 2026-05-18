@@ -316,33 +316,53 @@
 
 ## `texture.transformation`
 
-* `flip` `*`
+* `flipping.encode` `*`
 
-	* `source_file` : `*.png`
+	* `raw_file` : `*.png`
 
-	* `destination_file` : `path` ~ `*.flip.png` = `?automatic`
+	* `ripe_file` : `path` ~ `*.flipped.png` = `?automatic`
 
 	* `horizontal` : `boolean` = `?input`
 
 	* `vertical` : `boolean` = `?input`
 
-* `scale` `*`
+* `scaling.encode` `*`
 
-	* `source_file` : `*.png`
+	* `raw_file` : `*.png`
 
-	* `destination_file` : `path` ~ `*.scale.png` = `?automatic`
+	* `ripe_file` : `path` ~ `*.scaled.png` = `?automatic`
 
 	* `size_width` : `integer` = `?input`
 
 	* `size_height` : `integer` = `?input`
 
-* `scale_rate` `*`
+* `scaling.encode_rate` `*`
 
-	* `source_file` : `*.png`
+	* `raw_file` : `*.png`
 
-	* `destination_file` : `path` ~ `*.scale.png` = `?automatic`
+	* `ripe_file` : `path` ~ `*.scaled.png` = `?automatic`
 
 	* `size_rate` : `floater` = `?input`
+
+* `tiling.encode` `*`
+
+	* `raw_file` : `*.png`
+
+	* `ripe_file` : `path` ~ `*.tiled.png` = `?automatic`
+
+	* `tile_width` : `integer` = `?input`
+
+	* `tile_height` : `integer` = `?input`
+
+* `tiling.decode` `*`
+
+	* `ripe_file` : `*.png`
+
+	* `raw_file` : `path` ~ `*.detiled.png` = `?automatic`
+
+	* `tile_width` : `integer` = `?input`
+
+	* `tile_height` : `integer` = `?input`
 
 ## `texture.encoding`
 

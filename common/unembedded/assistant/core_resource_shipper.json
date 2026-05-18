@@ -462,14 +462,14 @@
 			"icon": "imagesmode",
 			"item": [
 				{
-					"name": "Flip",
+					"name": "Flipping",
 					"icon": "settings_backup_restore",
 					"filter": {
 						"type": "file",
 						"name": "(\\.png)$",
 					},
 					"batch": true,
-					"method": "texture.transformation.flip",
+					"method": "texture.transformation.flipping.encode",
 					"preset": [
 						{
 							"name": "Horizontal",
@@ -495,26 +495,26 @@
 					],
 				},
 				{
-					"name": "Scale",
+					"name": "Scaling",
 					"icon": "branding_watermark",
 					"filter": {
 						"type": "file",
 						"name": "(\\.png)$",
 					},
 					"batch": true,
-					"method": "texture.transformation.scale",
+					"method": "texture.transformation.scaling.encode",
 					"preset": [
 					],
 				},
 				{
-					"name": "Scale by rate",
+					"name": "Scaling by rate",
 					"icon": "branding_watermark",
 					"filter": {
 						"type": "file",
 						"name": "(\\.png)$",
 					},
 					"batch": true,
-					"method": "texture.transformation.scale_rate",
+					"method": "texture.transformation.scaling.encode_rate",
 					"preset": [
 						{
 							"name": "÷ 2",
@@ -526,6 +526,44 @@
 							"name": "× 2",
 							"argument": {
 								"size_rate": 2.0,
+							},
+						},
+					],
+				},
+				{
+					"name": "Tiling",
+					"icon": "view_module",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.tiling.encode",
+					"preset": [
+						{
+							"name": "32x32",
+							"argument": {
+								"tile_width": 32,
+								"tile_height": 32,
+							},
+						},
+					],
+				},
+				{
+					"name": "Detiling",
+					"icon": "grid_3x3_off",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.tiling.decode",
+					"preset": [
+						{
+							"name": "32x32",
+							"argument": {
+								"tile_width": 32,
+								"tile_height": 32,
 							},
 						},
 					],

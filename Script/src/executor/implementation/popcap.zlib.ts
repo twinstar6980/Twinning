@@ -97,7 +97,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.zlib {
 					}),
 				],
 				worker: ({ripe_file, raw_file, version_variant_64}, store: {}) => {
-					KernelX.Tool.Popcap.Zlib.uncompress_fs(ripe_file, raw_file, 15n, {variant_64: version_variant_64});
+					KernelX.Tool.Popcap.Zlib.uncompress_fs(raw_file, ripe_file, 15n, {variant_64: version_variant_64});
 					return;
 				},
 			}),

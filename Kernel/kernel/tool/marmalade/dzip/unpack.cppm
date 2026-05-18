@@ -94,7 +94,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						chunk_definition.flag = "zlib"_s;
 						auto chunk_stream = OutputByteStreamView{chunk_data};
 						data.forward(10_sz); // NOTE: EXPLAIN: skip gzip header
-						Data::Compression::Deflate::Uncompress::process(data, chunk_stream, 15_i, Data::Compression::Deflate::Wrapper::Constant::none());
+						Data::Compression::Deflate::Uncompress::process(chunk_stream, data, 15_i, Data::Compression::Deflate::Wrapper::Constant::none());
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {
@@ -103,7 +103,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "bzip2"_s;
 						auto chunk_stream = OutputByteStreamView{chunk_data};
-						Data::Compression::Bzip2::Uncompress::process(data, chunk_stream, k_false);
+						Data::Compression::Bzip2::Uncompress::process(chunk_stream, data, k_false);
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::mp3)) {
@@ -136,7 +136,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "lzma"_s;
 						auto chunk_stream = OutputByteStreamView{chunk_data};
-						Data::Compression::Lzma::Uncompress::process(data, chunk_stream);
+						Data::Compression::Lzma::Uncompress::process(chunk_stream, data);
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::random_access)) {

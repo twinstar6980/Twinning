@@ -35,9 +35,16 @@ import twinning.kernel.tool.data.serialization.json.decode;
 import twinning.kernel.tool.data.serialization.xml.common;
 import twinning.kernel.tool.data.serialization.xml.encode;
 import twinning.kernel.tool.data.serialization.xml.decode;
-import twinning.kernel.tool.texture.transformation.common;
-import twinning.kernel.tool.texture.transformation.flip;
-import twinning.kernel.tool.texture.transformation.scale;
+import twinning.kernel.tool.texture.transformation.flipping.common;
+import twinning.kernel.tool.texture.transformation.flipping.encode;
+import twinning.kernel.tool.texture.transformation.scaling.common;
+import twinning.kernel.tool.texture.transformation.scaling.encode;
+import twinning.kernel.tool.texture.transformation.tiling.common;
+import twinning.kernel.tool.texture.transformation.tiling.encode;
+import twinning.kernel.tool.texture.transformation.tiling.decode;
+import twinning.kernel.tool.texture.transformation.interleaving.common;
+import twinning.kernel.tool.texture.transformation.interleaving.encode;
+import twinning.kernel.tool.texture.transformation.interleaving.decode;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.encode;
 import twinning.kernel.tool.texture.encoding.decode;
@@ -123,9 +130,6 @@ import twinning.kernel.tool.popcap.resource_stream_bundle.unpack;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.version;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.encode;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.decode;
-import twinning.kernel.tool.miscellaneous.xbox_tiled_texture.common;
-import twinning.kernel.tool.miscellaneous.xbox_tiled_texture.encode;
-import twinning.kernel.tool.miscellaneous.xbox_tiled_texture.decode;
 import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.common;
 import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.encode;
 import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.decode;
@@ -628,10 +632,30 @@ export namespace Twinning::Kernel::Executor::Environment {
 				auto s_Texture = s_Tool.add_space("Texture"_s);
 				{
 					auto s_Transformation = s_Texture.add_space("Transformation"_s);
-					s_Transformation.add_space("Flip"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Flip::process>>("process"_s);
-					s_Transformation.add_space("Scale"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Scale::process>>("process"_s);
+					{
+						auto s_Flipping = s_Transformation.add_space("Flipping"_s);
+						s_Flipping.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Flipping::Encode::process>>("process"_s);
+					}
+					{
+						auto s_Scaling = s_Transformation.add_space("Scaling"_s);
+						s_Scaling.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Scaling::Encode::process>>("process"_s);
+					}
+					{
+						auto s_Tiling = s_Transformation.add_space("Tiling"_s);
+						s_Tiling.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Tiling::Encode::process>>("process"_s);
+						s_Tiling.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Tiling::Decode::process>>("process"_s);
+					}
+					{
+						auto s_Interleaving = s_Transformation.add_space("Interleaving"_s);
+						s_Interleaving.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Interleaving::Encode::process>>("process"_s);
+						s_Interleaving.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Interleaving::Decode::process>>("process"_s);
+					}
 				}
 				{
 					auto s_Encoding = s_Texture.add_space("Encoding"_s);
@@ -849,29 +873,29 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Zlib.add_space("Uncompress"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							InputByteStreamView &  ripe,
 							OutputByteStreamView & raw,
+							InputByteStreamView &  ripe,
 							Integer const &        window_exponent,
 							Version const &        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Zlib::Uncompress<version>::process(ripe, raw, window_exponent);
+										Tool::Popcap::Zlib::Uncompress<version>::process(raw, ripe, window_exponent);
 									}
 								);
 							}
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							ConstantByteListView const & ripe,
 							Size &                       raw_size,
+							ConstantByteListView const & ripe,
 							Version const &              version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Zlib::Uncompress<version>::estimate(ripe, raw_size);
+										Tool::Popcap::Zlib::Uncompress<version>::estimate(raw_size, ripe);
 									}
 								);
 							}
@@ -917,8 +941,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CryptData.add_space("Decrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							InputByteStreamView &  cipher,
 							OutputByteStreamView & plain,
+							InputByteStreamView &  cipher,
 							Size const &           limit,
 							String const &         key,
 							Version const &        version
@@ -926,22 +950,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CryptData::Decrypt<version>::process(cipher, plain, limit, key);
+										Tool::Popcap::CryptData::Decrypt<version>::process(plain, cipher, limit, key);
 									}
 								);
 							}
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							ConstantByteListView const & cipher,
 							Size &                       plain_size,
+							ConstantByteListView const & cipher,
 							Size const &                 limit,
 							Version const &              version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CryptData::Decrypt<version>::estimate(cipher, plain_size, limit);
+										Tool::Popcap::CryptData::Decrypt<version>::estimate(plain_size, cipher, limit);
 									}
 								);
 							}
@@ -1662,13 +1686,6 @@ export namespace Twinning::Kernel::Executor::Environment {
 			// Miscellaneous
 			{
 				auto s_Miscellaneous = s_Tool.add_space("Miscellaneous"_s);
-				{
-					auto s_XboxTiledTexture = s_Miscellaneous.add_space("XboxTiledTexture"_s);
-					s_XboxTiledTexture.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::XboxTiledTexture::Encode::process>>("process"_s);
-					s_XboxTiledTexture.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::XboxTiledTexture::Decode::process>>("process"_s);
-				}
 				{
 					auto s_Pvz2cnAlphaPaletteTexture = s_Miscellaneous.add_space("Pvz2cnAlphaPaletteTexture"_s);
 					s_Pvz2cnAlphaPaletteTexture.add_space("Encode"_s)

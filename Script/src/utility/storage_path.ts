@@ -205,7 +205,7 @@ namespace Twinning.Script {
 			}
 			else if (text.length >= 2 && ConvertHelper.is_path_dot(text[0]) && ConvertHelper.is_path_dot(text[1])) {
 				position += 2;
-				if (position == text.length || ConvertHelper.is_path_directory_separator(text[position])) {
+				if (position === text.length || ConvertHelper.is_path_directory_separator(text[position])) {
 					this.m_type = StoragePathType.relative;
 					this.m_root = '';
 				}
@@ -213,7 +213,7 @@ namespace Twinning.Script {
 			}
 			else if (text.length >= 1 && ConvertHelper.is_path_dot(text[0])) {
 				position += 1;
-				if (position == text.length || ConvertHelper.is_path_directory_separator(text[position])) {
+				if (position === text.length || ConvertHelper.is_path_directory_separator(text[position])) {
 					this.m_type = StoragePathType.relative;
 					this.m_root = '';
 					if (position < text.length) {

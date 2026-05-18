@@ -270,16 +270,16 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function decode_fs(
-						ripe_file: StoragePath,
 						raw_file: StoragePath,
+						ripe_file: StoragePath,
 					): void {
 						let ripe = StorageHelper.read_file(ripe_file);
 						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe.view()));
 						let raw_size = Kernel.Size.default();
-						Kernel.Tool.Data.Encoding.Base64.Decode.estimate(ripe_stream.view(), raw_size);
+						Kernel.Tool.Data.Encoding.Base64.Decode.estimate(raw_size, ripe_stream.view());
 						let raw = Kernel.ByteArray.allocate(raw_size);
 						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						Kernel.Tool.Data.Encoding.Base64.Decode.process(ripe_stream, raw_stream);
+						Kernel.Tool.Data.Encoding.Base64.Decode.process(raw_stream, ripe_stream);
 						StorageHelper.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -345,8 +345,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function decrypt_fs(
-						cipher_file: StoragePath,
 						plain_file: StoragePath,
+						cipher_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
 						key_size: BlockSize,
@@ -357,7 +357,7 @@ namespace Twinning.Script.KernelX {
 						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 						let plain = Kernel.ByteArray.allocate(cipher.size());
 						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(cipher_stream, plain_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), Kernel.Integer.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
+						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(plain_stream, cipher_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), Kernel.Integer.value(key_size), Kernel.String.value(key), Kernel.String.value(iv));
 						StorageHelper.write_file(plain_file, plain_stream.stream_view());
 						return;
 					}
@@ -423,8 +423,8 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function uncompress_fs(
-						ripe_file: StoragePath,
 						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						window_exponent: WindowExponent,
 						wrapper: Wrapper,
 						raw_buffer: Kernel.ByteListView,
@@ -432,7 +432,7 @@ namespace Twinning.Script.KernelX {
 						let ripe = StorageHelper.read_file(ripe_file);
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(ripe_stream, raw_stream, Kernel.Integer.value(window_exponent), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(raw_stream, ripe_stream, Kernel.Integer.value(window_exponent), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
 						StorageHelper.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -465,14 +465,14 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function uncompress_fs(
-						ripe_file: StoragePath,
 						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						raw_buffer: Kernel.ByteListView,
 					): void {
 						let ripe = StorageHelper.read_file(ripe_file);
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Bzip2.Uncompress.process(ripe_stream, raw_stream, Kernel.Boolean.value(false));
+						Kernel.Tool.Data.Compression.Bzip2.Uncompress.process(raw_stream, ripe_stream, Kernel.Boolean.value(false));
 						StorageHelper.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -505,14 +505,14 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function uncompress_fs(
-						ripe_file: StoragePath,
 						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						raw_buffer: Kernel.ByteListView,
 					): void {
 						let ripe = StorageHelper.read_file(ripe_file);
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Lzma.Uncompress.process(ripe_stream, raw_stream);
+						Kernel.Tool.Data.Compression.Lzma.Uncompress.process(raw_stream, ripe_stream);
 						StorageHelper.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -686,62 +686,172 @@ namespace Twinning.Script.KernelX {
 
 			export namespace Transformation {
 
-				export function flip(
-					target: Kernel.Image.VariableImageView,
-					horizontal: boolean,
-					vertical: boolean,
-				): void {
-					return Kernel.Tool.Texture.Transformation.Flip.process(target, Kernel.Boolean.value(horizontal), Kernel.Boolean.value(vertical));
+				export namespace Flipping {
+
+					export function encode(
+						target: Kernel.Image.VariableImageView,
+						horizontal: boolean,
+						vertical: boolean,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Flipping.Encode.process(target, Kernel.Boolean.value(horizontal), Kernel.Boolean.value(vertical));
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						horizontal: boolean,
+						vertical: boolean,
+					): void {
+						let target = File.Png.read_fs_of(raw_file);
+						let target_view = target.view();
+						encode(target_view, horizontal, vertical);
+						File.Png.write_fs(ripe_file, target_view);
+						return;
+					}
+
 				}
 
-				export function scale(
-					source: Kernel.Image.ConstantImageView,
-					destination: Kernel.Image.VariableImageView,
-				): void {
-					return Kernel.Tool.Texture.Transformation.Scale.process(source, destination);
+				export namespace Scaling {
+
+					export function encode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Scaling.Encode.process(raw, ripe);
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						size: Image.ImageSize,
+					): void {
+						let raw = File.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view);
+						File.Png.write_fs(ripe_file, ripe_view);
+						return;
+					}
+
+					export function encode_rate_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						size_rate: number,
+					): void {
+						let raw = File.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(raw.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(raw.size().value[1]) * size_rate)))]));
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view);
+						File.Png.write_fs(ripe_file, ripe_view);
+						return;
+					}
+
 				}
 
-				// ----------------
+				export namespace Tiling {
 
-				export function flip_fs(
-					source_file: StoragePath,
-					destination_file: StoragePath,
-					horizontal: boolean,
-					vertical: boolean,
-				): void {
-					let target = File.Png.read_fs_of(source_file);
-					let target_view = target.view();
-					flip(target_view, horizontal, vertical);
-					File.Png.write_fs(destination_file, target_view);
-					return;
+					export function encode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						tile_size: Image.ImageSize,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Tiling.Encode.process(raw, ripe, Kernel.Image.ImageSize.value(tile_size));
+					}
+
+					export function decode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						tile_size: Image.ImageSize,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Tiling.Decode.process(raw, ripe, Kernel.Image.ImageSize.value(tile_size));
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						tile_size: Image.ImageSize,
+					): void {
+						let raw = File.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(raw.size());
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view, tile_size);
+						File.Png.write_fs(ripe_file, ripe_view);
+						return;
+					}
+
+					export function decode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						tile_size: Image.ImageSize,
+					): void {
+						let ripe = File.Png.read_fs_of(ripe_file);
+						let ripe_view = ripe.view();
+						let raw = Kernel.Image.Image.allocate(ripe.size());
+						let raw_view = raw.view();
+						decode(raw_view, ripe_view, tile_size);
+						File.Png.write_fs(raw_file, raw_view);
+						return;
+					}
+
 				}
 
-				export function scale_fs(
-					source_file: StoragePath,
-					destination_file: StoragePath,
-					size: Image.ImageSize,
-				): void {
-					let source = File.Png.read_fs_of(source_file);
-					let source_view = source.view();
-					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
-					let destination_view = destination.view();
-					scale(source_view, destination_view);
-					File.Png.write_fs(destination_file, destination_view);
-					return;
-				}
+				export namespace Interleaving {
 
-				export function scale_rate_fs(
-					source_file: StoragePath,
-					destination_file: StoragePath,
-					size_rate: number,
-				): void {
-					let source = File.Png.read_fs_of(source_file);
-					let source_view = source.view();
-					let destination = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(source.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(source.size().value[1]) * size_rate)))]));
-					let destination_view = destination.view();
-					scale(source_view, destination_view);
-					File.Png.write_fs(destination_file, destination_view);
-					return;
+					export function encode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						tile_size: Image.ImageSize,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Interleaving.Encode.process(raw, ripe, Kernel.Image.ImageSize.value(tile_size));
+					}
+
+					export function decode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						tile_size: Image.ImageSize,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Interleaving.Decode.process(raw, ripe, Kernel.Image.ImageSize.value(tile_size));
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						tile_size: Image.ImageSize,
+					): void {
+						let raw = File.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(raw.size());
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view, tile_size);
+						File.Png.write_fs(ripe_file, ripe_view);
+						return;
+					}
+
+					export function decode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						tile_size: Image.ImageSize,
+					): void {
+						let ripe = File.Png.read_fs_of(ripe_file);
+						let ripe_view = ripe.view();
+						let raw = Kernel.Image.Image.allocate(ripe.size());
+						let raw_view = raw.view();
+						decode(raw_view, ripe_view, tile_size);
+						File.Png.write_fs(raw_file, raw_view);
+						return;
+					}
+
 				}
 
 			}
@@ -1532,8 +1642,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function uncompress_fs(
-					ripe_file: StoragePath,
 					raw_file: StoragePath,
+					ripe_file: StoragePath,
 					window_exponent: Data.Compression.Deflate.WindowExponent,
 					version: typeof Kernel.Tool.Popcap.Zlib.Version.Value,
 				): void {
@@ -1541,10 +1651,10 @@ namespace Twinning.Script.KernelX {
 					let ripe = StorageHelper.read_file(ripe_file);
 					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 					let raw_size = Kernel.Size.default();
-					Kernel.Tool.Popcap.Zlib.Uncompress.estimate(ripe.view(), raw_size, version_c);
+					Kernel.Tool.Popcap.Zlib.Uncompress.estimate(raw_size, ripe.view(), version_c);
 					let raw = Kernel.ByteArray.allocate(raw_size);
 					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-					Kernel.Tool.Popcap.Zlib.Uncompress.process(ripe_stream, raw_stream, Kernel.Integer.value(window_exponent), version_c);
+					Kernel.Tool.Popcap.Zlib.Uncompress.process(raw_stream, ripe_stream, Kernel.Integer.value(window_exponent), version_c);
 					StorageHelper.write_file(raw_file, raw_stream.stream_view());
 					return;
 				}
@@ -1573,8 +1683,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decrypt_fs(
-					cipher_file: StoragePath,
 					plain_file: StoragePath,
+					cipher_file: StoragePath,
 					limit: bigint,
 					key: string,
 					version: typeof Kernel.Tool.Popcap.CryptData.Version.Value,
@@ -1583,10 +1693,10 @@ namespace Twinning.Script.KernelX {
 					let cipher = StorageHelper.read_file(cipher_file);
 					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
 					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Popcap.CryptData.Decrypt.estimate(cipher.view(), plain_size, Kernel.Size.value(limit), version_c);
+					Kernel.Tool.Popcap.CryptData.Decrypt.estimate(plain_size, cipher.view(), Kernel.Size.value(limit), version_c);
 					let plain = Kernel.ByteArray.allocate(plain_size);
 					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Popcap.CryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
+					Kernel.Tool.Popcap.CryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
 					StorageHelper.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}
@@ -1677,7 +1787,7 @@ namespace Twinning.Script.KernelX {
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(cipher.size(), plain_size);
 					let plain = Kernel.ByteArray.allocate(plain_size);
 					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.String.value(key));
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
 					let data_stream = Kernel.ByteStreamView.watch(plain_stream.stream_view());
 					let definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
@@ -2281,26 +2391,6 @@ namespace Twinning.Script.KernelX {
 
 		export namespace Miscellaneous {
 
-			export namespace XboxTiledTexture {
-
-				export function encode(
-					data: Kernel.OutputByteStreamView,
-					image: Kernel.Image.ConstantImageView,
-					format: Texture.Encoding.Format,
-				): void {
-					return Kernel.Tool.Miscellaneous.XboxTiledTexture.Encode.process(data, image, Kernel.Tool.Texture.Encoding.Format.value(format));
-				}
-
-				export function decode(
-					data: Kernel.InputByteStreamView,
-					image: Kernel.Image.VariableImageView,
-					format: Texture.Encoding.Format,
-				): void {
-					return Kernel.Tool.Miscellaneous.XboxTiledTexture.Decode.process(data, image, Kernel.Tool.Texture.Encoding.Format.value(format));
-				}
-
-			}
-
 			export namespace Pvz2cnAlphaPaletteTexture {
 
 				export type BitCount = 1 | 2 | 3 | 4;
@@ -2427,8 +2517,8 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decrypt_fs(
-					cipher_file: StoragePath,
 					plain_file: StoragePath,
+					cipher_file: StoragePath,
 					key: string,
 				): void {
 					let cipher = StorageHelper.read_file(cipher_file);
@@ -2437,7 +2527,7 @@ namespace Twinning.Script.KernelX {
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(cipher.size(), plain_size);
 					let plain = Kernel.ByteArray.allocate(plain_size);
 					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(cipher_stream, plain_stream, Kernel.String.value(key));
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
 					StorageHelper.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}

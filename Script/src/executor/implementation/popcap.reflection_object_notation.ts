@@ -219,7 +219,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 					}),
 				],
 				worker: ({cipher_file, plain_file, key}, store: {}) => {
-					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.decrypt_fs(cipher_file, plain_file, key);
+					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.decrypt_fs(plain_file, cipher_file, key);
 					return;
 				},
 			}),

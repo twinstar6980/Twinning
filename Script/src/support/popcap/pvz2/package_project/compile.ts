@@ -223,7 +223,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 							];
 							let current_sprite = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(current_sprite_size));
 							let current_sprite_view = current_sprite.view();
-							Kernel.Tool.Texture.Transformation.Scale.process(sprite_view, current_sprite_view);
+							Kernel.Tool.Texture.Transformation.Scaling.Encode.process(sprite_view, current_sprite_view);
 						}
 					}
 					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, {width: Number(value[1].size().value[0]), height: Number(value[1].size().value[1])}]));

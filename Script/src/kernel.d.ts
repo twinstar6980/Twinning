@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 128
+ * @version 129
  */
 declare namespace Twinning.Kernel {
 
@@ -1415,22 +1415,22 @@ declare namespace Twinning.Kernel {
 
 						/**
 						 * 解码
-						 * @param ripe 成品数据
 						 * @param raw 原始数据
+						 * @param ripe 成品数据
 						 */
 						function process(
-							ripe: InputCharacterStreamView,
 							raw: OutputByteStreamView,
+							ripe: InputCharacterStreamView,
 						): Void;
 
 						/**
 						 * 计算原始数据尺寸
-						 * @param ripe 成品数据
 						 * @param raw_size 原始数据尺寸
+						 * @param ripe 成品数据
 						 */
 						function estimate(
-							ripe: ConstantCharacterListView,
 							raw_size: Size,
+							ripe: ConstantCharacterListView,
 						): Void;
 
 					}
@@ -1520,8 +1520,8 @@ declare namespace Twinning.Kernel {
 
 						/**
 						 * 解密
-						 * @param cipher 密文数据
 						 * @param plain 明文数据
+						 * @param cipher 密文数据
 						 * @param mode 模式
 						 * @param block_size 块尺寸，允许16、24、32
 						 * @param key_size 密钥尺寸，允许16、24、32
@@ -1529,8 +1529,8 @@ declare namespace Twinning.Kernel {
 						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
-							cipher: InputByteStreamView,
 							plain: OutputByteStreamView,
+							cipher: InputByteStreamView,
 							mode: Mode,
 							block_size: Integer,
 							key_size: Integer,
@@ -1642,14 +1642,14 @@ declare namespace Twinning.Kernel {
 
 						/**
 						 * 解压
-						 * @param ripe 成品数据
 						 * @param raw 原始数据
+						 * @param ripe 成品数据
 						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param wrapper 封装
 						 */
 						function process(
-							ripe: InputByteStreamView,
 							raw: OutputByteStreamView,
+							ripe: InputByteStreamView,
 							window_exponent: Integer,
 							wrapper: Wrapper,
 						): Void;
@@ -1685,13 +1685,13 @@ declare namespace Twinning.Kernel {
 
 						/**
 						 * 解压
-						 * @param ripe 成品数据
 						 * @param raw 原始数据
+						 * @param ripe 成品数据
 						 * @param small 是否使用少量内存
 						 */
 						function process(
-							ripe: InputByteStreamView,
 							raw: OutputByteStreamView,
+							ripe: InputByteStreamView,
 							small: Boolean,
 						): Void;
 
@@ -1724,12 +1724,12 @@ declare namespace Twinning.Kernel {
 
 						/**
 						 * 解压
-						 * @param ripe 成品数据
 						 * @param raw 原始数据
+						 * @param ripe 成品数据
 						 */
 						function process(
-							ripe: InputByteStreamView,
 							raw: OutputByteStreamView,
+							ripe: InputByteStreamView,
 						): Void;
 
 					}
@@ -1880,34 +1880,122 @@ declare namespace Twinning.Kernel {
 			namespace Transformation {
 
 				/** 翻转 */
-				namespace Flip {
+				namespace Flipping {
 
-					/**
-					 * 翻转
-					 * @param target 目标
-					 * @param horizontal 水平翻转
-					 * @param vertical 垂直翻转
-					 */
-					function process(
-						target: Image.VariableImageView,
-						horizontal: Boolean,
-						vertical: Boolean,
-					): Void;
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param target 目标图像
+						 * @param horizontal 水平翻转
+						 * @param vertical 垂直翻转
+						 */
+						function process(
+							target: Image.VariableImageView,
+							horizontal: Boolean,
+							vertical: Boolean,
+						): Void;
+
+					}
 
 				}
 
 				/** 缩放 */
-				namespace Scale {
+				namespace Scaling {
 
-					/**
-					 * 缩放
-					 * @param source 来源
-					 * @param destination 目的
-					 */
-					function process(
-						source: Image.ConstantImageView,
-						destination: Image.VariableImageView,
-					): Void;
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 */
+						function process(
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+						): Void;
+
+					}
+
+				}
+
+				/** 分块 */
+				namespace Tiling {
+
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 * @param tile_size 区块大小
+						 */
+						function process(
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+							tile_size: Image.ImageSize,
+						): Void;
+
+					}
+
+					/** 解码 */
+					namespace Decode {
+
+						/**
+						 * 解码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 * @param tile_size 区块大小
+						 */
+						function process(
+							raw: Image.VariableImageView,
+							ripe: Image.ConstantImageView,
+							tile_size: Image.ImageSize,
+						): Void;
+
+					}
+
+				}
+
+				/** 交织 */
+				namespace Interleaving {
+
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 * @param tile_size 区块大小
+						 */
+						function process(
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+							tile_size: Image.ImageSize,
+						): Void;
+
+					}
+
+					/** 解码 */
+					namespace Decode {
+
+						/**
+						 * 解码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 * @param tile_size 区块大小
+						 */
+						function process(
+							raw: Image.VariableImageView,
+							ripe: Image.ConstantImageView,
+							tile_size: Image.ImageSize,
+						): Void;
+
+					}
 
 				}
 
@@ -2629,27 +2717,27 @@ declare namespace Twinning.Kernel {
 
 					/**
 					 * 解压
-					 * @param ripe 成品数据
 					 * @param raw 原始数据
+					 * @param ripe 成品数据
 					 * @param window_exponent 窗口尺寸幂次(8~15)
 					 * @param version 版本
 					 */
 					function process(
-						ripe: InputByteStreamView,
 						raw: OutputByteStreamView,
+						ripe: InputByteStreamView,
 						window_exponent: Integer,
 						version: Version,
 					): Void;
 
 					/**
 					 * 计算原始数据尺寸
-					 * @param ripe 成品数据
 					 * @param raw_size 原始数据尺寸
+					 * @param ripe 成品数据
 					 * @param version 版本
 					 */
 					function estimate(
-						ripe: ConstantByteListView,
 						raw_size: Size,
+						ripe: ConstantByteListView,
 						version: Version,
 					): Void;
 
@@ -2724,15 +2812,15 @@ declare namespace Twinning.Kernel {
 
 					/**
 					 * 解密
-					 * @param cipher 密文数据
 					 * @param plain 明文数据
+					 * @param cipher 密文数据
 					 * @param limit 限度
 					 * @param key 密钥
 					 * @param version 版本
 					 */
 					function process(
-						cipher: InputByteStreamView,
 						plain: OutputByteStreamView,
+						cipher: InputByteStreamView,
 						limit: Size,
 						key: String,
 						version: Version,
@@ -2740,14 +2828,14 @@ declare namespace Twinning.Kernel {
 
 					/**
 					 * 计算明文数据尺寸
-					 * @param cipher 密文数据
 					 * @param plain_size 明文数据尺寸
+					 * @param cipher 密文数据
 					 * @param limit 限度
 					 * @param version 版本
 					 */
 					function estimate(
-						cipher: ConstantByteListView,
 						plain_size: Size,
+						cipher: ConstantByteListView,
 						limit: Size,
 						version: Version,
 					): Void;
@@ -4424,45 +4512,6 @@ declare namespace Twinning.Kernel {
 		/** 杂项 */
 		namespace Miscellaneous {
 
-			/** Xbox中的Tiled纹理 */
-			namespace XboxTiledTexture {
-
-				/** 编码 */
-				namespace Encode {
-
-					/**
-					 * 编码
-					 * @param data 数据
-					 * @param image 图像
-					 * @param format 格式
-					 */
-					function process(
-						data: OutputByteStreamView,
-						image: Image.ConstantImageView,
-						format: Texture.Encoding.Format,
-					): Void;
-
-				}
-
-				/** 解码 */
-				namespace Decode {
-
-					/**
-					 * 解码
-					 * @param data 数据
-					 * @param image 图像
-					 * @param format 格式
-					 */
-					function process(
-						data: InputByteStreamView,
-						image: Image.VariableImageView,
-						format: Texture.Encoding.Format,
-					): Void;
-
-				}
-
-			}
-
 			/** PvZ-2中国版中的alpha调色板纹理 */
 			namespace Pvz2cnAlphaPaletteTexture {
 
@@ -4537,24 +4586,24 @@ declare namespace Twinning.Kernel {
 
 					/**
 					 * 解密
-					 * @param cipher 密文数据
 					 * @param plain 明文数据
+					 * @param cipher 密文数据
 					 * @param key 密钥
 					 */
 					function process(
-						cipher: InputByteStreamView,
 						plain: OutputByteStreamView,
+						cipher: InputByteStreamView,
 						key: String,
 					): Void;
 
 					/**
 					 * 计算明文数据的尺寸
-					 * @param cipher_size 密文数据尺寸
 					 * @param plain_size 明文数据的尺寸
+					 * @param cipher_size 密文数据尺寸
 					 */
 					function estimate(
-						cipher_size: Size,
 						plain_size: Size,
+						cipher_size: Size,
 					): Void;
 
 				}

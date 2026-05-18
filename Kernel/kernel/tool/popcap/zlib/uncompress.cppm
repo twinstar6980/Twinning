@@ -28,8 +28,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  ripe,
 			OutputByteStreamView & raw,
+			InputByteStreamView &  ripe,
 			Integer const &        window_exponent
 		) -> Void {
 			ripe.read_constant(k_magic_marker);
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			}
 			auto header = Header{};
 			ripe.read(header);
-			Data::Compression::Deflate::Uncompress::process(ripe, raw, window_exponent, Data::Compression::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Uncompress::process(raw, ripe, window_exponent, Data::Compression::Deflate::Wrapper::Constant::zlib());
 			assert_test(raw.position() == cbox<Size>(header.raw_size));
 			return;
 		}
@@ -46,8 +46,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto estimate_whole(
-			ConstantByteListView const & ripe,
-			Size &                       raw_size
+			Size &                       raw_size,
+			ConstantByteListView const & ripe
 		) -> Void {
 			raw_size = 0_sz;
 			auto ripe_stream = InputByteStreamView{ripe};
@@ -64,21 +64,21 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  ripe_,
 			OutputByteStreamView & raw_,
+			InputByteStreamView &  ripe_,
 			Integer const &        window_exponent
 		) -> Void {
-			M_use_zps_of(ripe);
 			M_use_zps_of(raw);
-			return process_whole(ripe, raw, window_exponent);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, window_exponent);
 		}
 
 		inline static auto estimate(
-			ConstantByteListView const & ripe,
-			Size &                       raw_size
+			Size &                       raw_size,
+			ConstantByteListView const & ripe
 		) -> Void {
 			restruct(raw_size);
-			return estimate_whole(ripe, raw_size);
+			return estimate_whole(raw_size, ripe);
 		}
 
 	};

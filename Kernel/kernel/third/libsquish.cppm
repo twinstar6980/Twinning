@@ -19,12 +19,12 @@ export namespace Twinning::Kernel::Third::libsquish {
 
 	using ::squish::DecompressImage;
 
-	inline auto const kColourClusterFit = ::squish::kColourClusterFit;
+	inline constexpr auto kColourClusterFit = ::squish::kColourClusterFit;
 
-	inline auto const kDxt1 = ::squish::kDxt1;
+	inline constexpr auto kDxt1 = ::squish::kDxt1;
 
-	inline auto const kDxt3 = ::squish::kDxt3;
+	inline constexpr auto kDxt3 = ::squish::kDxt3;
 
-	inline auto const kDxt5 = ::squish::kDxt5;
+	inline constexpr auto kDxt5 = ::squish::kDxt5;
 
 }
