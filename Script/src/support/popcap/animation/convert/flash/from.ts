@@ -6,7 +6,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 		image: Kernel.Tool.Popcap.Animation.Definition.JS_N.Image,
 		index: number,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
-	): [Kernel.Xml.JS_Element, ExtraInformation['image'][number]] {
+	): [Kernel.Notation.Xml.JS_Element, ExtraInformation['image'][number]] {
 		let image_transform_matrix: Transform;
 		if (version.number < 2n) {
 			assert_test(image.transform.length === 3);
@@ -66,7 +66,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 		index: number | null,
 		sub_sprite: Array<Kernel.Tool.Popcap.Animation.Definition.JS_N.Sprite>,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
-	): [Kernel.Xml.JS_Element, ExtraInformation['sprite'][number]] {
+	): [Kernel.Notation.Xml.JS_Element, ExtraInformation['sprite'][number]] {
 		let model: Record<number, {
 			state: null | boolean;
 			resource: bigint;
@@ -76,7 +76,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 			frame_start: bigint;
 			frame_duration: bigint;
 		}> = {};
-		let frame_node_list: Record<number, Array<Kernel.Xml.JS_Node>> = {};
+		let frame_node_list: Record<number, Array<Kernel.Notation.Xml.JS_Node>> = {};
 		for (let frame_index = 0; frame_index < sprite.frame.length; frame_index++) {
 			let frame = sprite.frame[frame_index];
 			for (let remove of frame.remove) {
@@ -117,7 +117,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				let frame_node = frame_node_list[layer_index];
 				if (layer.state !== null) {
 					if (frame_node.length > 0) {
-						(frame_node[frame_node.length - 1].value as Kernel.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
+						(frame_node[frame_node.length - 1].value as Kernel.Notation.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
 					}
 				}
 				if (layer.state === true) {
@@ -171,7 +171,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 		for (let layer_index in model) {
 			let layer = model[layer_index];
 			let frame_node = frame_node_list[layer_index];
-			(frame_node[frame_node.length - 1].value as Kernel.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
+			(frame_node[frame_node.length - 1].value as Kernel.Notation.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
 			delete model[layer_index];
 		}
 		return [XmlHelper.create_element('DOMSymbolItem', {
@@ -216,10 +216,10 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 	function create_main_document(
 		animation: Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
-	): Kernel.Xml.JS_Element {
-		let flow_node: Array<Kernel.Xml.JS_Node> = [];
-		let command_node: Array<Kernel.Xml.JS_Node> = [];
-		let instance_node: Array<Kernel.Xml.JS_Node> = [];
+	): Kernel.Notation.Xml.JS_Element {
+		let flow_node: Array<Kernel.Notation.Xml.JS_Node> = [];
+		let command_node: Array<Kernel.Notation.Xml.JS_Node> = [];
+		let instance_node: Array<Kernel.Notation.Xml.JS_Node> = [];
 		if (animation.main_sprite !== null) {
 			let previous_end = {
 				flow: -1,
@@ -241,7 +241,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 					}, [
 						XmlHelper.create_element_node('elements', {}, []),
 					]);
-					let node_element = node.value as Kernel.Xml.JS_Element;
+					let node_element = node.value as Kernel.Notation.Xml.JS_Element;
 					if (frame.label !== null) {
 						node_element.attribute['name'] = `${frame.label}`;
 						node_element.attribute['labelType'] = `name`;

@@ -25,7 +25,7 @@ import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.miscellaneous.system_native_string_extended;
+import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.third.system.windows;
 import twinning.kernel.third.system.posix;
 

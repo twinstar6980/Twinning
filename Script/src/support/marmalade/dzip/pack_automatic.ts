@@ -29,7 +29,7 @@ namespace Twinning.Script.Support.Marmalade.Dzip.PackAutomatic {
 		]);
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(data_size_bound)));
 		let stream = Kernel.ByteStreamView.watch(data.view());
-		let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.json(Kernel.Json.Value.value(definition_js), version_c);
+		let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.json(Kernel.Notation.Json.Value.value(definition_js), version_c);
 		Kernel.Tool.Marmalade.Dzip.Pack.process(stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
 		Console.success(los('support.marmalade.dzip.pack_automatic:finish'), [
 		]);

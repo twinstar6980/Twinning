@@ -52,7 +52,7 @@
 
 * 下载并解压捆绑包。
 
-  查看 [Release](https://github.com/twinstar6980/Automation/releases/tag/Twinning-latest) ，捆绑包的命名为 `<version>.<system>.<architecture>.bundle.zip` ，其中 `system` 代表适配的操作系统，`architecture` 代表适配的 CPU 架构。
+  查看 [Release](https://github.com/twinstar6980/Automation/releases/tag/Twinning-latest) ，捆绑包的命名为 `<system>.<architecture>.bundle.zip` ，其中 `system` 代表适配的操作系统，`architecture` 代表适配的 CPU 架构。
 
   目前，提供了预编译分发的平台如下：
 

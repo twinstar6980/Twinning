@@ -20,21 +20,21 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			OutputByteStreamView & raw,
 			InputByteStreamView &  ripe,
 			Integer const &        window_exponent,
-			Wrapper const &        wrapper
+			WrapperType const &    wrapper_type
 		) -> Void {
 			assert_test(Math::between(window_exponent, 8_i, mbox<Integer>(Third::zlib::$MAX_WBITS)));
 			auto z_state = int{};
 			auto z_window_exponent = static_cast<int>(window_exponent.value);
-			switch (wrapper.value) {
-				case Wrapper::Constant::none().value: {
+			switch (wrapper_type.value) {
+				case WrapperType::Constant::none().value: {
 					z_window_exponent = -z_window_exponent;
 					break;
 				}
-				case Wrapper::Constant::zlib().value: {
+				case WrapperType::Constant::zlib().value: {
 					z_window_exponent = +z_window_exponent;
 					break;
 				}
-				case Wrapper::Constant::gzip().value: {
+				case WrapperType::Constant::gzip().value: {
 					z_window_exponent = +z_window_exponent + 16;
 					break;
 				}
@@ -83,11 +83,11 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			OutputByteStreamView & raw_,
 			InputByteStreamView &  ripe_,
 			Integer const &        window_exponent,
-			Wrapper const &        wrapper
+			WrapperType const &    wrapper_type
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);
-			return process_whole(raw, ripe, window_exponent, wrapper);
+			return process_whole(raw, ripe, window_exponent, wrapper_type);
 		}
 
 	};

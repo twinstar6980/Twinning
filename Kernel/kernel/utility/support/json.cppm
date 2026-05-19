@@ -10,8 +10,8 @@ import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.container.wrapper.wrapper;
 import twinning.kernel.utility.miscellaneous.dimension;
 import twinning.kernel.utility.miscellaneous.record;
-import twinning.kernel.utility.data.json.value;
-import twinning.kernel.utility.data.json.value_adapter;
+import twinning.kernel.utility.notation.json.value;
+import twinning.kernel.utility.notation.json.value_adapter;
 import twinning.kernel.utility.container.variant.variant;
 import twinning.kernel.utility.container.variant.enumerable_variant;
 import twinning.kernel.utility.container.optional.optional;
@@ -24,7 +24,7 @@ import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.support.string;
 
-export namespace Twinning::Kernel::Json {
+export namespace Twinning::Kernel::Notation::Json {
 
 	#pragma region basic
 

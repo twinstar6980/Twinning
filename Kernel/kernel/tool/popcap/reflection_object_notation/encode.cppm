@@ -48,16 +48,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process_value(
-			OutputByteStreamView & data,
-			Json::Boolean const &  value
+			OutputByteStreamView &          data,
+			Notation::Json::Boolean const & value
 		) -> Void {
 			data.write(TypeIdentifier{!value ? (TypeIdentifier::Value::boolean_false) : (TypeIdentifier::Value::boolean_true)});
 			return;
 		}
 
 		inline static auto process_value(
-			OutputByteStreamView & data,
-			Json::Number const &   value
+			OutputByteStreamView &         data,
+			Notation::Json::Number const & value
 		) -> Void {
 			if (value.is_integer()) {
 				data.write(TypeIdentifier{TypeIdentifier::Value::integer_variable_length_signed_64});
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static auto process_value(
 			OutputByteStreamView &                                   data,
-			Json::String const &                                     value,
+			Notation::Json::String const &                           value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index
 		) -> Void {
 			if (!native_string_index.has()) {
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static auto process_value(
 			OutputByteStreamView &                                   data,
-			Json::String const &                                     value,
+			Notation::Json::String const &                           value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
 			Boolean const &                                          enable_reference
 		) -> Void {
@@ -172,7 +172,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static auto process_value(
 			OutputByteStreamView &                                   data,
-			Json::Array const &                                      value,
+			Notation::Json::Array const &                            value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
 			Boolean const &                                          enable_reference
 		) -> Void {
@@ -188,7 +188,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static auto process_value(
 			OutputByteStreamView &                                   data,
-			Json::Object const &                                     value,
+			Notation::Json::Object const &                           value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
 			Boolean const &                                          enable_reference
 		) -> Void {
@@ -203,32 +203,32 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static auto process_value(
 			OutputByteStreamView &                                   data,
-			Json::Value const &                                      value,
+			Notation::Json::Value const &                            value,
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
 			Boolean const &                                          enable_reference
 		) -> Void {
 			switch (value.type().value) {
-				case Json::ValueType::Constant::null().value: {
+				case Notation::Json::ValueType::Constant::null().value: {
 					assert_fail(R"(value.type() == /* non-null */)");
 					break;
 				}
-				case Json::ValueType::Constant::boolean().value: {
+				case Notation::Json::ValueType::Constant::boolean().value: {
 					process_value(data, value.get_boolean());
 					break;
 				}
-				case Json::ValueType::Constant::number().value: {
+				case Notation::Json::ValueType::Constant::number().value: {
 					process_value(data, value.get_number());
 					break;
 				}
-				case Json::ValueType::Constant::string().value: {
+				case Notation::Json::ValueType::Constant::string().value: {
 					process_value(data, value.get_string(), native_string_index, enable_reference);
 					break;
 				}
-				case Json::ValueType::Constant::array().value: {
+				case Notation::Json::ValueType::Constant::array().value: {
 					process_value(data, value.get_array(), native_string_index, enable_reference);
 					break;
 				}
-				case Json::ValueType::Constant::object().value: {
+				case Notation::Json::ValueType::Constant::object().value: {
 					process_value(data, value.get_object(), native_string_index, enable_reference);
 					break;
 				}
@@ -240,10 +240,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView & data,
-			Json::Value const &    definition,
-			Boolean const &        enable_string_index,
-			Boolean const &        enable_reference
+			OutputByteStreamView &        data,
+			Notation::Json::Value const & definition,
+			Boolean const &               enable_string_index,
+			Boolean const &               enable_reference
 		) -> Void {
 			data.write_constant(k_magic_marker);
 			auto version_data = OutputByteStreamView{data.forward_view(bs_static_size<VersionNumber>())};
@@ -261,10 +261,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView & data_,
-			Json::Value const &    definition,
-			Boolean const &        enable_string_index,
-			Boolean const &        enable_reference
+			OutputByteStreamView &        data_,
+			Notation::Json::Value const & definition,
+			Boolean const &               enable_string_index,
+			Boolean const &               enable_reference
 		) -> Void {
 			M_use_zps_of(data);
 			return process_whole(data, definition, enable_string_index, enable_reference);

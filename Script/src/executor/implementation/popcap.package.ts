@@ -189,7 +189,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Package {
 					typical_argument_integer({
 						identifier: 'key',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value && value < 256n) ? null : los('executor.implement:*.illegal_key')),
+						checker: (argument: {}, value) => ((0n < value && value < 256n) ? null : los('executor.implementation:*.illegal_key')),
 						automatic: null,
 						condition: null,
 					}),

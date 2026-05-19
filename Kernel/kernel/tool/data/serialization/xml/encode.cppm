@@ -20,11 +20,11 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 		inline static auto convert_node(
 			Third::tinyxml2::XMLDocument & raw_document,
-			Node const &                   node
+			Notation::Xml::Node const &    node
 		) -> ZPointer<Third::tinyxml2::XMLNode> {
 			auto raw_node = ZPointer<Third::tinyxml2::XMLNode>{};
 			switch (node.type().value) {
-				case NodeType::Constant::element().value: {
+				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = node.get_element();
 					raw_node = raw_document.NewElement(cast_pointer<char>(make_null_terminated_string(node_value.name).begin()).value);
 					auto raw_element = raw_node->ToElement();
@@ -36,14 +36,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 					}
 					break;
 				}
-				case NodeType::Constant::text().value: {
+				case Notation::Xml::NodeType::Constant::text().value: {
 					auto & node_value = node.get_text();
 					raw_node = raw_document.NewText(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
 					auto raw_text = raw_node->ToText();
 					raw_text->SetCData(node_value.cdata.value);
 					break;
 				}
-				case NodeType::Constant::comment().value: {
+				case Notation::Xml::NodeType::Constant::comment().value: {
 					auto & node_value = node.get_comment();
 					raw_node = raw_document.NewComment(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
 					break;
@@ -56,8 +56,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ----------------
 
 		inline static auto process_whole(
-			String &     data,
-			Node const & value
+			String &                    data,
+			Notation::Xml::Node const & value
 		) -> Void {
 			auto raw_document = Third::tinyxml2::XMLDocument{};
 			raw_document.InsertEndChild(convert_node(raw_document, value));
@@ -70,8 +70,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ----------------
 
 		inline static auto process(
-			String &     data,
-			Node const & value
+			String &                    data,
+			Notation::Xml::Node const & value
 		) -> Void {
 			restruct(data);
 			return process_whole(data, value);

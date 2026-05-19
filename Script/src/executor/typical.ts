@@ -303,7 +303,7 @@ namespace Twinning.Script.Executor {
 	): Method<typeof proto.ArgumentRepresentation> {
 		return {
 			identifier: `${proto.identifier}${!batch ? '' : '!batch'}`,
-			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implement:${proto.identifier}`)}`),
+			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implementation:${proto.identifier}`)}`),
 			worker: (original_argument: Record<string, any>) => {
 				let interrupted = false;
 				let actual_argument = {} as Record<string, any>;
@@ -314,7 +314,7 @@ namespace Twinning.Script.Executor {
 						argument = batch_argument;
 					}
 					let argument_value = request_typical_argument(
-						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implement:${proto.identifier}:${argument.identifier}`)}`,
+						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implementation:${proto.identifier}:${argument.identifier}`)}`,
 						original_argument[argument.identifier],
 						argument.stringify,
 						argument.parse,

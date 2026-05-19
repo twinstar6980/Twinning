@@ -228,7 +228,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Animation {
 					typical_argument_integer({
 						identifier: 'resolution',
 						option: null,
-						checker: (argument, value) => (value > 0n ? null : los('executor.implement:*.resolution_should_be_bigger_then_zero')),
+						checker: (argument, value) => (value > 0n ? null : los('executor.implementation:*.resolution_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),

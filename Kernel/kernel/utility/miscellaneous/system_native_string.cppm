@@ -2,20 +2,14 @@ module;
 
 #include "kernel/common.hpp"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-macros"
-
-// NOTE: DEFINE
-#undef assert_test
-#define assert_test(...)\
-	if (!(__VA_ARGS__)) {\
-		throw std::runtime_error{"AssertionException: " #__VA_ARGS__};\
-	}\
-	static_assert(true)
-
-#pragma clang diagnostic pop
-
 export module twinning.kernel.utility.miscellaneous.system_native_string;
+import twinning.kernel.utility.builtin;
+import twinning.kernel.utility.trait;
+import twinning.kernel.utility.box;
+import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.string.basic_string_view;
+import twinning.kernel.utility.string.basic_string;
+import twinning.kernel.utility.string.basic_static_string;
 import twinning.kernel.third.system.windows;
 import twinning.kernel.third.system.posix;
 
@@ -26,34 +20,33 @@ export namespace Twinning::Kernel::SystemNativeString {
 	#if defined M_system_windows
 
 	inline auto wide_to_utf8(
-		std::wstring_view const & source
-	) -> std::string {
-		auto destination = std::string{};
+		ConstantBasicStringView<CharacterW> const & source
+	) -> BasicString<CharacterN> {
+		auto destination = BasicString<CharacterN>{};
 		if (!source.empty()) {
-			auto destination_size = std::size_t{};
-			destination_size = static_cast<std::size_t>(
+			auto destination_size = Size{};
+			destination_size = mbox<Size>(
 				Third::system::windows::$WideCharToMultiByte(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$WC_ERR_INVALID_CHARS,
-					source.data(),
-					static_cast<int>(source.size()),
+					cast_pointer<Third::system::windows::$WCHAR>(source.begin()).value,
+					static_cast<int>(source.size().value),
 					nullptr,
 					0,
 					nullptr,
 					nullptr
 				)
 			);
-			assert_test(destination_size != 0);
-			destination.reserve(destination_size + 1);
-			destination.resize(destination_size);
-			destination_size = static_cast<std::size_t>(
+			assert_test(destination_size != 0_sz);
+			destination.allocate_full(destination_size);
+			destination_size = mbox<Size>(
 				Third::system::windows::$WideCharToMultiByte(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$WC_ERR_INVALID_CHARS,
-					source.data(),
-					static_cast<int>(source.size()),
-					destination.data(),
-					static_cast<int>(destination.size()),
+					cast_pointer<Third::system::windows::$WCHAR>(source.begin()).value,
+					static_cast<int>(source.size().value),
+					cast_pointer<ZCharacterN>(destination.begin()).value,
+					static_cast<int>(destination.size().value),
 					nullptr,
 					nullptr
 				)
@@ -66,32 +59,31 @@ export namespace Twinning::Kernel::SystemNativeString {
 	// ----------------
 
 	inline auto wide_from_utf8(
-		std::string_view const & source
-	) -> std::wstring {
-		auto destination = std::wstring{};
+		ConstantBasicStringView<CharacterN> const & source
+	) -> BasicString<CharacterW> {
+		auto destination = BasicString<CharacterW>{};
 		if (!source.empty()) {
-			auto destination_size = std::size_t{};
-			destination_size = static_cast<std::size_t>(
+			auto destination_size = Size{};
+			destination_size = mbox<Size>(
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					source.data(),
-					static_cast<int>(source.size()),
+					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
+					static_cast<int>(source.size().value),
 					nullptr,
 					0
 				)
 			);
-			assert_test(destination_size != 0);
-			destination.reserve(destination_size + 1);
-			destination.resize(destination_size);
-			destination_size = static_cast<std::size_t>(
+			assert_test(destination_size != 0_sz);
+			destination.allocate_full(destination_size);
+			destination_size = mbox<Size>(
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					source.data(),
-					static_cast<int>(source.size()),
-					destination.data(),
-					static_cast<int>(destination.size())
+					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
+					static_cast<int>(source.size().value),
+					cast_pointer<Third::system::windows::$WCHAR>(destination.begin()).value,
+					static_cast<int>(destination.size().value)
 				)
 			);
 			assert_test(destination_size == destination.size());
@@ -100,32 +92,31 @@ export namespace Twinning::Kernel::SystemNativeString {
 	}
 
 	inline auto wide_from_ansi(
-		std::string_view const & source
-	) -> std::wstring {
-		auto destination = std::wstring{};
+		ConstantBasicStringView<CharacterN> const & source
+	) -> BasicString<CharacterW> {
+		auto destination = BasicString<CharacterW>{};
 		if (!source.empty()) {
-			auto destination_size = std::size_t{};
-			destination_size = static_cast<std::size_t>(
+			auto destination_size = Size{};
+			destination_size = mbox<Size>(
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_ACP,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					source.data(),
-					static_cast<int>(source.size()),
+					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
+					static_cast<int>(source.size().value),
 					nullptr,
 					0
 				)
 			);
-			assert_test(destination_size != 0);
-			destination.reserve(destination_size + 1);
-			destination.resize(destination_size);
-			destination_size = static_cast<std::size_t>(
+			assert_test(destination_size != 0_sz);
+			destination.allocate_full(destination_size);
+			destination_size = mbox<Size>(
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_ACP,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					source.data(),
-					static_cast<int>(source.size()),
-					destination.data(),
-					static_cast<int>(destination.size())
+					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
+					static_cast<int>(source.size().value),
+					cast_pointer<Third::system::windows::$WCHAR>(destination.begin()).value,
+					static_cast<int>(destination.size().value)
 				)
 			);
 			assert_test(destination_size == destination.size());
@@ -148,13 +139,13 @@ export namespace Twinning::Kernel::SystemNativeString {
 	#pragma region universal
 
 	inline auto utf8_from_native(
-		std::string_view const & source
-	) -> std::string {
+		ConstantBasicStringView<CharacterN> const & source
+	) -> BasicString<CharacterN> {
 		#if defined M_system_windows
 		return wide_to_utf8(wide_from_ansi(source));
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		return std::string{source};
+		return BasicString<CharacterN>{source};
 		#endif
 	}
 

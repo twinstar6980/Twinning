@@ -50,11 +50,11 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash {
 
 	export type FlashPackage = {
 		extra: ExtraInformation;
-		document: Kernel.Xml.JS_Element;
+		document: Kernel.Notation.Xml.JS_Element;
 		library: {
-			image: Array<Kernel.Xml.JS_Element>;
-			sprite: Array<Kernel.Xml.JS_Element>;
-			main_sprite: null | Kernel.Xml.JS_Element;
+			image: Array<Kernel.Notation.Xml.JS_Element>;
+			sprite: Array<Kernel.Notation.Xml.JS_Element>;
+			main_sprite: null | Kernel.Notation.Xml.JS_Element;
 		};
 	};
 
@@ -82,11 +82,11 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash {
 		directory: StoragePath,
 	): FlashPackage {
 		let extra = JsonHelper.decode_file(directory.join('extra.json')) as ExtraInformation;
-		let document = XmlHelper.decode_file(directory.join('DOMDocument.xml'),).value as Kernel.Xml.JS_Element;
+		let document = XmlHelper.decode_file(directory.join('DOMDocument.xml'),).value as Kernel.Notation.Xml.JS_Element;
 		let library = {
-			image: extra.image.map((value, index) => (XmlHelper.decode_file(directory.join('LIBRARY').join('image').join(`image_${index + 1}.xml`)).value as Kernel.Xml.JS_Element)),
-			sprite: extra.sprite.map((value, index) => (XmlHelper.decode_file(directory.join('LIBRARY').join('sprite').join(`sprite_${index + 1}.xml`)).value as Kernel.Xml.JS_Element)),
-			main_sprite: extra.main_sprite === null ? null : XmlHelper.decode_file(directory.join('LIBRARY').join('main_sprite.xml')).value as Kernel.Xml.JS_Element,
+			image: extra.image.map((value, index) => (XmlHelper.decode_file(directory.join('LIBRARY').join('image').join(`image_${index + 1}.xml`)).value as Kernel.Notation.Xml.JS_Element)),
+			sprite: extra.sprite.map((value, index) => (XmlHelper.decode_file(directory.join('LIBRARY').join('sprite').join(`sprite_${index + 1}.xml`)).value as Kernel.Notation.Xml.JS_Element)),
+			main_sprite: extra.main_sprite === null ? null : XmlHelper.decode_file(directory.join('LIBRARY').join('main_sprite.xml')).value as Kernel.Notation.Xml.JS_Element,
 		};
 		return {
 			extra,

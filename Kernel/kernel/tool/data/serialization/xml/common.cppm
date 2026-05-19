@@ -8,12 +8,6 @@ import twinning.kernel.third.tinyxml2;
 
 export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
-	using Kernel::Xml::NodeType;
-
-	using Kernel::Xml::Node;
-
-	// ----------------
-
 	struct Common {
 
 		// ReSharper disable CppInconsistentNaming

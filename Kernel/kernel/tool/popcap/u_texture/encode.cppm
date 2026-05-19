@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, format);
 			if constexpr (check_version(t_version, {true})) {
 				auto texture_data_stream = InputByteStreamView{texture_data_container};
-				Data::Compression::Deflate::Compress::process(texture_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Compress::process(texture_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
 			}
 			auto header = Header{};
 			header.size_width = cbox<IntegerU16>(image.size().width);
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 				texture_data_size_bound = texture_data_size;
 			}
 			if constexpr (check_version(t_version, {true})) {
-				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_i, 9_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_i, 9_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
 			}
 			data_size_bound += texture_data_size_bound;
 			return;

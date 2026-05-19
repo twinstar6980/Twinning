@@ -26,7 +26,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 					typical_argument_integer({
 						identifier: 'limit',
 						option: null,
-						checker: (argument: {}, value) => (0x00n <= value ? null : los('executor.implement:*.out_of_range')),
+						checker: (argument: {}, value) => (0x00n <= value ? null : los('executor.implementation:*.out_of_range')),
 						automatic: null,
 						condition: null,
 					}),
@@ -82,7 +82,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 					typical_argument_integer({
 						identifier: 'limit',
 						option: null,
-						checker: (argument: {}, value) => (0x00n <= value ? null : los('executor.implement:*.out_of_range')),
+						checker: (argument: {}, value) => (0x00n <= value ? null : los('executor.implementation:*.out_of_range')),
 						automatic: null,
 						condition: null,
 					}),

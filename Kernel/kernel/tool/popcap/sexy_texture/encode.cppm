@@ -92,7 +92,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			if (compress_texture_data) {
 				auto texture_data_stream = InputByteStreamView{texture_data_container};
 				auto ripe_texture_data_stream = OutputByteStreamView{data.reserve_view()};
-				Data::Compression::Deflate::Compress::process(texture_data_stream, ripe_texture_data_stream, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Compress::process(texture_data_stream, ripe_texture_data_stream, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
 				compress_texture_data_size = ripe_texture_data_stream.position();
 				data.forward(ripe_texture_data_stream.position());
 			}
@@ -124,7 +124,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 				texture_data_size_bound = texture_data_size;
 			}
 			else {
-				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_i, 9_i, Data::Compression::Deflate::Wrapper::Constant::zlib());
+				Data::Compression::Deflate::Compress::estimate(texture_data_size, texture_data_size_bound, 15_i, 9_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
 			}
 			data_size_bound += texture_data_size_bound;
 			return;

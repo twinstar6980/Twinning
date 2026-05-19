@@ -72,7 +72,7 @@
 
 * [`data.cppm`](../Shell/shell/bridge/data.cppm) ：声明 `Kernel` 中的数据类型。
 
-  > `Kernel` 模块中已经提供了适用于 `C++` 的接口声明 [`interface.hpp`](https://github.com/twinstar6980/Twinning/blob/master/Kernel/kernel/interface/interface.hpp) ，接口需要用户传递 C 式的结构体作为参数值与返回值。
+  > `Kernel` 模块中已经提供了适用于 `C++` 的接口声明 [`interface.hpp`](https://github.com/twinstar6980/Twinning/blob/main/Kernel/kernel/interface/interface.hpp) ，接口需要用户传递 C 式的结构体作为参数值与返回值。
 
 * [`proxy.cppm`](../Shell/shell/bridge/proxy.cppm) ：创建一个辅助类，负责接口所需的 C 式结构体的解析与构造。
 
@@ -80,9 +80,9 @@
 
 * [`library.cppm`](../Shell/shell/bridge/library.cppm) ：定义 `Kernel` 库的抽象类，它封装了对 `Kernel` 库的加载与符号获取。
 
-* [`client.cppm`](https://github.com/twinstar6980/Twinning/blob/master/Shell/shell/bridge/client.cppm) ：定义 `Shell` 客户端的抽象类。
+* [`client.cppm`](https://github.com/twinstar6980/Twinning/blob/main/Shell/shell/bridge/client.cppm) ：定义 `Shell` 客户端的抽象类。
 
-  > [`main_console.cppm`](https://github.com/twinstar6980/Twinning/blob/master/Shell/shell/main_console.cppm) ：实现了对基本的命令行式 `Shell` 客户端的封装。
+  > [`main_console.cppm`](https://github.com/twinstar6980/Twinning/blob/main/Shell/shell/main_console.cppm) ：实现了对基本的命令行式 `Shell` 客户端的封装。
 
 * [`launcher.cppm`](../Shell/shell/bridge/launcher.cppm) ：创建一个辅助类，配合 `Library` 与 `Client` 实例调用 `Kernel` 接口。
 
@@ -122,7 +122,7 @@ type JS_MainFunction = (
 
 工具的 `Kernel` 负责执行用户提供的脚本，其中定义的内核接口为脚本层提供了多样的功能，例如文件读写、数据操作等基本功能与 BNK 、PAM 编解码等高级功能。
 
-内核接口具有严格的类型限制，因此，在开发层面，应使用 `TypeScript` 作为开发语言，并编译为 `JavaScript` 供工具使用。`Script` 模块中的 [`kernel.d.ts`](https://github.com/twinstar6980/Twinning/blob/master/Script/kernel.d.ts) 声明了 `Kernel` 所定义的接口。
+内核接口具有严格的类型限制，因此，在开发层面，应使用 `TypeScript` 作为开发语言，并编译为 `JavaScript` 供工具使用。`Script` 模块中的 [`kernel.d.ts`](https://github.com/twinstar6980/Twinning/blob/main/Script/src/kernel.d.ts) 声明了 `Kernel` 所定义的接口。
 
 内核接口分为内核类型与内核函数，内核类型是对 `Kernel` 中的 `C++` 类型的封装，例如接口中的 `Kernel.Boolean` 类是对 `Kernel` 中 `C++ Boolean` 类的封装。用户需要借助内核类型才能与内核函数交互。
 
@@ -252,7 +252,7 @@ let target = Kernel.Path.value('C:/dir1');
 // 设定遍历深度，如果为null，则遍历所有层级
 let depth = Kernel.SizeOptional.value(2n);
 // 获取目录中的所有子文件路径
-let path_list = Kernel.Storage.list_file(target, depth);
+let path_list = Kernel.Storage.list_directory(target, depth, ...);
 for (let e of path_list.value) {
 	// 遍历子文件路径
 }

@@ -28,12 +28,12 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &                        raw,
-			OutputByteStreamView &                       ripe,
-			Integer const &                              level,
-			Integer const &                              window_exponent,
-			Integer const &                              memory_level,
-			Data::Compression::Deflate::Strategy const & strategy
+			InputByteStreamView &                            raw,
+			OutputByteStreamView &                           ripe,
+			Integer const &                                  level,
+			Integer const &                                  window_exponent,
+			Integer const &                                  memory_level,
+			Data::Compression::Deflate::StrategyMode const & strategy
 		) -> Void {
 			ripe.write_constant(k_magic_marker);
 			if constexpr (check_version(t_version, {true})) {
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			auto header = Header{};
 			header.raw_size = cbox<IntegerOfPlatform>(raw.reserve());
 			ripe.write(header);
-			Data::Compression::Deflate::Compress::process(raw, ripe, level, window_exponent, memory_level, strategy, Data::Compression::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Compress::process(raw, ripe, level, window_exponent, memory_level, strategy, Data::Compression::Deflate::WrapperType::Constant::zlib());
 			return;
 		}
 
@@ -61,7 +61,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			}
 			ripe_size_bound += bs_static_size<Header>();
 			auto ripe_data_size_bound = Size{};
-			Data::Compression::Deflate::Compress::estimate(raw_size, ripe_data_size_bound, window_exponent, memory_level, Data::Compression::Deflate::Wrapper::Constant::zlib());
+			Data::Compression::Deflate::Compress::estimate(raw_size, ripe_data_size_bound, window_exponent, memory_level, Data::Compression::Deflate::WrapperType::Constant::zlib());
 			ripe_size_bound += ripe_data_size_bound;
 			return;
 		}
@@ -69,16 +69,16 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &                        raw_,
-			OutputByteStreamView &                       ripe_,
-			Integer const &                              level,
-			Integer const &                              window_exponent,
-			Integer const &                              memory_level,
-			Data::Compression::Deflate::Strategy const & strategy
+			InputByteStreamView &                            raw_,
+			OutputByteStreamView &                           ripe_,
+			Integer const &                                  level,
+			Integer const &                                  window_exponent,
+			Integer const &                                  memory_level,
+			Data::Compression::Deflate::StrategyMode const & strategy_mode
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);
-			return process_whole(raw, ripe, level, window_exponent, memory_level, strategy);
+			return process_whole(raw, ripe, level, window_exponent, memory_level, strategy_mode);
 		}
 
 		inline static auto estimate(

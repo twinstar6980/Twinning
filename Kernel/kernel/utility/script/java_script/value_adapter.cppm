@@ -8,7 +8,7 @@ import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 
-export namespace Twinning::Kernel::JavaScript {
+export namespace Twinning::Kernel::Script::JavaScript {
 
 	#pragma region type
 

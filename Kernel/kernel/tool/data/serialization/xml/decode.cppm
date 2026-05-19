@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
 		inline static auto convert_node(
 			ZPointer<Third::tinyxml2::XMLNode const> const & raw_node,
-			Node &                                           node
+			Notation::Xml::Node &                            node
 		) -> Void {
 			if (auto raw_element = raw_node->ToElement()) {
 				node.set_element();
@@ -68,8 +68,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ----------------
 
 		inline static auto process_whole(
-			String const & data,
-			Node &         value
+			String const &        data,
+			Notation::Xml::Node & value
 		) -> Void {
 			auto raw_document = Third::tinyxml2::XMLDocument{};
 			raw_document.Parse(cast_pointer<ZCharacter>(data.begin()).value, data.size().value);
@@ -91,8 +91,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ----------------
 
 		inline static auto process(
-			String const & data,
-			Node &         value
+			String const &        data,
+			Notation::Xml::Node & value
 		) -> Void {
 			restruct(value);
 			return process_whole(data, value);

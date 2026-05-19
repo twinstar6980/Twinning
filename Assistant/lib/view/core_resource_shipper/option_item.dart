@@ -41,6 +41,7 @@ class OptionItem extends StatelessWidget {
           content: StyledText.custom(tooltip: enabled, this.configuration.name),
           trailing: FlexContainer.horizontal(mainStretch: false, [
             StyledButton.text(
+              enabled: enabled,
               tooltip: 'Preset',
               content: FlexContainer.horizontal([
                 Gap.horizontal(8),

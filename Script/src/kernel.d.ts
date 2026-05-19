@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 129
+ * @version 130
  */
 declare namespace Twinning.Kernel {
 
@@ -666,110 +666,113 @@ declare namespace Twinning.Kernel {
 
 	// ----------------
 
-	/** Json */
-	namespace Json {
+	/** 表示法 */
+	namespace Notation {
 
-		/** 值 */
-		type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | {[key: string]: JS_Value};
+		/** Json */
+		namespace Json {
 
-		/** 值 */
-		class Value<TConstraint extends JS_Value = JS_Value> {
+			/** 值 */
+			type JS_Value = undefined | null | boolean | bigint | number | string | JS_Value[] | {[key: string]: JS_Value};
 
-			private _Json_Value: TConstraint;
+			/** 值 */
+			class Value<TConstraint extends JS_Value = JS_Value> {
 
-			// ----------------
+				private _Notation_Json_Value: TConstraint;
 
-			static default<Constraint extends JS_Value>(): Value<Constraint>;
+				// ----------------
 
-			static copy<Constraint extends JS_Value>(it: Value<Constraint>): Value<Constraint>;
+				static default<Constraint extends JS_Value>(): Value<Constraint>;
 
-			// ----------------
+				static copy<Constraint extends JS_Value>(it: Value<Constraint>): Value<Constraint>;
 
-			static value<TConstraint extends JS_Value>(it: TConstraint): Value<TConstraint>;
+				// ----------------
 
-			get value(): TConstraint;
+				static value<TConstraint extends JS_Value>(it: TConstraint): Value<TConstraint>;
 
-			set value(it: TConstraint);
+				get value(): TConstraint;
+
+				set value(it: TConstraint);
+
+			}
+
+		}
+
+		/** Xml */
+		namespace Xml {
+
+			/** 结点类型 */
+			type JS_Type = 'element' | 'text' | 'comment';
+
+			/** 元素 */
+			type JS_Element = {
+				/** 名称 */
+				name: string,
+				/** 属性 */
+				attribute: Record<string, string>,
+				/** 子结点 */
+				child: Array<JS_Node>,
+			};
+
+			/** 文本 */
+			type JS_Text = {
+				/** 值 */
+				value: string,
+				/** 是否为cdata */
+				cdata: boolean,
+			};
+
+			/** 注释 */
+			type JS_Comment = {
+				/** 值 */
+				value: string,
+			};
+
+			/** 元素结点 */
+			type JS_ElementNode = {
+				type: 'element',
+				value: JS_Element,
+			};
+
+			/** 注释结点 */
+			type JS_TextNode = {
+				type: 'text',
+				value: JS_Text,
+			};
+
+			/** 注释结点 */
+			type JS_CommentNode = {
+				type: 'comment',
+				value: JS_Comment,
+			};
+
+			/** 结点 */
+			type JS_Node = JS_ElementNode | JS_TextNode | JS_CommentNode;
+
+			/** 结点 */
+			class Node<TConstraint extends JS_Node = JS_Node> {
+
+				private _Notation_Xml_Node: TConstraint;
+
+				// ----------------
+
+				static default<Constraint extends JS_Node>(): Node<Constraint>;
+
+				static copy<Constraint extends JS_Node>(it: Node<Constraint>): Node<Constraint>;
+
+				// ----------------
+
+				static value<Constraint extends JS_Node>(it: Constraint): Node<Constraint>;
+
+				get value(): TConstraint;
+
+				set value(it: TConstraint);
+
+			}
 
 		}
 
 	}
-
-	/** Xml */
-	namespace Xml {
-
-		/** 结点类型 */
-		type JS_Type = 'element' | 'text' | 'comment';
-
-		/** 元素 */
-		type JS_Element = {
-			/** 名称 */
-			name: string,
-			/** 属性 */
-			attribute: Record<string, string>,
-			/** 子结点 */
-			child: Array<JS_Node>,
-		};
-
-		/** 文本 */
-		type JS_Text = {
-			/** 值 */
-			value: string,
-			/** 是否为cdata */
-			cdata: boolean,
-		};
-
-		/** 注释 */
-		type JS_Comment = {
-			/** 值 */
-			value: string,
-		};
-
-		/** 元素结点 */
-		type JS_ElementNode = {
-			type: 'element',
-			value: JS_Element,
-		};
-
-		/** 注释结点 */
-		type JS_TextNode = {
-			type: 'text',
-			value: JS_Text,
-		};
-
-		/** 注释结点 */
-		type JS_CommentNode = {
-			type: 'comment',
-			value: JS_Comment,
-		};
-
-		/** 结点 */
-		type JS_Node = JS_ElementNode | JS_TextNode | JS_CommentNode;
-
-		/** 结点 */
-		class Node<TConstraint extends JS_Node = JS_Node> {
-
-			private _Xml_Node: TConstraint;
-
-			// ----------------
-
-			static default<Constraint extends JS_Node>(): Node<Constraint>;
-
-			static copy<Constraint extends JS_Node>(it: Node<Constraint>): Node<Constraint>;
-
-			// ----------------
-
-			static value<Constraint extends JS_Node>(it: Constraint): Node<Constraint>;
-
-			get value(): TConstraint;
-
-			set value(it: TConstraint);
-
-		}
-
-	}
-
-	// ----------------
 
 	/** 图像 */
 	namespace Image {
@@ -1550,49 +1553,49 @@ declare namespace Twinning.Kernel {
 				/** Deflate */
 				namespace Deflate {
 
-					/** 策略 */
-					class Strategy {
+					/** 策略模式 */
+					class StrategyMode {
 
-						private _Tool_Data_Compress_Deflate_Strategy;
+						private _Tool_Data_Compress_Deflate_StrategyMode;
 
 						// ----------------
 
-						static default(): Strategy;
+						static default(): StrategyMode;
 
-						static copy(it: Strategy): Strategy;
+						static copy(it: StrategyMode): StrategyMode;
 
 						// ----------------
 
 						static Value: 'default_mode' | 'filtered' | 'huffman_only' | 'rle' | 'fixed';
 
-						static value(it: typeof Strategy.Value): Strategy;
+						static value(it: typeof StrategyMode.Value): StrategyMode;
 
-						get value(): typeof Strategy.Value;
+						get value(): typeof StrategyMode.Value;
 
-						set value(it: typeof Strategy.Value);
+						set value(it: typeof StrategyMode.Value);
 
 					}
 
-					/** 封装 */
-					class Wrapper {
+					/** 封装类型 */
+					class WrapperType {
 
-						private _Tool_Data_Compress_Deflate_Wrapper;
+						private _Tool_Data_Compress_Deflate_WrapperType;
 
 						// ----------------
 
-						static default(): Wrapper;
+						static default(): WrapperType;
 
-						static copy(it: Wrapper): Wrapper;
+						static copy(it: WrapperType): WrapperType;
 
 						// ----------------
 
 						static Value: 'none' | 'zlib' | 'gzip';
 
-						static value(it: typeof Wrapper.Value): Wrapper;
+						static value(it: typeof WrapperType.Value): WrapperType;
 
-						get value(): typeof Wrapper.Value;
+						get value(): typeof WrapperType.Value;
 
-						set value(it: typeof Wrapper.Value);
+						set value(it: typeof WrapperType.Value);
 
 					}
 
@@ -1606,8 +1609,8 @@ declare namespace Twinning.Kernel {
 						 * @param level 压缩级别(0~9)
 						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param memory_level 内存级别(1~9)
-						 * @param strategy 策略
-						 * @param wrapper 封装
+						 * @param strategy_mode 策略模式
+						 * @param wrapper_type 封装类型
 						 */
 						function process(
 							raw: InputByteStreamView,
@@ -1615,8 +1618,8 @@ declare namespace Twinning.Kernel {
 							level: Integer,
 							window_exponent: Integer,
 							memory_level: Integer,
-							strategy: Strategy,
-							wrapper: Wrapper,
+							strategy_mode: StrategyMode,
+							wrapper_type: WrapperType,
 						): Void;
 
 						/**
@@ -1625,14 +1628,14 @@ declare namespace Twinning.Kernel {
 						 * @param ripe_size_bound 成品数据尺寸上限
 						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param memory_level 内存级别(1~9)
-						 * @param wrapper 封装
+						 * @param wrapper_type 封装类型
 						 */
 						function estimate(
 							raw_size: Size,
 							ripe_size_bound: Size,
 							window_exponent: Integer,
 							memory_level: Integer,
-							wrapper: Wrapper,
+							wrapper_type: WrapperType,
 						): Void;
 
 					}
@@ -1645,13 +1648,13 @@ declare namespace Twinning.Kernel {
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
 						 * @param window_exponent 窗口尺寸幂次(8~15)
-						 * @param wrapper 封装
+						 * @param wrapper_type 封装类型
 						 */
 						function process(
 							raw: OutputByteStreamView,
 							ripe: InputByteStreamView,
 							window_exponent: Integer,
-							wrapper: Wrapper,
+							wrapper_type: WrapperType,
 						): Void;
 
 					}
@@ -1806,7 +1809,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: OutputCharacterStreamView,
-							value: Kernel.Json.Value,
+							value: Notation.Json.Value,
 							disable_array_trailing_comma: Boolean,
 							disable_array_line_breaking: Boolean,
 							disable_object_trailing_comma: Boolean,
@@ -1826,7 +1829,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: InputCharacterStreamView,
-							value: Kernel.Json.Value,
+							value: Notation.Json.Value,
 							buffer: OutputCharacterStreamView,
 						): Void;
 
@@ -1847,7 +1850,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: String,
-							value: Kernel.Xml.Node,
+							value: Notation.Xml.Node,
 						): Void;
 
 					}
@@ -1862,7 +1865,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							data: String,
-							value: Kernel.Xml.Node,
+							value: Notation.Xml.Node,
 						): Void;
 
 					}
@@ -1887,14 +1890,16 @@ declare namespace Twinning.Kernel {
 
 						/**
 						 * 编码
-						 * @param target 目标图像
-						 * @param horizontal 水平翻转
-						 * @param vertical 垂直翻转
+						 * @param raw 原始图像
+						 * @param raw 成品图像
+						 * @param flip_horizontal 水平翻转
+						 * @param flip_vertical 垂直翻转
 						 */
 						function process(
-							target: Image.VariableImageView,
-							horizontal: Boolean,
-							vertical: Boolean,
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+							flip_horizontal: Boolean,
+							flip_vertical: Boolean,
 						): Void;
 
 					}
@@ -2465,11 +2470,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<JS_N.SoundBank>, version: Version): SoundBank;
+						static json(it: Notation.Json.Value<JS_N.SoundBank>, version: Version): SoundBank;
 
-						get_json(version: Version): Json.Value<JS_N.SoundBank>;
+						get_json(version: Version): Notation.Json.Value<JS_N.SoundBank>;
 
-						set_json(it: Json.Value<JS_N.SoundBank>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.SoundBank>, version: Version): Void;
 
 					}
 
@@ -2588,11 +2593,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Notation.Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): Json.Value<JS_N.Package>;
+						get_json(version: Version): Notation.Json.Value<JS_N.Package>;
 
-						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -2681,7 +2686,7 @@ declare namespace Twinning.Kernel {
 					 * @param level 压缩级别(0~9)
 					 * @param window_exponent 窗口尺寸幂次(8~15)
 					 * @param memory_level 内存级别(1~9)
-					 * @param strategy 策略
+					 * @param strategy_mode 策略模式
 					 * @param version 版本
 					 */
 					function process(
@@ -2690,7 +2695,7 @@ declare namespace Twinning.Kernel {
 						level: Integer,
 						window_exponent: Integer,
 						memory_level: Integer,
-						strategy: Data.Compression.Deflate.Strategy,
+						strategy_mode: Data.Compression.Deflate.StrategyMode,
 						version: Version,
 					): Void;
 
@@ -2889,7 +2894,7 @@ declare namespace Twinning.Kernel {
 					 */
 					function process(
 						data: OutputByteStreamView,
-						definition: Json.Value<JS_ValidValue>,
+						definition: Notation.Json.Value<JS_ValidValue>,
 						enable_string_index: Boolean,
 						enable_reference: Boolean,
 						version: Version,
@@ -2908,7 +2913,7 @@ declare namespace Twinning.Kernel {
 					 */
 					function process(
 						data: InputByteStreamView,
-						definition: Json.Value<JS_ValidValue>,
+						definition: Notation.Json.Value<JS_ValidValue>,
 						version: Version,
 					): Void;
 
@@ -3315,11 +3320,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<JS_N.Animation>, version: Version): Animation;
+						static json(it: Notation.Json.Value<JS_N.Animation>, version: Version): Animation;
 
-						get_json(version: Version): Json.Value<JS_N.Animation>;
+						get_json(version: Version): Notation.Json.Value<JS_N.Animation>;
 
-						set_json(it: Json.Value<JS_N.Animation>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.Animation>, version: Version): Void;
 
 					}
 
@@ -3430,11 +3435,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<undefined>, version: Version): Animation;
+						static json(it: Notation.Json.Value<undefined>, version: Version): Animation;
 
-						get_json(version: Version): Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<undefined>;
 
-						set_json(it: Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3525,11 +3530,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<undefined>, version: Version): Particle;
+						static json(it: Notation.Json.Value<undefined>, version: Version): Particle;
 
-						get_json(version: Version): Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<undefined>;
 
-						set_json(it: Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3620,11 +3625,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<undefined>, version: Version): Trail;
+						static json(it: Notation.Json.Value<undefined>, version: Version): Trail;
 
-						get_json(version: Version): Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<undefined>;
 
-						set_json(it: Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3715,11 +3720,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<undefined>, version: Version): Effect;
+						static json(it: Notation.Json.Value<undefined>, version: Version): Effect;
 
-						get_json(version: Version): Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<undefined>;
 
-						set_json(it: Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3809,11 +3814,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<undefined>, version: Version): Effect;
+						static json(it: Notation.Json.Value<undefined>, version: Version): Effect;
 
-						get_json(version: Version): Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<undefined>;
 
-						set_json(it: Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -3902,11 +3907,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<undefined>, version: Version): FontWidget;
+						static json(it: Notation.Json.Value<undefined>, version: Version): FontWidget;
 
-						get_json(version: Version): Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<undefined>;
 
-						set_json(it: Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
 
 					}
 
@@ -4011,11 +4016,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Notation.Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): Json.Value<JS_N.Package>;
+						get_json(version: Version): Notation.Json.Value<JS_N.Package>;
 
-						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -4161,11 +4166,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Notation.Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): Json.Value<JS_N.Package>;
+						get_json(version: Version): Notation.Json.Value<JS_N.Package>;
 
-						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -4346,11 +4351,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<JS_N.Package>, version: Version): Package;
+						static json(it: Notation.Json.Value<JS_N.Package>, version: Version): Package;
 
-						get_json(version: Version): Json.Value<JS_N.Package>;
+						get_json(version: Version): Notation.Json.Value<JS_N.Package>;
 
-						set_json(it: Json.Value<JS_N.Package>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.Package>, version: Version): Void;
 
 					}
 
@@ -4375,11 +4380,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Json.Value<null>, version: Version): PackageOptional;
+						static json(it: Notation.Json.Value<null>, version: Version): PackageOptional;
 
-						get_json(version: Version): Json.Value<null>;
+						get_json(version: Version): Notation.Json.Value<null>;
 
-						set_json(it: Json.Value<null>, version: Version): Void;
+						set_json(it: Notation.Json.Value<null>, version: Version): Void;
 
 					}
 
@@ -4512,45 +4517,6 @@ declare namespace Twinning.Kernel {
 		/** 杂项 */
 		namespace Miscellaneous {
 
-			/** PvZ-2中国版中的alpha调色板纹理 */
-			namespace Pvz2cnAlphaPaletteTexture {
-
-				/** 编码 */
-				namespace Encode {
-
-					/**
-					 * 编码
-					 * @param data 数据
-					 * @param image 图像
-					 * @param palette 调色板
-					 */
-					function process(
-						data: OutputByteStreamView,
-						image: Image.ConstantImageView,
-						palette: Image.ColorList,
-					): Void;
-
-				}
-
-				/** 解码 */
-				namespace Decode {
-
-					/**
-					 * 解码
-					 * @param data 数据
-					 * @param image 图像
-					 * @param palette 调色板
-					 */
-					function process(
-						data: InputByteStreamView,
-						image: Image.VariableImageView,
-						palette: Image.ColorList,
-					): Void;
-
-				}
-
-			}
-
 			/** PvZ-2中国版中的加密数据 */
 			namespace Pvz2cnCryptData {
 
@@ -4604,6 +4570,45 @@ declare namespace Twinning.Kernel {
 					function estimate(
 						plain_size: Size,
 						cipher_size: Size,
+					): Void;
+
+				}
+
+			}
+
+			/** PvZ-2中国版中的alpha调色板纹理 */
+			namespace Pvz2cnAlphaPaletteTexture {
+
+				/** 编码 */
+				namespace Encode {
+
+					/**
+					 * 编码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param palette 调色板
+					 */
+					function process(
+						data: OutputByteStreamView,
+						image: Image.ConstantImageView,
+						palette: Image.ColorList,
+					): Void;
+
+				}
+
+				/** 解码 */
+				namespace Decode {
+
+					/**
+					 * 解码
+					 * @param data 数据
+					 * @param image 图像
+					 * @param palette 调色板
+					 */
+					function process(
+						data: InputByteStreamView,
+						image: Image.VariableImageView,
+						palette: Image.ColorList,
 					): Void;
 
 				}

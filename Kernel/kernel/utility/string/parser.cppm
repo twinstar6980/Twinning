@@ -20,7 +20,7 @@ import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_static_string;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.support.character_stream.basic;
+import twinning.kernel.utility.support.character_stream;
 import twinning.kernel.third.mscharconv;
 
 export namespace Twinning::Kernel::StringParser {

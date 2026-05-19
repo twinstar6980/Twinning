@@ -21,7 +21,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.SourceManager {
 		index: number,
 		image: Kernel.Tool.Popcap.Animation.Definition.JS_N.Image,
 		resolution: bigint,
-	): Kernel.Xml.JS_Element {
+	): Kernel.Notation.Xml.JS_Element {
 		return XmlHelper.create_element('DOMSymbolItem', {
 			...k_xmlns_attribute,
 			name: `source/source_${index + 1}`,
@@ -58,14 +58,14 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.SourceManager {
 	function create(
 		animation: Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation,
 		resolution: bigint,
-	): Array<Kernel.Xml.JS_Element> {
+	): Array<Kernel.Notation.Xml.JS_Element> {
 		return animation.image.map((value, index) => (create_one(index, value, resolution)));
 	}
 
 	// ----------------
 
 	function resize_one(
-		document: Kernel.Xml.JS_Node,
+		document: Kernel.Notation.Xml.JS_Node,
 		resolution: bigint,
 	): void {
 		let scale_matrix = XmlHelper.find_child_element(
@@ -78,7 +78,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.SourceManager {
 									XmlHelper.find_child_element(
 										XmlHelper.find_child_element(
 											XmlHelper.find_child_element(
-												document.value as Kernel.Xml.JS_Element, 'timeline'
+												document.value as Kernel.Notation.Xml.JS_Element, 'timeline'
 											)[0], 'DOMTimeline'
 										)[0], 'layers'
 									)[0], 'DOMLayer'
@@ -94,7 +94,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.SourceManager {
 	}
 
 	function resize(
-		document: Array<Kernel.Xml.JS_Node>,
+		document: Array<Kernel.Notation.Xml.JS_Node>,
 		resolution: bigint,
 	): void {
 		document.forEach((value, index) => (resize_one(value, resolution)));

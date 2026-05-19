@@ -14,9 +14,9 @@ export namespace Twinning::Kernel::Executor {
 
 	protected:
 
-		JavaScript::Runtime m_runtime;
+		Script::JavaScript::Runtime m_runtime;
 
-		JavaScript::Context m_context;
+		Script::JavaScript::Context m_context;
 
 		Interface::ExecutorProxy m_callback;
 
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Executor {
 		explicit Context(
 			Interface::ExecutorProxy const & callback
 		) :
-			m_runtime{JavaScript::Runtime::new_instance()},
+			m_runtime{Script::JavaScript::Runtime::new_instance()},
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
 			m_busy{k_false},
@@ -59,10 +59,10 @@ export namespace Twinning::Kernel::Executor {
 		}
 
 		explicit Context(
-			JavaScript::Runtime &            runtime,
+			Script::JavaScript::Runtime &    runtime,
 			Interface::ExecutorProxy const & callback
 		) :
-			m_runtime{JavaScript::Runtime::new_reference(runtime._runtime())},
+			m_runtime{Script::JavaScript::Runtime::new_reference(runtime._runtime())},
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
 			m_busy{k_false},
@@ -87,12 +87,12 @@ export namespace Twinning::Kernel::Executor {
 		#pragma region runtime & context
 
 		auto runtime(
-		) -> JavaScript::Runtime & {
+		) -> Script::JavaScript::Runtime & {
 			return thiz.m_runtime;
 		}
 
 		auto context(
-		) -> JavaScript::Context & {
+		) -> Script::JavaScript::Context & {
 			return thiz.m_context;
 		}
 
@@ -104,8 +104,8 @@ export namespace Twinning::Kernel::Executor {
 			ConstantStringView const & script,
 			String const &             name,
 			Boolean const &            is_module
-		) -> JavaScript::Value {
-			auto locker = Thread::Locker{JavaScript::g_mutex};
+		) -> Script::JavaScript::Value {
+			auto locker = Thread::Locker{Script::JavaScript::g_mutex};
 			return thiz.m_context.evaluate(script, name, is_module);
 		}
 
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel::Executor {
 
 		auto spawn(
 		) -> Context {
-			auto locker = Thread::Locker{JavaScript::g_mutex};
+			auto locker = Thread::Locker{Script::JavaScript::g_mutex};
 			return Context{thiz.m_runtime, thiz.m_callback};
 		}
 
@@ -149,16 +149,16 @@ export namespace Twinning::Kernel::Executor {
 		}
 
 		auto execute(
-			Thread::Thread &    thread,
-			JavaScript::Value & executor
+			Thread::Thread &            thread,
+			Script::JavaScript::Value & executor
 		) -> Void {
 			assert_test(!thiz.busy());
 			thiz.m_busy = k_true;
-			auto locker = Thread::Locker{JavaScript::g_mutex};
+			auto locker = Thread::Locker{Script::JavaScript::g_mutex};
 			thread.run(
 				[&, executor] mutable {
-					auto inner_locker = Thread::Locker{JavaScript::g_mutex};
-					JavaScript::Value::new_reference(thiz.m_context._context(), executor._value()).call(make_list<JavaScript::Value>());
+					auto inner_locker = Thread::Locker{Script::JavaScript::g_mutex};
+					Script::JavaScript::Value::new_reference(thiz.m_context._context(), executor._value()).call(make_list<Script::JavaScript::Value>());
 					executor.set_undefined();
 					thiz.m_busy = k_false;
 					return;

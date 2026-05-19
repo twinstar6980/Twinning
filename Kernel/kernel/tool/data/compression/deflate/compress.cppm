@@ -22,25 +22,25 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Integer const &        level,
 			Integer const &        window_exponent,
 			Integer const &        memory_level,
-			Strategy const &       strategy,
-			Wrapper const &        wrapper
+			StrategyMode const &   strategy_mode,
+			WrapperType const &    wrapper_type
 		) -> Void {
 			assert_test(Math::between(level, 0_i, mbox<Integer>(Third::zlib::$Z_BEST_COMPRESSION)));
 			assert_test(Math::between(window_exponent, 8_i, mbox<Integer>(Third::zlib::$MAX_WBITS)));
 			assert_test(Math::between(memory_level, 1_i, mbox<Integer>(Third::zlib::$MAX_MEM_LEVEL)));
-			assert_test(!(window_exponent == 8_i && wrapper != Wrapper::Constant::zlib()));
+			assert_test(!(window_exponent == 8_i && wrapper_type != WrapperType::Constant::zlib()));
 			auto z_state = int{};
 			auto z_window_exponent = static_cast<int>(window_exponent.value);
-			switch (wrapper.value) {
-				case Wrapper::Constant::none().value: {
+			switch (wrapper_type.value) {
+				case WrapperType::Constant::none().value: {
 					z_window_exponent = -z_window_exponent;
 					break;
 				}
-				case Wrapper::Constant::zlib().value: {
+				case WrapperType::Constant::zlib().value: {
 					z_window_exponent = +z_window_exponent;
 					break;
 				}
-				case Wrapper::Constant::gzip().value: {
+				case WrapperType::Constant::gzip().value: {
 					z_window_exponent = +z_window_exponent + 16;
 					break;
 				}
@@ -68,7 +68,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				Third::zlib::$Z_DEFLATED,
 				z_window_exponent,
 				static_cast<int>(memory_level.value),
-				static_cast<int>(strategy.value),
+				static_cast<int>(strategy_mode.value),
 				Third::zlib::$ZLIB_VERSION,
 				static_cast<int>(sizeof(z_stream))
 			);
@@ -97,23 +97,23 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size const &    raw_size,
-			Size &          ripe_size_bound,
-			Integer const & window_exponent,
-			Integer const & memory_level,
-			Wrapper const & wrapper
+			Size const &        raw_size,
+			Size &              ripe_size_bound,
+			Integer const &     window_exponent,
+			Integer const &     memory_level,
+			WrapperType const & wrapper_type
 		) -> Void {
 			auto wrapper_size = 0_sz;
-			switch (wrapper.value) {
-				case Wrapper::Constant::none().value: {
+			switch (wrapper_type.value) {
+				case WrapperType::Constant::none().value: {
 					wrapper_size = 0_sz;
 					break;
 				}
-				case Wrapper::Constant::zlib().value: {
+				case WrapperType::Constant::zlib().value: {
 					wrapper_size = 2_sz + 4_sz + 4_sz;
 					break;
 				}
-				case Wrapper::Constant::gzip().value: {
+				case WrapperType::Constant::gzip().value: {
 					wrapper_size = 10_sz + 8_sz;
 					break;
 				}
@@ -136,23 +136,23 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Integer const &        level,
 			Integer const &        window_exponent,
 			Integer const &        memory_level,
-			Strategy const &       strategy,
-			Wrapper const &        wrapper
+			StrategyMode const &   strategy_mode,
+			WrapperType const &    wrapper_type
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);
-			return process_whole(raw, ripe, level, window_exponent, memory_level, strategy, wrapper);
+			return process_whole(raw, ripe, level, window_exponent, memory_level, strategy_mode, wrapper_type);
 		}
 
 		inline static auto estimate(
-			Size const &    raw_size,
-			Size &          ripe_size_bound,
-			Integer const & window_exponent,
-			Integer const & memory_level,
-			Wrapper const & wrapper
+			Size const &        raw_size,
+			Size &              ripe_size_bound,
+			Integer const &     window_exponent,
+			Integer const &     memory_level,
+			WrapperType const & wrapper_type
 		) -> Void {
 			restruct(ripe_size_bound);
-			return estimate_whole(raw_size, ripe_size_bound, window_exponent, memory_level, wrapper);
+			return estimate_whole(raw_size, ripe_size_bound, window_exponent, memory_level, wrapper_type);
 		}
 
 	};

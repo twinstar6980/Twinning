@@ -7,7 +7,7 @@
 			"item": [
 				{
 					"identifier": "common.utility.update_global_setting",
-					"name": "Update global setting",
+					"name": "Update Global Setting",
 					"icon": "settings",
 					"argument": [
 						{
@@ -20,26 +20,26 @@
 					"batch": null,
 					"preset": [
 						{
-							"name": "Byte endian - Little",
+							"name": "Byte Endian - Little",
 							"argument": {
 								"data": "{\"byte_stream_use_big_endian\":false}",
 							},
 						},
 						{
-							"name": "Byte endian - Big",
+							"name": "Byte Endian - Big",
 							"argument": {
 								"data": "{\"byte_stream_use_big_endian\":true}",
 							},
 						},
 						null,
 						{
-							"name": "JSON format - Trailing",
+							"name": "JSON Format - Trailing",
 							"argument": {
 								"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}",
 							},
 						},
 						{
-							"name": "JSON format - Compatible",
+							"name": "JSON Format - Compatible",
 							"argument": {
 								"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}",
 							},
@@ -65,13 +65,13 @@
 						},
 						null,
 						{
-							"name": "Executor name filter - Enabled",
+							"name": "Executor Name Filter - Enabled",
 							"argument": {
 								"data": "{\"executor_typical_method_disable_name_filter\":false}",
 							},
 						},
 						{
-							"name": "Executor name filter - Disabled",
+							"name": "Executor Name Filter - Disabled",
 							"argument": {
 								"data": "{\"executor_typical_method_disable_name_filter\":true}",
 							},
@@ -80,12 +80,12 @@
 				},
 				{
 					"identifier": "common.utility.run_embedded_script",
-					"name": "Run embedded script",
+					"name": "Run Embedded Script",
 					"icon": "extension",
 					"argument": [
 						{
 							"identifier": "target_name",
-							"name": "Target name",
+							"name": "Target Name",
 							"type": "string",
 							"option": [
 								"ScriptConsole",
@@ -139,18 +139,18 @@
 				},
 				{
 					"identifier": "common.utility.run_custom_script",
-					"name": "Run custom script",
+					"name": "Run Custom Script",
 					"icon": "code",
 					"argument": [
 						{
 							"identifier": "target_file",
-							"name": "Target file",
+							"name": "Target File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "is_module",
-							"name": "Run as module",
+							"name": "Run As Module",
 							"type": "boolean",
 							"option": null,
 						},
@@ -187,7 +187,7 @@
 					"argument": [
 						{
 							"identifier": "target_file",
-							"name": "Target file",
+							"name": "Target File",
 							"type": "path",
 							"option": null,
 						},
@@ -205,13 +205,13 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -230,13 +230,13 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -255,13 +255,13 @@
 					"argument": [
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
@@ -286,19 +286,19 @@
 					"argument": [
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "mode",
-							"name": "Algorithm mode",
+							"name": "Algorithm Mode",
 							"type": "string",
 							"option": [
 								"ecb",
@@ -308,7 +308,7 @@
 						},
 						{
 							"identifier": "block_size",
-							"name": "Block size",
+							"name": "Block Size",
 							"type": "integer",
 							"option": [
 								16,
@@ -324,7 +324,7 @@
 						},
 						{
 							"identifier": "iv",
-							"name": "Initialization vector",
+							"name": "IV",
 							"type": "string",
 							"option": null,
 						},
@@ -343,19 +343,19 @@
 					"argument": [
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "mode",
-							"name": "Algorithm mode",
+							"name": "Algorithm Mode",
 							"type": "string",
 							"option": [
 								"ecb",
@@ -365,7 +365,7 @@
 						},
 						{
 							"identifier": "block_size",
-							"name": "Block size",
+							"name": "Block Size",
 							"type": "integer",
 							"option": [
 								16,
@@ -381,7 +381,7 @@
 						},
 						{
 							"identifier": "iv",
-							"name": "Initialization vector",
+							"name": "IV",
 							"type": "string",
 							"option": null,
 						},
@@ -400,13 +400,13 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -425,19 +425,19 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -456,13 +456,13 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -481,19 +481,19 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -512,13 +512,13 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -537,19 +537,19 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -568,13 +568,13 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -593,19 +593,19 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -624,13 +624,13 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -649,19 +649,19 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -680,25 +680,25 @@
 					"argument": [
 						{
 							"identifier": "after_file",
-							"name": "After file",
+							"name": "After File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "patch_file",
-							"name": "Patch file",
+							"name": "Patch File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "before_file",
-							"name": "Before file",
+							"name": "Before File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -714,25 +714,25 @@
 					"argument": [
 						{
 							"identifier": "patch_file",
-							"name": "Patch file",
+							"name": "Patch File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "after_file",
-							"name": "After file",
+							"name": "After File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "before_file",
-							"name": "Before file",
+							"name": "Before File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -755,37 +755,37 @@
 					"argument": [
 						{
 							"identifier": "source_file",
-							"name": "Source file",
+							"name": "Source File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "destination_file",
-							"name": "Destination file",
+							"name": "Destination File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "disable_array_trailing_comma",
-							"name": "Disable array trailing comma",
+							"name": "Disable Array Trailing Comma",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "disable_array_line_breaking",
-							"name": "Disable array line breaking",
+							"name": "Disable Array Line Breaking",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "disable_object_trailing_comma",
-							"name": "Disable object trailing comma",
+							"name": "Disable Object Trailing Comma",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "disable_object_line_breaking",
-							"name": "Disable object line breaking",
+							"name": "Disable Object Line Breaking",
 							"type": "boolean",
 							"option": null,
 						},
@@ -796,7 +796,7 @@
 					],
 					"preset": [
 						{
-							"name": "Enable trailing comma | Enable line breaking",
+							"name": "Enable Trailing Comma | Enable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": false,
 								"disable_array_line_breaking": false,
@@ -805,7 +805,7 @@
 							},
 						},
 						{
-							"name": "Enable trailing comma | Disable line breaking",
+							"name": "Enable Trailing Comma | Disable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": false,
 								"disable_array_line_breaking": true,
@@ -815,7 +815,7 @@
 						},
 						null,
 						{
-							"name": "Disable trailing comma | Enable line breaking",
+							"name": "Disable Trailing Comma | Enable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": true,
 								"disable_array_line_breaking": false,
@@ -824,7 +824,7 @@
 							},
 						},
 						{
-							"name": "Disable trailing comma | Disable line breaking",
+							"name": "Disable Trailing Comma | Disable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": true,
 								"disable_array_line_breaking": true,
@@ -841,13 +841,13 @@
 					"argument": [
 						{
 							"identifier": "source_file",
-							"name": "Source file",
+							"name": "Source File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "destination_file",
-							"name": "Destination file",
+							"name": "Destination File",
 							"type": "path",
 							"option": null,
 						},
@@ -873,25 +873,25 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "horizontal",
-							"name": "Flip horizontal",
+							"identifier": "flip_horizontal",
+							"name": "Flip Horizontal",
 							"type": "boolean",
 							"option": null,
 						},
 						{
-							"identifier": "vertical",
-							"name": "Flip vertical",
+							"identifier": "flip_vertical",
+							"name": "Flip Vertical",
 							"type": "boolean",
 							"option": null,
 						},
@@ -904,22 +904,22 @@
 						{
 							"name": "Horizontal",
 							"argument": {
-								"horizontal": true,
-								"vertical": false,
+								"flip_horizontal": true,
+								"flip_vertical": false,
 							},
 						},
 						{
 							"name": "Vertical",
 							"argument": {
-								"horizontal": false,
-								"vertical": true,
+								"flip_horizontal": false,
+								"flip_vertical": true,
 							},
 						},
 						{
 							"name": "Both",
 							"argument": {
-								"horizontal": true,
-								"vertical": true,
+								"flip_horizontal": true,
+								"flip_vertical": true,
 							},
 						},
 					],
@@ -931,25 +931,25 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "size_width",
-							"name": "Width",
+							"identifier": "target_width",
+							"name": "Target Width",
 							"type": "integer",
 							"option": null,
 						},
 						{
-							"identifier": "size_height",
-							"name": "Height",
+							"identifier": "target_height",
+							"name": "Target Height",
 							"type": "integer",
 							"option": null,
 						},
@@ -963,24 +963,24 @@
 				},
 				{
 					"identifier": "texture.transformation.scaling.encode_rate",
-					"name": "Scaling by rate",
+					"name": "Scaling By Rate",
 					"icon": "branding_watermark",
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "size_rate",
-							"name": "Size rate",
+							"identifier": "target_rate",
+							"name": "Target Rate",
 							"type": "floater",
 							"option": null,
 						},
@@ -993,13 +993,13 @@
 						{
 							"name": "÷ 2",
 							"argument": {
-								"size_rate": 0.5,
+								"target_rate": 0.5,
 							},
 						},
 						{
 							"name": "× 2",
 							"argument": {
-								"size_rate": 2.0,
+								"target_rate": 2.0,
 							},
 						},
 					],
@@ -1011,25 +1011,25 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original File",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "tile_width",
-							"name": "Tile width",
+							"name": "Tile Width",
 							"type": "integer",
 							"option": null,
 						},
 						{
 							"identifier": "tile_height",
-							"name": "Tile height",
+							"name": "Tile Height",
 							"type": "integer",
 							"option": null,
 						},
@@ -1055,25 +1055,25 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original File",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "tile_width",
-							"name": "Tile width",
+							"name": "Tile Width",
 							"type": "integer",
 							"option": null,
 						},
 						{
 							"identifier": "tile_height",
-							"name": "Tile height",
+							"name": "Tile Height",
 							"type": "integer",
 							"option": null,
 						},
@@ -1099,19 +1099,19 @@
 					"argument": [
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "format",
-							"name": "Texture format",
+							"name": "Texture Format",
 							"type": "string",
 							"option": [
 								"a_8",
@@ -1142,6 +1142,8 @@
 								"rgb_etc1",
 								"rgb_etc2",
 								"rgba_etc2_eac",
+								"r_eac",
+								"rg_eac",
 								"rgba_astc_4x4",
 								"rgba_astc_5x4",
 								"rgba_astc_5x5",
@@ -1337,6 +1339,18 @@
 							"name": "RGBA-ETC2-EAC",
 							"argument": {
 								"format": "rgba_etc2_eac",
+							},
+						},
+						{
+							"name": "R-EAC",
+							"argument": {
+								"format": "r_eac",
+							},
+						},
+						{
+							"name": "RG-EAC",
+							"argument": {
+								"format": "rg_eac",
 							},
 						},
 						null,
@@ -1433,19 +1447,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "format",
-							"name": "Texture format",
+							"name": "Texture Format",
 							"type": "string",
 							"option": [
 								"a_8",
@@ -1476,6 +1490,8 @@
 								"rgb_etc1",
 								"rgb_etc2",
 								"rgba_etc2_eac",
+								"r_eac",
+								"rg_eac",
 								"rgba_astc_4x4",
 								"rgba_astc_5x4",
 								"rgba_astc_5x5",
@@ -1494,13 +1510,13 @@
 						},
 						{
 							"identifier": "image_width",
-							"name": "Image width",
+							"name": "Image Width",
 							"type": "integer",
 							"option": null,
 						},
 						{
 							"identifier": "image_height",
-							"name": "Image height",
+							"name": "Image Height",
 							"type": "integer",
 							"option": null,
 						},
@@ -1685,6 +1701,18 @@
 								"format": "rgba_etc2_eac",
 							},
 						},
+						{
+							"name": "R-EAC",
+							"argument": {
+								"format": "r_eac",
+							},
+						},
+						{
+							"name": "RG-EAC",
+							"argument": {
+								"format": "rg_eac",
+							},
+						},
 						null,
 						{
 							"name": "RGBA-ASTC-4x4",
@@ -1779,19 +1807,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "sprite_directory",
-							"name": "Sprite directory",
+							"name": "Sprite Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "atlas_file",
-							"name": "Atlas file",
+							"name": "Atlas File",
 							"type": "path",
 							"option": null,
 						},
@@ -1807,19 +1835,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "atlas_file",
-							"name": "Atlas file",
+							"name": "Atlas File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "sprite_directory",
-							"name": "Sprite directory",
+							"name": "Sprite Directory",
 							"type": "path",
 							"option": null,
 						},
@@ -1830,24 +1858,24 @@
 				},
 				{
 					"identifier": "texture.atlas.pack_automatic",
-					"name": "Atlas Pack by automatic",
+					"name": "Atlas Pack By Automatic",
 					"icon": "inventory_2",
 					"argument": [
 						{
 							"identifier": "sprite_directory",
-							"name": "Sprite directory",
+							"name": "Sprite Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "atlas_file",
-							"name": "Atlas file",
+							"name": "Atlas File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
@@ -1870,19 +1898,19 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original File",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "format",
-							"name": "Audio format",
+							"name": "Audio Format",
 							"type": "string",
 							"option": [
 								"pcm",
@@ -1944,13 +1972,13 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original File",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
@@ -1976,19 +2004,19 @@
 					"argument": [
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								72,
@@ -2009,7 +2037,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -2112,19 +2140,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								72,
@@ -2249,19 +2277,19 @@
 					"argument": [
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -2269,7 +2297,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -2294,19 +2322,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -2328,24 +2356,24 @@
 				},
 				{
 					"identifier": "marmalade.dzip.pack_automatic",
-					"name": "Pack by automatic",
+					"name": "Pack By Automatic",
 					"icon": "inventory_2",
 					"argument": [
 						{
 							"identifier": "resource_directory",
-							"name": "Resource directory",
+							"name": "Resource Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -2376,19 +2404,19 @@
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
@@ -2419,19 +2447,19 @@
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
@@ -2469,13 +2497,13 @@
 					"argument": [
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
@@ -2506,13 +2534,13 @@
 					"argument": [
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
@@ -2550,19 +2578,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -2570,13 +2598,13 @@
 						},
 						{
 							"identifier": "version_native_string_encoding_use_utf8",
-							"name": "Native string encoding use UTF-8",
+							"name": "Native String Encoding Use UTF-8",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -2609,19 +2637,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -2629,7 +2657,7 @@
 						},
 						{
 							"identifier": "version_native_string_encoding_use_utf8",
-							"name": "Native string encoding use UTF-8",
+							"name": "Native String Encoding Use UTF-8",
 							"type": "boolean",
 							"option": null,
 						},
@@ -2662,13 +2690,13 @@
 					"argument": [
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
@@ -2693,13 +2721,13 @@
 					"argument": [
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
@@ -2719,24 +2747,24 @@
 				},
 				{
 					"identifier": "popcap.reflection_object_notation.encode_cipher",
-					"name": "Encode for cipher",
+					"name": "Encode For Cipher",
 					"icon": "skip_next",
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -2744,7 +2772,7 @@
 						},
 						{
 							"identifier": "version_native_string_encoding_use_utf8",
-							"name": "Native string encoding use UTF-8",
+							"name": "Native String Encoding Use UTF-8",
 							"type": "boolean",
 							"option": null,
 						},
@@ -2756,7 +2784,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -2784,24 +2812,24 @@
 				},
 				{
 					"identifier": "popcap.reflection_object_notation.decode_cipher",
-					"name": "Decode for cipher",
+					"name": "Decode For Cipher",
 					"icon": "skip_previous",
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -2809,7 +2837,7 @@
 						},
 						{
 							"identifier": "version_native_string_encoding_use_utf8",
-							"name": "Native string encoding use UTF-8",
+							"name": "Native String Encoding Use UTF-8",
 							"type": "boolean",
 							"option": null,
 						},
@@ -2855,19 +2883,19 @@
 					"argument": [
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "format",
-							"name": "Texture format",
+							"name": "Texture Format",
 							"type": "string",
 							"option": [
 								"rgba_8888_o",
@@ -3001,19 +3029,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "format",
-							"name": "Texture format",
+							"name": "Texture Format",
 							"type": "string",
 							"option": [
 								"rgba_8888_o",
@@ -3036,13 +3064,13 @@
 						},
 						{
 							"identifier": "image_width",
-							"name": "Image width",
+							"name": "Image Width",
 							"type": "integer",
 							"option": null,
 						},
 						{
 							"identifier": "image_height",
-							"name": "Image height",
+							"name": "Image Height",
 							"type": "integer",
 							"option": null,
 						},
@@ -3166,25 +3194,25 @@
 					"argument": [
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_compress_texture_data",
-							"name": "Compress texture data",
+							"name": "Compress Texture Data",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "format",
-							"name": "Texture format",
+							"name": "Texture Format",
 							"type": "string",
 							"option": [
 								"rgba_8888_o",
@@ -3265,19 +3293,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_compress_texture_data",
-							"name": "Compress texture data",
+							"name": "Compress Texture Data",
 							"type": "boolean",
 							"option": null,
 						},
@@ -3360,19 +3388,19 @@
 					"argument": [
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -3380,7 +3408,7 @@
 						},
 						{
 							"identifier": "format",
-							"name": "Texture format",
+							"name": "Texture Format",
 							"type": "string",
 							"option": [
 								"argb_8888",
@@ -3395,7 +3423,7 @@
 						},
 						{
 							"identifier": "compress_texture_data",
-							"name": "Compress texture data",
+							"name": "Compress Texture Data",
 							"type": "boolean",
 							"option": null,
 						},
@@ -3543,19 +3571,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "image_file",
-							"name": "Image file",
+							"name": "Image File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -3712,19 +3740,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -3737,7 +3765,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -3792,19 +3820,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -3861,24 +3889,24 @@
 				},
 				{
 					"identifier": "popcap.animation.convert.flash.from",
-					"name": "Flash Convert from JSON",
+					"name": "Flash Convert From JSON",
 					"icon": "swipe_right_alt",
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_directory",
-							"name": "Finished directory",
+							"name": "Ripe Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -3935,24 +3963,24 @@
 				},
 				{
 					"identifier": "popcap.animation.convert.flash.to",
-					"name": "Flash Convert to JSON",
+					"name": "Flash Convert To JSON",
 					"icon": "swipe_left_alt",
 					"argument": [
 						{
 							"identifier": "ripe_directory",
-							"name": "Finished directory",
+							"name": "Ripe Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -4009,18 +4037,18 @@
 				},
 				{
 					"identifier": "popcap.animation.convert.flash.resize",
-					"name": "Flash Resize image",
+					"name": "Flash Resize Image",
 					"icon": "branding_watermark",
 					"argument": [
 						{
 							"identifier": "target_directory",
-							"name": "Target directory",
+							"name": "Target Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "resolution",
-							"name": "Image resolution",
+							"name": "Image Resolution",
 							"type": "integer",
 							"option": [
 								384,
@@ -4070,12 +4098,12 @@
 				},
 				{
 					"identifier": "popcap.animation.convert.flash.link_media",
-					"name": "Flash Create links for image files",
+					"name": "Flash Create Link For Media File",
 					"icon": "link",
 					"argument": [
 						{
 							"identifier": "target_directory",
-							"name": "Target directory",
+							"name": "Target Directory",
 							"type": "path",
 							"option": null,
 						},
@@ -4100,19 +4128,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_platform",
-							"name": "Version platform",
+							"name": "Version Platform",
 							"type": "string",
 							"option": [
 								"desktop",
@@ -4122,13 +4150,13 @@
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4175,19 +4203,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_platform",
-							"name": "Version platform",
+							"name": "Version Platform",
 							"type": "string",
 							"option": [
 								"desktop",
@@ -4197,7 +4225,7 @@
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
@@ -4251,19 +4279,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_platform",
-							"name": "Version platform",
+							"name": "Version Platform",
 							"type": "string",
 							"option": [
 								"desktop",
@@ -4273,13 +4301,13 @@
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4326,19 +4354,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_platform",
-							"name": "Version platform",
+							"name": "Version Platform",
 							"type": "string",
 							"option": [
 								"desktop",
@@ -4348,7 +4376,7 @@
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
@@ -4402,19 +4430,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_platform",
-							"name": "Version platform",
+							"name": "Version Platform",
 							"type": "string",
 							"option": [
 								"desktop",
@@ -4424,13 +4452,13 @@
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4477,19 +4505,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_platform",
-							"name": "Version platform",
+							"name": "Version Platform",
 							"type": "string",
 							"option": [
 								"desktop",
@@ -4499,7 +4527,7 @@
 						},
 						{
 							"identifier": "version_variant_64",
-							"name": "Use the 64-bit variant",
+							"name": "Use The 64-bit Variant",
 							"type": "boolean",
 							"option": null,
 						},
@@ -4553,19 +4581,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -4573,7 +4601,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4598,19 +4626,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -4644,19 +4672,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -4664,7 +4692,7 @@
 						},
 						{
 							"identifier": "version_variant",
-							"name": "Version variant",
+							"name": "Version Variant",
 							"type": "integer",
 							"option": [
 								1,
@@ -4674,7 +4702,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4714,19 +4742,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -4734,7 +4762,7 @@
 						},
 						{
 							"identifier": "version_variant",
-							"name": "Version variant",
+							"name": "Version Variant",
 							"type": "integer",
 							"option": [
 								1,
@@ -4785,19 +4813,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4816,13 +4844,13 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
@@ -4848,19 +4876,19 @@
 					"argument": [
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -4868,13 +4896,13 @@
 						},
 						{
 							"identifier": "version_compress_resource_data",
-							"name": "Compress resource data",
+							"name": "Compress Resource Data",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -4907,19 +4935,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -4927,7 +4955,7 @@
 						},
 						{
 							"identifier": "version_compress_resource_data",
-							"name": "Compress resource data",
+							"name": "Compress Resource Data",
 							"type": "boolean",
 							"option": null,
 						},
@@ -4955,24 +4983,24 @@
 				},
 				{
 					"identifier": "popcap.package.pack_automatic",
-					"name": "Pack by automatic",
+					"name": "Pack By Automatic",
 					"icon": "inventory_2",
 					"argument": [
 						{
 							"identifier": "resource_directory",
-							"name": "Resource directory",
+							"name": "Resource Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								0,
@@ -4980,7 +5008,7 @@
 						},
 						{
 							"identifier": "version_compress_resource_data",
-							"name": "Compress resource data",
+							"name": "Compress Resource Data",
 							"type": "boolean",
 							"option": null,
 						},
@@ -5010,13 +5038,13 @@
 					"argument": [
 						{
 							"identifier": "plain_file",
-							"name": "Plaintext file",
+							"name": "Plain File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "cipher_file",
-							"name": "Ciphertext file",
+							"name": "Cipher File",
 							"type": "path",
 							"option": null,
 						},
@@ -5048,19 +5076,19 @@
 					"argument": [
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5070,7 +5098,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -5107,19 +5135,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5167,19 +5195,19 @@
 					"argument": [
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5189,7 +5217,7 @@
 						},
 						{
 							"identifier": "version_extended_texture_information_for_pvz2cn",
-							"name": "Extended version of texture information for PvZ-2-CN version",
+							"name": "Extended Texture Information For PvZ-2-CN Version",
 							"type": "integer",
 							"option": [
 								0,
@@ -5200,7 +5228,7 @@
 						},
 						{
 							"identifier": "layout_mode",
-							"name": "Layout mode",
+							"name": "Layout Mode",
 							"type": "string",
 							"option": [
 								"group",
@@ -5210,19 +5238,19 @@
 						},
 						{
 							"identifier": "input_packet",
-							"name": "Use packets that already exists",
+							"name": "Use Packet That Already Exist",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "output_new_packet",
-							"name": "Export newly packed packets",
+							"name": "Export New Packet",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -5284,19 +5312,19 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5306,7 +5334,7 @@
 						},
 						{
 							"identifier": "version_extended_texture_information_for_pvz2cn",
-							"name": "Extended version of texture information for PvZ-2-CN version",
+							"name": "Extended Texture Information For PvZ-2-CN Version",
 							"type": "integer",
 							"option": [
 								0,
@@ -5317,7 +5345,7 @@
 						},
 						{
 							"identifier": "layout_mode",
-							"name": "Layout mode",
+							"name": "Layout Mode",
 							"type": "string",
 							"option": [
 								"group",
@@ -5327,13 +5355,13 @@
 						},
 						{
 							"identifier": "output_resource",
-							"name": "Export resources",
+							"name": "Export Resource",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "output_packet",
-							"name": "Export packet",
+							"name": "Export Packet",
 							"type": "boolean",
 							"option": null,
 						},
@@ -5390,18 +5418,18 @@
 				},
 				{
 					"identifier": "popcap.resource_stream_bundle.resource_convert",
-					"name": "Resource convert",
+					"name": "Resource Convert",
 					"icon": "lightning_stand",
 					"argument": [
 						{
 							"identifier": "bundle_directory",
-							"name": "Bundle directory",
+							"name": "Bundle Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "option_recase_path",
-							"name": "Recase resource path",
+							"name": "Recase Resource Path",
 							"type": "boolean",
 							"option": null,
 						},
@@ -5413,7 +5441,7 @@
 						},
 						{
 							"identifier": "option_rton_version_number",
-							"name": "Extract RTON - Version number",
+							"name": "Extract RTON - Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5421,19 +5449,19 @@
 						},
 						{
 							"identifier": "option_rton_version_native_string_encoding_use_utf8",
-							"name": "Extract RTON - Native string encoding use UTF-8",
+							"name": "Extract RTON - Native String Encoding Use UTF-8",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "option_rton_crypt",
-							"name": "Extract RTON - Enable encryption",
+							"name": "Extract RTON - Enable Encryption",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "option_rton_crypt_key",
-							"name": "Extract RTON - Key for encryption",
+							"name": "Extract RTON - Key For Encryption",
 							"type": "string",
 							"option": null,
 						},
@@ -5445,7 +5473,7 @@
 						},
 						{
 							"identifier": "option_ptx_format",
-							"name": "Extract PTX - Format category",
+							"name": "Extract PTX - Format Category",
 							"type": "string",
 							"option": [
 								"iphone",
@@ -5455,19 +5483,19 @@
 						},
 						{
 							"identifier": "option_ptx_atlas",
-							"name": "Extract PTX - Extract as atlas",
+							"name": "Extract PTX - Extract As Atlas",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "option_ptx_atlas_resize",
-							"name": "Extract PTX - Adjust atlas size",
+							"name": "Extract PTX - Adjust Atlas Size",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "option_ptx_sprite",
-							"name": "Extract PTX - Extract as sprite",
+							"name": "Extract PTX - Extract As Sprite",
 							"type": "boolean",
 							"option": null,
 						},
@@ -5479,7 +5507,7 @@
 						},
 						{
 							"identifier": "option_pam_version_number",
-							"name": "Extract PAM - Version number",
+							"name": "Extract PAM - Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5492,13 +5520,13 @@
 						},
 						{
 							"identifier": "option_pam_json",
-							"name": "Extract PAM - Extract as JSON",
+							"name": "Extract PAM - Extract As JSON",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "option_pam_flash",
-							"name": "Extract PAM - Extract as Flash",
+							"name": "Extract PAM - Extract As Flash",
 							"type": "boolean",
 							"option": null,
 						},
@@ -5510,7 +5538,7 @@
 						},
 						{
 							"identifier": "option_bnk_version_number",
-							"name": "Extract BNK - Version number",
+							"name": "Extract BNK - Version Number",
 							"type": "integer",
 							"option": [
 								72,
@@ -5541,7 +5569,7 @@
 					],
 					"preset": [
 						{
-							"name": "Recase path",
+							"name": "Recase Path",
 							"argument": {
 								"option_recase_path": true,
 								"option_rton": false,
@@ -5771,25 +5799,25 @@
 					"argument": [
 						{
 							"identifier": "after_file",
-							"name": "After file",
+							"name": "After File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "patch_file",
-							"name": "Patch file",
+							"name": "Patch File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "before_file",
-							"name": "Before file",
+							"name": "Before File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5797,13 +5825,13 @@
 						},
 						{
 							"identifier": "use_raw_packet",
-							"name": "Use raw packet",
+							"name": "Use Raw Packet",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -5819,25 +5847,25 @@
 					"argument": [
 						{
 							"identifier": "patch_file",
-							"name": "Patch file",
+							"name": "Patch File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "after_file",
-							"name": "After file",
+							"name": "After File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "before_file",
-							"name": "Before file",
+							"name": "Before File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "version_number",
-							"name": "Version number",
+							"name": "Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -5845,13 +5873,13 @@
 						},
 						{
 							"identifier": "use_raw_packet",
-							"name": "Use raw packet",
+							"name": "Use Raw Packet",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -5874,13 +5902,13 @@
 					"argument": [
 						{
 							"identifier": "source_file",
-							"name": "Source file",
+							"name": "Source File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "destination_version",
-							"name": "Destination version",
+							"name": "Destination Version",
 							"type": "string",
 							"option": [
 								"text",
@@ -5890,7 +5918,7 @@
 						},
 						{
 							"identifier": "destination_file",
-							"name": "Destination file",
+							"name": "Destination File",
 							"type": "path",
 							"option": null,
 						},
@@ -5931,19 +5959,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -5959,13 +5987,13 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
@@ -5976,18 +6004,18 @@
 				},
 				{
 					"identifier": "popcap.pvz2.resource_manifest.regular.from",
-					"name": "Regular Convert from official data",
+					"name": "Regular Convert From Official Data",
 					"icon": "swipe_right_alt",
 					"argument": [
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -5998,24 +6026,24 @@
 				},
 				{
 					"identifier": "popcap.pvz2.resource_manifest.regular.to",
-					"name": "Regular Convert to official data",
+					"name": "Regular Convert To Official Data",
 					"icon": "swipe_left_alt",
 					"argument": [
 						{
 							"identifier": "ripe_file",
-							"name": "Finished file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "raw_file",
-							"name": "Original file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "use_array_style_path",
-							"name": "Use array style path",
+							"name": "Use Array Style Path",
 							"type": "boolean",
 							"option": null,
 						},
@@ -6023,13 +6051,13 @@
 					"batch": null,
 					"preset": [
 						{
-							"name": "String path",
+							"name": "String Path",
 							"argument": {
 								"use_array_style_path": false,
 							},
 						},
 						{
-							"name": "Array path",
+							"name": "Array Path",
 							"argument": {
 								"use_array_style_path": true,
 							},
@@ -6050,19 +6078,19 @@
 					"argument": [
 						{
 							"identifier": "project_directory",
-							"name": "Project directory",
+							"name": "Project Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "target_scope",
-							"name": "Target scope",
+							"name": "Target Scope",
 							"type": "string",
 							"option": null,
 						},
 						{
 							"identifier": "target_package",
-							"name": "Target package",
+							"name": "Target Package",
 							"type": "string",
 							"option": null,
 						},
@@ -6116,7 +6144,7 @@
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -6263,25 +6291,25 @@
 					"argument": [
 						{
 							"identifier": "project_directory",
-							"name": "Project directory",
+							"name": "Project Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "target_scope",
-							"name": "Target scope",
+							"name": "Target Scope",
 							"type": "string",
 							"option": null,
 						},
 						{
 							"identifier": "target_package",
-							"name": "Target package",
+							"name": "Target Package",
 							"type": "string",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -6292,30 +6320,30 @@
 				},
 				{
 					"identifier": "popcap.pvz2.package_project.link",
-					"name": "link",
+					"name": "Link",
 					"icon": "linked_services",
 					"argument": [
 						{
 							"identifier": "project_directory",
-							"name": "Project directory",
+							"name": "Project Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "target_package",
-							"name": "Target package",
+							"name": "Target Package",
 							"type": "string",
 							"option": null,
 						},
 						{
 							"identifier": "remake_manifest",
-							"name": "Remake manifest",
+							"name": "Remake Manifest",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -6343,25 +6371,25 @@
 					"argument": [
 						{
 							"identifier": "project_directory",
-							"name": "Project directory",
+							"name": "Project Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "package_directory",
-							"name": "Package directory",
+							"name": "Package Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "package_name",
-							"name": "Package name",
+							"name": "Package Name",
 							"type": "string",
 							"option": null,
 						},
 						{
 							"identifier": "package_version_number",
-							"name": "Package version number",
+							"name": "Package Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -6371,7 +6399,7 @@
 						},
 						{
 							"identifier": "package_version_extended_texture_information_for_pvz2cn",
-							"name": "Package extended version of texture information for PvZ-2-CN version",
+							"name": "Package Extended Texture Information For PvZ-2-CN Version",
 							"type": "integer",
 							"option": [
 								0,
@@ -6442,7 +6470,7 @@
 					"argument": [
 						{
 							"identifier": "project_directory",
-							"name": "Project directory",
+							"name": "Project Directory",
 							"type": "path",
 							"option": null,
 						},
@@ -6471,7 +6499,7 @@
 						},
 						{
 							"identifier": "rton_version_number",
-							"name": "RTON - Version number",
+							"name": "RTON - Version Number",
 							"type": "integer",
 							"option": [
 								1,
@@ -6479,13 +6507,13 @@
 						},
 						{
 							"identifier": "rton_version_native_string_encoding_use_utf8",
-							"name": "RTON - Native string encoding use UTF-8",
+							"name": "RTON - Native String Encoding Use UTF-8",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "RTON - Buffer memory size",
+							"name": "RTON - Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -6507,28 +6535,28 @@
 						},
 						null,
 						{
-							"name": "Clear main package",
+							"name": "Clear Main Package",
 							"argument": {
 								"action": "clear",
 								"target": "main_package",
 							},
 						},
 						{
-							"name": "Clear content delivery",
+							"name": "Clear Content Delivery",
 							"argument": {
 								"action": "clear",
 								"target": "content_delivery",
 							},
 						},
 						{
-							"name": "Clear local profile",
+							"name": "Clear Local Profile",
 							"argument": {
 								"action": "clear",
 								"target": "local_profile",
 							},
 						},
 						{
-							"name": "Clear player profile",
+							"name": "Clear Player Profile",
 							"argument": {
 								"action": "clear",
 								"target": "player_profile",
@@ -6536,28 +6564,28 @@
 						},
 						null,
 						{
-							"name": "Pull main package",
+							"name": "Pull Main Package",
 							"argument": {
 								"action": "pull",
 								"target": "main_package",
 							},
 						},
 						{
-							"name": "Pull content delivery",
+							"name": "Pull Content Delivery",
 							"argument": {
 								"action": "pull",
 								"target": "content_delivery",
 							},
 						},
 						{
-							"name": "Pull local profile",
+							"name": "Pull Local Profile",
 							"argument": {
 								"action": "pull",
 								"target": "local_profile",
 							},
 						},
 						{
-							"name": "Pull player profile",
+							"name": "Pull Player Profile",
 							"argument": {
 								"action": "pull",
 								"target": "player_profile",
@@ -6565,28 +6593,28 @@
 						},
 						null,
 						{
-							"name": "Push main package",
+							"name": "Push Main Package",
 							"argument": {
 								"action": "push",
 								"target": "main_package",
 							},
 						},
 						{
-							"name": "Push content delivery",
+							"name": "Push Content Delivery",
 							"argument": {
 								"action": "push",
 								"target": "content_delivery",
 							},
 						},
 						{
-							"name": "Push local profile",
+							"name": "Push Local Profile",
 							"argument": {
 								"action": "push",
 								"target": "local_profile",
 							},
 						},
 						{
-							"name": "Push player profile",
+							"name": "Push Player Profile",
 							"argument": {
 								"action": "push",
 								"target": "player_profile",
@@ -6608,19 +6636,19 @@
 					"argument": [
 						{
 							"identifier": "target_directory",
-							"name": "Target directory",
+							"name": "Target Directory",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "disable_record_encryption",
-							"name": "Disable record encryption",
+							"name": "Disable Record Encryption",
 							"type": "boolean",
 							"option": null,
 						},
 						{
 							"identifier": "enable_debug_mode",
-							"name": "Enable debug mode",
+							"name": "Enable Debug Mode",
 							"type": "boolean",
 							"option": null,
 						},
@@ -6628,14 +6656,14 @@
 					"batch": null,
 					"preset": [
 						{
-							"name": "Disable record encryption",
+							"name": "Disable Record Encryption",
 							"argument": {
 								"disable_record_encryption": true,
 								"enable_debug_mode": false,
 							},
 						},
 						{
-							"name": "Enable debug mode",
+							"name": "Enable Debug Mode",
 							"argument": {
 								"disable_record_encryption": false,
 								"enable_debug_mode": true,
@@ -6665,7 +6693,7 @@
 					"argument": [
 						{
 							"identifier": "target_directory",
-							"name": "Target directory",
+							"name": "Target Directory",
 							"type": "path",
 							"option": null,
 						},
@@ -6694,19 +6722,19 @@
 					"argument": [
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "buffer_size",
-							"name": "Buffer memory size",
+							"name": "Buffer Memory Size",
 							"type": "size",
 							"option": null,
 						},
@@ -6725,13 +6753,13 @@
 					"argument": [
 						{
 							"identifier": "data_file",
-							"name": "Data file",
+							"name": "Data File",
 							"type": "path",
 							"option": null,
 						},
 						{
 							"identifier": "definition_file",
-							"name": "Definition file",
+							"name": "Definition File",
 							"type": "path",
 							"option": null,
 						},

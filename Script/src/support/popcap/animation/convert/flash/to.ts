@@ -3,7 +3,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 	// #region utility
 
 	function parse_transform(
-		x_Matrix: Kernel.Xml.JS_Element,
+		x_Matrix: Kernel.Notation.Xml.JS_Element,
 	): Transform {
 		return [
 			Number(CheckHelper.not_undefined_or(x_Matrix.attribute.a, '1')),
@@ -16,7 +16,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 	}
 
 	function parse_color(
-		x_Matrix: Kernel.Xml.JS_Element,
+		x_Matrix: Kernel.Notation.Xml.JS_Element,
 	): Color {
 		let compute = (multiplier_s: undefined | string, offset_s: undefined | string) => (Math.max(0, Math.min(255, Number(CheckHelper.not_undefined_or(multiplier_s, '1')) * 255 + Number(CheckHelper.not_undefined_or(offset_s, '0')))) / 255);
 		return [
@@ -28,7 +28,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 	}
 
 	function parse_image_document(
-		document: Kernel.Xml.JS_Element,
+		document: Kernel.Notation.Xml.JS_Element,
 		extra: ExtraInformation['image'][number],
 		index: number,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
@@ -63,7 +63,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 	}
 
 	function parse_sprite_document(
-		document: Kernel.Xml.JS_Element,
+		document: Kernel.Notation.Xml.JS_Element,
 		extra: ExtraInformation['sprite'][number],
 		index: number | null,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
@@ -206,7 +206,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.To {
 	}
 
 	function parse_main_document(
-		document: Kernel.Xml.JS_Element,
+		document: Kernel.Notation.Xml.JS_Element,
 		animation: Kernel.Tool.Popcap.Animation.Definition.JS_N.Animation,
 		version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
 	): void {

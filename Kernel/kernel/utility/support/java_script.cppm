@@ -16,8 +16,8 @@ import twinning.kernel.utility.container.tuple.tuple;
 import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.map.map;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.data.json.value;
-import twinning.kernel.utility.data.xml.node;
+import twinning.kernel.utility.notation.json.value;
+import twinning.kernel.utility.notation.xml.node;
 import twinning.kernel.utility.image.pixel;
 import twinning.kernel.utility.script.java_script.value;
 import twinning.kernel.utility.script.java_script.value_adapter;
@@ -31,7 +31,7 @@ import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.image.regular;
 import twinning.kernel.third.quickjs_ng;
 
-export namespace Twinning::Kernel::JavaScript {
+export namespace Twinning::Kernel::Script::JavaScript {
 
 	#pragma region basic
 
@@ -1220,11 +1220,11 @@ export namespace Twinning::Kernel::JavaScript {
 	// ----------------
 
 	template <>
-	struct ValueAdapter<Json::Value> {
+	struct ValueAdapter<Notation::Json::Value> {
 
 		using This = Value;
 
-		using That = Json::Value;
+		using That = Notation::Json::Value;
 
 		// ----------------
 
@@ -1232,29 +1232,28 @@ export namespace Twinning::Kernel::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			using namespace Json;
 			switch (that.type().value) {
-				case ValueType::Constant::null().value: {
+				case Notation::Json::ValueType::Constant::null().value: {
 					thix.from(that.get_null());
 					break;
 				}
-				case ValueType::Constant::boolean().value: {
+				case Notation::Json::ValueType::Constant::boolean().value: {
 					thix.from(that.get_boolean());
 					break;
 				}
-				case ValueType::Constant::number().value: {
+				case Notation::Json::ValueType::Constant::number().value: {
 					thix.from(that.get_number());
 					break;
 				}
-				case ValueType::Constant::string().value: {
+				case Notation::Json::ValueType::Constant::string().value: {
 					thix.from(that.get_string());
 					break;
 				}
-				case ValueType::Constant::array().value: {
+				case Notation::Json::ValueType::Constant::array().value: {
 					thix.from(that.get_array());
 					break;
 				}
-				case ValueType::Constant::object().value: {
+				case Notation::Json::ValueType::Constant::object().value: {
 					thix.from(that.get_object());
 					break;
 				}
@@ -1267,7 +1266,6 @@ export namespace Twinning::Kernel::JavaScript {
 			This & thix,
 			That & that
 		) -> Void {
-			using namespace Json;
 			if (thix.is_null()) {
 				thix.to(that.set_null());
 			}
@@ -1295,11 +1293,11 @@ export namespace Twinning::Kernel::JavaScript {
 	};
 
 	template <>
-	struct ValueAdapter<Xml::Node> {
+	struct ValueAdapter<Notation::Xml::Node> {
 
 		using This = Value;
 
-		using That = Xml::Node;
+		using That = Notation::Xml::Node;
 
 		// ----------------
 
@@ -1307,13 +1305,12 @@ export namespace Twinning::Kernel::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			using namespace Xml;
 			thix.set_object_of_object();
 			auto type = that.type();
 			thix.set_object_property("type"_sv, thix.new_value(type));
 			auto node_value_js = thix.new_value();
 			switch (type.value) {
-				case NodeType::Constant::element().value: {
+				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = that.get_element();
 					node_value_js.set_object_of_object();
 					node_value_js.set_object_property("name"_sv, thix.new_value(node_value.name));
@@ -1321,14 +1318,14 @@ export namespace Twinning::Kernel::JavaScript {
 					node_value_js.set_object_property("child"_sv, thix.new_value(node_value.child));
 					break;
 				}
-				case NodeType::Constant::text().value: {
+				case Notation::Xml::NodeType::Constant::text().value: {
 					auto & node_value = that.get_text();
 					node_value_js.set_object_of_object();
 					node_value_js.set_object_property("value"_sv, thix.new_value(node_value.value));
 					node_value_js.set_object_property("cdata"_sv, thix.new_value(node_value.cdata));
 					break;
 				}
-				case NodeType::Constant::comment().value: {
+				case Notation::Xml::NodeType::Constant::comment().value: {
 					auto & node_value = that.get_comment();
 					node_value_js.set_object_of_object();
 					node_value_js.set_object_property("value"_sv, thix.new_value(node_value.value));
@@ -1344,13 +1341,12 @@ export namespace Twinning::Kernel::JavaScript {
 			This & thix,
 			That & that
 		) -> Void {
-			using namespace Xml;
 			assert_test(thix.is_object_of_object());
-			auto type = NodeType{};
+			auto type = Notation::Xml::NodeType{};
 			thix.get_object_property("type"_sv).to(type);
 			auto node_value_js = thix.get_object_property("value"_sv);
 			switch (type.value) {
-				case NodeType::Constant::element().value: {
+				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = that.set_element();
 					assert_test(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("name"_sv).to(node_value.name);
@@ -1358,14 +1354,14 @@ export namespace Twinning::Kernel::JavaScript {
 					node_value_js.get_object_property("child"_sv).to(node_value.child);
 					break;
 				}
-				case NodeType::Constant::text().value: {
+				case Notation::Xml::NodeType::Constant::text().value: {
 					auto & node_value = that.set_text();
 					assert_test(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("value"_sv).to(node_value.value);
 					node_value_js.get_object_property("cdata"_sv).to(node_value.cdata);
 					break;
 				}
-				case NodeType::Constant::comment().value: {
+				case Notation::Xml::NodeType::Constant::comment().value: {
 					auto & node_value = that.set_comment();
 					assert_test(node_value_js.is_object_of_object());
 					node_value_js.get_object_property("value"_sv).to(node_value.value);

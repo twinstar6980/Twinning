@@ -26,7 +26,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					typical_argument_string({
 						identifier: 'key',
 						option: null,
-						checker: (argument: {}, value) => ((/^(( )*[0-9a-fA-F]{2,2}( )*)+$/.test(value)) ? null : los('executor.implement:*.illegal_key')),
+						checker: (argument: {}, value) => ((/^(( )*[0-9a-fA-F]{2,2}( )*)+$/.test(value)) ? null : los('executor.implementation:*.illegal_key')),
 						automatic: null,
 						condition: null,
 					}),
@@ -89,14 +89,14 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					typical_argument_string({
 						identifier: 'key',
 						option: null,
-						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los('executor.implement:*.illegal_key_length')),
+						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los('executor.implementation:*.illegal_key_length')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
 						identifier: 'iv',
 						option: null,
-						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
+						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implementation:*.length_not_match')),
 						automatic: null,
 						condition: (argument: {mode: string}) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
 					}),
@@ -159,14 +159,14 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					typical_argument_string({
 						identifier: 'key',
 						option: null,
-						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los('executor.implement:*.illegal_key_length')),
+						checker: (argument: {}, value) => (KernelX.Tool.Data.Encryption.Rijndael.BlockSizeE.includes(BigInt(value.length) as any) ? null : los('executor.implementation:*.illegal_key_length')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_string({
 						identifier: 'iv',
 						option: null,
-						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implement:*.length_not_match')),
+						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implementation:*.length_not_match')),
 						automatic: null,
 						condition: (argument: {mode: string}) => (['cbc', 'cfb'].includes(argument.mode) ? null : ''),
 					}),

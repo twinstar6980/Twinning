@@ -17,7 +17,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		inline static auto process_value(
 			InputCharacterStreamView &  data,
-			Value &                     value,
+			Notation::Json::Value &     value,
 			OutputCharacterStreamView & buffer
 		) -> Void {
 			while (k_true) {
@@ -88,7 +88,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 					}
 					case '[': {
 						auto & array = value.set_array();
-						auto   item_list = std::list<Array::Element>{};
+						auto   item_list = std::list<Notation::Json::Array::Element>{};
 						auto   has_comma = k_false;
 						for (auto need_more_item = k_true; need_more_item;) {
 							switch (data.read_of().value) {
@@ -142,7 +142,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 					}
 					case '{': {
 						auto & object = value.set_object();
-						auto   item_list = std::list<Object::Element>{};
+						auto   item_list = std::list<Notation::Json::Object::Element>{};
 						auto   has_comma = k_false;
 						for (auto need_more_item = k_true; need_more_item;) {
 							switch (data.read_of().value) {
@@ -231,7 +231,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		inline static auto process_whole(
 			InputCharacterStreamView &  data,
-			Value &                     value,
+			Notation::Json::Value &     value,
 			OutputCharacterStreamView & buffer
 		) -> Void {
 			process_value(data, value, buffer);
@@ -242,7 +242,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
 		inline static auto process(
 			InputCharacterStreamView &  data_,
-			Value &                     value,
+			Notation::Json::Value &     value,
 			OutputCharacterStreamView & buffer
 		) -> Void {
 			M_use_zps_of(data);

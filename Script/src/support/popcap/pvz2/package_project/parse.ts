@@ -88,7 +88,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 				package_setting.manifest.type = 'external_rton_with_string_path';
 				let resource_data = StorageHelper.read_file(package_resource_directory.push(new StoragePath(resource_path)));
 				let resource_data_stream = Kernel.ByteStreamView.watch(resource_data.view());
-				let resource_definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
+				let resource_definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true}));
 				package_manifest_official = resource_definition.value as any;
 				break;

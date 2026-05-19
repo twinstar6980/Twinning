@@ -17,7 +17,7 @@ import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.null_optional;
 import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.miscellaneous.system_native_string_extended;
+import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.third.system.windows;
 
 export namespace Twinning::Kernel::Storage {

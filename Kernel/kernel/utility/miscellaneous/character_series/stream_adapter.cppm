@@ -13,10 +13,8 @@ export namespace Twinning::Kernel {
 	#pragma region type
 
 	// NOTE: INTERFACE
-	// - static [ constexpr ] auto static_size (                                    TOption && ...option ) -> Size;
-	// - static [ constexpr ] auto size        (                     TThat && that, TOption && ...option ) -> Size;
-	// - static               auto write       ( TThisOutput & thix, TThat && that, TOption && ...option ) -> Void;
-	// - static               auto read        ( TThisInput  & thix, TThat && that, TOption && ...option ) -> Void;
+	// - static auto write ( TThisOutput & thix, TThat && that, TOption && ...option ) -> Void;
+	// - static auto read  ( TThisInput  & thix, TThat && that, TOption && ...option ) -> Void;
 	template <typename TThat>
 	struct CharacterStreamAdapter;
 

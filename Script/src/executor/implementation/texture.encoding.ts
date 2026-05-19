@@ -65,14 +65,14 @@ namespace Twinning.Script.Executor.Implementation.Texture.Encoding {
 					typical_argument_integer({
 						identifier: 'image_width',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						identifier: 'image_height',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),

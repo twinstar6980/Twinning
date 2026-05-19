@@ -121,7 +121,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, package_setting.manifest.type === 'external_rton_with_array_path');
 						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true});
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
-						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
+						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Notation.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
 						StorageHelper.write_file(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.stream_view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {

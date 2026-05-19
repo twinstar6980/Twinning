@@ -130,12 +130,12 @@ import twinning.kernel.tool.popcap.resource_stream_bundle.unpack;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.version;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.encode;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.decode;
-import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.common;
-import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.encode;
-import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.decode;
 import twinning.kernel.tool.miscellaneous.pvz2cn_crypt_data.common;
 import twinning.kernel.tool.miscellaneous.pvz2cn_crypt_data.encrypt;
 import twinning.kernel.tool.miscellaneous.pvz2cn_crypt_data.decrypt;
+import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.common;
+import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.encode;
+import twinning.kernel.tool.miscellaneous.pvz2cn_alpha_palette_texture.decode;
 
 export namespace Twinning::Kernel::Executor::Environment {
 
@@ -186,14 +186,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 		CategoryConstraint<IsPureInstance<TClass>>
 		&& (IsSameOf<t_flag, GenericClassDefinitionFlag>)
 	inline auto define_generic_class(
-		JavaScript::NativeSpaceBuilder & space,
-		String const &                   name
-	) -> JavaScript::NativeClassBuilder<TClass> {
+		Script::JavaScript::NativeSpaceBuilder & space,
+		String const &                           name
+	) -> Script::JavaScript::NativeClassBuilder<TClass> {
 		auto builder = space.add_class<TClass>(name);
 		builder.template set_constructor<
 			&normalized_lambda<
 				[](
-			) -> JavaScript::NativeValueHandler<TClass> {
+			) -> Script::JavaScript::NativeValueHandler<TClass> {
 					throw UnsupportedException{};
 				}
 			>
@@ -212,8 +212,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 				&normalized_lambda<
 					[](
 					TClass & that
-				) -> JavaScript::NativeValueHandler<TClass> {
-						return JavaScript::NativeValueHandler<TClass>::new_instance_allocate(that);
+				) -> Script::JavaScript::NativeValueHandler<TClass> {
+						return Script::JavaScript::NativeValueHandler<TClass>::new_instance_allocate(that);
 					}
 				>
 			>("value"_s);
@@ -223,7 +223,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			// NOTE: EXPLAIN: get value(): typeof T.Value;
 			constexpr auto & getter = normalized_lambda<
 				[](
-				JavaScript::NativeValueHandler<TClass> & thix
+				Script::JavaScript::NativeValueHandler<TClass> & thix
 			) -> TClass & {
 					// NOTE: EXPLAIN: return reference is cheap
 					return thix.value();
@@ -236,8 +236,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 				// NOTE: EXPLAIN: set value(it: typeof T.Value);
 				constexpr auto & setter = normalized_lambda<
 					[](
-					JavaScript::NativeValueHandler<TClass> & thix,
-					TClass &                                 value
+					Script::JavaScript::NativeValueHandler<TClass> & thix,
+					TClass &                                         value
 				) -> Void {
 						// NOTE: EXPLAIN: some type has not copy assignment
 						restruct(thix.value(), value);
@@ -253,14 +253,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 	template <typename TVersion, typename TVersionPackage, typename TClass> requires
 		CategoryConstraint<IsPureInstance<TVersion> && IsPureInstance<TVersionPackage> && IsPureInstance<TClass>>
 	inline auto define_variant_class_version_method(
-		JavaScript::NativeClassBuilder<TClass> & builder
-	) -> JavaScript::NativeClassBuilder<TClass> & {
+		Script::JavaScript::NativeClassBuilder<TClass> & builder
+	) -> Script::JavaScript::NativeClassBuilder<TClass> & {
 		// NOTE: EXPLAIN: static json(json: Json.Value, version: Version): T;
-		constexpr auto & json_constructor = JavaScript::proxy_native_function_by_handler<
+		constexpr auto & json_constructor = Script::JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[](
-				Json::Value const & json,
-				TVersion const &    version
+				Notation::Json::Value const & json,
+				TVersion const &              version
 			) -> TClass {
 					auto it = TClass{};
 					Generalization::match<TVersionPackage>(
@@ -274,13 +274,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 			>
 		>;
 		// NOTE: EXPLAIN: get_json(version: Version): Json.Value;
-		constexpr auto & json_getter = JavaScript::proxy_native_function_by_handler<
+		constexpr auto & json_getter = Script::JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[](
 				TClass &         thix,
 				TVersion const & version
-			) -> Json::Value {
-					auto json = Json::Value{};
+			) -> Notation::Json::Value {
+					auto json = Notation::Json::Value{};
 					Generalization::match<TVersionPackage>(
 						version,
 						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
@@ -292,12 +292,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 			>
 		>;
 		// NOTE: EXPLAIN: set_json(version: Version, value: Json.Value);
-		constexpr auto & json_setter = JavaScript::proxy_native_function_by_handler<
+		constexpr auto & json_setter = Script::JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[](
-				TClass &            thix,
-				TVersion const &    version,
-				Json::Value const & json
+				TClass &                      thix,
+				TVersion const &              version,
+				Notation::Json::Value const & json
 			) -> Void {
 					Generalization::match<TVersionPackage>(
 						version,
@@ -393,7 +393,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 		Context & context
 	) -> Void {
 		// ReSharper disable CppInconsistentNaming CppTooWideScope
-		auto s_Twinning = JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_left(context.context().global_object())};
+		auto s_Twinning = Script::JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_left(context.context().global_object())};
 		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
 		// Boolean
 		define_generic_class<Boolean>(s_Kernel, "Boolean"_s);
@@ -423,7 +423,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			.add_member_function<
 				&normalized_lambda<
 					[](
-					JavaScript::NativeValueHandler<ByteArray> & that
+					Script::JavaScript::NativeValueHandler<ByteArray> & that
 				) -> ByteArray && {
 						return as_moveable(that.value());
 					}
@@ -453,15 +453,19 @@ export namespace Twinning::Kernel::Executor::Environment {
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::set_position>>("set_position"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::view>>("view"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::stream_view>>("stream_view"_s);
-		// Json
+		// Notation
 		{
-			auto s_Json = s_Kernel.add_space("Json"_s);
-			define_generic_class<Json::Value>(s_Json, "Value"_s);
-		}
-		// Xml
-		{
-			auto s_Xml = s_Kernel.add_space("Xml"_s);
-			define_generic_class<Xml::Node>(s_Xml, "Node"_s);
+			auto s_Notation = s_Kernel.add_space("Notation"_s);
+			// Json
+			{
+				auto s_Json = s_Notation.add_space("Json"_s);
+				define_generic_class<Notation::Json::Value>(s_Json, "Value"_s);
+			}
+			// Xml
+			{
+				auto s_Xml = s_Notation.add_space("Xml"_s);
+				define_generic_class<Notation::Xml::Node>(s_Xml, "Node"_s);
+			}
 		}
 		// Image
 		{
@@ -576,8 +580,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_Compression = s_Data.add_space("Compression"_s);
 					{
 						auto s_Deflate = s_Compression.add_space("Deflate"_s);
-						define_generic_class<Tool::Data::Compression::Deflate::Strategy>(s_Deflate, "Strategy"_s);
-						define_generic_class<Tool::Data::Compression::Deflate::Wrapper>(s_Deflate, "Wrapper"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::StrategyMode>(s_Deflate, "StrategyMode"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::WrapperType>(s_Deflate, "WrapperType"_s);
 						s_Deflate.add_space("Compress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Compress::process>>("process"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Compress::estimate>>("estimate"_s);
@@ -838,13 +842,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Zlib.add_space("Compress"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							InputByteStreamView &                              raw,
-							OutputByteStreamView &                             ripe,
-							Integer const &                                    level,
-							Integer const &                                    window_exponent,
-							Integer const &                                    memory_level,
-							Tool::Data::Compression::Deflate::Strategy const & strategy,
-							Version const &                                    version
+							InputByteStreamView &                                  raw,
+							OutputByteStreamView &                                 ripe,
+							Integer const &                                        level,
+							Integer const &                                        window_exponent,
+							Integer const &                                        memory_level,
+							Tool::Data::Compression::Deflate::StrategyMode const & strategy,
+							Version const &                                        version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -979,11 +983,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ReflectionObjectNotation.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							OutputByteStreamView & data,
-							Json::Value const &    definition,
-							Boolean const &        enable_string_index,
-							Boolean const &        enable_reference,
-							Version const &        version
+							OutputByteStreamView &        data,
+							Notation::Json::Value const & definition,
+							Boolean const &               enable_string_index,
+							Boolean const &               enable_reference,
+							Version const &               version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -996,9 +1000,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_ReflectionObjectNotation.add_space("Decode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							InputByteStreamView & data,
-							Json::Value &         definition,
-							Version const &       version
+							InputByteStreamView &   data,
+							Notation::Json::Value & definition,
+							Version const &         version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1687,13 +1691,6 @@ export namespace Twinning::Kernel::Executor::Environment {
 			{
 				auto s_Miscellaneous = s_Tool.add_space("Miscellaneous"_s);
 				{
-					auto s_Pvz2cnAlphaPaletteTexture = s_Miscellaneous.add_space("Pvz2cnAlphaPaletteTexture"_s);
-					s_Pvz2cnAlphaPaletteTexture.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnAlphaPaletteTexture::Encode::process>>("process"_s);
-					s_Pvz2cnAlphaPaletteTexture.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnAlphaPaletteTexture::Decode::process>>("process"_s);
-				}
-				{
 					auto s_Pvz2cnCryptData = s_Miscellaneous.add_space("Pvz2cnCryptData"_s);
 					s_Pvz2cnCryptData.add_space("Encrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Encrypt::process>>("process"_s)
@@ -1701,6 +1698,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_Pvz2cnCryptData.add_space("Decrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Decrypt::process>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnCryptData::Decrypt::estimate>>("estimate"_s);
+				}
+				{
+					auto s_Pvz2cnAlphaPaletteTexture = s_Miscellaneous.add_space("Pvz2cnAlphaPaletteTexture"_s);
+					s_Pvz2cnAlphaPaletteTexture.add_space("Encode"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnAlphaPaletteTexture::Encode::process>>("process"_s);
+					s_Pvz2cnAlphaPaletteTexture.add_space("Decode"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Miscellaneous::Pvz2cnAlphaPaletteTexture::Decode::process>>("process"_s);
 				}
 			}
 		}
@@ -1717,11 +1721,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> &                   thix,
-						JavaScript::NativeValueHandler<VariableCharacterListView> & script,
-						JavaScript::NativeValueHandler<String> &                    name,
-						JavaScript::NativeValueHandler<Boolean> &                   is_module
-					) -> JavaScript::Value {
+						Script::JavaScript::NativeValueHandler<Context> &                   thix,
+						Script::JavaScript::NativeValueHandler<VariableCharacterListView> & script,
+						Script::JavaScript::NativeValueHandler<String> &                    name,
+						Script::JavaScript::NativeValueHandler<Boolean> &                   is_module
+					) -> Script::JavaScript::Value {
 							return thix.value().evaluate(down_cast<VariableStringView>(script.value()), name.value(), is_module.value());
 						}
 					>
@@ -1729,37 +1733,37 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> &      thix,
-						JavaScript::NativeValueHandler<List<String>> & argument
-					) -> JavaScript::NativeValueHandler<List<String>> {
-							return JavaScript::NativeValueHandler<List<String>>::new_instance_allocate(thix.value().callback(argument.value()));
+						Script::JavaScript::NativeValueHandler<Context> &      thix,
+						Script::JavaScript::NativeValueHandler<List<String>> & argument
+					) -> Script::JavaScript::NativeValueHandler<List<String>> {
+							return Script::JavaScript::NativeValueHandler<List<String>>::new_instance_allocate(thix.value().callback(argument.value()));
 						}
 					>
 				>("callback"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> & thix
-					) -> JavaScript::NativeValueHandler<Context> {
-							return JavaScript::NativeValueHandler<Context>::new_instance_allocate(thix.value().spawn());
+						Script::JavaScript::NativeValueHandler<Context> & thix
+					) -> Script::JavaScript::NativeValueHandler<Context> {
+							return Script::JavaScript::NativeValueHandler<Context>::new_instance_allocate(thix.value().spawn());
 						}
 					>
 				>("spawn"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> & thix
-					) -> JavaScript::NativeValueHandler<Boolean> {
-							return JavaScript::NativeValueHandler<Boolean>::new_instance_allocate(thix.value().busy());
+						Script::JavaScript::NativeValueHandler<Context> & thix
+					) -> Script::JavaScript::NativeValueHandler<Boolean> {
+							return Script::JavaScript::NativeValueHandler<Boolean>::new_instance_allocate(thix.value().busy());
 						}
 					>
 				>("busy"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> &        thix,
-						JavaScript::NativeValueHandler<Thread::Thread> & thread,
-						JavaScript::Value &                              executor
+						Script::JavaScript::NativeValueHandler<Context> &        thix,
+						Script::JavaScript::NativeValueHandler<Thread::Thread> & thread,
+						Script::JavaScript::Value &                              executor
 					) -> Void {
 							return thix.value().execute(thread.value(), executor);
 						}
@@ -1768,18 +1772,18 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> & thix
-					) -> JavaScript::NativeValueHandler<Optional<Path>> {
-							return JavaScript::NativeValueHandler<Optional<Path>>::new_reference(thix.value().query_module_home());
+						Script::JavaScript::NativeValueHandler<Context> & thix
+					) -> Script::JavaScript::NativeValueHandler<Optional<Path>> {
+							return Script::JavaScript::NativeValueHandler<Optional<Path>>::new_reference(thix.value().query_module_home());
 						}
 					>
 				>("query_module_home"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<Context> & thix
-					) -> JavaScript::NativeValueHandler<Boolean> {
-							return JavaScript::NativeValueHandler<Boolean>::new_reference(thix.value().query_byte_stream_use_big_endian());
+						Script::JavaScript::NativeValueHandler<Context> & thix
+					) -> Script::JavaScript::NativeValueHandler<Boolean> {
+							return Script::JavaScript::NativeValueHandler<Boolean>::new_reference(thix.value().query_byte_stream_use_big_endian());
 						}
 					>
 				>("query_byte_stream_use_big_endian"_s);
@@ -1838,17 +1842,17 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function<
 					&normalized_lambda<
 						[](
-						JavaScript::NativeValueHandler<VariableCharacterListView> & it
+						Script::JavaScript::NativeValueHandler<VariableCharacterListView> & it
 					) -> VariableStringView & {
 							// NOTE: EXPLAIN: return StringView is cheap
 							return down_cast<VariableStringView>(it.value());
 						}
 					>
 				>("cast_CharacterListView_to_JS_String"_s);
-			s_Miscellaneous.add_variable("g_context"_s, context.context().new_value(JavaScript::NativeValueHandler<Context>::new_reference(context)));
-			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_version))));
-			s_Miscellaneous.add_variable("g_system"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_system))));
-			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
+			s_Miscellaneous.add_variable("g_context"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<Context>::new_reference(context)));
+			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_version))));
+			s_Miscellaneous.add_variable("g_system"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_system))));
+			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
 		}
 		// ReSharper restore CppInconsistentNaming
 		return;

@@ -36,8 +36,8 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 		unicode_string_index: Array<string>,
 		type_identifier: bigint,
 		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
-	): Kernel.Json.JS_Value {
-		let value: Kernel.Json.JS_Value;
+	): Kernel.Notation.Json.JS_Value {
+		let value: Kernel.Notation.Json.JS_Value;
 		switch (type_identifier) {
 			case 0x00n: {
 				value = false;
@@ -302,7 +302,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 	function process_whole(
 		data: ByteStreamView,
 		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
-	): Kernel.Json.JS_Value {
+	): Kernel.Notation.Json.JS_Value {
 		if (data.u32() !== 0x4E4F5452n) {
 			Console.warning(`data@${data.p().toString(16)}h: invalid magic`, []);
 		}
@@ -321,7 +321,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 	export function process(
 		data: ByteStreamView,
 		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
-	): Kernel.Json.JS_Value {
+	): Kernel.Notation.Json.JS_Value {
 		return process_whole(data, version);
 	}
 

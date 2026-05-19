@@ -172,7 +172,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zlib)) {
 						auto chunk_data = Storage::read_file(resource_path);
-						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::Strategy::Constant::default_mode(), Data::Compression::Deflate::Wrapper::Constant::gzip());
+						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::gzip());
 						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
 						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;

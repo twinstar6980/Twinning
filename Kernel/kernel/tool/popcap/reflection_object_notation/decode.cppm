@@ -48,7 +48,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static auto process_value(
 			InputByteStreamView &      data,
-			Json::Value &              value,
+			Notation::Json::Value &    value,
 			List<ConstantStringView> & native_string_index,
 			List<ConstantStringView> & unicode_string_index,
 			TypeIdentifier const &     type_identifier
@@ -278,14 +278,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				}
 				case TypeIdentifier::Value::object_begin: {
 					auto & object = value.set_object();
-					auto   member_list = std::list<Json::Object::Element>{};
+					auto   member_list = std::list<Notation::Json::Object::Element>{};
 					while (k_true) {
 						auto key_type_identifier = data.read_of<TypeIdentifier>();
 						if (key_type_identifier.value == TypeIdentifier::Value::object_end) {
 							break;
 						}
 						member_list.emplace_back();
-						auto member_key = Json::Value{};
+						auto member_key = Notation::Json::Value{};
 						process_value(data, member_key, native_string_index, unicode_string_index, key_type_identifier);
 						member_list.back().key = as_moveable(member_key.get_string());
 						auto value_type_identifier = data.read_of<TypeIdentifier>();
@@ -310,8 +310,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView & data,
-			Json::Value &         definition
+			InputByteStreamView &   data,
+			Notation::Json::Value & definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			data.read_constant(cbox<VersionNumber>(t_version.number));
@@ -343,8 +343,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView & data_,
-			Json::Value &         definition
+			InputByteStreamView &   data_,
+			Notation::Json::Value & definition
 		) -> Void {
 			M_use_zps_of(data);
 			restruct(definition);

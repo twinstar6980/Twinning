@@ -7,16 +7,6 @@ import twinning.kernel.utility;
 
 export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 
-	using Kernel::Json::ValueType;
-
-	using Kernel::Json::Value;
-
-	using Kernel::Json::Array;
-
-	using Kernel::Json::Object;
-
-	// ----------------
-
 	struct Common {
 
 	};

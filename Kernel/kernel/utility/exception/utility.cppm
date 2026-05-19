@@ -5,7 +5,7 @@ module;
 
 export module twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.exception.exception;
-import twinning.kernel.utility.miscellaneous.system_native_string;
+import twinning.kernel.utility.miscellaneous.system_native_string_low;
 
 export namespace Twinning::Kernel {
 

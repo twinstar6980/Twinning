@@ -388,17 +388,17 @@ namespace Twinning.Script.KernelX {
 
 					export const MemoryLevelE = MemoryLevelX as unknown as MemoryLevel[];
 
-					const StrategyX = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
+					const StrategyModeX = ['default_mode', 'filtered', 'huffman_only', 'rle', 'fixed'] as const;
 
-					export type Strategy = typeof StrategyX[number];
+					export type StrategyMode = typeof StrategyModeX[number];
 
-					export const StrategyE = StrategyX as unknown as Strategy[];
+					export const StrategyModeE = StrategyModeX as unknown as StrategyMode[];
 
-					const WrapperX = ['none', 'zlib', 'gzip'] as const;
+					const WrapperTypeX = ['none', 'zlib', 'gzip'] as const;
 
-					export type Wrapper = typeof WrapperX[number];
+					export type WrapperType = typeof WrapperTypeX[number];
 
-					export const WrapperE = WrapperX as unknown as Wrapper[];
+					export const WrapperTypeE = WrapperTypeX as unknown as WrapperType[];
 
 					// ----------------
 
@@ -408,16 +408,16 @@ namespace Twinning.Script.KernelX {
 						level: Level,
 						window_exponent: WindowExponent,
 						memory_level: MemoryLevel,
-						strategy: Strategy,
-						wrapper: Wrapper,
+						strategy_mode: StrategyMode,
+						wrapper_type: WrapperType,
 					): void {
 						let raw = StorageHelper.read_file(raw_file);
 						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
 						let ripe_size_bound = Kernel.Size.default();
-						Kernel.Tool.Data.Compression.Deflate.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Kernel.Tool.Data.Compression.Deflate.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.WrapperType.value(wrapper_type));
 						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						Kernel.Tool.Data.Compression.Deflate.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Strategy.value(strategy), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Kernel.Tool.Data.Compression.Deflate.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.StrategyMode.value(strategy_mode), Kernel.Tool.Data.Compression.Deflate.WrapperType.value(wrapper_type));
 						StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
@@ -426,13 +426,13 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 						window_exponent: WindowExponent,
-						wrapper: Wrapper,
+						wrapper_type: WrapperType,
 						raw_buffer: Kernel.ByteListView,
 					): void {
 						let ripe = StorageHelper.read_file(ripe_file);
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(raw_stream, ripe_stream, Kernel.Integer.value(window_exponent), Kernel.Tool.Data.Compression.Deflate.Wrapper.value(wrapper));
+						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(raw_stream, ripe_stream, Kernel.Integer.value(window_exponent), Kernel.Tool.Data.Compression.Deflate.WrapperType.value(wrapper_type));
 						StorageHelper.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
@@ -584,8 +584,8 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					/** result is a view of buffer */
-					export function encode<TConstraint extends Kernel.Json.JS_Value>(
-						value: Kernel.Json.Value<TConstraint>,
+					export function encode<TConstraint extends Kernel.Notation.Json.JS_Value>(
+						value: Kernel.Notation.Json.Value<TConstraint>,
 						disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
@@ -597,11 +597,11 @@ namespace Twinning.Script.KernelX {
 						return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
 					}
 
-					export function decode<TConstraint extends Kernel.Json.JS_Value>(
+					export function decode<TConstraint extends Kernel.Notation.Json.JS_Value>(
 						data: ArrayBuffer,
-					): Kernel.Json.Value<TConstraint> {
+					): Kernel.Notation.Json.Value<TConstraint> {
 						let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
-						let value = Kernel.Json.Value.default<TConstraint>();
+						let value = Kernel.Notation.Json.Value.default<TConstraint>();
 						let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_for_string.view()));
 						Kernel.Tool.Data.Serialization.Json.Decode.process(data_stream, value, buffer_stream);
 						return value;
@@ -609,8 +609,8 @@ namespace Twinning.Script.KernelX {
 
 					// ----------------
 
-					export function encode_s<TConstraint extends Kernel.Json.JS_Value>(
-						value: Kernel.Json.Value<TConstraint>,
+					export function encode_s<TConstraint extends Kernel.Notation.Json.JS_Value>(
+						value: Kernel.Notation.Json.Value<TConstraint>,
 						disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
@@ -621,18 +621,18 @@ namespace Twinning.Script.KernelX {
 						return Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
 					}
 
-					export function decode_s<TConstraint extends Kernel.Json.JS_Value>(
+					export function decode_s<TConstraint extends Kernel.Notation.Json.JS_Value>(
 						data: string,
-					): Kernel.Json.Value<TConstraint> {
+					): Kernel.Notation.Json.Value<TConstraint> {
 						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
 						return decode(data_byte.view().value);
 					}
 
 					// ----------------
 
-					export function encode_fs<TConstraint extends Kernel.Json.JS_Value>(
+					export function encode_fs<TConstraint extends Kernel.Notation.Json.JS_Value>(
 						data_file: StoragePath,
-						value: Kernel.Json.Value<TConstraint>,
+						value: Kernel.Notation.Json.Value<TConstraint>,
 						disable_array_trailing_comma: boolean = g_format.disable_array_trailing_comma,
 						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
@@ -644,9 +644,9 @@ namespace Twinning.Script.KernelX {
 						return;
 					}
 
-					export function decode_fs<TConstraint extends Kernel.Json.JS_Value>(
+					export function decode_fs<TConstraint extends Kernel.Notation.Json.JS_Value>(
 						data_file: StoragePath,
-					): Kernel.Json.Value<TConstraint> {
+					): Kernel.Notation.Json.Value<TConstraint> {
 						let data = StorageHelper.read_file(data_file);
 						return decode(data.view().value);
 					}
@@ -657,7 +657,7 @@ namespace Twinning.Script.KernelX {
 
 					export function encode_fs(
 						data_file: StoragePath,
-						value: Kernel.Xml.Node,
+						value: Kernel.Notation.Xml.Node,
 					): void {
 						let data = Kernel.String.default();
 						Kernel.Tool.Data.Serialization.Xml.Encode.process(data, value);
@@ -668,10 +668,10 @@ namespace Twinning.Script.KernelX {
 
 					export function decode_fs(
 						data_file: StoragePath,
-					): Kernel.Xml.Node {
+					): Kernel.Notation.Xml.Node {
 						let data_byte = StorageHelper.read_file(data_file);
 						let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
-						let value = Kernel.Xml.Node.default();
+						let value = Kernel.Notation.Xml.Node.default();
 						Kernel.Tool.Data.Serialization.Xml.Decode.process(data, value);
 						return value;
 					}
@@ -689,11 +689,12 @@ namespace Twinning.Script.KernelX {
 				export namespace Flipping {
 
 					export function encode(
-						target: Kernel.Image.VariableImageView,
-						horizontal: boolean,
-						vertical: boolean,
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						flip_horizontal: boolean,
+						flip_vertical: boolean,
 					): void {
-						return Kernel.Tool.Texture.Transformation.Flipping.Encode.process(target, Kernel.Boolean.value(horizontal), Kernel.Boolean.value(vertical));
+						return Kernel.Tool.Texture.Transformation.Flipping.Encode.process(raw, ripe, Kernel.Boolean.value(flip_horizontal), Kernel.Boolean.value(flip_vertical));
 					}
 
 					// ----------------
@@ -701,13 +702,15 @@ namespace Twinning.Script.KernelX {
 					export function encode_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						horizontal: boolean,
-						vertical: boolean,
+						flip_horizontal: boolean,
+						flip_vertical: boolean,
 					): void {
-						let target = File.Png.read_fs_of(raw_file);
-						let target_view = target.view();
-						encode(target_view, horizontal, vertical);
-						File.Png.write_fs(ripe_file, target_view);
+						let raw = File.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(raw_view.size());
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view, flip_horizontal, flip_vertical);
+						File.Png.write_fs(ripe_file, ripe_view);
 						return;
 					}
 
@@ -727,11 +730,11 @@ namespace Twinning.Script.KernelX {
 					export function encode_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						size: Image.ImageSize,
+						target_size: Image.ImageSize,
 					): void {
 						let raw = File.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
-						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(size));
+						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(target_size));
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view);
 						File.Png.write_fs(ripe_file, ripe_view);
@@ -741,11 +744,12 @@ namespace Twinning.Script.KernelX {
 					export function encode_rate_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						size_rate: number,
+						target_rate: number,
 					): void {
 						let raw = File.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
-						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(raw.size().value[0]) * size_rate))), BigInt(Math.max(1, Math.round(Number(raw.size().value[1]) * size_rate)))]));
+						let target_size = Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(raw.size().value[0]) * target_rate))), BigInt(Math.max(1, Math.round(Number(raw.size().value[1]) * target_rate)))]);
+						let ripe = Kernel.Image.Image.allocate(target_size);
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view);
 						File.Png.write_fs(ripe_file, ripe_view);
@@ -894,6 +898,8 @@ namespace Twinning.Script.KernelX {
 					'rgb_etc1',
 					'rgb_etc2',
 					'rgba_etc2_eac',
+					'r_eac',
+					'rg_eac',
 					'rgba_astc_4x4',
 					'rgba_astc_5x4',
 					'rgba_astc_5x5',
@@ -966,7 +972,9 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgb_etc1':
 						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
+						case 'rgba_etc2_eac':
+						case 'r_eac':
+						case 'rg_eac': {
 							result = [4n, 4n];
 							break;
 						}
@@ -1093,9 +1101,11 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgb_etc1':
 						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
+						case 'rgba_etc2_eac':
+						case 'r_eac':
+						case 'rg_eac': {
 							result = 64n;
-							if (format === 'rgba_etc2_eac') {
+							if (format === 'rgba_etc2_eac' || format === 'rg_eac') {
 								result += 64n;
 							}
 							break;
@@ -1171,6 +1181,8 @@ namespace Twinning.Script.KernelX {
 						'rgb_pvrtc1_4bpp',
 						'rgb_etc1',
 						'rgb_etc2',
+						'r_eac',
+						'rg_eac',
 					].includes(format);
 				}
 
@@ -1245,20 +1257,25 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgb_etc1':
 						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
+						case 'rgba_etc2_eac':
+						case 'r_eac':
+						case 'rg_eac': {
 							let generation = ({
 								'rgb_etc1': 'v1',
 								'rgb_etc2': 'v2',
 								'rgba_etc2_eac': 'v2',
+								'r_eac': 'eac',
+								'rg_eac': 'eac',
 							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Etc.Generation.Value>)[format];
 							let with_alpha_eac = format === 'rgba_etc2_eac';
+							let with_green_eac = format === 'rg_eac';
 							Kernel.Tool.Texture.Compression.Etc.Compress.process(
 								data,
 								image,
 								Kernel.Tool.Texture.Compression.Etc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
 								Kernel.Boolean.value(with_alpha_eac),
-								Kernel.Boolean.value(false),
+								Kernel.Boolean.value(with_green_eac),
 							);
 							break;
 						}
@@ -1355,20 +1372,25 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgb_etc1':
 						case 'rgb_etc2':
-						case 'rgba_etc2_eac': {
+						case 'rgba_etc2_eac':
+						case 'r_eac':
+						case 'rg_eac': {
 							let generation = ({
 								'rgb_etc1': 'v1',
 								'rgb_etc2': 'v2',
 								'rgba_etc2_eac': 'v2',
+								'r_eac': 'eac',
+								'rg_eac': 'eac',
 							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Etc.Generation.Value>)[format];
 							let with_alpha_eac = format === 'rgba_etc2_eac';
+							let with_green_eac = format === 'rg_eac';
 							Kernel.Tool.Texture.Compression.Etc.Uncompress.process(
 								data,
 								image,
 								Kernel.Tool.Texture.Compression.Etc.Generation.value(generation),
 								Kernel.Image.ImageSize.value(get_block_size(format)),
 								Kernel.Boolean.value(with_alpha_eac),
-								Kernel.Boolean.value(false),
+								Kernel.Boolean.value(with_green_eac),
 							);
 							break;
 						}
@@ -1626,7 +1648,7 @@ namespace Twinning.Script.KernelX {
 					level: Data.Compression.Deflate.Level,
 					window_exponent: Data.Compression.Deflate.WindowExponent,
 					memory_level: Data.Compression.Deflate.MemoryLevel,
-					strategy: Data.Compression.Deflate.Strategy,
+					strategy_mode: Data.Compression.Deflate.StrategyMode,
 					version: typeof Kernel.Tool.Popcap.Zlib.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Zlib.Version.value(version);
@@ -1636,7 +1658,7 @@ namespace Twinning.Script.KernelX {
 					Kernel.Tool.Popcap.Zlib.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), version_c);
 					let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
 					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-					Kernel.Tool.Popcap.Zlib.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.Strategy.value(strategy), version_c);
+					Kernel.Tool.Popcap.Zlib.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.StrategyMode.value(strategy_mode), version_c);
 					StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 					return;
 				}
@@ -1739,7 +1761,7 @@ namespace Twinning.Script.KernelX {
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
 					let data = StorageHelper.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					let definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
+					let definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition);
 					return;
@@ -1789,7 +1811,7 @@ namespace Twinning.Script.KernelX {
 					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
 					let data_stream = Kernel.ByteStreamView.watch(plain_stream.stream_view());
-					let definition = Kernel.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
+					let definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition);
 					return;
@@ -2391,6 +2413,42 @@ namespace Twinning.Script.KernelX {
 
 		export namespace Miscellaneous {
 
+			export namespace Pvz2cnCryptData {
+
+				export function encrypt_fs(
+					plain_file: StoragePath,
+					cipher_file: StoragePath,
+					key: string,
+				): void {
+					let plain = StorageHelper.read_file(plain_file);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
+					let cipher_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(plain.size(), cipher_size);
+					let cipher = Kernel.ByteArray.allocate(cipher_size);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
+					StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
+					return;
+				}
+
+				export function decrypt_fs(
+					plain_file: StoragePath,
+					cipher_file: StoragePath,
+					key: string,
+				): void {
+					let cipher = StorageHelper.read_file(cipher_file);
+					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
+					let plain_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(cipher.size(), plain_size);
+					let plain = Kernel.ByteArray.allocate(plain_size);
+					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
+					StorageHelper.write_file(plain_file, plain_stream.stream_view());
+					return;
+				}
+
+			}
+
 			export namespace Pvz2cnAlphaPaletteTexture {
 
 				export type BitCount = 1 | 2 | 3 | 4;
@@ -2493,42 +2551,6 @@ namespace Twinning.Script.KernelX {
 					}
 					data.set_position(Kernel.Size.value(data.position().value + BigInt(palette_data.p())));
 					Kernel.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.Decode.process(data, image, Kernel.Image.ColorList.value(palette));
-					return;
-				}
-
-			}
-
-			export namespace Pvz2cnCryptData {
-
-				export function encrypt_fs(
-					plain_file: StoragePath,
-					cipher_file: StoragePath,
-					key: string,
-				): void {
-					let plain = StorageHelper.read_file(plain_file);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					let cipher_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(plain.size(), cipher_size);
-					let cipher = Kernel.ByteArray.allocate(cipher_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
-					return;
-				}
-
-				export function decrypt_fs(
-					plain_file: StoragePath,
-					cipher_file: StoragePath,
-					key: string,
-				): void {
-					let cipher = StorageHelper.read_file(cipher_file);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(cipher.size(), plain_size);
-					let plain = Kernel.ByteArray.allocate(plain_size);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					StorageHelper.write_file(plain_file, plain_stream.stream_view());
 					return;
 				}
 

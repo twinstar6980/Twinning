@@ -304,7 +304,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 			if (resource_path.toLowerCase().endsWith('rton')) {
 				let data = StorageHelper.read_file(resource_directory.push(new StoragePath(resource_path)));
 				let stream = Kernel.ByteStreamView.watch(data.view());
-				let result = Kernel.Json.Value.default<ResourceManifest.Package>();
+				let result = Kernel.Notation.Json.Value.default<ResourceManifest.Package>();
 				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(
 					stream,
 					result as any,
@@ -323,7 +323,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 			resource_manifest = resource_manifest!;
 		}
 		let regular_resource_manifest = RegularResourceManifest.Convert.from_official(resource_manifest);
-		KernelX.Tool.Data.Serialization.Json.encode_fs(resource_manifest_file, Kernel.Json.Value.value(regular_resource_manifest));
+		KernelX.Tool.Data.Serialization.Json.encode_fs(resource_manifest_file, Kernel.Notation.Json.Value.value(regular_resource_manifest));
 		convert(
 			resource_directory,
 			package_definition,

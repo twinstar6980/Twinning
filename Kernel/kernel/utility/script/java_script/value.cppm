@@ -15,7 +15,7 @@ import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.data.json.value;
+import twinning.kernel.utility.notation.json.value;
 import twinning.kernel.utility.script.java_script.value_adapter;
 import twinning.kernel.utility.range.number_range;
 import twinning.kernel.utility.range.range_wrapper;
@@ -25,7 +25,7 @@ import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.support.string;
 import twinning.kernel.third.quickjs_ng;
 
-export namespace Twinning::Kernel::JavaScript {
+export namespace Twinning::Kernel::Script::JavaScript {
 
 	#pragma region declaration
 
@@ -1323,7 +1323,7 @@ export namespace Twinning::Kernel::JavaScript {
 		Value &                      exception,
 		std::source_location const & location
 	) :
-		Exception{"JavaScript.Execution", {}, location} {
+		Exception{"Script.JavaScript.Execution", {}, location} {
 		auto exception_message = exception.context().evaluate(
 			R"((exception) => {
 				function generate_exception_message(

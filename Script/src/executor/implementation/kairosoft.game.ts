@@ -49,7 +49,7 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 					typical_argument_string({
 						identifier: 'key',
 						option: null,
-						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los('executor.implement:*.illegal_key')),
+						checker: (argument: {}, value) => ((/(^(( )*[0-9a-fA-F]{2,2}( )*)+$)|(^d(32|64):[0-9]+$)/.test(value)) ? null : los('executor.implementation:*.illegal_key')),
 						automatic: null,
 						condition: null,
 					}),

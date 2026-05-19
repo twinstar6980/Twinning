@@ -94,7 +94,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						chunk_definition.flag = "zlib"_s;
 						auto chunk_stream = OutputByteStreamView{chunk_data};
 						data.forward(10_sz); // NOTE: EXPLAIN: skip gzip header
-						Data::Compression::Deflate::Uncompress::process(chunk_stream, data, 15_i, Data::Compression::Deflate::Wrapper::Constant::none());
+						Data::Compression::Deflate::Uncompress::process(chunk_stream, data, 15_i, Data::Compression::Deflate::WrapperType::Constant::none());
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {

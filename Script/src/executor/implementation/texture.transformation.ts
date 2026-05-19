@@ -24,13 +24,13 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						condition: null,
 					}),
 					typical_argument_boolean({
-						identifier: 'horizontal',
+						identifier: 'flip_horizontal',
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_boolean({
-						identifier: 'vertical',
+						identifier: 'flip_vertical',
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -54,8 +54,8 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
 					}),
 				],
-				worker: ({raw_file, ripe_file, horizontal, vertical}, store: {}) => {
-					KernelX.Tool.Texture.Transformation.Flipping.encode_fs(raw_file, ripe_file, horizontal, vertical);
+				worker: ({raw_file, ripe_file, flip_horizontal, flip_vertical}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Flipping.encode_fs(raw_file, ripe_file, flip_horizontal, flip_vertical);
 					return;
 				},
 			}),
@@ -78,16 +78,16 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						condition: null,
 					}),
 					typical_argument_integer({
-						identifier: 'size_width',
+						identifier: 'target_width',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
-						identifier: 'size_height',
+						identifier: 'target_height',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
@@ -110,8 +110,8 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
 					}),
 				],
-				worker: ({raw_file, ripe_file, size_width, size_height}, store: {}) => {
-					KernelX.Tool.Texture.Transformation.Scaling.encode_fs(raw_file, ripe_file, [size_width, size_height]);
+				worker: ({raw_file, ripe_file, target_width, target_height}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Scaling.encode_fs(raw_file, ripe_file, [target_width, target_height]);
 					return;
 				},
 			}),
@@ -134,9 +134,9 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						condition: null,
 					}),
 					typical_argument_floater({
-						identifier: 'size_rate',
+						identifier: 'target_rate',
 						option: null,
-						checker: (argument: {}, value) => ((0.0 < value) ? null : los('executor.implement:*.rate_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0.0 < value) ? null : los('executor.implementation:*.rate_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
@@ -159,8 +159,8 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
 					}),
 				],
-				worker: ({raw_file, ripe_file, size_rate}, store: {}) => {
-					KernelX.Tool.Texture.Transformation.Scaling.encode_rate_fs(raw_file, ripe_file, size_rate);
+				worker: ({raw_file, ripe_file, target_rate}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Scaling.encode_rate_fs(raw_file, ripe_file, target_rate);
 					return;
 				},
 			}),
@@ -185,14 +185,14 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 					typical_argument_integer({
 						identifier: 'tile_width',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						identifier: 'tile_height',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
@@ -241,14 +241,14 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 					typical_argument_integer({
 						identifier: 'tile_width',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_integer({
 						identifier: 'tile_height',
 						option: null,
-						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implement:*.size_should_be_bigger_then_zero')),
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
 						automatic: null,
 						condition: null,
 					}),

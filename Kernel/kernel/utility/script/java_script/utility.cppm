@@ -21,7 +21,7 @@ import twinning.kernel.utility.thread.mutex;
 import twinning.kernel.utility.thread.unlocker;
 import twinning.kernel.third.quickjs_ng;
 
-export namespace Twinning::Kernel::JavaScript {
+export namespace Twinning::Kernel::Script::JavaScript {
 
 	#pragma region global mutex
 

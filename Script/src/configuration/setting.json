@@ -299,8 +299,8 @@
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
-					"horizontal": "?input",
-					"vertical": "?input",
+					"flip_horizontal": "?input",
+					"flip_vertical": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
@@ -312,8 +312,8 @@
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
-					"size_width": "?input",
-					"size_height": "?input",
+					"target_width": "?input",
+					"target_height": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
@@ -325,7 +325,7 @@
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
-					"size_rate": "?input",
+					"target_rate": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",

@@ -16,21 +16,24 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Flipping {
 		// ----------------
 
 		inline static auto process_image(
-			Image::VariableImageView const & target,
-			Boolean const &                  horizontal,
-			Boolean const &                  vertical
+			Image::ConstantImageView const & raw,
+			Image::VariableImageView const & ripe,
+			Boolean const &                  flip_horizontal,
+			Boolean const &                  flip_vertical
 		) -> Void {
-			if (horizontal) {
-				for (auto & row : SizeRange{target.size().height}) {
-					for (auto & column : SizeRange{target.size().width / 2_sz}) {
-						swap(target[row][column], target[row][target.size().width - column - 1_sz]);
+			assert_test(raw.size() == ripe.size());
+			ripe.draw(raw);
+			if (flip_horizontal) {
+				for (auto & y : SizeRange{ripe.size().height}) {
+					for (auto & x : SizeRange{ripe.size().width / 2_sz}) {
+						swap(ripe[y][x], ripe[y][ripe.size().width - x - 1_sz]);
 					}
 				}
 			}
-			if (vertical) {
-				for (auto & column : SizeRange{target.size().width}) {
-					for (auto & row : SizeRange{target.size().height / 2_sz}) {
-						swap(target[row][column], target[target.size().height - row - 1_sz][column]);
+			if (flip_vertical) {
+				for (auto & x : SizeRange{ripe.size().width}) {
+					for (auto & y : SizeRange{ripe.size().height / 2_sz}) {
+						swap(ripe[y][x], ripe[ripe.size().height - y - 1_sz][x]);
 					}
 				}
 			}
@@ -40,11 +43,12 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Flipping {
 		// ----------------
 
 		inline static auto process(
-			Image::VariableImageView const & target,
-			Boolean const &                  horizontal,
-			Boolean const &                  vertical
+			Image::ConstantImageView const & raw,
+			Image::VariableImageView const & ripe,
+			Boolean const &                  flip_horizontal,
+			Boolean const &                  flip_vertical
 		) -> Void {
-			return process_image(target, horizontal, vertical);
+			return process_image(raw, ripe, flip_horizontal, flip_vertical);
 		}
 
 	};

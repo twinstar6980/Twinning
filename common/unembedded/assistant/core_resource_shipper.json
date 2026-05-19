@@ -32,33 +32,33 @@
 			"icon": "handyman",
 			"item": [
 				{
-					"name": "Update global setting",
+					"name": "Update Global Setting",
 					"icon": "settings",
 					"filter": null,
 					"batch": false,
 					"method": "common.utility.update_global_setting",
 					"preset": [
 						{
-							"name": "Byte endian - Little",
+							"name": "Byte Endian - Little",
 							"argument": {
 								"data": "{\"byte_stream_use_big_endian\":false}",
 							},
 						},
 						{
-							"name": "Byte endian - Big",
+							"name": "Byte Endian - Big",
 							"argument": {
 								"data": "{\"byte_stream_use_big_endian\":true}",
 							},
 						},
 						null,
 						{
-							"name": "JSON format - Trailing",
+							"name": "JSON Format - Trailing",
 							"argument": {
 								"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}",
 							},
 						},
 						{
-							"name": "JSON format - Compatible",
+							"name": "JSON Format - Compatible",
 							"argument": {
 								"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}",
 							},
@@ -84,13 +84,13 @@
 						},
 						null,
 						{
-							"name": "Executor name filter - Enabled",
+							"name": "Executor Name Filter - Enabled",
 							"argument": {
 								"data": "{\"executor_typical_method_disable_name_filter\":false}",
 							},
 						},
 						{
-							"name": "Executor name filter - Disabled",
+							"name": "Executor Name Filter - Disabled",
 							"argument": {
 								"data": "{\"executor_typical_method_disable_name_filter\":true}",
 							},
@@ -98,7 +98,7 @@
 					],
 				},
 				{
-					"name": "Run embedded script",
+					"name": "Run Embedded Script",
 					"icon": "extension",
 					"filter": null,
 					"batch": false,
@@ -143,7 +143,7 @@
 					],
 				},
 				{
-					"name": "Run custom script",
+					"name": "Run Custom Script",
 					"icon": "code",
 					"filter": {
 						"type": "file",
@@ -405,7 +405,7 @@
 					"method": "text.json.format",
 					"preset": [
 						{
-							"name": "Enable trailing comma | Enable line breaking",
+							"name": "Enable Trailing Comma | Enable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": false,
 								"disable_array_line_breaking": false,
@@ -414,7 +414,7 @@
 							},
 						},
 						{
-							"name": "Enable trailing comma | Disable line breaking",
+							"name": "Enable Trailing Comma | Disable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": false,
 								"disable_array_line_breaking": true,
@@ -424,7 +424,7 @@
 						},
 						null,
 						{
-							"name": "Disable trailing comma | Enable line breaking",
+							"name": "Disable Trailing Comma | Enable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": true,
 								"disable_array_line_breaking": false,
@@ -433,7 +433,7 @@
 							},
 						},
 						{
-							"name": "Disable trailing comma | Disable line breaking",
+							"name": "Disable Trailing Comma | Disable Line Breaking",
 							"argument": {
 								"disable_array_trailing_comma": true,
 								"disable_array_line_breaking": true,
@@ -474,22 +474,22 @@
 						{
 							"name": "Horizontal",
 							"argument": {
-								"horizontal": true,
-								"vertical": false,
+								"flip_horizontal": true,
+								"flip_vertical": false,
 							},
 						},
 						{
 							"name": "Vertical",
 							"argument": {
-								"horizontal": false,
-								"vertical": true,
+								"flip_horizontal": false,
+								"flip_vertical": true,
 							},
 						},
 						{
 							"name": "Both",
 							"argument": {
-								"horizontal": true,
-								"vertical": true,
+								"flip_horizontal": true,
+								"flip_vertical": true,
 							},
 						},
 					],
@@ -507,7 +507,7 @@
 					],
 				},
 				{
-					"name": "Scaling by rate",
+					"name": "Scaling By Rate",
 					"icon": "branding_watermark",
 					"filter": {
 						"type": "file",
@@ -519,13 +519,13 @@
 						{
 							"name": "÷ 2",
 							"argument": {
-								"size_rate": 0.5,
+								"target_rate": 0.5,
 							},
 						},
 						{
 							"name": "× 2",
 							"argument": {
-								"size_rate": 2.0,
+								"target_rate": 2.0,
 							},
 						},
 					],
@@ -754,6 +754,18 @@
 							"name": "RGBA-ETC2-EAC",
 							"argument": {
 								"format": "rgba_etc2_eac",
+							},
+						},
+						{
+							"name": "R-EAC",
+							"argument": {
+								"format": "r_eac",
+							},
+						},
+						{
+							"name": "RG-EAC",
+							"argument": {
+								"format": "rg_eac",
 							},
 						},
 						null,
@@ -1031,6 +1043,18 @@
 								"format": "rgba_etc2_eac",
 							},
 						},
+						{
+							"name": "R-EAC",
+							"argument": {
+								"format": "r_eac",
+							},
+						},
+						{
+							"name": "RG-EAC",
+							"argument": {
+								"format": "rg_eac",
+							},
+						},
 						null,
 						{
 							"name": "RGBA-ASTC-4x4",
@@ -1143,7 +1167,7 @@
 					],
 				},
 				{
-					"name": "Atlas Pack by automatic",
+					"name": "Atlas Pack By Automatic",
 					"icon": "inventory_2",
 					"filter": {
 						"type": "directory",
@@ -1461,7 +1485,7 @@
 					],
 				},
 				{
-					"name": "Pack by automatic",
+					"name": "Pack By Automatic",
 					"icon": "inventory_2",
 					"filter": {
 						"type": "directory",
@@ -1645,7 +1669,7 @@
 					],
 				},
 				{
-					"name": "Encode for cipher",
+					"name": "Encode For Cipher",
 					"icon": "skip_next",
 					"filter": {
 						"type": "file",
@@ -1671,7 +1695,7 @@
 					],
 				},
 				{
-					"name": "Decode for cipher",
+					"name": "Decode For Cipher",
 					"icon": "skip_previous",
 					"filter": {
 						"type": "file",
@@ -2463,7 +2487,7 @@
 					],
 				},
 				{
-					"name": "Flash Convert from JSON",
+					"name": "Flash Convert From JSON",
 					"icon": "swipe_right_alt",
 					"filter": {
 						"type": "file",
@@ -2511,7 +2535,7 @@
 					],
 				},
 				{
-					"name": "Flash Convert to JSON",
+					"name": "Flash Convert To JSON",
 					"icon": "swipe_left_alt",
 					"filter": {
 						"type": "directory",
@@ -2559,7 +2583,7 @@
 					],
 				},
 				{
-					"name": "Flash Resize image",
+					"name": "Flash Resize Image",
 					"icon": "branding_watermark",
 					"filter": {
 						"type": "directory",
@@ -2602,7 +2626,7 @@
 					],
 				},
 				{
-					"name": "Flash Create links for image files",
+					"name": "Flash Create Link For Media File",
 					"icon": "link",
 					"filter": {
 						"type": "directory",
@@ -3074,7 +3098,7 @@
 					],
 				},
 				{
-					"name": "Pack by automatic",
+					"name": "Pack By Automatic",
 					"icon": "inventory_2",
 					"filter": {
 						"type": "directory",
@@ -3294,7 +3318,7 @@
 					],
 				},
 				{
-					"name": "Resource convert",
+					"name": "Resource Convert",
 					"icon": "lightning_stand",
 					"filter": {
 						"type": "directory",
@@ -3304,7 +3328,7 @@
 					"method": "popcap.resource_stream_bundle.resource_convert",
 					"preset": [
 						{
-							"name": "Recase path",
+							"name": "Recase Path",
 							"argument": {
 								"option_recase_path": true,
 								"option_rton": false,
@@ -3617,7 +3641,7 @@
 					],
 				},
 				{
-					"name": "Regular Convert from official data",
+					"name": "Regular Convert From Official Data",
 					"icon": "swipe_right_alt",
 					"filter": {
 						"type": "file",
@@ -3629,7 +3653,7 @@
 					],
 				},
 				{
-					"name": "Regular Convert to official data",
+					"name": "Regular Convert To Official Data",
 					"icon": "swipe_left_alt",
 					"filter": {
 						"type": "file",
@@ -3639,13 +3663,13 @@
 					"method": "popcap.pvz2.resource_manifest.regular.to",
 					"preset": [
 						{
-							"name": "String path",
+							"name": "String Path",
 							"argument": {
 								"use_array_style_path": false,
 							},
 						},
 						{
-							"name": "Array path",
+							"name": "Array Path",
 							"argument": {
 								"use_array_style_path": true,
 							},
@@ -3923,28 +3947,28 @@
 						},
 						null,
 						{
-							"name": "Clear main package",
+							"name": "Clear Main Package",
 							"argument": {
 								"action": "clear",
 								"target": "main_package",
 							},
 						},
 						{
-							"name": "Clear content delivery",
+							"name": "Clear Content Delivery",
 							"argument": {
 								"action": "clear",
 								"target": "content_delivery",
 							},
 						},
 						{
-							"name": "Clear local profile",
+							"name": "Clear Local Profile",
 							"argument": {
 								"action": "clear",
 								"target": "local_profile",
 							},
 						},
 						{
-							"name": "Clear player profile",
+							"name": "Clear Player Profile",
 							"argument": {
 								"action": "clear",
 								"target": "player_profile",
@@ -3952,28 +3976,28 @@
 						},
 						null,
 						{
-							"name": "Pull main package",
+							"name": "Pull Main Package",
 							"argument": {
 								"action": "pull",
 								"target": "main_package",
 							},
 						},
 						{
-							"name": "Pull content delivery",
+							"name": "Pull Content Delivery",
 							"argument": {
 								"action": "pull",
 								"target": "content_delivery",
 							},
 						},
 						{
-							"name": "Pull local profile",
+							"name": "Pull Local Profile",
 							"argument": {
 								"action": "pull",
 								"target": "local_profile",
 							},
 						},
 						{
-							"name": "Pull player profile",
+							"name": "Pull Player Profile",
 							"argument": {
 								"action": "pull",
 								"target": "player_profile",
@@ -3981,28 +4005,28 @@
 						},
 						null,
 						{
-							"name": "Push main package",
+							"name": "Push Main Package",
 							"argument": {
 								"action": "push",
 								"target": "main_package",
 							},
 						},
 						{
-							"name": "Push content delivery",
+							"name": "Push Content Delivery",
 							"argument": {
 								"action": "push",
 								"target": "content_delivery",
 							},
 						},
 						{
-							"name": "Push local profile",
+							"name": "Push Local Profile",
 							"argument": {
 								"action": "push",
 								"target": "local_profile",
 							},
 						},
 						{
-							"name": "Push player profile",
+							"name": "Push Player Profile",
 							"argument": {
 								"action": "push",
 								"target": "player_profile",
@@ -4027,14 +4051,14 @@
 					"method": "kairosoft.game.program.modify",
 					"preset": [
 						{
-							"name": "Disable record encryption",
+							"name": "Disable Record Encryption",
 							"argument": {
 								"disable_record_encryption": true,
 								"enable_debug_mode": false,
 							},
 						},
 						{
-							"name": "Enable debug mode",
+							"name": "Enable Debug Mode",
 							"argument": {
 								"disable_record_encryption": false,
 								"enable_debug_mode": true,
