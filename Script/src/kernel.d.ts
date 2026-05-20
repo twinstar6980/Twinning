@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 130
+ * @version 131
  */
 declare namespace Twinning.Kernel {
 
@@ -1502,18 +1502,16 @@ declare namespace Twinning.Kernel {
 						 * @param cipher 密文数据
 						 * @param mode 模式
 						 * @param block_size 块尺寸，允许16、24、32
-						 * @param key_size 密钥尺寸，允许16、24、32
-						 * @param key 密钥，尺寸必须与key_size一致
-						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
+						 * @param key 密钥，尺寸必须为16、24、32
+						 * @param initialization_vector 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
 							plain: InputByteStreamView,
 							cipher: OutputByteStreamView,
 							mode: Mode,
 							block_size: Integer,
-							key_size: Integer,
-							key: String,
-							iv: String,
+							key: ConstantByteListView,
+							initialization_vector: ConstantByteListView,
 						): Void;
 
 					}
@@ -1527,18 +1525,16 @@ declare namespace Twinning.Kernel {
 						 * @param cipher 密文数据
 						 * @param mode 模式
 						 * @param block_size 块尺寸，允许16、24、32
-						 * @param key_size 密钥尺寸，允许16、24、32
-						 * @param key 密钥，尺寸必须与key_size一致
-						 * @param iv 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
+						 * @param key 密钥，尺寸必须为16、24、32
+						 * @param initialization_vector 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
 							plain: OutputByteStreamView,
 							cipher: InputByteStreamView,
 							mode: Mode,
 							block_size: Integer,
-							key_size: Integer,
-							key: String,
-							iv: String,
+							key: ConstantByteListView,
+							initialization_vector: ConstantByteListView,
 						): Void;
 
 					}

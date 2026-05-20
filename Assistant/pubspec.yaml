@@ -1,5 +1,5 @@
 name: assistant
-version: 190.0.0+190
+version: 191.0.0+191
 environment:
   sdk: ^3.12.0
 dependencies:
@@ -27,3 +27,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets: []
+  config:
+    enable-swift-package-manager: false

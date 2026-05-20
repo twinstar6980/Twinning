@@ -120,7 +120,7 @@
 	"executor.implementation:data.encryption.rijndael.encrypt:mode": "Chế độ thuật toán",
 	"executor.implementation:data.encryption.rijndael.encrypt:block_size": "Kích thước khối",
 	"executor.implementation:data.encryption.rijndael.encrypt:key": "Khóa",
-	"executor.implementation:data.encryption.rijndael.encrypt:iv": "Vector khởi tạo",
+	"executor.implementation:data.encryption.rijndael.encrypt:initialization_vector": "Vector khởi tạo",
 	// 
 	"executor.implementation:data.encryption.rijndael.decrypt": "Giải mã Rijndael",
 	"executor.implementation:data.encryption.rijndael.decrypt:cipher_file": "Tệp mã hóa",
@@ -128,7 +128,7 @@
 	"executor.implementation:data.encryption.rijndael.decrypt:mode": "Chế độ thuật toán",
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "Kích thước khối",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "Khóa",
-	"executor.implementation:data.encryption.rijndael.decrypt:iv": "Vector khởi tạo",
+	"executor.implementation:data.encryption.rijndael.decrypt:initialization_vector": "Vector khởi tạo",
 	// executor/implement/data.compression
 	"executor.implementation:data.compression.deflate.compress": "Nén Deflate",
 	"executor.implementation:data.compression.deflate.compress:raw_file": "Tệp gốc",

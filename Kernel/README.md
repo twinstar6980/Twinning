@@ -10,7 +10,7 @@
 
 	* [xmake 3.0](https://xmake.io/#/)
 
-	* [LLVM 22.1 (LLVM-MinGW-ucrt 20260505)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
+	* [LLVM 22.1 (LLVM-MinGW-ucrt 20260519)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 
 	* [LLVM 22.1](https://llvm.org/) for `Linux`
 

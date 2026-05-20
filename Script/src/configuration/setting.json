@@ -101,7 +101,7 @@
 					"mode": "?input",
 					"block_size": "?input",
 					"key": "?input",
-					"iv": "?input",
+					"initialization_vector": "?input",
 				},
 				"batch": {
 					"plain_file": "?input",
@@ -116,7 +116,7 @@
 					"mode": "?input",
 					"block_size": "?input",
 					"key": "?input",
-					"iv": "?input",
+					"initialization_vector": "?input",
 				},
 				"batch": {
 					"cipher_file": "?input",

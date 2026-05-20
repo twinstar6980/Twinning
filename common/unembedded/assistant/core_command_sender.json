@@ -323,8 +323,8 @@
 							"option": null,
 						},
 						{
-							"identifier": "iv",
-							"name": "IV",
+							"identifier": "initialization_vector",
+							"name": "Initialization Vector",
 							"type": "string",
 							"option": null,
 						},
@@ -380,8 +380,8 @@
 							"option": null,
 						},
 						{
-							"identifier": "iv",
-							"name": "IV",
+							"identifier": "initialization_vector",
+							"name": "Initialization Vector",
 							"type": "string",
 							"option": null,
 						},

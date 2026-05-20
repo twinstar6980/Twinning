@@ -180,7 +180,7 @@
 
 	* `key` : `string` = `?input`
 
-	* `iv` : `string` = `?input`
+	* `initialization_vector` : `string` = `?input`
 
 * `rijndael.decrypt` `*`
 
@@ -194,7 +194,7 @@
 
 	* `key` : `string` = `?input`
 
-	* `iv` : `string` = `?input`
+	* `initialization_vector` : `string` = `?input`
 
 ## `data.compression`
 

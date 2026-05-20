@@ -120,7 +120,7 @@
 	"executor.implementation:data.encryption.rijndael.encrypt:mode": "Algorithm Mode",
 	"executor.implementation:data.encryption.rijndael.encrypt:block_size": "Block Size",
 	"executor.implementation:data.encryption.rijndael.encrypt:key": "Key",
-	"executor.implementation:data.encryption.rijndael.encrypt:iv": "IV",
+	"executor.implementation:data.encryption.rijndael.encrypt:initialization_vector": "Initialization Vector",
 	// 
 	"executor.implementation:data.encryption.rijndael.decrypt": "Rijndael Decrypt",
 	"executor.implementation:data.encryption.rijndael.decrypt:cipher_file": "Cipher File",
@@ -128,7 +128,7 @@
 	"executor.implementation:data.encryption.rijndael.decrypt:mode": "Algorithm Mode",
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "Block Size",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "Key",
-	"executor.implementation:data.encryption.rijndael.decrypt:iv": "IV",
+	"executor.implementation:data.encryption.rijndael.decrypt:initialization_vector": "Initialization Vector",
 	// executor/implement/data.compression
 	"executor.implementation:data.compression.deflate.compress": "Deflate Compress",
 	"executor.implementation:data.compression.deflate.compress:raw_file": "Raw File",

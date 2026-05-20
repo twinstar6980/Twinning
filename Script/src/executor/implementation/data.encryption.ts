@@ -94,7 +94,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						condition: null,
 					}),
 					typical_argument_string({
-						identifier: 'iv',
+						identifier: 'initialization_vector',
 						option: null,
 						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implementation:*.length_not_match')),
 						automatic: null,
@@ -119,8 +119,10 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({plain_file, cipher_file, mode, block_size, key, iv}, store: {}) => {
-					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
+				worker: ({plain_file, cipher_file, mode, block_size, key, initialization_vector}, store: {}) => {
+					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(key));
+					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(initialization_vector));
+					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
 					return;
 				},
 			}),
@@ -164,7 +166,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						condition: null,
 					}),
 					typical_argument_string({
-						identifier: 'iv',
+						identifier: 'initialization_vector',
 						option: null,
 						checker: (argument: {block_size: bigint}, value) => (value.length === Number(argument.block_size) ? null : los('executor.implementation:*.length_not_match')),
 						automatic: null,
@@ -189,8 +191,10 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({cipher_file, plain_file, mode, block_size, key, iv}, store: {}) => {
-					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(plain_file, cipher_file, mode as any, block_size as any, BigInt(key.length) as any, key, iv);
+				worker: ({cipher_file, plain_file, mode, block_size, key, initialization_vector}, store: {}) => {
+					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(key));
+					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(initialization_vector));
+					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(plain_file, cipher_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
 					return;
 				},
 			}),

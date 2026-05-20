@@ -120,7 +120,7 @@
 	"executor.implementation:data.encryption.rijndael.encrypt:mode": "算法模式",
 	"executor.implementation:data.encryption.rijndael.encrypt:block_size": "块大小",
 	"executor.implementation:data.encryption.rijndael.encrypt:key": "密钥",
-	"executor.implementation:data.encryption.rijndael.encrypt:iv": "初始向量",
+	"executor.implementation:data.encryption.rijndael.encrypt:initialization_vector": "初始向量",
 	// 
 	"executor.implementation:data.encryption.rijndael.decrypt": "Rijndael 解密",
 	"executor.implementation:data.encryption.rijndael.decrypt:cipher_file": "密文文件",
@@ -128,7 +128,7 @@
 	"executor.implementation:data.encryption.rijndael.decrypt:mode": "算法模式",
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "块大小",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "密钥",
-	"executor.implementation:data.encryption.rijndael.decrypt:iv": "初始向量",
+	"executor.implementation:data.encryption.rijndael.decrypt:initialization_vector": "初始向量",
 	// executor/implement/data.compression
 	"executor.implementation:data.compression.deflate.compress": "Deflate 压缩",
 	"executor.implementation:data.compression.deflate.compress:raw_file": "原始文件",

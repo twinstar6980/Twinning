@@ -28,8 +28,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			auto rijndael_cipher = InputByteStreamView{cipher.forward_view(rijndael_data_size)};
 			auto rijndael_plain = OutputByteStreamView{plain.forward_view(rijndael_data_size)};
 			auto rijndael_key = compute_rijndael_key(key);
-			auto rijndael_iv = compute_rijndael_iv(rijndael_key);
-			Data::Encryption::Rijndael::Decrypt::process(rijndael_plain, rijndael_cipher, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_crypt_block_size, k_crypt_key_size, rijndael_key, rijndael_iv);
+			auto rijndael_initialization_vector = compute_rijndael_initialization_vector(rijndael_key);
+			Data::Encryption::Rijndael::Decrypt::process(rijndael_plain, rijndael_cipher, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_rijndael_block_size, rijndael_key, rijndael_initialization_vector);
 			return;
 		}
 
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			plain_size = 0_sz;
 			assert_test(cipher_size >= bs_static_size<MagicMarker>());
 			auto rijndael_data_size = cipher_size - bs_static_size<MagicMarker>();
-			assert_test(is_padded_size(rijndael_data_size, cbox<Size>(k_crypt_block_size)));
+			assert_test(is_padded_size(rijndael_data_size, cbox<Size>(k_rijndael_block_size)));
 			plain_size += rijndael_data_size;
 			return;
 		}
