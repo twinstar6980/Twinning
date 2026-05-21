@@ -1093,6 +1093,56 @@
 					],
 				},
 				{
+					"identifier": "texture.transformation.premultiplying.encode",
+					"name": "Premultiplying",
+					"icon": "texture_add",
+					"argument": [
+						{
+							"identifier": "raw_file",
+							"name": "Raw File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "ripe_file",
+							"name": "Ripe File",
+							"type": "path",
+							"option": null,
+						},
+					],
+					"batch": [
+						"raw_file",
+						"ripe_file",
+					],
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.transformation.premultiplying.decode",
+					"name": "Unpremultiplying",
+					"icon": "texture_minus",
+					"argument": [
+						{
+							"identifier": "ripe_file",
+							"name": "Ripe File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "raw_file",
+							"name": "Raw File",
+							"type": "path",
+							"option": null,
+						},
+					],
+					"batch": [
+						"ripe_file",
+						"raw_file",
+					],
+					"preset": [
+					],
+				},
+				{
 					"identifier": "texture.encoding.encode",
 					"name": "Encode",
 					"icon": "skip_next",

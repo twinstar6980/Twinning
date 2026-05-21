@@ -15,35 +15,42 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 		// ----------------
 
-		inline static constexpr auto k_table = StaticArray<Character, 64_sz>{{
+		inline static constexpr auto k_table = StaticByteArray<64_sz>{{
 			// 'A' - 'Z'
-			'A'_c, 'B'_c, 'C'_c, 'D'_c, 'E'_c, 'F'_c, 'G'_c, 'H'_c, 'I'_c, 'J'_c, 'K'_c, 'L'_c, 'M'_c,
-			'N'_c, 'O'_c, 'P'_c, 'Q'_c, 'R'_c, 'S'_c, 'T'_c, 'U'_c, 'V'_c, 'W'_c, 'X'_c, 'Y'_c, 'Z'_c,
+			'A'_b, 'B'_b, 'C'_b, 'D'_b, 'E'_b, 'F'_b, 'G'_b, 'H'_b, 'I'_b, 'J'_b, 'K'_b, 'L'_b, 'M'_b,
+			'N'_b, 'O'_b, 'P'_b, 'Q'_b, 'R'_b, 'S'_b, 'T'_b, 'U'_b, 'V'_b, 'W'_b, 'X'_b, 'Y'_b, 'Z'_b,
 			// 'a' - 'z'
-			'a'_c, 'b'_c, 'c'_c, 'd'_c, 'e'_c, 'f'_c, 'g'_c, 'h'_c, 'i'_c, 'j'_c, 'k'_c, 'l'_c, 'm'_c,
-			'n'_c, 'o'_c, 'p'_c, 'q'_c, 'r'_c, 's'_c, 't'_c, 'u'_c, 'v'_c, 'w'_c, 'x'_c, 'y'_c, 'z'_c,
+			'a'_b, 'b'_b, 'c'_b, 'd'_b, 'e'_b, 'f'_b, 'g'_b, 'h'_b, 'i'_b, 'j'_b, 'k'_b, 'l'_b, 'm'_b,
+			'n'_b, 'o'_b, 'p'_b, 'q'_b, 'r'_b, 's'_b, 't'_b, 'u'_b, 'v'_b, 'w'_b, 'x'_b, 'y'_b, 'z'_b,
 			// '0' - '9'
-			'0'_c, '1'_c, '2'_c, '3'_c, '4'_c, '5'_c, '6'_c, '7'_c, '8'_c, '9'_c,
+			'0'_b, '1'_b, '2'_b, '3'_b, '4'_b, '5'_b, '6'_b, '7'_b, '8'_b, '9'_b,
 			// '+' '/'
-			'+'_c, '/'_c,
+			'+'_b, '/'_b,
 		}};
+
+		inline static auto query_table(
+			Size const & index
+		) -> Byte const & {
+			auto & value = k_table[index];
+			return value;
+		}
 
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &       raw,
-			OutputCharacterStreamView & ripe
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe
 		) -> Void {
 			auto raw_size = raw.reserve();
-			auto buffer = Array<Byte>{k_raw_block_size};
+			auto buffer = ByteArray{k_raw_block_size};
 			while (!raw.full()) {
 				buffer[1_ix] = raw.read_of();
 				buffer[2_ix] = !raw.full() ? (raw.read_of()) : (k_null_byte);
 				buffer[3_ix] = !raw.full() ? (raw.read_of()) : (k_null_byte);
-				ripe.write(k_table[cbox<Size>(clip_bit(buffer[1_ix], 3_ix, 6_sz) << 0_sz)]);
-				ripe.write(k_table[cbox<Size>(clip_bit(buffer[1_ix], 1_ix, 2_sz) << 4_sz | clip_bit(buffer[2_ix], 5_ix, 4_sz) << 0_sz)]);
-				ripe.write(k_table[cbox<Size>(clip_bit(buffer[2_ix], 1_ix, 4_sz) << 2_sz | clip_bit(buffer[3_ix], 7_ix, 2_sz) << 0_sz)]);
-				ripe.write(k_table[cbox<Size>(clip_bit(buffer[3_ix], 1_ix, 6_sz) << 0_sz)]);
+				ripe.write(query_table(cbox<Size>(clip_bit(buffer[1_ix], 3_ix, 6_sz) << 0_sz)));
+				ripe.write(query_table(cbox<Size>(clip_bit(buffer[1_ix], 1_ix, 2_sz) << 4_sz | clip_bit(buffer[2_ix], 5_ix, 4_sz) << 0_sz)));
+				ripe.write(query_table(cbox<Size>(clip_bit(buffer[2_ix], 1_ix, 4_sz) << 2_sz | clip_bit(buffer[3_ix], 7_ix, 2_sz) << 0_sz)));
+				ripe.write(query_table(cbox<Size>(clip_bit(buffer[3_ix], 1_ix, 6_sz) << 0_sz)));
 			}
 			switch ((raw_size % k_raw_block_size).value) {
 				case 0_sz .value: {
@@ -51,13 +58,13 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 				}
 				case 1_sz .value: {
 					ripe.backward(2_sz);
-					ripe.write(k_padding_character);
-					ripe.write(k_padding_character);
+					ripe.write(k_padding_byte);
+					ripe.write(k_padding_byte);
 					break;
 				}
 				case 2_sz .value: {
 					ripe.backward(1_sz);
-					ripe.write(k_padding_character);
+					ripe.write(k_padding_byte);
 					break;
 				}
 				default: throw UnreachableException{};
@@ -78,8 +85,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &       raw_,
-			OutputCharacterStreamView & ripe_
+			InputByteStreamView &  raw_,
+			OutputByteStreamView & ripe_
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);

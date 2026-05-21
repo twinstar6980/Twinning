@@ -263,9 +263,9 @@ namespace Twinning.Script.KernelX {
 						Kernel.Tool.Data.Encoding.Base64.Encode.estimate(raw.size(), ripe_size);
 						let ripe = Kernel.ByteArray.allocate(ripe_size);
 						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe.view()));
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						Kernel.Tool.Data.Encoding.Base64.Encode.process(raw_stream, ripe_stream);
-						StorageHelper.write_file(ripe_file, Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(ripe_stream.stream_view()));
+						StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
 
@@ -274,7 +274,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 					): void {
 						let ripe = StorageHelper.read_file(ripe_file);
-						let ripe_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(ripe.view()));
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						let raw_size = Kernel.Size.default();
 						Kernel.Tool.Data.Encoding.Base64.Decode.estimate(raw_size, ripe_stream.view());
 						let raw = Kernel.ByteArray.allocate(raw_size);
@@ -856,6 +856,52 @@ namespace Twinning.Script.KernelX {
 
 				}
 
+				export namespace Premultiplying {
+
+					export function encode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Premultiplying.Encode.process(raw, ripe);
+					}
+
+					export function decode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Premultiplying.Decode.process(raw, ripe);
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+					): void {
+						let raw = File.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(raw.size());
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view);
+						File.Png.write_fs(ripe_file, ripe_view);
+						return;
+					}
+
+					export function decode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+					): void {
+						let ripe = File.Png.read_fs_of(ripe_file);
+						let ripe_view = ripe.view();
+						let raw = Kernel.Image.Image.allocate(ripe.size());
+						let raw_view = raw.view();
+						decode(raw_view, ripe_view);
+						File.Png.write_fs(raw_file, raw_view);
+						return;
+					}
+
+				}
+
 			}
 
 			export namespace Encoding {
@@ -890,7 +936,9 @@ namespace Twinning.Script.KernelX {
 				const CompressionX = [
 					'rgba_dxtc1',
 					'rgba_dxtc3',
+					'rgba_dxtc3_p',
 					'rgba_dxtc5',
+					'rgba_dxtc5_p',
 					'rgb_pvrtc1_4bpp',
 					'rgba_pvrtc1_4bpp',
 					'rgb_etc1',
@@ -959,7 +1007,9 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
-						case 'rgba_dxtc5': {
+						case 'rgba_dxtc3_p':
+						case 'rgba_dxtc5':
+						case 'rgba_dxtc5_p': {
 							result = [4n, 4n];
 							break;
 						}
@@ -1085,9 +1135,11 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
-						case 'rgba_dxtc5': {
+						case 'rgba_dxtc3_p':
+						case 'rgba_dxtc5':
+						case 'rgba_dxtc5_p': {
 							result = 64n;
-							if (format === 'rgba_dxtc3' || format === 'rgba_dxtc5') {
+							if (format !== 'rgba_dxtc1') {
 								result += 64n;
 							}
 							break;
@@ -1221,19 +1273,41 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
-						case 'rgba_dxtc5': {
+						case 'rgba_dxtc3_p':
+						case 'rgba_dxtc5':
+						case 'rgba_dxtc5_p': {
 							let generation = ({
 								'rgba_dxtc1': 'v1',
 								'rgba_dxtc3': 'v3',
+								'rgba_dxtc3_p': 'v3',
 								'rgba_dxtc5': 'v5',
+								'rgba_dxtc5_p': 'v5',
 							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Dxtc.Generation.Value>)[format];
-							Kernel.Tool.Texture.Compression.Dxtc.Compress.process(
-								data,
-								image,
-								Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
-								Kernel.Image.ImageSize.value(get_block_size(format)),
-								Kernel.Boolean.value(true),
-							);
+							let premultiplying = format.endsWith('_p');
+							if (!premultiplying) {
+								Kernel.Tool.Texture.Compression.Dxtc.Compress.process(
+									data,
+									image,
+									Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
+									Kernel.Image.ImageSize.value(get_block_size(format)),
+									Kernel.Boolean.value(true),
+								);
+							}
+							else {
+								let premultiplying_image = Kernel.Image.Image.allocate(image.size());
+								let premultiplying_image_view = premultiplying_image.view();
+								Kernel.Tool.Texture.Transformation.Premultiplying.Encode.process(
+									image,
+									premultiplying_image_view,
+								);
+								Kernel.Tool.Texture.Compression.Dxtc.Compress.process(
+									data,
+									premultiplying_image_view,
+									Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
+									Kernel.Image.ImageSize.value(get_block_size(format)),
+									Kernel.Boolean.value(true),
+								);
+							}
 							break;
 						}
 						case 'rgb_pvrtc1_4bpp':
@@ -1336,19 +1410,41 @@ namespace Twinning.Script.KernelX {
 						}
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
-						case 'rgba_dxtc5': {
+						case 'rgba_dxtc3_p':
+						case 'rgba_dxtc5':
+						case 'rgba_dxtc5_p': {
 							let generation = ({
 								'rgba_dxtc1': 'v1',
 								'rgba_dxtc3': 'v3',
+								'rgba_dxtc3_p': 'v3',
 								'rgba_dxtc5': 'v5',
+								'rgba_dxtc5_p': 'v5',
 							} as Record<typeof format, typeof Kernel.Tool.Texture.Compression.Dxtc.Generation.Value>)[format];
-							Kernel.Tool.Texture.Compression.Dxtc.Uncompress.process(
-								data,
-								image,
-								Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
-								Kernel.Image.ImageSize.value(get_block_size(format)),
-								Kernel.Boolean.value(true),
-							);
+							let premultiplying = format.endsWith('_p');
+							if (!premultiplying) {
+								Kernel.Tool.Texture.Compression.Dxtc.Uncompress.process(
+									data,
+									image,
+									Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
+									Kernel.Image.ImageSize.value(get_block_size(format)),
+									Kernel.Boolean.value(true),
+								);
+							}
+							else {
+								let premultiplying_image = Kernel.Image.Image.allocate(image.size());
+								let premultiplying_image_view = premultiplying_image.view();
+								Kernel.Tool.Texture.Compression.Dxtc.Uncompress.process(
+									data,
+									premultiplying_image_view,
+									Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
+									Kernel.Image.ImageSize.value(get_block_size(format)),
+									Kernel.Boolean.value(true),
+								);
+								Kernel.Tool.Texture.Transformation.Premultiplying.Decode.process(
+									image,
+									premultiplying_image_view,
+								);
+							}
 							break;
 						}
 						case 'rgb_pvrtc1_4bpp':

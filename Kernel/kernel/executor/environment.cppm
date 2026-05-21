@@ -45,6 +45,9 @@ import twinning.kernel.tool.texture.transformation.tiling.decode;
 import twinning.kernel.tool.texture.transformation.interleaving.common;
 import twinning.kernel.tool.texture.transformation.interleaving.encode;
 import twinning.kernel.tool.texture.transformation.interleaving.decode;
+import twinning.kernel.tool.texture.transformation.premultiplying.common;
+import twinning.kernel.tool.texture.transformation.premultiplying.encode;
+import twinning.kernel.tool.texture.transformation.premultiplying.decode;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.encode;
 import twinning.kernel.tool.texture.encoding.decode;
@@ -659,6 +662,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Interleaving::Encode::process>>("process"_s);
 						s_Interleaving.add_space("Decode"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Interleaving::Decode::process>>("process"_s);
+					}
+					{
+						auto s_Premultiplying = s_Transformation.add_space("Premultiplying"_s);
+						s_Premultiplying.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Premultiplying::Encode::process>>("process"_s);
+						s_Premultiplying.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Premultiplying::Decode::process>>("process"_s);
 					}
 				}
 				{

@@ -569,6 +569,30 @@
 					],
 				},
 				{
+					"name": "Premultiplying",
+					"icon": "texture_add",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.premultiplying.encode",
+					"preset": [
+					],
+				},
+				{
+					"name": "Unpremultiplying",
+					"icon": "texture_minus",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.premultiplying.decode",
+					"preset": [
+					],
+				},
+				{
 					"name": "Encode",
 					"icon": "skip_next",
 					"filter": {

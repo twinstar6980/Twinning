@@ -227,6 +227,14 @@
 	"executor.implementation:texture.transformation.tiling.decode:raw_file": "Raw File",
 	"executor.implementation:texture.transformation.tiling.decode:tile_width": "Tile Width",
 	"executor.implementation:texture.transformation.tiling.decode:tile_height": "Tile Height",
+	// 
+	"executor.implementation:texture.transformation.premultiplying.encode": "Texture Premultiplying",
+	"executor.implementation:texture.transformation.premultiplying.encode:raw_file": "Raw File",
+	"executor.implementation:texture.transformation.premultiplying.encode:ripe_file": "Ripe File",
+	// 
+	"executor.implementation:texture.transformation.premultiplying.decode": "Texture Unpremultiplying",
+	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "Ripe File",
+	"executor.implementation:texture.transformation.premultiplying.decode:raw_file": "Raw File",
 	// executor/implement/texture.encoding
 	"executor.implementation:texture.encoding.encode": "Texture Encode",
 	"executor.implementation:texture.encoding.encode:image_file": "Image File",

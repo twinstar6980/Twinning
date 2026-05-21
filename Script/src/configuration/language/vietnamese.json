@@ -227,6 +227,14 @@
 	"executor.implementation:texture.transformation.tiling.decode:raw_file": "Tệp gốc",
 	"executor.implementation:texture.transformation.tiling.decode:tile_width": "Tile width",
 	"executor.implementation:texture.transformation.tiling.decode:tile_height": "Tile height",
+	// 
+	"executor.implementation:texture.transformation.premultiplying.encode": "Texture Premultiplying",
+	"executor.implementation:texture.transformation.premultiplying.encode:raw_file": "Tệp gốc",
+	"executor.implementation:texture.transformation.premultiplying.encode:ripe_file": "Tệp ra",
+	// 
+	"executor.implementation:texture.transformation.premultiplying.decode": "Texture Unpremultiplying",
+	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "Tệp ra",
+	"executor.implementation:texture.transformation.premultiplying.decode:raw_file": "Tệp gốc",
 	// executor/implement/texture.encoding
 	"executor.implementation:texture.encoding.encode": "Mã hóa hình ảnh",
 	"executor.implementation:texture.encoding.encode:image_file": "Tệp hình ảnh",

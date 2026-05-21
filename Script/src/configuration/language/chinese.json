@@ -227,6 +227,14 @@
 	"executor.implementation:texture.transformation.tiling.decode:raw_file": "原始文件",
 	"executor.implementation:texture.transformation.tiling.decode:tile_width": "分块宽度",
 	"executor.implementation:texture.transformation.tiling.decode:tile_height": "分块高度",
+	// 
+	"executor.implementation:texture.transformation.premultiplying.encode": "Texture 预乘",
+	"executor.implementation:texture.transformation.premultiplying.encode:raw_file": "原始文件",
+	"executor.implementation:texture.transformation.premultiplying.encode:ripe_file": "成品文件",
+	// 
+	"executor.implementation:texture.transformation.premultiplying.decode": "Texture 解预乘",
+	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.premultiplying.decode:raw_file": "原始文件",
 	// executor/implement/texture.encoding
 	"executor.implementation:texture.encoding.encode": "Texture 编码",
 	"executor.implementation:texture.encoding.encode:image_file": "图像文件",

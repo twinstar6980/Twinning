@@ -276,6 +276,90 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 					return;
 				},
 			}),
+			typical_method({
+				identifier: 'premultiplying.encode',
+				filter: ['file', /()$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'raw_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'ripe_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.png)?$/i, '.tiled.png'),
+						condition: null,
+					}),
+				],
+				batch: [
+					typical_argument_batch({
+						identifier: 'raw_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						identifier: 'ripe_file',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.tiled'),
+						condition: null,
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
+					}),
+				],
+				worker: ({raw_file, ripe_file}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Premultiplying.encode_fs(raw_file, ripe_file);
+					return;
+				},
+			}),
+			typical_method({
+				identifier: 'premultiplying.decode',
+				filter: ['file', /()$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'ripe_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'raw_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.png)?$/i, '.detiled.png'),
+						condition: null,
+					}),
+				],
+				batch: [
+					typical_argument_batch({
+						identifier: 'ripe_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						identifier: 'raw_file',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.detiled'),
+						condition: null,
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
+					}),
+				],
+				worker: ({ripe_file, raw_file}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Premultiplying.decode_fs(raw_file, ripe_file);
+					return;
+				},
+			}),
 		]);
 		return;
 	}

@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 131
+ * @version 132
  */
 declare namespace Twinning.Kernel {
 
@@ -1398,7 +1398,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							raw: InputByteStreamView,
-							ripe: OutputCharacterStreamView,
+							ripe: OutputByteStreamView,
 						): Void;
 
 						/**
@@ -1423,7 +1423,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function process(
 							raw: OutputByteStreamView,
-							ripe: InputCharacterStreamView,
+							ripe: InputByteStreamView,
 						): Void;
 
 						/**
@@ -1433,7 +1433,7 @@ declare namespace Twinning.Kernel {
 						 */
 						function estimate(
 							raw_size: Size,
-							ripe: ConstantCharacterListView,
+							ripe: ConstantByteListView,
 						): Void;
 
 					}
@@ -1994,6 +1994,41 @@ declare namespace Twinning.Kernel {
 							raw: Image.VariableImageView,
 							ripe: Image.ConstantImageView,
 							tile_size: Image.ImageSize,
+						): Void;
+
+					}
+
+				}
+
+				/** 预乘 */
+				namespace Premultiplying {
+
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 */
+						function process(
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+						): Void;
+
+					}
+
+					/** 解码 */
+					namespace Decode {
+
+						/**
+						 * 解码
+						 * @param raw 原始图像
+						 * @param ripe 成品图像
+						 */
+						function process(
+							raw: Image.VariableImageView,
+							ripe: Image.ConstantImageView,
 						): Void;
 
 					}

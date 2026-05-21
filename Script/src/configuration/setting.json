@@ -358,6 +358,28 @@
 					"raw_file": "?automatic",
 				},
 			},
+			"premultiplying.encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"premultiplying.decode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
 		},
 		"texture.encoding": {
 			"encode": {

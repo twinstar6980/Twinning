@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 
 		// ----------------
 
-		inline static constexpr auto k_table = StaticArray<Byte, 128_sz>{{
+		inline static constexpr auto k_table = StaticByteArray<128_sz>{{
 			// none
 			0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b,
 			0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b,
@@ -43,30 +43,38 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 			0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b, 0xFF_b,
 		}};
 
+		inline static auto query_table(
+			Size const & index
+		) -> Byte const & {
+			auto & value = k_table[index];
+			assert_test(value != 0xFF_b);
+			return value;
+		}
+
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &     raw,
-			InputCharacterStreamView & ripe
+			OutputByteStreamView & raw,
+			InputByteStreamView &  ripe
 		) -> Void {
 			auto raw_size = Size{};
 			estimate_whole(raw_size, ripe.reserve_view());
 			auto raw_end = raw.position() + raw_size;
-			auto buffer = Array<Character>{k_ripe_block_size};
+			auto buffer = ByteArray{k_ripe_block_size};
 			while (!ripe.full()) {
 				buffer[1_ix] = ripe.read_of();
 				buffer[2_ix] = ripe.read_of();
 				buffer[3_ix] = ripe.read_of();
 				buffer[4_ix] = ripe.read_of();
-				raw.write(k_table[cbox<Size>(buffer[1_ix])] << 2_sz | k_table[cbox<Size>(buffer[2_ix])] >> 4_sz);
+				raw.write(query_table(cbox<Size>(buffer[1_ix])) << 2_sz | query_table(cbox<Size>(buffer[2_ix])) >> 4_sz);
 				if (raw.position() == raw_end) {
 					break;
 				}
-				raw.write(k_table[cbox<Size>(buffer[2_ix])] << 4_sz | k_table[cbox<Size>(buffer[3_ix])] >> 2_sz);
+				raw.write(query_table(cbox<Size>(buffer[2_ix])) << 4_sz | query_table(cbox<Size>(buffer[3_ix])) >> 2_sz);
 				if (raw.position() == raw_end) {
 					break;
 				}
-				raw.write(k_table[cbox<Size>(buffer[3_ix])] << 6_sz | k_table[cbox<Size>(buffer[4_ix])] >> 0_sz);
+				raw.write(query_table(cbox<Size>(buffer[3_ix])) << 6_sz | query_table(cbox<Size>(buffer[4_ix])) >> 0_sz);
 			}
 			return;
 		}
@@ -74,16 +82,16 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size &                            raw_size,
-			ConstantCharacterListView const & ripe
+			Size &                       raw_size,
+			ConstantByteListView const & ripe
 		) -> Void {
 			assert_test(is_padded_size(ripe.size(), k_ripe_block_size));
 			auto padding_size = 0_sz;
 			if (!ripe.empty()) {
-				if (ripe[ripe.last_index() - 1_ix] == k_padding_character) {
+				if (ripe[ripe.last_index() - 1_ix] == k_padding_byte) {
 					++padding_size;
 				}
-				if (ripe[ripe.last_index() - 2_ix] == k_padding_character) {
+				if (ripe[ripe.last_index() - 2_ix] == k_padding_byte) {
 					++padding_size;
 				}
 			}
@@ -94,8 +102,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &     raw_,
-			InputCharacterStreamView & ripe_
+			OutputByteStreamView & raw_,
+			InputByteStreamView &  ripe_
 		) -> Void {
 			M_use_zps_of(raw);
 			M_use_zps_of(ripe);
@@ -103,8 +111,8 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 		}
 
 		inline static auto estimate(
-			Size &                            raw_size,
-			ConstantCharacterListView const & ripe
+			Size &                       raw_size,
+			ConstantByteListView const & ripe
 		) -> Void {
 			restruct(raw_size);
 			return estimate_whole(raw_size, ripe);
