@@ -717,7 +717,7 @@ class ListContainer extends StatelessWidget {
         controller: this.controller,
         itemCount: this.itemCount,
         itemBuilder: this.itemBuilder,
-        onReorder: this.onReorder!,
+        onReorderItem: this.onReorder!,
       );
   }
 

@@ -219,9 +219,6 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
             ),
           ),
           onReorder: (oldIndex, newIndex) async {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
-            }
             var item = this._command.removeAt(oldIndex);
             this._command.insert(newIndex, item);
             await refreshState(this.setState);

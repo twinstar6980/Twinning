@@ -18,8 +18,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Rotating {
 		inline static auto process_image(
 			Image::ConstantImageView const & raw,
 			Image::VariableImageView const & ripe,
-			Boolean const & rotate_90,
-			Boolean const & rotate_180
+			Boolean const &                  rotate_90,
+			Boolean const &                  rotate_180
 		) -> Void {
 			assert_test((!rotate_90) ? (raw.size() == ripe.size()) : (raw.size() == Image::ImageSize{ripe.size().height, ripe.size().width}));
 			for (auto & y : SizeRange{raw.size().height}) {
@@ -47,8 +47,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Rotating {
 		inline static auto process(
 			Image::ConstantImageView const & raw,
 			Image::VariableImageView const & ripe,
-			Boolean const & rotate_90,
-			Boolean const & rotate_180
+			Boolean const &                  rotate_90,
+			Boolean const &                  rotate_180
 		) -> Void {
 			return process_image(raw, ripe, rotate_90, rotate_180);
 		}
