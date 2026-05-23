@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 132
+ * @version 133
  */
 declare namespace Twinning.Kernel {
 
@@ -845,6 +845,29 @@ declare namespace Twinning.Kernel {
 			get value(): typeof Color.Value;
 
 			set value(it: typeof Color.Value);
+
+		}
+
+		/** Optional包装的颜色 */
+		class ColorOptional {
+
+			private _Image_ColorOptional;
+
+			// ----------------
+
+			static default(): ColorOptional;
+
+			static copy(it: ColorOptional): ColorOptional;
+
+			// ----------------
+
+			static Value: null | bigint;
+
+			static value(it: typeof ColorOptional.Value): ColorOptional;
+
+			get value(): typeof ColorOptional.Value;
+
+			set value(it: typeof ColorOptional.Value);
 
 		}
 
@@ -1879,6 +1902,34 @@ declare namespace Twinning.Kernel {
 			namespace Transformation {
 
 				/** 翻转 */
+				namespace Filling {
+
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param raw 原始图像
+						 * @param raw 成品图像
+						 * @param fill_red 填充R
+						 * @param fill_green 填充G
+						 * @param fill_blue 填充B
+						 * @param fill_alpha 填充A
+						 */
+						function process(
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+							fill_red: Image.ColorOptional,
+							fill_green: Image.ColorOptional,
+							fill_blue: Image.ColorOptional,
+							fill_alpha: Image.ColorOptional,
+						): Void;
+
+					}
+
+				}
+
+				/** 翻转 */
 				namespace Flipping {
 
 					/** 编码 */
@@ -1896,6 +1947,30 @@ declare namespace Twinning.Kernel {
 							ripe: Image.VariableImageView,
 							flip_horizontal: Boolean,
 							flip_vertical: Boolean,
+						): Void;
+
+					}
+
+				}
+
+				/** 旋转 */
+				namespace Rotating {
+
+					/** 编码 */
+					namespace Encode {
+
+						/**
+						 * 编码
+						 * @param raw 原始图像
+						 * @param raw 成品图像
+						 * @param rotate_90 90度旋转
+						 * @param rotate_180 180度旋转
+						 */
+						function process(
+							raw: Image.ConstantImageView,
+							ripe: Image.VariableImageView,
+							rotate_90: Boolean,
+							rotate_180: Boolean,
 						): Void;
 
 					}
@@ -1971,12 +2046,10 @@ declare namespace Twinning.Kernel {
 						 * 编码
 						 * @param raw 原始图像
 						 * @param ripe 成品图像
-						 * @param tile_size 区块大小
 						 */
 						function process(
 							raw: Image.ConstantImageView,
 							ripe: Image.VariableImageView,
-							tile_size: Image.ImageSize,
 						): Void;
 
 					}
@@ -1988,12 +2061,10 @@ declare namespace Twinning.Kernel {
 						 * 解码
 						 * @param raw 原始图像
 						 * @param ripe 成品图像
-						 * @param tile_size 区块大小
 						 */
 						function process(
 							raw: Image.VariableImageView,
 							ripe: Image.ConstantImageView,
-							tile_size: Image.ImageSize,
 						): Void;
 
 					}
@@ -2391,16 +2462,16 @@ declare namespace Twinning.Kernel {
 			}
 
 			/** 文件 */
-			namespace File {
+			namespace Conversion {
 
 				/** Png */
 				namespace Png {
 
-					/** 写 */
-					namespace Write {
+					/** 编码 */
+					namespace Encode {
 
 						/**
-						 * 写
+						 * 编码
 						 * @param data 数据
 						 * @param image 图像
 						 */
@@ -2411,11 +2482,11 @@ declare namespace Twinning.Kernel {
 
 					}
 
-					/** 读 */
-					namespace Read {
+					/** 解码 */
+					namespace Decode {
 
 						/**
-						 * 读
+						 * 解码
 						 * @param data 数据
 						 * @param image 图像
 						 */

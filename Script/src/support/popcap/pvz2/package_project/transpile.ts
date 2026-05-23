@@ -97,10 +97,10 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(resource_property.size));
 					let image_view = image.view();
-					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, conversion_setting.format);
+					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, conversion_setting.format, true);
 					for (let source_sprite of resource_property.sprite) {
 						let sprite_image_view = image_view.sub(Kernel.Image.ImagePosition.value(source_sprite.position), Kernel.Image.ImageSize.value(source_sprite.size));
-						KernelX.Tool.Texture.File.Png.write_fs(make_scope_child_path(new_source_data_directory, source_sprite.path + '.png'), sprite_image_view);
+						KernelX.Tool.Texture.Conversion.Png.encode_fs(make_scope_child_path(new_source_data_directory, source_sprite.path + '.png'), sprite_image_view);
 						new_sprite_property_list.push({
 							source: source_sprite.path,
 							identifier: source_sprite.identifier,
@@ -153,7 +153,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					let source_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
 					for (let sprite_resource_property of resource_property.sprite) {
 						let source_file = make_scope_child_path(source_directory, sprite_resource_property.source + '.png');
-						let source = KernelX.Tool.Texture.File.Png.read_fs_of(source_file);
+						let source = KernelX.Tool.Texture.Conversion.Png.read_fs_of(source_file);
 						let source_view = source.view();
 						source_list[sprite_resource_property.source] = [source, source_view];
 					}

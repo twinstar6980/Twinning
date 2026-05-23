@@ -186,14 +186,14 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
-					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, format);
+					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, format, true);
 					assert_test(data_stream.position().value === data_stream.size().value);
 					if (option.ptx.atlas !== null) {
 						let atlas_view = image_view;
 						if (option.ptx.atlas.resize) {
 							atlas_view = atlas_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(size));
 						}
-						KernelX.Tool.Texture.File.Png.write_fs(option.ptx.directory.push(path.parent()!).join(path.name() + '.png'), atlas_view);
+						KernelX.Tool.Texture.Conversion.Png.encode_fs(option.ptx.directory.push(path.parent()!).join(path.name() + '.png'), atlas_view);
 					}
 					if (option.ptx.sprite !== null) {
 						Support.Atlas.Pack.unpack_fsh({

@@ -294,6 +294,21 @@
 			},
 		},
 		"texture.transformation": {
+			"filling.encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"fill_red": "?input",
+					"fill_green": "?input",
+					"fill_blue": "?input",
+					"fill_alpha": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
 			"flipping.encode": {
 				"filter": "(\\.png)$",
 				"argument": {
@@ -301,6 +316,19 @@
 					"ripe_file": "?automatic",
 					"flip_horizontal": "?input",
 					"flip_vertical": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"rotating.encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"rotate_90": "?input",
+					"rotate_180": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
@@ -352,6 +380,28 @@
 					"raw_file": "?automatic",
 					"tile_width": "?input",
 					"tile_height": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"interleaving.encode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"interleaving.decode": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
 				},
 				"batch": {
 					"ripe_file": "?input",

@@ -193,7 +193,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 				let source_list: Record<string, [Kernel.Image.Image, Kernel.Image.ImageView]> = {};
 				for (let sprite_resource_property of resource_property.sprite) {
 					let source_file = make_scope_child_path(source_directory, sprite_resource_property.source + '.png');
-					let source = KernelX.Tool.Texture.File.Png.read_fs_of(source_file);
+					let source = KernelX.Tool.Texture.Conversion.Png.read_fs_of(source_file);
 					let source_view = source.view();
 					source_list[sprite_resource_property.source] = [source, source_view];
 				}

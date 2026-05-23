@@ -199,11 +199,25 @@
 	"executor.implementation:text.xml.format:source_file": "来源文件",
 	"executor.implementation:text.xml.format:destination_file": "目的文件",
 	// executor/implement/texture.transformation
+	"executor.implementation:texture.transformation.filling.encode": "Texture 填充",
+	"executor.implementation:texture.transformation.filling.encode:raw_file": "原始文件",
+	"executor.implementation:texture.transformation.filling.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.filling.encode:fill_red": "填充R",
+	"executor.implementation:texture.transformation.filling.encode:fill_blue": "填充G",
+	"executor.implementation:texture.transformation.filling.encode:fill_green": "填充B",
+	"executor.implementation:texture.transformation.filling.encode:fill_alpha": "填充A",
+	// 
 	"executor.implementation:texture.transformation.flipping.encode": "Texture 翻转",
 	"executor.implementation:texture.transformation.flipping.encode:raw_file": "原始文件",
 	"executor.implementation:texture.transformation.flipping.encode:ripe_file": "成品文件",
 	"executor.implementation:texture.transformation.flipping.encode:flip_horizontal": "水平翻转",
 	"executor.implementation:texture.transformation.flipping.encode:flip_vertical": "垂直翻转",
+	// 
+	"executor.implementation:texture.transformation.rotating.encode": "Texture 旋转",
+	"executor.implementation:texture.transformation.rotating.encode:raw_file": "原始文件",
+	"executor.implementation:texture.transformation.rotating.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.rotating.encode:rotate_90": "旋转90度",
+	"executor.implementation:texture.transformation.rotating.encode:rotate_180": "旋转180度",
 	// 
 	"executor.implementation:texture.transformation.scaling.encode": "Texture 缩放",
 	"executor.implementation:texture.transformation.scaling.encode:raw_file": "原始文件",
@@ -227,6 +241,14 @@
 	"executor.implementation:texture.transformation.tiling.decode:raw_file": "原始文件",
 	"executor.implementation:texture.transformation.tiling.decode:tile_width": "分块宽度",
 	"executor.implementation:texture.transformation.tiling.decode:tile_height": "分块高度",
+	// 
+	"executor.implementation:texture.transformation.interleaving.encode": "Texture 交织",
+	"executor.implementation:texture.transformation.interleaving.encode:raw_file": "Raw File",
+	"executor.implementation:texture.transformation.interleaving.encode:ripe_file": "Ripe File",
+	// 
+	"executor.implementation:texture.transformation.interleaving.decode": "Texture 解交织",
+	"executor.implementation:texture.transformation.interleaving.decode:ripe_file": "Ripe File",
+	"executor.implementation:texture.transformation.interleaving.decode:raw_file": "Raw File",
 	// 
 	"executor.implementation:texture.transformation.premultiplying.encode": "Texture 预乘",
 	"executor.implementation:texture.transformation.premultiplying.encode:raw_file": "原始文件",

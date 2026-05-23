@@ -35,16 +35,54 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 
 	// ----------------
 
-	export function is_opacity_format(
+	export function get_dummy_channel_filler(
 		format: Format,
-	): boolean {
+	): [null | bigint, null | bigint, null | bigint, null | bigint] {
+		let channel: Array<string>;
+		switch (format) {
+			case 'rgba_8888_o':
+			case 'argb_8888':
+			case 'rgba_4444':
+			case 'rgb_565':
+			case 'rgba_5551': {
+				channel = format.split('_')[0].split('');
+				break;
+			}
+			case 'rgba_4444_tiled':
+			case 'rgb_565_tiled':
+			case 'rgba_5551_tiled': {
+				channel = format.split('_')[0].split('');
+				break;
+			}
+			case 'rgba_pvrtc1_4bpp':
+			case 'rgb_pvrtc1_4bpp_a_8': {
+				channel = format.split('_')[0].split('');
+				if (format === 'rgb_pvrtc1_4bpp_a_8') {
+					channel.push('a');
+				}
+				break;
+			}
+			case 'rgb_etc1_a_8':
+			case 'rgb_etc1_a_palette': {
+				channel = format.split('_')[0].split('');
+				channel.push('a');
+				break;
+			}
+			case 'rgba_astc_4x4':
+			case 'rgba_astc_5x5':
+			case 'rgba_astc_6x6':
+			case 'rgba_astc_8x8': {
+				channel = format.split('_')[0].split('');
+				break;
+			}
+		}
 		return [
-			'rgb_565',
-			'rgb_565_tiled',
-		].includes(format);
+			channel.includes('r') ? null : 255n,
+			channel.includes('g') ? null : 255n,
+			channel.includes('b') ? null : 255n,
+			channel.includes('a') ? null : 255n,
+		];
 	}
-
-	// ----------------
 
 	export function get_block_size(
 		format: Format,
@@ -277,17 +315,15 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		data: Kernel.InputByteStreamView,
 		image: Kernel.Image.VariableImageView,
 		format: Format,
+		fill_dummy: Boolean,
 	): void {
-		if (is_opacity_format(format)) {
-			image.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
-		}
 		switch (format) {
 			case 'rgba_8888_o':
 			case 'argb_8888':
 			case 'rgba_4444':
 			case 'rgb_565':
 			case 'rgba_5551': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, format);
+				KernelX.Tool.Texture.Encoding.decode(data, image, format, false);
 				break;
 			}
 			case 'rgba_4444_tiled':
@@ -295,27 +331,27 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_5551_tiled': {
 				let original_image = Kernel.Image.Image.allocate(image.size());
 				let original_image_view = original_image.view();
-				KernelX.Tool.Texture.Encoding.decode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat);
+				KernelX.Tool.Texture.Encoding.decode(data, image, format.slice(0, -6) as KernelX.Tool.Texture.Encoding.CompositeFormat, false);
 				KernelX.Tool.Texture.Transformation.Tiling.decode(original_image_view, image, get_block_size(format));
 				image.draw(original_image_view);
 				break;
 			}
 			case 'rgba_pvrtc1_4bpp': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgba_pvrtc1_4bpp');
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgba_pvrtc1_4bpp', false);
 				break;
 			}
 			case 'rgb_pvrtc1_4bpp_a_8': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_pvrtc1_4bpp');
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'a_8');
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_pvrtc1_4bpp', false);
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'a_8', false);
 				break;
 			}
 			case 'rgb_etc1_a_8': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1');
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'a_8');
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1', false);
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'a_8', false);
 				break;
 			}
 			case 'rgb_etc1_a_palette': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1');
+				KernelX.Tool.Texture.Encoding.decode(data, image, 'rgb_etc1', false);
 				KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.decode_with_palette(data, image);
 				break;
 			}
@@ -323,8 +359,17 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			case 'rgba_astc_5x5':
 			case 'rgba_astc_6x6':
 			case 'rgba_astc_8x8': {
-				KernelX.Tool.Texture.Encoding.decode(data, image, format);
+				KernelX.Tool.Texture.Encoding.decode(data, image, format, false);
 				break;
+			}
+		}
+		if (fill_dummy) {
+			let dummy_channel_filler = get_dummy_channel_filler(format);
+			if (dummy_channel_filler.some((it) => it !== null)) {
+				let filled_image = Kernel.Image.Image.allocate(image.size());
+				let filled_image_view = filled_image.view();
+				KernelX.Tool.Texture.Transformation.Filling.encode(filled_image_view, image, dummy_channel_filler[0], dummy_channel_filler[1], dummy_channel_filler[2], dummy_channel_filler[3]);
+				image.draw(filled_image_view);
 			}
 		}
 		return;
@@ -339,11 +384,11 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	): void {
 		let image_data = StorageHelper.read_file(image_file);
 		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
-		let image_size = KernelX.Tool.Texture.File.Png.size(image_stream.view());
+		let image_size = KernelX.Tool.Texture.Conversion.Png.size(image_stream.view());
 		let image_size_padded = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 		let image_view = image.view();
-		KernelX.Tool.Texture.File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		KernelX.Tool.Texture.Conversion.Png.decode(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		let option: EncodeOption = {
 			rgb_etc1_a_palette: null,
 		};
@@ -371,8 +416,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		let image_size_padded = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 		let image_view = image.view();
-		decode(data_stream, image_view, format);
-		KernelX.Tool.Texture.File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		decode(data_stream, image_view, format, true);
+		KernelX.Tool.Texture.Conversion.Png.encode_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 		return;
 	}
 

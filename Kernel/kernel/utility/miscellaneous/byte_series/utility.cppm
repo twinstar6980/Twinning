@@ -15,7 +15,7 @@ import twinning.kernel.utility.miscellaneous.byte_series.container;
 
 export namespace Twinning::Kernel {
 
-	#pragma region padding
+	#pragma region size
 
 	inline constexpr auto is_padded_size(
 		Size const & size,
@@ -38,38 +38,100 @@ export namespace Twinning::Kernel {
 		return compute_padded_size(size, unit) - size;
 	}
 
-	#pragma endregion bit
+	// ----------------
 
-	template <typename TIt> requires
-		CategoryConstraint<IsPureInstance<TIt>>
-		&& (IsIntegerBox<TIt>)
-	inline auto clip_bit(
-		TIt const &  it,
-		Size const & begin,
+	inline constexpr auto is_padded_size_of_exponent_of_2(
 		Size const & size
-	) -> TIt {
-		return (it >> begin) & ~(~mbox<TIt>(0) << size);
+	) -> Boolean {
+		return (size != 0_sz) && ((size & (size - 1_sz)) == 0_sz);
 	}
 
-	template <typename TIt> requires
-		CategoryConstraint<IsBaseBox<TIt>>
-	inline auto reverse_endian(
-		TIt const & it
-	) -> TIt {
-		if constexpr (k_type_size<TIt> == 1_sz) {
-			return it;
+	#pragma endregion
+
+	#pragma region bit
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsIntegerBox<TValue>)
+	inline auto clip_bit(
+		TValue const & value,
+		Size const &   begin,
+		Size const &   size
+	) -> TValue {
+		return (value >> begin) & ~(~mbox<TValue>(0) << size);
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsIntegerBox<TValue>)
+	inline auto expand_bit(
+		TValue const & value
+	) -> TValue {
+		auto result = value;
+		if constexpr (k_type_size<TValue> >= 8_sz) {
+			result = (result | (result << 16_sz)) & cbox<TValue>(0b00000000'00000000'11111111'11111111'00000000'00000000'11111111'11111111_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 4_sz) {
+			result = (result | (result << 8_sz)) & cbox<TValue>(0b00000000'11111111'00000000'11111111'00000000'11111111'00000000'11111111_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 2_sz) {
+			result = (result | (result << 4_sz)) & cbox<TValue>(0b00001111'00001111'00001111'00001111'00001111'00001111'00001111'00001111_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 1_sz) {
+			result = (result | (result << 2_sz)) & cbox<TValue>(0b00110011'00110011'00110011'00110011'00110011'00110011'00110011'00110011_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 0_sz) {
+			result = (result | (result << 1_sz)) & cbox<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
+		}
+		return result;
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsIntegerBox<TValue>)
+	inline auto shrink_bit(
+		TValue const & value
+	) -> TValue {
+		auto result = value & cbox<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
+		if constexpr (k_type_size<TValue> >= 0_sz) {
+			result = (result | (result >> 1_sz)) & cbox<TValue>(0b00110011'00110011'00110011'00110011'00110011'00110011'00110011'00110011_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 1_sz) {
+			result = (result | (result >> 2_sz)) & cbox<TValue>(0b00001111'00001111'00001111'00001111'00001111'00001111'00001111'00001111_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 2_sz) {
+			result = (result | (result >> 4_sz)) & cbox<TValue>(0b00000000'11111111'00000000'11111111'00000000'11111111'00000000'11111111_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 4_sz) {
+			result = (result | (result >> 8_sz)) & cbox<TValue>(0b00000000'00000000'11111111'11111111'00000000'00000000'11111111'11111111_iu64);
+		}
+		if constexpr (k_type_size<TValue> >= 8_sz) {
+			result = (result | (result >> 16_sz)) & cbox<TValue>(0b00000000'00000000'00000000'00000000'11111111'11111111'11111111'11111111_iu64);
+		}
+		return result;
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsBaseBox<TValue>>
+	inline auto reverse_bit(
+		TValue const & value
+	) -> TValue {
+		if constexpr (k_type_size<TValue> == 1_sz) {
+			return value;
 		}
 		else {
-			auto forward = cast_pointer<ZByte>(make_pointer_of(it));
-			auto backward = StaticArray<ZByte, k_type_size<TIt>>{};
-			for (auto & index : SizeRange{k_type_size<TIt>}) {
-				backward[index] = forward[k_type_size<TIt> - 1_sz - index];
+			auto forward = cast_pointer<ZByte>(make_pointer_of(value));
+			auto backward = StaticArray<ZByte, k_type_size<TValue>>{};
+			for (auto & index : SizeRange{k_type_size<TValue>}) {
+				backward[index] = forward[k_type_size<TValue> - 1_sz - index];
 			}
-			return cast_pointer<TIt>(backward.begin()).dereference();
+			return cast_pointer<TValue>(backward.begin()).dereference();
 		}
 	}
 
-	#pragma region view cast
+	#pragma endregion
+
+	#pragma region view
 
 	template <typename TSourceElement, auto t_constant> requires
 		CategoryConstraint<IsPureInstance<TSourceElement>>

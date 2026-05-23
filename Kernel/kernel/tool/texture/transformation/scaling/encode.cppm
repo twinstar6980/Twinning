@@ -22,8 +22,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 		) -> Void {
 			auto raw_buffer = Array<Image::Pixel>{raw.size().area()};
 			auto ripe_buffer = Array<Image::Pixel>{ripe.size().area()};
-			for (auto & row : SizeRange{raw.size().height}) {
-				Range::assign_from(raw_buffer.sub(raw.size().width * row, raw.size().width), raw[row]);
+			for (auto & y : SizeRange{raw.size().height}) {
+				Range::assign_from(raw_buffer.sub(raw.size().width * y, raw.size().width), raw[y]);
 			}
 			Third::avir::CImageResizer<>{8}.resizeImage(
 				cast_pointer<std::uint8_t>(raw_buffer.begin()).value,
@@ -37,8 +37,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 				0.0,
 				nullptr
 			);
-			for (auto & row : SizeRange{ripe.size().height}) {
-				Range::assign_from(ripe[row], ripe_buffer.sub(ripe.size().width * row, ripe.size().width));
+			for (auto & y : SizeRange{ripe.size().height}) {
+				Range::assign_from(ripe[y], ripe_buffer.sub(ripe.size().width * y, ripe.size().width));
 			}
 			return;
 		}

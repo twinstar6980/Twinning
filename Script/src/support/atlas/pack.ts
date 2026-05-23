@@ -23,7 +23,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: StoragePath,
 	): void {
 		for (let sprite_definition of definition.sprite) {
-			KernelX.Tool.Texture.File.Png.read_fs(sprite_directory.join(`${sprite_definition.name}.png`), atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
+			KernelX.Tool.Texture.Conversion.Png.decode_fs(sprite_directory.join(`${sprite_definition.name}.png`), atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
 		}
 		return;
 	}
@@ -34,7 +34,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: StoragePath,
 	): void {
 		for (let sprite_definition of definition.sprite) {
-			KernelX.Tool.Texture.File.Png.write_fs(sprite_directory.join(`${sprite_definition.name}.png`), atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
+			KernelX.Tool.Texture.Conversion.Png.encode_fs(sprite_directory.join(`${sprite_definition.name}.png`), atlas.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size)));
 		}
 		return;
 	}
@@ -47,7 +47,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 	): [AtlasDefinition, Kernel.Image.Image] {
 		let sprite_file_list = StorageHelper.list_directory(sprite_directory, null, true, false, true, false).filter((value) => /.+(\.png)/i.test(value.name()!)).map((value) => value.parent()!.join(value.stem()!));
 		let sprite_box = ConvertHelper.record_from_array(sprite_file_list, (index, value) => {
-			let size = KernelX.Tool.Texture.File.Png.size_fs(sprite_directory.push(value.parent()!).join(`${value.stem()}.png`));
+			let size = KernelX.Tool.Texture.Conversion.Png.size_fs(sprite_directory.push(value.parent()!).join(`${value.stem()}.png`));
 			return [value.emit(), {width: Number(size[0]), height: Number(size[1])}];
 		});
 		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'exponent_of_2' ? PackAutomatic.expander_exponent_of_2_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
@@ -66,7 +66,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 			};
 			definition.sprite.push(sprite_definition);
 			let sprite = atlas_view.sub(Kernel.Image.ImagePosition.value(sprite_definition.position), Kernel.Image.ImageSize.value(sprite_definition.size));
-			KernelX.Tool.Texture.File.Png.read_fs(sprite_directory.join(`${sprite_file}.png`), sprite);
+			KernelX.Tool.Texture.Conversion.Png.decode_fs(sprite_directory.join(`${sprite_file}.png`), sprite);
 		}
 		return [definition, atlas];
 	}
@@ -84,7 +84,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(definition.size));
 		let atlas_view = atlas.view();
 		pack_fsh(definition, atlas_view, sprite_directory);
-		KernelX.Tool.Texture.File.Png.write_fs(atlas_file, atlas_view);
+		KernelX.Tool.Texture.Conversion.Png.encode_fs(atlas_file, atlas_view);
 		return;
 	}
 
@@ -94,7 +94,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: StoragePath,
 	): void {
 		let definition = JsonHelper.decode_file(definition_file) as AtlasDefinition;
-		let atlas = KernelX.Tool.Texture.File.Png.read_fs_of(atlas_file);
+		let atlas = KernelX.Tool.Texture.Conversion.Png.read_fs_of(atlas_file);
 		let atlas_view = atlas.view();
 		unpack_fsh(definition, atlas_view, sprite_directory);
 		return;
@@ -110,7 +110,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 	): void {
 		let [definition, atlas] = pack_automatic_fsh(sprite_directory, expand_value);
 		JsonHelper.encode_file(definition_file, definition);
-		KernelX.Tool.Texture.File.Png.write_fs(atlas_file, atlas.view());
+		KernelX.Tool.Texture.Conversion.Png.encode_fs(atlas_file, atlas.view());
 		return;
 	}
 

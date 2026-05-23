@@ -6,6 +6,76 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 	): void {
 		push_typical_method('texture.transformation', [
 			typical_method({
+				identifier: 'filling.encode',
+				filter: ['file', /(\.png)$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'raw_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'ripe_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.png)?$/i, '.filled.png'),
+						condition: null,
+					}),
+					typical_argument_integer({
+						identifier: 'fill_red',
+						option: null,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_integer({
+						identifier: 'fill_green',
+						option: null,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_integer({
+						identifier: 'fill_blue',
+						option: null,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_integer({
+						identifier: 'fill_alpha',
+						option: null,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+				],
+				batch: [
+					typical_argument_batch({
+						identifier: 'raw_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						identifier: 'ripe_file',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.filled'),
+						condition: null,
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
+					}),
+				],
+				worker: ({raw_file, ripe_file, fill_red, fill_green, fill_blue, fill_alpha}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Filling.encode_fs(raw_file, ripe_file, fill_red === -1n ? null : fill_red, fill_green === -1n ? null : fill_green, fill_blue === -1n ? null : fill_blue, fill_alpha === -1n ? null : fill_alpha);
+					return;
+				},
+			}),
+			typical_method({
 				identifier: 'flipping.encode',
 				filter: ['file', /(\.png)$/i],
 				argument: [
@@ -56,6 +126,60 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 				],
 				worker: ({raw_file, ripe_file, flip_horizontal, flip_vertical}, store: {}) => {
 					KernelX.Tool.Texture.Transformation.Flipping.encode_fs(raw_file, ripe_file, flip_horizontal, flip_vertical);
+					return;
+				},
+			}),
+			typical_method({
+				identifier: 'rotating.encode',
+				filter: ['file', /(\.png)$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'raw_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'ripe_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.png)?$/i, '.rotated.png'),
+						condition: null,
+					}),
+					typical_argument_boolean({
+						identifier: 'rotate_90',
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_boolean({
+						identifier: 'rotate_180',
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+				],
+				batch: [
+					typical_argument_batch({
+						identifier: 'raw_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						identifier: 'ripe_file',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.rotated'),
+						condition: null,
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.png)?$/i, '.png'),
+					}),
+				],
+				worker: ({raw_file, ripe_file, rotate_90, rotate_180}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Rotating.encode_fs(raw_file, ripe_file, rotate_90, rotate_180);
 					return;
 				},
 			}),
@@ -277,7 +401,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 				},
 			}),
 			typical_method({
-				identifier: 'premultiplying.encode',
+				identifier: 'interleaving.encode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
@@ -291,7 +415,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.png)?$/i, '.tiled.png'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.png)?$/i, '.interleaved.png'),
 						condition: null,
 					}),
 				],
@@ -308,7 +432,91 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.tiled'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.interleaved'),
+						condition: null,
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
+					}),
+				],
+				worker: ({raw_file, ripe_file}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Interleaving.encode_fs(raw_file, ripe_file);
+					return;
+				},
+			}),
+			typical_method({
+				identifier: 'interleaving.decode',
+				filter: ['file', /()$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'ripe_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'raw_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.png)?$/i, '.deinterleaved.png'),
+						condition: null,
+					}),
+				],
+				batch: [
+					typical_argument_batch({
+						identifier: 'ripe_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						identifier: 'raw_file',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.deinterleaved'),
+						condition: null,
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
+					}),
+				],
+				worker: ({ripe_file, raw_file}, store: {}) => {
+					KernelX.Tool.Texture.Transformation.Interleaving.decode_fs(raw_file, ripe_file);
+					return;
+				},
+			}),
+			typical_method({
+				identifier: 'premultiplying.encode',
+				filter: ['file', /()$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'raw_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'ripe_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.png)?$/i, '.premultiplied.png'),
+						condition: null,
+					}),
+				],
+				batch: [
+					typical_argument_batch({
+						identifier: 'raw_file',
+						rule: 'input',
+						checker: null,
+						automatic: null,
+						condition: null,
+						item_mapper: (argument: {}, value) => (value),
+					}),
+					typical_argument_batch({
+						identifier: 'ripe_file',
+						rule: 'output',
+						checker: null,
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.premultiplied'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
@@ -333,7 +541,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.png)?$/i, '.detiled.png'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.png)?$/i, '.unpremultiplied.png'),
 						condition: null,
 					}),
 				],
@@ -350,7 +558,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Transformation {
 						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.detiled'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.unpremultiplied'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),

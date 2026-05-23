@@ -867,6 +867,64 @@
 			"icon": "imagesmode",
 			"item": [
 				{
+					"identifier": "texture.transformation.filling.encode",
+					"name": "Filling",
+					"icon": "format_color_fill",
+					"argument": [
+						{
+							"identifier": "raw_file",
+							"name": "Raw File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "ripe_file",
+							"name": "Ripe File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "fill_red",
+							"name": "Fill Red",
+							"type": "integer",
+							"option": null,
+						},
+						{
+							"identifier": "fill_green",
+							"name": "Fill Green",
+							"type": "integer",
+							"option": null,
+						},
+						{
+							"identifier": "fill_blue",
+							"name": "Fill Blue",
+							"type": "integer",
+							"option": null,
+						},
+						{
+							"identifier": "fill_alpha",
+							"name": "Fill Alpha",
+							"type": "integer",
+							"option": null,
+						},
+					],
+					"batch": [
+						"raw_file",
+						"ripe_file",
+					],
+					"preset": [
+						{
+							"name": "Opacity",
+							"argument": {
+								"fill_red": -1,
+								"fill_green": -1,
+								"fill_blue": -1,
+								"fill_alpha": 255,
+							},
+						},
+					],
+				},
+				{
 					"identifier": "texture.transformation.flipping.encode",
 					"name": "Flipping",
 					"icon": "settings_backup_restore",
@@ -920,6 +978,64 @@
 							"argument": {
 								"flip_horizontal": true,
 								"flip_vertical": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.rotating.encode",
+					"name": "Rotating",
+					"icon": "rotate_90_degrees_cw",
+					"argument": [
+						{
+							"identifier": "raw_file",
+							"name": "Raw File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "ripe_file",
+							"name": "Ripe File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "rotate_90",
+							"name": "Rotate 90",
+							"type": "boolean",
+							"option": null,
+						},
+						{
+							"identifier": "rotate_180",
+							"name": "Rotate 180",
+							"type": "boolean",
+							"option": null,
+						},
+					],
+					"batch": [
+						"raw_file",
+						"ripe_file",
+					],
+					"preset": [
+						{
+							"name": "90",
+							"argument": {
+								"rotate_90": true,
+								"rotate_180": false,
+							},
+						},
+						{
+							"name": "180",
+							"argument": {
+								"rotate_90": false,
+								"rotate_180": true,
+							},
+						},
+						{
+							"name": "270",
+							"argument": {
+								"rotate_90": true,
+								"rotate_180": true,
 							},
 						},
 					],
@@ -1090,6 +1206,56 @@
 								"tile_height": 32,
 							},
 						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.interleaving.encode",
+					"name": "Interleaving",
+					"icon": "fit_page",
+					"argument": [
+						{
+							"identifier": "raw_file",
+							"name": "Raw File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "ripe_file",
+							"name": "Ripe File",
+							"type": "path",
+							"option": null,
+						},
+					],
+					"batch": [
+						"raw_file",
+						"ripe_file",
+					],
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.transformation.interleaving.decode",
+					"name": "Deinterleaving",
+					"icon": "fit_page_width",
+					"argument": [
+						{
+							"identifier": "ripe_file",
+							"name": "Ripe File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "raw_file",
+							"name": "Raw File",
+							"type": "path",
+							"option": null,
+						},
+					],
+					"batch": [
+						"ripe_file",
+						"raw_file",
+					],
+					"preset": [
 					],
 				},
 				{

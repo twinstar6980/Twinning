@@ -684,6 +684,40 @@ namespace Twinning.Script.KernelX {
 
 			export namespace Transformation {
 
+				export namespace Filling {
+
+					export function encode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						fill_red: null | bigint,
+						fill_green: null | bigint,
+						fill_blue: null | bigint,
+						fill_alpha: null | bigint,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Filling.Encode.process(raw, ripe, Kernel.Image.ColorOptional.value(fill_red), Kernel.Image.ColorOptional.value(fill_green), Kernel.Image.ColorOptional.value(fill_blue), Kernel.Image.ColorOptional.value(fill_alpha));
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						fill_red: null | bigint,
+						fill_green: null | bigint,
+						fill_blue: null | bigint,
+						fill_alpha: null | bigint,
+					): void {
+						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(raw_view.size());
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view, fill_red, fill_green, fill_blue, fill_alpha);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
+						return;
+					}
+
+				}
+
 				export namespace Flipping {
 
 					export function encode(
@@ -703,12 +737,42 @@ namespace Twinning.Script.KernelX {
 						flip_horizontal: boolean,
 						flip_vertical: boolean,
 					): void {
-						let raw = File.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw_view.size());
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view, flip_horizontal, flip_vertical);
-						File.Png.write_fs(ripe_file, ripe_view);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
+						return;
+					}
+
+				}
+
+				export namespace Rotating {
+
+					export function encode(
+						raw: Kernel.Image.ConstantImageView,
+						ripe: Kernel.Image.VariableImageView,
+						rotate_90: boolean,
+						rotate_180: boolean,
+					): void {
+						return Kernel.Tool.Texture.Transformation.Rotating.Encode.process(raw, ripe, Kernel.Boolean.value(rotate_90), Kernel.Boolean.value(rotate_180));
+					}
+
+					// ----------------
+
+					export function encode_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						rotate_90: boolean,
+						rotate_180: boolean,
+					): void {
+						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw_view = raw.view();
+						let ripe = Kernel.Image.Image.allocate(!rotate_90 ? raw_view.size() : Kernel.Image.ImageSize.value([raw_view.size().value[1], raw_view.size().value[0]]));
+						let ripe_view = ripe.view();
+						encode(raw_view, ripe_view, rotate_90, rotate_180);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
 						return;
 					}
 
@@ -730,12 +794,12 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						target_size: Image.ImageSize,
 					): void {
-						let raw = File.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(target_size));
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view);
-						File.Png.write_fs(ripe_file, ripe_view);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
 						return;
 					}
 
@@ -744,13 +808,13 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						target_rate: number,
 					): void {
-						let raw = File.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
 						let target_size = Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(raw.size().value[0]) * target_rate))), BigInt(Math.max(1, Math.round(Number(raw.size().value[1]) * target_rate)))]);
 						let ripe = Kernel.Image.Image.allocate(target_size);
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view);
-						File.Png.write_fs(ripe_file, ripe_view);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
 						return;
 					}
 
@@ -781,12 +845,12 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						tile_size: Image.ImageSize,
 					): void {
-						let raw = File.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view, tile_size);
-						File.Png.write_fs(ripe_file, ripe_view);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
 						return;
 					}
 
@@ -795,12 +859,12 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						tile_size: Image.ImageSize,
 					): void {
-						let ripe = File.Png.read_fs_of(ripe_file);
+						let ripe = Conversion.Png.read_fs_of(ripe_file);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
 						decode(raw_view, ripe_view, tile_size);
-						File.Png.write_fs(raw_file, raw_view);
+						Conversion.Png.encode_fs(raw_file, raw_view);
 						return;
 					}
 
@@ -811,17 +875,15 @@ namespace Twinning.Script.KernelX {
 					export function encode(
 						raw: Kernel.Image.ConstantImageView,
 						ripe: Kernel.Image.VariableImageView,
-						tile_size: Image.ImageSize,
 					): void {
-						return Kernel.Tool.Texture.Transformation.Interleaving.Encode.process(raw, ripe, Kernel.Image.ImageSize.value(tile_size));
+						return Kernel.Tool.Texture.Transformation.Interleaving.Encode.process(raw, ripe);
 					}
 
 					export function decode(
 						raw: Kernel.Image.ConstantImageView,
 						ripe: Kernel.Image.VariableImageView,
-						tile_size: Image.ImageSize,
 					): void {
-						return Kernel.Tool.Texture.Transformation.Interleaving.Decode.process(raw, ripe, Kernel.Image.ImageSize.value(tile_size));
+						return Kernel.Tool.Texture.Transformation.Interleaving.Decode.process(raw, ripe);
 					}
 
 					// ----------------
@@ -829,28 +891,26 @@ namespace Twinning.Script.KernelX {
 					export function encode_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						tile_size: Image.ImageSize,
 					): void {
-						let raw = File.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
-						encode(raw_view, ripe_view, tile_size);
-						File.Png.write_fs(ripe_file, ripe_view);
+						encode(raw_view, ripe_view);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
 						return;
 					}
 
 					export function decode_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						tile_size: Image.ImageSize,
 					): void {
-						let ripe = File.Png.read_fs_of(ripe_file);
+						let ripe = Conversion.Png.read_fs_of(ripe_file);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
-						decode(raw_view, ripe_view, tile_size);
-						File.Png.write_fs(raw_file, raw_view);
+						decode(raw_view, ripe_view);
+						Conversion.Png.encode_fs(raw_file, raw_view);
 						return;
 					}
 
@@ -878,12 +938,12 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let raw = File.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.read_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
 						encode(raw_view, ripe_view);
-						File.Png.write_fs(ripe_file, ripe_view);
+						Conversion.Png.encode_fs(ripe_file, ripe_view);
 						return;
 					}
 
@@ -891,12 +951,12 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let ripe = File.Png.read_fs_of(ripe_file);
+						let ripe = Conversion.Png.read_fs_of(ripe_file);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
 						decode(raw_view, ripe_view);
-						File.Png.write_fs(raw_file, raw_view);
+						Conversion.Png.encode_fs(raw_file, raw_view);
 						return;
 					}
 
@@ -977,6 +1037,81 @@ namespace Twinning.Script.KernelX {
 
 				// ----------------
 
+				export function get_dummy_channel_filler(
+					format: CompositeFormat,
+				): [null | bigint, null | bigint, null | bigint, null | bigint] {
+					let channel: Array<string>;
+					switch (format) {
+						case 'a_8':
+						case 'rgb_332':
+						case 'rgb_565':
+						case 'rgba_5551':
+						case 'rgba_4444':
+						case 'rgba_8888':
+						case 'argb_1555':
+						case 'argb_4444':
+						case 'argb_8888':
+						case 'l_8':
+						case 'la_44':
+						case 'la_88':
+						case 'al_44':
+						case 'al_88':
+						case 'rgb_888_o':
+						case 'rgb_888_r':
+						case 'rgba_8888_o':
+						case 'rgba_8888_r':
+						case 'argb_8888_o':
+						case 'argb_8888_r': {
+							channel = format.split('_')[0].split('');
+							break;
+						}
+						case 'rgba_dxtc1':
+						case 'rgba_dxtc3':
+						case 'rgba_dxtc3_p':
+						case 'rgba_dxtc5':
+						case 'rgba_dxtc5_p': {
+							channel = format.split('_')[0].split('');
+							break;
+						}
+						case 'rgb_pvrtc1_4bpp':
+						case 'rgba_pvrtc1_4bpp': {
+							channel = format.split('_')[0].split('');
+							break;
+						}
+						case 'rgb_etc1':
+						case 'rgb_etc2':
+						case 'rgba_etc2_eac':
+						case 'r_eac':
+						case 'rg_eac': {
+							channel = format.split('_')[0].split('');
+							break;
+						}
+						case 'rgba_astc_4x4':
+						case 'rgba_astc_5x4':
+						case 'rgba_astc_5x5':
+						case 'rgba_astc_6x5':
+						case 'rgba_astc_6x6':
+						case 'rgba_astc_8x5':
+						case 'rgba_astc_8x6':
+						case 'rgba_astc_8x8':
+						case 'rgba_astc_10x5':
+						case 'rgba_astc_10x6':
+						case 'rgba_astc_10x8':
+						case 'rgba_astc_10x10':
+						case 'rgba_astc_12x10':
+						case 'rgba_astc_12x12': {
+							channel = format.split('_')[0].split('');
+							break;
+						}
+					}
+					return [
+						channel.includes('r') ? null : 255n,
+						channel.includes('g') ? null : 255n,
+						channel.includes('b') ? null : 255n,
+						channel.includes('a') ? null : 255n,
+					];
+				}
+
 				export function get_block_size(
 					format: CompositeFormat,
 				): Image.ImageSize {
@@ -1053,84 +1188,28 @@ namespace Twinning.Script.KernelX {
 				): bigint {
 					let result: bigint;
 					switch (format) {
-						case 'a_8': {
-							result = 8n;
-							break;
-						}
-						case 'rgb_332': {
-							result = 8n;
-							break;
-						}
-						case 'rgb_565': {
-							result = 16n;
-							break;
-						}
-						case 'rgba_5551': {
-							result = 16n;
-							break;
-						}
-						case 'rgba_4444': {
-							result = 16n;
-							break;
-						}
-						case 'rgba_8888': {
-							result = 32n;
-							break;
-						}
-						case 'argb_1555': {
-							result = 16n;
-							break;
-						}
-						case 'argb_4444': {
-							result = 16n;
-							break;
-						}
-						case 'argb_8888': {
-							result = 32n;
-							break;
-						}
-						case 'l_8': {
-							result = 8n;
-							break;
-						}
-						case 'la_44': {
-							result = 8n;
-							break;
-						}
-						case 'la_88': {
-							result = 16n;
-							break;
-						}
-						case 'al_44': {
-							result = 8n;
-							break;
-						}
-						case 'al_88': {
-							result = 16n;
-							break;
-						}
-						case 'rgb_888_o': {
-							result = 24n;
-							break;
-						}
-						case 'rgb_888_r': {
-							result = 24n;
-							break;
-						}
-						case 'rgba_8888_o': {
-							result = 32n;
-							break;
-						}
-						case 'rgba_8888_r': {
-							result = 32n;
-							break;
-						}
-						case 'argb_8888_o': {
-							result = 32n;
-							break;
-						}
+						case 'a_8':
+						case 'rgb_332':
+						case 'rgb_565':
+						case 'rgba_5551':
+						case 'rgba_4444':
+						case 'rgba_8888':
+						case 'argb_1555':
+						case 'argb_4444':
+						case 'argb_8888':
+						case 'l_8':
+						case 'la_44':
+						case 'la_88':
+						case 'al_44':
+						case 'al_88':
+						case 'rgb_888_o':
+						case 'rgb_888_r':
+						case 'rgba_8888_o':
+						case 'rgba_8888_r':
+						case 'argb_8888_o':
 						case 'argb_8888_r': {
-							result = 32n;
+							let channel_bit_count = format.split('_')[1].split('').map(BigInt);
+							result = channel_bit_count.reduce((a, b) => a + b, 0n);
 							break;
 						}
 						case 'rgba_dxtc1':
@@ -1216,24 +1295,6 @@ namespace Twinning.Script.KernelX {
 						padded_size = [maximum_size, maximum_size];
 					}
 					return padded_size;
-				}
-
-				export function is_opacity_format(
-					format: CompositeFormat,
-				): boolean {
-					return [
-						'rgb_332',
-						'rgb_565',
-						'l_8',
-						'rgb_888_o',
-						'rgb_888_r',
-						'rgba_dxtc1',
-						'rgb_pvrtc1_4bpp',
-						'rgb_etc1',
-						'rgb_etc2',
-						'r_eac',
-						'rg_eac',
-					].includes(format);
 				}
 
 				// ----------------
@@ -1383,6 +1444,7 @@ namespace Twinning.Script.KernelX {
 					data: Kernel.InputByteStreamView,
 					image: Kernel.Image.VariableImageView,
 					format: CompositeFormat,
+					fill_dummy: Boolean,
 				): void {
 					switch (format) {
 						case 'a_8':
@@ -1512,6 +1574,15 @@ namespace Twinning.Script.KernelX {
 							break;
 						}
 					}
+					if (fill_dummy) {
+						let dummy_channel_filler = get_dummy_channel_filler(format);
+						if (dummy_channel_filler.some((it) => it !== null)) {
+							let filled_image = Kernel.Image.Image.allocate(image.size());
+							let filled_image_view = filled_image.view();
+							Transformation.Filling.encode(filled_image_view, image, dummy_channel_filler[0], dummy_channel_filler[1], dummy_channel_filler[2], dummy_channel_filler[3]);
+							image.draw(filled_image_view);
+						}
+					}
 					return;
 				}
 
@@ -1524,11 +1595,11 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let image_original = StorageHelper.read_file(image_file);
 					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
-					let image_size = File.Png.size(image_stream.view());
+					let image_size = Conversion.Png.size(image_stream.view());
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
-					File.Png.read(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					Conversion.Png.decode(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					let data_size = compute_data_size(image_size_padded, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
@@ -1548,17 +1619,14 @@ namespace Twinning.Script.KernelX {
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
-					if (is_opacity_format(format)) {
-						image_view.fill(Kernel.Image.Pixel.value([0xFFn, 0xFFn, 0xFFn, 0xFFn]));
-					}
-					decode(data_stream, image_view, format);
-					File.Png.write_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					decode(data_stream, image_view, format, true);
+					Conversion.Png.encode_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					return;
 				}
 
 			}
 
-			export namespace File {
+			export namespace Conversion {
 
 				export namespace Png {
 
@@ -1566,22 +1634,22 @@ namespace Twinning.Script.KernelX {
 						data: Kernel.ByteListView,
 					): Image.ImageSize {
 						let size = Kernel.Image.ImageSize.default();
-						Kernel.Tool.Texture.File.Png.Read.estimate(data, size);
+						Kernel.Tool.Texture.Conversion.Png.Decode.estimate(data, size);
 						return size.value;
 					}
 
-					export function read(
-						data: Kernel.ByteStreamView,
-						image: Kernel.Image.VariableImageView,
-					): void {
-						return Kernel.Tool.Texture.File.Png.Read.process(data, image);
-					}
-
-					export function write(
+					export function encode(
 						data: Kernel.ByteStreamView,
 						image: Kernel.Image.ConstantImageView,
 					): void {
-						return Kernel.Tool.Texture.File.Png.Write.process(data, image);
+						return Kernel.Tool.Texture.Conversion.Png.Encode.process(data, image);
+					}
+
+					export function decode(
+						data: Kernel.ByteStreamView,
+						image: Kernel.Image.VariableImageView,
+					): void {
+						return Kernel.Tool.Texture.Conversion.Png.Decode.process(data, image);
 					}
 
 					// ----------------
@@ -1594,24 +1662,24 @@ namespace Twinning.Script.KernelX {
 						return image_size;
 					}
 
-					export function read_fs(
-						file: StoragePath,
-						image: Kernel.Image.VariableImageView,
-					): void {
-						let data = StorageHelper.read_file(file);
-						let data_stream = Kernel.ByteStreamView.watch(data.view());
-						read(data_stream, image);
-						return;
-					}
-
-					export function write_fs(
+					export function encode_fs(
 						file: StoragePath,
 						image: Kernel.Image.ConstantImageView,
 						data_buffer: Kernel.ByteListView = g_common_buffer.view(),
 					): void {
 						let data_stream = Kernel.ByteStreamView.watch(data_buffer);
-						write(data_stream, image);
+						encode(data_stream, image);
 						StorageHelper.write_file(file, data_stream.stream_view());
+						return;
+					}
+
+					export function decode_fs(
+						file: StoragePath,
+						image: Kernel.Image.VariableImageView,
+					): void {
+						let data = StorageHelper.read_file(file);
+						let data_stream = Kernel.ByteStreamView.watch(data.view());
+						decode(data_stream, image);
 						return;
 					}
 
@@ -1624,7 +1692,7 @@ namespace Twinning.Script.KernelX {
 						let data_stream = Kernel.ByteStreamView.watch(data.view());
 						let image_size = size(data.view());
 						let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
-						read(data_stream, image.view());
+						decode(data_stream, image.view());
 						return image;
 					}
 
@@ -1939,7 +2007,7 @@ namespace Twinning.Script.KernelX {
 					version: typeof Kernel.Tool.Popcap.UTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.UTexture.Version.value(version);
-					let image = Texture.File.Png.read_fs_of(image_file);
+					let image = Texture.Conversion.Png.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
@@ -1963,7 +2031,7 @@ namespace Twinning.Script.KernelX {
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.UTexture.Decode.process(data_stream, image_view, version_c);
-					Texture.File.Png.write_fs(image_file, image_view);
+					Texture.Conversion.Png.encode_fs(image_file, image_view);
 					return;
 				}
 
@@ -2001,7 +2069,7 @@ namespace Twinning.Script.KernelX {
 					version: typeof Kernel.Tool.Popcap.SexyTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.SexyTexture.Version.value(version);
-					let image = Texture.File.Png.read_fs_of(image_file);
+					let image = Texture.Conversion.Png.read_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
@@ -2025,7 +2093,7 @@ namespace Twinning.Script.KernelX {
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.SexyTexture.Decode.process(data_stream, image_view, version_c);
-					Texture.File.Png.write_fs(image_file, image_view);
+					Texture.Conversion.Png.encode_fs(image_file, image_view);
 					return;
 				}
 

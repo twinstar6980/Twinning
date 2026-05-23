@@ -462,6 +462,27 @@
 			"icon": "imagesmode",
 			"item": [
 				{
+					"name": "Filling",
+					"icon": "format_color_fill",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.filling.encode",
+					"preset": [
+						{
+							"name": "Opacity",
+							"argument": {
+								"fill_red": -1,
+								"fill_green": -1,
+								"fill_blue": -1,
+								"fill_alpha": 255,
+							},
+						},
+					],
+				},
+				{
 					"name": "Flipping",
 					"icon": "settings_backup_restore",
 					"filter": {
@@ -490,6 +511,39 @@
 							"argument": {
 								"flip_horizontal": true,
 								"flip_vertical": true,
+							},
+						},
+					],
+				},
+				{
+					"name": "Rotating",
+					"icon": "rotate_90_degrees_cw",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.rotating.encode",
+					"preset": [
+						{
+							"name": "90",
+							"argument": {
+								"rotate_90": true,
+								"rotate_180": false,
+							},
+						},
+						{
+							"name": "180",
+							"argument": {
+								"rotate_90": false,
+								"rotate_180": true,
+							},
+						},
+						{
+							"name": "270",
+							"argument": {
+								"rotate_90": true,
+								"rotate_180": true,
 							},
 						},
 					],
@@ -566,6 +620,30 @@
 								"tile_height": 32,
 							},
 						},
+					],
+				},
+				{
+					"name": "Interleaving",
+					"icon": "fit_page",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.interleaving.encode",
+					"preset": [
+					],
+				},
+				{
+					"name": "Deinterleaving",
+					"icon": "fit_page_width",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": true,
+					"method": "texture.transformation.interleaving.decode",
+					"preset": [
 					],
 				},
 				{

@@ -199,11 +199,25 @@
 	"executor.implementation:text.xml.format:source_file": "Tệp nguồn",
 	"executor.implementation:text.xml.format:destination_file": "Tệp đích",
 	// executor/implement/texture.transformation
+	"executor.implementation:texture.transformation.filling.encode": "Texture Filling",
+	"executor.implementation:texture.transformation.filling.encode:raw_file": "Raw File",
+	"executor.implementation:texture.transformation.filling.encode:ripe_file": "Ripe File",
+	"executor.implementation:texture.transformation.filling.encode:fill_red": "Fill Red",
+	"executor.implementation:texture.transformation.filling.encode:fill_blue": "Fill Green",
+	"executor.implementation:texture.transformation.filling.encode:fill_green": "Fill Blue",
+	"executor.implementation:texture.transformation.filling.encode:fill_alpha": "Fill Alpha",
+	// 
 	"executor.implementation:texture.transformation.flipping.encode": "Texture lật",
 	"executor.implementation:texture.transformation.flipping.encode:raw_file": "Tệp gốc",
 	"executor.implementation:texture.transformation.flipping.encode:ripe_file": "Tệp ra",
 	"executor.implementation:texture.transformation.flipping.encode:flip_horizontal": "Lật ngang",
 	"executor.implementation:texture.transformation.flipping.encode:flip_vertical": "Lật dọc",
+	// 
+	"executor.implementation:texture.transformation.rotating.encode": "Texture Rotating",
+	"executor.implementation:texture.transformation.rotating.encode:raw_file": "Tệp gốc",
+	"executor.implementation:texture.transformation.rotating.encode:ripe_file": "Tệp ra",
+	"executor.implementation:texture.transformation.rotating.encode:rotate_90": "Rotate 90",
+	"executor.implementation:texture.transformation.rotating.encode:rotate_180": "Rotate 180",
 	// 
 	"executor.implementation:texture.transformation.scaling.encode": "Texture mở rộng",
 	"executor.implementation:texture.transformation.scaling.encode:raw_file": "Tệp gốc",
@@ -227,6 +241,14 @@
 	"executor.implementation:texture.transformation.tiling.decode:raw_file": "Tệp gốc",
 	"executor.implementation:texture.transformation.tiling.decode:tile_width": "Tile width",
 	"executor.implementation:texture.transformation.tiling.decode:tile_height": "Tile height",
+	// 
+	"executor.implementation:texture.transformation.interleaving.encode": "Texture Interleaving",
+	"executor.implementation:texture.transformation.interleaving.encode:raw_file": "Raw File",
+	"executor.implementation:texture.transformation.interleaving.encode:ripe_file": "Ripe File",
+	// 
+	"executor.implementation:texture.transformation.interleaving.decode": "Texture Deinterleaving",
+	"executor.implementation:texture.transformation.interleaving.decode:ripe_file": "Ripe File",
+	"executor.implementation:texture.transformation.interleaving.decode:raw_file": "Raw File",
 	// 
 	"executor.implementation:texture.transformation.premultiplying.encode": "Texture Premultiplying",
 	"executor.implementation:texture.transformation.premultiplying.encode:raw_file": "Tệp gốc",

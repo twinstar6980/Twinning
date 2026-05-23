@@ -35,8 +35,12 @@ import twinning.kernel.tool.data.serialization.json.decode;
 import twinning.kernel.tool.data.serialization.xml.common;
 import twinning.kernel.tool.data.serialization.xml.encode;
 import twinning.kernel.tool.data.serialization.xml.decode;
+import twinning.kernel.tool.texture.transformation.filling.common;
+import twinning.kernel.tool.texture.transformation.filling.encode;
 import twinning.kernel.tool.texture.transformation.flipping.common;
 import twinning.kernel.tool.texture.transformation.flipping.encode;
+import twinning.kernel.tool.texture.transformation.rotating.common;
+import twinning.kernel.tool.texture.transformation.rotating.encode;
 import twinning.kernel.tool.texture.transformation.scaling.common;
 import twinning.kernel.tool.texture.transformation.scaling.encode;
 import twinning.kernel.tool.texture.transformation.tiling.common;
@@ -63,9 +67,9 @@ import twinning.kernel.tool.texture.compression.etc.uncompress;
 import twinning.kernel.tool.texture.compression.astc.common;
 import twinning.kernel.tool.texture.compression.astc.compress;
 import twinning.kernel.tool.texture.compression.astc.uncompress;
-import twinning.kernel.tool.texture.file.png.common;
-import twinning.kernel.tool.texture.file.png.write;
-import twinning.kernel.tool.texture.file.png.read;
+import twinning.kernel.tool.texture.conversion.png.common;
+import twinning.kernel.tool.texture.conversion.png.encode;
+import twinning.kernel.tool.texture.conversion.png.decode;
 import twinning.kernel.tool.wwise.sound_bank.version;
 import twinning.kernel.tool.wwise.sound_bank.definition;
 import twinning.kernel.tool.wwise.sound_bank.encode;
@@ -476,6 +480,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			define_generic_class<Image::ImageSize>(s_Image, "ImageSize"_s);
 			define_generic_class<Image::ImagePosition>(s_Image, "ImagePosition"_s);
 			define_generic_class<Image::Color>(s_Image, "Color"_s);
+			define_generic_class<Optional<Image::Color>>(s_Image, "ColorOptional"_s);
 			define_generic_class<List<Image::Color>>(s_Image, "ColorList"_s);
 			define_generic_class<Image::Pixel>(s_Image, "Pixel"_s);
 			define_generic_class<Image::VariableImageView, GenericClassDefinitionFlag::generic_mask>(s_Image, "ImageView"_s)
@@ -640,9 +645,19 @@ export namespace Twinning::Kernel::Executor::Environment {
 				{
 					auto s_Transformation = s_Texture.add_space("Transformation"_s);
 					{
+						auto s_Filling = s_Transformation.add_space("Filling"_s);
+						s_Filling.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Filling::Encode::process>>("process"_s);
+					}
+					{
 						auto s_Flipping = s_Transformation.add_space("Flipping"_s);
 						s_Flipping.add_space("Encode"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Flipping::Encode::process>>("process"_s);
+					}
+					{
+						auto s_Rotating = s_Transformation.add_space("Rotating"_s);
+						s_Rotating.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Transformation::Rotating::Encode::process>>("process"_s);
 					}
 					{
 						auto s_Scaling = s_Transformation.add_space("Scaling"_s);
@@ -715,14 +730,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 					}
 				}
 				{
-					auto s_File = s_Texture.add_space("File"_s);
+					auto s_Conversion = s_Texture.add_space("Conversion"_s);
 					{
-						auto s_Png = s_File.add_space("Png"_s);
-						s_Png.add_space("Write"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::Png::Write::process>>("process"_s);
-						s_Png.add_space("Read"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::Png::Read::process>>("process"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::File::Png::Read::estimate>>("estimate"_s);
+						auto s_Png = s_Conversion.add_space("Png"_s);
+						s_Png.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Conversion::Png::Encode::process>>("process"_s);
+						s_Png.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Conversion::Png::Decode::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Conversion::Png::Decode::estimate>>("estimate"_s);
 					}
 				}
 			}

@@ -15,12 +15,30 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Interleaving {
 
 		// ----------------
 
+		inline static auto convert_index(
+			Image::ImagePosition const & raw,
+			Size const &                 width
+		) -> Image::ImagePosition {
+			auto index = (expand_bit(raw.x) << 0_sz) | (expand_bit(raw.y) << 1_sz);
+			return Image::ImagePosition{index % width, index / width};
+		}
+
+		// ----------------
+
 		inline static auto process_image(
 			Image::ConstantImageView const & raw,
-			Image::VariableImageView const & ripe,
-			Image::ImageSize const &         tile_size
+			Image::VariableImageView const & ripe
 		) -> Void {
-			throw UnimplementedException{};
+			assert_test(raw.size() == ripe.size());
+			assert_test(is_padded_size_of_exponent_of_2(raw.size().width) && is_padded_size_of_exponent_of_2(raw.size().height));
+			for (auto & y : SizeRange{raw.size().height}) {
+				for (auto & x : SizeRange{raw.size().width}) {
+					auto   ripe_position = convert_index(Image::ImagePosition{x, y}, raw.size().width);
+					auto & raw_pixel = raw[y][x];
+					auto & ripe_pixel = ripe[ripe_position.y][ripe_position.x];
+					ripe_pixel = raw_pixel;
+				}
+			}
 			return;
 		}
 
@@ -28,10 +46,9 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Interleaving {
 
 		inline static auto process(
 			Image::ConstantImageView const & raw,
-			Image::VariableImageView const & ripe,
-			Image::ImageSize const &         tile_size
+			Image::VariableImageView const & ripe
 		) -> Void {
-			return process_image(raw, ripe, tile_size);
+			return process_image(raw, ripe);
 		}
 
 	};
