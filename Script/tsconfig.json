@@ -18,6 +18,11 @@
 		"strict": true,
 		"skipLibCheck": false,
 		"newLine": "lf",
+		"plugins": [
+			{
+				"transform": "./transformer/assert_test.ts",
+			},
+		],
 	},
 	"include": [
 		"src",

@@ -1,13 +1,12 @@
 {
 	"name": "script",
-	"version": "187.0.0",
+	"version": "188.0.0",
 	"scripts": {
-		"build": "tsc"
-	},
-	"dependencies": {
+		"build": "tspc"
 	},
 	"devDependencies": {
-		"typescript": "6.0.3"
+		"typescript": "6.0.3",
+		"ts-patch": "4.0.1"
 	},
 	"private": true
 }
