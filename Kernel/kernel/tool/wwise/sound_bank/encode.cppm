@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			auto has_case = k_false;
 			Generalization::each<typename EnumerationAttribute<TValue>::Index>(
 				[&]<auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
-					if (t_index == static_cast<ZSize>(value.value)) {
+					if (t_index == ubox<ZSize>(value)) {
 						index_value = t_value_index;
 						has_case = k_true;
 					}
@@ -72,12 +72,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		template <auto t_type, typename TValue> requires
 			CategoryConstraint<IsPureInstance<TValue>>
-			&& (IsSame<typename EnumerationAttribute<decltype(t_type)>::Attribute::template Element<static_cast<ZSize>(t_type.value)>::template Element<2_ixz>::template Element<1_ixz>, TValue, Enumerated, IdentifierWrapper>)
+			&& (IsSame<typename EnumerationAttribute<decltype(t_type)>::Attribute::template Element<ubox<ZSize>(t_type)>::template Element<2_ixz>::template Element<1_ixz>, TValue, Enumerated, IdentifierWrapper>)
 		inline static auto convert_common_property(
 			CommonPropertyMap<decltype(t_type)> & map,
 			TValue const &                        value
 		) -> Void {
-			using CurrentEnumerationAttribute = EnumerationAttribute<decltype(t_type)>::Attribute::template Element<static_cast<ZSize>(t_type.value)>;
+			using CurrentEnumerationAttribute = EnumerationAttribute<decltype(t_type)>::Attribute::template Element<ubox<ZSize>(t_type)>;
 			constexpr auto default_value = CurrentEnumerationAttribute::template Element<3_ixz>::template element<1_ixz>;
 			if constexpr (IsSame<typename CurrentEnumerationAttribute::template Element<2_ixz>::template Element<1_ixz>, TValue>) {
 				if (value != default_value) {
@@ -105,13 +105,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		template <auto t_type, typename TValue> requires
 			CategoryConstraint<IsPureInstance<TValue>>
-			&& (IsSame<TValue, typename EnumerationAttribute<decltype(t_type)>::Attribute::template Element<static_cast<ZSize>(t_type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
+			&& (IsSame<TValue, typename EnumerationAttribute<decltype(t_type)>::Attribute::template Element<ubox<ZSize>(t_type)>::template Element<2_ixz>::template Element<1_ixz>>)
 			&& (IsSame<TValue, Boolean, Integer, Floater>)
 		inline static auto convert_common_property_as_regular(
 			CommonPropertyMap<decltype(t_type)> &             map,
 			Definition::template RegularValue<TValue> const & value
 		) -> Void {
-			if (value.value != EnumerationAttribute<decltype(t_type)>::Attribute::template Element<static_cast<ZSize>(t_type.value)>::template Element<3_ixz>::template element<1_ixz>) {
+			if (value.value != EnumerationAttribute<decltype(t_type)>::Attribute::template Element<ubox<ZSize>(t_type)>::template Element<3_ixz>::template element<1_ixz>) {
 				auto & element = map.regular.append();
 				element.key = t_type;
 				element.value.template get<1_ix>().template set<TValue>() = value.value;
@@ -121,13 +121,13 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 
 		template <auto t_type, typename TValue> requires
 			CategoryConstraint<IsPureInstance<TValue>>
-			&& (IsSame<TValue, typename EnumerationAttribute<decltype(t_type)>::Attribute::template Element<static_cast<ZSize>(t_type.value)>::template Element<2_ixz>::template Element<1_ixz>>)
+			&& (IsSame<TValue, typename EnumerationAttribute<decltype(t_type)>::Attribute::template Element<ubox<ZSize>(t_type)>::template Element<2_ixz>::template Element<1_ixz>>)
 			&& (IsSame<TValue, Boolean, Integer, Floater>)
 		inline static auto convert_common_property_as_randomizable(
 			CommonPropertyMap<decltype(t_type)> &                  map,
 			Definition::template RandomizableValue<TValue> const & value
 		) -> Void {
-			if (value.value != EnumerationAttribute<decltype(t_type)>::Attribute::template Element<static_cast<ZSize>(t_type.value)>::template Element<3_ixz>::template element<1_ixz>) {
+			if (value.value != EnumerationAttribute<decltype(t_type)>::Attribute::template Element<ubox<ZSize>(t_type)>::template Element<3_ixz>::template element<1_ixz>) {
 				auto & element = map.regular.append();
 				element.key = t_type;
 				element.value.template get<1_ix>().template set<TValue>() = value.value;
@@ -595,7 +595,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					auto has_case = k_false;
 					Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
 						[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
-							if (t_index == static_cast<ZSize>(element.key.value)) {
+							if (t_index == ubox<ZSize>(element.key)) {
 								type = TAttribute::template Element<1_ixz>::template element<1_ixz>;
 								has_case = k_true;
 							}
@@ -608,7 +608,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					auto has_case = k_false;
 					Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
 						[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
-							if (t_index == static_cast<ZSize>(element.key.value)) {
+							if (t_index == ubox<ZSize>(element.key)) {
 								exchange_common_property_value<typename TAttribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<1_ix>());
 								has_case = k_true;
 							}
@@ -627,7 +627,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
 							[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
-								if (t_index == static_cast<ZSize>(element.key.value)) {
+								if (t_index == ubox<ZSize>(element.key)) {
 									type = TAttribute::template Element<1_ixz>::template element<1_ixz>;
 									has_case = k_true;
 								}
@@ -640,7 +640,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						auto has_case = k_false;
 						Generalization::each<typename EnumerationAttribute<TType>::Attribute>(
 							[&]<auto t_index, typename TAttribute>(ValuePackage<t_index>, TypePackage<TAttribute>) {
-								if (t_index == static_cast<ZSize>(element.key.value)) {
+								if (t_index == ubox<ZSize>(element.key)) {
 									exchange_common_property_value<typename TAttribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<1_ix>());
 									exchange_common_property_value<typename TAttribute::template Element<2_ixz>::template Element<1_ixz>>(data, element.value.template get<2_ix>());
 									has_case = k_true;
@@ -4923,7 +4923,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							[&]<auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
 								constexpr auto variant_type = mbox<typename Definition::HierarchyType>(t_index);
 								if constexpr (variant_type != Definition::HierarchyType::Constant::unknown()) {
-									if (static_cast<ZSize>(value.index().value) == t_index) {
+									if (ubox<ZSize>(value.index()) == t_index) {
 										type = cbox<Enumerated>(t_value_index);
 										exchange_section(item_data, value.template get_of_type<variant_type>());
 										has_case = k_true;

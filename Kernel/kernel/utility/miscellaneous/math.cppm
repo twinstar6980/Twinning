@@ -34,7 +34,7 @@ export namespace Twinning::Kernel::Math {
 	inline constexpr auto floor(
 		TValue const & value
 	) -> TResult {
-		return mbox<TResult>(std::floor(value.value));
+		return mbox<TResult>(std::floor(ubox<typename TValue::Value>(value)));
 	}
 
 	template <typename TResult, typename TValue> requires
@@ -44,7 +44,7 @@ export namespace Twinning::Kernel::Math {
 	inline constexpr auto round(
 		TValue const & value
 	) -> TResult {
-		return mbox<TResult>(std::round(value.value));
+		return mbox<TResult>(std::round(ubox<typename TValue::Value>(value)));
 	}
 
 	template <typename TResult, typename TValue> requires
@@ -54,7 +54,7 @@ export namespace Twinning::Kernel::Math {
 	inline constexpr auto ceil(
 		TValue const & value
 	) -> TResult {
-		return mbox<TResult>(std::ceil(value.value));
+		return mbox<TResult>(std::ceil(ubox<typename TValue::Value>(value)));
 	}
 
 	#pragma endregion

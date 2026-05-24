@@ -213,7 +213,7 @@ export namespace Twinning::Kernel {
 	inline auto null_terminated_string_size_of(
 		Pointer<TElement> const & string
 	) -> Size {
-		return mbox<Size>(std::char_traits<typename AsPure<TElement>::Value>::length(cast_pointer<typename AsPure<TElement>::Value>(string).value));
+		return mbox<Size>(std::char_traits<typename AsPure<TElement>::Value>::length(rubox<typename AsPure<TElement>::Value const *>(string)));
 	}
 
 	#pragma endregion

@@ -49,6 +49,9 @@ target('third.astc_encoder', function()
 	add_includedirs(
 		{ public = true }
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

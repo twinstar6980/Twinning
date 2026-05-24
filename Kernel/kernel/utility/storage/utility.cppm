@@ -121,10 +121,10 @@ export namespace Twinning::Kernel::Storage {
 			Pointer<std::FILE> &    handler
 		) -> auto {
 			#if defined M_system_windows
-			auto file = Third::system::windows::$_wfopen(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(target.emit_native()))).begin()).value, cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin()).value);
+			auto file = Third::system::windows::$_wfopen(rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(target.emit_native()))).begin()), rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin()));
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto file = std::fopen(cast_pointer<char>(make_null_terminated_string(target.emit_native()).begin()).value, mode);
+			auto file = std::fopen(rubox<char *>(make_null_terminated_string(target.emit_native()).begin()), mode);
 			#endif
 			assert_test(file != nullptr);
 			handler = make_pointer(file);
@@ -176,7 +176,7 @@ export namespace Twinning::Kernel::Storage {
 			auto referent = resolve_link(target);
 			auto is_directory = Boolean{};
 			#if defined M_system_windows
-			auto attribute = Third::system::windows::$GetFileAttributesW(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(target.emit_native()))).begin()).value);
+			auto attribute = Third::system::windows::$GetFileAttributesW(rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(target.emit_native()))).begin()));
 			is_directory = attribute != Third::system::windows::$INVALID_FILE_ATTRIBUTES && (attribute & Third::system::windows::$FILE_ATTRIBUTE_DIRECTORY) != 0;
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
@@ -334,7 +334,7 @@ export namespace Twinning::Kernel::Storage {
 		auto data = ByteArray{size};
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "rb", handler);
-		auto count = std::fread(data.begin().value, size.value, 1, handler.value);
+		auto count = std::fread(rubox<void *>(data.begin()), ubox<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		return data;
 	}
@@ -347,7 +347,7 @@ export namespace Twinning::Kernel::Storage {
 		auto size = data.size();
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "wb", handler);
-		auto count = std::fwrite(data.begin().value, size.value, 1, handler.value);
+		auto count = std::fwrite(rubox<void const *>(data.begin()), ubox<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		return;
 	}
@@ -363,7 +363,7 @@ export namespace Twinning::Kernel::Storage {
 		assert_test(data.reserve() >= size);
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "rb", handler);
-		auto count = std::fread(data.current_pointer().value, size.value, 1, handler.value);
+		auto count = std::fread(rubox<void *>(data.current_pointer()), ubox<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		data.forward(size);
 		return size;
@@ -377,7 +377,7 @@ export namespace Twinning::Kernel::Storage {
 		auto size = data.reserve();
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "wb", handler);
-		auto count = std::fwrite(data.current_pointer().value, size.value, 1, handler.value);
+		auto count = std::fwrite(rubox<void const *>(data.current_pointer()), ubox<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		data.forward(size);
 		return size;

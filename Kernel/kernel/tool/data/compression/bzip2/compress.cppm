@@ -26,12 +26,12 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 			assert_test(Math::between(work_factor, 0_i, 250_i));
 			auto bz_state = int{};
 			auto bz_stream = Third::bzip2::$bz_stream{
-				.next_in = cast_pointer<char>(as_variable_pointer(raw.current_pointer())).value,
-				.avail_in = static_cast<unsigned int>(raw.reserve().value),
+				.next_in = rubox<char *>(as_variable_pointer(raw.current_pointer())),
+				.avail_in = ubox<unsigned int>(raw.reserve()),
 				.total_in_lo32 = 0,
 				.total_in_hi32 = 0,
-				.next_out = cast_pointer<char>(ripe.current_pointer()).value,
-				.avail_out = static_cast<unsigned int>(ripe.reserve().value),
+				.next_out = rubox<char *>(ripe.current_pointer()),
+				.avail_out = ubox<unsigned int>(ripe.reserve()),
 				.total_out_lo32 = 0,
 				.total_out_hi32 = 0,
 				.state = nullptr,
@@ -41,9 +41,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 			};
 			bz_state = Third::bzip2::$BZ2_bzCompressInit(
 				&bz_stream,
-				static_cast<int>(block_size.value),
+				ubox<int>(block_size),
 				0,
-				static_cast<int>(work_factor.value)
+				ubox<int>(work_factor)
 			);
 			assert_test(bz_state == Third::bzip2::$BZ_OK);
 			bz_state = Third::bzip2::$BZ2_bzCompress(

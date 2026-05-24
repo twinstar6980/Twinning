@@ -24,13 +24,13 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 		) -> Void {
 			auto v_state = bool{};
 			auto patch_container = std::string{};
-			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{cast_pointer<char>(as_variable_pointer(before.current_pointer())).value, before.reserve().value};
+			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{rubox<char const *>(before.current_pointer()), ubox<std::size_t>(before.reserve())};
 			auto encoder = Third::open_vcdiff::VCDiffStreamingEncoder{&hashed_dictionary, !interleaved ? (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_STANDARD_FORMAT) : (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_FORMAT_INTERLEAVED), true};
 			v_state = hashed_dictionary.Init();
 			assert_test(v_state);
 			v_state = encoder.StartEncoding(&patch_container);
 			assert_test(v_state);
-			v_state = encoder.EncodeChunk(cast_pointer<char>(as_variable_pointer(after.current_pointer())).value, after.reserve().value, &patch_container);
+			v_state = encoder.EncodeChunk(rubox<char const *>(after.current_pointer()), ubox<std::size_t>(after.reserve()), &patch_container);
 			assert_test(v_state);
 			v_state = encoder.FinishEncoding(&patch_container);
 			assert_test(v_state);

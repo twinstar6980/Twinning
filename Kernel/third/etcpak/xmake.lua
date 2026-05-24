@@ -62,6 +62,9 @@ target('third.etcpak', function()
 		'../libpng',
 		{ public = true }
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		'third.libpng',
 		{}

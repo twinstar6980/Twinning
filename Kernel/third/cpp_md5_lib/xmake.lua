@@ -17,6 +17,9 @@ target('third.cpp_md5_lib', function()
 		'include',
 		{ public = true }
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

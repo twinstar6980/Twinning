@@ -744,12 +744,12 @@
 			],
 		},
 		{
-			"identifier": "text",
-			"name": "Text",
+			"identifier": "notation",
+			"name": "Notation",
 			"icon": "description",
 			"item": [
 				{
-					"identifier": "text.json.format",
+					"identifier": "notation.json.format",
 					"name": "JSON Format",
 					"icon": "format_list_bulleted",
 					"argument": [
@@ -835,7 +835,7 @@
 					],
 				},
 				{
-					"identifier": "text.xml.format",
+					"identifier": "notation.xml.format",
 					"name": "XML Format",
 					"icon": "format_list_bulleted",
 					"argument": [

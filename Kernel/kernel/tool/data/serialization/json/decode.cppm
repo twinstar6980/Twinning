@@ -21,7 +21,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 			OutputCharacterStreamView & buffer
 		) -> Void {
 			while (k_true) {
-				switch (auto character = data.read_of(); character.value) {
+				auto character = data.read_of();
+				switch (character.value) {
 					case ' ':
 					case '\t':
 					case '\n':

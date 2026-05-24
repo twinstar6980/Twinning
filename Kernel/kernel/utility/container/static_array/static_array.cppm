@@ -184,17 +184,17 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) -> VariableIterator {
 			assert_test(index <= thiz.end_index());
-			return Iterator{thiz.m_data + index.value};
+			return Iterator{thiz.m_data} + index;
 		}
 
 		constexpr auto begin(
 		) -> VariableIterator {
-			return Iterator{thiz.m_data + thiz.begin_index().value};
+			return Iterator{thiz.m_data} + thiz.begin_index();
 		}
 
 		constexpr auto end(
 		) -> VariableIterator {
-			return Iterator{thiz.m_data + thiz.end_index().value};
+			return Iterator{thiz.m_data} + thiz.end_index();
 		}
 
 		// ----------------
@@ -203,17 +203,17 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) const -> ConstantIterator {
 			assert_test(index <= thiz.end_index());
-			return ConstantIterator{thiz.m_data + index.value};
+			return ConstantIterator{thiz.m_data} + index;
 		}
 
 		constexpr auto begin(
 		) const -> ConstantIterator {
-			return ConstantIterator{thiz.m_data + thiz.begin_index().value};
+			return ConstantIterator{thiz.m_data} + thiz.begin_index();
 		}
 
 		constexpr auto end(
 		) const -> ConstantIterator {
-			return ConstantIterator{thiz.m_data + thiz.end_index().value};
+			return ConstantIterator{thiz.m_data} + thiz.end_index();
 		}
 
 		#pragma endregion
@@ -224,7 +224,7 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) -> VariableElement & {
 			assert_test(index < thiz.end_index());
-			return thiz.m_data[index.value];
+			return thiz.m_data[ubox<ZSize>(index)];
 		}
 
 		constexpr auto first(
@@ -243,7 +243,7 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) const -> ConstantElement & {
 			assert_test(index < thiz.end_index());
-			return thiz.m_data[index.value];
+			return thiz.m_data[ubox<ZSize>(index)];
 		}
 
 		constexpr auto first(

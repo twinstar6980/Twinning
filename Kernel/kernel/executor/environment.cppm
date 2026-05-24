@@ -166,20 +166,6 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	// ----------------
 
-	inline constexpr auto operator |(
-		GenericClassDefinitionFlag const & thix,
-		GenericClassDefinitionFlag const & that
-	) -> GenericClassDefinitionFlag {
-		return static_cast<GenericClassDefinitionFlag>(static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(thix) | static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(that));
-	}
-
-	inline constexpr auto operator &(
-		GenericClassDefinitionFlag const & thix,
-		GenericClassDefinitionFlag const & that
-	) -> GenericClassDefinitionFlag {
-		return static_cast<GenericClassDefinitionFlag>(static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(thix) & static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(that));
-	}
-
 	inline constexpr auto operator *(
 		GenericClassDefinitionFlag const & thix,
 		GenericClassDefinitionFlag const & that

@@ -16,9 +16,9 @@
 
 - [data.differentiation](#datadifferentiation)
 
-- [text.json](#textjson)
+- [notation.json](#notationjson)
 
-- [text.xml](#textxml)
+- [notation.xml](#notationxml)
 
 - [texture.transformation](#texturetransformation)
 
@@ -290,7 +290,7 @@
 
 	* `buffer_size` : `size` = `1024.0m`
 
-## `text.json`
+## `notation.json`
 
 * `format` `*`
 
@@ -306,7 +306,7 @@
 
 	* `disable_object_line_breaking` : `boolean` ~ `KernelX.JSON.g_format.disable_object_line_breaking` = `?automatic`
 
-## `text.xml`
+## `notation.xml`
 
 * `format` `*`
 

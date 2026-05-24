@@ -32,8 +32,8 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 			auto cipher_size = cipher.reserve();
 			if (cipher_size != 0_sz) {
 				auto rijndael = Third::Rijndael::CRijndael{};
-				rijndael.MakeKey(cast_pointer<char>(key.begin()).value, cast_pointer<char>(initialization_vector_view.begin()).value, static_cast<int>(key.size().value), static_cast<int>(block_size.value));
-				rijndael.Decrypt(cast_pointer<char>(cipher.current_pointer()).value, cast_pointer<char>(plain.current_pointer()).value, cipher.reserve().value, static_cast<int>(mode.value));
+				rijndael.MakeKey(rubox<char const *>(key.begin()), rubox<char const *>(initialization_vector_view.begin()), ubox<int>(key.size()), ubox<int>(block_size));
+				rijndael.Decrypt(rubox<char const *>(cipher.current_pointer()), rubox<char *>(plain.current_pointer()), ubox<std::size_t>(cipher.reserve()), ubox<int>(mode));
 			}
 			cipher.forward(cipher_size);
 			plain.forward(cipher_size);

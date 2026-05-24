@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 				Third::libpng::$png_set_gamma(png_struct, Third::libpng::$PNG_DEFAULT_sRGB, 0.45455);
 			}
 			for (auto & row : image.data()) {
-				Third::libpng::$png_read_row(png_struct, reinterpret_cast<Third::libpng::$png_bytep>(row.begin().value), nullptr);
+				Third::libpng::$png_read_row(png_struct, rubox<Third::libpng::$png_bytep>(row.begin()), nullptr);
 			}
 			Third::libpng::$png_read_end(png_struct, png_info);
 			Third::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);

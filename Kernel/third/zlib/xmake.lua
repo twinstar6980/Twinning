@@ -40,6 +40,10 @@ target('third.zlib', function()
 	add_includedirs(
 		{ public = true }
 	)
+	add_defines(
+		'ZLIB_CONST',
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

@@ -17,6 +17,9 @@ target('shell', function()
 		manifest.root .. '',
 		{}
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

@@ -18,6 +18,9 @@ target('test', function()
 		manifest.root .. '/../Shell',
 		{}
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		'kernel',
 		{}

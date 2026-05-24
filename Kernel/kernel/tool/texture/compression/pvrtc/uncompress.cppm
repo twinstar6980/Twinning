@@ -41,9 +41,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 						auto raw_format = Encoding::Format::Constant::rgb_888_r();
 						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(
-							cast_pointer<Third::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.begin()).value,
-							Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)},
-							data.current_pointer().value
+							rubox<Third::PVRTCCompressor::ColorRgb<unsigned char> *>(raw_data.begin()),
+							Third::PVRTCCompressor::Point2<int>{ubox<int>(image.size().width), ubox<int>(image.size().height)},
+							rubox<void const *>(data.current_pointer())
 						);
 						data.forward(ripe_data_size);
 						Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -54,9 +54,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 						auto raw_format = Encoding::Format::Constant::argb_8888_r();
 						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(
-							cast_pointer<Third::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.begin()).value,
-							Third::PVRTCCompressor::Point2<int>{static_cast<int>(image.size().width.value), static_cast<int>(image.size().height.value)},
-							data.current_pointer().value
+							rubox<Third::PVRTCCompressor::ColorRgba<unsigned char> *>(raw_data.begin()),
+							Third::PVRTCCompressor::Point2<int>{ubox<int>(image.size().width), ubox<int>(image.size().height)},
+							rubox<void const *>(data.current_pointer())
 						);
 						data.forward(ripe_data_size);
 						Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);

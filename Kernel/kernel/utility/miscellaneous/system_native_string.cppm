@@ -29,8 +29,8 @@ export namespace Twinning::Kernel::SystemNativeString {
 				Third::system::windows::$WideCharToMultiByte(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$WC_ERR_INVALID_CHARS,
-					cast_pointer<Third::system::windows::$WCHAR>(source.begin()).value,
-					static_cast<int>(source.size().value),
+					rubox<Third::system::windows::$WCHAR const *>(source.begin()),
+					ubox<int>(source.size()),
 					nullptr,
 					0,
 					nullptr,
@@ -43,10 +43,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 				Third::system::windows::$WideCharToMultiByte(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$WC_ERR_INVALID_CHARS,
-					cast_pointer<Third::system::windows::$WCHAR>(source.begin()).value,
-					static_cast<int>(source.size().value),
-					cast_pointer<ZCharacterN>(destination.begin()).value,
-					static_cast<int>(destination.size().value),
+					rubox<Third::system::windows::$WCHAR const *>(source.begin()),
+					ubox<int>(source.size()),
+					rubox<ZCharacterN *>(destination.begin()),
+					ubox<int>(destination.size()),
 					nullptr,
 					nullptr
 				)
@@ -68,8 +68,8 @@ export namespace Twinning::Kernel::SystemNativeString {
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
-					static_cast<int>(source.size().value),
+					rubox<Third::system::windows::$CHAR const *>(source.begin()),
+					ubox<int>(source.size()),
 					nullptr,
 					0
 				)
@@ -80,10 +80,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_UTF8,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
-					static_cast<int>(source.size().value),
-					cast_pointer<Third::system::windows::$WCHAR>(destination.begin()).value,
-					static_cast<int>(destination.size().value)
+					rubox<Third::system::windows::$CHAR const *>(source.begin()),
+					ubox<int>(source.size()),
+					rubox<Third::system::windows::$WCHAR *>(destination.begin()),
+					ubox<int>(destination.size())
 				)
 			);
 			assert_test(destination_size == destination.size());
@@ -101,8 +101,8 @@ export namespace Twinning::Kernel::SystemNativeString {
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_ACP,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
-					static_cast<int>(source.size().value),
+					rubox<Third::system::windows::$CHAR const *>(source.begin()),
+					ubox<int>(source.size()),
 					nullptr,
 					0
 				)
@@ -113,10 +113,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 				Third::system::windows::$MultiByteToWideChar(
 					Third::system::windows::$CP_ACP,
 					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					cast_pointer<Third::system::windows::$CHAR>(source.begin()).value,
-					static_cast<int>(source.size().value),
-					cast_pointer<Third::system::windows::$WCHAR>(destination.begin()).value,
-					static_cast<int>(destination.size().value)
+					rubox<Third::system::windows::$CHAR const *>(source.begin()),
+					ubox<int>(source.size()),
+					rubox<Third::system::windows::$WCHAR *>(destination.begin()),
+					ubox<int>(destination.size())
 				)
 			);
 			assert_test(destination_size == destination.size());

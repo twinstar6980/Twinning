@@ -34,10 +34,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::libsquish::DecompressImage(
-					cast_pointer<Third::libsquish::u8>(raw_data.begin()).value,
-					static_cast<int>(image.size().width.value),
-					static_cast<int>(image.size().height.value),
-					data.current_pointer().value,
+					rubox<Third::libsquish::u8 *>(raw_data.begin()),
+					ubox<int>(image.size().width),
+					ubox<int>(image.size().height),
+					rubox<void const *>(data.current_pointer()),
 					Third::libsquish::kDxt1
 				);
 				data.forward(ripe_data_size);
@@ -49,10 +49,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::libsquish::DecompressImage(
-					cast_pointer<Third::libsquish::u8>(raw_data.begin()).value,
-					static_cast<int>(image.size().width.value),
-					static_cast<int>(image.size().height.value),
-					data.current_pointer().value,
+					rubox<Third::libsquish::u8 *>(raw_data.begin()),
+					ubox<int>(image.size().width),
+					ubox<int>(image.size().height),
+					rubox<void const *>(data.current_pointer()),
 					Third::libsquish::kDxt3
 				);
 				data.forward(ripe_data_size);
@@ -64,10 +64,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::libsquish::DecompressImage(
-					cast_pointer<Third::libsquish::u8>(raw_data.begin()).value,
-					static_cast<int>(image.size().width.value),
-					static_cast<int>(image.size().height.value),
-					data.current_pointer().value,
+					rubox<Third::libsquish::u8 *>(raw_data.begin()),
+					ubox<int>(image.size().width),
+					ubox<int>(image.size().height),
+					rubox<void const *>(data.current_pointer()),
 					Third::libsquish::kDxt5
 				);
 				data.forward(ripe_data_size);

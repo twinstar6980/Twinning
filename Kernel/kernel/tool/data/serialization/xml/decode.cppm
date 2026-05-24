@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			Notation::Xml::Node & value
 		) -> Void {
 			auto raw_document = Third::tinyxml2::XMLDocument{};
-			raw_document.Parse(cast_pointer<ZCharacter>(data.begin()).value, data.size().value);
+			raw_document.Parse(rubox<ZCharacter const *>(data.begin()), ubox<std::size_t>(data.size()));
 			auto current_child = raw_document.FirstChild();
 			assert_test(current_child != nullptr);
 			auto declaration = current_child->ToDeclaration();

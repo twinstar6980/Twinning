@@ -186,18 +186,18 @@
 	"executor.implementation:data.differentiation.vcdiff.decode:after_file": "变动后文件",
 	"executor.implementation:data.differentiation.vcdiff.decode:before_file": "变动前文件",
 	"executor.implementation:data.differentiation.vcdiff.decode:buffer_size": "内存缓冲区大小",
-	// executor/implement/text.json
-	"executor.implementation:text.json.format": "JSON 格式化",
-	"executor.implementation:text.json.format:source_file": "来源文件",
-	"executor.implementation:text.json.format:destination_file": "目的文件",
-	"executor.implementation:text.json.format:disable_array_trailing_comma": "禁用数组尾随逗号",
-	"executor.implementation:text.json.format:disable_array_line_breaking": "禁用数组换行",
-	"executor.implementation:text.json.format:disable_object_trailing_comma": "禁用对象尾随逗号",
-	"executor.implementation:text.json.format:disable_object_line_breaking": "禁用对象换行",
-	// executor/implement/text.xml
-	"executor.implementation:text.xml.format": "XML 格式化",
-	"executor.implementation:text.xml.format:source_file": "来源文件",
-	"executor.implementation:text.xml.format:destination_file": "目的文件",
+	// executor/implement/notation.json
+	"executor.implementation:notation.json.format": "JSON 格式化",
+	"executor.implementation:notation.json.format:source_file": "来源文件",
+	"executor.implementation:notation.json.format:destination_file": "目的文件",
+	"executor.implementation:notation.json.format:disable_array_trailing_comma": "禁用数组尾随逗号",
+	"executor.implementation:notation.json.format:disable_array_line_breaking": "禁用数组换行",
+	"executor.implementation:notation.json.format:disable_object_trailing_comma": "禁用对象尾随逗号",
+	"executor.implementation:notation.json.format:disable_object_line_breaking": "禁用对象换行",
+	// executor/implement/notation.xml
+	"executor.implementation:notation.xml.format": "XML 格式化",
+	"executor.implementation:notation.xml.format:source_file": "来源文件",
+	"executor.implementation:notation.xml.format:destination_file": "目的文件",
 	// executor/implement/texture.transformation
 	"executor.implementation:texture.transformation.filling.encode": "Texture 填充",
 	"executor.implementation:texture.transformation.filling.encode:raw_file": "原始文件",

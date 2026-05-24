@@ -100,7 +100,7 @@ export namespace Twinning::Kernel::Thread {
 		inline static auto sleep(
 			Size const & duration
 		) -> Void {
-			std::this_thread::sleep_for(std::chrono::milliseconds{duration.value});
+			std::this_thread::sleep_for(std::chrono::milliseconds{ubox<std::size_t>(duration)});
 			return;
 		}
 

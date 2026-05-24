@@ -168,20 +168,20 @@ export namespace Twinning::Kernel::Process {
 		#if defined M_system_windows
 		auto state_d = Third::system::windows::$DWORD{};
 		auto name_w = make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<ConstantBasicStringView<CharacterN>>(name)));
-		state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, nullptr, 0);
+		state_d = Third::system::windows::$GetEnvironmentVariableW(rubox<Third::system::windows::$WCHAR *>(name_w.begin()), nullptr, 0);
 		if (state_d == 0) {
 			assert_test(Third::system::windows::$GetLastError() == Third::system::windows::$ERROR_ENVVAR_NOT_FOUND);
 			value.reset();
 		}
 		else {
 			auto buffer = Array<CharacterW>{mbox<Size>(state_d)};
-			state_d = Third::system::windows::$GetEnvironmentVariableW(cast_pointer<Third::system::windows::$WCHAR>(name_w.begin()).value, cast_pointer<Third::system::windows::$WCHAR>(buffer.begin()).value, static_cast<Third::system::windows::$DWORD>(buffer.size().value));
-			assert_test(state_d == static_cast<Third::system::windows::$DWORD>((buffer.size() - 1_sz).value));
+			state_d = Third::system::windows::$GetEnvironmentVariableW(rubox<Third::system::windows::$WCHAR *>(name_w.begin()), rubox<Third::system::windows::$WCHAR *>(buffer.begin()), ubox<Third::system::windows::$DWORD>(buffer.size()));
+			assert_test(state_d == ubox<Third::system::windows::$DWORD>(buffer.size() - 1_sz));
 			value.set(self_cast<String>(SystemNativeString::wide_to_utf8(ConstantBasicStringView<CharacterW>{buffer.begin(), buffer.size() - 1_sz})));
 		}
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		auto value_if = Third::system::posix::$getenv(cast_pointer<char>(make_null_terminated_string(name).begin()).value);
+		auto value_if = Third::system::posix::$getenv(rubox<char *>(make_null_terminated_string(name).begin()));
 		if (value_if == nullptr) {
 			value.reset();
 		}
@@ -235,7 +235,7 @@ export namespace Twinning::Kernel::Process {
 		startup_information.cb = sizeof(Third::system::windows::$STARTUPINFOW);
 		startup_information.dwFlags = Third::system::windows::$STARTF_USESTDHANDLES;
 		startup_information.hStdInput = Third::system::windows::$CreateFileW(
-			cast_pointer<Third::system::windows::$WCHAR>(input_string.begin()).value,
+			rubox<Third::system::windows::$WCHAR *>(input_string.begin()),
 			Third::system::windows::$GENERIC_READ,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -245,7 +245,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		assert_test(startup_information.hStdInput != Third::system::windows::$INVALID_HANDLE_VALUE);
 		startup_information.hStdOutput = Third::system::windows::$CreateFileW(
-			cast_pointer<Third::system::windows::$WCHAR>(output_string.begin()).value,
+			rubox<Third::system::windows::$WCHAR *>(output_string.begin()),
 			Third::system::windows::$GENERIC_WRITE,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -255,7 +255,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		assert_test(startup_information.hStdOutput != Third::system::windows::$INVALID_HANDLE_VALUE);
 		startup_information.hStdError = Third::system::windows::$CreateFileW(
-			cast_pointer<Third::system::windows::$WCHAR>(error_string.begin()).value,
+			rubox<Third::system::windows::$WCHAR *>(error_string.begin()),
 			Third::system::windows::$GENERIC_WRITE,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -266,14 +266,14 @@ export namespace Twinning::Kernel::Process {
 		assert_test(startup_information.hStdError != Third::system::windows::$INVALID_HANDLE_VALUE);
 		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
 		state_b = Third::system::windows::$CreateProcessW(
-			cast_pointer<Third::system::windows::$WCHAR>(program_string.begin()).value,
-			cast_pointer<Third::system::windows::$WCHAR>(argument_string.begin()).value,
+			rubox<Third::system::windows::$WCHAR *>(program_string.begin()),
+			rubox<Third::system::windows::$WCHAR *>(argument_string.begin()),
 			nullptr,
 			nullptr,
 			Third::system::windows::$TRUE,
 			Third::system::windows::$CREATE_UNICODE_ENVIRONMENT | Third::system::windows::$DETACHED_PROCESS,
-			cast_pointer<Third::system::windows::$WCHAR>(environment_string.begin()).value,
-			cast_pointer<Third::system::windows::$WCHAR>(workspace_string.begin()).value,
+			rubox<Third::system::windows::$WCHAR *>(environment_string.begin()),
+			rubox<Third::system::windows::$WCHAR *>(workspace_string.begin()),
 			&startup_information,
 			&process_information
 		);
@@ -305,10 +305,10 @@ export namespace Twinning::Kernel::Process {
 		for (auto & element : argument) {
 			argument_string.append(make_null_terminated_string(element));
 		}
-		auto argument_string_list = List<Character *>{};
+		auto argument_string_list = List<char *>{};
 		argument_string_list.allocate(argument_string.size() + 1_sz);
 		for (auto & element : argument_string) {
-			argument_string_list.append(element.begin().value);
+			argument_string_list.append(rubox<char *>(element.begin()));
 		}
 		argument_string_list.append(nullptr);
 		auto workspace_string = make_null_terminated_string(workspace.emit_native());
@@ -317,10 +317,10 @@ export namespace Twinning::Kernel::Process {
 		for (auto & element : environment) {
 			environment_string.append(make_null_terminated_string(element));
 		}
-		auto environment_string_list = List<Character *>{};
+		auto environment_string_list = List<char *>{};
 		environment_string_list.allocate(environment_string.size() + 1_sz);
 		for (auto & element : environment_string) {
-			environment_string_list.append(element.begin().value);
+			environment_string_list.append(rubox<char *>(element.begin()));
 		}
 		environment_string_list.append(nullptr);
 		auto input_string = make_null_terminated_string((!input.has() ? (null_device) : (input.get())).emit_native());
@@ -329,14 +329,14 @@ export namespace Twinning::Kernel::Process {
 		auto spawn_file_action = Third::system::posix::$posix_spawn_file_actions_t{};
 		state_i = Third::system::posix::$posix_spawn_file_actions_init(&spawn_file_action);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDIN_FILENO, cast_pointer<char>(input_string.begin()).value, Third::system::posix::$O_RDONLY, 0);
+		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDIN_FILENO, rubox<char *>(input_string.begin()), Third::system::posix::$O_RDONLY, 0);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDOUT_FILENO, cast_pointer<char>(output_string.begin()).value, Third::system::posix::$O_WRONLY, 0);
+		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDOUT_FILENO, rubox<char *>(output_string.begin()), Third::system::posix::$O_WRONLY, 0);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDERR_FILENO, cast_pointer<char>(error_string.begin()).value, Third::system::posix::$O_WRONLY, 0);
+		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDERR_FILENO, rubox<char *>(error_string.begin()), Third::system::posix::$O_WRONLY, 0);
 		assert_test(state_i == 0);
 		auto process_identifier = Third::system::posix::$pid_t{};
-		state_i = Third::system::posix::$posix_spawn(&process_identifier, cast_pointer<char>(program_string.begin()).value, &spawn_file_action, nullptr, cast_pointer<char *>(argument_string_list.begin()).value, cast_pointer<char *>(environment_string_list.begin()).value);
+		state_i = Third::system::posix::$posix_spawn(&process_identifier, rubox<char *>(program_string.begin()), &spawn_file_action, nullptr, rubox<char * *>(argument_string_list.begin()), rubox<char * *>(environment_string_list.begin()));
 		assert_test(state_i == 0);
 		state_i = Third::system::posix::$posix_spawn_file_actions_destroy(&spawn_file_action);
 		assert_test(state_i == 0);
@@ -357,10 +357,10 @@ export namespace Twinning::Kernel::Process {
 	) -> IntegerU32 {
 		auto result = IntegerU32{};
 		#if defined M_system_windows
-		result = mbox<IntegerU32>(Third::system::windows::$_wsystem(cast_pointer<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(command))).begin()).value));
+		result = mbox<IntegerU32>(Third::system::windows::$_wsystem(rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(command))).begin())));
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android
-		result = mbox<IntegerU32>(std::system(cast_pointer<char>(make_null_terminated_string(command).begin()).value));
+		result = mbox<IntegerU32>(std::system(rubox<char *>(make_null_terminated_string(command).begin())));
 		#endif
 		#if defined M_system_iphone
 		throw UnsupportedException{};

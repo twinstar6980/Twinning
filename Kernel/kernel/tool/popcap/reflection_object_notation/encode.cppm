@@ -7,7 +7,6 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.reflection_object_notation.version;
 import twinning.kernel.tool.popcap.reflection_object_notation.common;
 import twinning.kernel.tool.common.protocol_buffer_variable_length_integer;
-import twinning.kernel.third.mscharconv;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
@@ -128,23 +127,22 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
 							auto identifier = content.head(at_position);
-							auto identifier_part = split_string<String>(identifier, StaticArray<Character, 1_sz>{{'.'_c}});
-							assert_test(identifier_part.size() == 3_sz);
-							assert_test(Range::all_of(identifier_part[1_ix], &CharacterType::is_number_decimal));
-							assert_test(Range::all_of(identifier_part[2_ix], &CharacterType::is_number_decimal));
-							assert_test(Range::all_of(identifier_part[3_ix], &CharacterType::is_number_hexadecimal));
-							auto identifier_first = IntegerU32{};
-							auto identifier_middle = IntegerU32{};
-							auto identifier_last = IntegerU32{};
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(identifier_part[1_ix].begin()).value, cast_pointer<char>(identifier_part[1_ix].end()).value, identifier_first.value, 10).ec == std::errc{});
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(identifier_part[2_ix].begin()).value, cast_pointer<char>(identifier_part[2_ix].end()).value, identifier_middle.value, 10).ec == std::errc{});
-							assert_test(Third::mscharconv::from_chars(cast_pointer<char>(identifier_part[3_ix].begin()).value, cast_pointer<char>(identifier_part[3_ix].end()).value, identifier_last.value, 16).ec == std::errc{});
+							auto identifier_stream = InputCharacterStreamView{identifier};
+							auto identifier_first = Integer{};
+							auto identifier_middle = Integer{};
+							auto identifier_last = Integer{};
+							StringParser::read_number(identifier_stream, identifier_first);
+							identifier_stream.read_constant('.'_c);
+							StringParser::read_number(identifier_stream, identifier_middle);
+							identifier_stream.read_constant('.'_c);
+							StringParser::read_number_hexadecimal(identifier_stream, identifier_last);
+							assert_test(identifier_stream.full());
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
 							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(sheet.size()));
 							data.write(sheet);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, identifier_middle);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, identifier_first);
-							data.write(identifier_last);
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(identifier_middle));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(identifier_first));
+							data.write(cbox<IntegerU32>(identifier_last));
 							break;
 						}
 						case ReferenceTypeIdentifier::Value::alias: {

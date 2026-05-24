@@ -26,10 +26,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			switch (node.type().value) {
 				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = node.get_element();
-					raw_node = raw_document.NewElement(cast_pointer<char>(make_null_terminated_string(node_value.name).begin()).value);
+					raw_node = raw_document.NewElement(rubox<char *>(make_null_terminated_string(node_value.name).begin()));
 					auto raw_element = raw_node->ToElement();
 					for (auto & attribute : node_value.attribute) {
-						raw_element->SetAttribute(cast_pointer<char>(make_null_terminated_string(attribute.key).begin()).value, cast_pointer<char>(make_null_terminated_string(attribute.value).begin()).value);
+						raw_element->SetAttribute(rubox<char *>(make_null_terminated_string(attribute.key).begin()), rubox<char *>(make_null_terminated_string(attribute.value).begin()));
 					}
 					for (auto & child : node_value.child) {
 						raw_element->InsertEndChild(convert_node(raw_document, child));
@@ -38,14 +38,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				}
 				case Notation::Xml::NodeType::Constant::text().value: {
 					auto & node_value = node.get_text();
-					raw_node = raw_document.NewText(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
+					raw_node = raw_document.NewText(rubox<char *>(make_null_terminated_string(node_value.value).begin()));
 					auto raw_text = raw_node->ToText();
 					raw_text->SetCData(node_value.cdata.value);
 					break;
 				}
 				case Notation::Xml::NodeType::Constant::comment().value: {
 					auto & node_value = node.get_comment();
-					raw_node = raw_document.NewComment(cast_pointer<char>(make_null_terminated_string(node_value.value).begin()).value);
+					raw_node = raw_document.NewComment(rubox<char *>(make_null_terminated_string(node_value.value).begin()));
 					break;
 				}
 				default: throw UnreachableException{};

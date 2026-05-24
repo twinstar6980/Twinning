@@ -186,18 +186,18 @@
 	"executor.implementation:data.differentiation.vcdiff.decode:after_file": "After File",
 	"executor.implementation:data.differentiation.vcdiff.decode:before_file": "Before File",
 	"executor.implementation:data.differentiation.vcdiff.decode:buffer_size": "Buffer Memory Size",
-	// executor/implement/text.json
-	"executor.implementation:text.json.format": "JSON Format",
-	"executor.implementation:text.json.format:source_file": "Source File",
-	"executor.implementation:text.json.format:destination_file": "Destination File",
-	"executor.implementation:text.json.format:disable_array_trailing_comma": "Disable Array Trailing Comma",
-	"executor.implementation:text.json.format:disable_array_line_breaking": "Disable Array Line Breaking",
-	"executor.implementation:text.json.format:disable_object_trailing_comma": "Disable Object Trailing Comma",
-	"executor.implementation:text.json.format:disable_object_line_breaking": "Disable Object Line Breaking",
-	// executor/implement/text.xml
-	"executor.implementation:text.xml.format": "XML Format",
-	"executor.implementation:text.xml.format:source_file": "Source File",
-	"executor.implementation:text.xml.format:destination_file": "Destination File",
+	// executor/implement/notation.json
+	"executor.implementation:notation.json.format": "JSON Format",
+	"executor.implementation:notation.json.format:source_file": "Source File",
+	"executor.implementation:notation.json.format:destination_file": "Destination File",
+	"executor.implementation:notation.json.format:disable_array_trailing_comma": "Disable Array Trailing Comma",
+	"executor.implementation:notation.json.format:disable_array_line_breaking": "Disable Array Line Breaking",
+	"executor.implementation:notation.json.format:disable_object_trailing_comma": "Disable Object Trailing Comma",
+	"executor.implementation:notation.json.format:disable_object_line_breaking": "Disable Object Line Breaking",
+	// executor/implement/notation.xml
+	"executor.implementation:notation.xml.format": "XML Format",
+	"executor.implementation:notation.xml.format:source_file": "Source File",
+	"executor.implementation:notation.xml.format:destination_file": "Destination File",
 	// executor/implement/texture.transformation
 	"executor.implementation:texture.transformation.filling.encode": "Texture Filling",
 	"executor.implementation:texture.transformation.filling.encode:raw_file": "Raw File",

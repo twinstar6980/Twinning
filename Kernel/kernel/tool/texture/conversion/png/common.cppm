@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			if (stream.reserve() < mbox<Size>(length)) {
 				Third::libpng::$png_error(png_ptr, "Read Error");
 			}
-			std::memcpy(data, stream.current_pointer().value, length);
+			std::memcpy(data, rubox<void const *>(stream.current_pointer()), length);
 			stream.forward(mbox<Size>(length));
 			return;
 		}
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			if (stream.reserve() < mbox<Size>(length)) {
 				Third::libpng::$png_error(png_ptr, "Write Error");
 			}
-			std::memcpy(stream.current_pointer().value, data, length);
+			std::memcpy(rubox<void *>(stream.current_pointer()), data, length);
 			stream.forward(mbox<Size>(length));
 			return;
 		}

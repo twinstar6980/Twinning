@@ -103,6 +103,17 @@ export namespace Twinning::Kernel {
 		return TBox{static_cast<TBox::Value>(value)};
 	}
 
+	// NOTE: ALIAS: unmake_box
+	template <typename TValue, typename TBox> requires
+		CategoryConstraint<IsPureInstance<TValue> && IsPureInstance<TBox>>
+		&& (IsBaseBoxValue<TValue>)
+		&& (IsBaseBox<TBox>)
+	inline constexpr auto ubox(
+		TBox const & box
+	) -> TValue {
+		return static_cast<TValue>(box.value);
+	}
+
 	// ----------------
 
 	// NOTE: ALIAS: cast_box
@@ -113,7 +124,18 @@ export namespace Twinning::Kernel {
 	inline constexpr auto cbox(
 		TSource const & source
 	) -> TDestination {
-		return TDestination{static_cast<TDestination::Value>(source.value)};
+		return TDestination{ubox<typename TDestination::Value>(source)};
+	}
+
+	// NOTE: ALIAS: reinterpret_unmake_box
+	template <typename TValue, typename TBox> requires
+		CategoryConstraint<IsPureInstance<TValue> && IsPureInstance<TBox>>
+		&& (IsBaseBoxValue<TValue>)
+		&& (IsBaseBox<TBox>)
+	inline auto rubox(
+		TBox const & box
+	) -> TValue {
+		return reinterpret_cast<TValue>(box.value);
 	}
 
 	#pragma endregion

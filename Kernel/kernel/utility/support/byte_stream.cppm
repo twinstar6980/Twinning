@@ -63,11 +63,11 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]] {
-				std::memcpy(thix.current_pointer().value, &that, k_type_size<TValue>.value);
+				std::memcpy(rubox<void *>(thix.current_pointer()), &that, ubox<std::size_t>(k_type_size<TValue>));
 			}
 			else [[unlikely]] {
 				auto that_reversed = reverse_bit(that);
-				std::memcpy(thix.current_pointer().value, &that_reversed, k_type_size<TValue>.value);
+				std::memcpy(rubox<void *>(thix.current_pointer()), &that_reversed, ubox<std::size_t>(k_type_size<TValue>));
 			}
 			thix.forward(k_type_size<TValue>);
 			return;
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			std::memcpy(&that, thix.current_pointer().value, k_type_size<TValue>.value);
+			std::memcpy(&that, rubox<void const *>(thix.current_pointer()), ubox<std::size_t>(k_type_size<TValue>));
 			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]] {
 				that = reverse_bit(that);
 			}

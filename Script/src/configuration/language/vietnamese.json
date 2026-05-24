@@ -186,18 +186,18 @@
 	"executor.implementation:data.differentiation.vcdiff.decode:after_file": "Tệp sau",
 	"executor.implementation:data.differentiation.vcdiff.decode:before_file": "Tệp trước",
 	"executor.implementation:data.differentiation.vcdiff.decode:buffer_size": "Kích thước bộ nhớ đệm",
-	// executor/implement/text.json
-	"executor.implementation:text.json.format": "Định dạng JSON",
-	"executor.implementation:text.json.format:source_file": "Tệp nguồn",
-	"executor.implementation:text.json.format:destination_file": "Tệp đích",
-	"executor.implementation:text.json.format:disable_array_trailing_comma": "Tắt dấu phẩy thừa ở cuối mảng",
-	"executor.implementation:text.json.format:disable_array_line_breaking": "Tắt mảng tự ngắt dòng",
-	"executor.implementation:text.json.format:disable_object_trailing_comma": "Tắt dấu phẩy thừa ở đối tượng",
-	"executor.implementation:text.json.format:disable_object_line_breaking": "Tắt đối tượng tự ngắt dòng",
-	// executor/implement/text.xml
-	"executor.implementation:text.xml.format": "Định dạng XML",
-	"executor.implementation:text.xml.format:source_file": "Tệp nguồn",
-	"executor.implementation:text.xml.format:destination_file": "Tệp đích",
+	// executor/implement/notation.json
+	"executor.implementation:notation.json.format": "Định dạng JSON",
+	"executor.implementation:notation.json.format:source_file": "Tệp nguồn",
+	"executor.implementation:notation.json.format:destination_file": "Tệp đích",
+	"executor.implementation:notation.json.format:disable_array_trailing_comma": "Tắt dấu phẩy thừa ở cuối mảng",
+	"executor.implementation:notation.json.format:disable_array_line_breaking": "Tắt mảng tự ngắt dòng",
+	"executor.implementation:notation.json.format:disable_object_trailing_comma": "Tắt dấu phẩy thừa ở đối tượng",
+	"executor.implementation:notation.json.format:disable_object_line_breaking": "Tắt đối tượng tự ngắt dòng",
+	// executor/implement/notation.xml
+	"executor.implementation:notation.xml.format": "Định dạng XML",
+	"executor.implementation:notation.xml.format:source_file": "Tệp nguồn",
+	"executor.implementation:notation.xml.format:destination_file": "Tệp đích",
 	// executor/implement/texture.transformation
 	"executor.implementation:texture.transformation.filling.encode": "Texture Filling",
 	"executor.implementation:texture.transformation.filling.encode:raw_file": "Raw File",

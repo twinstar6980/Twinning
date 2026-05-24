@@ -24,22 +24,22 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 			auto raw_size_recorded = ripe.read_of<IntegerU64>();
 			assert_test(raw_size_recorded != ~0_iu64);
 			assert_test(raw.reserve() >= cbox<Size>(raw_size_recorded));
-			auto ripe_size = ripe.reserve().value;
-			auto raw_size = cbox<Size>(raw_size_recorded).value;
-			auto property_size = property.size().value;
+			auto lz_ripe_size = ubox<std::size_t>(ripe.reserve());
+			auto lz_raw_size = ubox<std::size_t>(raw_size_recorded);
+			auto lz_property_size = ubox<std::size_t>(property.size());
 			auto lz_state = int{};
 			lz_state = Third::lzma::$LzmaUncompress(
-				cast_pointer<Third::lzma::$Byte>(raw.current_pointer()).value,
-				&raw_size,
-				cast_pointer<Third::lzma::$Byte>(ripe.current_pointer()).value,
-				&ripe_size,
-				cast_pointer<Third::lzma::$Byte>(property.begin()).value,
-				property_size
+				rubox<Third::lzma::$Byte *>(raw.current_pointer()),
+				&lz_raw_size,
+				rubox<Third::lzma::$Byte const *>(ripe.current_pointer()),
+				&lz_ripe_size,
+				rubox<Third::lzma::$Byte const *>(property.begin()),
+				lz_property_size
 			);
 			assert_test(lz_state == Third::lzma::$SZ_OK);
-			assert_test(raw_size == cbox<Size>(raw_size_recorded).value);
-			ripe.forward(mbox<Size>(ripe_size));
-			raw.forward(mbox<Size>(raw_size));
+			assert_test(lz_raw_size == ubox<std::size_t>(raw_size_recorded));
+			ripe.forward(mbox<Size>(lz_ripe_size));
+			raw.forward(mbox<Size>(lz_raw_size));
 			return;
 		}
 

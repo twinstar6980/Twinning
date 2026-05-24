@@ -17,6 +17,9 @@ target('kernel', function()
 		manifest.root .. '',
 		{}
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		'third.mscharconv',
 		'third.tinyxml2',

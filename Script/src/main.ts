@@ -2,7 +2,7 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '186';
+	export const k_version = '187';
 
 	// ----------------
 
@@ -168,8 +168,8 @@ namespace Twinning.Script {
 			`executor/implementation/data.encryption`,
 			`executor/implementation/data.compression`,
 			`executor/implementation/data.differentiation`,
-			`executor/implementation/text.json`,
-			`executor/implementation/text.xml`,
+			`executor/implementation/notation.json`,
+			`executor/implementation/notation.xml`,
 			`executor/implementation/texture.transformation`,
 			`executor/implementation/texture.encoding`,
 			`executor/implementation/texture.atlas`,

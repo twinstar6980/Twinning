@@ -693,9 +693,9 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		auto convert_result = Third::mscharconv::to_chars(rubox<char *>(valid_begin), rubox<char *>(valid_end), value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
-		stream.forward(mbox<Size>(convert_result.ptr - cast_pointer<char>(valid_begin).value));
+		stream.forward(mbox<Size>(convert_result.ptr - rubox<char *>(valid_begin)));
 		return;
 	}
 
@@ -739,7 +739,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, 10);
+		auto convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -756,9 +756,9 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, Third::mscharconv::chars_format::fixed);
+		auto convert_result = Third::mscharconv::to_chars(rubox<char *>(valid_begin), rubox<char *>(valid_end), value.value, Third::mscharconv::chars_format::fixed);
 		assert_test(convert_result.ec == std::errc{});
-		stream.forward(mbox<Size>(convert_result.ptr - cast_pointer<char>(valid_begin).value));
+		stream.forward(mbox<Size>(convert_result.ptr - rubox<char *>(valid_begin)));
 		if (!Range::has(Range::make_range(valid_begin, stream.current_pointer()), '.'_c)) {
 			stream.write('.'_c);
 			stream.write('0'_c);
@@ -828,7 +828,7 @@ export namespace Twinning::Kernel::StringParser {
 		assert_test(is_floater);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
+		auto convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -917,11 +917,86 @@ export namespace Twinning::Kernel::StringParser {
 		assert_test(valid_begin != valid_end);
 		auto convert_result = Third::mscharconv::from_chars_result{};
 		if (!is_floater) {
-			convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_integer().value, 10);
+			convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.set_integer().value, 10);
 		}
 		else {
-			convert_result = Third::mscharconv::from_chars(cast_pointer<char>(valid_begin).value, cast_pointer<char>(valid_end).value, value.set_floater().value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
+			convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.set_floater().value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
 		}
+		assert_test(convert_result.ec == std::errc{});
+		return;
+	}
+
+	// ----------------
+
+	inline auto write_number_hexadecimal(
+		OutputCharacterStreamView & stream,
+		Integer const &             value,
+		Boolean const &             disable_sign_when_positive = k_false
+	) -> Void {
+		if (value > 0_i && !disable_sign_when_positive) {
+			stream.write('+'_c);
+		}
+		auto valid_begin = stream.reserve_view().begin();
+		auto valid_end = stream.reserve_view().end();
+		auto convert_result = Third::mscharconv::to_chars(rubox<char *>(valid_begin), rubox<char *>(valid_end), value.value, 16);
+		assert_test(convert_result.ec == std::errc{});
+		stream.forward(mbox<Size>(convert_result.ptr - rubox<char *>(valid_begin)));
+		return;
+	}
+
+	inline auto read_number_hexadecimal(
+		InputCharacterStreamView & stream,
+		Integer &                  value
+	) -> Void {
+		auto valid_begin = stream.current_pointer();
+		auto current = Character{};
+		current = stream.read_of();
+		if (current == '+'_c) {
+			++valid_begin;
+		}
+		else if (current == '-'_c) {
+		}
+		else {
+			assert_test(CharacterType::is_number_hexadecimal(current));
+		}
+		while (!stream.full()) {
+			current = stream.read_of();
+			switch (current.value) {
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+				case 'A':
+				case 'B':
+				case 'C':
+				case 'D':
+				case 'E':
+				case 'F':
+				case 'a':
+				case 'b':
+				case 'c':
+				case 'd':
+				case 'e':
+				case 'f': {
+					continue;
+					break;
+				}
+				default: {
+					stream.backward();
+					break;
+				}
+			}
+			break;
+		}
+		auto valid_end = stream.current_pointer();
+		assert_test(valid_begin != valid_end);
+		auto convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.value, 16);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}

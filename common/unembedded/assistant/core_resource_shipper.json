@@ -391,7 +391,7 @@
 			],
 		},
 		{
-			"name": "Text",
+			"name": "Notation",
 			"icon": "description",
 			"item": [
 				{
@@ -402,7 +402,7 @@
 						"name": "(\\.json)$",
 					},
 					"batch": true,
-					"method": "text.json.format",
+					"method": "notation.json.format",
 					"preset": [
 						{
 							"name": "Enable Trailing Comma | Enable Line Breaking",
@@ -451,7 +451,7 @@
 						"name": "(\\.xml)$",
 					},
 					"batch": true,
-					"method": "text.xml.format",
+					"method": "notation.xml.format",
 					"preset": [
 					],
 				},

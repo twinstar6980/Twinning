@@ -16,6 +16,9 @@ target('third.tinyxml2', function()
 	add_includedirs(
 		{ public = true }
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

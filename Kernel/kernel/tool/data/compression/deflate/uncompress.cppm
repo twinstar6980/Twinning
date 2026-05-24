@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		) -> Void {
 			assert_test(Math::between(window_exponent, 8_i, mbox<Integer>(Third::zlib::$MAX_WBITS)));
 			auto z_state = int{};
-			auto z_window_exponent = static_cast<int>(window_exponent.value);
+			auto z_window_exponent = ubox<int>(window_exponent);
 			switch (wrapper_type.value) {
 				case WrapperType::Constant::none().value: {
 					z_window_exponent = -z_window_exponent;
@@ -41,11 +41,11 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				default: throw UnreachableException{};
 			}
 			auto z_stream = Third::zlib::$z_stream{
-				.next_in = cast_pointer<Third::zlib::$Bytef>(as_variable_pointer(ripe.current_pointer())).value,
-				.avail_in = static_cast<unsigned>(ripe.reserve().value),
+				.next_in = rubox<Third::zlib::$Bytef const *>(ripe.current_pointer()),
+				.avail_in = ubox<unsigned>(ripe.reserve()),
 				.total_in = 0,
-				.next_out = cast_pointer<Third::zlib::$Bytef>(raw.current_pointer()).value,
-				.avail_out = static_cast<unsigned>(raw.reserve().value),
+				.next_out = rubox<Third::zlib::$Bytef *>(raw.current_pointer()),
+				.avail_out = ubox<unsigned>(raw.reserve()),
 				.total_out = 0,
 				.msg = nullptr,
 				.state = nullptr,
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				&z_stream,
 				z_window_exponent,
 				Third::zlib::$ZLIB_VERSION,
-				static_cast<int>(sizeof(z_stream))
+				ubox<int>(k_type_size<Third::zlib::$z_stream>)
 			);
 			assert_test(z_state == Third::zlib::$Z_OK);
 			z_state = Third::zlib::$inflate(

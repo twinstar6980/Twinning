@@ -583,6 +583,18 @@ export namespace Twinning::Kernel {
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
+	inline constexpr auto k_number_minimum = TIt{std::numeric_limits<typename TIt::Value>::min()};
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsNumberBox<TIt>)
+	inline constexpr auto k_number_maximum = TIt{std::numeric_limits<typename TIt::Value>::max()};
+
+	// ----------------
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
 	inline constexpr auto k_type_size = Size{mbox<Size>(sizeof(TIt))};
 
 	template <typename TIt> requires

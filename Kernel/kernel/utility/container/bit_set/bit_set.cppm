@@ -96,14 +96,14 @@ export namespace Twinning::Kernel {
 		auto get(
 			Size const & index
 		) -> Boolean {
-			return thiz.m_data.test(index.value);
+			return thiz.m_data.test(ubox<ZSize>(index));
 		}
 
 		auto set(
 			Size const &    index,
 			Boolean const & value
 		) -> Void {
-			thiz.m_data.set(index.value, value.value);
+			thiz.m_data.set(ubox<ZSize>(index), ubox<ZBoolean>(value));
 			return;
 		}
 
@@ -118,7 +118,7 @@ export namespace Twinning::Kernel {
 		auto reset(
 			Size const & index
 		) -> Void {
-			thiz.m_data.reset(index.value);
+			thiz.m_data.reset(ubox<ZSize>(index));
 			return;
 		}
 
@@ -133,7 +133,7 @@ export namespace Twinning::Kernel {
 		auto set(
 			Size const & index
 		) -> Void {
-			thiz.m_data.set(index.value);
+			thiz.m_data.set(ubox<ZSize>(index));
 			return;
 		}
 
@@ -197,7 +197,7 @@ export namespace Twinning::Kernel {
 		auto from_integer(
 			TTargetInteger const & value
 		) -> Void {
-			thiz.m_data = std::bitset<t_size.value>{value.value};
+			thiz.m_data = std::bitset<t_size.value>{ubox<typename TTargetInteger::Value>(value)};
 			return;
 		}
 

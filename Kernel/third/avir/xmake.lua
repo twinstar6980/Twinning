@@ -19,6 +19,9 @@ target('third.avir', function()
 	add_includedirs(
 		{ public = true }
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

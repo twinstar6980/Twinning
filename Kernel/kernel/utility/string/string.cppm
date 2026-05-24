@@ -76,7 +76,7 @@ export namespace Twinning::Kernel {
 	inline auto make_std_string_view(
 		ConstantStringView const & string
 	) -> std::string_view {
-		return std::string_view{cast_pointer<char>(string.begin()).value, string.size().value};
+		return std::string_view{rubox<char const *>(string.begin()), ubox<std::size_t>(string.size())};
 	}
 
 	inline constexpr auto hash_std_string_view(
@@ -98,7 +98,7 @@ export namespace Twinning::Kernel {
 	inline auto mss(
 		ConstantStringView const & string
 	) -> std::string {
-		return std::string{cast_pointer<char>(string.begin()).value, string.size().value};
+		return std::string{rubox<char const *>(string.begin()), ubox<std::size_t>(string.size())};
 	}
 
 	#pragma endregion

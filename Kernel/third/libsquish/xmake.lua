@@ -39,6 +39,9 @@ target('third.libsquish', function()
 		'lib/include',
 		{ public = true }
 	)
+	add_defines(
+		{ public = true }
+	)
 	add_deps(
 		{}
 	)

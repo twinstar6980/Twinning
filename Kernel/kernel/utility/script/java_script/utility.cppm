@@ -336,7 +336,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Runtime & rt,
 			Value &   obj
 		) -> Void {
-			delete static_cast<NativeValueHandler<TClass> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), static_cast<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>.value)));
+			delete static_cast<NativeValueHandler<TClass> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), ubox<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>)));
 			return;
 		}
 

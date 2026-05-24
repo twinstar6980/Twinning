@@ -263,7 +263,7 @@
 				"batch": null,
 			},
 		},
-		"text.json": {
+		"notation.json": {
 			"format": {
 				"filter": "(\\.json)$",
 				"argument": {
@@ -280,7 +280,7 @@
 				},
 			},
 		},
-		"text.xml": {
+		"notation.xml": {
 			"format": {
 				"filter": "(\\.xml)$",
 				"argument": {
