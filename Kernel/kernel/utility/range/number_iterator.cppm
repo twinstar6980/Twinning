@@ -89,6 +89,12 @@ export namespace Twinning::Kernel::Range {
 			return thiz;
 		}
 
+		constexpr auto operator --(
+		) -> NumberIterator & {
+			thiz.m_value -= thiz.m_step;
+			return thiz;
+		}
+
 		#pragma endregion
 
 	public:

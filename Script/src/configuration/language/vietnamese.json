@@ -81,7 +81,7 @@
 	"executor.typical:argument_input": "Đối số yêu cầu đầu vào: {}",
 	"executor.typical:method_interrupted": "Nhận giá trị null làm đầu vào rõ ràng, làm gián đoạn quá trình thực thi",
 	"executor.typical:batch_result": "Hoàn thành xử lý, tổng cộng {} tệp, hợp lệ {} tệp, thất bại {} tệp",
-	// executor/implement/*
+	// executor/implementation/*
 	"executor.implementation:*.out_of_range": "Vượt quá phạm vi",
 	"executor.implementation:*.illegal_key": "Khoá không hợp lệ",
 	"executor.implementation:*.illegal_key_length": "Độ dài khóa không hợp lệ",
@@ -89,7 +89,7 @@
 	"executor.implementation:*.resolution_should_be_bigger_then_zero": "Độ phân giải nên lớn hơn không",
 	"executor.implementation:*.size_should_be_bigger_then_zero": "Kích thước nên lớn hơn không",
 	"executor.implementation:*.rate_should_be_bigger_then_zero": "Tỷ lệ nên lớn hơn không",
-	// executor/implement/common.utility
+	// executor/implementation/common.utility
 	"executor.implementation:common.utility.update_global_setting": "Cập nhật cài đặt toàn cầu",
 	"executor.implementation:common.utility.update_global_setting:data": "Dữ liệu",
 	"executor.implementation:common.utility.run_embedded_script": "Chạy tập lệnh nhúng",
@@ -97,10 +97,10 @@
 	"executor.implementation:common.utility.run_custom_script": "Chạy tập lệnh tùy chỉnh",
 	"executor.implementation:common.utility.run_custom_script:target_file": "Tệp mục tiêu",
 	"executor.implementation:common.utility.run_custom_script:is_module": "Chạy dưới dạng module",
-	// executor/implement/data.hash
+	// executor/implementation/data.hash
 	"executor.implementation:data.hash.md5": "Mã hoá MD5",
 	"executor.implementation:data.hash.md5:target_file": "Tệp mục tiêu",
-	// executor/implement/data.encoding
+	// executor/implementation/data.encoding
 	"executor.implementation:data.encoding.base64.encode": "Mã hóa Base64",
 	"executor.implementation:data.encoding.base64.encode:raw_file": "Tệp gốc",
 	"executor.implementation:data.encoding.base64.encode:ripe_file": "Tệp ra",
@@ -108,7 +108,7 @@
 	"executor.implementation:data.encoding.base64.decode": "Giải mã Base64",
 	"executor.implementation:data.encoding.base64.decode:ripe_file": "Tệp gốc",
 	"executor.implementation:data.encoding.base64.decode:raw_file": "Tệp ra",
-	// executor/implement/data.encryption
+	// executor/implementation/data.encryption
 	"executor.implementation:data.encryption.exor.encrypt": "Mã hóa EXOR",
 	"executor.implementation:data.encryption.exor.encrypt:plain_file": "Tệp văn bản gốc",
 	"executor.implementation:data.encryption.exor.encrypt:cipher_file": "Tệp mã hóa",
@@ -129,7 +129,7 @@
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "Kích thước khối",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "Khóa",
 	"executor.implementation:data.encryption.rijndael.decrypt:initialization_vector": "Vector khởi tạo",
-	// executor/implement/data.compression
+	// executor/implementation/data.compression
 	"executor.implementation:data.compression.deflate.compress": "Nén Deflate",
 	"executor.implementation:data.compression.deflate.compress:raw_file": "Tệp gốc",
 	"executor.implementation:data.compression.deflate.compress:ripe_file": "Tệp ra",
@@ -174,7 +174,7 @@
 	"executor.implementation:data.compression.lzma.uncompress:ripe_file": "Tệp ra",
 	"executor.implementation:data.compression.lzma.uncompress:raw_file": "Tệp gốc",
 	"executor.implementation:data.compression.lzma.uncompress:buffer_size": "Kích thước bộ nhớ đệm",
-	// executor/implement/data.differentiation
+	// executor/implementation/data.differentiation
 	"executor.implementation:data.differentiation.vcdiff.encode": "Mã Hoá VCDiff",
 	"executor.implementation:data.differentiation.vcdiff.encode:after_file": "Tệp sau",
 	"executor.implementation:data.differentiation.vcdiff.encode:patch_file": "Tệp vá",
@@ -186,7 +186,7 @@
 	"executor.implementation:data.differentiation.vcdiff.decode:after_file": "Tệp sau",
 	"executor.implementation:data.differentiation.vcdiff.decode:before_file": "Tệp trước",
 	"executor.implementation:data.differentiation.vcdiff.decode:buffer_size": "Kích thước bộ nhớ đệm",
-	// executor/implement/notation.json
+	// executor/implementation/notation.json
 	"executor.implementation:notation.json.format": "Định dạng JSON",
 	"executor.implementation:notation.json.format:source_file": "Tệp nguồn",
 	"executor.implementation:notation.json.format:destination_file": "Tệp đích",
@@ -194,11 +194,11 @@
 	"executor.implementation:notation.json.format:disable_array_line_breaking": "Tắt mảng tự ngắt dòng",
 	"executor.implementation:notation.json.format:disable_object_trailing_comma": "Tắt dấu phẩy thừa ở đối tượng",
 	"executor.implementation:notation.json.format:disable_object_line_breaking": "Tắt đối tượng tự ngắt dòng",
-	// executor/implement/notation.xml
+	// executor/implementation/notation.xml
 	"executor.implementation:notation.xml.format": "Định dạng XML",
 	"executor.implementation:notation.xml.format:source_file": "Tệp nguồn",
 	"executor.implementation:notation.xml.format:destination_file": "Tệp đích",
-	// executor/implement/texture.transformation
+	// executor/implementation/texture.transformation
 	"executor.implementation:texture.transformation.filling.encode": "Texture Filling",
 	"executor.implementation:texture.transformation.filling.encode:raw_file": "Raw File",
 	"executor.implementation:texture.transformation.filling.encode:ripe_file": "Ripe File",
@@ -257,7 +257,7 @@
 	"executor.implementation:texture.transformation.premultiplying.decode": "Texture Unpremultiplying",
 	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "Tệp ra",
 	"executor.implementation:texture.transformation.premultiplying.decode:raw_file": "Tệp gốc",
-	// executor/implement/texture.encoding
+	// executor/implementation/texture.encoding
 	"executor.implementation:texture.encoding.encode": "Mã hóa hình ảnh",
 	"executor.implementation:texture.encoding.encode:image_file": "Tệp hình ảnh",
 	"executor.implementation:texture.encoding.encode:data_file": "Tệp dữ liệu",
@@ -269,7 +269,7 @@
 	"executor.implementation:texture.encoding.decode:format": "Định dạng hình ảnh",
 	"executor.implementation:texture.encoding.decode:image_width": "Chiều rộng hình ảnh",
 	"executor.implementation:texture.encoding.decode:image_height": "Chiều cao hình ảnh",
-	// executor/implement/texture.atlas
+	// executor/implementation/texture.atlas
 	"executor.implementation:texture.atlas.pack": "Nén Texture Atlas",
 	"executor.implementation:texture.atlas.pack:definition_file": "Tệp định nghĩa",
 	"executor.implementation:texture.atlas.pack:sprite_directory": "Thư mục Sprite",
@@ -284,7 +284,7 @@
 	"executor.implementation:texture.atlas.pack_automatic:sprite_directory": "Thư mục Sprite",
 	"executor.implementation:texture.atlas.pack_automatic:atlas_file": "Tệp Atlas",
 	"executor.implementation:texture.atlas.pack_automatic:definition_file": "Tệp định nghĩa",
-	// executor/implement/wwise.media
+	// executor/implementation/wwise.media
 	"executor.implementation:wwise.media.encode": "Mã Hoá Wwise Media",
 	"executor.implementation:wwise.media.encode:raw_file": "Tệp gốc",
 	"executor.implementation:wwise.media.encode:ripe_file": "Tệp ra",
@@ -293,7 +293,7 @@
 	"executor.implementation:wwise.media.decode": "Giải Mã Wwise Media",
 	"executor.implementation:wwise.media.decode:ripe_file": "Tệp ra",
 	"executor.implementation:wwise.media.decode:raw_file": "Tệp gốc",
-	// executor/implement/wwise.sound_bank
+	// executor/implementation/wwise.sound_bank
 	"executor.implementation:wwise.sound_bank.encode": "Mã Hoá Wwise Sound-Bank",
 	"executor.implementation:wwise.sound_bank.encode:bundle_directory": "Thư mục gói",
 	"executor.implementation:wwise.sound_bank.encode:data_file": "Tệp dữ liệu",
@@ -304,7 +304,7 @@
 	"executor.implementation:wwise.sound_bank.decode:data_file": "Tệp dữ liệu",
 	"executor.implementation:wwise.sound_bank.decode:bundle_directory": "Thư mục gói",
 	"executor.implementation:wwise.sound_bank.decode:version_number": "Số phiên bản",
-	// executor/implement/marmalade.dzip
+	// executor/implementation/marmalade.dzip
 	"executor.implementation:marmalade.dzip.pack": "Đóng Gói Marmalade DZip",
 	"executor.implementation:marmalade.dzip.pack:bundle_directory": "Thư mục gói",
 	"executor.implementation:marmalade.dzip.pack:data_file": "Tệp dữ liệu",
@@ -320,7 +320,7 @@
 	"executor.implementation:marmalade.dzip.pack_automatic:resource_directory": "Resource directory",
 	"executor.implementation:marmalade.dzip.pack_automatic:data_file": "Tệp dữ liệu",
 	"executor.implementation:marmalade.dzip.pack_automatic:version_number": "Số phiên bản",
-	// executor/implement/popcap.zlib
+	// executor/implementation/popcap.zlib
 	"executor.implementation:popcap.zlib.compress": "Nén PopCap ZLib",
 	"executor.implementation:popcap.zlib.compress:raw_file": "Tệp gốc",
 	"executor.implementation:popcap.zlib.compress:ripe_file": "Tệp ra",
@@ -330,7 +330,7 @@
 	"executor.implementation:popcap.zlib.uncompress:ripe_file": "Tệp ra",
 	"executor.implementation:popcap.zlib.uncompress:raw_file": "Tệp gốc",
 	"executor.implementation:popcap.zlib.uncompress:version_variant_64": "Sử dụng biến thể 64-bit",
-	// executor/implement/popcap.crypt_data
+	// executor/implementation/popcap.crypt_data
 	"executor.implementation:popcap.crypt_data.encrypt": "Mã hoá PopCap Crypt-Data",
 	"executor.implementation:popcap.crypt_data.encrypt:plain_file": "Tệp văn bản",
 	"executor.implementation:popcap.crypt_data.encrypt:cipher_file": "Tệp mã hoá",
@@ -342,7 +342,7 @@
 	"executor.implementation:popcap.crypt_data.decrypt:plain_file": "Tệp văn bản",
 	"executor.implementation:popcap.crypt_data.decrypt:limit": "Giới hạn",
 	"executor.implementation:popcap.crypt_data.decrypt:key": "Khoá",
-	// executor/implement/popcap.reflection_object_notation
+	// executor/implementation/popcap.reflection_object_notation
 	"executor.implementation:popcap.reflection_object_notation.encode": "Mã hoá PopCap Reflection-Object-Notation",
 	"executor.implementation:popcap.reflection_object_notation.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.reflection_object_notation.encode:data_file": "Tệp dữ liệu",
@@ -380,7 +380,7 @@
 	"executor.implementation:popcap.reflection_object_notation.decode_cipher:version_number": "Số phiên bản",
 	"executor.implementation:popcap.reflection_object_notation.decode_cipher:version_native_string_encoding_use_utf8": "Mã hóa chuỗi sử dụng UTF-8",
 	"executor.implementation:popcap.reflection_object_notation.decode_cipher:key": "Khoá",
-	// executor/implement/popcap.texture
+	// executor/implementation/popcap.texture
 	"executor.implementation:popcap.texture.encode": "Mã Hoá PopCap Texture",
 	"executor.implementation:popcap.texture.encode:image_file": "Tệp hình ảnh",
 	"executor.implementation:popcap.texture.encode:data_file": "Tệp dữ liệu",
@@ -392,7 +392,7 @@
 	"executor.implementation:popcap.texture.decode:format": "Định dạng texture",
 	"executor.implementation:popcap.texture.decode:image_width": "Chiều rộng ảnh",
 	"executor.implementation:popcap.texture.decode:image_height": "Chiều cao ảnh",
-	// executor/implement/popcap.u_texture
+	// executor/implementation/popcap.u_texture
 	"executor.implementation:popcap.u_texture.encode": "Mã Hoá PopCap U-Texture",
 	"executor.implementation:popcap.u_texture.encode:image_file": "Tệp hình ảnh",
 	"executor.implementation:popcap.u_texture.encode:data_file": "Tệp dữ liệu",
@@ -403,7 +403,7 @@
 	"executor.implementation:popcap.u_texture.decode:data_file": "Tệp dữ liệu",
 	"executor.implementation:popcap.u_texture.decode:image_file": "Tệp hình ảnh",
 	"executor.implementation:popcap.u_texture.decode:version_compress_texture_data": "Nén dữ liệu texture",
-	// executor/implement/popcap.sexy_texture
+	// executor/implementation/popcap.sexy_texture
 	"executor.implementation:popcap.sexy_texture.encode": "Mã Hoá PopCap Sexy-Texture",
 	"executor.implementation:popcap.sexy_texture.encode:image_file": "Tệp hình ảnh",
 	"executor.implementation:popcap.sexy_texture.encode:data_file": "Tệp dữ liệu",
@@ -415,7 +415,7 @@
 	"executor.implementation:popcap.sexy_texture.decode:data_file": "Tệp dữ liệu",
 	"executor.implementation:popcap.sexy_texture.decode:image_file": "Tệp hình ảnh",
 	"executor.implementation:popcap.sexy_texture.decode:version_number": "Số phiên bản",
-	// executor/implement/popcap.animation
+	// executor/implementation/popcap.animation
 	"executor.implementation:popcap.animation.encode": "Mã Hoá PopCap Animation",
 	"executor.implementation:popcap.animation.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.animation.encode:data_file": "Tệp dữ liệu",
@@ -443,7 +443,7 @@
 	// 
 	"executor.implementation:popcap.animation.convert.flash.link_media": "PopCap Animation Flash Tạo liên kết cho các tệp hình ảnh",
 	"executor.implementation:popcap.animation.convert.flash.link_media:target_directory": "Thư mục đích",
-	// executor/implement/popcap.re_animation
+	// executor/implementation/popcap.re_animation
 	"executor.implementation:popcap.re_animation.encode": "Mã Hoá PopCap Re-Animation",
 	"executor.implementation:popcap.re_animation.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.re_animation.encode:data_file": "Tệp dữ liệu",
@@ -456,7 +456,7 @@
 	"executor.implementation:popcap.re_animation.decode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.re_animation.decode:version_platform": "Nền tảng phiên bản",
 	"executor.implementation:popcap.re_animation.decode:version_variant_64": "Sử dụng biến thể 64-bit",
-	// executor/implement/popcap.particle
+	// executor/implementation/popcap.particle
 	"executor.implementation:popcap.particle.encode": "Mã Hoá PopCap Particle",
 	"executor.implementation:popcap.particle.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.particle.encode:data_file": "Tệp dữ liệu",
@@ -469,7 +469,7 @@
 	"executor.implementation:popcap.particle.decode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.particle.decode:version_platform": "Nền tảng phiên bản",
 	"executor.implementation:popcap.particle.decode:version_variant_64": "Sử dụng biến thể 64-bit",
-	// executor/implement/popcap.trail
+	// executor/implementation/popcap.trail
 	"executor.implementation:popcap.trail.encode": "Mã Hoá PopCap Trail",
 	"executor.implementation:popcap.trail.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.trail.encode:data_file": "Tệp dữ liệu",
@@ -482,7 +482,7 @@
 	"executor.implementation:popcap.trail.decode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.trail.decode:version_platform": "Nền tảng phiên bản",
 	"executor.implementation:popcap.trail.decode:version_variant_64": "Sử dụng biến thể 64-bit",
-	// executor/implement/popcap.particle_effect
+	// executor/implementation/popcap.particle_effect
 	"executor.implementation:popcap.particle_effect.encode": "Mã Hoá PopCap Particle-Effect",
 	"executor.implementation:popcap.particle_effect.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.particle_effect.encode:data_file": "Tệp dữ liệu",
@@ -493,7 +493,7 @@
 	"executor.implementation:popcap.particle_effect.decode:data_file": "Tệp dữ liệu",
 	"executor.implementation:popcap.particle_effect.decode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.particle_effect.decode:version_number": "Số phiên bản",
-	// executor/implement/popcap.render_effect
+	// executor/implementation/popcap.render_effect
 	"executor.implementation:popcap.render_effect.encode": "Mã Hoá PopCap Render-Effect",
 	"executor.implementation:popcap.render_effect.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.render_effect.encode:data_file": "Tệp dữ liệu",
@@ -506,7 +506,7 @@
 	"executor.implementation:popcap.render_effect.decode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.render_effect.decode:version_number": "Số phiên bản",
 	"executor.implementation:popcap.render_effect.decode:version_variant": "Biến thể phiên bản",
-	// executor/implement/popcap.character_font_widget_2
+	// executor/implementation/popcap.character_font_widget_2
 	"executor.implementation:popcap.character_font_widget_2.encode": "Mã Hoá PopCap Character-Font-Widget-2",
 	"executor.implementation:popcap.character_font_widget_2.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.character_font_widget_2.encode:data_file": "Tệp dữ liệu",
@@ -515,7 +515,7 @@
 	"executor.implementation:popcap.character_font_widget_2.decode": "Giải Mã PopCap Character-Font-Widget-2",
 	"executor.implementation:popcap.character_font_widget_2.decode:data_file": "Tệp dữ liệu",
 	"executor.implementation:popcap.character_font_widget_2.decode:definition_file": "Tệp định nghĩa",
-	// executor/implement/popcap.package
+	// executor/implementation/popcap.package
 	"executor.implementation:popcap.package.pack": "Đóng Gói PopCap Package",
 	"executor.implementation:popcap.package.pack:bundle_directory": "Thư mục gói",
 	"executor.implementation:popcap.package.pack:data_file": "Tệp dữ liệu",
@@ -539,7 +539,7 @@
 	"executor.implementation:popcap.package.encrypt:plain_file": "Tệp văn bản",
 	"executor.implementation:popcap.package.encrypt:cipher_file": "Tệp mã hoá",
 	"executor.implementation:popcap.package.encrypt:key": "Mật mã",
-	// executor/implement/popcap.resource_stream_group
+	// executor/implementation/popcap.resource_stream_group
 	"executor.implementation:popcap.resource_stream_group.pack": "Đóng Gói PopCap Resource-Stream-Group",
 	"executor.implementation:popcap.resource_stream_group.pack:bundle_directory": "Thư mục gói",
 	"executor.implementation:popcap.resource_stream_group.pack:data_file": "Tệp dữ liệu",
@@ -550,7 +550,7 @@
 	"executor.implementation:popcap.resource_stream_group.unpack:data_file": "Tệp dữ liệu",
 	"executor.implementation:popcap.resource_stream_group.unpack:bundle_directory": "Thư mục gói",
 	"executor.implementation:popcap.resource_stream_group.unpack:version_number": "Số phiên bản",
-	// executor/implement/popcap.resource_stream_bundle
+	// executor/implementation/popcap.resource_stream_bundle
 	"executor.implementation:popcap.resource_stream_bundle.pack": "Đóng Gói PopCap Resource-Stream-Bundle",
 	"executor.implementation:popcap.resource_stream_bundle.pack:bundle_directory": "Thư mục gói",
 	"executor.implementation:popcap.resource_stream_bundle.pack:data_file": "Tệp dữ liệu",
@@ -590,7 +590,7 @@
 	"executor.implementation:popcap.resource_stream_bundle.resource_convert:option_bnk": "Tách BNK",
 	"executor.implementation:popcap.resource_stream_bundle.resource_convert:option_bnk_version_number": "Tách BNK - Số phiên bản",
 	"executor.implementation:popcap.resource_stream_bundle.resource_convert:option_wem": "Tách WEM",
-	// executor/implement/popcap.resource_stream_bundle_patch
+	// executor/implementation/popcap.resource_stream_bundle_patch
 	"executor.implementation:popcap.resource_stream_bundle_patch.encode": "Mã hoá PopCap Resource-Stream-Bundle-Patch",
 	"executor.implementation:popcap.resource_stream_bundle_patch.encode:after_file": "Tệp sau",
 	"executor.implementation:popcap.resource_stream_bundle_patch.encode:patch_file": "Tệp vá",
@@ -606,12 +606,12 @@
 	"executor.implementation:popcap.resource_stream_bundle_patch.decode:version_number": "Số phiên bản",
 	"executor.implementation:popcap.resource_stream_bundle_patch.decode:use_raw_packet": "Sử dụng gói thô",
 	"executor.implementation:popcap.resource_stream_bundle_patch.decode:buffer_size": "Kích thước bộ nhớ đệm",
-	// executor/implement/popcap.pvz2.text_table
+	// executor/implementation/popcap.pvz2.text_table
 	"executor.implementation:popcap.pvz2.text_table.convert": "Chuyển Hoá PvZ-2 Text-Table",
 	"executor.implementation:popcap.pvz2.text_table.convert:source_file": "Tệp nguồn",
 	"executor.implementation:popcap.pvz2.text_table.convert:destination_version": "Phiên bản định nghĩa",
 	"executor.implementation:popcap.pvz2.text_table.convert:destination_file": "Tệp đích",
-	// executor/implement/popcap.pvz2.resource_manifest
+	// executor/implementation/popcap.pvz2.resource_manifest
 	"executor.implementation:popcap.pvz2.resource_manifest.new_type_object_notation.encode": "Mã hoá PvZ-2 Resource-Manifest New-Type-Object-Notation",
 	"executor.implementation:popcap.pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:popcap.pvz2.resource_manifest.new_type_object_notation.encode:data_file": "Tệp dữ liệu",
@@ -629,7 +629,7 @@
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:ripe_file": "Tệp ra",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:raw_file": "Tệp gốc",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:use_array_style_path": "Dùng đường dẫn kiểu mảng",
-	// executor/implement/popcap.pvz2.package_project
+	// executor/implementation/popcap.pvz2.package_project
 	"executor.implementation:popcap.pvz2.package_project.transpile": "Trung Chuyển PvZ-2 Package-Project",
 	"executor.implementation:popcap.pvz2.package_project.transpile:project_directory": "Project directory",
 	"executor.implementation:popcap.pvz2.package_project.transpile:target_scope": "Phạm vi mục tiêu",
@@ -662,7 +662,7 @@
 	"executor.implementation:popcap.pvz2.package_project.parse:package_name": "Tên gói",
 	"executor.implementation:popcap.pvz2.package_project.parse:package_version_number": "Phiên bản gói",
 	"executor.implementation:popcap.pvz2.package_project.parse:package_version_extended_texture_information_for_pvz2cn": "Mở rộng thông tin gói đối với phiên bản PvZ-2 Trung Quốc",
-	// executor/implement/popcap.pvz2.remote_project
+	// executor/implementation/popcap.pvz2.remote_project
 	"executor.implementation:popcap.pvz2.remote_project.execute": "PvZ-2 Remote-Project Thực Thi",
 	"executor.implementation:popcap.pvz2.remote_project.execute:project_directory": "Thư mục dự án",
 	"executor.implementation:popcap.pvz2.remote_project.execute:action": "Hành động",
@@ -670,7 +670,7 @@
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_version_number": "RTON - Số phiên bản",
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_version_native_string_encoding_use_utf8": "RTON - Xâu ký tự sử dụng UTF-8",
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - Kích thước bộ nhớ đệm",
-	// executor/implement/kairosoft.game
+	// executor/implementation/kairosoft.game
 	"executor.implementation:kairosoft.game.program.modify": "Kairosoft Game Program biến đổi",
 	"executor.implementation:kairosoft.game.program.modify:target_directory": "Thư mục đích",
 	"executor.implementation:kairosoft.game.program.modify:disable_record_encryption": "Tắt mã hóa bản ghi",
@@ -679,7 +679,7 @@
 	"executor.implementation:kairosoft.game.record.encrypt": "Kairosoft Game Record Mã hóa",
 	"executor.implementation:kairosoft.game.record.encrypt:target_directory": "Thư mục đích",
 	"executor.implementation:kairosoft.game.record.encrypt:key": "Mật mã",
-	// executor/implement/nitrome.twin_shot_deluxe
+	// executor/implementation/nitrome.twin_shot_deluxe
 	"executor.implementation:nitrome.twin_shot_deluxe.record.encode": "Nitrome Twin-Shot-Deluxe Record Mã hóa",
 	"executor.implementation:nitrome.twin_shot_deluxe.record.encode:definition_file": "Tệp định nghĩa",
 	"executor.implementation:nitrome.twin_shot_deluxe.record.encode:data_file": "Tệp dữ liệu",

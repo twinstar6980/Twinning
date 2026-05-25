@@ -27,7 +27,7 @@ def test(
 		)
 		utility.fs_create_link(
 			f'{test}/script',
-			f'{source}/Script/dist',
+			f'{source}/Script/build',
 			True,
 		)
 		utility.fs_create_link(
@@ -53,7 +53,7 @@ def test(
 		)
 		utility.fs_create_link(
 			f'{test}/script',
-			f'{source}/Script/dist',
+			f'{source}/Script/build',
 			True,
 		)
 		utility.fs_create_link(
@@ -79,7 +79,7 @@ def test(
 		)
 		utility.fs_create_link(
 			f'{test}/script',
-			f'{source}/Script/dist',
+			f'{source}/Script/build',
 			True,
 		)
 		utility.fs_create_link(

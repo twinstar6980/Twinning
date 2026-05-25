@@ -24,12 +24,12 @@ def build(
 			'build',
 		])
 		utility.fs_create_link(
-			f'{source}/dist/configuration',
+			f'{source}/build/configuration',
 			f'{source}/src/configuration',
 			True,
 		)
 		utility.fs_copy(
-			f'{source}/dist',
+			f'{source}/build',
 			f'{temporary}/artifact',
 		)
 		utility.pack_zip(

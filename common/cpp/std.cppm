@@ -247,8 +247,6 @@ export {
 		using ::std::move;
 		using ::std::forward;
 		using ::std::replace;
-		using ::std::make_reverse_iterator;
-		using ::std::make_move_iterator;
 		using ::std::get;
 		using ::std::system;
 	}

@@ -36,7 +36,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				let resource_property = resource_setting.property as GeneralResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.bin');
 				if (option.specialize_rton && resource_property.path.toLowerCase().endsWith('.rton')) {
-					Console.warning(`Transpiling by specialize_rton ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by specialize_rton ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.rton.find((value) => (true));
 					if (conversion_setting === undefined) {
 						throw new Error(`conversion setting for rton is not found`);
@@ -51,7 +51,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					} as SpecialRtonResourceProperty;
 				}
 				if (option.specialize_pam && resource_property.path.toLowerCase().endsWith('.pam')) {
-					Console.warning(`Transpiling by specialize_pam ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by specialize_pam ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.pam.find((value) => (true));
 					if (conversion_setting === undefined) {
 						throw new Error(`conversion setting for pam is not found`);
@@ -66,7 +66,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					} as SpecialPamResourceProperty;
 				}
 				if (option.specialize_wem && resource_property.path.toLowerCase().endsWith('.wem')) {
-					Console.warning(`Transpiling by specialize_wem ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by specialize_wem ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.wav');
 					let format = Support.Wwise.Media.Decode.decode_fs(source_file, new_source_file);
 					StorageHelper.remove(source_file);
@@ -86,7 +86,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				let resource_property = resource_setting.property as TextureResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.ptx');
 				if (option.specialize_ptx) {
-					Console.warning(`Transpiling by specialize_ptx ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by specialize_ptx ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = conversion_setting_map.ptx.find((value) => (value.index === resource_property.format));
 					if (conversion_setting === undefined) {
 						throw new Error(`conversion setting for ptx '${resource_property.format}' is not found`);
@@ -124,7 +124,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				let resource_property = resource_setting.property as SpecialRtonResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				if (option.generalize_rton) {
-					Console.warning(`Transpiling by generalize_rton ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by generalize_rton ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'rton', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					if (conversion_setting.key === null) {
@@ -146,7 +146,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				let resource_property = resource_setting.property as SpecialPtxResourceProperty;
 				let source_directory = make_scope_child_path(resource_directory, 'source.sprite');
 				if (option.generalize_ptx) {
-					Console.warning(`Transpiling by generalize_ptx ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by generalize_ptx ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'ptx', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.ptx');
 					let new_sprite_property_list: Array<TextureResourcePropertySpriteProperty> = [];
@@ -208,7 +208,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				let resource_property = resource_setting.property as SpecialWemResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				if (option.generalize_pam) {
-					Console.warning(`Transpiling by generalize_pam ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by generalize_pam ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'pam', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					KernelX.Tool.Popcap.Animation.encode_fs(new_source_file, source_file, conversion_setting.version, buffer.view());
@@ -225,7 +225,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				let resource_property = resource_setting.property as SpecialWemResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.wav');
 				if (option.generalize_wem) {
-					Console.warning(`Transpiling by generalize_wem ...`, [`/${part_name}/${group_name}/${resource_name}`]);
+					Console.warning(`transpiling by generalize_wem ...`, [`/${part_name}/${group_name}/${resource_name}`]);
 					let conversion_setting = find_conversion_setting_strict(conversion_setting_map, 'wem', resource_property.conversion);
 					let new_source_file = make_scope_child_path(resource_directory, 'source.bin');
 					Support.Wwise.Media.Encode.encode_fs(new_source_file, source_file, conversion_setting.format);

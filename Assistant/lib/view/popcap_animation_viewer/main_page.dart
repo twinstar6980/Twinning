@@ -573,7 +573,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     return ModulePageRegion(
       onStorageDrop: (item) async {
         if (item.length != 1) {
-          await StyledSnackExtension.show(context, 'Source is multiply.');
+          await StyledSnackExtension.show(context, 'source is multiply.');
           return;
         }
         var animationFile = null as StoragePath?;
@@ -584,7 +584,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
           animationFile = await VisualHelper.checkAnimationDirectoryPath(item.first);
         }
         if (animationFile == null) {
-          await StyledSnackExtension.show(context, 'Source is invalid.');
+          await StyledSnackExtension.show(context, 'source is invalid.');
           return;
         }
         await this._applyLoad(animationFile, null, null, null, null, null, null, null);
@@ -937,7 +937,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                   }
                   else {
                     if (this._animation!.mainSprite == null) {
-                      await StyledSnackExtension.show(context, 'The animation does not contain main sprite.');
+                      await StyledSnackExtension.show(context, 'the animation does not contain main sprite.');
                     }
                     else {
                       await this._activate((type: true, index: this._animation!.sprite.length), null, null, null, null);
@@ -1054,7 +1054,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                         Navigator.pop(context);
                         target = await VisualHelper.checkAnimationDirectoryPath(target);
                         if (target == null) {
-                          await StyledSnackExtension.show(context, 'The source directory must contain unique animation file.');
+                          await StyledSnackExtension.show(context, 'the source directory must contain unique animation file.');
                         }
                         else {
                           await this._applyLoad(target, null, null, null, null, null, null, null);

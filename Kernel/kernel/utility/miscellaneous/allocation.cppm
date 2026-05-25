@@ -9,7 +9,7 @@ import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.null;
 import twinning.kernel.utility.range.algorithm;
-import twinning.kernel.utility.range.range_wrapper;
+import twinning.kernel.utility.range.generic_range;
 
 export namespace Twinning::Kernel {
 

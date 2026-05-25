@@ -7,7 +7,7 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.range.range_wrapper;
+import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.range.algorithm;
 
 export namespace Twinning::Kernel {

@@ -18,7 +18,7 @@ import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.notation.json.value;
 import twinning.kernel.utility.script.java_script.value_adapter;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.range.range_wrapper;
+import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.storage.utility;
 import twinning.kernel.utility.string.basic_string;

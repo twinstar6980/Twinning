@@ -13,7 +13,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 		group_identifier: string,
 		buffer: Kernel.ByteArray,
 	): void {
-		Console.information(`Compiling ...`, [`${package_setting.name}/${part_name}/${group_name}/${resource_name}`]);
+		Console.information(`compiling ...`, [`${package_setting.name}/${part_name}/${group_name}/${resource_name}`]);
 		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
 		let resource_setting = JsonHelper.decode_file(make_scope_setting_path(resource_directory)) as ResourceSetting;
 		if (resource_setting.category.resolution !== null && !package_setting.category.resolution.includes(resource_setting.category.resolution)) {
@@ -440,7 +440,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 			if (target_package !== null && !target_package.includes(package_setting.name)) {
 				continue;
 			}
-			Console.information(`Loading state ...`, []);
+			Console.information(`loading state ...`, []);
 			let package_state_file = make_build_package_state_path(project_directory, package_setting.name);
 			let package_state: PackageState;
 			try {
@@ -454,7 +454,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 			for (let scope of target_scope) {
 				compile_project(project_directory, scope, package_setting, [], package_state, buffer);
 			}
-			Console.information(`Saving state ...`, []);
+			Console.information(`saving state ...`, []);
 			JsonHelper.encode_file(package_state_file, package_state, true, true, true, true);
 		}
 		return;

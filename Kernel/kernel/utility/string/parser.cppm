@@ -15,7 +15,7 @@ import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.byte_series.utility;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.range.range_wrapper;
+import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_static_string;

@@ -15,11 +15,11 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 			if (target_package !== null && !target_package.includes(package_setting.name)) {
 				continue;
 			}
-			Console.information(`Linking package ...`, [`${package_setting.name}`]);
+			Console.information(`linking package ...`, [`${package_setting.name}`]);
 			if (remake_manifest) {
-				Console.information(`Loading state ...`, []);
+				Console.information(`loading state ...`, []);
 				let package_state = JsonHelper.decode_file(make_build_package_state_path(project_directory, package_setting.name)) as PackageState;
-				Console.information(`Remaking manifest ...`, []);
+				Console.information(`remaking manifest ...`, []);
 				let package_definition: Kernel.Tool.Popcap.ResourceStreamBundle.Definition.JS_N.Package = {
 					group: [],
 				};
@@ -159,7 +159,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 				}
 				JsonHelper.encode_file(package_bundle_directory.join('definition.json'), package_definition);
 			}
-			Console.information(`Packing bundle ...`, []);
+			Console.information(`packing bundle ...`, []);
 			let data_file = make_build_package_data_path(project_directory, package_setting.name);
 			let bundle_directory = make_build_package_bundle_path(project_directory, package_setting.name);
 			let definition_file = bundle_directory.join('definition.json');

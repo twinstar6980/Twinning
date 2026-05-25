@@ -224,9 +224,9 @@ class GameProgramHelper {
     dynamic                       externalToolSetting,
     Void Function(String message) onNotify,
   ) async {
-    onNotify('Phase: dump program information.');
+    onNotify('phase: dump program information.');
     var dumpData = await ExternalToolHelper.runIl2cppdumper(programFile, metadataFile);
-    onNotify('Phase: parse symbol address.');
+    onNotify('phase: parse symbol address.');
     var symbolAddress = <String, List<Integer>>{};
     {
       symbolAddress['CRC64.GetValue'] = ExternalToolHelper.doIl2cppdumperSearchMethodFromDumpData(dumpData, 'CRC64', 'GetValue')
@@ -263,11 +263,11 @@ class GameProgramHelper {
         onNotify('Tip: the symbol \'${symbolName}\' at ${symbolAddress[symbolName]!.map((value) => value.toRadixString(16).padLeft(8, '0')).join(',')}.');
       }
     }
-    onNotify('Phase: load original program.');
+    onNotify('phase: load original program.');
     var programData = await StorageHelper.readFile(programFile);
     var programStream = ByteStreamView(programData.buffer.asByteData());
     if (disableRecordEncryption) {
-      onNotify('Phase: modify method \'RecordStore.ReadRecord\'.');
+      onNotify('phase: modify method \'RecordStore.ReadRecord\'.');
       programStream.position = symbolAddress['RecordStore.ReadRecord']!.first;
       assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Decode']!, true, platform));
       assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Decode']!, true, platform));
@@ -305,13 +305,13 @@ class GameProgramHelper {
       }
     }
     if (disableRecordEncryption) {
-      onNotify('Phase: modify method \'RecordStore.WriteRecord\'.');
+      onNotify('phase: modify method \'RecordStore.WriteRecord\'.');
       programStream.position = symbolAddress['RecordStore.WriteRecord']!.first;
       assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Encode']!, true, platform));
       assertTest(GameProgramHelper._findCallInstruction(programStream, 0x1000, symbolAddress['Encrypter.Encode']!, true, platform));
     }
     if (enableDebugMode) {
-      onNotify('Phase: modify method \'MyConfig..cctor\'.');
+      onNotify('phase: modify method \'MyConfig..cctor\'.');
       programStream.position = symbolAddress['MyConfig..cctor']!.first;
       var programStreamEnd = programStream.position + 0x200;
       if (platform == .windowsIntel32) {
@@ -373,9 +373,9 @@ class GameProgramHelper {
         }
       }
       assertTest(programStream.position != programStreamEnd);
-      onNotify('Warning: the STR instruction for \'MyConfig.DEBUG\'+4 was found at ${(programStream.position - 4).toRadixString(16).padLeft(8, '0')}, but this modification may cause error.');
+      onNotify('warning: the STR instruction for \'MyConfig.DEBUG\'+4 was found at ${(programStream.position - 4).toRadixString(16).padLeft(8, '0')}, but this modification may cause error.');
     }
-    onNotify('Phase: save modified program.');
+    onNotify('phase: save modified program.');
     if (!await StorageHelper.existFile(programFile)) {
       await StorageHelper.createFile(programFile);
     }
@@ -392,7 +392,7 @@ class GameProgramHelper {
   ) async {
     var temporaryDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(temporaryDirectory);
-    onNotify('Phase: detect package type.');
+    onNotify('phase: detect package type.');
     var packageType = null as GamePackageType?;
     if (await StorageHelper.existDirectory(target)) {
       packageType = .flat;
@@ -409,11 +409,11 @@ class GameProgramHelper {
       }
     }
     assertTest(packageType != null);
-    onNotify('Tip: the package type is \'${packageType!.name}\'.');
+    onNotify('tip: the package type is \'${packageType!.name}\'.');
     var packageBundle = null as lib.Archive?;
     var packagePartList = null as List<({String name, lib.Archive data})>?;
     if (packageType != .flat) {
-      onNotify('Phase: load package file.');
+      onNotify('phase: load package file.');
       packageBundle = lib.ZipDecoder().decodeBytes(await StorageHelper.readFile(target));
       packagePartList = [];
       if (packageType == .zip) {
@@ -434,7 +434,7 @@ class GameProgramHelper {
         }
       }
     }
-    onNotify('Phase: extract necessary file.');
+    onNotify('phase: extract necessary file.');
     var targetDirectory = temporaryDirectory.join('flat');
     var necessaryFilePathList = GamePlatform.values.map((it) => [GameProgramHelper._getProgramFilePath(it), GameProgramHelper._getMetadataFilePath(it)]).flattenedToSet;
     if (packageType == .flat) {
@@ -458,12 +458,12 @@ class GameProgramHelper {
         }
       }
     }
-    onNotify('Phase: detect platform.');
+    onNotify('phase: detect platform.');
     var platformList = await GameProgramHelper.detectPlatform(targetDirectory);
     assertTest(!platformList.isEmpty);
-    onNotify('Tip: the platform is \'${platformList.map((it) => it.name).join('|')}\'.');
+    onNotify('tip: the platform is \'${platformList.map((it) => it.name).join('|')}\'.');
     for (var platform in platformList) {
-      onNotify('Phase: modify program of \'${platform.name}\'.');
+      onNotify('phase: modify program of \'${platform.name}\'.');
       await GameProgramHelper.modify(
         platform,
         targetDirectory.push(GameProgramHelper._getProgramFilePath(platform)),
@@ -475,7 +475,7 @@ class GameProgramHelper {
       );
     }
     if (packageType != .flat) {
-      onNotify('Phase: repack package file.');
+      onNotify('phase: repack package file.');
       packagePartList!;
       var replaceTaskList = <({lib.Archive data, GamePlatform platform})>[];
       for (var platform in platformList) {
@@ -503,7 +503,7 @@ class GameProgramHelper {
       }
     }
     if (packageType == .apk || packageType == .apks) {
-      onNotify('Phase: post-processing apk file.');
+      onNotify('phase: post-processing apk file.');
       packagePartList!;
       var enableAlign = true;
       var enableSign = true;
@@ -518,7 +518,7 @@ class GameProgramHelper {
         }
       }
     }
-    onNotify('Phase: generate result.');
+    onNotify('phase: generate result.');
     if (packageType == .flat) {
       for (var platform in platformList) {
         await StorageHelper.remove(target.push(GameProgramHelper._getProgramFilePath(platform)));
@@ -546,7 +546,7 @@ class GameProgramHelper {
       await StorageHelper.copy(packageMainPath, target, false);
     }
     await StorageHelper.remove(temporaryDirectory);
-    onNotify('Phase: done.');
+    onNotify('phase: done.');
     return;
   }
 

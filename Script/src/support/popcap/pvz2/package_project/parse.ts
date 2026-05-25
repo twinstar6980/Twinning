@@ -20,7 +20,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 			}
 			return null;
 		};
-		Console.information(`Loading setting ...`, []);
+		Console.information(`loading setting ...`, []);
 		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		let part_directory = StorageHelper.generate_suffix_path(make_scope_child_path(project_directory, package_name), '~');
 		let part_setting: PartSetting = {
@@ -54,7 +54,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 			conversion: conversion_setting,
 			variable: [],
 		};
-		Console.information(`Extracting manifest ...`, []);
+		Console.information(`extracting manifest ...`, []);
 		do {
 			let group_list = package_definition.group.filter((value) => (/^__MANIFESTGROUP__(.+)?$/i.test(value.identifier)));
 			if (group_list.length !== 1) {
@@ -96,9 +96,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 		}
 		while (false);
 		assert_test(package_manifest_official !== null);
-		Console.information(`Regularizing manifest ...`, []);
+		Console.information(`regularizing manifest ...`, []);
 		let package_manifest = RegularResourceManifest.Convert.from_official(package_manifest_official);
-		Console.information(`Converting resource ...`, []);
+		Console.information(`converting resource ...`, []);
 		for (let group_manifest of package_manifest.group) {
 			let group_directory = make_scope_child_path(part_directory, group_manifest.identifier);
 			let group_setting: GroupSetting = {
@@ -174,7 +174,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 			}
 		}
 		project_setting.package.push(package_setting);
-		Console.information(`Saving setting ...`, []);
+		Console.information(`saving setting ...`, []);
 		JsonHelper.encode_file(make_scope_setting_path(project_directory), project_setting);
 		return;
 	}

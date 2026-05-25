@@ -456,7 +456,7 @@ class _SettingPanelState extends State<SettingPanel> {
               Navigator.pop(context);
               await setting.load();
               await setting.save();
-              await StyledSnackExtension.show(context, 'Done!');
+              await StyledSnackExtension.show(context, 'done!');
             },
           ),
           StyledListTile.standard(
@@ -467,7 +467,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 Navigator.pop(context);
                 await setting.reset();
                 await setting.save();
-                await StyledSnackExtension.show(context, 'Done!');
+                await StyledSnackExtension.show(context, 'done!');
               }
             },
           ),
@@ -480,7 +480,7 @@ class _SettingPanelState extends State<SettingPanel> {
                 Navigator.pop(context);
                 await setting.load(file: target);
                 await setting.save();
-                await StyledSnackExtension.show(context, 'Done!');
+                await StyledSnackExtension.show(context, 'done!');
               }
             },
           ),
@@ -492,7 +492,7 @@ class _SettingPanelState extends State<SettingPanel> {
               if (target != null) {
                 Navigator.pop(context);
                 await setting.save(file: target, apply: false);
-                await StyledSnackExtension.show(context, 'Done!');
+                await StyledSnackExtension.show(context, 'done!');
               }
             },
           ),
@@ -530,7 +530,7 @@ class _SettingPanelState extends State<SettingPanel> {
               if (await StorageHelper.exist(target)) {
                 await StorageHelper.remove(target);
               }
-              await StyledSnackExtension.show(context, 'Done!');
+              await StyledSnackExtension.show(context, 'done!');
             },
           ),
         ],

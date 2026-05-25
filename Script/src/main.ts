@@ -2,13 +2,13 @@ namespace Twinning.Script {
 
 	// #region common
 
-	export const k_version = '188';
+	export declare const k_version: string;
 
 	// ----------------
 
 	export function assert_test(
 		condition: boolean,
-		expression: string = ``,
+		expression: string = '',
 	): asserts condition {
 		if (!condition) {
 			let error = new Error(expression);

@@ -271,9 +271,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		Console.information(`Phase: dump program information`, []);
+		Console.information(`phase: dump program information`, []);
 		let dump_data = run_il2cppdumper(program_file, metadata_file);
-		Console.information(`Phase: parse symbol address`, []);
+		Console.information(`phase: parse symbol address`, []);
 		let symbol_address = {
 			CRC64: {
 				GetValue: [] as Array<number>,
@@ -299,7 +299,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			): Array<number> => {
 				assert_test(search_result.length === expect_count);
 				let address_list = search_result.map((it) => (it.address));
-				Console.information(`Tip: the symbol '${name}' at ${address_list.map((it) => (it.toString(16).padStart(8, '0'))).join(',')}`, []);
+				Console.information(`tip: the symbol '${name}' at ${address_list.map((it) => (it.toString(16).padStart(8, '0'))).join(',')}`, []);
 				return address_list;
 			};
 			symbol_address.CRC64.GetValue = check_search_result(
@@ -338,11 +338,11 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				'MyConfig.DEBUG',
 			);
 		}
-		Console.information(`Phase: load original program`, []);
+		Console.information(`phase: load original program`, []);
 		let program_data = StorageHelper.read_file(program_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
-			Console.information(`Phase: modify method 'RecordStore.ReadRecord'`, []);
+			Console.information(`phase: modify method 'RecordStore.ReadRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.ReadRecord[0]);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
@@ -382,13 +382,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			}
 		}
 		if (disable_record_encryption) {
-			Console.information(`Phase: modify method 'RecordStore.WriteRecord'`, []);
+			Console.information(`phase: modify method 'RecordStore.WriteRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.WriteRecord[0]);
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
 			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
 		}
 		if (enable_debug_mode) {
-			Console.information(`Phase: modify method 'MyConfig..cctor'`, []);
+			Console.information(`phase: modify method 'MyConfig..cctor'`, []);
 			program_stream.p(symbol_address.MyConfig._cctor[0]);
 			let program_stream_end = program_stream.p() + 0x200;
 			if (platform === 'windows_intel32') {
@@ -450,9 +450,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				}
 			}
 			assert_test(program_stream.p() !== program_stream_end);
-			Console.warning(`Warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16).padStart(8, '0')}, but this modification may cause error`, []);
+			Console.warning(`warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16).padStart(8, '0')}, but this modification may cause error`, []);
 		}
-		Console.information(`Phase: save modified program`, []);
+		Console.information(`phase: save modified program`, []);
 		StorageHelper.write_file(program_file, program_data);
 		return;
 	}
@@ -462,12 +462,12 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		Console.information(`Phase: detect platform`, []);
+		Console.information(`phase: detect platform`, []);
 		let platform_list = detect_platform(target_directory);
-		Console.information(`Tip: the platform is '${platform_list.join('|')}'`, []);
+		Console.information(`tip: the platform is '${platform_list.join('|')}'`, []);
 		assert_test(platform_list.length !== 0);
 		for (let platform of platform_list) {
-			Console.information(`Phase: modify program of '${platform}'`, []);
+			Console.information(`phase: modify program of '${platform}'`, []);
 			modify_program_flat(
 				platform,
 				target_directory.push(get_program_file_path(platform)),
@@ -476,7 +476,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				enable_debug_mode,
 			);
 		}
-		Console.information(`Phase: done`, []);
+		Console.information(`phase: done`, []);
 		return;
 	}
 

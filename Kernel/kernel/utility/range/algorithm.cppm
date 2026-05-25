@@ -9,8 +9,8 @@ import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.null_optional;
+import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.range.range_wrapper;
 
 export namespace Twinning::Kernel::Range {
 
@@ -27,7 +27,7 @@ export namespace Twinning::Kernel::Range {
 		template <typename TIt>
 		concept IsHasBuiltinSizeMethodRange =
 			CategoryConstraint<IsPureInstance<TIt>>
-			&& (requires { { declare<TIt &>().size() } -> IsBuiltinInteger<>; })
+			&& (requires { { declare<TIt &>().size() } -> IsSame<ZSize>; })
 			;
 
 	}
@@ -46,14 +46,8 @@ export namespace Twinning::Kernel::Range {
 		else if constexpr (Detail::IsHasBuiltinSizeMethodRange<TRange>) {
 			return mbox<Size>(range.size());
 		}
-		else if constexpr (IsSame<decltype(range.end() - range.begin()), Size>) {
-			return range.end() - range.begin();
-		}
-		else if constexpr (IsIntegerBox<decltype(range.end() - range.begin())>) {
+		else if constexpr (IsSame<decltype(range.end() - range.begin()), SSize>) {
 			return cbox<Size>(range.end() - range.begin());
-		}
-		else if constexpr (IsBuiltinInteger<decltype(range.end() - range.begin())>) {
-			return mbox<Size>(range.end() - range.begin());
 		}
 		else {
 			static_assert(k_static_assert_fail<TRange>);

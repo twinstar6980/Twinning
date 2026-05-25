@@ -81,7 +81,7 @@
 	"executor.typical:argument_input": "参数需输入：{}",
 	"executor.typical:method_interrupted": "接收到显式输入的空值，中止执行",
 	"executor.typical:batch_result": "批处理完成，总计 {} 项，有效 {} 项，失败 {} 项",
-	// executor/implement/*
+	// executor/implementation/*
 	"executor.implementation:*.out_of_range": "超出范围",
 	"executor.implementation:*.illegal_key": "密钥无效",
 	"executor.implementation:*.illegal_key_length": "密钥长度无效",
@@ -89,7 +89,7 @@
 	"executor.implementation:*.resolution_should_be_bigger_then_zero": "分辨率应大于零",
 	"executor.implementation:*.size_should_be_bigger_then_zero": "尺寸应大于零",
 	"executor.implementation:*.rate_should_be_bigger_then_zero": "比率应大于零",
-	// executor/implement/common.utility
+	// executor/implementation/common.utility
 	"executor.implementation:common.utility.update_global_setting": "更新全局设置",
 	"executor.implementation:common.utility.update_global_setting:data": "数据",
 	"executor.implementation:common.utility.run_embedded_script": "运行内置脚本",
@@ -97,10 +97,10 @@
 	"executor.implementation:common.utility.run_custom_script": "运行自定义脚本",
 	"executor.implementation:common.utility.run_custom_script:target_file": "目标文件",
 	"executor.implementation:common.utility.run_custom_script:is_module": "作为模块运行",
-	// executor/implement/data.hash
+	// executor/implementation/data.hash
 	"executor.implementation:data.hash.md5": "MD5 散列",
 	"executor.implementation:data.hash.md5:target_file": "目标文件",
-	// executor/implement/data.encoding
+	// executor/implementation/data.encoding
 	"executor.implementation:data.encoding.base64.encode": "Base64 编码",
 	"executor.implementation:data.encoding.base64.encode:raw_file": "原始文件",
 	"executor.implementation:data.encoding.base64.encode:ripe_file": "成品文件",
@@ -108,7 +108,7 @@
 	"executor.implementation:data.encoding.base64.decode": "Base64 解码",
 	"executor.implementation:data.encoding.base64.decode:ripe_file": "成品文件",
 	"executor.implementation:data.encoding.base64.decode:raw_file": "原始文件",
-	// executor/implement/data.encryption
+	// executor/implementation/data.encryption
 	"executor.implementation:data.encryption.exor.encrypt": "EXOR 加密",
 	"executor.implementation:data.encryption.exor.encrypt:plain_file": "明文文件",
 	"executor.implementation:data.encryption.exor.encrypt:cipher_file": "密文文件",
@@ -129,7 +129,7 @@
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "块大小",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "密钥",
 	"executor.implementation:data.encryption.rijndael.decrypt:initialization_vector": "初始向量",
-	// executor/implement/data.compression
+	// executor/implementation/data.compression
 	"executor.implementation:data.compression.deflate.compress": "Deflate 压缩",
 	"executor.implementation:data.compression.deflate.compress:raw_file": "原始文件",
 	"executor.implementation:data.compression.deflate.compress:ripe_file": "成品文件",
@@ -174,7 +174,7 @@
 	"executor.implementation:data.compression.lzma.uncompress:ripe_file": "成品文件",
 	"executor.implementation:data.compression.lzma.uncompress:raw_file": "原始文件",
 	"executor.implementation:data.compression.lzma.uncompress:buffer_size": "内存缓冲区大小",
-	// executor/implement/data.differentiation
+	// executor/implementation/data.differentiation
 	"executor.implementation:data.differentiation.vcdiff.encode": "VCDiff 编码",
 	"executor.implementation:data.differentiation.vcdiff.encode:after_file": "变动后文件",
 	"executor.implementation:data.differentiation.vcdiff.encode:patch_file": "补丁文件",
@@ -186,7 +186,7 @@
 	"executor.implementation:data.differentiation.vcdiff.decode:after_file": "变动后文件",
 	"executor.implementation:data.differentiation.vcdiff.decode:before_file": "变动前文件",
 	"executor.implementation:data.differentiation.vcdiff.decode:buffer_size": "内存缓冲区大小",
-	// executor/implement/notation.json
+	// executor/implementation/notation.json
 	"executor.implementation:notation.json.format": "JSON 格式化",
 	"executor.implementation:notation.json.format:source_file": "来源文件",
 	"executor.implementation:notation.json.format:destination_file": "目的文件",
@@ -194,11 +194,11 @@
 	"executor.implementation:notation.json.format:disable_array_line_breaking": "禁用数组换行",
 	"executor.implementation:notation.json.format:disable_object_trailing_comma": "禁用对象尾随逗号",
 	"executor.implementation:notation.json.format:disable_object_line_breaking": "禁用对象换行",
-	// executor/implement/notation.xml
+	// executor/implementation/notation.xml
 	"executor.implementation:notation.xml.format": "XML 格式化",
 	"executor.implementation:notation.xml.format:source_file": "来源文件",
 	"executor.implementation:notation.xml.format:destination_file": "目的文件",
-	// executor/implement/texture.transformation
+	// executor/implementation/texture.transformation
 	"executor.implementation:texture.transformation.filling.encode": "Texture 填充",
 	"executor.implementation:texture.transformation.filling.encode:raw_file": "原始文件",
 	"executor.implementation:texture.transformation.filling.encode:ripe_file": "成品文件",
@@ -257,7 +257,7 @@
 	"executor.implementation:texture.transformation.premultiplying.decode": "Texture 解预乘",
 	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "成品文件",
 	"executor.implementation:texture.transformation.premultiplying.decode:raw_file": "原始文件",
-	// executor/implement/texture.encoding
+	// executor/implementation/texture.encoding
 	"executor.implementation:texture.encoding.encode": "Texture 编码",
 	"executor.implementation:texture.encoding.encode:image_file": "图像文件",
 	"executor.implementation:texture.encoding.encode:data_file": "数据文件",
@@ -269,7 +269,7 @@
 	"executor.implementation:texture.encoding.decode:format": "纹理格式",
 	"executor.implementation:texture.encoding.decode:image_width": "图像宽度",
 	"executor.implementation:texture.encoding.decode:image_height": "图像高度",
-	// executor/implement/texture.atlas
+	// executor/implementation/texture.atlas
 	"executor.implementation:texture.atlas.pack": "Texture 图集打包",
 	"executor.implementation:texture.atlas.pack:definition_file": "定义文件",
 	"executor.implementation:texture.atlas.pack:sprite_directory": "精灵目录",
@@ -284,7 +284,7 @@
 	"executor.implementation:texture.atlas.pack_automatic:sprite_directory": "精灵目录",
 	"executor.implementation:texture.atlas.pack_automatic:atlas_file": "图集文件",
 	"executor.implementation:texture.atlas.pack_automatic:definition_file": "定义文件",
-	// executor/implement/wwise.media
+	// executor/implementation/wwise.media
 	"executor.implementation:wwise.media.encode": "Wwise Media 编码",
 	"executor.implementation:wwise.media.encode:raw_file": "原始文件",
 	"executor.implementation:wwise.media.encode:ripe_file": "成品文件",
@@ -293,7 +293,7 @@
 	"executor.implementation:wwise.media.decode": "Wwise Media 解码",
 	"executor.implementation:wwise.media.decode:ripe_file": "成品文件",
 	"executor.implementation:wwise.media.decode:raw_file": "原始文件",
-	// executor/implement/wwise.sound_bank
+	// executor/implementation/wwise.sound_bank
 	"executor.implementation:wwise.sound_bank.encode": "Wwise Sound-Bank 编码",
 	"executor.implementation:wwise.sound_bank.encode:bundle_directory": "捆绑目录",
 	"executor.implementation:wwise.sound_bank.encode:data_file": "数据文件",
@@ -304,7 +304,7 @@
 	"executor.implementation:wwise.sound_bank.decode:data_file": "数据文件",
 	"executor.implementation:wwise.sound_bank.decode:bundle_directory": "捆绑目录",
 	"executor.implementation:wwise.sound_bank.decode:version_number": "版本编号",
-	// executor/implement/marmalade.dzip
+	// executor/implementation/marmalade.dzip
 	"executor.implementation:marmalade.dzip.pack": "Marmalade DZip 打包",
 	"executor.implementation:marmalade.dzip.pack:bundle_directory": "捆绑目录",
 	"executor.implementation:marmalade.dzip.pack:data_file": "数据文件",
@@ -320,7 +320,7 @@
 	"executor.implementation:marmalade.dzip.pack_automatic:resource_directory": "资源目录",
 	"executor.implementation:marmalade.dzip.pack_automatic:data_file": "数据文件",
 	"executor.implementation:marmalade.dzip.pack_automatic:version_number": "版本编号",
-	// executor/implement/popcap.zlib
+	// executor/implementation/popcap.zlib
 	"executor.implementation:popcap.zlib.compress": "PopCap ZLib 压缩",
 	"executor.implementation:popcap.zlib.compress:raw_file": "原始文件",
 	"executor.implementation:popcap.zlib.compress:ripe_file": "成品文件",
@@ -330,7 +330,7 @@
 	"executor.implementation:popcap.zlib.uncompress:ripe_file": "成品文件",
 	"executor.implementation:popcap.zlib.uncompress:raw_file": "原始文件",
 	"executor.implementation:popcap.zlib.uncompress:version_variant_64": "使用64位变体",
-	// executor/implement/popcap.crypt_data
+	// executor/implementation/popcap.crypt_data
 	"executor.implementation:popcap.crypt_data.encrypt": "PopCap Crypt-Data 加密",
 	"executor.implementation:popcap.crypt_data.encrypt:plain_file": "明文文件",
 	"executor.implementation:popcap.crypt_data.encrypt:cipher_file": "密文文件",
@@ -342,7 +342,7 @@
 	"executor.implementation:popcap.crypt_data.decrypt:plain_file": "明文文件",
 	"executor.implementation:popcap.crypt_data.decrypt:limit": "限度",
 	"executor.implementation:popcap.crypt_data.decrypt:key": "密钥",
-	// executor/implement/popcap.reflection_object_notation
+	// executor/implementation/popcap.reflection_object_notation
 	"executor.implementation:popcap.reflection_object_notation.encode": "PopCap Reflection-Object-Notation 编码",
 	"executor.implementation:popcap.reflection_object_notation.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.reflection_object_notation.encode:data_file": "数据文件",
@@ -380,7 +380,7 @@
 	"executor.implementation:popcap.reflection_object_notation.decode_cipher:version_number": "版本编号",
 	"executor.implementation:popcap.reflection_object_notation.decode_cipher:version_native_string_encoding_use_utf8": "本地字符串编码使用UTF-8",
 	"executor.implementation:popcap.reflection_object_notation.decode_cipher:key": "密钥",
-	// executor/implement/popcap.texture
+	// executor/implementation/popcap.texture
 	"executor.implementation:popcap.texture.encode": "PopCap Texture 编码",
 	"executor.implementation:popcap.texture.encode:image_file": "图像文件",
 	"executor.implementation:popcap.texture.encode:data_file": "数据文件",
@@ -392,7 +392,7 @@
 	"executor.implementation:popcap.texture.decode:format": "纹理格式",
 	"executor.implementation:popcap.texture.decode:image_width": "图像宽度",
 	"executor.implementation:popcap.texture.decode:image_height": "图像高度",
-	// executor/implement/popcap.u_texture
+	// executor/implementation/popcap.u_texture
 	"executor.implementation:popcap.u_texture.encode": "PopCap U-Texture 编码",
 	"executor.implementation:popcap.u_texture.encode:image_file": "图像文件",
 	"executor.implementation:popcap.u_texture.encode:data_file": "数据文件",
@@ -403,7 +403,7 @@
 	"executor.implementation:popcap.u_texture.decode:data_file": "数据文件",
 	"executor.implementation:popcap.u_texture.decode:image_file": "图像文件",
 	"executor.implementation:popcap.u_texture.decode:version_compress_texture_data": "压缩纹理数据",
-	// executor/implement/popcap.sexy_texture
+	// executor/implementation/popcap.sexy_texture
 	"executor.implementation:popcap.sexy_texture.encode": "PopCap Sexy-Texture 编码",
 	"executor.implementation:popcap.sexy_texture.encode:image_file": "图像文件",
 	"executor.implementation:popcap.sexy_texture.encode:data_file": "数据文件",
@@ -415,7 +415,7 @@
 	"executor.implementation:popcap.sexy_texture.decode:data_file": "数据文件",
 	"executor.implementation:popcap.sexy_texture.decode:image_file": "图像文件",
 	"executor.implementation:popcap.sexy_texture.decode:version_number": "版本编号",
-	// executor/implement/popcap.animation
+	// executor/implementation/popcap.animation
 	"executor.implementation:popcap.animation.encode": "PopCap Animation 编码",
 	"executor.implementation:popcap.animation.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.animation.encode:data_file": "数据文件",
@@ -443,7 +443,7 @@
 	// 
 	"executor.implementation:popcap.animation.convert.flash.link_media": "PopCap Animation Flash 创建图像文件链接",
 	"executor.implementation:popcap.animation.convert.flash.link_media:target_directory": "目标目录",
-	// executor/implement/popcap.re_animation
+	// executor/implementation/popcap.re_animation
 	"executor.implementation:popcap.re_animation.encode": "PopCap Re-Animation 编码",
 	"executor.implementation:popcap.re_animation.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.re_animation.encode:data_file": "数据文件",
@@ -456,7 +456,7 @@
 	"executor.implementation:popcap.re_animation.decode:definition_file": "定义文件",
 	"executor.implementation:popcap.re_animation.decode:version_platform": "版本平台",
 	"executor.implementation:popcap.re_animation.decode:version_variant_64": "使用64位变体",
-	// executor/implement/popcap.particle
+	// executor/implementation/popcap.particle
 	"executor.implementation:popcap.particle.encode": "PopCap Particle 编码",
 	"executor.implementation:popcap.particle.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.particle.encode:data_file": "数据文件",
@@ -469,7 +469,7 @@
 	"executor.implementation:popcap.particle.decode:definition_file": "定义文件",
 	"executor.implementation:popcap.particle.decode:version_platform": "版本平台",
 	"executor.implementation:popcap.particle.decode:version_variant_64": "使用64位变体",
-	// executor/implement/popcap.trail
+	// executor/implementation/popcap.trail
 	"executor.implementation:popcap.trail.encode": "PopCap Trail 编码",
 	"executor.implementation:popcap.trail.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.trail.encode:data_file": "数据文件",
@@ -482,7 +482,7 @@
 	"executor.implementation:popcap.trail.decode:definition_file": "定义文件",
 	"executor.implementation:popcap.trail.decode:version_platform": "版本平台",
 	"executor.implementation:popcap.trail.decode:version_variant_64": "使用64位变体",
-	// executor/implement/popcap.particle_effect
+	// executor/implementation/popcap.particle_effect
 	"executor.implementation:popcap.particle_effect.encode": "PopCap Particle-Effect 编码",
 	"executor.implementation:popcap.particle_effect.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.particle_effect.encode:data_file": "数据文件",
@@ -493,7 +493,7 @@
 	"executor.implementation:popcap.particle_effect.decode:data_file": "数据文件",
 	"executor.implementation:popcap.particle_effect.decode:definition_file": "定义文件",
 	"executor.implementation:popcap.particle_effect.decode:version_number": "版本编号",
-	// executor/implement/popcap.render_effect
+	// executor/implementation/popcap.render_effect
 	"executor.implementation:popcap.render_effect.encode": "PopCap Render-Effect 编码",
 	"executor.implementation:popcap.render_effect.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.render_effect.encode:data_file": "数据文件",
@@ -506,7 +506,7 @@
 	"executor.implementation:popcap.render_effect.decode:definition_file": "定义文件",
 	"executor.implementation:popcap.render_effect.decode:version_number": "版本编号",
 	"executor.implementation:popcap.render_effect.decode:version_variant": "版本变体",
-	// executor/implement/popcap.character_font_widget_2
+	// executor/implementation/popcap.character_font_widget_2
 	"executor.implementation:popcap.character_font_widget_2.encode": "PopCap Character-Font-Widget-2 编码",
 	"executor.implementation:popcap.character_font_widget_2.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.character_font_widget_2.encode:data_file": "数据文件",
@@ -515,7 +515,7 @@
 	"executor.implementation:popcap.character_font_widget_2.decode": "PopCap Character-Font-Widget-2 解码",
 	"executor.implementation:popcap.character_font_widget_2.decode:data_file": "数据文件",
 	"executor.implementation:popcap.character_font_widget_2.decode:definition_file": "定义文件",
-	// executor/implement/popcap.package
+	// executor/implementation/popcap.package
 	"executor.implementation:popcap.package.pack": "PopCap Package 打包",
 	"executor.implementation:popcap.package.pack:bundle_directory": "捆绑目录",
 	"executor.implementation:popcap.package.pack:data_file": "数据文件",
@@ -539,7 +539,7 @@
 	"executor.implementation:popcap.package.encrypt:plain_file": "明文文件",
 	"executor.implementation:popcap.package.encrypt:cipher_file": "密文文件",
 	"executor.implementation:popcap.package.encrypt:key": "密钥",
-	// executor/implement/popcap.resource_stream_group
+	// executor/implementation/popcap.resource_stream_group
 	"executor.implementation:popcap.resource_stream_group.pack": "PopCap Resource-Stream-Group 打包",
 	"executor.implementation:popcap.resource_stream_group.pack:bundle_directory": "捆绑目录",
 	"executor.implementation:popcap.resource_stream_group.pack:data_file": "数据文件",
@@ -550,7 +550,7 @@
 	"executor.implementation:popcap.resource_stream_group.unpack:data_file": "数据文件",
 	"executor.implementation:popcap.resource_stream_group.unpack:bundle_directory": "捆绑目录",
 	"executor.implementation:popcap.resource_stream_group.unpack:version_number": "版本编号",
-	// executor/implement/popcap.resource_stream_bundle
+	// executor/implementation/popcap.resource_stream_bundle
 	"executor.implementation:popcap.resource_stream_bundle.pack": "PopCap Resource-Stream-Bundle 打包",
 	"executor.implementation:popcap.resource_stream_bundle.pack:bundle_directory": "捆绑目录",
 	"executor.implementation:popcap.resource_stream_bundle.pack:data_file": "数据文件",
@@ -590,7 +590,7 @@
 	"executor.implementation:popcap.resource_stream_bundle.resource_convert:option_bnk": "提取BNK",
 	"executor.implementation:popcap.resource_stream_bundle.resource_convert:option_bnk_version_number": "提取BNK - 版本编号",
 	"executor.implementation:popcap.resource_stream_bundle.resource_convert:option_wem": "提取WEM",
-	// executor/implement/popcap.resource_stream_bundle_patch
+	// executor/implementation/popcap.resource_stream_bundle_patch
 	"executor.implementation:popcap.resource_stream_bundle_patch.encode": "PopCap Resource-Stream-Bundle-Patch 编码",
 	"executor.implementation:popcap.resource_stream_bundle_patch.encode:after_file": "变动后文件",
 	"executor.implementation:popcap.resource_stream_bundle_patch.encode:patch_file": "补丁文件",
@@ -606,12 +606,12 @@
 	"executor.implementation:popcap.resource_stream_bundle_patch.decode:version_number": "版本编号",
 	"executor.implementation:popcap.resource_stream_bundle_patch.decode:use_raw_packet": "使用原始子包",
 	"executor.implementation:popcap.resource_stream_bundle_patch.decode:buffer_size": "内存缓冲区大小",
-	// executor/implement/popcap.pvz2.text_table
+	// executor/implementation/popcap.pvz2.text_table
 	"executor.implementation:popcap.pvz2.text_table.convert": "PvZ-2 Text-Table 转换",
 	"executor.implementation:popcap.pvz2.text_table.convert:source_file": "来源文件",
 	"executor.implementation:popcap.pvz2.text_table.convert:destination_version": "目的版本",
 	"executor.implementation:popcap.pvz2.text_table.convert:destination_file": "目的文件",
-	// executor/implement/popcap.pvz2.resource_manifest
+	// executor/implementation/popcap.pvz2.resource_manifest
 	"executor.implementation:popcap.pvz2.resource_manifest.new_type_object_notation.encode": "PvZ-2 Resource-Manifest New-Type-Object-Notation 编码",
 	"executor.implementation:popcap.pvz2.resource_manifest.new_type_object_notation.encode:definition_file": "定义文件",
 	"executor.implementation:popcap.pvz2.resource_manifest.new_type_object_notation.encode:data_file": "数据文件",
@@ -629,7 +629,7 @@
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:ripe_file": "成品文件",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:raw_file": "原始文件",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:use_array_style_path": "使用数组式路径",
-	// executor/implement/popcap.pvz2.package_project
+	// executor/implementation/popcap.pvz2.package_project
 	"executor.implementation:popcap.pvz2.package_project.transpile": "PvZ-2 Package-Project 转译",
 	"executor.implementation:popcap.pvz2.package_project.transpile:project_directory": "项目目录",
 	"executor.implementation:popcap.pvz2.package_project.transpile:target_scope": "目标域",
@@ -662,7 +662,7 @@
 	"executor.implementation:popcap.pvz2.package_project.parse:package_name": "包名称",
 	"executor.implementation:popcap.pvz2.package_project.parse:package_version_number": "包版本编号",
 	"executor.implementation:popcap.pvz2.package_project.parse:package_version_extended_texture_information_for_pvz2cn": "包用于PvZ-2中国版的纹理信息扩展版本",
-	// executor/implement/popcap.pvz2.remote_project
+	// executor/implementation/popcap.pvz2.remote_project
 	"executor.implementation:popcap.pvz2.remote_project.execute": "PvZ-2 Remote-Project 执行",
 	"executor.implementation:popcap.pvz2.remote_project.execute:project_directory": "项目目录",
 	"executor.implementation:popcap.pvz2.remote_project.execute:action": "行为",
@@ -670,7 +670,7 @@
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_version_number": "RTON - 版本编号",
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_version_native_string_encoding_use_utf8": "RTON - 本地字符串编码使用UTF-8",
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - 内存缓冲区大小",
-	// executor/implement/kairosoft.game
+	// executor/implementation/kairosoft.game
 	"executor.implementation:kairosoft.game.program.modify": "Kairosoft Game Program 修改",
 	"executor.implementation:kairosoft.game.program.modify:target_directory": "目标目录",
 	"executor.implementation:kairosoft.game.program.modify:disable_record_encryption": "禁用存档加密",
@@ -679,7 +679,7 @@
 	"executor.implementation:kairosoft.game.record.encrypt": "Kairosoft Game Record 加密",
 	"executor.implementation:kairosoft.game.record.encrypt:target_directory": "目标目录",
 	"executor.implementation:kairosoft.game.record.encrypt:key": "密钥",
-	// executor/implement/nitrome.twin_shot_deluxe
+	// executor/implementation/nitrome.twin_shot_deluxe
 	"executor.implementation:nitrome.twin_shot_deluxe.record.encode": "Nitrome Twin-Shot-Deluxe Record 编码",
 	"executor.implementation:nitrome.twin_shot_deluxe.record.encode:definition_file": "定义文件",
 	"executor.implementation:nitrome.twin_shot_deluxe.record.encode:data_file": "数据文件",

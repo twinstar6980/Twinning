@@ -32,7 +32,7 @@ class OnboardingPanel extends StatelessWidget {
           if (target != null) {
             await setting.load(file: target);
             await setting.save();
-            await StyledSnackExtension.show(context, 'Done!');
+            await StyledSnackExtension.show(context, 'done!');
             this.onDone();
           }
         },
@@ -45,7 +45,7 @@ class OnboardingPanel extends StatelessWidget {
           if (target != null) {
             await setting.quickSetup(target);
             await setting.save();
-            await StyledSnackExtension.show(context, 'Done!');
+            await StyledSnackExtension.show(context, 'done!');
             this.onDone();
           }
         },
