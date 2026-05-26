@@ -49,7 +49,6 @@ namespace Twinning.Script.ProcessHelper {
 			environment = get_environment();
 		}
 		let temporary_directory = StorageHelper.temporary('directory');
-		let temporary_directory_fallback: null | StoragePath = null;
 		let input_file = temporary_directory.join('input');
 		let output_file = temporary_directory.join('output');
 		let error_file = temporary_directory.join('error');

@@ -47,7 +47,7 @@ export default function (program: ts.Program, pluginConfig: tcp.PluginConfig, {t
 							],
 						),
 					);
-					const newRoot = ts.factory.updateModuleDeclaration(
+					return ts.factory.updateModuleDeclaration(
 						node,
 						node.modifiers,
 						node.name,
@@ -61,7 +61,6 @@ export default function (program: ts.Program, pluginConfig: tcp.PluginConfig, {t
 							),
 						) as ts.ModuleBody,
 					);
-					return newRoot;
 				}
 				while (false);
 				return ts.visitEachChild(node, visit, context);
