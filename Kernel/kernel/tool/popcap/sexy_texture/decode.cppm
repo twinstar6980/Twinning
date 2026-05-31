@@ -36,11 +36,11 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			Image::VariableImageView const & image
 		) -> Void {
 			data.read_constant(k_magic_marker);
-			data.read_constant(cbox<VersionNumber>(t_version.number));
+			data.read_constant(cast_box<VersionNumber>(t_version.number));
 			auto header = Header{};
 			data.read(header);
-			assert_test(image.size() == Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)});
-			auto image_format = cbox<Integer>(header.format);
+			assert_test(image.size() == Image::ImageSize{cast_box<Size>(header.size_width), cast_box<Size>(header.size_height)});
+			auto image_format = cast_box<Integer>(header.format);
 			auto format = Texture::Encoding::Format{};
 			auto opacity = Boolean{};
 			switch (image_format.value) {
@@ -94,8 +94,8 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 					break;
 				}
 			}
-			auto compress_texture_data = cbox<Boolean>(header.compress_data);
-			auto compress_texture_data_size = cbox<Size>(header.compress_data_size);
+			auto compress_texture_data = cast_box<Boolean>(header.compress_data);
+			auto compress_texture_data_size = cast_box<Size>(header.compress_data_size);
 			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
 			auto texture_data_view = ConstantByteListView{};
 			auto texture_data_container = ByteArray{};
@@ -134,10 +134,10 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		) -> Void {
 			auto data_stream = InputByteStreamView{data};
 			data_stream.read_constant(k_magic_marker);
-			data_stream.read_constant(cbox<VersionNumber>(t_version.number));
+			data_stream.read_constant(cast_box<VersionNumber>(t_version.number));
 			auto header = Header{};
 			data_stream.read(header);
-			image_size = Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)};
+			image_size = Image::ImageSize{cast_box<Size>(header.size_width), cast_box<Size>(header.size_height)};
 			return;
 		}
 

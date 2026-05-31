@@ -14,7 +14,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			Third::libpng::$png_structp     png_ptr,
 			Third::libpng::$png_const_charp error_message
 		) -> Void {
-			throw UnnamedException{mss("libpng: {}"_sf(error_message))};
+			throw UnnamedException{make_std_string("libpng: {}"_sf(error_message))};
 		}
 
 		inline static auto png_warning(
@@ -32,12 +32,12 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			Third::libpng::$png_bytep   data,
 			Third::libpng::$size_t      length
 		) -> Void {
-			auto & stream = *static_cast<InputByteStreamView *>(Third::libpng::$png_get_io_ptr(png_ptr));
-			if (stream.reserve() < mbox<Size>(length)) {
+			auto & stream = *make_pointer_unsafe<InputByteStreamView>(Third::libpng::$png_get_io_ptr(png_ptr));
+			if (stream.reserve() < make_box<Size>(length)) {
 				Third::libpng::$png_error(png_ptr, "Read Error");
 			}
-			std::memcpy(data, rubox<void const *>(stream.current_pointer()), length);
-			stream.forward(mbox<Size>(length));
+			std::memcpy(data, unmake_pointer_unsafe<void>(stream.current_pointer()), length);
+			stream.forward(make_box<Size>(length));
 			return;
 		}
 
@@ -46,12 +46,12 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			Third::libpng::$png_bytep   data,
 			Third::libpng::$size_t      length
 		) -> Void {
-			auto & stream = *static_cast<OutputByteStreamView *>(Third::libpng::$png_get_io_ptr(png_ptr));
-			if (stream.reserve() < mbox<Size>(length)) {
+			auto & stream = *make_pointer_unsafe<OutputByteStreamView>(Third::libpng::$png_get_io_ptr(png_ptr));
+			if (stream.reserve() < make_box<Size>(length)) {
 				Third::libpng::$png_error(png_ptr, "Write Error");
 			}
-			std::memcpy(rubox<void *>(stream.current_pointer()), data, length);
-			stream.forward(mbox<Size>(length));
+			std::memcpy(unmake_pointer_unsafe<void>(stream.current_pointer()), data, length);
+			stream.forward(make_box<Size>(length));
 			return;
 		}
 

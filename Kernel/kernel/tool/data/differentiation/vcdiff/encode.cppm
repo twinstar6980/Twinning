@@ -24,20 +24,20 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 		) -> Void {
 			auto v_state = bool{};
 			auto patch_container = std::string{};
-			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{rubox<char const *>(before.current_pointer()), ubox<std::size_t>(before.reserve())};
+			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{unmake_pointer_unsafe<char>(before.current_pointer()), unmake_box<std::size_t>(before.reserve())};
 			auto encoder = Third::open_vcdiff::VCDiffStreamingEncoder{&hashed_dictionary, !interleaved ? (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_STANDARD_FORMAT) : (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_FORMAT_INTERLEAVED), true};
 			v_state = hashed_dictionary.Init();
 			assert_test(v_state);
 			v_state = encoder.StartEncoding(&patch_container);
 			assert_test(v_state);
-			v_state = encoder.EncodeChunk(rubox<char const *>(after.current_pointer()), ubox<std::size_t>(after.reserve()), &patch_container);
+			v_state = encoder.EncodeChunk(unmake_pointer_unsafe<char>(after.current_pointer()), unmake_box<std::size_t>(after.reserve()), &patch_container);
 			assert_test(v_state);
 			v_state = encoder.FinishEncoding(&patch_container);
 			assert_test(v_state);
 			before.forward(before.reserve());
 			after.forward(after.reserve());
 			for (auto & element : patch_container) {
-				patch.write(self_cast<Byte>(element));
+				patch.write(unsafe_cast<Byte>(element));
 			}
 			return;
 		}

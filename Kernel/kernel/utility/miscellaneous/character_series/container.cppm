@@ -79,12 +79,12 @@ export namespace Twinning::Kernel {
 
 		implicit operator ConstantView &() requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		implicit operator ConstantView const &() const requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -218,12 +218,12 @@ export namespace Twinning::Kernel {
 
 		auto as_view(
 		) -> VariableView const & {
-			return self_cast<VariableView>(thiz);
+			return unsafe_cast<VariableView>(thiz);
 		}
 
 		auto as_view(
 		) const -> ConstantView const & {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
@@ -377,12 +377,12 @@ export namespace Twinning::Kernel {
 
 		auto as_view(
 		) -> VariableView const & {
-			return self_cast<VariableView>(thiz);
+			return unsafe_cast<VariableView>(thiz);
 		}
 
 		auto as_view(
 		) const -> ConstantView const & {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		// ----------------

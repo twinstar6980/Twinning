@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 				cipher.read_constant(k_magic_marker);
 				auto header = Header{};
 				cipher.read(header);
-				auto plain_data_size = cbox<Size>(header.plain_size);
+				auto plain_data_size = cast_box<Size>(header.plain_size);
 				assert_test(plain_data_size >= limit);
 				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{cipher.forward_view(limit)}), plain, to_byte_view(key.as_view()));
 				plain.write(cipher.forward_view(plain_data_size - limit));
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 				cipher_stream.read_constant(k_magic_marker);
 				auto header = Header{};
 				cipher_stream.read(header);
-				auto plain_data_size = cbox<Size>(header.plain_size);
+				auto plain_data_size = cast_box<Size>(header.plain_size);
 				assert_test(plain_data_size >= limit);
 				plain_size += plain_data_size;
 			}

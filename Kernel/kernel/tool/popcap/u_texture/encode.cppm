@@ -72,9 +72,9 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 				Data::Compression::Deflate::Compress::process(texture_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
 			}
 			auto header = Header{};
-			header.size_width = cbox<IntegerU16>(image.size().width);
-			header.size_height = cbox<IntegerU16>(image.size().height);
-			header.format = cbox<IntegerU16>(image_format);
+			header.size_width = cast_box<IntegerU16>(image.size().width);
+			header.size_height = cast_box<IntegerU16>(image.size().height);
+			header.format = cast_box<IntegerU16>(image_format);
 			header_stream.write(header);
 			return;
 		}

@@ -57,12 +57,13 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 					auto resource_directory_string = resource_definition.path.parent().get().emit_windows();
 					information_structure.resource_file.append(resource_definition.path.name().get());
-					if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
+					auto resource_directory_index_if = Range::find_index(information_structure.resource_directory, resource_directory_string);
+					if (resource_directory_index_if.has()) {
 					}
 					else {
 						information_structure.resource_directory.append(resource_directory_string);
 					}
-					resource_information_structure.chunk_index.allocate_full(cbox<Size>(resource_definition.chunk.size()));
+					resource_information_structure.chunk_index.allocate_full(cast_box<Size>(resource_definition.chunk.size()));
 					for (auto & chunk_index : SizeRange{resource_definition.chunk.size()}) {
 						information_structure.chunk_information.append();
 						++global_chunk_index;
@@ -109,7 +110,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				};
 			}
 			auto information_structure = Structure::Information<t_version>{};
-			information_structure.archive_setting.version = cbox<Structure::VersionNumber>(t_version.number);
+			information_structure.archive_setting.version = cast_box<Structure::VersionNumber>(t_version.number);
 			information_structure.resource_file.allocate(definition.resource.size());
 			information_structure.resource_directory.allocate(definition.resource.size() + 1_sz);
 			information_structure.resource_information.allocate_full(definition.resource.size());
@@ -123,16 +124,17 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				auto   resource_path = resource_directory.push(resource_definition.path);
 				auto   resource_directory_string = resource_definition.path.parent().get().emit_windows();
 				information_structure.resource_file.append(resource_definition.path.name().get());
-				if (auto index = Range::find_index(information_structure.resource_directory, resource_directory_string); index.has()) {
-					resource_information_structure.directory_index = cbox<IntegerU16>(index.get());
+				auto resource_directory_index_if = Range::find_index(information_structure.resource_directory, resource_directory_string);
+				if (resource_directory_index_if.has()) {
+					resource_information_structure.directory_index = cast_box<IntegerU16>(resource_directory_index_if.get());
 				}
 				else {
 					information_structure.resource_directory.append(resource_directory_string);
-					resource_information_structure.directory_index = cbox<IntegerU16>(information_structure.resource_directory.last_index());
+					resource_information_structure.directory_index = cast_box<IntegerU16>(information_structure.resource_directory.last_index());
 				}
-				resource_information_structure.chunk_index.allocate_full(cbox<Size>(resource_definition.chunk.size()));
+				resource_information_structure.chunk_index.allocate_full(cast_box<Size>(resource_definition.chunk.size()));
 				for (auto & chunk_index : SizeRange{resource_definition.chunk.size()}) {
-					resource_information_structure.chunk_index[chunk_index] = cbox<IntegerU16>(global_chunk_index);
+					resource_information_structure.chunk_index[chunk_index] = cast_box<IntegerU16>(global_chunk_index);
 					auto & chunk_definition = resource_definition.chunk[chunk_index];
 					auto & chunk_information_structure = information_structure.chunk_information.append();
 					auto   chunk_flag = BitSet<Structure::ChunkFlag<t_version>::k_count>{};
@@ -160,7 +162,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					}
 					auto chunk_size_uncompressed = Size{};
 					auto chunk_size_compressed = Size{};
-					chunk_information_structure.offset = cbox<IntegerU32>(data.position());
+					chunk_information_structure.offset = cast_box<IntegerU32>(data.position());
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::combuf)) {
 						throw UnimplementedException{};
 					}
@@ -208,26 +210,26 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::random_access)) {
 						throw UnimplementedException{};
 					}
-					chunk_information_structure.size_compressed = cbox<IntegerU32>(chunk_size_compressed);
-					chunk_information_structure.size_uncompressed = cbox<IntegerU32>(chunk_size_uncompressed);
-					chunk_information_structure.flag = chunk_flag.to_integer();
+					chunk_information_structure.size_compressed = cast_box<IntegerU32>(chunk_size_compressed);
+					chunk_information_structure.size_uncompressed = cast_box<IntegerU32>(chunk_size_uncompressed);
+					chunk_information_structure.flag = cast_box<IntegerU16>(chunk_flag.to_integer());
 					chunk_information_structure.file = 0_iu16;
 					++global_chunk_index;
 				}
 			}
 			information_structure.chunk_setting.archive_resource_count = 1_iu16;
-			information_structure.chunk_setting.chunk_count = cbox<IntegerU16>(global_chunk_index);
-			information_structure.archive_setting.resource_file_count = cbox<IntegerU16>(information_structure.resource_file.size());
-			information_structure.archive_setting.resource_directory_count = cbox<IntegerU16>(information_structure.resource_directory.size());
+			information_structure.chunk_setting.chunk_count = cast_box<IntegerU16>(global_chunk_index);
+			information_structure.archive_setting.resource_file_count = cast_box<IntegerU16>(information_structure.resource_file.size());
+			information_structure.archive_setting.resource_directory_count = cast_box<IntegerU16>(information_structure.resource_directory.size());
 			{
 				information_data.archive_setting.write(information_structure.archive_setting);
 				for (auto & element : information_structure.resource_file) {
-					StringParser::write_string_until(self_cast<OutputCharacterStreamView>(information_data.resource_file), element, CharacterType::k_null);
-					self_cast<OutputCharacterStreamView>(information_data.resource_file).write_constant(CharacterType::k_null);
+					StringParser::write_string_until(unsafe_cast<OutputCharacterStreamView>(information_data.resource_file), element, CharacterType::k_null);
+					unsafe_cast<OutputCharacterStreamView>(information_data.resource_file).write_constant(CharacterType::k_null);
 				}
 				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
-					StringParser::write_string_until(self_cast<OutputCharacterStreamView>(information_data.resource_directory), element, CharacterType::k_null);
-					self_cast<OutputCharacterStreamView>(information_data.resource_directory).write_constant(CharacterType::k_null);
+					StringParser::write_string_until(unsafe_cast<OutputCharacterStreamView>(information_data.resource_directory), element, CharacterType::k_null);
+					unsafe_cast<OutputCharacterStreamView>(information_data.resource_directory).write_constant(CharacterType::k_null);
 				}
 				information_data.resource_information.write(information_structure.resource_information);
 				information_data.chunk_setting.write(information_structure.chunk_setting);

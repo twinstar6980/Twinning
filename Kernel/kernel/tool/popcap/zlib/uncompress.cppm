@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			auto header = Header{};
 			ripe.read(header);
 			Data::Compression::Deflate::Uncompress::process(raw, ripe, window_exponent, Data::Compression::Deflate::WrapperType::Constant::zlib());
-			assert_test(raw.position() == cbox<Size>(header.raw_size));
+			assert_test(raw.position() == cast_box<Size>(header.raw_size));
 			return;
 		}
 
@@ -57,7 +57,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			}
 			auto header = Header{};
 			ripe_stream.read(header);
-			raw_size += cbox<Size>(header.raw_size);
+			raw_size += cast_box<Size>(header.raw_size);
 			return;
 		}
 

@@ -41,13 +41,13 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_b8(
 		ZLiteralInteger value
 	) -> Byte8 {
-		return mbox<Byte8>(value);
+		return make_box<Byte8>(value);
 	}
 
 	inline constexpr auto operator ""_b8(
 		ZLiteralCharacter value
 	) -> Byte8 {
-		return mbox<Byte8>(value);
+		return make_box<Byte8>(value);
 	}
 
 	// ----------------
@@ -55,13 +55,13 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_b(
 		ZLiteralInteger value
 	) -> Byte {
-		return mbox<Byte>(value);
+		return make_box<Byte>(value);
 	}
 
 	inline constexpr auto operator ""_b(
 		ZLiteralCharacter value
 	) -> Byte {
-		return mbox<Byte>(value);
+		return make_box<Byte>(value);
 	}
 
 	#pragma endregion

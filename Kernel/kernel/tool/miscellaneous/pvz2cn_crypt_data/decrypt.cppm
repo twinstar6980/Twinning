@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			plain_size = 0_sz;
 			assert_test(cipher_size >= bs_static_size<MagicMarker>());
 			auto rijndael_data_size = cipher_size - bs_static_size<MagicMarker>();
-			assert_test(is_padded_size(rijndael_data_size, cbox<Size>(k_rijndael_block_size)));
+			assert_test(is_padded_size(rijndael_data_size, cast_box<Size>(k_rijndael_block_size)));
 			plain_size += rijndael_data_size;
 			return;
 		}

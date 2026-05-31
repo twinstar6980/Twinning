@@ -22,12 +22,12 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Md5 {
 		) -> Void {
 			auto generator = Third::cpp_md5_lib::MD5{};
 			for (auto part_position = 0_sz; part_position < data.size();) {
-				auto part_size = minimum(data.size() - part_position, 0x7FFFFFFF_sz);
-				generator.update(rubox<unsigned char const *>(data.begin() + part_position), ubox<unsigned int>(part_size));
+				auto part_size = Math::minimum(data.size() - part_position, 0x7FFFFFFF_sz);
+				generator.update(unmake_pointer_unsafe<unsigned char>(data.begin() + part_position), unmake_box<unsigned int>(part_size));
 				part_position += part_size;
 			}
 			generator.finalize();
-			value.assign(ConstantByteListView{cast_pointer<Byte>(make_pointer(generator.get_digest())), 16_sz});
+			value.assign(ConstantByteListView{make_pointer_unsafe<Byte>(generator.get_digest()), 16_sz});
 			return;
 		}
 

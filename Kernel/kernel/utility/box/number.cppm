@@ -6,6 +6,7 @@ export module twinning.kernel.utility.box.number;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box.base;
+import twinning.kernel.utility.exception.utility;
 
 export namespace Twinning::Kernel {
 
@@ -132,7 +133,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator +(
 		TIt const & thix
 	) -> TIt {
-		return TIt{+thix.value};
+		return TIt{static_cast<TIt::Value>(+thix.value)};
 	}
 
 	template <typename TIt> requires
@@ -141,7 +142,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator -(
 		TIt const & thix
 	) -> TIt {
-		return TIt{-thix.value};
+		return TIt{static_cast<TIt::Value>(-thix.value)};
 	}
 
 	// ----------------
@@ -474,49 +475,49 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_iu8(
 		ZLiteralInteger value
 	) -> IntegerU8 {
-		return mbox<IntegerU8>(value);
+		return make_box<IntegerU8>(value);
 	}
 
 	inline constexpr auto operator ""_iu16(
 		ZLiteralInteger value
 	) -> IntegerU16 {
-		return mbox<IntegerU16>(value);
+		return make_box<IntegerU16>(value);
 	}
 
 	inline constexpr auto operator ""_iu32(
 		ZLiteralInteger value
 	) -> IntegerU32 {
-		return mbox<IntegerU32>(value);
+		return make_box<IntegerU32>(value);
 	}
 
 	inline constexpr auto operator ""_iu64(
 		ZLiteralInteger value
 	) -> IntegerU64 {
-		return mbox<IntegerU64>(value);
+		return make_box<IntegerU64>(value);
 	}
 
 	inline constexpr auto operator ""_is8(
 		ZLiteralInteger value
 	) -> IntegerS8 {
-		return mbox<IntegerS8>(value);
+		return make_box<IntegerS8>(value);
 	}
 
 	inline constexpr auto operator ""_is16(
 		ZLiteralInteger value
 	) -> IntegerS16 {
-		return mbox<IntegerS16>(value);
+		return make_box<IntegerS16>(value);
 	}
 
 	inline constexpr auto operator ""_is32(
 		ZLiteralInteger value
 	) -> IntegerS32 {
-		return mbox<IntegerS32>(value);
+		return make_box<IntegerS32>(value);
 	}
 
 	inline constexpr auto operator ""_is64(
 		ZLiteralInteger value
 	) -> IntegerS64 {
-		return mbox<IntegerS64>(value);
+		return make_box<IntegerS64>(value);
 	}
 
 	// ----------------
@@ -524,13 +525,13 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_fs32(
 		ZLiteralFloater value
 	) -> FloaterS32 {
-		return mbox<FloaterS32>(value);
+		return make_box<FloaterS32>(value);
 	}
 
 	inline constexpr auto operator ""_fs64(
 		ZLiteralFloater value
 	) -> FloaterS64 {
-		return mbox<FloaterS64>(value);
+		return make_box<FloaterS64>(value);
 	}
 
 	// ----------------
@@ -538,13 +539,13 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_szu(
 		ZLiteralInteger value
 	) -> SizeU {
-		return mbox<SizeU>(value);
+		return make_box<SizeU>(value);
 	}
 
 	inline constexpr auto operator ""_szs(
 		ZLiteralInteger value
 	) -> SizeS {
-		return mbox<SizeS>(value);
+		return make_box<SizeS>(value);
 	}
 
 	// ----------------
@@ -552,7 +553,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_i(
 		ZLiteralInteger value
 	) -> Integer {
-		return mbox<Integer>(value);
+		return make_box<Integer>(value);
 	}
 
 	// ----------------
@@ -560,7 +561,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_f(
 		ZLiteralFloater value
 	) -> Floater {
-		return mbox<Floater>(value);
+		return make_box<Floater>(value);
 	}
 
 	// ----------------
@@ -568,13 +569,13 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_sz(
 		ZLiteralInteger value
 	) -> Size {
-		return mbox<Size>(value);
+		return make_box<Size>(value);
 	}
 
 	inline constexpr auto operator ""_ix(
 		ZLiteralInteger value
 	) -> Size {
-		return mbox<Size>(value - 1);
+		return make_box<Size>(value - 1);
 	}
 
 	#pragma endregion
@@ -595,7 +596,7 @@ export namespace Twinning::Kernel {
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
-	inline constexpr auto k_type_size = Size{mbox<Size>(sizeof(TIt))};
+	inline constexpr auto k_type_size = Size{make_box<Size>(sizeof(TIt))};
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>

@@ -5,6 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
+#include <typeinfo>
 #include <type_traits>
 #include <source_location>
 #include <exception>
@@ -57,6 +58,7 @@ export {
 	}
 	// traits
 	namespace std {
+		using ::std::type_info;
 		using ::std::is_constant_evaluated;
 		using ::std::is_same_v;
 		using ::std::conditional_t;
@@ -118,14 +120,14 @@ export {
 		using ::std::uint32_t;
 		using ::std::uint64_t;
 		using ::std::size_t;
+		using ::std::intptr_t;
 		using ::std::ptrdiff_t;
 		using ::std::numeric_limits;
 	}
 	// math
 	namespace std {
-		using ::std::floor;
+		using ::std::isfinite;
 		using ::std::round;
-		using ::std::ceil;
 	}
 	// string
 	namespace std {
@@ -166,6 +168,7 @@ export {
 	}
 	// memory
 	namespace std {
+		using ::std::free;
 		using ::std::memcpy;
 		using ::std::unique_ptr;
 		using ::std::make_unique;

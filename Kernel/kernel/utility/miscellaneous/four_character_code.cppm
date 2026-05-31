@@ -42,10 +42,10 @@ export namespace Twinning::Kernel {
 	) -> FourCharacterCode {
 		assert_test(string.size() == 4_sz);
 		auto data = FourCharacterCode{};
-		data.first = cbox<Character8>(string[1_ix]);
-		data.second = cbox<Character8>(string[2_ix]);
-		data.third = cbox<Character8>(string[3_ix]);
-		data.fourth = cbox<Character8>(string[4_ix]);
+		data.first = cast_box<Character8>(string[1_ix]);
+		data.second = cast_box<Character8>(string[2_ix]);
+		data.third = cast_box<Character8>(string[3_ix]);
+		data.fourth = cast_box<Character8>(string[4_ix]);
 		return data;
 	}
 
@@ -55,10 +55,10 @@ export namespace Twinning::Kernel {
 		IntegerU32 const & integer
 	) -> FourCharacterCode {
 		auto data = FourCharacterCode{};
-		data.fourth = cbox<Character8>(clip_bit(integer, 1_ix, 8_sz));
-		data.third = cbox<Character8>(clip_bit(integer, 9_ix, 8_sz));
-		data.second = cbox<Character8>(clip_bit(integer, 17_ix, 8_sz));
-		data.first = cbox<Character8>(clip_bit(integer, 25_ix, 8_sz));
+		data.fourth = cast_box<Character8>(clip_bit(integer, 1_ix, 8_sz));
+		data.third = cast_box<Character8>(clip_bit(integer, 9_ix, 8_sz));
+		data.second = cast_box<Character8>(clip_bit(integer, 17_ix, 8_sz));
+		data.first = cast_box<Character8>(clip_bit(integer, 25_ix, 8_sz));
 		return data;
 	}
 
@@ -66,10 +66,10 @@ export namespace Twinning::Kernel {
 		FourCharacterCode const & data
 	) -> IntegerU32 {
 		auto integer = IntegerU32{};
-		integer |= cbox<IntegerU32>(data.fourth) << 0_sz;
-		integer |= cbox<IntegerU32>(data.third) << 8_sz;
-		integer |= cbox<IntegerU32>(data.second) << 16_sz;
-		integer |= cbox<IntegerU32>(data.first) << 24_sz;
+		integer |= cast_box<IntegerU32>(data.fourth) << 0_sz;
+		integer |= cast_box<IntegerU32>(data.third) << 8_sz;
+		integer |= cast_box<IntegerU32>(data.second) << 16_sz;
+		integer |= cast_box<IntegerU32>(data.first) << 24_sz;
 		return integer;
 	}
 

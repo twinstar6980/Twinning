@@ -39,7 +39,7 @@ export namespace Twinning::Kernel::Image {
 		BasicColor<TValue> const & value,
 		Size const &               bit_count
 	) -> BasicColor<TValue> {
-		return Math::round<BasicColor<TValue>>(cbox<Floater>(value) * cbox<Floater>(~BasicColor<TValue>{0}) / cbox<Floater>((0b1_iu64 << bit_count) - 1_iu64));
+		return cast_box<BasicColor<TValue>>(Math::round(cast_box<Floater>(value) * cast_box<Floater>(~BasicColor<TValue>{0}) / cast_box<Floater>((0b1_iu64 << bit_count) - 1_iu64)));
 	}
 
 	// ----------------
@@ -52,7 +52,7 @@ export namespace Twinning::Kernel::Image {
 		BasicColor<TValue> const & green,
 		BasicColor<TValue> const & blue
 	) -> BasicColor<TValue> {
-		return Math::round<BasicColor<TValue>>(cbox<Floater>(red) * 0.299_f + cbox<Floater>(green) * 0.587_f + cbox<Floater>(blue) * 0.114_f);
+		return cast_box<BasicColor<TValue>>(Math::round(cast_box<Floater>(red) * 0.299_f + cast_box<Floater>(green) * 0.587_f + cast_box<Floater>(blue) * 0.114_f));
 	}
 
 	#pragma endregion

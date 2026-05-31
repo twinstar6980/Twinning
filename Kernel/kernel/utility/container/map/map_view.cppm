@@ -98,12 +98,12 @@ export namespace Twinning::Kernel {
 
 		implicit operator ConstantView &() requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		implicit operator ConstantView const &() const requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -112,12 +112,12 @@ export namespace Twinning::Kernel {
 
 		auto as_list(
 		) -> ListView & {
-			return self_cast<ListView>(thiz);
+			return unsafe_cast<ListView>(thiz);
 		}
 
 		auto as_list(
 		) const -> ListView const & {
-			return self_cast<ListView>(thiz);
+			return unsafe_cast<ListView>(thiz);
 		}
 
 		#pragma endregion

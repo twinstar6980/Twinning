@@ -25,12 +25,12 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		inline static auto compute_rijndael_key(
 			String const & original_key
 		) -> ByteArray {
-			auto result = ByteArray{cbox<Size>(k_rijndael_key_size)};
+			auto result = ByteArray{cast_box<Size>(k_rijndael_key_size)};
 			auto key_hash = ByteArray{};
 			Data::Hash::Md5::Hash::process(to_byte_view(original_key.view()), key_hash);
 			for (auto & key_index : SizeRange{key_hash.size()}) {
-				result[key_index * 2_sz + 0_sz] = cbox<Byte>(CharacterType::to_number_hexadecimal_lower(cbox<IntegerU8>(key_hash[key_index] / 0x10_b)));
-				result[key_index * 2_sz + 1_sz] = cbox<Byte>(CharacterType::to_number_hexadecimal_lower(cbox<IntegerU8>(key_hash[key_index] % 0x10_b)));
+				result[key_index * 2_sz + 0_sz] = cast_box<Byte>(CharacterType::to_number_hexadecimal_lower(cast_box<IntegerU8>(key_hash[key_index] / 0x10_b)));
+				result[key_index * 2_sz + 1_sz] = cast_box<Byte>(CharacterType::to_number_hexadecimal_lower(cast_box<IntegerU8>(key_hash[key_index] % 0x10_b)));
 			}
 			return result;
 		}
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		inline static auto compute_rijndael_initialization_vector(
 			ByteArray const & rijndael_key
 		) -> ByteArray {
-			return ByteArray{rijndael_key.sub(5_ix, cbox<Size>(k_rijndael_block_size))};
+			return ByteArray{rijndael_key.sub(5_ix, cast_box<Size>(k_rijndael_block_size))};
 		}
 
 	};

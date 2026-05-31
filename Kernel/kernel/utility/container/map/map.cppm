@@ -149,12 +149,12 @@ export namespace Twinning::Kernel {
 
 		auto as_list(
 		) -> List & {
-			return self_cast<List>(thiz);
+			return unsafe_cast<List>(thiz);
 		}
 
 		auto as_list(
 		) const -> List const & {
-			return self_cast<List>(thiz);
+			return unsafe_cast<List>(thiz);
 		}
 
 		#pragma endregion
@@ -163,12 +163,12 @@ export namespace Twinning::Kernel {
 
 		auto as_view(
 		) -> VariableView const & {
-			return self_cast<VariableView>(thiz);
+			return unsafe_cast<VariableView>(thiz);
 		}
 
 		auto as_view(
 		) const -> ConstantView const & {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
@@ -459,11 +459,11 @@ export namespace Twinning::Kernel {
 	inline auto make_map(
 		TArgument && ... argument
 	) -> Map<TKey, TValue> {
-		auto result = Map<TKey, TValue>{mbox<Size>(sizeof...(TArgument))};
+		auto result = Map<TKey, TValue>{make_box<Size>(sizeof...(TArgument))};
 		result.expand_size_to_full();
 		Generalization::each_with<>(
 			[&]<auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
-				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
+				restruct(result.at(make_box<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
 			as_forward<TArgument>(argument) ...
 		);

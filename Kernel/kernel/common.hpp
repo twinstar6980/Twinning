@@ -191,14 +191,6 @@
 		using _base::_simplify_base;\
 	}
 
-#define M_simple_function_alias(_alias, _name)\
-	template <typename ... Argument>\
-	inline constexpr auto _alias(\
-		Argument && ... argument\
-	) -> decltype(_name(std::forward<Argument>(argument)...)) {\
-		return _name(std::forward<Argument>(argument)...);\
-	}
-
 // ----------------
 
 #define M_log(...)\
@@ -254,13 +246,38 @@
 		return Type{Type::Value::_name};\
 	}
 
-// ----------------
-
 #define M_enumeration(_type, _item, _)\
 	struct _type :\
 		EnumerationBox<decltype([] {\
 			enum class Type : ZIntegerU8 {\
 				M_map(M_enumeration_item, _item)\
+			};\
+			return declare<Type>();\
+		}())> {\
+		using EnumerationBox<typename _type::Value>::EnumerationBox;\
+		struct Reflection {\
+			using Type = typename EnumerationBox<typename _type::Value>::Value;\
+			using EnumerationValue = AsTypePackageRemoveTail<TypePackage<\
+				M_map(M_enumeration_item_reflection, _item)\
+				None\
+			>, 1_szz>;\
+		};\
+		struct Constant {\
+			using Type = _type;\
+			M_map(M_enumeration_item_getter, _item)\
+		};\
+	}
+
+// ----------------
+
+#define M_enumeration_specific_item(_expression)\
+	_expression,
+
+#define M_enumeration_specific(_type, _base, _item, _definition, _)\
+	struct _type :\
+		EnumerationBox<decltype([] {\
+			enum class Type : _base {\
+				M_map(M_enumeration_specific_item, _definition)\
 			};\
 			return declare<Type>();\
 		}())> {\
@@ -288,8 +305,6 @@
 #define M_record_field_reflection(_expression)\
 	Trait::Reflection::MemberVariableField<Trait::Reflection::make_string(M_stringify(M_detach _expression)), &Type:: M_detach _expression>,
 
-// ----------------
-
 #define M_record(_category, _type, _item, _)\
 	struct _type :\
 		_category {\
@@ -302,7 +317,7 @@
 			using Type = _type;\
 			using MemberVariable = AsTypePackageRemoveTail<TypePackage<\
 				M_map(M_record_field_reflection, _item)\
-				None\
+				Void\
 			>, 1_szz>;\
 		};\
 	}

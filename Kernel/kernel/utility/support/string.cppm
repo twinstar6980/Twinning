@@ -16,6 +16,7 @@ import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
 import twinning.kernel.utility.storage.path;
+import twinning.kernel.utility.miscellaneous.math;
 import twinning.kernel.utility.miscellaneous.number_variant;
 import twinning.kernel.utility.miscellaneous.four_character_code;
 import twinning.kernel.utility.support.character_stream.extend;
@@ -323,20 +324,14 @@ export namespace Twinning::Kernel {
 			This &       thix,
 			That const & that
 		) -> Void {
-			auto has_case = k_false;
-			Generalization::each<FieldPackage>(
+			Generalization::match_if<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					if (!has_case) {
-						if (TField::value == that.value) {
-							thix = make_string(TField::name.view());
-							has_case = k_true;
-						}
-					}
+					return TField::value == that.value;
+				},
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+					thix = make_string(TField::name.view());
 				}
 			);
-			if (!has_case) {
-				assert_fail(R"(/* enumeration value is invalid */)");
-			}
 			return;
 		}
 
@@ -344,22 +339,15 @@ export namespace Twinning::Kernel {
 			This const & thix,
 			That &       that
 		) -> Void {
-			auto has_case = k_false;
 			auto thix_hash = thix.hash().value;
-			Generalization::each<FieldPackage>(
+			Generalization::match_if<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					if (!has_case) {
-						constexpr auto name_hash = hash_std_string_view(TField::name.view());
-						if (name_hash == thix_hash) {
-							that.value = TField::value;
-							has_case = k_true;
-						}
-					}
+					return hash_std_string_view(TField::name.view()) == thix_hash;
+				},
+				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
+					that.value = TField::value;
 				}
 			);
-			if (!has_case) {
-				assert_fail(R"(/* enumeration name is invalid */)");
-			}
 			return;
 		}
 
@@ -418,7 +406,7 @@ export namespace Twinning::Kernel {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.allocate_full(that.size() * 2_sz + maximum(that.size(), 1_sz) - 1_sz);
+			thix.allocate_full(that.size() * 2_sz + Math::maximum(that.size(), 1_sz) - 1_sz);
 			auto stream = OutputCharacterStreamView{thix};
 			stream.write(that.view());
 			return;
@@ -455,10 +443,10 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			thix.allocate_full(4_sz);
-			thix[1_ix] = cbox<Character>(that.first);
-			thix[2_ix] = cbox<Character>(that.second);
-			thix[3_ix] = cbox<Character>(that.third);
-			thix[4_ix] = cbox<Character>(that.fourth);
+			thix[1_ix] = cast_box<Character>(that.first);
+			thix[2_ix] = cast_box<Character>(that.second);
+			thix[3_ix] = cast_box<Character>(that.third);
+			thix[4_ix] = cast_box<Character>(that.fourth);
 			return;
 		}
 
@@ -467,10 +455,10 @@ export namespace Twinning::Kernel {
 			That &       that
 		) -> Void {
 			assert_test(thix.size() == 4_sz);
-			that.first = cbox<Character8>(thix[1_ix]);
-			that.second = cbox<Character8>(thix[2_ix]);
-			that.third = cbox<Character8>(thix[3_ix]);
-			that.fourth = cbox<Character8>(thix[4_ix]);
+			that.first = cast_box<Character8>(thix[1_ix]);
+			that.second = cast_box<Character8>(thix[2_ix]);
+			that.third = cast_box<Character8>(thix[3_ix]);
+			that.fourth = cast_box<Character8>(thix[4_ix]);
 			return;
 		}
 

@@ -33,7 +33,7 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto mode = StreamMode{t_mode};
 
-		using ListView = TMListView<Element, mbox<Boolean>(t_mode == StreamMode::Constant::input())>;
+		using ListView = TMListView<Element, make_box<Boolean>(t_mode == StreamMode::Constant::input())>;
 
 		using QualifyElement = ListView::QualifyElement;
 
@@ -374,13 +374,13 @@ export namespace Twinning::Kernel {
 		auto as_input_stream(
 		) -> InputStream & requires
 			(mode == StreamMode::Constant::access()) {
-			return self_cast<InputStream>(thiz);
+			return unsafe_cast<InputStream>(thiz);
 		}
 
 		auto as_output_stream(
 		) -> OutputStream & requires
 			(mode == StreamMode::Constant::access()) {
-			return self_cast<OutputStream>(thiz);
+			return unsafe_cast<OutputStream>(thiz);
 		}
 
 		#pragma endregion

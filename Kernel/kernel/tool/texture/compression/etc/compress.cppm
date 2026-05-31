@@ -36,10 +36,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 				Third::etcpak::CompressEtc1Rgb(
-					rubox<std::uint32_t *>(raw_data.begin()),
-					rubox<std::uint64_t *>(data.current_pointer()),
-					ubox<std::uint32_t>(block_count),
-					ubox<std::size_t>(image.size().width)
+					unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+					unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+					unmake_box<std::uint32_t>(block_count),
+					unmake_box<std::size_t>(image.size().width)
 				);
 				data.forward(ripe_data_size);
 			}
@@ -51,10 +51,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEtc2Rgb(
-						rubox<std::uint32_t *>(raw_data.begin()),
-						rubox<std::uint64_t *>(data.current_pointer()),
-						ubox<std::uint32_t>(block_count),
-						ubox<std::size_t>(image.size().width),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_box<std::uint32_t>(block_count),
+						unmake_box<std::size_t>(image.size().width),
 						true
 					);
 					data.forward(ripe_data_size);
@@ -66,10 +66,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEtc2Rgba(
-						rubox<std::uint32_t *>(raw_data.begin()),
-						rubox<std::uint64_t *>(data.current_pointer()),
-						ubox<std::uint32_t>(block_count),
-						ubox<std::size_t>(image.size().width),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_box<std::uint32_t>(block_count),
+						unmake_box<std::size_t>(image.size().width),
 						true
 					);
 					data.forward(ripe_data_size);
@@ -83,10 +83,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEacR(
-						rubox<std::uint32_t *>(raw_data.begin()),
-						rubox<std::uint64_t *>(data.current_pointer()),
-						ubox<std::uint32_t>(block_count),
-						ubox<std::size_t>(image.size().width)
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_box<std::uint32_t>(block_count),
+						unmake_box<std::size_t>(image.size().width)
 					);
 					data.forward(ripe_data_size);
 				}
@@ -97,10 +97,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEacRg(
-						rubox<std::uint32_t *>(raw_data.begin()),
-						rubox<std::uint64_t *>(data.current_pointer()),
-						ubox<std::uint32_t>(block_count),
-						ubox<std::size_t>(image.size().width)
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_box<std::uint32_t>(block_count),
+						unmake_box<std::size_t>(image.size().width)
 					);
 					data.forward(ripe_data_size);
 				}

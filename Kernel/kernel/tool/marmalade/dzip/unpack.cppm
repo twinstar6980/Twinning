@@ -36,45 +36,45 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			auto information_structure = Structure::Information<t_version>{};
 			{
 				data.read(information_structure.archive_setting);
-				information_structure.resource_file.allocate_full(cbox<Size>(information_structure.archive_setting.resource_file_count));
-				assert_test(information_structure.archive_setting.version == cbox<Structure::VersionNumber>(t_version.number));
+				information_structure.resource_file.allocate_full(cast_box<Size>(information_structure.archive_setting.resource_file_count));
+				assert_test(information_structure.archive_setting.version == cast_box<Structure::VersionNumber>(t_version.number));
 				for (auto & element : information_structure.resource_file) {
 					auto string = ConstantStringView{};
-					StringParser::read_string_until(self_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
-					self_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
+					StringParser::read_string_until(unsafe_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
+					unsafe_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
 					element = string;
 				}
-				information_structure.resource_directory.allocate_full(cbox<Size>(information_structure.archive_setting.resource_directory_count));
+				information_structure.resource_directory.allocate_full(cast_box<Size>(information_structure.archive_setting.resource_directory_count));
 				information_structure.resource_directory[1_ix] = ""_sv;
 				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
 					auto string = ConstantStringView{};
-					StringParser::read_string_until(self_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
-					self_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
+					StringParser::read_string_until(unsafe_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
+					unsafe_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
 					element = string;
 				}
-				data.read(information_structure.resource_information, cbox<Size>(information_structure.archive_setting.resource_file_count));
+				data.read(information_structure.resource_information, cast_box<Size>(information_structure.archive_setting.resource_file_count));
 				data.read(information_structure.chunk_setting);
-				data.read(information_structure.chunk_information, cbox<Size>(information_structure.chunk_setting.chunk_count));
-				data.read(information_structure.archive_resource_information, cbox<Size>(information_structure.chunk_setting.archive_resource_count) - 1_sz);
+				data.read(information_structure.chunk_information, cast_box<Size>(information_structure.chunk_setting.chunk_count));
+				data.read(information_structure.archive_resource_information, cast_box<Size>(information_structure.chunk_setting.archive_resource_count) - 1_sz);
 			}
 			definition.resource.allocate_full(information_structure.resource_information.size());
 			auto package_data_end_position = data.position();
 			for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
 				auto & resource_definition = definition.resource[resource_index];
-				resource_definition.path = Path{information_structure.resource_directory[cbox<Size>(resource_information_structure.directory_index)]}.push(Path{information_structure.resource_file[resource_index]});
+				resource_definition.path = Path{information_structure.resource_directory[cast_box<Size>(resource_information_structure.directory_index)]}.push(Path{information_structure.resource_file[resource_index]});
 				assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 				resource_definition.chunk.allocate_full(resource_information_structure.chunk_index.size());
 				auto chunk_data_list = Array<ByteArray>{resource_information_structure.chunk_index.size()};
 				for (auto & chunk_index : SizeRange{resource_information_structure.chunk_index.size()}) {
-					auto & chunk_information_structure = information_structure.chunk_information[cbox<Size>(resource_information_structure.chunk_index[chunk_index])];
+					auto & chunk_information_structure = information_structure.chunk_information[cast_box<Size>(resource_information_structure.chunk_index[chunk_index])];
 					auto & chunk_definition = resource_definition.chunk[chunk_index];
 					auto & chunk_data = chunk_data_list[chunk_index];
-					data.set_position(cbox<Size>(chunk_information_structure.offset));
-					chunk_data.allocate(cbox<Size>(chunk_information_structure.size_uncompressed));
-					auto chunk_size_compressed = cbox<Size>(chunk_information_structure.size_compressed);
+					data.set_position(cast_box<Size>(chunk_information_structure.offset));
+					chunk_data.allocate(cast_box<Size>(chunk_information_structure.size_uncompressed));
+					auto chunk_size_compressed = cast_box<Size>(chunk_information_structure.size_compressed);
 					auto chunk_flag = BitSet<Structure::ChunkFlag<t_version>::k_count>{};
-					chunk_flag.from_integer(chunk_information_structure.flag);
+					chunk_flag.from_integer(cast_box<typename BitSet<Structure::ChunkFlag<t_version>::k_count>::BoundedInteger>(chunk_information_structure.flag));
 					assert_test(!chunk_flag.get(Structure::ChunkFlag<t_version>::unused_2));
 					auto chunk_ok = k_false;
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::combuf)) {
@@ -145,7 +145,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						throw UnimplementedException{};
 					}
 					assert_test(chunk_ok);
-					package_data_end_position = maximum(package_data_end_position, data.position());
+					package_data_end_position = Math::maximum(package_data_end_position, data.position());
 				}
 				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&](auto & element) -> auto { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {

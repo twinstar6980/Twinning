@@ -123,7 +123,7 @@ export namespace Twinning::Kernel {
 
 		constexpr auto index(
 		) const -> Size {
-			return mbox<Size>(thiz.m_value.index());
+			return make_box<Size>(thiz.m_value.index());
 		}
 
 		#pragma endregion

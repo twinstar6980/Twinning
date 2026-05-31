@@ -119,13 +119,13 @@ export namespace Twinning::Kernel::Executor {
 			{
 				thiz.m_callback.value(
 					Interface::ExecutorProxy{},
-					self_cast<Interface::MessageProxy>(argument),
-					self_cast<Interface::MessageProxy>(result)
+					unsafe_cast<Interface::MessageProxy>(argument),
+					unsafe_cast<Interface::MessageProxy>(result)
 				);
 			}
 			#if defined M_build_release
 			catch (String & e) {
-				throw InvocationException{mss("<callback>"_sv), mss(e)};
+				throw InvocationException{make_std_string("<callback>"_sv), make_std_string(e)};
 			}
 			#endif
 			return result;

@@ -12,7 +12,7 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion
 
-	#pragma region fundamental
+	#pragma region arithmetic
 
 	using ZBoolean8 = bool;
 
@@ -138,14 +138,6 @@ export namespace Twinning::Kernel {
 	// ----------------
 
 	using StrongOrdering = std::strong_ordering;
-
-	// ----------------
-
-	M_simple_function_alias(swap, std::swap);
-
-	M_simple_function_alias(minimum, std::min);
-
-	M_simple_function_alias(maximum, std::max);
 
 	// ----------------
 

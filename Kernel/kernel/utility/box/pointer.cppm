@@ -81,13 +81,13 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		implicit operator PointerBox<Target const> &() requires
-			(IsVariableInstance<Target>) {
-			return self_cast<PointerBox<Target const>>(thiz);
+			(IsVariable<Target>) {
+			return unsafe_cast<PointerBox<Target const>>(thiz);
 		}
 
 		implicit operator PointerBox<Target const> const &() const requires
-			(IsVariableInstance<Target>) {
-			return self_cast<PointerBox<Target const>>(thiz);
+			(IsVariable<Target>) {
+			return unsafe_cast<PointerBox<Target const>>(thiz);
 		}
 
 		#pragma endregion
@@ -273,7 +273,7 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> SSize {
-		return mbox<SSize>(thix.value - that.value);
+		return make_box<SSize>(thix.value - that.value);
 	}
 
 	#pragma endregion
@@ -288,22 +288,40 @@ export namespace Twinning::Kernel {
 		return PointerBox<TTarget>{value};
 	}
 
-	template <typename TTarget> requires
-		CategoryConstraint<IsPointable<TTarget>>
-	inline constexpr auto make_pointer_of(
-		TTarget & value
-	) -> PointerBox<TTarget> {
-		return PointerBox<TTarget>{&value};
+	template <typename TTarget, typename TOriginal> requires
+		CategoryConstraint<IsPure<TTarget> && IsPointable<TOriginal>>
+	inline auto make_pointer_unsafe(
+		ZPointer<TOriginal> const & value
+	) -> PointerBox<AsConstantIf<TTarget, IsConstant<TOriginal>>> {
+		return PointerBox<AsConstantIf<TTarget, IsConstant<TOriginal>>>{reinterpret_cast<AsConstantIf<TTarget, IsConstant<TOriginal>> *>(value)};
 	}
 
 	// ----------------
 
-	template <typename TDestinationTarget, typename TSourceTarget> requires
-		CategoryConstraint<IsPure<TDestinationTarget> && IsPointable<TSourceTarget>>
+	template <typename TTarget> requires
+		CategoryConstraint<IsPointable<TTarget>>
+	inline constexpr auto unmake_pointer(
+		PointerBox<TTarget> const & pointer
+	) -> ZPointer<TTarget> {
+		return pointer.value;
+	}
+
+	template <typename TTarget, typename TOriginal> requires
+		CategoryConstraint<IsPure<TTarget> && IsPointable<TOriginal>>
+	inline auto unmake_pointer_unsafe(
+		PointerBox<TOriginal> const & pointer
+	) -> ZPointer<AsConstantIf<TTarget, IsConstant<TOriginal>>> {
+		return reinterpret_cast<AsConstantIf<TTarget, IsConstant<TOriginal>> *>(pointer.value);
+	}
+
+	// ----------------
+
+	template <typename TDestination, typename TSource> requires
+		CategoryConstraint<IsPure<TDestination> && IsPointable<TSource>>
 	inline auto cast_pointer(
-		PointerBox<TSourceTarget> const & source
-	) -> PointerBox<AsConstantIf<TDestinationTarget, IsConstantInstance<TSourceTarget>>> {
-		return self_cast<PointerBox<AsConstantIf<TDestinationTarget, IsConstantInstance<TSourceTarget>>>>(source);
+		PointerBox<TSource> const & source
+	) -> PointerBox<AsConstantIf<TDestination, IsConstant<TSource>>> {
+		return unsafe_cast<PointerBox<AsConstantIf<TDestination, IsConstant<TSource>>>>(source);
 	}
 
 	// ----------------
@@ -313,7 +331,7 @@ export namespace Twinning::Kernel {
 	inline auto as_variable_pointer(
 		PointerBox<TTarget> & it
 	) -> PointerBox<AsUnmakeConstant<TTarget>> & {
-		return self_cast<PointerBox<AsUnmakeConstant<TTarget>>>(it);
+		return unsafe_cast<PointerBox<AsUnmakeConstant<TTarget>>>(it);
 	}
 
 	template <typename TTarget> requires
@@ -321,7 +339,7 @@ export namespace Twinning::Kernel {
 	inline auto as_variable_pointer(
 		PointerBox<TTarget> const & it
 	) -> PointerBox<AsUnmakeConstant<TTarget>> const & {
-		return self_cast<PointerBox<AsUnmakeConstant<TTarget>>>(it);
+		return unsafe_cast<PointerBox<AsUnmakeConstant<TTarget>>>(it);
 	}
 
 	// ----------------
@@ -331,7 +349,7 @@ export namespace Twinning::Kernel {
 	inline auto as_constant_pointer(
 		PointerBox<TTarget> & it
 	) -> PointerBox<AsMakeConstant<TTarget>> & {
-		return self_cast<PointerBox<AsMakeConstant<TTarget>>>(it);
+		return unsafe_cast<PointerBox<AsMakeConstant<TTarget>>>(it);
 	}
 
 	template <typename TTarget> requires
@@ -339,7 +357,7 @@ export namespace Twinning::Kernel {
 	inline auto as_constant_pointer(
 		PointerBox<TTarget> const & it
 	) -> PointerBox<AsMakeConstant<TTarget>> const & {
-		return self_cast<PointerBox<AsMakeConstant<TTarget>>>(it);
+		return unsafe_cast<PointerBox<AsMakeConstant<TTarget>>>(it);
 	}
 
 	#pragma endregion

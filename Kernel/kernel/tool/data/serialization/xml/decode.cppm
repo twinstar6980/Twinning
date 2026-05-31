@@ -52,7 +52,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				node.set_text();
 				auto & node_value = node.get_text();
 				node_value.value = make_string_view(raw_text->Value());
-				node_value.cdata = mbox<Boolean>(raw_text->CData());
+				node_value.cdata = make_box<Boolean>(raw_text->CData());
 			}
 			else if (auto raw_comment = raw_node->ToComment()) {
 				node.set_comment();
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			Notation::Xml::Node & value
 		) -> Void {
 			auto raw_document = Third::tinyxml2::XMLDocument{};
-			raw_document.Parse(rubox<ZCharacter const *>(data.begin()), ubox<std::size_t>(data.size()));
+			raw_document.Parse(unmake_pointer_unsafe<ZCharacter>(data.begin()), unmake_box<std::size_t>(data.size()));
 			auto current_child = raw_document.FirstChild();
 			assert_test(current_child != nullptr);
 			auto declaration = current_child->ToDeclaration();

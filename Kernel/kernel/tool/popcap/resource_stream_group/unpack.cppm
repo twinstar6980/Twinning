@@ -30,7 +30,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 			Optional<Path> const & resource_directory
 		) -> Void {
 			data.read_constant(Structure::k_magic_marker);
-			data.read_constant(cbox<Structure::VersionNumber>(t_version.number));
+			data.read_constant(cast_box<Structure::VersionNumber>(t_version.number));
 			auto information_structure = Structure::Information<t_version>{};
 			{
 				data.read(information_structure.header);
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				if constexpr (check_version(t_version, {3})) {
 					assert_test(information_structure.header.unknown_1 == 0_iu32);
 				}
-				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{data.sub_view(cbox<Size>(information_structure.header.resource_information_section_offset), cbox<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{data.sub_view(cast_box<Size>(information_structure.header.resource_information_section_offset), cast_box<Size>(information_structure.header.resource_information_section_size))}));
 			}
 			definition.compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			definition.resource.allocate_full(information_structure.resource_information.size());
@@ -53,16 +53,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				auto compress_resource_data_section = k_false;
 				switch (current_resource_type.value) {
 					case ResourceType::Constant::general().value: {
-						resource_data_section_offset = cbox<Size>(information_structure.header.general_resource_data_section_offset);
-						resource_data_section_size = cbox<Size>(information_structure.header.general_resource_data_section_size);
-						resource_data_section_size_original = cbox<Size>(information_structure.header.general_resource_data_section_size_original);
+						resource_data_section_offset = cast_box<Size>(information_structure.header.general_resource_data_section_offset);
+						resource_data_section_size = cast_box<Size>(information_structure.header.general_resource_data_section_size);
+						resource_data_section_size_original = cast_box<Size>(information_structure.header.general_resource_data_section_size_original);
 						compress_resource_data_section = definition.compression.general;
 						break;
 					}
 					case ResourceType::Constant::texture().value: {
-						resource_data_section_offset = cbox<Size>(information_structure.header.texture_resource_data_section_offset);
-						resource_data_section_size = cbox<Size>(information_structure.header.texture_resource_data_section_size);
-						resource_data_section_size_original = cbox<Size>(information_structure.header.texture_resource_data_section_size_original);
+						resource_data_section_offset = cast_box<Size>(information_structure.header.texture_resource_data_section_offset);
+						resource_data_section_size = cast_box<Size>(information_structure.header.texture_resource_data_section_size);
+						resource_data_section_size_original = cast_box<Size>(information_structure.header.texture_resource_data_section_size_original);
 						compress_resource_data_section = definition.compression.texture;
 						break;
 					}
@@ -98,14 +98,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						case ResourceType::Constant::texture().value: {
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template get_of_type<ResourceType::Constant::texture()>();
 							auto & resource_additional_definition = resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
-							resource_additional_definition.index = cbox<Integer>(resource_additional_information_structure.index);
-							resource_additional_definition.size.width = cbox<Integer>(resource_additional_information_structure.size_width);
-							resource_additional_definition.size.height = cbox<Integer>(resource_additional_information_structure.size_height);
+							resource_additional_definition.index = cast_box<Integer>(resource_additional_information_structure.index);
+							resource_additional_definition.size.width = cast_box<Integer>(resource_additional_information_structure.size_width);
+							resource_additional_definition.size.height = cast_box<Integer>(resource_additional_information_structure.size_height);
 							break;
 						}
 						default: throw UnreachableException{};
 					}
-					auto resource_data = resource_data_section_view.sub(cbox<Size>(resource_information_structure.value.offset), cbox<Size>(resource_information_structure.value.size));
+					auto resource_data = resource_data_section_view.sub(cast_box<Size>(resource_information_structure.value.offset), cast_box<Size>(resource_information_structure.value.size));
 					if (resource_directory.has()) {
 						if (!Storage::exist_directory(resource_directory.get())) {
 							Storage::create_directory(resource_directory.get());
@@ -118,8 +118,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				}
 			}
 			data.set_position(
-				cbox<Size>(
-					maximum(
+				cast_box<Size>(
+					Range::maximum(
 						make_initializer_list(
 							{
 								information_structure.header.information_section_size,

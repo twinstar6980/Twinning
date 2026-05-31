@@ -98,12 +98,12 @@ export namespace Twinning::Kernel {
 
 		implicit operator ConstantView &() requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		implicit operator ConstantView const &() const requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -174,17 +174,17 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) const -> QualifyIterator {
 			assert_test(index <= thiz.end_index());
-			return QualifyIterator{thiz.m_data + index};
+			return thiz.m_data + index;
 		}
 
 		constexpr auto begin(
 		) const -> QualifyIterator {
-			return QualifyIterator{thiz.m_data + thiz.begin_index()};
+			return thiz.m_data + thiz.begin_index();
 		}
 
 		constexpr auto end(
 		) const -> QualifyIterator {
-			return QualifyIterator{thiz.m_data + thiz.end_index()};
+			return thiz.m_data + thiz.end_index();
 		}
 
 		#pragma endregion

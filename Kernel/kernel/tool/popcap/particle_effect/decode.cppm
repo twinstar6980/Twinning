@@ -92,11 +92,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			auto initial_value = Optional<Floater>{};
 			auto count_with_flag = Integer{};
 			exchange_integer_fixed<IntegerU8>(data, count_with_flag);
-			count = cbox<Size>(count_with_flag & 0b111_i);
+			count = cast_box<Size>(count_with_flag & 0b111_i);
 			if (count == 0b111_sz) {
 				exchange_size_fixed<IntegerS16>(data, count);
 			}
-			flag.from_integer(cbox<IntegerU8>(count_with_flag >> 3_sz));
+			flag.from_integer(cast_box<BitSet<5_sz>::BoundedInteger>(count_with_flag >> 3_sz));
 			value.control = count > 1_sz && flag.get(1_ix);
 			if (!flag.get(2_ix)) {
 				initial_time.reset();
@@ -469,7 +469,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			Definition::Effect &  definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
-			data.read_constant(cbox<VersionNumber>(t_version.number));
+			data.read_constant(cast_box<VersionNumber>(t_version.number));
 			process_effect(data, definition);
 			return;
 		}

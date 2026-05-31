@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 				ripe.write_constant(0x00000000_iu32);
 			}
 			auto header = Header{};
-			header.raw_size = cbox<IntegerOfPlatform>(raw.reserve());
+			header.raw_size = cast_box<IntegerOfPlatform>(raw.reserve());
 			ripe.write(header);
 			Data::Compression::Deflate::Compress::process(raw, ripe, level, window_exponent, memory_level, strategy, Data::Compression::Deflate::WrapperType::Constant::zlib());
 			return;

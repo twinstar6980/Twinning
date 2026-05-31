@@ -148,34 +148,46 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	#pragma region define generic class
 
-	enum class GenericClassDefinitionFlag : ZIntegerU8 {
-		// generic operation
-		default_constructor = 1 << 0,
-		copy_constructor    = 1 << 1,
-		// value operation
-		value_constructor = 1 << 2,
-		value_getter      = 1 << 3,
-		value_setter      = 1 << 4,
-		// mask
-		none_mask    = 0b000'00,
-		all_mask     = 0b111'11,
-		generic_mask = default_constructor | copy_constructor,
-		value_mask   = value_constructor | value_getter | value_setter,
-		default_mask = generic_mask | value_mask,
-	};
+	M_enumeration_specific(
+		M_wrap(GenericClassDefinitionFlag),
+		M_wrap(ZIntegerU8),
+		M_wrap(
+			// generic operation
+			default_constructor,
+			copy_constructor,
+			// value operation
+			value_constructor,
+			value_getter,
+			value_setter,
+			// mask
+			none_mask,
+			all_mask,
+			generic_mask,
+			value_mask,
+			default_mask,
+		),
+		M_wrap(
+			// @formatter:off
+			// generic operation
+			default_constructor = 1 << 0,
+			copy_constructor    = 1 << 1,
+			// value operation
+			value_constructor = 1 << 2,
+			value_getter      = 1 << 3,
+			value_setter      = 1 << 4,
+			// mask
+			none_mask    = 0b000'00,
+			all_mask     = 0b111'11,
+			generic_mask = default_constructor | copy_constructor,
+			value_mask   = value_constructor | value_getter | value_setter,
+			default_mask = generic_mask | value_mask,
+			// @formatter:on
+		),
+	);
 
 	// ----------------
 
-	inline constexpr auto operator *(
-		GenericClassDefinitionFlag const & thix,
-		GenericClassDefinitionFlag const & that
-	) -> Boolean {
-		return mbox<Boolean>(static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(thix) & static_cast<std::underlying_type_t<GenericClassDefinitionFlag>>(that));
-	}
-
-	// ----------------
-
-	template <typename TClass, auto t_flag = GenericClassDefinitionFlag::default_mask> requires
+	template <typename TClass, auto t_flag = GenericClassDefinitionFlag::Constant::default_mask()> requires
 		CategoryConstraint<IsPureInstance<TClass>>
 		&& (IsSameOf<t_flag, GenericClassDefinitionFlag>)
 	inline auto define_generic_class(
@@ -191,15 +203,18 @@ export namespace Twinning::Kernel::Executor::Environment {
 				}
 			>
 		>();
-		if constexpr (t_flag * GenericClassDefinitionFlag::default_constructor) {
+		constexpr auto check = [](GenericClassDefinitionFlag const & value) -> Boolean {
+			return make_box<Boolean>((t_flag.underlying() & value.underlying()) != make_box<GenericClassDefinitionFlag::Underlying>(0));
+		};
+		if constexpr (check(GenericClassDefinitionFlag::Constant::default_constructor())) {
 			// NOTE: EXPLAIN: static default(): T;
 			builder.template add_constructor_allocate_proxy<>("default"_s);
 		}
-		if constexpr (t_flag * GenericClassDefinitionFlag::copy_constructor) {
+		if constexpr (check(GenericClassDefinitionFlag::Constant::copy_constructor())) {
 			// NOTE: EXPLAIN: static copy(it: T): T;
 			builder.template add_constructor_allocate_proxy<TClass const &>("copy"_s);
 		}
-		if constexpr (t_flag * GenericClassDefinitionFlag::value_constructor) {
+		if constexpr (check(GenericClassDefinitionFlag::Constant::value_constructor())) {
 			// NOTE: EXPLAIN: static value(it: typeof T.Value): T;
 			builder.template add_constructor<
 				&normalized_lambda<
@@ -211,8 +226,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 				>
 			>("value"_s);
 		}
-		if constexpr (t_flag * GenericClassDefinitionFlag::value_getter || t_flag * GenericClassDefinitionFlag::value_setter) {
-			static_assert(t_flag * GenericClassDefinitionFlag::value_getter);
+		if constexpr (check(GenericClassDefinitionFlag::Constant::value_getter()) || check(GenericClassDefinitionFlag::Constant::value_setter())) {
+			static_assert(check(GenericClassDefinitionFlag::Constant::value_getter()));
 			// NOTE: EXPLAIN: get value(): typeof T.Value;
 			constexpr auto & getter = normalized_lambda<
 				[](
@@ -222,7 +237,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					return thix.value();
 				}
 			>;
-			if constexpr (!(t_flag * GenericClassDefinitionFlag::value_setter)) {
+			if constexpr (!check(GenericClassDefinitionFlag::Constant::value_setter())) {
 				builder.template add_getter<&getter>("value"_s);
 			}
 			else {
@@ -232,7 +247,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					Script::JavaScript::NativeValueHandler<TClass> & thix,
 					TClass &                                         value
 				) -> Void {
-						// NOTE: EXPLAIN: some type has not copy assignment
+						// NOTE: EXPLAIN: some type has not the copy assignment
 						restruct(thix.value(), value);
 						return;
 					}
@@ -248,7 +263,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 	inline auto define_variant_class_version_method(
 		Script::JavaScript::NativeClassBuilder<TClass> & builder
 	) -> Script::JavaScript::NativeClassBuilder<TClass> & {
-		// NOTE: EXPLAIN: static json(json: Json.Value, version: Version): T;
+		// NOTE: EXPLAIN: static json(json: Notation.Json.Value, version: Version): T;
 		constexpr auto & json_constructor = Script::JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[](
@@ -259,14 +274,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 					Generalization::match<TVersionPackage>(
 						version,
 						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
-							json.to(it, mbox<Size>(t_index));
+							json.to(it, make_box<Size>(t_index));
 						}
 					);
 					return it;
 				}
 			>
 		>;
-		// NOTE: EXPLAIN: get_json(version: Version): Json.Value;
+		// NOTE: EXPLAIN: get_json(version: Version): Notation.Json.Value;
 		constexpr auto & json_getter = Script::JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[](
@@ -277,14 +292,14 @@ export namespace Twinning::Kernel::Executor::Environment {
 					Generalization::match<TVersionPackage>(
 						version,
 						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
-							json.from(thix, mbox<Size>(t_index));
+							json.from(thix, make_box<Size>(t_index));
 						}
 					);
 					return json;
 				}
 			>
 		>;
-		// NOTE: EXPLAIN: set_json(version: Version, value: Json.Value);
+		// NOTE: EXPLAIN: set_json(version: Version, value: Notation.Json.Value);
 		constexpr auto & json_setter = Script::JavaScript::proxy_native_function_by_handler<
 			&normalized_lambda<
 				[](
@@ -295,7 +310,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					Generalization::match<TVersionPackage>(
 						version,
 						[&]<auto t_index, auto t_version>(ValuePackage<t_index>, ValuePackage<t_version>) {
-							json.to(thix, mbox<Size>(t_index));
+							json.to(thix, make_box<Size>(t_index));
 						}
 					);
 					return;
@@ -324,31 +339,29 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 		template <typename TType> requires
 			NoneConstraint
-		using AsPromotion = AsSwitch<
-			IsSame<TType, ConstantStringView, VariableStringView>,
-			String,
-			AsSwitch<
-				IsSame<TType, ConstantByteListView>,
-				VariableByteListView,
-				AsSwitch<
-					IsSame<TType, InputByteStreamView, OutputByteStreamView>,
-					AccessByteStreamView,
-					AsSwitch<
-						IsSame<TType, ConstantCharacterListView>,
-						VariableCharacterListView,
-						AsSwitch<
-							IsSame<TType, InputCharacterStreamView, OutputCharacterStreamView>,
-							AccessCharacterStreamView,
-							AsSwitch<
-								IsSame<TType, Image::ConstantImageView>,
-								Image::VariableImageView,
-								TType
-							>
-						>
-					>
-				>
-			>
-		>;
+		using AsPromotion = decltype([]<typename = None> {
+			if constexpr (IsSame<TType, ConstantStringView, VariableStringView>) {
+				return declare<String>();
+			}
+			else if constexpr (IsSame<TType, ConstantByteListView>) {
+				return declare<VariableByteListView>();
+			}
+			else if constexpr (IsSame<TType, InputByteStreamView, OutputByteStreamView>) {
+				return declare<AccessByteStreamView>();
+			}
+			else if constexpr (IsSame<TType, ConstantCharacterListView>) {
+				return declare<VariableCharacterListView>();
+			}
+			else if constexpr (IsSame<TType, InputCharacterStreamView, OutputCharacterStreamView>) {
+				return declare<AccessCharacterStreamView>();
+			}
+			else if constexpr (IsSame<TType, Image::ConstantImageView>) {
+				return declare<Image::VariableImageView>();
+			}
+			else {
+				return declare<TType>();
+			}
+		}());
 
 		template <auto t_function, auto ... t_index> requires
 			NoneConstraint
@@ -385,6 +398,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 	inline auto inject(
 		Context & context
 	) -> Void {
+		// @formatter:off
 		// ReSharper disable CppInconsistentNaming CppTooWideScope
 		auto s_Twinning = Script::JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_left(context.context().global_object())};
 		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
@@ -427,7 +441,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableByteListView, &VariableByteListView::size>>("size"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableByteListView, AsConstantMemberFunction<VariableByteListView, VariableByteListView, Size const &, Size const &>{&VariableByteListView::sub}>>("sub"_s);
 		// ByteStreamView
-		define_generic_class<AccessByteStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "ByteStreamView"_s)
+		define_generic_class<AccessByteStreamView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "ByteStreamView"_s)
 			.add_constructor_allocate_proxy<VariableByteListView const &>("watch"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::size>>("size"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::position>>("position"_s)
@@ -435,11 +449,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::view>>("view"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::stream_view>>("stream_view"_s);
 		// CharacterListView
-		define_generic_class<VariableCharacterListView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterListView"_s)
+		define_generic_class<VariableCharacterListView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "CharacterListView"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableCharacterListView, &VariableCharacterListView::size>>("size"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableCharacterListView, AsConstantMemberFunction<VariableCharacterListView, VariableCharacterListView, Size const &, Size const &>{&VariableCharacterListView::sub}>>("sub"_s);
 		// CharacterStreamView
-		define_generic_class<AccessCharacterStreamView, GenericClassDefinitionFlag::generic_mask>(s_Kernel, "CharacterStreamView"_s)
+		define_generic_class<AccessCharacterStreamView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "CharacterStreamView"_s)
 			.add_constructor_allocate_proxy<VariableCharacterListView const &>("watch"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::size>>("size"_s)
 			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::position>>("position"_s)
@@ -469,12 +483,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 			define_generic_class<Optional<Image::Color>>(s_Image, "ColorOptional"_s);
 			define_generic_class<List<Image::Color>>(s_Image, "ColorList"_s);
 			define_generic_class<Image::Pixel>(s_Image, "Pixel"_s);
-			define_generic_class<Image::VariableImageView, GenericClassDefinitionFlag::generic_mask>(s_Image, "ImageView"_s)
+			define_generic_class<Image::VariableImageView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Image, "ImageView"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::size>>("size"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::fill>>("fill"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::draw>>("draw"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::VariableImageView, &Image::VariableImageView::sub>>("sub"_s);
-			define_generic_class<Image::Image, GenericClassDefinitionFlag::generic_mask>(s_Image, "Image"_s)
+			define_generic_class<Image::Image, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Image, "Image"_s)
 				.add_constructor_allocate_proxy<Image::ImageSize const &>("allocate"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::allocate>>("allocate"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::reset>>("reset"_s)
@@ -754,7 +768,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_SoundBank, "Version"_s);
 					{
 						auto s_Definition = s_SoundBank.add_space("Definition"_s);
-						auto c_SoundBank = define_generic_class<SoundBankDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "SoundBank"_s);
+						auto c_SoundBank = define_generic_class<SoundBankDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "SoundBank"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_SoundBank);
 					}
 					s_SoundBank.add_space("Encode"_s)
@@ -768,7 +782,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::SoundBank::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), embedded_media_directory);
+										Tool::Wwise::SoundBank::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>(), embedded_media_directory);
 									}
 								);
 							}
@@ -784,7 +798,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Wwise::SoundBank::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), embedded_media_directory);
+										Tool::Wwise::SoundBank::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>(), embedded_media_directory);
 									}
 								);
 							}
@@ -805,7 +819,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Dzip, "Version"_s);
 					{
 						auto s_Definition = s_Dzip.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_Dzip.add_space("Pack"_s)
@@ -819,7 +833,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Marmalade::Dzip::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Marmalade::Dzip::Pack<version>::process(data, definition.get_of_index<make_box<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -835,7 +849,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Marmalade::Dzip::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Marmalade::Dzip::Unpack<version>::process(data, definition.set_of_index<make_box<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1174,7 +1188,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Animation, "Version"_s);
 					{
 						auto s_Definition = s_Animation.add_space("Definition"_s);
-						auto c_Animation = define_generic_class<AnimationDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Animation"_s);
+						auto c_Animation = define_generic_class<AnimationDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
 					s_Animation.add_space("Encode"_s)
@@ -1187,7 +1201,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Animation::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Animation::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1202,7 +1216,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Animation::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Animation::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1222,7 +1236,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ReAnimation, "Version"_s);
 					{
 						auto s_Definition = s_ReAnimation.add_space("Definition"_s);
-						auto c_Animation = define_generic_class<AnimationDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Animation"_s);
+						auto c_Animation = define_generic_class<AnimationDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Animation"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
 					s_ReAnimation.add_space("Encode"_s)
@@ -1235,7 +1249,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ReAnimation::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ReAnimation::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1250,7 +1264,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ReAnimation::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ReAnimation::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1270,7 +1284,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Particle, "Version"_s);
 					{
 						auto s_Definition = s_Particle.add_space("Definition"_s);
-						auto c_Particle = define_generic_class<ParticleDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Particle"_s);
+						auto c_Particle = define_generic_class<ParticleDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Particle"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
 					}
 					s_Particle.add_space("Encode"_s)
@@ -1283,7 +1297,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Particle::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Particle::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1298,7 +1312,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Particle::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Particle::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1318,7 +1332,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Trail, "Version"_s);
 					{
 						auto s_Definition = s_Trail.add_space("Definition"_s);
-						auto c_Trail = define_generic_class<TrailDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Trail"_s);
+						auto c_Trail = define_generic_class<TrailDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Trail"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Trail);
 					}
 					s_Trail.add_space("Encode"_s)
@@ -1331,7 +1345,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Trail::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Trail::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1346,7 +1360,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Trail::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::Trail::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1365,7 +1379,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_RenderEffect, "Version"_s);
 					{
 						auto s_Definition = s_RenderEffect.add_space("Definition"_s);
-						auto c_Effect = define_generic_class<EffectDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Effect"_s);
+						auto c_Effect = define_generic_class<EffectDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Effect"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
 					s_RenderEffect.add_space("Encode"_s)
@@ -1378,7 +1392,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::RenderEffect::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::RenderEffect::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1393,7 +1407,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::RenderEffect::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::RenderEffect::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1410,7 +1424,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ParticleEffect, "Version"_s);
 					{
 						auto s_Definition = s_ParticleEffect.add_space("Definition"_s);
-						auto c_Effect = define_generic_class<EffectDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Effect"_s);
+						auto c_Effect = define_generic_class<EffectDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Effect"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
 					s_ParticleEffect.add_space("Encode"_s)
@@ -1423,7 +1437,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ParticleEffect::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ParticleEffect::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1438,7 +1452,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ParticleEffect::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::ParticleEffect::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1455,7 +1469,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_CharacterFontWidget2, "Version"_s);
 					{
 						auto s_Definition = s_CharacterFontWidget2.add_space("Definition"_s);
-						auto c_FontWidget = define_generic_class<FontWidgetDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "FontWidget"_s);
+						auto c_FontWidget = define_generic_class<FontWidgetDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "FontWidget"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
 					}
 					s_CharacterFontWidget2.add_space("Encode"_s)
@@ -1468,7 +1482,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CharacterFontWidget2::Encode<version>::process(data, definition.get_of_index<mbox<Size>(index)>());
+										Tool::Popcap::CharacterFontWidget2::Encode<version>::process(data, definition.get_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1483,7 +1497,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CharacterFontWidget2::Decode<version>::process(data, definition.set_of_index<mbox<Size>(index)>());
+										Tool::Popcap::CharacterFontWidget2::Decode<version>::process(data, definition.set_of_index<make_box<Size>(index)>());
 									}
 								);
 							}
@@ -1501,7 +1515,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_Package, "Version"_s);
 					{
 						auto s_Definition = s_Package.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_Package.add_space("Pack"_s)
@@ -1515,7 +1529,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Package::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::Package::Pack<version>::process(data, definition.get_of_index<make_box<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1531,7 +1545,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::Package::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::Package::Unpack<version>::process(data, definition.set_of_index<make_box<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1550,7 +1564,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ResourceStreamGroup, "Version"_s);
 					{
 						auto s_Definition = s_ResourceStreamGroup.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_ResourceStreamGroup.add_space("Pack"_s)
@@ -1564,7 +1578,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ResourceStreamGroup::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::ResourceStreamGroup::Pack<version>::process(data, definition.get_of_index<make_box<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1580,7 +1594,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ResourceStreamGroup::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), resource_directory);
+										Tool::Popcap::ResourceStreamGroup::Unpack<version>::process(data, definition.set_of_index<make_box<Size>(index)>(), resource_directory);
 									}
 								);
 							}
@@ -1611,12 +1625,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 					define_generic_class<Version>(s_ResourceStreamBundle, "Version"_s);
 					{
 						auto s_Definition = s_ResourceStreamBundle.add_space("Definition"_s);
-						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::generic_mask>(s_Definition, "Package"_s);
+						auto c_Package = define_generic_class<PackageDefinition, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Definition, "Package"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					{
 						auto s_Manifest = s_ResourceStreamBundle.add_space("Manifest"_s);
-						auto c_PackageOptional = define_generic_class<PackageManifestOptional, GenericClassDefinitionFlag::generic_mask>(s_Manifest, "PackageOptional"_s);
+						auto c_PackageOptional = define_generic_class<PackageManifestOptional, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Manifest, "PackageOptional"_s);
 						define_variant_class_version_method<Version, VersionPackage>(c_PackageOptional);
 					}
 					s_ResourceStreamBundle.add_space("Pack"_s)
@@ -1633,7 +1647,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ResourceStreamBundle::Pack<version>::process(data, definition.get_of_index<mbox<Size>(index)>(), manifest.get_of_index<mbox<Size>(index)>(), resource_directory, packet_file, new_packet_file);
+										Tool::Popcap::ResourceStreamBundle::Pack<version>::process(data, definition.get_of_index<make_box<Size>(index)>(), manifest.get_of_index<make_box<Size>(index)>(), resource_directory, packet_file, new_packet_file);
 									}
 								);
 							}
@@ -1651,7 +1665,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::ResourceStreamBundle::Unpack<version>::process(data, definition.set_of_index<mbox<Size>(index)>(), manifest.set_of_index<mbox<Size>(index)>(), resource_directory, packet_file);
+										Tool::Popcap::ResourceStreamBundle::Unpack<version>::process(data, definition.set_of_index<make_box<Size>(index)>(), manifest.set_of_index<make_box<Size>(index)>(), resource_directory, packet_file);
 									}
 								);
 							}
@@ -1722,13 +1736,13 @@ export namespace Twinning::Kernel::Executor::Environment {
 		// Miscellaneous
 		{
 			auto s_Miscellaneous = s_Kernel.add_space("Miscellaneous"_s);
-			define_generic_class<Thread::Thread, GenericClassDefinitionFlag::default_constructor>(s_Miscellaneous, "Thread"_s)
+			define_generic_class<Thread::Thread, GenericClassDefinitionFlag::Constant::default_constructor()>(s_Miscellaneous, "Thread"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Thread::Thread, &Thread::Thread::joinable>>("joinable"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Thread::Thread, &Thread::Thread::join>>("join"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Thread::Thread, &Thread::Thread::detach>>("detach"_s)
 				.add_static_function_proxy<&proxy_global_function_with_promotion<&Thread::Thread::yield>>("yield"_s)
 				.add_static_function_proxy<&proxy_global_function_with_promotion<&Thread::Thread::sleep>>("sleep"_s);
-			define_generic_class<Context, GenericClassDefinitionFlag::none_mask>(s_Miscellaneous, "Context"_s)
+			define_generic_class<Context, GenericClassDefinitionFlag::Constant::none_mask()>(s_Miscellaneous, "Context"_s)
 				.add_member_function<
 					&normalized_lambda<
 						[](
@@ -1804,7 +1818,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						[](
 						VariableByteListView & it
 					) -> VariableCharacterListView {
-							return self_cast<VariableCharacterListView>(it);
+							return unsafe_cast<VariableCharacterListView>(it);
 						}
 					>
 				>("cast_ByteListView_to_CharacterListView"_s)
@@ -1813,7 +1827,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 						[](
 						VariableCharacterListView & it
 					) -> VariableByteListView {
-							return self_cast<VariableByteListView>(it);
+							return unsafe_cast<VariableByteListView>(it);
 						}
 					>
 				>("cast_CharacterListView_to_ByteListView"_s)
@@ -1866,6 +1880,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
 		}
 		// ReSharper restore CppInconsistentNaming
+		// @formatter:on
 		return;
 	}
 

@@ -24,16 +24,16 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 			ConstantByteListView const & key,
 			ConstantByteListView const & initialization_vector
 		) -> Void {
-			assert_test(is_padded_size(cipher.reserve(), cbox<Size>(block_size)));
+			assert_test(is_padded_size(cipher.reserve(), cast_box<Size>(block_size)));
 			assert_test(is_valid_block_size(block_size));
-			assert_test(is_valid_block_size(cbox<Integer>(key.size())));
-			assert_test(is_padded_size(bs_size(initialization_vector) * k_type_bit_count<Character>, cbox<Size>(block_size)));
-			auto initialization_vector_view = mode == Mode::Constant::ecb() ? (k_empty_initialization_vector.view().head(cbox<Size>(block_size))) : (initialization_vector);
+			assert_test(is_valid_block_size(cast_box<Integer>(key.size())));
+			assert_test(is_padded_size(bs_size(initialization_vector) * k_type_bit_count<Character>, cast_box<Size>(block_size)));
+			auto initialization_vector_view = mode == Mode::Constant::ecb() ? (k_empty_initialization_vector.view().head(cast_box<Size>(block_size))) : (initialization_vector);
 			auto cipher_size = cipher.reserve();
 			if (cipher_size != 0_sz) {
 				auto rijndael = Third::Rijndael::CRijndael{};
-				rijndael.MakeKey(rubox<char const *>(key.begin()), rubox<char const *>(initialization_vector_view.begin()), ubox<int>(key.size()), ubox<int>(block_size));
-				rijndael.Decrypt(rubox<char const *>(cipher.current_pointer()), rubox<char *>(plain.current_pointer()), ubox<std::size_t>(cipher.reserve()), ubox<int>(mode));
+				rijndael.MakeKey(unmake_pointer_unsafe<char>(key.begin()), unmake_pointer_unsafe<char>(initialization_vector_view.begin()), unmake_box<int>(key.size()), unmake_box<int>(block_size));
+				rijndael.Decrypt(unmake_pointer_unsafe<char>(cipher.current_pointer()), unmake_pointer_unsafe<char>(plain.current_pointer()), unmake_box<std::size_t>(cipher.reserve()), unmake_box<int>(mode));
 			}
 			cipher.forward(cipher_size);
 			plain.forward(cipher_size);

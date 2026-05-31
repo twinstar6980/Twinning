@@ -58,10 +58,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		inline static auto move_printer_buffer_if_can(
 			Third::tinyxml2::XMLPrinter & printer
 		) -> String {
-			auto & printer_imitator = self_cast<TinyXml2PrinterImitator>(printer);
-			auto   buffer_data = cast_pointer<Character>(make_pointer(printer_imitator._buffer._mem));
-			auto   buffer_size = mbox<Size>(printer_imitator._buffer._size);
-			auto   buffer_capacity = mbox<Size>(printer_imitator._buffer._allocated);
+			auto & printer_imitator = unsafe_cast<TinyXml2PrinterImitator>(printer);
+			auto   buffer_data = make_pointer_unsafe<Character>(printer_imitator._buffer._mem);
+			auto   buffer_size = make_box<Size>(printer_imitator._buffer._size);
+			auto   buffer_capacity = make_box<Size>(printer_imitator._buffer._allocated);
 			auto   result = String{};
 			assert_test(buffer_size > 0_sz);
 			if (printer_imitator._buffer._mem == printer_imitator._buffer._pool) {

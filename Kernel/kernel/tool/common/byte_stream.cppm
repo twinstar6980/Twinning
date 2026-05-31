@@ -273,7 +273,7 @@ export namespace Twinning::Kernel::Tool {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				value.index().value,
 				[&]<auto t_index, auto t_value_index>(ValuePackage<t_index>, ValuePackage<t_value_index>) {
-					value_exchanger(data, value.template get_of_index<mbox<Size>(t_value_index)>());
+					value_exchanger(data, value.template get_of_index<make_box<Size>(t_value_index)>());
 				}
 			);
 			return;
@@ -420,10 +420,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Boolean>(raw_value);
+				value = cast_box<Boolean>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -439,10 +439,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Integer>(raw_value);
+				value = cast_box<Integer>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -458,10 +458,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Floater>(raw_value);
+				value = cast_box<Floater>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -477,10 +477,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Size>(raw_value);
+				value = cast_box<Size>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -496,10 +496,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Character>(raw_value);
+				value = cast_box<Character>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -515,10 +515,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Unicode>(raw_value);
+				value = cast_box<Unicode>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -534,10 +534,10 @@ export namespace Twinning::Kernel::Tool {
 			auto raw_value = TRawValue{};
 			if constexpr (t_mode == StreamMode::Constant::input()) {
 				exchange_raw(data, raw_value);
-				value = cbox<Enumerated>(raw_value);
+				value = cast_box<Enumerated>(raw_value);
 			}
 			if constexpr (t_mode == StreamMode::Constant::output()) {
-				raw_value = cbox<TRawValue>(value);
+				raw_value = cast_box<TRawValue>(value);
 				exchange_raw(data, raw_value);
 			}
 			return;
@@ -550,7 +550,7 @@ export namespace Twinning::Kernel::Tool {
 			ExchangeableByteStreamView & data,
 			ExchangeableValue<String> &  value
 		) -> Void {
-			exchange_raw(data, self_cast<StringBlock<TRawSizeValue>>(value));
+			exchange_raw(data, unsafe_cast<StringBlock<TRawSizeValue>>(value));
 			return;
 		}
 

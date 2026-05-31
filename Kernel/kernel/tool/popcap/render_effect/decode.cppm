@@ -67,7 +67,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			string_chunk_data.set_position(string_offset);
 			exchange_string_block<Void>(string_chunk_data, value.string);
 			assert_test(value.string.size() == string_size);
-			string_chunk_size = maximum(string_chunk_size, string_chunk_data.position());
+			string_chunk_size = Math::maximum(string_chunk_size, string_chunk_data.position());
 			return;
 		}
 
@@ -221,7 +221,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			Definition::Effect &  definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
-			data.read_constant(cbox<VersionNumber>(t_version.number));
+			data.read_constant(cast_box<VersionNumber>(t_version.number));
 			exchange_effect(data, definition);
 			return;
 		}

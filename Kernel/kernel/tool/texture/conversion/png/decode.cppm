@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			Third::libpng::$png_set_read_fn(png_struct, &data, &png_read_data);
 			auto png_info = Third::libpng::$png_create_info_struct(png_struct);
 			Third::libpng::$png_read_info(png_struct, png_info);
-			assert_test(image.size() == Image::ImageSize{mbox<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), mbox<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))});
+			assert_test(image.size() == Image::ImageSize{make_box<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))});
 			auto png_bit_depth = Third::libpng::$png_get_bit_depth(png_struct, png_info);
 			switch (Third::libpng::$png_get_color_type(png_struct, png_info)) {
 				case Third::libpng::$PNG_COLOR_TYPE_PALETTE: {
@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 				Third::libpng::$png_set_gamma(png_struct, Third::libpng::$PNG_DEFAULT_sRGB, 0.45455);
 			}
 			for (auto & row : image.data()) {
-				Third::libpng::$png_read_row(png_struct, rubox<Third::libpng::$png_bytep>(row.begin()), nullptr);
+				Third::libpng::$png_read_row(png_struct, unmake_pointer_unsafe<Third::libpng::$png_byte>(row.begin()), nullptr);
 			}
 			Third::libpng::$png_read_end(png_struct, png_info);
 			Third::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
@@ -100,7 +100,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			Third::libpng::$png_set_read_fn(png_struct, &stream, &png_read_data);
 			auto png_info = Third::libpng::$png_create_info_struct(png_struct);
 			Third::libpng::$png_read_info(png_struct, png_info);
-			image_size = Image::ImageSize{mbox<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), mbox<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))};
+			image_size = Image::ImageSize{make_box<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))};
 			Third::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
 			return;
 		}

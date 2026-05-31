@@ -53,37 +53,37 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_c8(
 		ZLiteralInteger value
 	) -> Character8 {
-		return mbox<Character8>(value);
+		return make_box<Character8>(value);
 	}
 
 	inline constexpr auto operator ""_c8(
 		ZLiteralCharacter value
 	) -> Character8 {
-		return mbox<Character8>(value);
+		return make_box<Character8>(value);
 	}
 
 	inline constexpr auto operator ""_c16(
 		ZLiteralInteger value
 	) -> Character16 {
-		return mbox<Character16>(value);
+		return make_box<Character16>(value);
 	}
 
 	inline constexpr auto operator ""_c16(
 		ZLiteralCharacter value
 	) -> Character16 {
-		return mbox<Character16>(value);
+		return make_box<Character16>(value);
 	}
 
 	inline constexpr auto operator ""_c32(
 		ZLiteralInteger value
 	) -> Character32 {
-		return mbox<Character32>(value);
+		return make_box<Character32>(value);
 	}
 
 	inline constexpr auto operator ""_c32(
 		ZLiteralCharacter value
 	) -> Character32 {
-		return mbox<Character32>(value);
+		return make_box<Character32>(value);
 	}
 
 	// ----------------
@@ -91,25 +91,25 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_cn(
 		ZLiteralInteger value
 	) -> CharacterN {
-		return mbox<CharacterN>(value);
+		return make_box<CharacterN>(value);
 	}
 
 	inline constexpr auto operator ""_cn(
 		ZLiteralCharacter value
 	) -> CharacterN {
-		return mbox<CharacterN>(value);
+		return make_box<CharacterN>(value);
 	}
 
 	inline constexpr auto operator ""_cw(
 		ZLiteralInteger value
 	) -> CharacterW {
-		return mbox<CharacterW>(value);
+		return make_box<CharacterW>(value);
 	}
 
 	inline constexpr auto operator ""_cw(
 		ZLiteralCharacter value
 	) -> CharacterW {
-		return mbox<CharacterW>(value);
+		return make_box<CharacterW>(value);
 	}
 
 	// ----------------
@@ -117,25 +117,25 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_c(
 		ZLiteralInteger value
 	) -> Character {
-		return mbox<Character>(value);
+		return make_box<Character>(value);
 	}
 
 	inline constexpr auto operator ""_c(
 		ZLiteralCharacter value
 	) -> Character {
-		return mbox<Character>(value);
+		return make_box<Character>(value);
 	}
 
 	inline constexpr auto operator ""_u(
 		ZLiteralInteger value
 	) -> Unicode {
-		return mbox<Unicode>(value);
+		return make_box<Unicode>(value);
 	}
 
 	inline constexpr auto operator ""_u(
 		ZLiteralCharacter value
 	) -> Unicode {
-		return mbox<Unicode>(value);
+		return make_box<Unicode>(value);
 	}
 
 	#pragma endregion

@@ -63,11 +63,11 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]] {
-				std::memcpy(rubox<void *>(thix.current_pointer()), &that, ubox<std::size_t>(k_type_size<TValue>));
+				std::memcpy(unmake_pointer_unsafe<void>(thix.current_pointer()), &that, unmake_box<std::size_t>(k_type_size<TValue>));
 			}
 			else [[unlikely]] {
 				auto that_reversed = reverse_bit(that);
-				std::memcpy(rubox<void *>(thix.current_pointer()), &that_reversed, ubox<std::size_t>(k_type_size<TValue>));
+				std::memcpy(unmake_pointer_unsafe<void>(thix.current_pointer()), &that_reversed, unmake_box<std::size_t>(k_type_size<TValue>));
 			}
 			thix.forward(k_type_size<TValue>);
 			return;
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			std::memcpy(&that, rubox<void const *>(thix.current_pointer()), ubox<std::size_t>(k_type_size<TValue>));
+			std::memcpy(&that, unmake_pointer_unsafe<void>(thix.current_pointer()), unmake_box<std::size_t>(k_type_size<TValue>));
 			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]] {
 				that = reverse_bit(that);
 			}
@@ -118,7 +118,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
 			using RawBox = IntegerBox<std::make_unsigned_t<RawValueAlternative>>;
-			thix.write(self_cast<RawBox>(that));
+			thix.write(unsafe_cast<RawBox>(that));
 			return;
 		}
 
@@ -128,8 +128,8 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			using RawValueAlternative = AsSwitch<IsSame<TValue, ZBoolean>, ZIntegerU8, TValue>;
 			using RawBox = IntegerBox<std::make_unsigned_t<RawValueAlternative>>;
-			thix.read(self_cast<RawBox>(that));
-			assert_test((self_cast<RawBox>(that) & ~mbox<RawBox>(0b1)) == mbox<RawBox>(0b0));
+			thix.read(unsafe_cast<RawBox>(that));
+			assert_test((unsafe_cast<RawBox>(that) & ~make_box<RawBox>(0b1)) == make_box<RawBox>(0b0));
 			return;
 		}
 
@@ -241,6 +241,16 @@ export namespace Twinning::Kernel {
 	template <>
 	struct ByteStreamAdapter<Enumerated> :
 		ByteStreamAdapter<Enumerated8> {
+
+	};
+
+	template <typename TType> requires
+		AutomaticConstraint
+		&& (IsEnumerationBox<TType>)
+		&& (IsDerivedFrom<TType, Enumeration<typename TType::Value>>)
+		&& (!IsSame<TType, Enumeration<typename TType::Value>>)
+	struct ByteStreamAdapter<TType> :
+		ByteStreamAdapter<EnumerationBox<typename TType::Value>> {
 
 	};
 
@@ -727,11 +737,11 @@ export namespace Twinning::Kernel {
 			That const & that
 		) -> Void {
 			if constexpr (IsVoid<TLength>) {
-				StringParser::write_string_until(self_cast<OutputCharacterStreamView>(thix), that.value.as_view(), CharacterType::k_null);
-				self_cast<OutputCharacterStreamView>(thix).write_constant(CharacterType::k_null);
+				StringParser::write_string_until(unsafe_cast<OutputCharacterStreamView>(thix), that.value.as_view(), CharacterType::k_null);
+				unsafe_cast<OutputCharacterStreamView>(thix).write_constant(CharacterType::k_null);
 			}
 			else {
-				thix.write(cbox<TLength>(that.value.size()));
+				thix.write(cast_box<TLength>(that.value.size()));
 				thix.write(that.value);
 			}
 			return;
@@ -743,13 +753,13 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			if constexpr (IsVoid<TLength>) {
 				auto that_view = ConstantStringView{};
-				StringParser::read_string_until(self_cast<InputCharacterStreamView>(thix), that_view, CharacterType::k_null);
-				self_cast<InputCharacterStreamView>(thix).read_constant(CharacterType::k_null);
+				StringParser::read_string_until(unsafe_cast<InputCharacterStreamView>(thix), that_view, CharacterType::k_null);
+				unsafe_cast<InputCharacterStreamView>(thix).read_constant(CharacterType::k_null);
 				that.value = that_view;
 			}
 			else {
 				auto length = thix.read_of<TLength>();
-				thix.read(that.value, cbox<Size>(length));
+				thix.read(that.value, cast_box<Size>(length));
 			}
 			return;
 		}

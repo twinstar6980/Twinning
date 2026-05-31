@@ -186,14 +186,14 @@ export namespace Twinning::Kernel::CharacterType {
 		Character const & character
 	) -> IntegerU8 {
 		assert_test(is_number_octal(character));
-		return cbox<IntegerU8>(character - '0'_c);
+		return cast_box<IntegerU8>(character - '0'_c);
 	}
 
 	inline constexpr auto to_number_octal(
 		IntegerU8 const & number
 	) -> Character {
 		assert_test(number < 010_iu8);
-		return '0'_c + cbox<Character>(number);
+		return '0'_c + cast_box<Character>(number);
 	}
 
 	// ----------------
@@ -202,13 +202,13 @@ export namespace Twinning::Kernel::CharacterType {
 		Character const & character
 	) -> IntegerU8 {
 		if (is_letter_hexadecimal_lower(character)) {
-			return 0xa_iu8 + cbox<IntegerU8>(character - 'a'_c);
+			return 0xa_iu8 + cast_box<IntegerU8>(character - 'a'_c);
 		}
 		else if (is_letter_hexadecimal_upper(character)) {
-			return 0xA_iu8 + cbox<IntegerU8>(character - 'A'_c);
+			return 0xA_iu8 + cast_box<IntegerU8>(character - 'A'_c);
 		}
 		else if (is_number_decimal(character)) {
-			return 0x0_iu8 + cbox<IntegerU8>(character - '0'_c);
+			return 0x0_iu8 + cast_box<IntegerU8>(character - '0'_c);
 		}
 		else {
 			assert_fail(R"(/* number is valid */)");
@@ -220,10 +220,10 @@ export namespace Twinning::Kernel::CharacterType {
 	) -> Character {
 		assert_test(number < 0x10_iu8);
 		if (number >= 0xa_iu8) {
-			return 'a'_c + cbox<Character>(number - 0xa_iu8);
+			return 'a'_c + cast_box<Character>(number - 0xa_iu8);
 		}
 		else {
-			return '0'_c + cbox<Character>(number);
+			return '0'_c + cast_box<Character>(number);
 		}
 	}
 
@@ -232,10 +232,10 @@ export namespace Twinning::Kernel::CharacterType {
 	) -> Character {
 		assert_test(number < 0x10_iu8);
 		if (number >= 0xA_iu8) {
-			return 'A'_c + cbox<Character>(number - 0xA_iu8);
+			return 'A'_c + cast_box<Character>(number - 0xA_iu8);
 		}
 		else {
-			return '0'_c + cbox<Character>(number);
+			return '0'_c + cast_box<Character>(number);
 		}
 	}
 

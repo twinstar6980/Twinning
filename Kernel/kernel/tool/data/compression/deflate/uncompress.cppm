@@ -22,9 +22,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Integer const &        window_exponent,
 			WrapperType const &    wrapper_type
 		) -> Void {
-			assert_test(Math::between(window_exponent, 8_i, mbox<Integer>(Third::zlib::$MAX_WBITS)));
+			assert_test(Math::between(window_exponent, 8_i, make_box<Integer>(Third::zlib::$MAX_WBITS)));
 			auto z_state = int{};
-			auto z_window_exponent = ubox<int>(window_exponent);
+			auto z_window_exponent = unmake_box<int>(window_exponent);
 			switch (wrapper_type.value) {
 				case WrapperType::Constant::none().value: {
 					z_window_exponent = -z_window_exponent;
@@ -41,11 +41,11 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				default: throw UnreachableException{};
 			}
 			auto z_stream = Third::zlib::$z_stream{
-				.next_in = rubox<Third::zlib::$Bytef const *>(ripe.current_pointer()),
-				.avail_in = ubox<unsigned>(ripe.reserve()),
+				.next_in = unmake_pointer_unsafe<Third::zlib::$Bytef>(ripe.current_pointer()),
+				.avail_in = unmake_box<unsigned>(ripe.reserve()),
 				.total_in = 0,
-				.next_out = rubox<Third::zlib::$Bytef *>(raw.current_pointer()),
-				.avail_out = ubox<unsigned>(raw.reserve()),
+				.next_out = unmake_pointer_unsafe<Third::zlib::$Bytef>(raw.current_pointer()),
+				.avail_out = unmake_box<unsigned>(raw.reserve()),
 				.total_out = 0,
 				.msg = nullptr,
 				.state = nullptr,
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				&z_stream,
 				z_window_exponent,
 				Third::zlib::$ZLIB_VERSION,
-				ubox<int>(k_type_size<Third::zlib::$z_stream>)
+				unmake_box<int>(k_type_size<Third::zlib::$z_stream>)
 			);
 			assert_test(z_state == Third::zlib::$Z_OK);
 			z_state = Third::zlib::$inflate(
@@ -72,8 +72,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				&z_stream
 			);
 			assert_test(z_state == Third::zlib::$Z_OK);
-			ripe.forward(mbox<Size>(z_stream.total_in));
-			raw.forward(mbox<Size>(z_stream.total_out));
+			ripe.forward(make_box<Size>(z_stream.total_in));
+			raw.forward(make_box<Size>(z_stream.total_out));
 			return;
 		}
 

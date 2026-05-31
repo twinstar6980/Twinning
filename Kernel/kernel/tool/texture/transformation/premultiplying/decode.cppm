@@ -19,14 +19,14 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Premultiplying
 			Image::Color const & value,
 			Image::Color const & alpha
 		) -> Image::Color {
-			auto result = cbox<Floater>(Image::k_color_minimum);
+			auto result = cast_box<Floater>(Image::k_color_minimum);
 			if (alpha != Image::k_color_minimum) {
-				result = Math::round<Floater>(cbox<Floater>(value) / (cbox<Floater>(alpha) / cbox<Floater>(Image::k_color_maximum)));
-				if (result > cbox<Floater>(Image::k_color_maximum)) {
-					result = cbox<Floater>(Image::k_color_maximum);
+				result = Math::round(cast_box<Floater>(value) / (cast_box<Floater>(alpha) / cast_box<Floater>(Image::k_color_maximum)));
+				if (result > cast_box<Floater>(Image::k_color_maximum)) {
+					result = cast_box<Floater>(Image::k_color_maximum);
 				}
 			}
-			return cbox<Image::Color>(result);
+			return cast_box<Image::Color>(result);
 		}
 
 		// ----------------

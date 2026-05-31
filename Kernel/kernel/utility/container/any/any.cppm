@@ -1,6 +1,5 @@
 module;
 
-#include <typeinfo>
 #include "kernel/common.hpp"
 
 export module twinning.kernel.utility.container.any.any;
@@ -60,14 +59,14 @@ export namespace Twinning::Kernel {
 
 		auto has(
 		) const -> Boolean {
-			return mbox<Boolean>(thiz.m_value.has_value());
+			return make_box<Boolean>(thiz.m_value.has_value());
 		}
 
 		template <typename TValueObject> requires
 			CategoryConstraint<IsPureInstance<TValueObject>>
 		auto is(
 		) const -> Boolean {
-			return mbox<Boolean>(thiz.m_value.type() == typeid(TValueObject));
+			return make_box<Boolean>(thiz.m_value.type() == typeid(TValueObject));
 		}
 
 		// ----------------

@@ -75,7 +75,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					string_map.emplace(std::make_pair(string, string_manifest_information_data_size));
 					string_manifest_information_data_size += bs_size(string) + bs_size(CharacterType::k_null);
 				}
-				return cbox<IntegerU32>(result);
+				return cast_box<IntegerU32>(result);
 			};
 			set_string(""_s);
 			group_manifest_information_structure_list.allocate_full(manifest.group.size());
@@ -84,8 +84,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				auto & group_manifest = manifest.group[group_index];
 				auto & group_manifest_information_structure = group_manifest_information_structure_list[group_index];
 				group_manifest_information_structure.identifier_offset = set_string(make_standard_group_identifier(group_manifest.identifier, group_manifest.composite));
-				group_manifest_information_structure.subgroup_count = cbox<IntegerU32>(group_manifest.subgroup.size());
-				group_manifest_information_structure.subgroup_information_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupBasicManifestInformation<t_version>>());
+				group_manifest_information_structure.subgroup_count = cast_box<IntegerU32>(group_manifest.subgroup.size());
+				group_manifest_information_structure.subgroup_information_size = cast_box<IntegerU32>(bs_static_size<Structure::SubgroupBasicManifestInformation<t_version>>());
 				group_manifest_information_structure.subgroup_information.allocate_full(group_manifest.subgroup.size());
 				for (auto & subgroup_index : SizeRange{group_manifest.subgroup.size()}) {
 					auto & subgroup_manifest = group_manifest.subgroup[subgroup_index];
@@ -95,7 +95,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							subgroup_manifest_information_structure.resolution = 0x00000000_iu32;
 						}
 						else {
-							subgroup_manifest_information_structure.resolution = cbox<IntegerU32>(subgroup_manifest.category.resolution.get());
+							subgroup_manifest_information_structure.resolution = cast_box<IntegerU32>(subgroup_manifest.category.resolution.get());
 						}
 					}
 					if constexpr (check_version(t_version, {3}, {})) {
@@ -107,30 +107,30 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						}
 					}
 					subgroup_manifest_information_structure.identifier_offset = set_string(subgroup_manifest.identifier);
-					subgroup_manifest_information_structure.resource_count = cbox<IntegerU32>(subgroup_manifest.resource.size());
+					subgroup_manifest_information_structure.resource_count = cast_box<IntegerU32>(subgroup_manifest.resource.size());
 					subgroup_manifest_information_structure.resource_information.allocate_full(subgroup_manifest.resource.size());
 					for (auto & resource_index : SizeRange{subgroup_manifest.resource.size()}) {
 						auto & resource_manifest = subgroup_manifest.resource[resource_index];
 						auto & resource_manifest_information_structure = subgroup_manifest_information_structure.resource_information[resource_index];
 						auto & resource_detail_manifest_information_structure = resource_detail_manifest_information_structure_list.append();
 						assert_test(resource_manifest.path.type() == Storage::PathType::Constant::detached());
-						resource_manifest_information_structure.detail_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
+						resource_manifest_information_structure.detail_offset = cast_box<IntegerU32>(resource_manifest_information_data_size);
 						resource_detail_manifest_information_structure.identifier_offset = set_string(resource_manifest.identifier);
 						resource_detail_manifest_information_structure.path_offset = set_string(resource_manifest.path.emit_windows());
-						resource_detail_manifest_information_structure.header_size = cbox<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<t_version>>());
-						resource_detail_manifest_information_structure.type = cbox<IntegerU16>(resource_manifest.type);
+						resource_detail_manifest_information_structure.header_size = cast_box<IntegerU16>(bs_static_size<Structure::ResourceBasicDetailManifestInformation<t_version>>());
+						resource_detail_manifest_information_structure.type = cast_box<IntegerU16>(resource_manifest.type);
 						if (resource_detail_manifest_information_structure.type == 0_iu16) {
 							auto & resource_image_property_detail_manifest_information_structure = resource_detail_manifest_information_structure.image_property_information.set();
-							resource_image_property_detail_manifest_information_structure.type = cbox<IntegerU16>(resource_manifest.property["type"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.flag = cbox<IntegerU16>(resource_manifest.property["flag"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.x = cbox<IntegerU16>(resource_manifest.property["x"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.y = cbox<IntegerU16>(resource_manifest.property["y"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.ax = cbox<IntegerU16>(resource_manifest.property["ax"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.ay = cbox<IntegerU16>(resource_manifest.property["ay"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.aw = cbox<IntegerU16>(resource_manifest.property["aw"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.ah = cbox<IntegerU16>(resource_manifest.property["ah"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.rows = cbox<IntegerU16>(resource_manifest.property["rows"_sv].template to_of<Integer>());
-							resource_image_property_detail_manifest_information_structure.cols = cbox<IntegerU16>(resource_manifest.property["cols"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.type = cast_box<IntegerU16>(resource_manifest.property["type"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.flag = cast_box<IntegerU16>(resource_manifest.property["flag"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.x = cast_box<IntegerU16>(resource_manifest.property["x"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.y = cast_box<IntegerU16>(resource_manifest.property["y"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.ax = cast_box<IntegerU16>(resource_manifest.property["ax"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.ay = cast_box<IntegerU16>(resource_manifest.property["ay"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.aw = cast_box<IntegerU16>(resource_manifest.property["aw"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.ah = cast_box<IntegerU16>(resource_manifest.property["ah"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.rows = cast_box<IntegerU16>(resource_manifest.property["rows"_sv].template to_of<Integer>());
+							resource_image_property_detail_manifest_information_structure.cols = cast_box<IntegerU16>(resource_manifest.property["cols"_sv].template to_of<Integer>());
 							resource_image_property_detail_manifest_information_structure.parent_offset = set_string(resource_manifest.property["parent"_sv]);
 						}
 						else {
@@ -145,27 +145,27 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 								resource_property_detail_information_structure.value_offset = set_string(resource_property_manifest.value);
 							}
 						}
-						resource_detail_manifest_information_structure.property_information_count = cbox<IntegerU32>(resource_detail_manifest_information_structure.property_information.size());
+						resource_detail_manifest_information_structure.property_information_count = cast_box<IntegerU32>(resource_detail_manifest_information_structure.property_information.size());
 						resource_manifest_information_data_size += bs_static_size<Structure::ResourceBasicDetailManifestInformation<t_version>>();
 						if (resource_detail_manifest_information_structure.image_property_information.has()) {
-							resource_detail_manifest_information_structure.image_property_information_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
+							resource_detail_manifest_information_structure.image_property_information_offset = cast_box<IntegerU32>(resource_manifest_information_data_size);
 							resource_manifest_information_data_size += bs_static_size<Structure::ResourceImagePropertyDetailManifestInformation<t_version>>();
 						}
 						else {
 							resource_detail_manifest_information_structure.image_property_information_offset = 0_iu32;
 						}
-						resource_detail_manifest_information_structure.property_information_offset = cbox<IntegerU32>(resource_manifest_information_data_size);
+						resource_detail_manifest_information_structure.property_information_offset = cast_box<IntegerU32>(resource_manifest_information_data_size);
 						resource_manifest_information_data_size += bs_static_size<List<Structure::ResourcePropertyDetailManifestInformation<t_version>>>(resource_detail_manifest_information_structure.property_information.size());
 					}
 				}
 			}
-			header_structure.group_manifest_information_section_offset = cbox<IntegerU32>(data.position());
+			header_structure.group_manifest_information_section_offset = cast_box<IntegerU32>(data.position());
 			data.write(group_manifest_information_structure_list);
-			header_structure.resource_manifest_information_section_offset = cbox<IntegerU32>(data.position());
+			header_structure.resource_manifest_information_section_offset = cast_box<IntegerU32>(data.position());
 			data.write(resource_detail_manifest_information_structure_list);
-			header_structure.string_manifest_information_section_offset = cbox<IntegerU32>(data.position());
+			header_structure.string_manifest_information_section_offset = cast_box<IntegerU32>(data.position());
 			for (auto & element : string_list) {
-				StringParser::write_string_until(self_cast<OutputCharacterStreamView>(data), element, CharacterType::k_null);
+				StringParser::write_string_until(unsafe_cast<OutputCharacterStreamView>(data), element, CharacterType::k_null);
 				data.write_constant(CharacterType::k_null);
 			}
 			return;
@@ -181,7 +181,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 		) -> Void {
 			constexpr auto packet_version = ResourceStreamGroup::Version{.number = t_version.number};
 			data.write_constant(Structure::k_magic_marker);
-			data.write_constant(cbox<Structure::VersionNumber>(t_version.number));
+			data.write_constant(cast_box<Structure::VersionNumber>(t_version.number));
 			struct {
 				OutputByteStreamView header{};
 				Size                 group_identifier_offset{};
@@ -339,38 +339,38 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					}
 				}
 			}
-			information_structure.header.resource_path_section_size = cbox<IntegerU32>(information_data.resource_path.size());
-			information_structure.header.resource_path_section_offset = cbox<IntegerU32>(information_data.resource_path_offset);
-			information_structure.header.subgroup_identifier_section_size = cbox<IntegerU32>(information_data.subgroup_identifier.size());
-			information_structure.header.subgroup_identifier_section_offset = cbox<IntegerU32>(information_data.subgroup_identifier_offset);
-			information_structure.header.subgroup_information_section_block_count = cbox<IntegerU32>(global_subgroup_count);
-			information_structure.header.subgroup_information_section_offset = cbox<IntegerU32>(information_data.subgroup_information_offset);
-			information_structure.header.subgroup_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::SubgroupInformation<t_version>>());
-			information_structure.header.group_information_section_block_count = cbox<IntegerU32>(global_group_count);
-			information_structure.header.group_information_section_offset = cbox<IntegerU32>(information_data.group_information_offset);
-			information_structure.header.group_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::GroupInformation<t_version>>());
-			information_structure.header.group_identifier_section_size = cbox<IntegerU32>(information_data.group_identifier.size());
-			information_structure.header.group_identifier_section_offset = cbox<IntegerU32>(information_data.group_identifier_offset);
-			information_structure.header.pool_information_section_block_count = cbox<IntegerU32>(global_subgroup_count);
-			information_structure.header.pool_information_section_offset = cbox<IntegerU32>(information_data.pool_information_offset);
-			information_structure.header.pool_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::PoolInformation<t_version>>());
-			information_structure.header.texture_resource_information_section_block_count = cbox<IntegerU32>(global_texture_resource_count);
-			information_structure.header.texture_resource_information_section_offset = cbox<IntegerU32>(information_data.texture_resource_information_offset);
-			information_structure.header.texture_resource_information_section_block_size = cbox<IntegerU32>(bs_static_size<Structure::TextureResourceInformation<t_version>>());
+			information_structure.header.resource_path_section_size = cast_box<IntegerU32>(information_data.resource_path.size());
+			information_structure.header.resource_path_section_offset = cast_box<IntegerU32>(information_data.resource_path_offset);
+			information_structure.header.subgroup_identifier_section_size = cast_box<IntegerU32>(information_data.subgroup_identifier.size());
+			information_structure.header.subgroup_identifier_section_offset = cast_box<IntegerU32>(information_data.subgroup_identifier_offset);
+			information_structure.header.subgroup_information_section_block_count = cast_box<IntegerU32>(global_subgroup_count);
+			information_structure.header.subgroup_information_section_offset = cast_box<IntegerU32>(information_data.subgroup_information_offset);
+			information_structure.header.subgroup_information_section_block_size = cast_box<IntegerU32>(bs_static_size<Structure::SubgroupInformation<t_version>>());
+			information_structure.header.group_information_section_block_count = cast_box<IntegerU32>(global_group_count);
+			information_structure.header.group_information_section_offset = cast_box<IntegerU32>(information_data.group_information_offset);
+			information_structure.header.group_information_section_block_size = cast_box<IntegerU32>(bs_static_size<Structure::GroupInformation<t_version>>());
+			information_structure.header.group_identifier_section_size = cast_box<IntegerU32>(information_data.group_identifier.size());
+			information_structure.header.group_identifier_section_offset = cast_box<IntegerU32>(information_data.group_identifier_offset);
+			information_structure.header.pool_information_section_block_count = cast_box<IntegerU32>(global_subgroup_count);
+			information_structure.header.pool_information_section_offset = cast_box<IntegerU32>(information_data.pool_information_offset);
+			information_structure.header.pool_information_section_block_size = cast_box<IntegerU32>(bs_static_size<Structure::PoolInformation<t_version>>());
+			information_structure.header.texture_resource_information_section_block_count = cast_box<IntegerU32>(global_texture_resource_count);
+			information_structure.header.texture_resource_information_section_offset = cast_box<IntegerU32>(information_data.texture_resource_information_offset);
+			information_structure.header.texture_resource_information_section_block_size = cast_box<IntegerU32>(bs_static_size<Structure::TextureResourceInformation<t_version>>());
 			if constexpr (check_version(t_version, {4}, {})) {
 				data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
-				information_structure.header.information_without_manifest_section_size = cbox<IntegerU32>(data.position());
+				information_structure.header.information_without_manifest_section_size = cast_box<IntegerU32>(data.position());
 			}
 			if (manifest.has()) {
 				process_package_manifest(data, information_structure.header, manifest.get());
 			}
 			else {
-				information_structure.header.group_manifest_information_section_offset = cbox<IntegerU32>(0_sz);
-				information_structure.header.resource_manifest_information_section_offset = cbox<IntegerU32>(0_sz);
-				information_structure.header.string_manifest_information_section_offset = cbox<IntegerU32>(0_sz);
+				information_structure.header.group_manifest_information_section_offset = cast_box<IntegerU32>(0_sz);
+				information_structure.header.resource_manifest_information_section_offset = cast_box<IntegerU32>(0_sz);
+				information_structure.header.string_manifest_information_section_offset = cast_box<IntegerU32>(0_sz);
 			}
 			data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
-			information_structure.header.information_section_size = cbox<IntegerU32>(data.position());
+			information_structure.header.information_section_size = cast_box<IntegerU32>(data.position());
 			information_structure.group_identifier.allocate_full(global_group_count);
 			information_structure.group_information.allocate_full(global_group_count);
 			information_structure.subgroup_identifier.allocate_full(global_subgroup_count);
@@ -389,9 +389,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				auto & group_information_structure = information_structure.group_information[global_group_index];
 				auto   standard_group_identifier = make_standard_group_identifier(group_definition.identifier, group_definition.composite);
 				group_identifier_structure.key = standard_group_identifier;
-				group_identifier_structure.value = cbox<IntegerU32>(global_group_index);
+				group_identifier_structure.value = cast_box<IntegerU32>(global_group_index);
 				group_information_structure.identifier = string_block_fixed_128_from_string(standard_group_identifier);
-				group_information_structure.subgroup_count = cbox<IntegerU32>(group_definition.subgroup.size());
+				group_information_structure.subgroup_count = cast_box<IntegerU32>(group_definition.subgroup.size());
 				for (auto & subgroup_index : SizeRange{group_definition.subgroup.size()}) {
 					auto & subgroup_definition = group_definition.subgroup[subgroup_index];
 					auto & simple_subgroup_information_structure = group_information_structure.subgroup_information[subgroup_index];
@@ -399,13 +399,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					auto & subgroup_information_structure = information_structure.subgroup_information[global_subgroup_index];
 					auto & pool_information_structure = information_structure.pool_information[global_subgroup_index];
 					auto   packet_package_definition = typename ResourceStreamGroup::Definition<packet_version>::Package{};
-					simple_subgroup_information_structure.index = cbox<IntegerU32>(global_subgroup_index);
+					simple_subgroup_information_structure.index = cast_box<IntegerU32>(global_subgroup_index);
 					if constexpr (check_version(t_version, {1}, {})) {
 						if (!subgroup_definition.category.resolution.has()) {
 							simple_subgroup_information_structure.resolution = 0x00000000_iu32;
 						}
 						else {
-							simple_subgroup_information_structure.resolution = cbox<IntegerU32>(subgroup_definition.category.resolution.get());
+							simple_subgroup_information_structure.resolution = cast_box<IntegerU32>(subgroup_definition.category.resolution.get());
 						}
 					}
 					if constexpr (check_version(t_version, {3}, {})) {
@@ -417,9 +417,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						}
 					}
 					subgroup_identifier_structure.key = subgroup_definition.identifier;
-					subgroup_identifier_structure.value = cbox<IntegerU32>(global_subgroup_index);
+					subgroup_identifier_structure.value = cast_box<IntegerU32>(global_subgroup_index);
 					subgroup_information_structure.identifier = string_block_fixed_128_from_string(subgroup_definition.identifier);
-					subgroup_information_structure.pool = cbox<IntegerU32>(global_subgroup_index);
+					subgroup_information_structure.pool = cast_box<IntegerU32>(global_subgroup_index);
 					pool_information_structure.identifier = string_block_fixed_128_from_string(subgroup_definition.identifier + k_suffix_of_automation_pool);
 					pool_information_structure.instance_count = 1_iu32;
 					pool_information_structure.flag = 0_iu32;
@@ -438,7 +438,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto & packet_resource_definition = packet_package_definition.resource[resource_index];
 						assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 						resource_path_structure.key = resource_definition.path.emit_windows();
-						resource_path_structure.value = cbox<IntegerU32>(global_subgroup_index);
+						resource_path_structure.value = cast_box<IntegerU32>(global_subgroup_index);
 						packet_resource_definition.path = resource_definition.path;
 						switch (resource_definition.additional.type().value) {
 							case ResourceType::Constant::general().value: {
@@ -451,17 +451,17 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 								auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 								auto & texture_information_structure = information_structure.texture_resource_information[global_texture_resource_index];
 								auto & packet_resource_additional_definition = packet_resource_definition.additional.template set_of_type<ResourceType::Constant::texture()>();
-								texture_information_structure.size_width = cbox<IntegerU32>(resource_additional_definition.size.width);
-								texture_information_structure.size_height = cbox<IntegerU32>(resource_additional_definition.size.height);
-								texture_information_structure.pitch = cbox<IntegerU32>(resource_additional_definition.pitch);
-								texture_information_structure.format = cbox<IntegerU32>(resource_additional_definition.format);
+								texture_information_structure.size_width = cast_box<IntegerU32>(resource_additional_definition.size.width);
+								texture_information_structure.size_height = cast_box<IntegerU32>(resource_additional_definition.size.height);
+								texture_information_structure.pitch = cast_box<IntegerU32>(resource_additional_definition.pitch);
+								texture_information_structure.format = cast_box<IntegerU32>(resource_additional_definition.format);
 								if constexpr (check_version(t_version, {4}, {1})) {
-									texture_information_structure.additional_byte_count = cbox<IntegerU32>(resource_additional_definition.additional_byte_count);
+									texture_information_structure.additional_byte_count = cast_box<IntegerU32>(resource_additional_definition.additional_byte_count);
 								}
 								if constexpr (check_version(t_version, {4}, {2})) {
-									texture_information_structure.scale = cbox<IntegerU32>(resource_additional_definition.scale);
+									texture_information_structure.scale = cast_box<IntegerU32>(resource_additional_definition.scale);
 								}
-								packet_resource_additional_definition.index = cbox<Integer>(texture_resource_count);
+								packet_resource_additional_definition.index = cast_box<Integer>(texture_resource_count);
 								packet_resource_additional_definition.size = resource_additional_definition.size;
 								++texture_resource_count;
 								++global_texture_resource_index;
@@ -479,7 +479,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							auto legacy_packet_size = Storage::read_file_stream(make_formatted_path(packet_file.get()), packet_data);
 							auto legacy_packet_stream = InputByteStreamView{packet_data.previous_view(legacy_packet_size)};
 							legacy_packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_marker);
-							legacy_packet_stream.read_constant(cbox<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
+							legacy_packet_stream.read_constant(cast_box<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
 							legacy_packet_stream.read(packet_header_structure);
 							use_legacy_packet = k_true;
 						}
@@ -495,8 +495,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto legacy_packet_stream = InputByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicMarker>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
 						legacy_packet_stream.read(packet_header_structure);
 					}
-					subgroup_information_structure.offset = cbox<IntegerU32>(data.position());
-					subgroup_information_structure.size = cbox<IntegerU32>(packet_data.position());
+					subgroup_information_structure.offset = cast_box<IntegerU32>(data.position());
+					subgroup_information_structure.size = cast_box<IntegerU32>(packet_data.position());
 					subgroup_information_structure.resource_data_section_compression = packet_header_structure.resource_data_section_compression;
 					subgroup_information_structure.information_section_size = packet_header_structure.information_section_size;
 					subgroup_information_structure.general_resource_data_section_offset = packet_header_structure.general_resource_data_section_offset;
@@ -510,12 +510,12 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					pool_information_structure.texture_resource_data_section_offset = packet_header_structure.general_resource_data_section_offset + packet_header_structure.general_resource_data_section_size_original;
 					pool_information_structure.texture_resource_data_section_size = packet_header_structure.texture_resource_data_section_size_original;
 					if constexpr (check_version(t_version, {1, 3}, {})) {
-						pool_information_structure.texture_resource_begin = cbox<IntegerU32>(texture_resource_begin);
-						pool_information_structure.texture_resource_count = cbox<IntegerU32>(texture_resource_count);
+						pool_information_structure.texture_resource_begin = cast_box<IntegerU32>(texture_resource_begin);
+						pool_information_structure.texture_resource_count = cast_box<IntegerU32>(texture_resource_count);
 					}
 					if constexpr (check_version(t_version, {3}, {})) {
-						subgroup_information_structure.texture_resource_begin = cbox<IntegerU32>(texture_resource_begin);
-						subgroup_information_structure.texture_resource_count = cbox<IntegerU32>(texture_resource_count);
+						subgroup_information_structure.texture_resource_begin = cast_box<IntegerU32>(texture_resource_begin);
+						subgroup_information_structure.texture_resource_count = cast_box<IntegerU32>(texture_resource_count);
 						pool_information_structure.texture_resource_begin = 0_iu32;
 						pool_information_structure.texture_resource_count = 0_iu32;
 					}

@@ -125,7 +125,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 				flag.set(4_ix, k_true);
 			}
 			flag.set(5_ix, k_false);
-			auto count_with_flag = cbox<Integer>(flag.to_integer() << 3_sz) | cbox<Integer>(minimum(count, 0b111_sz));
+			auto count_with_flag = cast_box<Integer>(flag.to_integer() << 3_sz) | cast_box<Integer>(Math::minimum(count, 0b111_sz));
 			exchange_integer_fixed<IntegerU8>(data, count_with_flag);
 			if (count >= 0b111_sz) {
 				exchange_size_fixed<IntegerS16>(data, count);
@@ -473,7 +473,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			Definition::Effect const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
-			data.write_constant(cbox<VersionNumber>(t_version.number));
+			data.write_constant(cast_box<VersionNumber>(t_version.number));
 			process_effect(data, definition);
 			return;
 		}

@@ -48,7 +48,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 		) -> Void {
 			auto value_integer = Integer{};
 			exchange_integer_variant<TRawShortValue, TRawLongValue>(data, value_integer);
-			value = cbox<Size>(value_integer);
+			value = cast_box<Size>(value_integer);
 			return;
 		}
 
@@ -60,16 +60,16 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			InputByteStreamView & data,
 			Integer &             value
 		) -> Void {
-			auto value_short_maximum = ~mbox<TRawShortValue>(0);
+			auto value_short_maximum = ~make_box<TRawShortValue>(0);
 			auto value_short = data.read_of<TRawShortValue>();
 			auto value_long = TRawLongValue{};
 			if (value_short != value_short_maximum) {
-				value_long = cbox<TRawLongValue>(value_short);
+				value_long = cast_box<TRawLongValue>(value_short);
 			}
 			else {
 				value_long = data.read_of<TRawLongValue>();
 			}
-			value = cbox<Integer>(value_long);
+			value = cast_box<Integer>(value_long);
 			return;
 		}
 
@@ -84,19 +84,19 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			BitSet<t_flag_count> & flag
 		) -> Void {
 			auto value_short_bit_count = k_type_bit_count<TRawShortValue> - t_flag_count;
-			auto value_short_maximum = ~(~mbox<TRawShortValue>(0) << value_short_bit_count);
+			auto value_short_maximum = ~(~make_box<TRawShortValue>(0) << value_short_bit_count);
 			auto value_short_with_flag = data.read_of<TRawShortValue>();
 			auto value_short = clip_bit(value_short_with_flag, 0_sz, value_short_bit_count);
 			auto value_flag = clip_bit(value_short_with_flag, value_short_bit_count, t_flag_count);
 			auto value_long = TRawLongValue{};
 			if (value_short != value_short_maximum) {
-				value_long = cbox<TRawLongValue>(value_short);
+				value_long = cast_box<TRawLongValue>(value_short);
 			}
 			else {
 				value_long = data.read_of<TRawLongValue>();
 			}
-			value = cbox<Integer>(value_long);
-			flag.from_integer(cbox<typename BitSet<t_flag_count>::BoundedInteger>(value_flag));
+			value = cast_box<Integer>(value_long);
+			flag.from_integer(cast_box<typename BitSet<t_flag_count>::BoundedInteger>(value_flag));
 			return;
 		}
 
@@ -108,7 +108,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			InputByteStreamView & data,
 			Floater &             value
 		) -> Void {
-			auto value_integer = cbox<Floater>(data.read_of<TRawValue>());
+			auto value_integer = cast_box<Floater>(data.read_of<TRawValue>());
 			value = value_integer / t_rate;
 			return;
 		}
@@ -278,7 +278,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			auto flag_integer = Integer{};
 			exchange_integer_fixed<IntegerU8>(data, flag_integer);
 			auto flag = BitSet<FrameFlag::k_count>{};
-			flag.from_integer(cbox<IntegerU8>(flag_integer));
+			flag.from_integer(cast_box<typename BitSet<FrameFlag::k_count>::BoundedInteger>(flag_integer));
 			if (flag.get(FrameFlag::remove)) {
 				exchange_list(data, value.remove, &exchange_size_variant<IntegerU8, IntegerU16>, &exchange_layer_remove);
 			}
@@ -396,7 +396,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			Definition::Animation & definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
-			data.read_constant(cbox<VersionNumber>(t_version.number));
+			data.read_constant(cast_box<VersionNumber>(t_version.number));
 			exchange_animation(data, definition);
 			return;
 		}

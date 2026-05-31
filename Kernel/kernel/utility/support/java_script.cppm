@@ -24,6 +24,7 @@ import twinning.kernel.utility.script.java_script.value_adapter;
 import twinning.kernel.utility.script.java_script.utility;
 import twinning.kernel.utility.null;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
+import twinning.kernel.utility.miscellaneous.allocation;
 import twinning.kernel.utility.miscellaneous.number_variant;
 import twinning.kernel.utility.miscellaneous.dimension;
 import twinning.kernel.utility.miscellaneous.record;
@@ -87,9 +88,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That const & that
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
-			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), ubox<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
-			auto thix_opaque = new That{that};
-			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque);
+			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
+			auto thix_opaque = allocate_instance<That>(that);
+			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
 			thix._rebind_value(thix_value);
 			return;
 		}
@@ -99,9 +100,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That && that
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
-			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), ubox<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
-			auto thix_opaque = new That{as_moveable(that)};
-			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque);
+			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
+			auto thix_opaque = allocate_instance<That>(as_moveable(that));
+			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
 			thix._rebind_value(thix_value);
 			return;
 		}
@@ -112,9 +113,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
 			auto thix_value = thix._value();
-			auto thix_opaque = Third::quickjs_ng::$JS_GetOpaque(thix_value, ubox<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
-			assert_test(thix_opaque != nullptr);
-			that = *static_cast<That *>(thix_opaque);
+			auto thix_opaque = make_pointer_unsafe<That>(Third::quickjs_ng::$JS_GetOpaque(thix_value, unmake_box<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>)));
+			assert_test(thix_opaque != k_null_pointer);
+			that = *thix_opaque;
 			return;
 		}
 
@@ -323,7 +324,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_bigint(cbox<Integer>(that));
+			thix.set_bigint(cast_box<Integer>(that));
 			return;
 		}
 
@@ -332,7 +333,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			assert_test(thix.is_bigint());
-			that = cbox<That>(thix.get_bigint());
+			that = cast_box<That>(thix.get_bigint());
 			return;
 		}
 
@@ -518,7 +519,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					thix.from(that.template get_of_index<mbox<Size>(t_index)>());
+					thix.from(that.template get_of_index<make_box<Size>(t_index)>());
 				}
 			);
 			return;
@@ -532,7 +533,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					thix.to(that.template set_of_index<mbox<Size>(t_index)>());
+					thix.to(that.template set_of_index<make_box<Size>(t_index)>());
 				}
 			);
 			return;
@@ -580,11 +581,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That const &         that,
 			TEnumeration const & variant_type
 		) -> Void {
-			auto variant_index = cbox<Size>(variant_type);
+			auto variant_index = cast_box<Size>(variant_type);
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					thix.from(that.template get_of_index<mbox<Size>(t_index)>());
+					thix.from(that.template get_of_index<make_box<Size>(t_index)>());
 				}
 			);
 			return;
@@ -595,11 +596,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That &               that,
 			TEnumeration const & variant_type
 		) -> Void {
-			auto variant_index = cbox<Size>(variant_type);
+			auto variant_index = cast_box<Size>(variant_type);
 			Generalization::match<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				variant_index.value,
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					thix.to(that.template set_of_index<mbox<Size>(t_index)>());
+					thix.to(that.template set_of_index<make_box<Size>(t_index)>());
 				}
 			);
 			return;
@@ -651,7 +652,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			thix.set_object_of_array();
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					thix.set_object_property(mbox<Size>(t_index), thix.new_value(that.template get<mbox<Size>(t_index)>()));
+					thix.set_object_property(make_box<Size>(t_index), thix.new_value(that.template get<make_box<Size>(t_index)>()));
 				}
 			);
 			return;
@@ -662,10 +663,10 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			auto thix_array = thix.collect_object_own_property_of_array();
-			assert_test(thix_array.size() == mbox<Size>(sizeof...(TValue)));
+			assert_test(thix_array.size() == make_box<Size>(sizeof...(TValue)));
 			Generalization::each<AsValuePackageOfIndex<sizeof...(TValue)>>(
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					thix_array.at(mbox<Size>(t_index)).to(that.template get<mbox<Size>(t_index)>());
+					thix_array.at(make_box<Size>(t_index)).to(that.template get<make_box<Size>(t_index)>());
 				}
 			);
 			return;
@@ -780,7 +781,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			thix.set_object_of_array();
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					thix.set_object_property(mbox<Size>(t_index), thix.new_value(TField::value_of(that)));
+					thix.set_object_property(make_box<Size>(t_index), thix.new_value(TField::value_of(that)));
 				}
 			);
 			return;
@@ -791,10 +792,10 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			auto thix_array = thix.collect_object_own_property_of_array();
-			assert_test(thix_array.size() == mbox<Size>(FieldPackage::size));
+			assert_test(thix_array.size() == make_box<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					thix_array.at(mbox<Size>(t_index)).to(TField::value_of(that));
+					thix_array.at(make_box<Size>(t_index)).to(TField::value_of(that));
 				}
 			);
 			return;
@@ -833,11 +834,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			auto thix_object = thix.collect_object_own_property_of_object();
-			assert_test(thix_object.size() == mbox<Size>(FieldPackage::size));
+			assert_test(thix_object.size() == make_box<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					assert_test(thix_object.at(mbox<Size>(t_index)).key == make_string_view(TField::name.view()));
-					thix_object.at(mbox<Size>(t_index)).value.to(TField::value_of(that));
+					assert_test(thix_object.at(make_box<Size>(t_index)).key == make_string_view(TField::name.view()));
+					thix_object.at(make_box<Size>(t_index)).value.to(TField::value_of(that));
 				}
 			);
 			return;
@@ -873,10 +874,10 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
 				thix_array.size().value,
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					auto & that_value = that.template set_of_index<mbox<Size>(t_index)>();
+					auto & that_value = that.template set_of_index<make_box<Size>(t_index)>();
 					Generalization::each<typename TypePackage<TValue ...>::template Element<t_index>::Reflection::MemberVariable>(
 						[&]<auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
-							thix_array.at(mbox<Size>(t_field_index)).to(TField::value_of(that_value));
+							thix_array.at(make_box<Size>(t_field_index)).to(TField::value_of(that_value));
 						}
 					);
 				}
@@ -912,11 +913,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Generalization::match<ValuePackage<TValue::Reflection::MemberVariable::size ...>>(
 				thix_object.size().value,
 				[&]<auto t_index>(ValuePackage<t_index>, auto) {
-					auto & that_value = that.template set_of_index<mbox<Size>(t_index)>();
+					auto & that_value = that.template set_of_index<make_box<Size>(t_index)>();
 					Generalization::each<typename TypePackage<TValue ...>::template Element<t_index>::Reflection::MemberVariable>(
 						[&]<auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
-							assert_test(thix_object.at(mbox<Size>(t_field_index)).key == make_string_view(TField::name.view()));
-							thix_object.at(mbox<Size>(t_field_index)).value.to(TField::value_of(that_value));
+							assert_test(thix_object.at(make_box<Size>(t_field_index)).key == make_string_view(TField::name.view()));
+							thix_object.at(make_box<Size>(t_field_index)).value.to(TField::value_of(that_value));
 						}
 					);
 				}
@@ -943,7 +944,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_bigint(cbox<Integer>(that));
+			thix.set_bigint(cast_box<Integer>(that));
 			return;
 		}
 
@@ -952,7 +953,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			assert_test(thix.is_bigint());
-			that = cbox<That>(thix.get_bigint());
+			that = cast_box<That>(thix.get_bigint());
 			return;
 		}
 
@@ -1389,7 +1390,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_bigint(cbox<Integer>(that));
+			thix.set_bigint(cast_box<Integer>(that));
 			return;
 		}
 
@@ -1398,7 +1399,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			assert_test(thix.is_bigint());
-			that = cbox<That>(thix.get_bigint());
+			that = cast_box<That>(thix.get_bigint());
 			return;
 		}
 
@@ -1472,34 +1473,6 @@ export namespace Twinning::Kernel::Script::JavaScript {
 	// ----------------
 
 	template <>
-	struct ValueAdapter<IntegerU8> {
-
-		using This = Value;
-
-		using That = IntegerU8;
-
-		// ----------------
-
-		inline static auto from(
-			This &       thix,
-			That const & that
-		) -> Void {
-			thix.set_bigint(cbox<Integer>(that));
-			return;
-		}
-
-		inline static auto to(
-			This & thix,
-			That & that
-		) -> Void {
-			assert_test(thix.is_bigint());
-			that = cbox<That>(thix.get_bigint());
-			return;
-		}
-
-	};
-
-	template <>
 	struct ValueAdapter<IntegerU32> {
 
 		using This = Value;
@@ -1512,7 +1485,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_bigint(cbox<Integer>(that));
+			thix.set_bigint(cast_box<Integer>(that));
 			return;
 		}
 
@@ -1521,7 +1494,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That & that
 		) -> Void {
 			assert_test(thix.is_bigint());
-			that = cbox<That>(thix.get_bigint());
+			that = cast_box<That>(thix.get_bigint());
 			return;
 		}
 

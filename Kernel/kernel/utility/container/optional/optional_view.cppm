@@ -77,16 +77,6 @@ export namespace Twinning::Kernel {
 			OptionalView && that
 		) -> OptionalView & = default;
 
-		// ----------------
-
-		explicit constexpr operator Boolean() const {
-			return thiz.has();
-		}
-
-		explicit constexpr operator ZBoolean() const {
-			return thiz.has();
-		}
-
 		#pragma endregion
 
 		#pragma region value
@@ -109,7 +99,7 @@ export namespace Twinning::Kernel {
 			QualifyValue & value
 		) -> QualifyValue & {
 			thiz.m_has = k_true;
-			thiz.m_value = make_pointer_of(value);
+			thiz.m_value = make_pointer(&value);
 			return thiz.m_value.dereference();
 		}
 

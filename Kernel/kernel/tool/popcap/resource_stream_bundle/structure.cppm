@@ -548,14 +548,14 @@ export namespace Twinning::Kernel {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
-				assert_test(cbox<Size>(that.image_property_information_offset) == thix.position());
+				assert_test(cast_box<Size>(that.image_property_information_offset) == thix.position());
 				thix.read(that.image_property_information.set());
 			}
 			else {
 				that.image_property_information.reset();
 			}
-			assert_test(cbox<Size>(that.property_information_offset) == thix.position());
-			thix.read(that.property_information, cbox<Size>(that.property_information_count));
+			assert_test(cast_box<Size>(that.property_information_offset) == thix.position());
+			thix.read(that.property_information, cast_box<Size>(that.property_information_count));
 			return;
 		}
 
@@ -644,7 +644,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
-			thix.read(that.resource_information, cbox<Size>(that.resource_count));
+			thix.read(that.resource_information, cast_box<Size>(that.resource_count));
 			return;
 		}
 
@@ -690,7 +690,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			thix.read(up_cast<GroupBasicManifestInformation<t_version>>(that));
-			thix.read(that.subgroup_information, cbox<Size>(that.subgroup_count));
+			thix.read(that.subgroup_information, cast_box<Size>(that.subgroup_count));
 			return;
 		}
 

@@ -126,9 +126,9 @@ export namespace Twinning::Kernel {
 
 	#pragma region constant
 
-	inline constexpr auto k_false = Boolean{mbox<Boolean>(false)};
+	inline constexpr auto k_false = Boolean{make_box<Boolean>(false)};
 
-	inline constexpr auto k_true = Boolean{mbox<Boolean>(true)};
+	inline constexpr auto k_true = Boolean{make_box<Boolean>(true)};
 
 	#pragma endregion
 

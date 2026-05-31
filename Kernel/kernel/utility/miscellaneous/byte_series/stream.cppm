@@ -164,13 +164,13 @@ export namespace Twinning::Kernel {
 		auto as_input_stream(
 		) -> InputStream & requires
 			(mode == StreamMode::Constant::access()) {
-			return self_cast<InputStream>(thiz);
+			return unsafe_cast<InputStream>(thiz);
 		}
 
 		auto as_output_stream(
 		) -> OutputStream & requires
 			(mode == StreamMode::Constant::access()) {
-			return self_cast<OutputStream>(thiz);
+			return unsafe_cast<OutputStream>(thiz);
 		}
 
 		#pragma endregion

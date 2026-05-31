@@ -97,12 +97,12 @@ export namespace Twinning::Kernel::Image {
 
 		implicit operator ConstantView &() requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		implicit operator ConstantView const &() const requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion

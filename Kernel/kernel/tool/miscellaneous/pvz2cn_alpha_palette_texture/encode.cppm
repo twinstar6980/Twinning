@@ -26,7 +26,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 			auto pixel_row = InputStreamView<Image::Pixel>{};
 			auto index_table = Array<Optional<Size>>{0b1_sz << k_maximum_bit_count};
 			for (auto & index : SizeRange{palette.size()}) {
-				index_table[cbox<Size>(palette[index])].set(index);
+				index_table[cast_box<Size>(palette[index])].set(index);
 			}
 			auto bit_reserve = k_type_bit_count<Byte>;
 			while (!index_data.full()) {
@@ -35,7 +35,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 				}
 				auto & pixel = pixel_row.next();
 				auto   alpha = Image::compress_color(pixel.alpha, k_maximum_bit_count);
-				auto   index_value = cbox<Byte>(index_table[cbox<Size>(alpha)].get());
+				auto   index_value = cast_box<Byte>(index_table[cast_box<Size>(alpha)].get());
 				if (bit_reserve > bit_count) {
 					index_data.current() |= index_value << (bit_reserve - bit_count);
 					bit_reserve -= bit_count;

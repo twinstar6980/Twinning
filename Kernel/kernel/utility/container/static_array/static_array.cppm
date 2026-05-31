@@ -10,6 +10,7 @@ import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.generic_range;
+import twinning.kernel.utility.miscellaneous.math;
 
 export namespace Twinning::Kernel {
 
@@ -85,7 +86,7 @@ export namespace Twinning::Kernel {
 			ConstantView const & view
 		) :
 			StaticArray{} {
-			Range::assign_from(Range::make_range_n(thiz.begin(), minimum(view.size(), thiz.size())), view);
+			Range::assign_from(Range::make_range_n(thiz.begin(), Math::minimum(view.size(), thiz.size())), view);
 			return;
 		}
 
@@ -184,17 +185,17 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) -> VariableIterator {
 			assert_test(index <= thiz.end_index());
-			return Iterator{thiz.m_data} + index;
+			return VariableIterator{thiz.m_data} + index;
 		}
 
 		constexpr auto begin(
 		) -> VariableIterator {
-			return Iterator{thiz.m_data} + thiz.begin_index();
+			return VariableIterator{thiz.m_data} + thiz.begin_index();
 		}
 
 		constexpr auto end(
 		) -> VariableIterator {
-			return Iterator{thiz.m_data} + thiz.end_index();
+			return VariableIterator{thiz.m_data} + thiz.end_index();
 		}
 
 		// ----------------
@@ -224,7 +225,7 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) -> VariableElement & {
 			assert_test(index < thiz.end_index());
-			return thiz.m_data[ubox<ZSize>(index)];
+			return thiz.m_data[unmake_box<ZSize>(index)];
 		}
 
 		constexpr auto first(
@@ -243,7 +244,7 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) const -> ConstantElement & {
 			assert_test(index < thiz.end_index());
-			return thiz.m_data[ubox<ZSize>(index)];
+			return thiz.m_data[unmake_box<ZSize>(index)];
 		}
 
 		constexpr auto first(
@@ -296,11 +297,11 @@ export namespace Twinning::Kernel {
 		&& (IsConstructible<TElement, TArgument &&> && ...)
 	inline constexpr auto make_static_array(
 		TArgument && ... argument
-	) -> StaticArray<TElement, mbox<Size>(sizeof...(TArgument))> {
-		auto result = StaticArray<TElement, mbox<Size>(sizeof...(TArgument))>{};
+	) -> StaticArray<TElement, make_box<Size>(sizeof...(TArgument))> {
+		auto result = StaticArray<TElement, make_box<Size>(sizeof...(TArgument))>{};
 		Generalization::each_with<>(
 			[&]<auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
-				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
+				restruct(result.at(make_box<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
 			as_forward<TArgument>(argument) ...
 		);

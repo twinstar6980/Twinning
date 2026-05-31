@@ -31,6 +31,18 @@ export namespace Twinning::Kernel::Trait {
 		&& (!std::is_void_v<TIt> && ...)
 		;
 
+	template <typename ... TIt>
+	concept IsVariable =
+		CustomConstraint
+		&& (!std::is_const_v<TIt> && ...)
+		;
+
+	template <typename ... TIt>
+	concept IsConstant =
+		CustomConstraint
+		&& (std::is_const_v<TIt> && ...)
+		;
+
 	// ----------------
 
 	template <typename ... TIt>
@@ -251,7 +263,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename TThat, typename TIt> requires
 		CategoryConstraint<IsPureInstance<TThat> && IsPureInstance<TIt>>
-	inline auto self_cast(
+	inline auto unsafe_cast(
 		TIt & it
 	) -> TThat & {
 		return reinterpret_cast<TThat &>(it);
@@ -259,7 +271,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename TThat, typename TIt> requires
 		CategoryConstraint<IsPureInstance<TThat> && IsPureInstance<TIt>>
-	inline auto self_cast(
+	inline auto unsafe_cast(
 		TIt const & it
 	) -> TThat const & {
 		return reinterpret_cast<TThat const &>(it);
@@ -267,7 +279,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename TThat, typename TIt> requires
 		CategoryConstraint<IsPureInstance<TThat> && IsPureInstance<TIt>>
-	inline auto self_cast(
+	inline auto unsafe_cast(
 		TIt && it
 	) -> TThat && {
 		return reinterpret_cast<TThat &&>(it);

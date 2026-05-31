@@ -30,7 +30,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
-			data.write_constant(cbox<Structure::VersionNumber>(t_version.number));
+			data.write_constant(cast_box<Structure::VersionNumber>(t_version.number));
 			struct {
 				OutputByteStreamView header{};
 				OutputByteStreamView resource_information{};
@@ -75,7 +75,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 			if constexpr (check_version(t_version, {3})) {
 				information_structure.header.unknown_1 = 0_iu32;
 			}
-			information_structure.header.information_section_size = cbox<IntegerU32>(data.position());
+			information_structure.header.information_section_size = cast_box<IntegerU32>(data.position());
 			information_structure.header.resource_data_section_compression = packet_compression_to_data(definition.compression);
 			information_structure.resource_information.allocate_full(definition.resource.size());
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
@@ -120,8 +120,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
 					auto   resource_path_full = resource_directory.push(resource_definition.path);
 					resource_information_structure.key = resource_definition.path.emit_windows();
-					resource_information_structure.value.offset = cbox<IntegerU32>(resource_data_section_stream.position());
-					resource_information_structure.value.size = cbox<IntegerU32>(Storage::read_file_stream(resource_path_full, resource_data_section_stream));
+					resource_information_structure.value.offset = cast_box<IntegerU32>(resource_data_section_stream.position());
+					resource_information_structure.value.size = cast_box<IntegerU32>(Storage::read_file_stream(resource_path_full, resource_data_section_stream));
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
@@ -133,9 +133,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::texture()>();
 							resource_information_structure.value.type = Structure::ResourceTypeFlag<t_version>::texture;
 							auto & resource_additional_information_structure = resource_information_structure.value.additional.template set_of_type<ResourceType::Constant::texture()>();
-							resource_additional_information_structure.index = cbox<IntegerU32>(resource_additional_definition.index);
-							resource_additional_information_structure.size_width = cbox<IntegerU32>(resource_additional_definition.size.width);
-							resource_additional_information_structure.size_height = cbox<IntegerU32>(resource_additional_definition.size.height);
+							resource_additional_information_structure.index = cast_box<IntegerU32>(resource_additional_definition.index);
+							resource_additional_information_structure.size_width = cast_box<IntegerU32>(resource_additional_definition.size.width);
+							resource_additional_information_structure.size_height = cast_box<IntegerU32>(resource_additional_definition.size.height);
 							break;
 						}
 						default: throw UnreachableException{};
@@ -152,22 +152,22 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				auto resource_data_section_size = data.position() - resource_data_section_offset;
 				switch (current_resource_type.value) {
 					case ResourceType::Constant::general().value: {
-						information_structure.header.general_resource_data_section_offset = cbox<IntegerU32>(resource_data_section_offset);
-						information_structure.header.general_resource_data_section_size = cbox<IntegerU32>(resource_data_section_size);
-						information_structure.header.general_resource_data_section_size_original = cbox<IntegerU32>(resource_data_section_size_original);
+						information_structure.header.general_resource_data_section_offset = cast_box<IntegerU32>(resource_data_section_offset);
+						information_structure.header.general_resource_data_section_size = cast_box<IntegerU32>(resource_data_section_size);
+						information_structure.header.general_resource_data_section_size_original = cast_box<IntegerU32>(resource_data_section_size_original);
 						break;
 					}
 					case ResourceType::Constant::texture().value: {
-						information_structure.header.texture_resource_data_section_offset = cbox<IntegerU32>(resource_data_section_offset);
-						information_structure.header.texture_resource_data_section_size = cbox<IntegerU32>(resource_data_section_size);
-						information_structure.header.texture_resource_data_section_size_original = cbox<IntegerU32>(resource_data_section_size_original);
+						information_structure.header.texture_resource_data_section_offset = cast_box<IntegerU32>(resource_data_section_offset);
+						information_structure.header.texture_resource_data_section_size = cast_box<IntegerU32>(resource_data_section_size);
+						information_structure.header.texture_resource_data_section_size_original = cast_box<IntegerU32>(resource_data_section_size_original);
 						break;
 					}
 					default: throw UnreachableException{};
 				}
 			}
-			information_structure.header.resource_information_section_offset = cbox<IntegerU32>(information_data.resource_information_offset);
-			information_structure.header.resource_information_section_size = cbox<IntegerU32>(information_data.resource_information.size());
+			information_structure.header.resource_information_section_offset = cast_box<IntegerU32>(information_data.resource_information_offset);
+			information_structure.header.resource_information_section_size = cast_box<IntegerU32>(information_data.resource_information.size());
 			CompiledMapData::adjust_sequence(information_structure.resource_information);
 			{
 				information_data.header.write(information_structure.header);

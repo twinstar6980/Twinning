@@ -110,12 +110,12 @@ export namespace Twinning::Kernel {
 
 		auto as_view(
 		) -> View const & {
-			return self_cast<View>(thiz);
+			return unsafe_cast<View>(thiz);
 		}
 
 		auto as_view(
 		) const -> ConstantView const & {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
@@ -150,11 +150,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region comparison
 
-		auto compare_3way(
+		auto compare_three_way(
 			ConstantView const & that
 		) const -> StrongOrdering requires
 			(IsSame<Element, Character>) {
-			return thiz.as_view().compare_3way(that);
+			return thiz.as_view().compare_three_way(that);
 		}
 
 		#pragma endregion
@@ -277,7 +277,7 @@ export namespace Twinning::Kernel {
 			BasicString const & that
 		) -> StrongOrdering requires
 			(IsSame<Element, Character>) {
-			return thix.compare_3way(that);
+			return thix.compare_three_way(that);
 		}
 
 		#pragma endregion
@@ -297,7 +297,7 @@ export namespace Twinning::Kernel {
 		auto result = BasicString<typename TSource::Element>{source.size() + 1_sz};
 		result.expand_size_to_full();
 		Range::assign_from(result.head(source.size()), source);
-		result.last() = mbox<typename TSource::Element>('\0');
+		result.last() = make_box<typename TSource::Element>('\0');
 		result.shrink_size(1_sz);
 		return result;
 	}

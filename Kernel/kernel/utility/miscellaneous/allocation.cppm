@@ -47,7 +47,7 @@ export namespace Twinning::Kernel {
 		Size const &          size,
 		TArgument const & ... argument
 	) -> Pointer<TIt> {
-		auto pointer = make_pointer(new TIt[ubox<ZSize>(size)]{});
+		auto pointer = make_pointer(new TIt[unmake_box<ZSize>(size)]{});
 		if constexpr (sizeof...(TArgument) != 0_szz) {
 			Range::restruct(Range::make_range_n(pointer, size), argument ...);
 		}

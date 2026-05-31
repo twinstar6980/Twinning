@@ -41,7 +41,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_e8(
 		ZLiteralInteger value
 	) -> Enumerated8 {
-		return mbox<Enumerated8>(value);
+		return make_box<Enumerated8>(value);
 	}
 
 	// ----------------
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_e(
 		ZLiteralInteger value
 	) -> Enumerated {
-		return mbox<Enumerated>(value);
+		return make_box<Enumerated>(value);
 	}
 
 	#pragma endregion

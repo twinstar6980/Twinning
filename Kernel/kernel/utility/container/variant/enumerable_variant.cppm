@@ -70,7 +70,7 @@ export namespace Twinning::Kernel {
 
 		constexpr auto type(
 		) const -> Enumeration {
-			return cbox<Enumeration>(thiz.index());
+			return cast_box<Enumeration>(thiz.index());
 		}
 
 		#pragma endregion
@@ -80,10 +80,10 @@ export namespace Twinning::Kernel {
 		template <auto t_type> requires
 			CategoryConstraint<>
 			&& (IsSameOf<t_type, Enumeration>)
-			&& (ubox<ZSize>(t_type) < sizeof...(TValue))
+			&& (unmake_box<ZSize>(t_type) < sizeof...(TValue))
 		constexpr auto is_of_type(
 		) const -> Boolean {
-			return thiz.template is<AsSelect<ubox<ZSize>(t_type), TValue ...>>();
+			return thiz.template is<AsSelect<unmake_box<ZSize>(t_type), TValue ...>>();
 		}
 
 		// ----------------
@@ -91,12 +91,12 @@ export namespace Twinning::Kernel {
 		template <auto t_type, typename ... TArgument> requires
 			CategoryConstraint<>
 			&& (IsSameOf<t_type, Enumeration>)
-			&& (ubox<ZSize>(t_type) < sizeof...(TValue))
-			&& (IsConstructible<AsSelect<ubox<ZSize>(t_type), TValue ...>, TArgument && ...>)
+			&& (unmake_box<ZSize>(t_type) < sizeof...(TValue))
+			&& (IsConstructible<AsSelect<unmake_box<ZSize>(t_type), TValue ...>, TArgument && ...>)
 		constexpr auto set_of_type(
 			TArgument && ... argument
-		) -> AsSelect<ubox<ZSize>(t_type), TValue ...> & {
-			return thiz.template set<AsSelect<ubox<ZSize>(t_type), TValue ...>>(as_forward<TArgument>(argument) ...);
+		) -> AsSelect<unmake_box<ZSize>(t_type), TValue ...> & {
+			return thiz.template set<AsSelect<unmake_box<ZSize>(t_type), TValue ...>>(as_forward<TArgument>(argument) ...);
 		}
 
 		// ----------------
@@ -104,19 +104,19 @@ export namespace Twinning::Kernel {
 		template <auto t_type> requires
 			CategoryConstraint<>
 			&& (IsSameOf<t_type, Enumeration>)
-			&& (ubox<ZSize>(t_type) < sizeof...(TValue))
+			&& (unmake_box<ZSize>(t_type) < sizeof...(TValue))
 		constexpr auto get_of_type(
-		) -> AsSelect<ubox<ZSize>(t_type), TValue ...> & {
-			return thiz.template get<AsSelect<ubox<ZSize>(t_type), TValue ...>>();
+		) -> AsSelect<unmake_box<ZSize>(t_type), TValue ...> & {
+			return thiz.template get<AsSelect<unmake_box<ZSize>(t_type), TValue ...>>();
 		}
 
 		template <auto t_type> requires
 			CategoryConstraint<>
 			&& (IsSameOf<t_type, Enumeration>)
-			&& (ubox<ZSize>(t_type) < sizeof...(TValue))
+			&& (unmake_box<ZSize>(t_type) < sizeof...(TValue))
 		constexpr auto get_of_type(
-		) const -> AsSelect<ubox<ZSize>(t_type), TValue ...> const & {
-			return thiz.template get<AsSelect<ubox<ZSize>(t_type), TValue ...>>();
+		) const -> AsSelect<unmake_box<ZSize>(t_type), TValue ...> const & {
+			return thiz.template get<AsSelect<unmake_box<ZSize>(t_type), TValue ...>>();
 		}
 
 		#pragma endregion

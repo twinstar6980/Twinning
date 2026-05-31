@@ -20,26 +20,26 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Lzma {
 			OutputByteStreamView & raw,
 			InputByteStreamView &  ripe
 		) -> Void {
-			auto property = ripe.forward_view(mbox<Size>(Third::lzma::$LZMA_PROPS_SIZE));
+			auto property = ripe.forward_view(make_box<Size>(Third::lzma::$LZMA_PROPS_SIZE));
 			auto raw_size_recorded = ripe.read_of<IntegerU64>();
 			assert_test(raw_size_recorded != ~0_iu64);
-			assert_test(raw.reserve() >= cbox<Size>(raw_size_recorded));
-			auto lz_ripe_size = ubox<std::size_t>(ripe.reserve());
-			auto lz_raw_size = ubox<std::size_t>(raw_size_recorded);
-			auto lz_property_size = ubox<std::size_t>(property.size());
+			assert_test(raw.reserve() >= cast_box<Size>(raw_size_recorded));
+			auto lz_ripe_size = unmake_box<std::size_t>(ripe.reserve());
+			auto lz_raw_size = unmake_box<std::size_t>(raw_size_recorded);
+			auto lz_property_size = unmake_box<std::size_t>(property.size());
 			auto lz_state = int{};
 			lz_state = Third::lzma::$LzmaUncompress(
-				rubox<Third::lzma::$Byte *>(raw.current_pointer()),
+				unmake_pointer_unsafe<Third::lzma::$Byte>(raw.current_pointer()),
 				&lz_raw_size,
-				rubox<Third::lzma::$Byte const *>(ripe.current_pointer()),
+				unmake_pointer_unsafe<Third::lzma::$Byte>(ripe.current_pointer()),
 				&lz_ripe_size,
-				rubox<Third::lzma::$Byte const *>(property.begin()),
+				unmake_pointer_unsafe<Third::lzma::$Byte>(property.begin()),
 				lz_property_size
 			);
 			assert_test(lz_state == Third::lzma::$SZ_OK);
-			assert_test(lz_raw_size == ubox<std::size_t>(raw_size_recorded));
-			ripe.forward(mbox<Size>(lz_ripe_size));
-			raw.forward(mbox<Size>(lz_raw_size));
+			assert_test(lz_raw_size == unmake_box<std::size_t>(raw_size_recorded));
+			ripe.forward(make_box<Size>(lz_ripe_size));
+			raw.forward(make_box<Size>(lz_raw_size));
 			return;
 		}
 

@@ -70,19 +70,19 @@ export namespace Twinning::Kernel {
 
 		auto as_underlying(
 		) -> Underlying & {
-			return self_cast<Underlying>(thiz);
+			return unsafe_cast<Underlying>(thiz);
 		}
 
 		auto as_underlying(
 		) const -> Underlying const & {
-			return self_cast<Underlying>(thiz);
+			return unsafe_cast<Underlying>(thiz);
 		}
 
 		// ----------------
 
 		constexpr auto underlying(
 		) const -> Underlying {
-			return cbox<Underlying>(thiz);
+			return cast_box<Underlying>(thiz);
 		}
 
 		#pragma endregion

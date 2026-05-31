@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		) {
 			executor(
 				ValuePackage<t_element_index>{},
-				[] <typename TCurrentPackage>(TCurrentPackage) {
+				[]<typename TCurrentPackage>(TCurrentPackage) {
 					if constexpr (IsTypePackage<TCurrentPackage>) {
 						return TypePackage<typename TCurrentPackage::template Element<t_element_index>>{};
 					}
@@ -61,7 +61,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		) {
 			executor(
 				ValuePackage<t_element_index>{},
-				[] <typename TCurrentPackage>(TCurrentPackage) {
+				[]<typename TCurrentPackage>(TCurrentPackage) {
 					if constexpr (IsTypePackage<TCurrentPackage>) {
 						return TypePackage<typename TCurrentPackage::template Element<t_element_index>>{};
 					}
@@ -82,23 +82,57 @@ export namespace Twinning::Kernel::Trait::Generalization {
 
 	// ----------------
 
-	template <typename TPackage, typename TCondition, typename TExecutor> requires
-		CategoryConstraint<IsPureInstance<TPackage> && IsPureInstance<TCondition> && IsPureInstance<TExecutor>>
+	template <typename TPackage, typename TValue, typename TExecutor> requires
+		CategoryConstraint<IsPureInstance<TPackage> && IsPureInstance<TValue> && IsPureInstance<TExecutor>>
 		&& (IsValuePackage<TPackage>)
 		&& (IsGenericCallable<TExecutor>)
 	inline constexpr auto match(
-		TCondition const & condition,
-		TExecutor const &  executor
+		TValue const &    value,
+		TExecutor const & executor
 	) -> Void {
 		auto has_case = false;
 		each<TPackage>(
 			[&]<auto t_index, auto t_element>(ValuePackage<t_index>, ValuePackage<t_element>) {
-				if (t_element == condition) {
+				if (t_element == value) {
 					executor(ValuePackage<t_index>{}, ValuePackage<t_element>{});
 					has_case = true;
 				}
 			}
 		);
+		assert_test(has_case);
+		return;
+	}
+
+	template <typename TPackage, typename TMatcher, typename TExecutor> requires
+		CategoryConstraint<IsPureInstance<TPackage> && IsPureInstance<TMatcher> && IsPureInstance<TExecutor>>
+		&& (IsTypePackage<TPackage> || IsValuePackage<TPackage>)
+		&& (IsGenericCallable<TMatcher>)
+		&& (IsGenericCallable<TExecutor>)
+	inline constexpr auto match_if(
+		TMatcher const &  matcher,
+		TExecutor const & executor
+	) -> Void {
+		auto has_case = false;
+		if constexpr (IsTypePackage<TPackage>) {
+			each<TPackage>(
+				[&]<auto t_index, typename TElement>(ValuePackage<t_index>, TypePackage<TElement>) {
+					if (!has_case && matcher(ValuePackage<t_index>{}, TypePackage<TElement>{})) {
+						executor(ValuePackage<t_index>{}, TypePackage<TElement>{});
+						has_case = true;
+					}
+				}
+			);
+		}
+		if constexpr (IsValuePackage<TPackage>) {
+			each<TPackage>(
+				[&]<auto t_index, auto t_element>(ValuePackage<t_index>, ValuePackage<t_element>) {
+					if (!has_case && matcher(ValuePackage<t_index>{}, ValuePackage<t_element>{})) {
+						executor(ValuePackage<t_index>{}, ValuePackage<t_element>{});
+						has_case = true;
+					}
+				}
+			);
+		}
 		assert_test(has_case);
 		return;
 	}

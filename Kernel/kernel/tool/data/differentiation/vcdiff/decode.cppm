@@ -26,17 +26,17 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 			auto after_container = std::string{};
 			auto decoder = Third::open_vcdiff::VCDiffStreamingDecoder{};
 			decoder.SetAllowVcdTarget(true);
-			decoder.SetMaximumTargetFileSize(ubox<std::size_t>(k_number_maximum<IntegerS32>));
-			decoder.SetMaximumTargetWindowSize(ubox<std::size_t>(maximum_window_size));
-			decoder.StartDecoding(rubox<char const *>(before.current_pointer()), ubox<std::size_t>(before.reserve()));
-			v_state = decoder.DecodeChunk(rubox<char const *>(patch.current_pointer()), ubox<std::size_t>(patch.reserve()), &after_container);
+			decoder.SetMaximumTargetFileSize(unmake_box<std::size_t>(k_number_maximum<IntegerS32>));
+			decoder.SetMaximumTargetWindowSize(unmake_box<std::size_t>(maximum_window_size));
+			decoder.StartDecoding(unmake_pointer_unsafe<char>(before.current_pointer()), unmake_box<std::size_t>(before.reserve()));
+			v_state = decoder.DecodeChunk(unmake_pointer_unsafe<char>(patch.current_pointer()), unmake_box<std::size_t>(patch.reserve()), &after_container);
 			assert_test(v_state);
 			v_state = decoder.FinishDecoding();
 			assert_test(v_state);
 			before.forward(before.reserve());
 			patch.forward(patch.reserve());
 			for (auto & element : after_container) {
-				after.write(self_cast<Byte>(element));
+				after.write(unsafe_cast<Byte>(element));
 			}
 			return;
 		}

@@ -53,7 +53,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			List<typename Definition::Field> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
-			exchange_raw_constant(data, cbox<IntegerU32>(k_field_data_size));
+			exchange_raw_constant(data, cast_box<IntegerU32>(k_field_data_size));
 			for (auto & value : value_list) {
 				exchange_integer_fixed<IntegerOfPlatform>(data, value.type);
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 			if constexpr (check_version(t_version, {}, {true})) {
 				exchange_integer_fixed<IntegerU32>(data, ignored);
 			}
-			exchange_raw_constant(data, cbox<IntegerU32>(k_emitter_data_size));
+			exchange_raw_constant(data, cast_box<IntegerU32>(k_emitter_data_size));
 			for (auto & value : value_list) {
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				exchange_integer_fixed<IntegerU32>(data, value.image_column);

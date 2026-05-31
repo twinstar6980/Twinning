@@ -11,5 +11,5 @@ set PATH=%home%\library;%PATH%
 	"%home%" ^
 	%*
 
-set /p _=Press ^<ENTER^> to continue ... 
+set /p _=press ^<ENTER^> to continue ... 
 set ERRORLEVEL=0

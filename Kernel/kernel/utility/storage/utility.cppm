@@ -54,7 +54,7 @@ export namespace Twinning::Kernel::Storage {
 			Path const & value
 		) -> std::filesystem::path {
 			auto string = value.emit_native();
-			return std::filesystem::path{self_cast<std::u8string_view>(make_std_string_view(string))};
+			return std::filesystem::path{unsafe_cast<std::u8string_view>(make_std_string_view(string))};
 		}
 
 		#pragma endregion
@@ -121,10 +121,10 @@ export namespace Twinning::Kernel::Storage {
 			Pointer<std::FILE> &    handler
 		) -> auto {
 			#if defined M_system_windows
-			auto file = Third::system::windows::$_wfopen(rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(target.emit_native()))).begin()), rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin()));
+			auto file = Third::system::windows::$_wfopen(unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(target.emit_native()))).begin()), unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin()));
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto file = std::fopen(rubox<char *>(make_null_terminated_string(target.emit_native()).begin()), mode);
+			auto file = std::fopen(unmake_pointer_unsafe<char>(make_null_terminated_string(target.emit_native()).begin()), mode);
 			#endif
 			assert_test(file != nullptr);
 			handler = make_pointer(file);
@@ -176,7 +176,7 @@ export namespace Twinning::Kernel::Storage {
 			auto referent = resolve_link(target);
 			auto is_directory = Boolean{};
 			#if defined M_system_windows
-			auto attribute = Third::system::windows::$GetFileAttributesW(rubox<Third::system::windows::$WCHAR *>(make_null_terminated_string(SystemNativeString::wide_from_utf8(self_cast<BasicString<CharacterN>>(target.emit_native()))).begin()));
+			auto attribute = Third::system::windows::$GetFileAttributesW(unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(target.emit_native()))).begin()));
 			is_directory = attribute != Third::system::windows::$INVALID_FILE_ATTRIBUTES && (attribute & Third::system::windows::$FILE_ATTRIBUTE_DIRECTORY) != 0;
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
@@ -190,7 +190,7 @@ export namespace Twinning::Kernel::Storage {
 		else if (type == Detail::FileType::Constant::directory()) {
 			create_directory(placement);
 			for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(target), std::filesystem::directory_options::none}) {
-				auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
+				auto item_name = make_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
 				copy(target.join(item_name), placement.join(item_name), follow_link);
 			}
 		}
@@ -284,7 +284,7 @@ export namespace Twinning::Kernel::Storage {
 	) -> Path {
 		assert_test(exist_link(target));
 		auto referent = std::filesystem::read_symlink(Detail::emit_path(target));
-		return Path{make_string(self_cast<std::string>(referent.generic_u8string()))};
+		return Path{make_string(unsafe_cast<std::string>(referent.generic_u8string()))};
 	}
 
 	#pragma endregion
@@ -321,7 +321,7 @@ export namespace Twinning::Kernel::Storage {
 	) -> Size {
 		assert_test(exist_file(target));
 		auto size = std::filesystem::file_size(Detail::emit_path(target));
-		return mbox<Size>(size);
+		return make_box<Size>(size);
 	}
 
 	// ----------------
@@ -334,7 +334,7 @@ export namespace Twinning::Kernel::Storage {
 		auto data = ByteArray{size};
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "rb", handler);
-		auto count = std::fread(rubox<void *>(data.begin()), ubox<std::size_t>(size), 1, handler.value);
+		auto count = std::fread(unmake_pointer_unsafe<void>(data.begin()), unmake_box<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		return data;
 	}
@@ -347,7 +347,7 @@ export namespace Twinning::Kernel::Storage {
 		auto size = data.size();
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "wb", handler);
-		auto count = std::fwrite(rubox<void const *>(data.begin()), ubox<std::size_t>(size), 1, handler.value);
+		auto count = std::fwrite(unmake_pointer_unsafe<void>(data.begin()), unmake_box<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		return;
 	}
@@ -363,7 +363,7 @@ export namespace Twinning::Kernel::Storage {
 		assert_test(data.reserve() >= size);
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "rb", handler);
-		auto count = std::fread(rubox<void *>(data.current_pointer()), ubox<std::size_t>(size), 1, handler.value);
+		auto count = std::fread(unmake_pointer_unsafe<void>(data.current_pointer()), unmake_box<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		data.forward(size);
 		return size;
@@ -377,7 +377,7 @@ export namespace Twinning::Kernel::Storage {
 		auto size = data.reserve();
 		auto handler = Pointer<std::FILE>{};
 		auto finalizer = Detail::open_file(target, "wb", handler);
-		auto count = std::fwrite(rubox<void const *>(data.current_pointer()), ubox<std::size_t>(size), 1, handler.value);
+		auto count = std::fwrite(unmake_pointer_unsafe<void>(data.current_pointer()), unmake_box<std::size_t>(size), 1, handler.value);
 		assert_test(count == 1 || size == 0_sz);
 		data.forward(size);
 		return size;
@@ -426,7 +426,7 @@ export namespace Twinning::Kernel::Storage {
 			if (!depth.has() || current_depth < depth.get()) {
 				for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(current_target), std::filesystem::directory_options::none}) {
 					auto item_type = Detail::resolve_type(item.symlink_status().type());
-					auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
+					auto item_name = make_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
 					if (follow_link && item_type == Detail::FileType::Constant::link()) {
 						auto referent_type = Detail::resolve_type(item.status().type());
 						if (referent_type != Detail::FileType::Constant::none()) {
@@ -458,7 +458,7 @@ export namespace Twinning::Kernel::Storage {
 			if (!depth.has() || current_depth < depth.get()) {
 				for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(current_target), std::filesystem::directory_options::none}) {
 					auto item_type = Detail::resolve_type(item.symlink_status().type());
-					auto item_name = make_string(self_cast<std::string>(item.path().filename().generic_u8string()));
+					auto item_name = make_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
 					auto item_path = current_item.join(item_name);
 					if (follow_link && item_type == Detail::FileType::Constant::link()) {
 						auto referent_type = Detail::resolve_type(item.status().type());

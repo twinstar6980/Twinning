@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Trait {
 		&& (IsValuePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_size, ZSize>)
 		&& (t_begin + t_size <= TPackage::size)
 	using AsValuePackageSub = decltype(
-		[] <ZSize ... t_index>(
+		[]<auto ... t_index>(
 		std::index_sequence<t_index ...>
 	) -> ValuePackage<TPackage::template value<t_begin + t_index> ...> {
 			return {};
@@ -91,7 +91,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<IsPureInstance<TPackage1> && IsPureInstance<TPackage2>>
 		&& (IsValuePackage<TPackage1> && IsValuePackage<TPackage2>)
 	using AsValuePackageConcat = decltype(
-		[] <auto ... t_index_1, auto ... t_index_2>(
+		[]<auto ... t_index_1, auto ... t_index_2>(
 		std::index_sequence<t_index_1 ...>,
 		std::index_sequence<t_index_2 ...>
 	) -> ValuePackage<TPackage1::template value<t_index_1> ..., TPackage2::template value<t_index_2> ...> {
@@ -115,7 +115,7 @@ export namespace Twinning::Kernel::Trait {
 		CategoryConstraint<>
 		&& (IsSameOf<t_size, ZSize>)
 	using AsValuePackageOfIndex = decltype(
-		[] <auto ... t_index>(
+		[]<auto ... t_index>(
 		std::index_sequence<t_index ...>
 	) -> ValuePackage<t_index ...> {
 			return {};

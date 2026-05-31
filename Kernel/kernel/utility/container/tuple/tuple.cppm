@@ -84,7 +84,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			Generalization::each_with<>(
 				[&]<auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
-					restruct(thiz.template get<mbox<Size>(t_index)>(), as_forward<TCurrentArgument>(current_argument));
+					restruct(thiz.template get<make_box<Size>(t_index)>(), as_forward<TCurrentArgument>(current_argument));
 				},
 				as_forward<TArgument>(argument) ...
 			);

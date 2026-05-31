@@ -16,13 +16,13 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		inline auto encode_32(
 			IntegerS32 const & value
 		) -> IntegerU32 {
-			return cbox<IntegerU32>(value << 1_sz ^ value >> 31_sz);
+			return cast_box_unsafe<IntegerU32>(value << 1_sz ^ value >> 31_sz);
 		}
 
 		inline auto encode_64(
 			IntegerS64 const & value
 		) -> IntegerU64 {
-			return cbox<IntegerU64>(value << 1_sz ^ value >> 63_sz);
+			return cast_box_unsafe<IntegerU64>(value << 1_sz ^ value >> 63_sz);
 		}
 
 		// ----------------
@@ -30,13 +30,13 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		inline auto decode_32(
 			IntegerU32 const & value
 		) -> IntegerS32 {
-			return cbox<IntegerS32>(value >> 1_sz) ^ -cbox<IntegerS32>(value & 1_iu32);
+			return cast_box_unsafe<IntegerS32>(value >> 1_sz) ^ -cast_box_unsafe<IntegerS32>(value & 1_iu32);
 		}
 
 		inline auto decode_64(
 			IntegerU64 const & value
 		) -> IntegerS64 {
-			return cbox<IntegerS64>(value >> 1_sz) ^ -cbox<IntegerS64>(value & 1_iu64);
+			return cast_box_unsafe<IntegerS64>(value >> 1_sz) ^ -cast_box_unsafe<IntegerS64>(value & 1_iu64);
 		}
 
 		#pragma endregion
@@ -61,11 +61,11 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		OutputByteStreamView & stream,
 		IntegerU32             value
 	) -> Void {
-		while (value >= cbox<IntegerU32>(k_b)) {
-			stream.write(cbox<Byte>(value) & k_x | k_b);
+		while (value >= cast_box<IntegerU32>(k_b)) {
+			stream.write(cast_box_unsafe<Byte>(value) & k_x | k_b);
 			value >>= 7_sz;
 		}
-		stream.write(cbox<Byte>(value));
+		stream.write(cast_box_unsafe<Byte>(value));
 		return;
 	}
 
@@ -73,11 +73,11 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		OutputByteStreamView & stream,
 		IntegerU64             value
 	) -> Void {
-		while (value >= cbox<IntegerU64>(k_b)) {
-			stream.write(cbox<Byte>(value) & k_x | k_b);
+		while (value >= cast_box<IntegerU64>(k_b)) {
+			stream.write(cast_box_unsafe<Byte>(value) & k_x | k_b);
 			value >>= 7_sz;
 		}
-		stream.write(cbox<Byte>(value));
+		stream.write(cast_box_unsafe<Byte>(value));
 		return;
 	}
 
@@ -90,10 +90,10 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		for (auto & shift_count : SizeRange{0_sz, k_type_bit_count<IntegerU32>, 7_sz}) {
 			auto byte = stream.read_of();
 			if ((byte & k_b) != k_z) {
-				value |= cbox<IntegerU32>(byte & k_x) << shift_count;
+				value |= cast_box<IntegerU32>(byte & k_x) << shift_count;
 			}
 			else {
-				value |= cbox<IntegerU32>(byte) << shift_count;
+				value |= cast_box<IntegerU32>(byte) << shift_count;
 				break;
 			}
 		}
@@ -107,10 +107,10 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 		for (auto & shift_count : SizeRange{0_sz, k_type_bit_count<IntegerU64>, 7_sz}) {
 			auto byte = stream.read_of();
 			if ((byte & k_b) != k_z) {
-				value |= cbox<IntegerU64>(byte & k_x) << shift_count;
+				value |= cast_box<IntegerU64>(byte & k_x) << shift_count;
 			}
 			else {
-				value |= cbox<IntegerU64>(byte) << shift_count;
+				value |= cast_box<IntegerU64>(byte) << shift_count;
 				break;
 			}
 		}

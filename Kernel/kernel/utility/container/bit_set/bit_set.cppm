@@ -20,26 +20,7 @@ export namespace Twinning::Kernel {
 
 	public:
 
-		using BoundedInteger = decltype([] {
-			if constexpr (t_size <= 0_sz) {
-				return declare<Void>();
-			}
-			else if constexpr (t_size <= 8_sz) {
-				return declare<IntegerU8>();
-			}
-			else if constexpr (t_size <= 16_sz) {
-				return declare<IntegerU16>();
-			}
-			else if constexpr (t_size <= 32_sz) {
-				return declare<IntegerU32>();
-			}
-			else if constexpr (t_size <= 64_sz) {
-				return declare<IntegerU64>();
-			}
-			else {
-				return declare<Void>();
-			}
-		}());
+		using BoundedInteger = IntegerU64;
 
 	protected:
 
@@ -86,7 +67,7 @@ export namespace Twinning::Kernel {
 
 		auto size(
 		) const -> Size {
-			return mbox<Size>(thiz.m_data.size());
+			return make_box<Size>(thiz.m_data.size());
 		}
 
 		#pragma endregion
@@ -96,14 +77,14 @@ export namespace Twinning::Kernel {
 		auto get(
 			Size const & index
 		) -> Boolean {
-			return thiz.m_data.test(ubox<ZSize>(index));
+			return thiz.m_data.test(unmake_box<ZSize>(index));
 		}
 
 		auto set(
 			Size const &    index,
 			Boolean const & value
 		) -> Void {
-			thiz.m_data.set(ubox<ZSize>(index), ubox<ZBoolean>(value));
+			thiz.m_data.set(unmake_box<ZSize>(index), unmake_box<ZBoolean>(value));
 			return;
 		}
 
@@ -118,7 +99,7 @@ export namespace Twinning::Kernel {
 		auto reset(
 			Size const & index
 		) -> Void {
-			thiz.m_data.reset(ubox<ZSize>(index));
+			thiz.m_data.reset(unmake_box<ZSize>(index));
 			return;
 		}
 
@@ -133,7 +114,7 @@ export namespace Twinning::Kernel {
 		auto set(
 			Size const & index
 		) -> Void {
-			thiz.m_data.set(ubox<ZSize>(index));
+			thiz.m_data.set(unmake_box<ZSize>(index));
 			return;
 		}
 
@@ -143,24 +124,24 @@ export namespace Twinning::Kernel {
 
 		auto all(
 		) const -> Boolean {
-			return mbox<Boolean>(thiz.m_data.all());
+			return make_box<Boolean>(thiz.m_data.all());
 		}
 
 		auto any(
 		) const -> Boolean {
-			return mbox<Boolean>(thiz.m_data.any());
+			return make_box<Boolean>(thiz.m_data.any());
 		}
 
 		auto none(
 		) const -> Boolean {
-			return mbox<Boolean>(thiz.m_data.none());
+			return make_box<Boolean>(thiz.m_data.none());
 		}
 
 		// ----------------
 
 		auto count(
 		) const -> Size {
-			return mbox<Size>(thiz.m_data.count());
+			return make_box<Size>(thiz.m_data.count());
 		}
 
 		// ----------------
@@ -190,24 +171,17 @@ export namespace Twinning::Kernel {
 
 		#pragma region from & to with integer
 
-		template <typename TTargetInteger = BoundedInteger> requires
-			AutomaticConstraint
-			&& (IsSame<TTargetInteger, BoundedInteger>)
-			&& (!IsVoid<TTargetInteger>)
 		auto from_integer(
-			TTargetInteger const & value
+			BoundedInteger const & value
 		) -> Void {
-			thiz.m_data = std::bitset<t_size.value>{ubox<typename TTargetInteger::Value>(value)};
+			assert_test((value >> t_size) == make_box<BoundedInteger>(0));
+			thiz.m_data = std::bitset<t_size.value>{unmake_box<BoundedInteger::Value>(value)};
 			return;
 		}
 
-		template <typename TTargetInteger = BoundedInteger> requires
-			AutomaticConstraint
-			&& (IsSame<TTargetInteger, BoundedInteger>)
-			&& (!IsVoid<TTargetInteger>)
 		auto to_integer(
-		) const -> TTargetInteger {
-			return mbox<TTargetInteger>(thiz.m_data.to_ullong());
+		) const -> BoundedInteger {
+			return make_box<BoundedInteger>(thiz.m_data.to_ullong());
 		}
 
 		#pragma endregion

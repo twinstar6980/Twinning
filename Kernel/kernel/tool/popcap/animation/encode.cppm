@@ -46,7 +46,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			OutputByteStreamView & data,
 			Size const &           value
 		) -> Void {
-			auto value_integer = cbox<Integer>(value);
+			auto value_integer = cast_box<Integer>(value);
 			exchange_integer_variant<TRawShortValue, TRawLongValue>(data, value_integer);
 			return;
 		}
@@ -59,10 +59,10 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			OutputByteStreamView & data,
 			Integer const &        value
 		) -> Void {
-			auto value_short_maximum = ~mbox<TRawShortValue>(0);
-			auto value_long = cbox<TRawLongValue>(value);
-			if (value_long < cbox<TRawLongValue>(value_short_maximum)) {
-				data.write(cbox<TRawShortValue>(value_long));
+			auto value_short_maximum = ~make_box<TRawShortValue>(0);
+			auto value_long = cast_box<TRawLongValue>(value);
+			if (value_long < cast_box<TRawLongValue>(value_short_maximum)) {
+				data.write(cast_box<TRawShortValue>(value_long));
 			}
 			else {
 				data.write(value_short_maximum);
@@ -82,12 +82,12 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			BitSet<t_flag_count> const & flag
 		) -> Void {
 			auto value_short_bit_count = k_type_bit_count<TRawShortValue> - t_flag_count;
-			auto value_short_maximum = ~(~mbox<TRawShortValue>(0) << value_short_bit_count);
-			auto value_long = cbox<TRawLongValue>(value);
-			auto value_flag = cbox<TRawShortValue>(flag.to_integer());
+			auto value_short_maximum = ~(~make_box<TRawShortValue>(0) << value_short_bit_count);
+			auto value_long = cast_box<TRawLongValue>(value);
+			auto value_flag = cast_box<TRawShortValue>(flag.to_integer());
 			auto value_short_with_flag = value_flag << value_short_bit_count;
-			if (value_long < cbox<TRawLongValue>(value_short_maximum)) {
-				value_short_with_flag |= cbox<TRawShortValue>(value_long);
+			if (value_long < cast_box<TRawLongValue>(value_short_maximum)) {
+				value_short_with_flag |= cast_box<TRawShortValue>(value_long);
 				data.write(value_short_with_flag);
 			}
 			else {
@@ -107,7 +107,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			Floater const &        value
 		) -> Void {
 			auto value_integer = value * t_rate;
-			data.write(cbox<TRawValue>(Math::round<Floater>(value_integer)));
+			data.write(cast_box<TRawValue>(Math::round(value_integer)));
 			return;
 		}
 
@@ -287,7 +287,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			if (!value.command.empty()) {
 				flag.set(FrameFlag::command);
 			}
-			exchange_integer_fixed<IntegerU8>(data, cbox<Integer>(flag.to_integer()));
+			exchange_integer_fixed<IntegerU8>(data, cast_box<Integer>(flag.to_integer()));
 			if (flag.get(FrameFlag::remove)) {
 				exchange_list(data, value.remove, &exchange_size_variant<IntegerU8, IntegerU16>, &exchange_layer_remove);
 			}
@@ -386,7 +386,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			Definition::Animation const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
-			data.write_constant(cbox<VersionNumber>(t_version.number));
+			data.write_constant(cast_box<VersionNumber>(t_version.number));
 			exchange_animation(data, definition);
 			return;
 		}

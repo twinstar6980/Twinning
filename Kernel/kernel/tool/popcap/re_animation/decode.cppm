@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			List<typename Definition::Transform> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
-			exchange_raw_constant(data, cbox<IntegerU32>(k_transform_data_size));
+			exchange_raw_constant(data, cast_box<IntegerU32>(k_transform_data_size));
 			for (auto & value : value_list) {
 				exchange_floater_fixed<FloaterS32>(data, value.x);
 				exchange_floater_fixed<FloaterS32>(data, value.y);
@@ -77,7 +77,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 			List<typename Definition::Track> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
-			exchange_raw_constant(data, cbox<IntegerU32>(k_track_data_size));
+			exchange_raw_constant(data, cast_box<IntegerU32>(k_track_data_size));
 			for (auto & value : value_list) {
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
 				exchange_integer_fixed<IntegerOfPlatform>(data, ignored);

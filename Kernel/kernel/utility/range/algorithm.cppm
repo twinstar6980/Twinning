@@ -11,6 +11,7 @@ import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.null_optional;
 import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.miscellaneous.math;
 
 export namespace Twinning::Kernel::Range {
 
@@ -44,10 +45,10 @@ export namespace Twinning::Kernel::Range {
 			return range.size();
 		}
 		else if constexpr (Detail::IsHasBuiltinSizeMethodRange<TRange>) {
-			return mbox<Size>(range.size());
+			return make_box<Size>(range.size());
 		}
 		else if constexpr (IsSame<decltype(range.end() - range.begin()), SSize>) {
-			return cbox<Size>(range.end() - range.begin());
+			return cast_box<Size>(range.end() - range.begin());
 		}
 		else {
 			static_assert(k_static_assert_fail<TRange>);
@@ -219,7 +220,7 @@ export namespace Twinning::Kernel::Range {
 		TRange1 && range_1,
 		TRange2 && range_2
 	) -> Size {
-		auto maximum_common_size = minimum(size(range_1), size(range_2));
+		auto maximum_common_size = Math::minimum(size(range_1), size(range_2));
 		auto size = 0_sz;
 		auto current_1 = range_1.begin();
 		auto current_2 = range_2.begin();
@@ -366,6 +367,46 @@ export namespace Twinning::Kernel::Range {
 		auto range_size = size(range);
 		auto sub_range_size = size(sub_range);
 		return range_size >= sub_range_size && equal(make_range_n(range.end() - sub_range_size, sub_range_size), sub_range);
+	}
+
+	// ----------------
+
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
+	inline constexpr auto minimum(
+		TRange && range
+	) -> decltype(*range.begin()) {
+		assert_test(size(range) != 0_sz);
+		auto current = range.begin();
+		auto end = range.end();
+		auto target = current;
+		while (current != end) {
+			if (*target > *current) {
+				target = current;
+			}
+			++current;
+		}
+		return *target;
+	}
+
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
+	inline constexpr auto maximum(
+		TRange && range
+	) -> decltype(*range.begin()) {
+		assert_test(size(range) != 0_sz);
+		auto current = range.begin();
+		auto end = range.end();
+		auto target = current;
+		while (current != end) {
+			if (*target < *current) {
+				target = current;
+			}
+			++current;
+		}
+		return *target;
 	}
 
 	#pragma endregion
@@ -661,7 +702,7 @@ export namespace Twinning::Kernel::Range {
 	) -> Void {
 		sort(
 			range,
-			[] <typename TElement1, typename TElement2>(TElement1 && element_1, TElement2 && element_2) -> auto {
+			[]<typename TElement1, typename TElement2>(TElement1 && element_1, TElement2 && element_2) -> auto {
 				return element_1 > element_2;
 			}
 		);
@@ -676,7 +717,7 @@ export namespace Twinning::Kernel::Range {
 	) -> Void {
 		sort(
 			range,
-			[] <typename TElement1, typename TElement2>(TElement1 && element_1, TElement2 && element_2) -> auto {
+			[]<typename TElement1, typename TElement2>(TElement1 && element_1, TElement2 && element_2) -> auto {
 				return element_1 < element_2;
 			}
 		);

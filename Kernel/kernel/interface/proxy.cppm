@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Interface {
 			auto   data_position = std::size_t{0};
 			auto   value_size = *reinterpret_cast<std::uint32_t *>(instance.data + data_position);
 			data_position += sizeof(std::uint32_t);
-			value.allocate(mbox<Size>(value_size));
+			value.allocate(make_box<Size>(value_size));
 			for (auto value_index = std::size_t{0}; value_index < value_size; ++value_index) {
 				auto value_item_size = *reinterpret_cast<std::uint32_t *>(instance.data + data_position);
 				data_position += sizeof(std::uint32_t);
@@ -114,7 +114,7 @@ export namespace Twinning::Kernel::Interface {
 			*reinterpret_cast<std::uint32_t *>(instance.data + data_position) = static_cast<std::uint32_t>(value_size);
 			data_position += sizeof(std::uint32_t);
 			for (auto value_index = std::size_t{0}; value_index < value_size; ++value_index) {
-				auto & value_item = value[mbox<Size>(value_index)];
+				auto & value_item = value[make_box<Size>(value_index)];
 				auto   value_item_size = value_item.size().value;
 				*reinterpret_cast<std::uint32_t *>(instance.data + data_position) = static_cast<std::uint32_t>(value_item_size);
 				data_position += sizeof(std::uint32_t);

@@ -29,7 +29,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
-			data.write_constant(cbox<Structure::VersionNumber>(t_version.number));
+			data.write_constant(cast_box<Structure::VersionNumber>(t_version.number));
 			struct {
 				OutputByteStreamView resource_information{};
 			} information_data = {};
@@ -63,18 +63,18 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
 				auto   resource_path = resource_directory.push(resource_definition.path);
 				resource_information_structure.path = StringBlock8{resource_definition.path.emit_windows()};
-				resource_information_structure.time = cbox<IntegerU64>(resource_definition.time);
+				resource_information_structure.time = cast_box<IntegerU64>(resource_definition.time);
 				if constexpr (check_version(t_version, {}, {false})) {
 					auto resource_size = Storage::read_file_stream(resource_path, data);
-					resource_information_structure.size = cbox<IntegerU32>(resource_size);
+					resource_information_structure.size = cast_box<IntegerU32>(resource_size);
 				}
 				if constexpr (check_version(t_version, {}, {true})) {
 					auto resource_data = Storage::read_file(resource_path);
 					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_offset = data.position();
 					Data::Compression::Deflate::Compress::process(resource_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
-					resource_information_structure.size = cbox<IntegerU32>(data.position() - resource_offset);
-					resource_information_structure.size_original = cbox<IntegerU32>(resource_data.size());
+					resource_information_structure.size = cast_box<IntegerU32>(data.position() - resource_offset);
+					resource_information_structure.size_original = cast_box<IntegerU32>(resource_data.size());
 				}
 			}
 			{

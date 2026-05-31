@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 		) -> Void {
 			using Parameter = Parameter<t_bit_count>;
 			if constexpr (t_mode == Mode::Constant::m_0()) {
-				value = mbox<typename Parameter::Value>(0);
+				value = make_box<typename Parameter::Value>(0);
 			}
 			if constexpr (t_mode == Mode::Constant::m_1() || t_mode == Mode::Constant::m_1a()) {
 				value = Parameter::offset;
@@ -33,10 +33,10 @@ export namespace Twinning::Kernel::Tool::Data::Hash::Fnv {
 			for (auto & element : data) {
 				if constexpr (t_mode == Mode::Constant::m_0() || t_mode == Mode::Constant::m_1()) {
 					value *= Parameter::prime;
-					value ^= cbox<typename Parameter::Value>(element);
+					value ^= cast_box_unsafe<typename Parameter::Value>(element);
 				}
 				if constexpr (t_mode == Mode::Constant::m_1a()) {
-					value ^= cbox<typename Parameter::Value>(element);
+					value ^= cast_box_unsafe<typename Parameter::Value>(element);
 					value *= Parameter::prime;
 				}
 			}

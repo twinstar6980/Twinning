@@ -26,13 +26,13 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 				Range::assign_from(raw_buffer.sub(raw.size().width * y, raw.size().width), raw[y]);
 			}
 			Third::avir::CImageResizer<>{8}.resizeImage(
-				rubox<std::uint8_t *>(raw_buffer.begin()),
-				ubox<int>(raw.size().width),
-				ubox<int>(raw.size().height),
+				unmake_pointer_unsafe<std::uint8_t>(raw_buffer.begin()),
+				unmake_box<int>(raw.size().width),
+				unmake_box<int>(raw.size().height),
 				0,
-				rubox<std::uint8_t *>(ripe_buffer.begin()),
-				ubox<int>(ripe.size().width),
-				ubox<int>(ripe.size().height),
+				unmake_pointer_unsafe<std::uint8_t>(ripe_buffer.begin()),
+				unmake_box<int>(ripe.size().width),
+				unmake_box<int>(ripe.size().height),
 				4,
 				0.0,
 				nullptr

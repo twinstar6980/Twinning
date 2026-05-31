@@ -143,8 +143,8 @@ export namespace Twinning::Kernel::Trait {
 
 	// TODO: maybe bug, use assignment instead of constructor if in consteval context
 	template <typename TIt, typename ... TArgument> requires
-		CategoryConstraint<IsInstance<TIt> && IsValid<TArgument ...>>
-		&& (IsConstructible<AsPure<TIt>, TArgument && ...>)
+		CategoryConstraint<IsPureInstance<TIt> && IsValid<TArgument ...>>
+		&& (IsConstructible<TIt, TArgument && ...>)
 	inline constexpr auto construct(
 		TIt &            it,
 		TArgument && ... argument
@@ -159,8 +159,8 @@ export namespace Twinning::Kernel::Trait {
 	}
 
 	template <typename TIt> requires
-		CategoryConstraint<IsInstance<TIt>>
-		&& (IsDestructible<AsPure<TIt>>)
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsDestructible<TIt>)
 	inline constexpr auto destruct(
 		TIt & it
 	) -> Void {
@@ -173,15 +173,27 @@ export namespace Twinning::Kernel::Trait {
 	}
 
 	template <typename TIt, typename ... TArgument> requires
-		CategoryConstraint<IsInstance<TIt> && IsValid<TArgument ...>>
-		&& (IsConstructible<AsPure<TIt>, TArgument && ...>)
-		&& (IsDestructible<AsPure<TIt>>)
+		CategoryConstraint<IsPureInstance<TIt> && IsValid<TArgument ...>>
+		&& (IsConstructible<TIt, TArgument && ...>)
+		&& (IsDestructible<TIt>)
 	inline constexpr auto restruct(
 		TIt &            it,
 		TArgument && ... argument
 	) -> Void {
 		destruct(it);
 		construct(it, as_forward<TArgument>(argument) ...);
+		return;
+	}
+
+	// ----------------
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+	inline constexpr auto swap(
+		TIt & thix,
+		TIt & that
+	) -> Void {
+		std::swap(thix, that);
 		return;
 	}
 

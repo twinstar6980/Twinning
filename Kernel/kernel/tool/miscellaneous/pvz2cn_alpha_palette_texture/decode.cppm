@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 					}
 				}
 				auto & pixel = pixel_row.next();
-				pixel.alpha = Image::uncompress_color(palette[cbox<Size>(index_value)], k_maximum_bit_count);
+				pixel.alpha = Image::uncompress_color(palette[cast_box<Size>(index_value)], k_maximum_bit_count);
 			}
 			return;
 		}

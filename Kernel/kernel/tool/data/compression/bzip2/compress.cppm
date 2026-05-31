@@ -26,12 +26,12 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 			assert_test(Math::between(work_factor, 0_i, 250_i));
 			auto bz_state = int{};
 			auto bz_stream = Third::bzip2::$bz_stream{
-				.next_in = rubox<char *>(as_variable_pointer(raw.current_pointer())),
-				.avail_in = ubox<unsigned int>(raw.reserve()),
+				.next_in = unmake_pointer_unsafe<char>(as_variable_pointer(raw.current_pointer())),
+				.avail_in = unmake_box<unsigned int>(raw.reserve()),
 				.total_in_lo32 = 0,
 				.total_in_hi32 = 0,
-				.next_out = rubox<char *>(ripe.current_pointer()),
-				.avail_out = ubox<unsigned int>(ripe.reserve()),
+				.next_out = unmake_pointer_unsafe<char>(ripe.current_pointer()),
+				.avail_out = unmake_box<unsigned int>(ripe.reserve()),
 				.total_out_lo32 = 0,
 				.total_out_hi32 = 0,
 				.state = nullptr,
@@ -41,9 +41,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 			};
 			bz_state = Third::bzip2::$BZ2_bzCompressInit(
 				&bz_stream,
-				ubox<int>(block_size),
+				unmake_box<int>(block_size),
 				0,
-				ubox<int>(work_factor)
+				unmake_box<int>(work_factor)
 			);
 			assert_test(bz_state == Third::bzip2::$BZ_OK);
 			bz_state = Third::bzip2::$BZ2_bzCompress(
@@ -56,8 +56,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 			);
 			assert_test(bz_state == Third::bzip2::$BZ_OK);
 			assert_test(bz_stream.avail_in == 0);
-			raw.forward(mbox<Size>((static_cast<std::uint64_t>(bz_stream.total_in_hi32) << 32) + static_cast<std::uint64_t>(bz_stream.total_in_lo32)));
-			ripe.forward(mbox<Size>((static_cast<std::uint64_t>(bz_stream.total_out_hi32) << 32) + static_cast<std::uint64_t>(bz_stream.total_out_lo32)));
+			raw.forward(cast_box<Size>((make_box<IntegerU64>(bz_stream.total_in_hi32) << 32_sz) | (make_box<IntegerU64>(bz_stream.total_in_lo32) << 0_sz)));
+			ripe.forward(cast_box<Size>((make_box<IntegerU64>(bz_stream.total_out_hi32) << 32_sz) | (make_box<IntegerU64>(bz_stream.total_out_lo32) << 0_sz)));
 			assert_test(raw.full());
 			return;
 		}

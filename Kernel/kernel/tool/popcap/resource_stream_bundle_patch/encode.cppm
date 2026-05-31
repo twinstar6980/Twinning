@@ -76,15 +76,15 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			Boolean const &        use_raw_packet
 		) -> Void {
 			patch.write_constant(k_magic_marker);
-			patch.write_constant(cbox<VersionNumber>(t_version.number));
+			patch.write_constant(cast_box<VersionNumber>(t_version.number));
 			auto package_information_stream = OutputByteStreamView{patch.forward_view(bs_static_size<PackageInformation>())};
 			auto package_information = PackageInformation{};
 			auto information_section_before_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			auto information_section_after_structure = ResourceStreamBundle::Structure::Information<package_version>{};
 			read_package_information_structure(as_left(InputByteStreamView{before.view()}), information_section_before_structure);
 			read_package_information_structure(as_left(InputByteStreamView{after.view()}), information_section_after_structure);
-			auto information_section_before = before.sub_view(0_sz, cbox<Size>(information_section_before_structure.header.information_section_size));
-			auto information_section_after = after.sub_view(0_sz, cbox<Size>(information_section_after_structure.header.information_section_size));
+			auto information_section_before = before.sub_view(0_sz, cast_box<Size>(information_section_before_structure.header.information_section_size));
+			auto information_section_after = after.sub_view(0_sz, cast_box<Size>(information_section_after_structure.header.information_section_size));
 			test_hash(information_section_before, package_information.before_hash);
 			auto information_section_patch_exist = Boolean{};
 			auto information_section_patch_size = Size{};
@@ -95,15 +95,15 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			else {
 				process_sub(information_section_before, information_section_after, patch, information_section_patch_size);
 			}
-			package_information.patch_exist = cbox<IntegerU32>(information_section_patch_exist);
-			package_information.patch_size = cbox<IntegerU32>(information_section_patch_size);
-			auto packet_before_subgroup_information_index_map = indexing_subgroup_information_by_identifier(information_section_before_structure.subgroup_information);
+			package_information.patch_exist = cast_box<IntegerU32>(information_section_patch_exist);
+			package_information.patch_size = cast_box<IntegerU32>(information_section_patch_size);
+			auto packet_before_subgroup_information_index_if_map = indexing_subgroup_information_by_identifier(information_section_before_structure.subgroup_information);
 			auto packet_before_raw_container = ByteArray{};
 			auto packet_after_raw_container = ByteArray{};
-			auto before_end_position = cbox<Size>(information_section_before_structure.header.information_section_size);
-			auto after_end_position = cbox<Size>(information_section_after_structure.header.information_section_size);
-			auto packet_count = cbox<Size>(information_section_after_structure.header.subgroup_information_section_block_count);
-			package_information.packet_count = cbox<IntegerU32>(packet_count);
+			auto before_end_position = cast_box<Size>(information_section_before_structure.header.information_section_size);
+			auto after_end_position = cast_box<Size>(information_section_after_structure.header.information_section_size);
+			auto packet_count = cast_box<Size>(information_section_after_structure.header.subgroup_information_section_block_count);
+			package_information.packet_count = cast_box<IntegerU32>(packet_count);
 			for (auto & packet_index : SizeRange{packet_count}) {
 				auto & packet_after_subgroup_information = information_section_after_structure.subgroup_information[packet_index];
 				auto   packet_information_stream = OutputByteStreamView{patch.forward_view(bs_static_size<PacketInformation>())};
@@ -113,14 +113,15 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				auto   packet_patch_size = Size{};
 				packet_name = String{packet_after_subgroup_information.identifier.begin(), null_terminated_string_size_of(packet_after_subgroup_information.identifier.begin())};
 				auto packet_before = ConstantByteListView{};
-				if (auto packet_before_subgroup_information_index = packet_before_subgroup_information_index_map.query_if(packet_name)) {
-					auto & packet_before_subgroup_information = information_section_before_structure.subgroup_information[cbox<Size>(packet_before_subgroup_information_index.get().value)];
-					auto   packet_before_ripe = InputByteStreamView{before.sub_view(cbox<Size>(packet_before_subgroup_information.offset), cbox<Size>(packet_before_subgroup_information.size))};
+				auto packet_before_subgroup_information_index_if = packet_before_subgroup_information_index_if_map.query_if(packet_name);
+				if (packet_before_subgroup_information_index_if.has()) {
+					auto & packet_before_subgroup_information = information_section_before_structure.subgroup_information[cast_box<Size>(packet_before_subgroup_information_index_if.get().value)];
+					auto   packet_before_ripe = InputByteStreamView{before.sub_view(cast_box<Size>(packet_before_subgroup_information.offset), cast_box<Size>(packet_before_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_before = packet_before_ripe.view();
 					}
 					else {
-						auto packet_before_raw_size = cbox<Size>(packet_before_subgroup_information.information_section_size + packet_before_subgroup_information.general_resource_data_section_size_original + packet_before_subgroup_information.texture_resource_data_section_size_original);
+						auto packet_before_raw_size = cast_box<Size>(packet_before_subgroup_information.information_section_size + packet_before_subgroup_information.general_resource_data_section_size_original + packet_before_subgroup_information.texture_resource_data_section_size_original);
 						if (packet_before_raw_size > packet_before_raw_container.size()) {
 							packet_before_raw_container.allocate(packet_before_raw_size);
 						}
@@ -129,17 +130,17 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 						assert_test(packet_before_ripe.full());
 						packet_before = packet_before_raw.stream_view();
 					}
-					before_end_position = maximum(before_end_position, cbox<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
+					before_end_position = Math::maximum(before_end_position, cast_box<Size>(packet_before_subgroup_information.offset + packet_before_subgroup_information.size));
 				}
 				test_hash(packet_before, packet_information.before_hash);
 				auto packet_after = ConstantByteListView{};
 				{
-					auto packet_after_ripe = InputByteStreamView{after.sub_view(cbox<Size>(packet_after_subgroup_information.offset), cbox<Size>(packet_after_subgroup_information.size))};
+					auto packet_after_ripe = InputByteStreamView{after.sub_view(cast_box<Size>(packet_after_subgroup_information.offset), cast_box<Size>(packet_after_subgroup_information.size))};
 					if (!use_raw_packet) {
 						packet_after = packet_after_ripe.view();
 					}
 					else {
-						auto packet_after_raw_size = cbox<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.general_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
+						auto packet_after_raw_size = cast_box<Size>(packet_after_subgroup_information.information_section_size + packet_after_subgroup_information.general_resource_data_section_size_original + packet_after_subgroup_information.texture_resource_data_section_size_original);
 						if (packet_after_raw_size > packet_after_raw_container.size()) {
 							packet_after_raw_container.allocate(packet_after_raw_size);
 						}
@@ -148,7 +149,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 						assert_test(packet_after_ripe.full());
 						packet_after = packet_after_raw.stream_view();
 					}
-					after_end_position = maximum(after_end_position, cbox<Size>(packet_after_subgroup_information.offset + packet_after_subgroup_information.size));
+					after_end_position = Math::maximum(after_end_position, cast_box<Size>(packet_after_subgroup_information.offset + packet_after_subgroup_information.size));
 				}
 				packet_patch_exist = packet_after != packet_before;
 				if (!packet_patch_exist) {
@@ -158,14 +159,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 					process_sub(packet_before, packet_after, patch, packet_patch_size);
 				}
 				Range::assign_from(packet_information.name.view().head(packet_name.size()), packet_name.view());
-				packet_information.patch_exist = cbox<IntegerU32>(packet_patch_exist);
-				packet_information.patch_size = cbox<IntegerU32>(packet_patch_size);
+				packet_information.patch_exist = cast_box<IntegerU32>(packet_patch_exist);
+				packet_information.patch_size = cast_box<IntegerU32>(packet_patch_size);
 				packet_information_stream.write(packet_information);
 			}
-			package_information.all_after_size = cbox<IntegerU32>(after_end_position);
-			package_information.packet_count = cbox<IntegerU32>(packet_count);
-			package_information.patch_exist = cbox<IntegerU32>(information_section_patch_exist);
-			package_information.patch_size = cbox<IntegerU32>(information_section_patch_size);
+			package_information.all_after_size = cast_box<IntegerU32>(after_end_position);
+			package_information.packet_count = cast_box<IntegerU32>(packet_count);
+			package_information.patch_exist = cast_box<IntegerU32>(information_section_patch_exist);
+			package_information.patch_size = cast_box<IntegerU32>(information_section_patch_size);
 			package_information_stream.write(package_information);
 			before.set_position(before_end_position);
 			after.set_position(after_end_position);

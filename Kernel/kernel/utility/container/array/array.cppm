@@ -8,6 +8,7 @@ import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.miscellaneous.allocation;
+import twinning.kernel.utility.miscellaneous.math;
 import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.generic_range;
@@ -173,12 +174,12 @@ export namespace Twinning::Kernel {
 
 		auto as_view(
 		) -> VariableView const & {
-			return self_cast<VariableView>(thiz);
+			return unsafe_cast<VariableView>(thiz);
 		}
 
 		auto as_view(
 		) const -> ConstantView const & {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		// ----------------
@@ -406,7 +407,7 @@ export namespace Twinning::Kernel {
 			Size const & size
 		) -> Void {
 			auto old = as_moveable(thiz);
-			auto old_size = minimum(size, old.size());
+			auto old_size = Math::minimum(size, old.size());
 			thiz.allocate(size);
 			Range::assign_from(thiz.head(old_size), Range::make_moveable_range_of(old.head(old_size)));
 			old.reset();
@@ -507,10 +508,10 @@ export namespace Twinning::Kernel {
 	inline auto make_array(
 		TArgument && ... argument
 	) -> Array<TElement> {
-		auto result = Array<TElement>{mbox<Size>(sizeof...(TArgument))};
+		auto result = Array<TElement>{make_box<Size>(sizeof...(TArgument))};
 		Generalization::each_with<>(
 			[&]<auto t_index, typename TCurrentArgument>(ValuePackage<t_index>, TCurrentArgument && current_argument) {
-				restruct(result.at(mbox<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
+				restruct(result.at(make_box<Size>(t_index)), as_forward<TCurrentArgument>(current_argument));
 			},
 			as_forward<TArgument>(argument) ...
 		);

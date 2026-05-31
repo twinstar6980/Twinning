@@ -31,11 +31,11 @@ export namespace Twinning::Kernel {
 		CategoryConstraint<>
 		&& (IsSameOf<t_size, ZSize>)
 	struct StaticString :
-		BasicStaticString<Character, mbox<Size>(t_size)> {
+		BasicStaticString<Character, make_box<Size>(t_size)> {
 		implicit constexpr StaticString(
 			ZArray<Character::Value, t_size> const & data
 		) :
-			BasicStaticString<Character, mbox<Size>(t_size)>{data} {
+			BasicStaticString<Character, make_box<Size>(t_size)>{data} {
 		}
 	};
 
@@ -47,14 +47,14 @@ export namespace Twinning::Kernel {
 		ZConstantString const & string,
 		ZSize const &           length
 	) -> ConstantStringView {
-		return ConstantStringView{cast_pointer<Character>(make_pointer(string)), mbox<Size>(length)};
+		return ConstantStringView{make_pointer_unsafe<Character>(string), make_box<Size>(length)};
 	}
 
 	inline auto make_string(
 		ZConstantString const & string,
 		ZSize const &           length
 	) -> String {
-		return String{cast_pointer<Character>(make_pointer(string)), mbox<Size>(length)};
+		return String{make_pointer_unsafe<Character>(string), make_box<Size>(length)};
 	}
 
 	// ----------------
@@ -76,7 +76,7 @@ export namespace Twinning::Kernel {
 	inline auto make_std_string_view(
 		ConstantStringView const & string
 	) -> std::string_view {
-		return std::string_view{rubox<char const *>(string.begin()), ubox<std::size_t>(string.size())};
+		return std::string_view{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
 	}
 
 	inline constexpr auto hash_std_string_view(
@@ -94,11 +94,10 @@ export namespace Twinning::Kernel {
 
 	// ----------------
 
-	// NOTE: ALIAS: make_std_string
-	inline auto mss(
+	inline auto make_std_string(
 		ConstantStringView const & string
 	) -> std::string {
-		return std::string{rubox<char const *>(string.begin()), ubox<std::size_t>(string.size())};
+		return std::string{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
 	}
 
 	#pragma endregion

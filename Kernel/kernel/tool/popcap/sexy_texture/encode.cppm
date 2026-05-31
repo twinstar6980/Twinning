@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			Boolean const &                   compress_texture_data
 		) -> Void {
 			data.write_constant(k_magic_marker);
-			data.write_constant(cbox<VersionNumber>(t_version.number));
+			data.write_constant(cast_box<VersionNumber>(t_version.number));
 			auto header_stream = OutputByteStreamView{data.forward_view(bs_static_size<Header>())};
 			auto image_format = Integer{};
 			switch (format.value) {
@@ -97,11 +97,11 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 				data.forward(ripe_texture_data_stream.position());
 			}
 			auto header = Header{};
-			header.size_width = cbox<IntegerU32>(image.size().width);
-			header.size_height = cbox<IntegerU32>(image.size().height);
-			header.format = cbox<IntegerU32>(image_format);
-			header.compress_data = cbox<IntegerU32>(compress_texture_data);
-			header.compress_data_size = cbox<IntegerU32>(compress_texture_data_size);
+			header.size_width = cast_box<IntegerU32>(image.size().width);
+			header.size_height = cast_box<IntegerU32>(image.size().height);
+			header.format = cast_box<IntegerU32>(image_format);
+			header.compress_data = cast_box<IntegerU32>(compress_texture_data);
+			header.compress_data_size = cast_box<IntegerU32>(compress_texture_data_size);
 			header_stream.write(header);
 			return;
 		}

@@ -27,8 +27,79 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		// ----------------
 
-		struct TypeIdentifierEnumeration {
-			enum class Type : ZByte {
+		M_enumeration_specific(
+			M_wrap(TypeIdentifier),
+			M_wrap(ZByte),
+			M_wrap(
+				// boolean
+				boolean_false,
+				boolean_true,
+				// integer
+				integer_signed_8,
+				integer_signed_8_zero,
+				integer_unsigned_8,
+				integer_unsigned_8_zero,
+				integer_signed_16,
+				integer_signed_16_zero,
+				integer_unsigned_16,
+				integer_unsigned_16_zero,
+				integer_signed_32,
+				integer_signed_32_zero,
+				integer_unsigned_32,
+				integer_unsigned_32_zero,
+				integer_signed_64,
+				integer_signed_64_zero,
+				integer_unsigned_64,
+				integer_unsigned_64_zero,
+				// floater
+				floater_signed_32,
+				floater_signed_32_zero,
+				floater_signed_64,
+				floater_signed_64_zero,
+				// integer variable length
+				integer_variable_length_unsigned_32,
+				integer_variable_length_signed_32,
+				integer_variable_length_unsigned_32_equivalent,
+				integer_variable_length_unsigned_64,
+				integer_variable_length_signed_64,
+				integer_variable_length_unsigned_64_equivalent,
+				// string native
+				string_native,
+				string_native_indexing,
+				string_native_indexed,
+				// string unicode
+				string_unicode,
+				string_unicode_indexing,
+				string_unicode_indexed,
+				// reference
+				reference,
+				reference_null,
+				// array
+				array_begin,
+				array_size,
+				array_end,
+				// object
+				object_begin,
+				object_end,
+				// TODO: never appeared in known rton file
+				_string_literal_star,
+				_string_binary_blob,
+				_string_native_x1,
+				_string_native_x2,
+				_string_unicode_x1,
+				_string_unicode_x2,
+				_string_native_or_unicode_x1,
+				_string_native_or_unicode_x2,
+				_string_native_or_unicode_x3,
+				_string_native_or_unicode_x4,
+				_object_begin_x1,
+				_array_begin_x1,
+				_string_native_x3,
+				_string_binary_blob_x1,
+				_boolean_x1,
+			),
+			M_wrap(
+				// @formatter:off
 				// boolean
 				boolean_false = 0x00,
 				boolean_true  = 0x01,
@@ -79,7 +150,6 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				// object
 				object_begin = 0x85,
 				object_end   = 0xFF,
-				// ReSharper disable CppInconsistentNaming
 				// TODO: never appeared in known rton file
 				_string_literal_star         = 0x02,
 				_string_binary_blob          = 0x87,
@@ -96,23 +166,28 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				_string_native_x3            = 0xBA,
 				_string_binary_blob_x1       = 0xBB,
 				_boolean_x1                  = 0xBC,
-				// ReSharper restore CppInconsistentNaming
-			};
-		};
-
-		using TypeIdentifier = Enumeration<typename TypeIdentifierEnumeration::Type>;
+				// @formatter:on
+			),
+		);
 
 		// ----------------
 
-		struct ReferenceTypeIdentifierEnumeration {
-			enum class Type : ZByte {
+		M_enumeration_specific(
+			M_wrap(ReferenceTypeIdentifier),
+			M_wrap(ZByte),
+			M_wrap(
+				null,
+				identifier,
+				alias,
+			),
+			M_wrap(
+				// @formatter:off
 				null       = 0x00,
 				identifier = 0x02,
 				alias      = 0x03,
-			};
-		};
-
-		using ReferenceTypeIdentifier = Enumeration<typename ReferenceTypeIdentifierEnumeration::Type>;
+				// @formatter:on
+			),
+		);
 
 		inline static constexpr auto k_reference_expression_format_of_null = StringFormatter{"RTID(0)"_sf};
 
@@ -128,7 +203,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			}
 			auto content = string.sub("RTID("_sl, string.size() - "RTID()"_sl);
 			if (content == "0"_sv) {
-				return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::null});
+				return make_optional_of(ReferenceTypeIdentifier::Constant::null());
 			}
 			auto at_position = Range::find_index(content, '@'_c);
 			if (!at_position.has()) {
@@ -139,10 +214,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				if (Range::all_of(identifier_part[1_ix], &CharacterType::is_number_decimal) &&
 					Range::all_of(identifier_part[2_ix], &CharacterType::is_number_decimal) &&
 					Range::all_of(identifier_part[3_ix], &CharacterType::is_number_hexadecimal)) {
-					return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::identifier});
+					return make_optional_of(ReferenceTypeIdentifier::Constant::identifier());
 				}
 			}
-			return make_optional_of(ReferenceTypeIdentifier{ReferenceTypeIdentifier::Value::alias});
+			return make_optional_of(ReferenceTypeIdentifier::Constant::alias());
 		}
 
 		// ----------------

@@ -36,8 +36,8 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			data.read_constant(k_magic_marker);
 			auto header = Header{};
 			data.read(header);
-			assert_test(image.size() == Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)});
-			auto image_format = cbox<Integer>(header.format);
+			assert_test(image.size() == Image::ImageSize{cast_box<Size>(header.size_width), cast_box<Size>(header.size_height)});
+			auto image_format = cast_box<Integer>(header.format);
 			auto format = Texture::Encoding::Format{};
 			auto opacity = Boolean{};
 			switch (image_format.value) {
@@ -102,7 +102,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			data_stream.read_constant(k_magic_marker);
 			auto header = Header{};
 			data_stream.read(header);
-			image_size = Image::ImageSize{cbox<Size>(header.size_width), cbox<Size>(header.size_height)};
+			image_size = Image::ImageSize{cast_box<Size>(header.size_width), cast_box<Size>(header.size_height)};
 			return;
 		}
 

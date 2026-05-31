@@ -39,10 +39,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 				auto astc_config = Third::astc_encoder::astcenc_config{};
 				astc_error = Third::astc_encoder::astcenc_config_init(
 					Third::astc_encoder::astcenc_profile::ASTCENC_PRF_LDR,
-					ubox<unsigned int>(block_size.width),
-					ubox<unsigned int>(block_size.height),
+					unmake_box<unsigned int>(block_size.width),
+					unmake_box<unsigned int>(block_size.height),
 					1,
-					ubox<float>(quality),
+					unmake_box<float>(quality),
 					0,
 					&astc_config
 				);
@@ -50,10 +50,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 				auto astc_context = ZPointer<Third::astc_encoder::astcenc_context>{};
 				astc_error = Third::astc_encoder::astcenc_context_alloc(&astc_config, 1, &astc_context, nullptr);
 				assert_test(astc_error == Third::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
-				auto astc_image_data = rubox<Void *>(raw_data.begin());
+				auto astc_image_data = unmake_pointer_unsafe<Void>(raw_data.begin());
 				auto astc_image = Third::astc_encoder::astcenc_image{
-					.dim_x = ubox<unsigned int>(image.size().width),
-					.dim_y = ubox<unsigned int>(image.size().height),
+					.dim_x = unmake_box<unsigned int>(image.size().width),
+					.dim_y = unmake_box<unsigned int>(image.size().height),
 					.dim_z = 1,
 					.data_type = Third::astc_encoder::astcenc_type::ASTCENC_TYPE_U8,
 					.data = &astc_image_data,
@@ -68,8 +68,8 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 					astc_context,
 					&astc_image,
 					&astc_swizzle,
-					rubox<std::uint8_t *>(data.current_pointer()),
-					ubox<std::size_t>(ripe_data_size),
+					unmake_pointer_unsafe<std::uint8_t>(data.current_pointer()),
+					unmake_box<std::size_t>(ripe_data_size),
 					0
 				);
 				Third::astc_encoder::astcenc_context_free(astc_context);

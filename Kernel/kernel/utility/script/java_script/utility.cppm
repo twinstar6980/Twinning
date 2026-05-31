@@ -125,13 +125,13 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		inline static auto new_instance(
 			Value & value
 		) -> NativeValueHandler {
-			return NativeValueHandler{make_pointer_of(value), k_true};
+			return NativeValueHandler{make_pointer(&value), k_true};
 		}
 
 		inline static auto new_reference(
 			Value & value
 		) -> NativeValueHandler {
-			return NativeValueHandler{make_pointer_of(value), k_false};
+			return NativeValueHandler{make_pointer(&value), k_false};
 		}
 
 		template <typename ... TArgument> requires
@@ -178,7 +178,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 				if constexpr (!t_forward_object) {
 					using Argument = CallableTraitOf<t_function>::Argument;
 					return call_native_function_wrapper_inner<t_function>(
-						as_forward<typename Argument::template Element<t_index>>(argument[mbox<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
+						as_forward<typename Argument::template Element<t_index>>(argument[make_box<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
 					);
 				}
 				else {
@@ -186,7 +186,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<t_function>::Argument, 1_szz>;
 					return call_native_function_wrapper_inner<t_function>(
 						as_left(object.to_of<Class>()),
-						as_forward<typename Argument::template Element<t_index>>(argument[mbox<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
+						as_forward<typename Argument::template Element<t_index>>(argument[make_box<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
 					);
 				}
 			}(AsValuePackageOfIndex<CallableTraitOf<t_function>::Argument::size - (!t_forward_object ? (0) : (1))>{});
@@ -336,7 +336,8 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Runtime & rt,
 			Value &   obj
 		) -> Void {
-			delete static_cast<NativeValueHandler<TClass> *>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), ubox<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>)));
+			auto opaque = make_pointer_unsafe<NativeValueHandler<TClass>>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), unmake_box<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>)));
+			free_instance(opaque);
 			return;
 		}
 

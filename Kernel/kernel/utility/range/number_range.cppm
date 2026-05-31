@@ -62,10 +62,10 @@ export namespace Twinning::Kernel::Range {
 		explicit constexpr NumberRange(
 			Number const & begin,
 			Number const & end,
-			Number const & step = mbox<Number>(1)
+			Number const & step = make_box<Number>(1)
 		) :
 			m_begin{begin},
-			m_end{(end - begin) % step == mbox<Number>(0) ? (end) : (end + step - (end - begin) % step)},
+			m_end{(end - begin) % step == make_box<Number>(0) ? (end) : (end + step - (end - begin) % step)},
 			m_step{step} {
 			return;
 		}
@@ -73,9 +73,9 @@ export namespace Twinning::Kernel::Range {
 		explicit constexpr NumberRange(
 			Number const & size
 		) :
-			m_begin{mbox<Number>(0)},
+			m_begin{make_box<Number>(0)},
 			m_end{size},
-			m_step{mbox<Number>(1)} {
+			m_step{make_box<Number>(1)} {
 			return;
 		}
 

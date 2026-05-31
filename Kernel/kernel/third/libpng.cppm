@@ -17,9 +17,9 @@ export namespace Twinning::Kernel::Third::libpng {
 
 	using $png_structp = png_structp;
 
-	using $png_bytep = png_bytep;
+	using $png_byte = png_byte;
 
-	using $png_const_bytep = png_const_bytep;
+	using $png_bytep = png_bytep;
 
 	using $png_const_charp = png_const_charp;
 

@@ -29,7 +29,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 			Optional<Path> const & resource_directory
 		) -> Void {
 			data.read_constant(Structure::k_magic_marker);
-			data.read_constant(cbox<Structure::VersionNumber>(t_version.number));
+			data.read_constant(cast_box<Structure::VersionNumber>(t_version.number));
 			auto information_structure = Structure::Information<t_version>{};
 			{
 				information_structure.resource_information.allocate(0_sz);
@@ -52,8 +52,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				auto & resource_definition = definition.resource[resource_index];
 				resource_definition.path = Path{resource_information_structure.path.value};
 				assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
-				resource_definition.time = cbox<Integer>(resource_information_structure.time);
-				auto resource_data = data.forward_view(cbox<Size>(resource_information_structure.size));
+				resource_definition.time = cast_box<Integer>(resource_information_structure.time);
+				auto resource_data = data.forward_view(cast_box<Size>(resource_information_structure.size));
 				if constexpr (check_version(t_version, {}, {false})) {
 					if (resource_directory.has()) {
 						if (!Storage::exist_directory(resource_directory.get())) {
@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 					}
 				}
 				if constexpr (check_version(t_version, {}, {true})) {
-					auto resource_data_original = ByteArray{cbox<Size>(resource_information_structure.size_original)};
+					auto resource_data_original = ByteArray{cast_box<Size>(resource_information_structure.size_original)};
 					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_data_original_stream = OutputByteStreamView{resource_data_original};
 					Data::Compression::Deflate::Uncompress::process(resource_data_original_stream, resource_data_stream, 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());

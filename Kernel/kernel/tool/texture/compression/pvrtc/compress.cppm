@@ -37,12 +37,12 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 					if (!with_alpha) {
 						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
 						assert_test(ripe_data_size <= data.reserve());
-						auto pvrtc_image = Third::PVRTCCompressor::RgbBitmap{ubox<int>(image.size().width), ubox<int>(image.size().height)};
+						auto pvrtc_image = Third::PVRTCCompressor::RgbBitmap{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)};
 						auto raw_format = Encoding::Format::Constant::rgb_888_r();
 						auto raw_data = to_byte_view(VariableListView<Third::PVRTCCompressor::ColorRgb<unsigned char>>{make_pointer(pvrtc_image.GetData()), image.size().area()});
 						Encoding::Encode::process(as_left(OutputByteStreamView{raw_data}), image, raw_format);
 						Third::PVRTCCompressor::PvrTcEncoder::EncodeRgb4Bpp(
-							rubox<void *>(data.current_pointer()),
+							unmake_pointer_unsafe<void>(data.current_pointer()),
 							pvrtc_image
 						);
 						data.forward(ripe_data_size);
@@ -50,12 +50,12 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 					else {
 						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
 						assert_test(ripe_data_size <= data.reserve());
-						auto pvrtc_image = Third::PVRTCCompressor::RgbaBitmap{ubox<int>(image.size().width), ubox<int>(image.size().height)};
+						auto pvrtc_image = Third::PVRTCCompressor::RgbaBitmap{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)};
 						auto raw_format = Encoding::Format::Constant::argb_8888_r();
 						auto raw_data = to_byte_view(VariableListView<Third::PVRTCCompressor::ColorRgba<unsigned char>>{make_pointer(pvrtc_image.GetData()), image.size().area()});
 						Encoding::Encode::process(as_left(OutputByteStreamView{raw_data}), image, raw_format);
 						Third::PVRTCCompressor::PvrTcEncoder::EncodeRgba4Bpp(
-							rubox<void *>(data.current_pointer()),
+							unmake_pointer_unsafe<void>(data.current_pointer()),
 							pvrtc_image
 						);
 						data.forward(ripe_data_size);

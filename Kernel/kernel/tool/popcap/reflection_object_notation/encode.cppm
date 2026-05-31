@@ -26,11 +26,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		using typename Common::VersionNumber;
 
-		using typename Common::TypeIdentifierEnumeration;
-
 		using typename Common::TypeIdentifier;
-
-		using typename Common::ReferenceTypeIdentifierEnumeration;
 
 		using typename Common::ReferenceTypeIdentifier;
 
@@ -50,7 +46,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			OutputByteStreamView &          data,
 			Notation::Json::Boolean const & value
 		) -> Void {
-			data.write(TypeIdentifier{!value ? (TypeIdentifier::Value::boolean_false) : (TypeIdentifier::Value::boolean_true)});
+			data.write(!value ? (TypeIdentifier::Constant::boolean_false()) : (TypeIdentifier::Constant::boolean_true()));
 			return;
 		}
 
@@ -59,11 +55,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			Notation::Json::Number const & value
 		) -> Void {
 			if (value.is_integer()) {
-				data.write(TypeIdentifier{TypeIdentifier::Value::integer_variable_length_signed_64});
+				data.write(TypeIdentifier::Constant::integer_variable_length_signed_64());
 				ProtocolBufferVariableLengthInteger::encode_s64(data, up_cast<IntegerS64>(value.get_integer()));
 			}
 			else {
-				data.write(TypeIdentifier{TypeIdentifier::Value::floater_signed_64});
+				data.write(TypeIdentifier::Constant::floater_signed_64());
 				data.write(up_cast<FloaterS64>(value.get_floater()));
 			}
 			return;
@@ -75,31 +71,32 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index
 		) -> Void {
 			if (!native_string_index.has()) {
-				data.write(TypeIdentifier{TypeIdentifier::Value::string_native});
+				data.write(TypeIdentifier::Constant::string_native());
 				if constexpr (check_version(t_version, {}, {false})) {
-					ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(value)));
-					StringParser::write_eascii_string(self_cast<OutputCharacterStreamView>(data), value, as_left(Size{}));
+					ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(StringParser::compute_utf8_string_length(value)));
+					StringParser::write_eascii_string(unsafe_cast<OutputCharacterStreamView>(data), value, as_left(Size{}));
 				}
 				if constexpr (check_version(t_version, {}, {true})) {
-					ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(value.size()));
-					StringParser::write_utf8_string(self_cast<OutputCharacterStreamView>(data), value.as_view(), as_left(Size{}));
+					ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(value.size()));
+					StringParser::write_utf8_string(unsafe_cast<OutputCharacterStreamView>(data), value.as_view(), as_left(Size{}));
 				}
 			}
 			else {
-				if (auto indexed_string = native_string_index.get().find(value); indexed_string != native_string_index.get().end()) {
-					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexed});
-					ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>((*indexed_string).second));
+				auto indexed_string = native_string_index.get().find(value);
+				if (indexed_string != native_string_index.get().end()) {
+					data.write(TypeIdentifier::Constant::string_native_indexed());
+					ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>((*indexed_string).second));
 				}
 				else {
-					native_string_index.get()[value] = mbox<Size>(native_string_index.get().size());
-					data.write(TypeIdentifier{TypeIdentifier::Value::string_native_indexing});
+					native_string_index.get()[value] = make_box<Size>(native_string_index.get().size());
+					data.write(TypeIdentifier::Constant::string_native_indexing());
 					if constexpr (check_version(t_version, {}, {false})) {
-						ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(value)));
-						StringParser::write_eascii_string(self_cast<OutputCharacterStreamView>(data), value, as_left(Size{}));
+						ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(StringParser::compute_utf8_string_length(value)));
+						StringParser::write_eascii_string(unsafe_cast<OutputCharacterStreamView>(data), value, as_left(Size{}));
 					}
 					if constexpr (check_version(t_version, {}, {true})) {
-						ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(value.size()));
-						StringParser::write_utf8_string(self_cast<OutputCharacterStreamView>(data), value.as_view(), as_left(Size{}));
+						ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(value.size()));
+						StringParser::write_utf8_string(unsafe_cast<OutputCharacterStreamView>(data), value.as_view(), as_left(Size{}));
 					}
 				}
 			}
@@ -114,15 +111,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 		) -> Void {
 			auto is_reference = k_false;
 			if (enable_reference) {
-				if (auto reference_type = analysis_reference(value); reference_type.has()) {
+				auto reference_type = analysis_reference(value);
+				if (reference_type.has()) {
 					is_reference = k_true;
-					data.write(TypeIdentifier{TypeIdentifier::Value::reference});
+					data.write(TypeIdentifier::Constant::reference());
 					data.write(reference_type.get());
 					switch (reference_type.get().value) {
-						case ReferenceTypeIdentifier::Value::null: {
+						case ReferenceTypeIdentifier::Constant::null().value: {
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::identifier: {
+						case ReferenceTypeIdentifier::Constant::identifier().value: {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
@@ -137,24 +135,24 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 							identifier_stream.read_constant('.'_c);
 							StringParser::read_number_hexadecimal(identifier_stream, identifier_last);
 							assert_test(identifier_stream.full());
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(sheet.size()));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(sheet.size()));
 							data.write(sheet);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(identifier_middle));
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(identifier_first));
-							data.write(cbox<IntegerU32>(identifier_last));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(identifier_middle));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(identifier_first));
+							data.write(cast_box<IntegerU32>(identifier_last));
 							break;
 						}
-						case ReferenceTypeIdentifier::Value::alias: {
+						case ReferenceTypeIdentifier::Constant::alias().value: {
 							auto content = value.sub("RTID("_sl, value.size() - "RTID()"_sl);
 							auto at_position = Range::find_index(content, '@'_c).get();
 							auto sheet = content.tail(content.size() - (at_position + "@"_sl));
 							auto alias = content.head(at_position);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(sheet.size()));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(StringParser::compute_utf8_string_length(sheet)));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(sheet.size()));
 							data.write(sheet);
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(StringParser::compute_utf8_string_length(alias)));
-							ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(alias.size()));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(StringParser::compute_utf8_string_length(alias)));
+							ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(alias.size()));
 							data.write(alias);
 							break;
 						}
@@ -174,13 +172,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
 			Boolean const &                                          enable_reference
 		) -> Void {
-			data.write(TypeIdentifier{TypeIdentifier::Value::array_begin});
-			data.write_constant(TypeIdentifier{TypeIdentifier::Value::array_size});
-			ProtocolBufferVariableLengthInteger::encode_u32(data, cbox<IntegerU32>(value.size()));
+			data.write(TypeIdentifier::Constant::array_begin());
+			data.write_constant(TypeIdentifier::Constant::array_size());
+			ProtocolBufferVariableLengthInteger::encode_u32(data, cast_box<IntegerU32>(value.size()));
 			for (auto & element : value) {
 				process_value(data, element, native_string_index, enable_reference);
 			}
-			data.write(TypeIdentifier{TypeIdentifier::Value::array_end});
+			data.write(TypeIdentifier::Constant::array_end());
 			return;
 		}
 
@@ -190,12 +188,12 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			Optional<std::unordered_map<ConstantStringView, Size>> & native_string_index,
 			Boolean const &                                          enable_reference
 		) -> Void {
-			data.write(TypeIdentifier{TypeIdentifier::Value::object_begin});
+			data.write(TypeIdentifier::Constant::object_begin());
 			for (auto & element : value) {
 				process_value(data, element.key, native_string_index);
 				process_value(data, element.value, native_string_index, enable_reference);
 			}
-			data.write(TypeIdentifier{TypeIdentifier::Value::object_end});
+			data.write(TypeIdentifier::Constant::object_end());
 			return;
 		}
 
@@ -252,7 +250,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 			}
 			process_value(data, definition.get_object(), native_string_index, enable_reference);
 			data.write_constant(k_done_marker);
-			version_data.write_constant(cbox<VersionNumber>(t_version.number));
+			version_data.write_constant(cast_box<VersionNumber>(t_version.number));
 			return;
 		}
 

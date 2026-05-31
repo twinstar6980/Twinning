@@ -49,18 +49,18 @@ export namespace Twinning::Kernel::StringParser {
 		if (character >= 0x100_u) {
 			if (character >= 0x10000_u) {
 				stream.write('U'_c);
-				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 29_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 25_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 21_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 17_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 29_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 25_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 21_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 17_ix, 4_sz))));
 			}
 			else {
 				stream.write('u'_c);
 			}
-			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 13_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 9_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 13_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 9_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
 		}
 		else {
 			switch (character.value) {
@@ -110,8 +110,8 @@ export namespace Twinning::Kernel::StringParser {
 				}
 				default: {
 					stream.write('x'_c);
-					stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-					stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
 					break;
 				}
 			}
@@ -172,28 +172,28 @@ export namespace Twinning::Kernel::StringParser {
 			case 'o': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{3_sz}) {
-					character = character << 3_sz | cbox<Unicode>(CharacterType::from_number_octal(stream.read_of()));
+					character = character << 3_sz | cast_box<Unicode>(CharacterType::from_number_octal(stream.read_of()));
 				}
 				break;
 			}
 			case 'x': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{2_sz}) {
-					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
+					character = character << 4_sz | cast_box<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
 				}
 				break;
 			}
 			case 'u': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{4_sz}) {
-					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
+					character = character << 4_sz | cast_box<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
 				}
 				break;
 			}
 			case 'U': {
 				character = '\0'_u;
 				for (auto & index : SizeRange{8_sz}) {
-					character = character << 4_sz | cbox<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
+					character = character << 4_sz | cast_box<Unicode>(CharacterType::from_number_hexadecimal(stream.read_of()));
 				}
 				break;
 			}
@@ -214,7 +214,7 @@ export namespace Twinning::Kernel::StringParser {
 		Unicode const &             character
 	) -> Void {
 		assert_test(character < 0x100_u);
-		stream.write(self_cast<Character>(cbox<Character8>(character)));
+		stream.write(unsafe_cast<Character>(cast_box<Character8>(character)));
 		return;
 	}
 
@@ -222,7 +222,7 @@ export namespace Twinning::Kernel::StringParser {
 		InputCharacterStreamView & stream,
 		Unicode &                  character
 	) -> Void {
-		character = cbox<Unicode>(self_cast<Character8>(stream.read_of()));
+		character = cast_box<Unicode>(unsafe_cast<Character8>(stream.read_of()));
 		return;
 	}
 
@@ -236,19 +236,19 @@ export namespace Twinning::Kernel::StringParser {
 	) -> Void {
 		auto extra_size = Size{};
 		if (character < 0x80_u) {
-			stream.write(self_cast<Character>(cbox<Character8>(character)));
+			stream.write(unsafe_cast<Character>(cast_box<Character8>(character)));
 			extra_size = 0_sz;
 		}
 		else if (character < 0x800_u) {
-			stream.write(self_cast<Character>(0b110'00000_c8 | cbox<Character8>(clip_bit(character, 6_sz * 1_sz, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b110'00000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * 1_sz, 6_sz))));
 			extra_size = 1_sz;
 		}
 		else if (character < 0x10000_u) {
-			stream.write(self_cast<Character>(0b1110'0000_c8 | cbox<Character8>(clip_bit(character, 6_sz * 2_sz, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b1110'0000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * 2_sz, 6_sz))));
 			extra_size = 2_sz;
 		}
 		else if (character < 0x110000_u) {
-			stream.write(self_cast<Character>(0b11110'000_c8 | cbox<Character8>(clip_bit(character, 6_sz * 3_sz, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b11110'000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * 3_sz, 6_sz))));
 			extra_size = 3_sz;
 		}
 		else {
@@ -256,7 +256,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		while (extra_size > 0_sz) {
 			--extra_size;
-			stream.write(self_cast<Character>(0b10'000000_c8 | cbox<Character8>(clip_bit(character, 6_sz * extra_size, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b10'000000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * extra_size, 6_sz))));
 		}
 		return;
 	}
@@ -265,25 +265,25 @@ export namespace Twinning::Kernel::StringParser {
 		InputCharacterStreamView & stream,
 		Unicode &                  character
 	) -> Void {
-		auto current = self_cast<Character8>(stream.read_of());
+		auto current = unsafe_cast<Character8>(stream.read_of());
 		auto extra_size = Size{};
 		if (current < 0b1'0000000_c8) {
-			character = cbox<Unicode>(current);
+			character = cast_box<Unicode>(current);
 			extra_size = 0_sz;
 		}
 		else if (current < 0b11'000000_c8) {
 			assert_fail(R"(/* first utf-8 character is valid */)");
 		}
 		else if (current < 0b111'00000_c8) {
-			character = cbox<Unicode>(current & 0b000'11111_c8);
+			character = cast_box<Unicode>(current & 0b000'11111_c8);
 			extra_size = 1_sz;
 		}
 		else if (current < 0b1111'0000_c8) {
-			character = cbox<Unicode>(current & 0b0000'1111_c8);
+			character = cast_box<Unicode>(current & 0b0000'1111_c8);
 			extra_size = 2_sz;
 		}
 		else if (current < 0b11111'000_c8) {
-			character = cbox<Unicode>(current & 0b00000'111_c8);
+			character = cast_box<Unicode>(current & 0b00000'111_c8);
 			extra_size = 3_sz;
 		}
 		else {
@@ -291,11 +291,11 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		while (extra_size > 0_sz) {
 			--extra_size;
-			current = self_cast<Character8>(stream.read_of());
+			current = unsafe_cast<Character8>(stream.read_of());
 			if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 				assert_fail(R"(/* extra utf-8 character is valid */)");
 			}
-			character = character << 6_sz | cbox<Unicode>(current & 0b00'111111_c8);
+			character = character << 6_sz | cast_box<Unicode>(current & 0b00'111111_c8);
 		}
 		return;
 	}
@@ -362,7 +362,7 @@ export namespace Twinning::Kernel::StringParser {
 			auto character = Unicode{};
 			read_utf8_character(string_stream, character);
 			assert_test(character < 0x100_u);
-			stream.write(self_cast<Character>(cbox<Character8>(character)));
+			stream.write(unsafe_cast<Character>(cast_box<Character8>(character)));
 			++length;
 		}
 		return;
@@ -377,8 +377,8 @@ export namespace Twinning::Kernel::StringParser {
 		auto string_stream = InputCharacterStreamView{stream.reserve_view()};
 		auto output_stream = OutputCharacterStreamView{string.view()};
 		for (auto & index : SizeRange{length}) {
-			auto current = self_cast<Character8>(string_stream.read_of());
-			write_utf8_character(output_stream, cbox<Unicode>(current));
+			auto current = unsafe_cast<Character8>(string_stream.read_of());
+			write_utf8_character(output_stream, cast_box<Unicode>(current));
 		}
 		string.set_size(output_stream.position());
 		stream.forward(string_stream.position());
@@ -396,16 +396,16 @@ export namespace Twinning::Kernel::StringParser {
 	) -> Void {
 		auto string_stream = InputCharacterStreamView{string};
 		while (!string_stream.full()) {
-			auto current = self_cast<Character8>(string_stream.read_of());
+			auto current = unsafe_cast<Character8>(string_stream.read_of());
 			auto extra_size = compute_utf8_character_extra_size(current);
-			stream.write(self_cast<Character>(current));
+			stream.write(unsafe_cast<Character>(current));
 			while (extra_size > 0_sz) {
 				--extra_size;
-				current = self_cast<Character8>(string_stream.read_of());
+				current = unsafe_cast<Character8>(string_stream.read_of());
 				if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 					assert_fail(R"(/* extra utf-8 character is valid */)");
 				}
-				stream.write(self_cast<Character>(current));
+				stream.write(unsafe_cast<Character>(current));
 			}
 			++length;
 		}
@@ -419,11 +419,11 @@ export namespace Twinning::Kernel::StringParser {
 	) -> Void {
 		auto string_stream = InputCharacterStreamView{stream.reserve_view()};
 		for (auto & index : SizeRange{length}) {
-			auto current = self_cast<Character8>(string_stream.read_of());
+			auto current = unsafe_cast<Character8>(string_stream.read_of());
 			auto extra_size = compute_utf8_character_extra_size(current);
 			while (extra_size > 0_sz) {
 				--extra_size;
-				current = self_cast<Character8>(string_stream.read_of());
+				current = unsafe_cast<Character8>(string_stream.read_of());
 				if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 					assert_fail(R"(/* extra utf-8 character is valid */)");
 				}
@@ -443,11 +443,11 @@ export namespace Twinning::Kernel::StringParser {
 		auto string_stream = InputCharacterStreamView{stream.next_view(size)};
 		length = 0_sz;
 		while (!string_stream.full()) {
-			auto current = self_cast<Character8>(string_stream.read_of());
+			auto current = unsafe_cast<Character8>(string_stream.read_of());
 			auto extra_size = compute_utf8_character_extra_size(current);
 			while (extra_size > 0_sz) {
 				--extra_size;
-				current = self_cast<Character8>(string_stream.read_of());
+				current = unsafe_cast<Character8>(string_stream.read_of());
 				if ((current & 0b11'000000_c8) != 0b10'000000_c8) {
 					assert_fail(R"(/* extra utf-8 character is valid */)");
 				}
@@ -514,18 +514,18 @@ export namespace Twinning::Kernel::StringParser {
 			auto current = string.read_of();
 			if (CharacterType::is_control(current) || current == CharacterType::k_escape_slash || current == end_marker) {
 				stream.write(CharacterType::k_escape_slash);
-				write_escape_character(stream, cbox<Unicode>(current));
+				write_escape_character(stream, cast_box<Unicode>(current));
 			}
 			else {
-				auto extra_size = compute_utf8_character_extra_size(self_cast<Character8>(current));
+				auto extra_size = compute_utf8_character_extra_size(unsafe_cast<Character8>(current));
 				stream.write(current);
 				while (extra_size > 0_sz) {
 					--extra_size;
-					auto current_8 = self_cast<Character8>(string.read_of());
+					auto current_8 = unsafe_cast<Character8>(string.read_of());
 					if ((current_8 & 0b11'000000_c8) != 0b10'000000_c8) {
 						assert_fail(R"(/* extra utf-8 character is valid */)");
 					}
-					stream.write(self_cast<Character>(current_8));
+					stream.write(unsafe_cast<Character>(current_8));
 				}
 			}
 		}
@@ -549,15 +549,15 @@ export namespace Twinning::Kernel::StringParser {
 				write_utf8_character(string, escape_character);
 			}
 			else {
-				auto extra_size = compute_utf8_character_extra_size(self_cast<Character8>(current));
+				auto extra_size = compute_utf8_character_extra_size(unsafe_cast<Character8>(current));
 				string.write(current);
 				while (extra_size > 0_sz) {
 					--extra_size;
-					auto current_8 = self_cast<Character8>(stream.read_of());
+					auto current_8 = unsafe_cast<Character8>(stream.read_of());
 					if ((current_8 & 0b11'000000_c8) != 0b10'000000_c8) {
 						assert_fail(R"(/* extra utf-8 character is valid */)");
 					}
-					string.write(self_cast<Character>(current_8));
+					string.write(unsafe_cast<Character>(current_8));
 				}
 			}
 		}
@@ -693,9 +693,9 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(rubox<char *>(valid_begin), rubox<char *>(valid_end), value.value, 10);
+		auto convert_result = Third::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
-		stream.forward(mbox<Size>(convert_result.ptr - rubox<char *>(valid_begin)));
+		stream.forward(make_box<Size>(convert_result.ptr - unmake_pointer_unsafe<char>(valid_begin)));
 		return;
 	}
 
@@ -739,7 +739,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.value, 10);
+		auto convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -756,9 +756,9 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(rubox<char *>(valid_begin), rubox<char *>(valid_end), value.value, Third::mscharconv::chars_format::fixed);
+		auto convert_result = Third::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, Third::mscharconv::chars_format::fixed);
 		assert_test(convert_result.ec == std::errc{});
-		stream.forward(mbox<Size>(convert_result.ptr - rubox<char *>(valid_begin)));
+		stream.forward(make_box<Size>(convert_result.ptr - unmake_pointer_unsafe<char>(valid_begin)));
 		if (!Range::has(Range::make_range(valid_begin, stream.current_pointer()), '.'_c)) {
 			stream.write('.'_c);
 			stream.write('0'_c);
@@ -828,7 +828,7 @@ export namespace Twinning::Kernel::StringParser {
 		assert_test(is_floater);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
+		auto convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -917,10 +917,10 @@ export namespace Twinning::Kernel::StringParser {
 		assert_test(valid_begin != valid_end);
 		auto convert_result = Third::mscharconv::from_chars_result{};
 		if (!is_floater) {
-			convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.set_integer().value, 10);
+			convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.set_integer().value, 10);
 		}
 		else {
-			convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.set_floater().value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
+			convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.set_floater().value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
 		}
 		assert_test(convert_result.ec == std::errc{});
 		return;
@@ -938,9 +938,9 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(rubox<char *>(valid_begin), rubox<char *>(valid_end), value.value, 16);
+		auto convert_result = Third::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 16);
 		assert_test(convert_result.ec == std::errc{});
-		stream.forward(mbox<Size>(convert_result.ptr - rubox<char *>(valid_begin)));
+		stream.forward(make_box<Size>(convert_result.ptr - unmake_pointer_unsafe<char>(valid_begin)));
 		return;
 	}
 
@@ -996,7 +996,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(rubox<char const *>(valid_begin), rubox<char const *>(valid_end), value.value, 16);
+		auto convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 16);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -1009,8 +1009,8 @@ export namespace Twinning::Kernel::StringParser {
 		OutputCharacterStreamView & stream,
 		Byte const &                value
 	) -> Void {
-		stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(value, 5_ix, 4_sz))));
-		stream.write(CharacterType::to_number_hexadecimal_upper(cbox<IntegerU8>(clip_bit(value, 1_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(value, 5_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(value, 1_ix, 4_sz))));
 		return;
 	}
 
@@ -1019,8 +1019,8 @@ export namespace Twinning::Kernel::StringParser {
 		Byte &                     value
 	) -> Void {
 		value = 0x00_b;
-		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
-		value = value << 4_sz | cbox<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
+		value = value << 4_sz | cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
+		value = value << 4_sz | cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
 		return;
 	}
 

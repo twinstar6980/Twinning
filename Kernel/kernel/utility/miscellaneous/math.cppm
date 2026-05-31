@@ -17,44 +17,45 @@ export namespace Twinning::Kernel::Math {
 		&& (IsNumberBox<TValue>)
 	inline constexpr auto between(
 		TValue const & value,
-		TValue const & minimum_limit,
-		TValue const & maximum_limit
+		TValue const & minimum,
+		TValue const & maximum
 	) -> Boolean {
-		return minimum_limit <= value && value <= maximum_limit;
+		return minimum <= value && value <= maximum;
+	}
+
+	// ----------------
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsNumberBox<TValue>)
+	inline constexpr auto minimum(
+		TValue const & value_1,
+		TValue const & value_2
+	) -> TValue const & {
+		return value_1 < value_2 ? (value_1) : (value_2);
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsNumberBox<TValue>)
+	inline constexpr auto maximum(
+		TValue const & value_1,
+		TValue const & value_2
+	) -> TValue const & {
+		return value_1 > value_2 ? (value_1) : (value_2);
 	}
 
 	#pragma endregion
 
-	#pragma region rounding
+	#pragma region round
 
-	template <typename TResult, typename TValue> requires
-		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TValue>>
-		&& (IsNumberBox<TResult>)
-		&& (IsFloaterBox<TValue>)
-	inline constexpr auto floor(
-		TValue const & value
-	) -> TResult {
-		return mbox<TResult>(std::floor(ubox<typename TValue::Value>(value)));
-	}
-
-	template <typename TResult, typename TValue> requires
-		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TValue>>
-		&& (IsNumberBox<TResult>)
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsFloaterBox<TValue>)
 	inline constexpr auto round(
 		TValue const & value
-	) -> TResult {
-		return mbox<TResult>(std::round(ubox<typename TValue::Value>(value)));
-	}
-
-	template <typename TResult, typename TValue> requires
-		CategoryConstraint<IsPureInstance<TResult> && IsPureInstance<TValue>>
-		&& (IsNumberBox<TResult>)
-		&& (IsFloaterBox<TValue>)
-	inline constexpr auto ceil(
-		TValue const & value
-	) -> TResult {
-		return mbox<TResult>(std::ceil(ubox<typename TValue::Value>(value)));
+	) -> TValue {
+		return make_box<TValue>(std::round(unmake_box<typename TValue::Value>(value)));
 	}
 
 	#pragma endregion

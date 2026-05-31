@@ -52,7 +52,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 		auto data_bit = BitSet<k_packet_compression_flag_count>{};
 		data_bit.set(PacketCompressionFlag::general, value.general);
 		data_bit.set(PacketCompressionFlag::texture, value.texture);
-		return cbox<IntegerU32>(data_bit.to_integer());
+		return cast_box<IntegerU32>(data_bit.to_integer());
 	}
 
 	inline auto packet_compression_from_data(
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 	) -> PacketCompression {
 		auto value = PacketCompression{};
 		auto data_bit = BitSet<k_packet_compression_flag_count>{};
-		data_bit.from_integer(cbox<IntegerU8>(data));
+		data_bit.from_integer(cast_box<BitSet<k_packet_compression_flag_count>::BoundedInteger>(data));
 		value.general = data_bit.get(PacketCompressionFlag::general);
 		value.texture = data_bit.get(PacketCompressionFlag::texture);
 		return value;
@@ -202,17 +202,17 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 						auto current_position = stream.position();
 						stream.set_position(work_option[index].get().parent_offset * k_block_size);
 						auto composite_value = stream.read_of<IntegerU32>();
-						composite_value |= cbox<IntegerU32>(current_position / k_block_size) << k_type_bit_count<IntegerU8>;
+						composite_value |= cast_box<IntegerU32>(current_position / k_block_size) << k_type_bit_count<IntegerU8>;
 						stream.backward(bs_static_size<IntegerU32>());
 						stream.write(composite_value);
 						stream.set_position(current_position);
 						work_option[index].reset();
 					}
 					while (character_index < element.key.size()) {
-						stream.write(cbox<IntegerU32>(element.key[character_index]));
+						stream.write(cast_box<IntegerU32>(element.key[character_index]));
 						++character_index;
 					}
-					stream.write(cbox<IntegerU32>(CharacterType::k_null));
+					stream.write(cast_box<IntegerU32>(CharacterType::k_null));
 					stream.write(element.value);
 				}
 			}
@@ -235,15 +235,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				auto   string_length_in_next_stream = 0_sz;
 				{
 					auto string_begin_position = stream.position();
-					while (cbox<Character>(clip_bit(stream.read_of<IntegerU32>(), 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>)) != CharacterType::k_null) {
+					while (cast_box<Character>(clip_bit(stream.read_of<IntegerU32>(), 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>)) != CharacterType::k_null) {
 						++string_length_in_next_stream;
 					}
 					stream.set_position(string_begin_position);
 				}
-				if (auto & parent_string = parent_string_list[stream.position() / k_block_size]; parent_string.has()) {
-					element.key.allocate(parent_string.get().size() + string_length_in_next_stream);
-					element.key.append_list(parent_string.get());
-					parent_string.reset();
+				auto & parent_string_if = parent_string_list[stream.position() / k_block_size];
+				if (parent_string_if.has()) {
+					element.key.allocate(parent_string_if.get().size() + string_length_in_next_stream);
+					element.key.append_list(parent_string_if.get());
+					parent_string_if.reset();
 				}
 				else {
 					element.key.allocate(string_length_in_next_stream);
@@ -251,9 +252,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				while (k_true) {
 					auto composite_value = stream.read_of<IntegerU32>();
 					auto child_string_offset = clip_bit(composite_value, 2_ix * k_type_bit_count<IntegerU8>, 3_sz * k_type_bit_count<IntegerU8>);
-					auto current_character = cbox<Character>(clip_bit(composite_value, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
+					auto current_character = cast_box<Character>(clip_bit(composite_value, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
 					if (child_string_offset != 0x000000_iu32) {
-						parent_string_list[cbox<Size>(child_string_offset)].set(element.key);
+						parent_string_list[cast_box<Size>(child_string_offset)].set(element.key);
 					}
 					if (current_character == CharacterType::k_null) {
 						break;

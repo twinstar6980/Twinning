@@ -35,10 +35,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::etcpak::DecodeRGB(
-					rubox<std::uint64_t const *>(data.current_pointer()),
-					rubox<std::uint32_t *>(raw_data.begin()),
-					ubox<std::int32_t>(image.size().width),
-					ubox<std::int32_t>(image.size().height)
+					unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+					unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+					unmake_box<std::int32_t>(image.size().width),
+					unmake_box<std::int32_t>(image.size().height)
 				);
 				data.forward(ripe_data_size);
 				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -50,10 +50,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Third::etcpak::DecodeRGB(
-						rubox<std::uint64_t const *>(data.current_pointer()),
-						rubox<std::uint32_t *>(raw_data.begin()),
-						ubox<std::int32_t>(image.size().width),
-						ubox<std::int32_t>(image.size().height)
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_box<std::int32_t>(image.size().width),
+						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
 					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -64,10 +64,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Third::etcpak::DecodeRGBA(
-						rubox<std::uint64_t const *>(data.current_pointer()),
-						rubox<std::uint32_t *>(raw_data.begin()),
-						ubox<std::int32_t>(image.size().width),
-						ubox<std::int32_t>(image.size().height)
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_box<std::int32_t>(image.size().width),
+						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
 					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -80,10 +80,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Third::etcpak::DecodeR(
-						rubox<std::uint64_t const *>(data.current_pointer()),
-						rubox<std::uint32_t *>(raw_data.begin()),
-						ubox<std::int32_t>(image.size().width),
-						ubox<std::int32_t>(image.size().height)
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_box<std::int32_t>(image.size().width),
+						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
 					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -94,10 +94,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Third::etcpak::DecodeRG(
-						rubox<std::uint64_t const *>(data.current_pointer()),
-						rubox<std::uint32_t *>(raw_data.begin()),
-						ubox<std::int32_t>(image.size().width),
-						ubox<std::int32_t>(image.size().height)
+						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_box<std::int32_t>(image.size().width),
+						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
 					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);

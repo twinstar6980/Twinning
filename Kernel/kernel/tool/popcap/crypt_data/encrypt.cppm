@@ -34,7 +34,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 			if (plain.reserve() >= limit) {
 				cipher.write_constant(k_magic_marker);
 				auto header = Header{};
-				header.plain_size = cbox<IntegerU64>(plain.reserve());
+				header.plain_size = cast_box<IntegerU64>(plain.reserve());
 				cipher.write(header);
 				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
 			}

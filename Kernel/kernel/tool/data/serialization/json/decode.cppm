@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 							value.set_null();
 						}
 						else {
-							throw SyntaxException{data.position().value, mss("invalid null value"_sf())};
+							throw SyntaxException{data.position().value, make_std_string("invalid null value"_sf())};
 						}
 						break;
 					}
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 							value.set_boolean(k_false);
 						}
 						else {
-							throw SyntaxException{data.position().value, mss("invalid false value"_sf())};
+							throw SyntaxException{data.position().value, make_std_string("invalid false value"_sf())};
 						}
 						break;
 					}
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 							value.set_boolean(k_true);
 						}
 						else {
-							throw SyntaxException{data.position().value, mss("invalid true value"_sf())};
+							throw SyntaxException{data.position().value, make_std_string("invalid true value"_sf())};
 						}
 						break;
 					}
@@ -95,14 +95,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 							switch (data.read_of().value) {
 								case ']': {
 									if (has_comma && item_list.empty()) {
-										throw SyntaxException{data.position().value, mss("invalid comma on empty array"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("invalid comma on empty array"_sf())};
 									}
 									need_more_item = k_false;
 									break;
 								}
 								case ',': {
 									if (has_comma) {
-										throw SyntaxException{data.position().value, mss("too many comma on array"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("too many comma on array"_sf())};
 									}
 									has_comma = k_true;
 									break;
@@ -119,10 +119,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 								}
 								default: {
 									if (has_comma && item_list.empty()) {
-										throw SyntaxException{data.position().value, mss("invalid comma before array's first element"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("invalid comma before array's first element"_sf())};
 									}
 									if (!has_comma && !item_list.empty()) {
-										throw SyntaxException{data.position().value, mss("need comma between array's element"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("need comma between array's element"_sf())};
 									}
 									data.backward();
 									item_list.emplace_back();
@@ -149,14 +149,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 							switch (data.read_of().value) {
 								case '}': {
 									if (has_comma && item_list.empty()) {
-										throw SyntaxException{data.position().value, mss("invalid comma on empty object"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("invalid comma on empty object"_sf())};
 									}
 									need_more_item = k_false;
 									break;
 								}
 								case ',': {
 									if (has_comma) {
-										throw SyntaxException{data.position().value, mss("too many comma on object"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("too many comma on object"_sf())};
 									}
 									has_comma = k_true;
 									break;
@@ -173,15 +173,15 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 								}
 								default: {
 									if (has_comma && item_list.empty()) {
-										throw SyntaxException{data.position().value, mss("invalid comma before object's first member"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("invalid comma before object's first member"_sf())};
 									}
 									if (!has_comma && !item_list.empty()) {
-										throw SyntaxException{data.position().value, mss("need comma between object's member"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("need comma between object's member"_sf())};
 									}
 									data.backward();
 									item_list.emplace_back();
 									if (data.read_of() != '\"'_c) {
-										throw SyntaxException{data.position().value, mss("key must be string"_sf())};
+										throw SyntaxException{data.position().value, make_std_string("key must be string"_sf())};
 									}
 									buffer.backward_to_begin();
 									StringParser::read_escape_utf8_string_until(data, buffer, '"'_c);
@@ -200,7 +200,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 												break;
 											}
 											default: {
-												throw SyntaxException{data.position().value, mss("key's next non-space character must be ':'"_sf())};
+												throw SyntaxException{data.position().value, make_std_string("key's next non-space character must be ':'"_sf())};
 												break;
 											}
 										}
@@ -221,7 +221,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 						break;
 					}
 					default: {
-						throw SyntaxException{data.position().value, mss("invalid character '{:02X}h'"_sf(character))};
+						throw SyntaxException{data.position().value, make_std_string("invalid character '{:02X}h'"_sf(character))};
 						break;
 					}
 				}

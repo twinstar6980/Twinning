@@ -11,6 +11,7 @@ import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.type;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.miscellaneous.math;
 
 export namespace Twinning::Kernel {
 
@@ -79,12 +80,12 @@ export namespace Twinning::Kernel {
 
 		implicit operator ConstantView &() requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		implicit operator ConstantView const &() const requires
 			(!constant.value) {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		#pragma endregion
@@ -111,11 +112,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region comparison
 
-		constexpr auto compare_3way(
+		constexpr auto compare_three_way(
 			ConstantView const & that
 		) const -> StrongOrdering requires
 			(IsSame<Element, Character>) {
-			auto common_size = minimum(thiz.size(), that.size());
+			auto common_size = Math::minimum(thiz.size(), that.size());
 			for (auto & index : SizeRange{common_size}) {
 				auto & thiz_element = thiz[index];
 				auto & that_element = that[index];
@@ -141,7 +142,7 @@ export namespace Twinning::Kernel {
 			auto prime = 1099511628211_iu64;
 			auto result = offset;
 			for (auto & element : thiz) {
-				result ^= cbox<IntegerU64>(element);
+				result ^= cast_box<IntegerU64>(element);
 				result *= prime;
 			}
 			return result;
@@ -184,7 +185,7 @@ export namespace Twinning::Kernel {
 			BasicStringView const & that
 		) -> StrongOrdering requires
 			(IsSame<Element, Character>) {
-			return thix.compare_3way(that);
+			return thix.compare_three_way(that);
 		}
 
 		#pragma endregion
@@ -213,7 +214,7 @@ export namespace Twinning::Kernel {
 	inline auto null_terminated_string_size_of(
 		Pointer<TElement> const & string
 	) -> Size {
-		return mbox<Size>(std::char_traits<typename AsPure<TElement>::Value>::length(rubox<typename AsPure<TElement>::Value const *>(string)));
+		return make_box<Size>(std::char_traits<typename AsPure<TElement>::Value>::length(unmake_pointer_unsafe<typename AsPure<TElement>::Value>(string)));
 	}
 
 	#pragma endregion

@@ -58,7 +58,7 @@ export namespace Twinning::Kernel {
 		Size const &   begin,
 		Size const &   size
 	) -> TValue {
-		return (value >> begin) & ~(~mbox<TValue>(0) << size);
+		return (value >> begin) & ~(~make_box<TValue>(0) << size);
 	}
 
 	template <typename TValue> requires
@@ -69,19 +69,19 @@ export namespace Twinning::Kernel {
 	) -> TValue {
 		auto result = value;
 		if constexpr (k_type_size<TValue> >= 8_sz) {
-			result = (result | (result << 16_sz)) & cbox<TValue>(0b00000000'00000000'11111111'11111111'00000000'00000000'11111111'11111111_iu64);
+			result = (result | (result << 16_sz)) & cast_box_unsafe<TValue>(0b00000000'00000000'11111111'11111111'00000000'00000000'11111111'11111111_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 4_sz) {
-			result = (result | (result << 8_sz)) & cbox<TValue>(0b00000000'11111111'00000000'11111111'00000000'11111111'00000000'11111111_iu64);
+			result = (result | (result << 8_sz)) & cast_box_unsafe<TValue>(0b00000000'11111111'00000000'11111111'00000000'11111111'00000000'11111111_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 2_sz) {
-			result = (result | (result << 4_sz)) & cbox<TValue>(0b00001111'00001111'00001111'00001111'00001111'00001111'00001111'00001111_iu64);
+			result = (result | (result << 4_sz)) & cast_box_unsafe<TValue>(0b00001111'00001111'00001111'00001111'00001111'00001111'00001111'00001111_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 1_sz) {
-			result = (result | (result << 2_sz)) & cbox<TValue>(0b00110011'00110011'00110011'00110011'00110011'00110011'00110011'00110011_iu64);
+			result = (result | (result << 2_sz)) & cast_box_unsafe<TValue>(0b00110011'00110011'00110011'00110011'00110011'00110011'00110011'00110011_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 0_sz) {
-			result = (result | (result << 1_sz)) & cbox<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
+			result = (result | (result << 1_sz)) & cast_box_unsafe<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
 		}
 		return result;
 	}
@@ -92,21 +92,21 @@ export namespace Twinning::Kernel {
 	inline auto shrink_bit(
 		TValue const & value
 	) -> TValue {
-		auto result = value & cbox<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
+		auto result = value & cast_box_unsafe<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
 		if constexpr (k_type_size<TValue> >= 0_sz) {
-			result = (result | (result >> 1_sz)) & cbox<TValue>(0b00110011'00110011'00110011'00110011'00110011'00110011'00110011'00110011_iu64);
+			result = (result | (result >> 1_sz)) & cast_box_unsafe<TValue>(0b00110011'00110011'00110011'00110011'00110011'00110011'00110011'00110011_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 1_sz) {
-			result = (result | (result >> 2_sz)) & cbox<TValue>(0b00001111'00001111'00001111'00001111'00001111'00001111'00001111'00001111_iu64);
+			result = (result | (result >> 2_sz)) & cast_box_unsafe<TValue>(0b00001111'00001111'00001111'00001111'00001111'00001111'00001111'00001111_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 2_sz) {
-			result = (result | (result >> 4_sz)) & cbox<TValue>(0b00000000'11111111'00000000'11111111'00000000'11111111'00000000'11111111_iu64);
+			result = (result | (result >> 4_sz)) & cast_box_unsafe<TValue>(0b00000000'11111111'00000000'11111111'00000000'11111111'00000000'11111111_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 4_sz) {
-			result = (result | (result >> 8_sz)) & cbox<TValue>(0b00000000'00000000'11111111'11111111'00000000'00000000'11111111'11111111_iu64);
+			result = (result | (result >> 8_sz)) & cast_box_unsafe<TValue>(0b00000000'00000000'11111111'11111111'00000000'00000000'11111111'11111111_iu64);
 		}
 		if constexpr (k_type_size<TValue> >= 8_sz) {
-			result = (result | (result >> 16_sz)) & cbox<TValue>(0b00000000'00000000'00000000'00000000'11111111'11111111'11111111'11111111_iu64);
+			result = (result | (result >> 16_sz)) & cast_box_unsafe<TValue>(0b00000000'00000000'00000000'00000000'11111111'11111111'11111111'11111111_iu64);
 		}
 		return result;
 	}
@@ -120,7 +120,7 @@ export namespace Twinning::Kernel {
 			return value;
 		}
 		else {
-			auto forward = cast_pointer<ZByte>(make_pointer_of(value));
+			auto forward = make_pointer_unsafe<ZByte>(&value);
 			auto backward = StaticArray<ZByte, k_type_size<TValue>>{};
 			for (auto & index : SizeRange{k_type_size<TValue>}) {
 				backward[index] = forward[k_type_size<TValue> - 1_sz - index];

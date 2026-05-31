@@ -149,12 +149,12 @@ export namespace Twinning::Kernel::Image {
 
 		auto as_view(
 		) -> VariableView const & {
-			return self_cast<VariableView>(thiz);
+			return unsafe_cast<VariableView>(thiz);
 		}
 
 		auto as_view(
 		) const -> ConstantView const & {
-			return self_cast<ConstantView>(thiz);
+			return unsafe_cast<ConstantView>(thiz);
 		}
 
 		// ----------------

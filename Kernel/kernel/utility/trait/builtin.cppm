@@ -71,7 +71,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename TIt>
 	concept IsBuiltinCharacter =
 		CategoryConstraint<IsPure<TIt>>
-		&& (IsSame<TIt, char, wchar_t, char8_t, char16_t, char32_t>)
+		&& (IsSame<TIt, char8_t, char16_t, char32_t, char, wchar_t>)
 		;
 
 	// ----------------

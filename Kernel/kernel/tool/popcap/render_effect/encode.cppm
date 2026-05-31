@@ -220,7 +220,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			Definition::Effect const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
-			data.write_constant(cbox<VersionNumber>(t_version.number));
+			data.write_constant(cast_box<VersionNumber>(t_version.number));
 			exchange_effect(data, definition);
 			return;
 		}

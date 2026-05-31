@@ -79,7 +79,7 @@ export namespace Twinning::Kernel {
 		constexpr auto set(
 			QualifyValue & value
 		) -> QualifyValue & {
-			thiz.m_value = make_pointer_of(value);
+			thiz.m_value = make_pointer(&value);
 			return thiz.m_value.dereference();
 		}
 
