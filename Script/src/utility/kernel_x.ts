@@ -191,14 +191,6 @@ namespace Twinning.Script.KernelX {
 			return Kernel.Process.run_process(Kernel.Path.value(program.emit()), Kernel.StringList.value(argument), Kernel.Path.value(workspace.emit()), Kernel.StringList.value(environment), Kernel.PathOptional.value(input === null ? null : input.emit()), Kernel.PathOptional.value(output === null ? null : output.emit()), Kernel.PathOptional.value(error === null ? null : error.emit())).value;
 		}
 
-		// ----------------
-
-		export function execute_command(
-			command: string,
-		): bigint {
-			return Kernel.Process.execute_command(Kernel.String.value(command)).value;
-		}
-
 	}
 
 	// ----------------

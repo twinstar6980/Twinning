@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 133
+ * @version 138
  */
 declare namespace Twinning.Kernel {
 
@@ -1287,17 +1287,6 @@ declare namespace Twinning.Kernel {
 			input: PathOptional,
 			output: PathOptional,
 			error: PathOptional,
-		): IntegerU32;
-
-		// ----------------
-
-		/**
-		 * 执行命令，通过宿主环境的解释器
-		 * @param command 命令
-		 * @returns std::system的返回值，由实现定义
-		 */
-		function execute_command(
-			command: String,
 		): IntegerU32;
 
 	}

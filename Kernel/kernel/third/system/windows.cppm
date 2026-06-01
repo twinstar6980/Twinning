@@ -39,8 +39,6 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline auto const $_wfopen = _wfopen;
 
-	inline auto const $_wsystem = _wsystem;
-
 	inline auto const $GetLastError = GetLastError;
 
 	inline auto const $GetEnvironmentVariableW = GetEnvironmentVariableW;

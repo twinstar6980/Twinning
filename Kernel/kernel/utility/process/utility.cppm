@@ -350,24 +350,4 @@ export namespace Twinning::Kernel::Process {
 
 	#pragma endregion
 
-	#pragma region command
-
-	inline auto execute_command(
-		String const & command
-	) -> IntegerU32 {
-		auto result = IntegerU32{};
-		#if defined M_system_windows
-		result = make_box_unsafe<IntegerU32>(Third::system::windows::$_wsystem(unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(command))).begin())));
-		#endif
-		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android
-		result = make_box_unsafe<IntegerU32>(std::system(unmake_pointer_unsafe<char>(make_null_terminated_string(command).begin())));
-		#endif
-		#if defined M_system_iphone
-		throw UnsupportedException{};
-		#endif
-		return result;
-	}
-
-	#pragma endregion
-
 }

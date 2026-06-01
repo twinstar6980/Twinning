@@ -531,9 +531,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_environment>>("get_environment"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::find_environment>>("find_environment"_s)
 				// process
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::run_process>>("run_process"_s)
-				// command
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::execute_command>>("execute_command"_s);
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::run_process>>("run_process"_s);
 		}
 		// Tool
 		{

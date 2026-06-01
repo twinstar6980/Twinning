@@ -176,10 +176,8 @@
 
   > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
 
-* [Il2CppDumper.dll](https://github.com/Perfare/Il2CppDumper) `=6.7.46,net7`
+* [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) `=6.7.46,net7`
 
   用于 **开罗游戏程序修改** 。
 
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `Il2CppDumper.dll` 动态库文件。
-
-  > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
+  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `Il2CppDumper.dll` 动态库文件或 `Il2CppDumper` 可执行程序。

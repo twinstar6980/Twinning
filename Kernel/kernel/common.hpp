@@ -317,7 +317,7 @@
 			using Type = _type;\
 			using MemberVariable = AsTypePackageRemoveTail<TypePackage<\
 				M_map(M_record_field_reflection, _item)\
-				Void\
+				None\
 			>, 1_szz>;\
 		};\
 	}
