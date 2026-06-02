@@ -168,16 +168,8 @@
 
   > 该程序仅支持 `Windows` 、`Macintosh` 系统。
 
-* [dotnet](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) `=7.0.20`
+* [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) `=6.7.46`
 
   用于 **开罗游戏程序修改** 。
 
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `dotnet` 可执行程序。
-
-  > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
-
-* [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) `=6.7.46,net7`
-
-  用于 **开罗游戏程序修改** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `Il2CppDumper.dll` 动态库文件或 `Il2CppDumper` 可执行程序。
+  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `Il2CppDumper` 可执行程序。

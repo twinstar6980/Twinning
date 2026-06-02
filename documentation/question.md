@@ -10,6 +10,8 @@
 
 - [Android Content URI 处理方式](#Android-Content-URI-处理方式)
 
+- [Android 调用外部程序的限制](#Android-调用外部程序的限制)
+
 - [Shell 对宿主终端的要求](#Shell-对宿主终端的要求)
 
 - [JSON 文件格式](#JSON-文件格式)
@@ -95,6 +97,20 @@
 |  Solid Explorer  |           pl.solidexplorer2.files           |         /...          |
 |    MT Manager    |               bin.mt.plus.fp                |         /...          |
 |       NMM        |               in.mfile.files                |         /...          |
+
+## Android 调用外部程序的限制
+
+由于 Android 的系统限制，应用在调用外部程序时会受到 `SELinux` 的限制，即使授予了文件可执行权限，也无法成功执行，这一般会表现为返回错误码 `127` 。
+
+若要让应用调用外部程序，需要满足以下几点要求：
+
+* 设备已获取 `ROOT` 权限。
+
+* 通过 `setenforce 0` 指令将 `SELinux` 切换到不安全的宽容模式。
+
+* 将可执行程序文件放置于 `/data/user/<user>/<package>` 或 `/data/local/tmp` 等目录之内，并赋予可执行权限。
+
+此外，在一些系统环境中，应用默认的程序检索逻辑会优先匹配到 `/vendor/bin` 目录内的供应商实现程序，例如 `sh` ，它们往往会导致预期之外的结果。可以在 `<home>/script/configuration/setting.json` 中指定所需程序的其绝对路径。
 
 ## Shell 对宿主终端的要求
 

@@ -63,32 +63,16 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		metadata_file: StoragePath,
 	): Array<string> {
 		let dump_directory = StorageHelper.temporary('directory');
-		let il2cppdumper_result: ReturnType<typeof ProcessHelper.run_process>;
-		if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
-			il2cppdumper_result = ProcessHelper.run_process(
-				ProcessHelper.search_program_ensure('dotnet', true),
-				[
-					ProcessHelper.search_program_ensure('Il2CppDumper.dll', false).emit_native(),
-					program_file.emit_native(),
-					metadata_file.emit_native(),
-					dump_directory.emit_native(),
-				],
-				null,
-				null,
-			);
-		}
-		else {
-			il2cppdumper_result = ProcessHelper.run_process(
-				ProcessHelper.search_program_ensure('Il2CppDumper', true),
-				[
-					program_file.emit_native(),
-					metadata_file.emit_native(),
-					dump_directory.emit_native(),
-				],
-				null,
-				null,
-			);
-		}
+		let il2cppdumper_result = ProcessHelper.run_process(
+			ProcessHelper.search_program_ensure('Il2CppDumper', true),
+			[
+				program_file.emit_native(),
+				metadata_file.emit_native(),
+				dump_directory.emit_native(),
+			],
+			null,
+			null,
+		);
 		if (!/\nDone!\n(Press any key to exit\.\.\.\n)?$/.test(ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output))) {
 			throw new Error(`execute failed by Il2CppDumper: ${il2cppdumper_result.code}\n${il2cppdumper_result.output}\n${il2cppdumper_result.error}`);
 		}
