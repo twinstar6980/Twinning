@@ -8,8 +8,8 @@ import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.string.basic_string_view;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.miscellaneous.character_series.container;
-import twinning.kernel.utility.miscellaneous.character_series.type;
 
 export namespace Twinning::Kernel {
 

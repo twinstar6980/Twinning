@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/process_helper.dart';
@@ -16,9 +17,8 @@ class ExternalToolHelper {
     var dumpDirectory = await StorageHelper.temporary();
     await StorageHelper.createDirectory(dumpDirectory);
     var processResult = await ProcessHelper.runProcess(
-      await ProcessHelper.searchProgramEnsure('dotnet', true),
+      await ProcessHelper.searchProgramEnsure('Il2CppDumper', true),
       [
-        (await ProcessHelper.searchProgramEnsure('Il2CppDumper.dll', false)).emitNative(),
         programFile.emitNative(),
         metadataFile.emitNative(),
         dumpDirectory.emitNative(),
@@ -26,7 +26,7 @@ class ExternalToolHelper {
       null,
       null,
     );
-    assertTest(processResult.output.replaceAll('\r\n', '\n').endsWith('Done!\nPress any key to exit...\n'));
+    assertTest(RegExp(r'\nDone!\n(Press any key to exit\.\.\.\n)?$').hasMatch(ConvertHelper.normalizeStringLineFeed(processResult.output)));
     var result = (await StorageHelper.readFileText(dumpDirectory.join('dump.cs'))).split('\n');
     await StorageHelper.remove(dumpDirectory);
     return result;

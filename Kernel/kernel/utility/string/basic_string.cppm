@@ -11,9 +11,9 @@ import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string_adapter;
-import twinning.kernel.utility.miscellaneous.character_series.container;
-import twinning.kernel.utility.miscellaneous.character_series.type;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.range.algorithm;
+import twinning.kernel.utility.miscellaneous.character_series.container;
 
 export namespace Twinning::Kernel {
 

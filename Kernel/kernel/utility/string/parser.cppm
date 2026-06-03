@@ -7,12 +7,10 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.null;
-import twinning.kernel.utility.miscellaneous.number_variant;
+import twinning.kernel.utility.math.number_variant;
+import twinning.kernel.utility.memory.bitwise;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
-import twinning.kernel.utility.miscellaneous.character_series.type;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
-import twinning.kernel.utility.miscellaneous.byte_series.utility;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.number_range;
 import twinning.kernel.utility.range.generic_range;
@@ -20,6 +18,7 @@ import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_static_string;
 import twinning.kernel.utility.string.string;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.support.character_stream;
 import twinning.kernel.third.mscharconv;
 
@@ -49,18 +48,18 @@ export namespace Twinning::Kernel::StringParser {
 		if (character >= 0x100_u) {
 			if (character >= 0x10000_u) {
 				stream.write('U'_c);
-				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 29_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 25_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 21_ix, 4_sz))));
-				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 17_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 29_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 25_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 21_ix, 4_sz))));
+				stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 17_ix, 4_sz))));
 			}
 			else {
 				stream.write('u'_c);
 			}
-			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 13_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 9_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 13_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 9_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 5_ix, 4_sz))));
+			stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 1_ix, 4_sz))));
 		}
 		else {
 			switch (character.value) {
@@ -110,8 +109,8 @@ export namespace Twinning::Kernel::StringParser {
 				}
 				default: {
 					stream.write('x'_c);
-					stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 5_ix, 4_sz))));
-					stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(character, 1_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 5_ix, 4_sz))));
+					stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(character, 1_ix, 4_sz))));
 					break;
 				}
 			}
@@ -240,15 +239,15 @@ export namespace Twinning::Kernel::StringParser {
 			extra_size = 0_sz;
 		}
 		else if (character < 0x800_u) {
-			stream.write(unsafe_cast<Character>(0b110'00000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * 1_sz, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b110'00000_c8 | cast_box<Character8>(Bitwise::extract(character, 6_sz * 1_sz, 6_sz))));
 			extra_size = 1_sz;
 		}
 		else if (character < 0x10000_u) {
-			stream.write(unsafe_cast<Character>(0b1110'0000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * 2_sz, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b1110'0000_c8 | cast_box<Character8>(Bitwise::extract(character, 6_sz * 2_sz, 6_sz))));
 			extra_size = 2_sz;
 		}
 		else if (character < 0x110000_u) {
-			stream.write(unsafe_cast<Character>(0b11110'000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * 3_sz, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b11110'000_c8 | cast_box<Character8>(Bitwise::extract(character, 6_sz * 3_sz, 6_sz))));
 			extra_size = 3_sz;
 		}
 		else {
@@ -256,7 +255,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		while (extra_size > 0_sz) {
 			--extra_size;
-			stream.write(unsafe_cast<Character>(0b10'000000_c8 | cast_box<Character8>(clip_bit(character, 6_sz * extra_size, 6_sz))));
+			stream.write(unsafe_cast<Character>(0b10'000000_c8 | cast_box<Character8>(Bitwise::extract(character, 6_sz * extra_size, 6_sz))));
 		}
 		return;
 	}
@@ -1009,8 +1008,8 @@ export namespace Twinning::Kernel::StringParser {
 		OutputCharacterStreamView & stream,
 		Byte const &                value
 	) -> Void {
-		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(value, 5_ix, 4_sz))));
-		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(clip_bit(value, 1_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(value, 5_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(value, 1_ix, 4_sz))));
 		return;
 	}
 

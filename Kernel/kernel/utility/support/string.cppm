@@ -16,11 +16,10 @@ import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
 import twinning.kernel.utility.storage.path;
-import twinning.kernel.utility.miscellaneous.math;
-import twinning.kernel.utility.miscellaneous.number_variant;
-import twinning.kernel.utility.miscellaneous.four_character_code;
+import twinning.kernel.utility.math.number_variant;
+import twinning.kernel.utility.math.utility;
+import twinning.kernel.utility.model.four_character_code;
 import twinning.kernel.utility.support.character_stream.extend;
-import twinning.kernel.utility.null;
 
 export namespace Twinning::Kernel {
 

@@ -154,7 +154,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				}
 				block_count += element.key.size() - character_index + 1_sz;
 				auto additional_size = bs_size(element.value);
-				assert_test(is_padded_size(additional_size, bs_static_size<IntegerU32>()));
+				assert_test(Math::is_padded_size(additional_size, bs_static_size<IntegerU32>()));
 				block_count += additional_size / bs_static_size<IntegerU32>();
 			}
 			return block_count * k_block_size;
@@ -235,7 +235,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				auto   string_length_in_next_stream = 0_sz;
 				{
 					auto string_begin_position = stream.position();
-					while (cast_box<Character>(clip_bit(stream.read_of<IntegerU32>(), 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>)) != CharacterType::k_null) {
+					while (cast_box<Character>(Bitwise::extract(stream.read_of<IntegerU32>(), 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>)) != CharacterType::k_null) {
 						++string_length_in_next_stream;
 					}
 					stream.set_position(string_begin_position);
@@ -251,8 +251,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				}
 				while (k_true) {
 					auto composite_value = stream.read_of<IntegerU32>();
-					auto child_string_offset = clip_bit(composite_value, 2_ix * k_type_bit_count<IntegerU8>, 3_sz * k_type_bit_count<IntegerU8>);
-					auto current_character = cast_box<Character>(clip_bit(composite_value, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
+					auto child_string_offset = Bitwise::extract(composite_value, 2_ix * k_type_bit_count<IntegerU8>, 3_sz * k_type_bit_count<IntegerU8>);
+					auto current_character = cast_box<Character>(Bitwise::extract(composite_value, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
 					if (child_string_offset != 0x000000_iu32) {
 						parent_string_list[cast_box<Size>(child_string_offset)].set(element.key);
 					}

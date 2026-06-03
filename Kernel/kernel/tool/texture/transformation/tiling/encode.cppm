@@ -21,7 +21,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Tiling {
 			Image::ImageSize const &         tile_size
 		) -> Void {
 			assert_test(raw.size() == ripe.size());
-			assert_test(is_padded_size(raw.size().width, tile_size.width) && is_padded_size(raw.size().height, tile_size.height));
+			assert_test(Math::is_padded_size(raw.size().width, tile_size.width) && Math::is_padded_size(raw.size().height, tile_size.height));
 			auto tile_count_x = raw.size().width / tile_size.width;
 			auto tile_count_y = raw.size().height / tile_size.height;
 			auto raw_x = 0_sz;

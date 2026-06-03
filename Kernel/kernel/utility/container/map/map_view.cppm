@@ -7,7 +7,7 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.miscellaneous.key_value_pair;
+import twinning.kernel.utility.model.key_value_pair;
 import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.optional_view;

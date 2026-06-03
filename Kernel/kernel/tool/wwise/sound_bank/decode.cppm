@@ -4786,7 +4786,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			if constexpr (check_version(t_version, {72})) {
 				// NOTE: HERE
 				constexpr auto didx_item_structure_size = bs_static_size<IntegerU32>() + bs_static_size<IntegerU32>() + bs_static_size<IntegerU32>();
-				assert_test(is_padded_size(didx_data.reserve(), didx_item_structure_size));
+				assert_test(Math::is_padded_size(didx_data.reserve(), didx_item_structure_size));
 				value.allocate_full(didx_data.reserve() / didx_item_structure_size);
 				exchange_list_element(
 					didx_data,

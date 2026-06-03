@@ -11,7 +11,7 @@ import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.null_optional;
 import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.miscellaneous.math;
+import twinning.kernel.utility.math.utility;
 
 export namespace Twinning::Kernel::Range {
 

@@ -31,21 +31,21 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnAlphaPaletteTextur
 					pixel_row.set(pixel_row_stream.next());
 				}
 				if (bit_reserve > bit_count) {
-					index_value = clip_bit(index_data.current(), bit_reserve - bit_count, bit_count);
+					index_value = Bitwise::extract(index_data.current(), bit_reserve - bit_count, bit_count);
 					bit_reserve -= bit_count;
 				}
 				else {
 					if (bit_reserve == bit_count) {
-						index_value = clip_bit(index_data.current(), bit_reserve - bit_count, bit_count);
+						index_value = Bitwise::extract(index_data.current(), bit_reserve - bit_count, bit_count);
 						index_data.forward();
 						bit_reserve = k_type_bit_count<Byte>;
 					}
 					else {
 						auto first_block_size = bit_reserve;
 						auto second_block_size = bit_count - first_block_size;
-						auto first_block = clip_bit(index_data.current(), 0_sz, first_block_size);
+						auto first_block = Bitwise::extract(index_data.current(), 0_sz, first_block_size);
 						index_data.forward();
-						auto second_block = clip_bit(index_data.current(), k_type_bit_count<Byte> - second_block_size, second_block_size);
+						auto second_block = Bitwise::extract(index_data.current(), k_type_bit_count<Byte> - second_block_size, second_block_size);
 						index_value = (first_block << second_block_size) | second_block;
 						bit_reserve = k_type_bit_count<Byte> - second_block_size;
 					}

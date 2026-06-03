@@ -7,11 +7,11 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.miscellaneous.character_series.container;
-import twinning.kernel.utility.miscellaneous.character_series.type;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.miscellaneous.math;
+import twinning.kernel.utility.math.utility;
 
 export namespace Twinning::Kernel {
 

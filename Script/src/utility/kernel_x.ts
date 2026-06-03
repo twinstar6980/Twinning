@@ -699,7 +699,7 @@ namespace Twinning.Script.KernelX {
 						fill_blue: null | bigint,
 						fill_alpha: null | bigint,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw_view.size());
 						let ripe_view = ripe.view();
@@ -729,7 +729,7 @@ namespace Twinning.Script.KernelX {
 						flip_horizontal: boolean,
 						flip_vertical: boolean,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw_view.size());
 						let ripe_view = ripe.view();
@@ -759,7 +759,7 @@ namespace Twinning.Script.KernelX {
 						rotate_90: boolean,
 						rotate_180: boolean,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(!rotate_90 ? raw_view.size() : Kernel.Image.ImageSize.value([raw_view.size().value[1], raw_view.size().value[0]]));
 						let ripe_view = ripe.view();
@@ -786,7 +786,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						target_size: Image.ImageSize,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(target_size));
 						let ripe_view = ripe.view();
@@ -800,7 +800,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						target_rate: number,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let target_size = Kernel.Image.ImageSize.value([BigInt(Math.max(1, Math.round(Number(raw.size().value[0]) * target_rate))), BigInt(Math.max(1, Math.round(Number(raw.size().value[1]) * target_rate)))]);
 						let ripe = Kernel.Image.Image.allocate(target_size);
@@ -837,7 +837,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						tile_size: Image.ImageSize,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
@@ -851,7 +851,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						tile_size: Image.ImageSize,
 					): void {
-						let ripe = Conversion.Png.read_fs_of(ripe_file);
+						let ripe = Conversion.Png.decode_fs_of(ripe_file);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
@@ -884,7 +884,7 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
@@ -897,7 +897,7 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let ripe = Conversion.Png.read_fs_of(ripe_file);
+						let ripe = Conversion.Png.decode_fs_of(ripe_file);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
@@ -930,7 +930,7 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let raw = Conversion.Png.read_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
@@ -943,7 +943,7 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let ripe = Conversion.Png.read_fs_of(ripe_file);
+						let ripe = Conversion.Png.decode_fs_of(ripe_file);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
@@ -1265,25 +1265,19 @@ namespace Twinning.Script.KernelX {
 					origin_size: Image.ImageSize,
 					format: CompositeFormat,
 				): Image.ImageSize {
-					let compute_block = (t: bigint, n: bigint) => {
-						return t % n === 0n ? (t) : ((t / n + 1n) * n);
-					};
-					let compute_exponent_of_2 = (t: bigint) => {
-						let r = 0b1n << 1n;
-						while (r < t) {
-							r <<= 1n;
-						}
-						return r;
-					};
 					let block_size = get_block_size(format);
-					let padded_size: Image.ImageSize = [compute_block(origin_size[0], block_size[0]), compute_block(origin_size[1], block_size[1])];
-					if (format.includes('etc')) {
-						padded_size = [compute_exponent_of_2(padded_size[0]), compute_exponent_of_2(padded_size[1])];
+					let padded_size: Image.ImageSize = [
+						ConvertHelper.compute_padded_size(origin_size[0], block_size[0]),
+						ConvertHelper.compute_padded_size(origin_size[1], block_size[1]),
+					];
+					if (format.includes('etc') || format.includes('pvrtc')) {
+						padded_size = [
+							ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[0]),
+							ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[1]),
+						];
 					}
-					else if (format.includes('pvrtc')) {
-						let padded_width = compute_exponent_of_2(padded_size[0]);
-						let padded_height = compute_exponent_of_2(padded_size[1]);
-						let maximum_size = padded_width > padded_height ? padded_width : padded_height;
+					if (format.includes('pvrtc')) {
+						let maximum_size = padded_size[0] > padded_size[1] ? padded_size[0] : padded_size[1];
 						padded_size = [maximum_size, maximum_size];
 					}
 					return padded_size;
@@ -1677,7 +1671,7 @@ namespace Twinning.Script.KernelX {
 
 					// ----------------
 
-					export function read_fs_of(
+					export function decode_fs_of(
 						file: StoragePath,
 					): Kernel.Image.Image {
 						let data = StorageHelper.read_file(file);
@@ -1999,7 +1993,7 @@ namespace Twinning.Script.KernelX {
 					version: typeof Kernel.Tool.Popcap.UTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.UTexture.Version.value(version);
-					let image = Texture.Conversion.Png.read_fs_of(image_file);
+					let image = Texture.Conversion.Png.decode_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
@@ -2061,7 +2055,7 @@ namespace Twinning.Script.KernelX {
 					version: typeof Kernel.Tool.Popcap.SexyTexture.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.SexyTexture.Version.value(version);
-					let image = Texture.Conversion.Png.read_fs_of(image_file);
+					let image = Texture.Conversion.Png.decode_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);

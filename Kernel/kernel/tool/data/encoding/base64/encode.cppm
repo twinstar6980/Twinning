@@ -47,10 +47,10 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 				buffer[1_ix] = raw.read_of();
 				buffer[2_ix] = !raw.full() ? (raw.read_of()) : (k_null_byte);
 				buffer[3_ix] = !raw.full() ? (raw.read_of()) : (k_null_byte);
-				ripe.write(query_table(cast_box<Size>(clip_bit(buffer[1_ix], 3_ix, 6_sz) << 0_sz)));
-				ripe.write(query_table(cast_box<Size>(clip_bit(buffer[1_ix], 1_ix, 2_sz) << 4_sz | clip_bit(buffer[2_ix], 5_ix, 4_sz) << 0_sz)));
-				ripe.write(query_table(cast_box<Size>(clip_bit(buffer[2_ix], 1_ix, 4_sz) << 2_sz | clip_bit(buffer[3_ix], 7_ix, 2_sz) << 0_sz)));
-				ripe.write(query_table(cast_box<Size>(clip_bit(buffer[3_ix], 1_ix, 6_sz) << 0_sz)));
+				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[1_ix], 3_ix, 6_sz) << 0_sz)));
+				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[1_ix], 1_ix, 2_sz) << 4_sz | Bitwise::extract(buffer[2_ix], 5_ix, 4_sz) << 0_sz)));
+				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[2_ix], 1_ix, 4_sz) << 2_sz | Bitwise::extract(buffer[3_ix], 7_ix, 2_sz) << 0_sz)));
+				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[3_ix], 1_ix, 6_sz) << 0_sz)));
 			}
 			switch ((raw_size % k_raw_block_size).value) {
 				case 0_sz .value: {
@@ -78,7 +78,7 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 			Size const & raw_size,
 			Size &       ripe_size
 		) -> Void {
-			ripe_size = compute_padded_size(raw_size, k_raw_block_size) / k_raw_block_size * k_ripe_block_size;
+			ripe_size = Math::compute_padded_size(raw_size, k_raw_block_size) / k_raw_block_size * k_ripe_block_size;
 			return;
 		}
 

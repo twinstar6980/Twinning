@@ -11,6 +11,7 @@ import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.container.static_array.static_array;
+import twinning.kernel.utility.math.utility;
 
 export namespace Twinning::Kernel {
 
@@ -559,6 +560,29 @@ export namespace Twinning::Kernel {
 	template <auto t_size> requires
 		AutomaticConstraint
 	using StaticByteArray = BasicStaticByteArray<Byte, t_size>;
+
+	#pragma endregion
+
+	#pragma region function
+
+	template <typename TSourceElement, auto t_constant> requires
+		CategoryConstraint<IsPureInstance<TSourceElement>>
+		&& (IsSameOf<t_constant, Boolean>)
+	inline auto to_byte_view(
+		ListView<TSourceElement, t_constant> const & source
+	) -> ByteListView<t_constant> {
+		return ByteListView<t_constant>{cast_pointer<Byte>(source.begin()), source.size() * k_type_size<AsPure<TSourceElement>>};
+	}
+
+	template <typename TDestinationElement, template <typename, auto> typename TDestinationView = ListView, auto t_constant> requires
+		CategoryConstraint<IsPureInstance<TDestinationElement>>
+		&& (IsSameOf<t_constant, Boolean>)
+	inline auto from_byte_view(
+		ByteListView<t_constant> const & source
+	) -> TDestinationView<TDestinationElement, t_constant> {
+		assert_test(Math::is_padded_size(source.size(), k_type_size<TDestinationElement>));
+		return TDestinationView<TDestinationElement, t_constant>{cast_pointer<TDestinationElement>(source.begin()), source.size() / k_type_size<TDestinationElement>};
+	}
 
 	#pragma endregion
 

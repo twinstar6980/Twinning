@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			auto rijndael_plain_container = ByteArray{};
 			auto rijndael_plain = InputByteStreamView{};
 			auto plain_data = plain.forward_view(plain.reserve());
-			auto rijndael_data_size = compute_padded_size(plain_data.size(), cast_box<Size>(k_rijndael_block_size));
+			auto rijndael_data_size = Math::compute_padded_size(plain_data.size(), cast_box<Size>(k_rijndael_block_size));
 			if (plain_data.size() == rijndael_data_size) {
 				rijndael_plain.set(plain_data);
 			}
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		) -> Void {
 			cipher_size = 0_sz;
 			cipher_size += bs_static_size<MagicMarker>();
-			cipher_size += compute_padded_size(plain_size, cast_box<Size>(k_rijndael_block_size));
+			cipher_size += Math::compute_padded_size(plain_size, cast_box<Size>(k_rijndael_block_size));
 			return;
 		}
 

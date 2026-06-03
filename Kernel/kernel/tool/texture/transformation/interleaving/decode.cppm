@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Interleaving {
 			Size const &                 width
 		) -> Image::ImagePosition {
 			auto index = ripe.y * width + ripe.x;
-			return Image::ImagePosition{shrink_bit(index >> 0_sz), shrink_bit(index >> 1_sz)};
+			return Image::ImagePosition{Bitwise::shrink(index >> 0_sz), Bitwise::shrink(index >> 1_sz)};
 		}
 
 		// ----------------
@@ -30,7 +30,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Interleaving {
 			Image::ConstantImageView const & ripe
 		) -> Void {
 			assert_test(raw.size() == ripe.size());
-			assert_test(is_padded_size_of_exponent_of_2(raw.size().width) && is_padded_size_of_exponent_of_2(raw.size().height));
+			assert_test(Math::is_padded_size_of_exponent_of_2(raw.size().width) && Math::is_padded_size_of_exponent_of_2(raw.size().height));
 			for (auto & y : SizeRange{raw.size().height}) {
 				for (auto & x : SizeRange{raw.size().width}) {
 					auto   raw_position = convert_index(Image::ImagePosition{x, y}, raw.size().width);

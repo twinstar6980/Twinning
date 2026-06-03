@@ -132,6 +132,14 @@ class ConvertHelper {
 
   // #region string
 
+  static String normalizeStringLineFeed(
+    String source,
+  ) {
+    return source.replaceAll('\r\n', '\n');
+  }
+
+  // ----------------
+
   static List<String> splitStringOfCamelCase(
     String source,
   ) {

@@ -112,7 +112,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				)
 			);
 			ripe.write(raw.sub_view(0_sz, cast_box<Size>(information_structure.header.information_section_size)));
-			ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
+			ripe.write_space(k_null_byte, Math::compute_padding_size(ripe.position(), k_padding_unit_size));
 			auto resource_data_section_compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			{
 				information_structure.header.general_resource_data_section_offset = cast_box<IntegerU32>(ripe.position());
@@ -122,7 +122,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				}
 				else {
 					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
-					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
+					ripe.write_space(k_null_byte, Math::compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
 				information_structure.header.general_resource_data_section_size = cast_box<IntegerU32>(ripe.position()) - information_structure.header.general_resource_data_section_offset;
 			}
@@ -134,7 +134,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				}
 				else {
 					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), ripe, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
-					ripe.write_space(k_null_byte, compute_padding_size(ripe.position(), k_padding_unit_size));
+					ripe.write_space(k_null_byte, Math::compute_padding_size(ripe.position(), k_padding_unit_size));
 				}
 				information_structure.header.texture_resource_data_section_size = cast_box<IntegerU32>(ripe.position()) - information_structure.header.texture_resource_data_section_offset;
 			}
@@ -167,7 +167,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				)
 			);
 			raw.write(ripe.sub_view(0_sz, cast_box<Size>(information_structure.header.information_section_size)));
-			raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
+			raw.write_space(k_null_byte, Math::compute_padding_size(raw.position(), k_padding_unit_size));
 			auto resource_data_section_compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			{
 				auto resource_data_section_view = ripe.sub_view(cast_box<Size>(information_structure.header.general_resource_data_section_offset), cast_box<Size>(information_structure.header.general_resource_data_section_size));
@@ -177,7 +177,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				else {
 					Data::Compression::Deflate::Uncompress::process(raw, as_left(InputByteStreamView{resource_data_section_view}), 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
 				}
-				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
+				raw.write_space(k_null_byte, Math::compute_padding_size(raw.position(), k_padding_unit_size));
 			}
 			{
 				auto resource_data_section_view = ripe.sub_view(cast_box<Size>(information_structure.header.texture_resource_data_section_offset), cast_box<Size>(information_structure.header.texture_resource_data_section_size));
@@ -187,7 +187,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 				else {
 					Data::Compression::Deflate::Uncompress::process(raw, as_left(InputByteStreamView{resource_data_section_view}), 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
 				}
-				raw.write_space(k_null_byte, compute_padding_size(raw.position(), k_padding_unit_size));
+				raw.write_space(k_null_byte, Math::compute_padding_size(raw.position(), k_padding_unit_size));
 			}
 			return information_structure;
 		}

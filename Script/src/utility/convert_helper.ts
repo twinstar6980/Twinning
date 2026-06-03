@@ -193,6 +193,42 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #endregion
 
+	// #region size
+
+	export function is_padded_size(
+		value: bigint,
+		unit: bigint,
+	): boolean {
+		return value % unit === 0n;
+	}
+
+	export function compute_padded_size(
+		value: bigint,
+		unit: bigint,
+	): bigint {
+		return is_padded_size(value, unit) ? (value) : ((value / unit + 1n) * unit);
+	}
+
+	// ----------------
+
+	export function is_padded_size_of_exponent_of_2(
+		value: bigint,
+	): boolean {
+		return(value !== 0n) && ((value & (value - 1n)) === 0n);
+	}
+
+	export function compute_padded_size_of_exponent_of_2(
+		value: bigint,
+	): bigint {
+		let result = 0b1n << 1n;
+		while (result < value) {
+			result <<= 1n;
+		}
+		return result;
+	}
+
+	// #endregion
+
 	// #region character
 
 	export function is_letter(

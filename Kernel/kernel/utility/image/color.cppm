@@ -7,7 +7,8 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.miscellaneous.math;
+import twinning.kernel.utility.math.utility;
+import twinning.kernel.utility.memory.bitwise;
 
 export namespace Twinning::Kernel::Image {
 
@@ -29,7 +30,7 @@ export namespace Twinning::Kernel::Image {
 		BasicColor<TValue> const & value,
 		Size const &               bit_count
 	) -> BasicColor<TValue> {
-		return clip_bit(value, k_type_bit_count<BasicColor<TValue>> - bit_count, bit_count);
+		return Bitwise::extract(value, k_type_bit_count<BasicColor<TValue>> - bit_count, bit_count);
 	}
 
 	template <typename TValue> requires

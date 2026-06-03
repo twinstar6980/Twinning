@@ -19,7 +19,7 @@ import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.storage.utility;
 import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.miscellaneous.character_series.type;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.string.basic_string;

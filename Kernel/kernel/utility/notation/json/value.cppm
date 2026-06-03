@@ -7,12 +7,11 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.null;
 import twinning.kernel.utility.container.variant.enumerable_variant;
 import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.map.map;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.miscellaneous.number_variant;
+import twinning.kernel.utility.math.number_variant;
 import twinning.kernel.utility.notation.json.value_adapter;
 
 export namespace Twinning::Kernel::Notation::Json {

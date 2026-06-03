@@ -7,7 +7,7 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.miscellaneous.dimension;
+import twinning.kernel.utility.model.dimension;
 
 export namespace Twinning::Kernel::Image {
 

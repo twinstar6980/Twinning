@@ -94,7 +94,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: StoragePath,
 	): void {
 		let definition = JsonHelper.decode_file(definition_file) as AtlasDefinition;
-		let atlas = KernelX.Tool.Texture.Conversion.Png.read_fs_of(atlas_file);
+		let atlas = KernelX.Tool.Texture.Conversion.Png.decode_fs_of(atlas_file);
 		let atlas_view = atlas.view();
 		unpack_fsh(definition, atlas_view, sprite_directory);
 		return;

@@ -10,7 +10,7 @@ import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.range.generic_range;
-import twinning.kernel.utility.miscellaneous.math;
+import twinning.kernel.utility.math.utility;
 
 export namespace Twinning::Kernel {
 

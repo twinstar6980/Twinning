@@ -6,27 +6,26 @@ export module twinning.kernel.utility.support.byte_stream;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.null;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.container.list.list_view;
 import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.container.static_array.static_array;
+import twinning.kernel.utility.memory.bitwise;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.byte_series.stream;
 import twinning.kernel.utility.miscellaneous.byte_series.stream_adapter;
-import twinning.kernel.utility.miscellaneous.byte_series.utility;
 import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
-import twinning.kernel.utility.miscellaneous.character_series.type;
-import twinning.kernel.utility.miscellaneous.record;
-import twinning.kernel.utility.miscellaneous.four_character_code;
+import twinning.kernel.utility.model.record;
+import twinning.kernel.utility.model.four_character_code;
 import twinning.kernel.utility.miscellaneous.constant_block;
 import twinning.kernel.utility.miscellaneous.string_block;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.string.parser;
+import twinning.kernel.utility.string.character_type;
 
 export namespace Twinning::Kernel {
 
@@ -66,7 +65,7 @@ export namespace Twinning::Kernel {
 				std::memcpy(unmake_pointer_unsafe<void>(thix.current_pointer()), &that, unmake_box<std::size_t>(k_type_size<TValue>));
 			}
 			else [[unlikely]] {
-				auto that_reversed = reverse_bit(that);
+				auto that_reversed = Bitwise::reverse(that);
 				std::memcpy(unmake_pointer_unsafe<void>(thix.current_pointer()), &that_reversed, unmake_box<std::size_t>(k_type_size<TValue>));
 			}
 			thix.forward(k_type_size<TValue>);
@@ -79,7 +78,7 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			std::memcpy(&that, unmake_pointer_unsafe<void>(thix.current_pointer()), unmake_box<std::size_t>(k_type_size<TValue>));
 			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]] {
-				that = reverse_bit(that);
+				that = Bitwise::reverse(that);
 			}
 			thix.forward(k_type_size<TValue>);
 			return;

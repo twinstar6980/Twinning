@@ -7,14 +7,13 @@ import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.math.number_variant;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.string.parser;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.container;
 import twinning.kernel.utility.miscellaneous.character_series.stream;
 import twinning.kernel.utility.miscellaneous.character_series.stream_adapter;
-import twinning.kernel.utility.miscellaneous.number_variant;
-import twinning.kernel.utility.null;
 
 export namespace Twinning::Kernel {
 

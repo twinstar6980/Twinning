@@ -9,12 +9,12 @@ import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.list.list;
+import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.miscellaneous.character_series.type;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.range.number_range;
 import twinning.kernel.utility.range.algorithm;
-import twinning.kernel.utility.string.basic_string;
 
 export namespace Twinning::Kernel::Storage {
 

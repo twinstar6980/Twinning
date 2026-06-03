@@ -181,25 +181,19 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		origin_size: KernelX.Image.ImageSize,
 		format: Format,
 	): KernelX.Image.ImageSize {
-		let compute_block = (t: bigint, n: bigint) => {
-			return t % n === 0n ? (t) : ((t / n + 1n) * n);
-		};
-		let compute_exponent_of_2 = (t: bigint) => {
-			let r = 0b1n << 1n;
-			while (r < t) {
-				r <<= 1n;
-			}
-			return r;
-		};
 		let block_size = get_block_size(format);
-		let padded_size: KernelX.Image.ImageSize = [compute_block(origin_size[0], block_size[0]), compute_block(origin_size[1], block_size[1])];
-		if (format.includes('etc')) {
-			padded_size = [compute_exponent_of_2(padded_size[0]), compute_exponent_of_2(padded_size[1])];
+		let padded_size: KernelX.Image.ImageSize = [
+			ConvertHelper.compute_padded_size(origin_size[0], block_size[0]),
+			ConvertHelper.compute_padded_size(origin_size[1], block_size[1]),
+		];
+		if (format.includes('etc') || format.includes('pvrtc')) {
+			padded_size = [
+				ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[0]),
+				ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[1]),
+			];
 		}
-		else if (format.includes('pvrtc')) {
-			let padded_width = compute_exponent_of_2(padded_size[0]);
-			let padded_height = compute_exponent_of_2(padded_size[1]);
-			let maximum_size = padded_width > padded_height ? padded_width : padded_height;
+		if (format.includes('pvrtc')) {
+			let maximum_size = padded_size[0] > padded_size[1] ? padded_size[0] : padded_size[1];
 			padded_size = [maximum_size, maximum_size];
 		}
 		return padded_size;

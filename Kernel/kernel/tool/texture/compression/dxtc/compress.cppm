@@ -26,7 +26,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 			Boolean const &                  with_alpha
 		) -> Void {
 			assert_test(is_valid_block_size(block_size));
-			assert_test(is_padded_size(image.size().width, block_size.width) && is_padded_size(image.size().height, block_size.height));
+			assert_test(Math::is_padded_size(image.size().width, block_size.width) && Math::is_padded_size(image.size().height, block_size.height));
 			auto block_count = image.size().area() / block_size.area();
 			if (generation == Generation::Constant::v1()) {
 				auto ripe_data_size = block_count * k_block_bit_count_1 / k_type_bit_count<Byte>;

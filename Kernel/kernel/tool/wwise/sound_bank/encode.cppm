@@ -507,7 +507,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						auto index_value = Enumerated{};
 						convert_enumeration_index(index_value, current_value);
 						for (auto & bit_index : SizeRange{EnumerationAttribute<TCurrentValue>::size}) {
-							bit_set.set(current_index, cast_box<Boolean>(clip_bit(index_value, bit_index, 1_sz)));
+							bit_set.set(current_index, cast_box<Boolean>(Bitwise::extract(index_value, bit_index, 1_sz)));
 							++current_index;
 						}
 					}
@@ -4788,7 +4788,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 							data_size = 0_sz;
 						}
 						else {
-							data_data.write_space(k_null_byte, compute_padding_size(data_begin_position + data_data.position(), k_data_block_padding_size));
+							data_data.write_space(k_null_byte, Math::compute_padding_size(data_begin_position + data_data.position(), k_data_block_padding_size));
 							data_offset = data_data.position();
 							data_size = Storage::read_file_stream(embedded_media_directory.join("{}.wem"_sf(value)), data_data);
 						}

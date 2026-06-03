@@ -358,7 +358,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 			information_structure.header.texture_resource_information_section_offset = cast_box<IntegerU32>(information_data.texture_resource_information_offset);
 			information_structure.header.texture_resource_information_section_block_size = cast_box<IntegerU32>(bs_static_size<Structure::TextureResourceInformation<t_version>>());
 			if constexpr (check_version(t_version, {4}, {})) {
-				data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
+				data.write_space(k_null_byte, Math::compute_padding_size(data.position(), k_padding_unit_size));
 				information_structure.header.information_without_manifest_section_size = cast_box<IntegerU32>(data.position());
 			}
 			if (manifest.has()) {
@@ -369,7 +369,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				information_structure.header.resource_manifest_information_section_offset = cast_box<IntegerU32>(0_sz);
 				information_structure.header.string_manifest_information_section_offset = cast_box<IntegerU32>(0_sz);
 			}
-			data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
+			data.write_space(k_null_byte, Math::compute_padding_size(data.position(), k_padding_unit_size));
 			information_structure.header.information_section_size = cast_box<IntegerU32>(data.position());
 			information_structure.group_identifier.allocate_full(global_group_count);
 			information_structure.group_information.allocate_full(global_group_count);

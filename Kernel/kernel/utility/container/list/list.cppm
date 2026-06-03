@@ -9,8 +9,8 @@ import twinning.kernel.utility.box;
 import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.range.algorithm;
-import twinning.kernel.utility.miscellaneous.allocation;
-import twinning.kernel.utility.miscellaneous.math;
+import twinning.kernel.utility.memory.allocation;
+import twinning.kernel.utility.math.utility;
 import twinning.kernel.utility.container.list.list_view;
 
 export namespace Twinning::Kernel {

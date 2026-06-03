@@ -11,7 +11,7 @@ import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.miscellaneous.finalizer;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.miscellaneous.byte_series.stream;
-import twinning.kernel.utility.miscellaneous.character_series.type;
+import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.container.optional.optional;

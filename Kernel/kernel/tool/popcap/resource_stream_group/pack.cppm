@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				information_data.resource_information = OutputByteStreamView{
 					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_information))
 				};
-				data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
+				data.write_space(k_null_byte, Math::compute_padding_size(data.position(), k_padding_unit_size));
 			}
 			auto information_structure = Structure::Information<t_version>{};
 			if constexpr (check_version(t_version, {1, 3})) {
@@ -90,7 +90,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 					auto resource_path_full = resource_directory.push(resource_definition.path);
 					auto resource_size = Storage::size_file(resource_path_full);
-					resource_data_section_size_original += compute_padded_size(resource_size, k_padding_unit_size);
+					resource_data_section_size_original += Math::compute_padded_size(resource_size, k_padding_unit_size);
 				}
 				auto compress_resource_data_section = k_false;
 				switch (current_resource_type.value) {
@@ -140,14 +140,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						}
 						default: throw UnreachableException{};
 					}
-					resource_data_section_stream.write_space(k_null_byte, compute_padding_size(resource_data_section_stream.position(), k_padding_unit_size));
+					resource_data_section_stream.write_space(k_null_byte, Math::compute_padding_size(resource_data_section_stream.position(), k_padding_unit_size));
 				}
 				if (!compress_resource_data_section || (current_resource_type == ResourceType::Constant::texture() && resource_data_section_size_original == 0_sz)) {
 					data.forward(resource_data_section_view.size());
 				}
 				else {
 					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
-					data.write_space(k_null_byte, compute_padding_size(data.position(), k_padding_unit_size));
+					data.write_space(k_null_byte, Math::compute_padding_size(data.position(), k_padding_unit_size));
 				}
 				auto resource_data_section_size = data.position() - resource_data_section_offset;
 				switch (current_resource_type.value) {

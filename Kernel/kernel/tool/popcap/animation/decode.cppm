@@ -86,8 +86,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Animation {
 			auto value_short_bit_count = k_type_bit_count<TRawShortValue> - t_flag_count;
 			auto value_short_maximum = ~(~make_box<TRawShortValue>(0) << value_short_bit_count);
 			auto value_short_with_flag = data.read_of<TRawShortValue>();
-			auto value_short = clip_bit(value_short_with_flag, 0_sz, value_short_bit_count);
-			auto value_flag = clip_bit(value_short_with_flag, value_short_bit_count, t_flag_count);
+			auto value_short = Bitwise::extract(value_short_with_flag, 0_sz, value_short_bit_count);
+			auto value_flag = Bitwise::extract(value_short_with_flag, value_short_bit_count, t_flag_count);
 			auto value_long = TRawLongValue{};
 			if (value_short != value_short_maximum) {
 				value_long = cast_box<TRawLongValue>(value_short);
