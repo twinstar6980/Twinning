@@ -181,7 +181,7 @@
 			"icon": "draft",
 			"item": [
 				{
-					"identifier": "data.hash.md5",
+					"identifier": "data.hashing.md5.hash",
 					"name": "MD5 Hash",
 					"icon": "check_box",
 					"argument": [
@@ -190,6 +190,43 @@
 							"name": "Target File",
 							"type": "path",
 							"option": null,
+						},
+					],
+					"batch": [
+						"target_file",
+					],
+					"preset": [
+					],
+				},
+				{
+					"identifier": "data.hashing.fnv.hash",
+					"name": "FNV Hash",
+					"icon": "check_box",
+					"argument": [
+						{
+							"identifier": "target_file",
+							"name": "Target File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "mode",
+							"name": "Algorithm Mode",
+							"type": "string",
+							"option": [
+								"m_0",
+								"m_1",
+								"m_1a",
+							],
+						},
+						{
+							"identifier": "bit_count",
+							"name": "Bit Count",
+							"type": "string",
+							"option": [
+								"b_32",
+								"b_64",
+							],
 						},
 					],
 					"batch": [
@@ -254,14 +291,14 @@
 					"icon": "lock",
 					"argument": [
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -273,8 +310,8 @@
 						},
 					],
 					"batch": [
-						"plain_file",
-						"cipher_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 					],
@@ -285,14 +322,14 @@
 					"icon": "lock",
 					"argument": [
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -330,8 +367,8 @@
 						},
 					],
 					"batch": [
-						"plain_file",
-						"cipher_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 					],
@@ -342,14 +379,14 @@
 					"icon": "key",
 					"argument": [
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
@@ -387,8 +424,8 @@
 						},
 					],
 					"batch": [
-						"cipher_file",
-						"plain_file",
+						"ripe_file",
+						"raw_file",
 					],
 					"preset": [
 					],
@@ -2712,14 +2749,14 @@
 					"icon": "lock",
 					"argument": [
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -2737,8 +2774,8 @@
 						},
 					],
 					"batch": [
-						"plain_file",
-						"cipher_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 					],
@@ -2749,14 +2786,14 @@
 					"icon": "key",
 					"argument": [
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
@@ -2774,8 +2811,8 @@
 						},
 					],
 					"batch": [
-						"cipher_file",
-						"plain_file",
+						"ripe_file",
+						"raw_file",
 					],
 					"preset": [
 					],
@@ -2905,14 +2942,14 @@
 					"icon": "lock",
 					"argument": [
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -2924,8 +2961,8 @@
 						},
 					],
 					"batch": [
-						"plain_file",
-						"cipher_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 					],
@@ -2936,14 +2973,14 @@
 					"icon": "key",
 					"argument": [
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
@@ -2955,8 +2992,8 @@
 						},
 					],
 					"batch": [
-						"cipher_file",
-						"plain_file",
+						"ripe_file",
+						"raw_file",
 					],
 					"preset": [
 					],
@@ -5253,14 +5290,14 @@
 					"icon": "lock",
 					"argument": [
 						{
-							"identifier": "plain_file",
-							"name": "Plain File",
+							"identifier": "raw_file",
+							"name": "Raw File",
 							"type": "path",
 							"option": null,
 						},
 						{
-							"identifier": "cipher_file",
-							"name": "Cipher File",
+							"identifier": "ripe_file",
+							"name": "Ripe File",
 							"type": "path",
 							"option": null,
 						},
@@ -5272,8 +5309,8 @@
 						},
 					],
 					"batch": [
-						"plain_file",
-						"cipher_file",
+						"raw_file",
+						"ripe_file",
 					],
 					"preset": [
 					],

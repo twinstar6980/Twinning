@@ -180,7 +180,19 @@
 						"name": "()$",
 					},
 					"batch": true,
-					"method": "data.hash.md5",
+					"method": "data.hashing.md5.hash",
+					"preset": [
+					],
+				},
+				{
+					"name": "FNV Hash",
+					"icon": "check_box",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.hashing.fnv.hash",
 					"preset": [
 					],
 				},

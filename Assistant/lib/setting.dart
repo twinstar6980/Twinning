@@ -235,6 +235,7 @@ class SettingProvider with ChangeNotifier {
         showBoundary: false,
       ),
       kairosoftGameManager: .new(
+        repository: [],
       ),
     );
   }
@@ -320,6 +321,7 @@ class SettingProvider with ChangeNotifier {
         'show_boundary': data.popcapAnimationViewer.showBoundary,
       },
       'kairosoft_game_manager': {
+        'repository': data.kairosoftGameManager.repository.map((it) => it.emit()).toList(),
       },
     };
   }
@@ -386,6 +388,7 @@ class SettingProvider with ChangeNotifier {
         showBoundary: (jsonPart['show_boundary'] as Boolean),
       )),
       kairosoftGameManager: (json['kairosoft_game_manager'] as Map<dynamic, dynamic>).selfLet((jsonPart) => kairosoft_game_manager.Setting(
+        repository: (jsonPart['repository'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
       )),
     );
   }

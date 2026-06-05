@@ -10,17 +10,17 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.cdat'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.cdat'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -40,7 +40,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -48,16 +48,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.encrypt'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, '.cdat'),
 					}),
 				],
-				worker: ({plain_file, cipher_file, limit, key}, store: {}) => {
-					KernelX.Tool.Popcap.CryptData.encrypt_fs(plain_file, cipher_file, limit, key, {});
+				worker: ({raw_file, ripe_file, limit, key}, store: {}) => {
+					KernelX.Tool.Popcap.CryptData.encrypt_fs(raw_file, ripe_file, limit, key, {});
 					return;
 				},
 			}),
@@ -66,17 +66,17 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 				filter: ['file', /(\.cdat)$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {cipher_file: StoragePath}) => ConvertHelper.replace_path_name(argument.cipher_file, /(\.cdat)?$/i, ''),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.cdat)?$/i, ''),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -96,7 +96,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -104,16 +104,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CryptData {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {cipher_file: StoragePath}) => ConvertHelper.replace_path_name(argument.cipher_file, /()?$/i, '.decrypt'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.decrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.cdat)?$/i, ''),
 					}),
 				],
-				worker: ({cipher_file, plain_file, limit, key}, store: {}) => {
-					KernelX.Tool.Popcap.CryptData.decrypt_fs(plain_file, cipher_file, limit, key, {});
+				worker: ({ripe_file, raw_file, limit, key}, store: {}) => {
+					KernelX.Tool.Popcap.CryptData.decrypt_fs(raw_file, ripe_file, limit, key, {});
 					return;
 				},
 			}),

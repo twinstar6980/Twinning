@@ -97,34 +97,39 @@
 	"executor.implementation:common.utility.run_custom_script": "运行自定义脚本",
 	"executor.implementation:common.utility.run_custom_script:target_file": "目标文件",
 	"executor.implementation:common.utility.run_custom_script:is_module": "作为模块运行",
-	// executor/implementation/data.hash
-	"executor.implementation:data.hash.md5": "MD5 散列",
-	"executor.implementation:data.hash.md5:target_file": "目标文件",
+	// executor/implementation/data.hashing
+	"executor.implementation:data.hashing.md5.hash": "MD5 散列",
+	"executor.implementation:data.hashing.md5.hash:target_file": "目标文件",
+	// 
+	"executor.implementation:data.hashing.fnv.hash": "FNV 散列",
+	"executor.implementation:data.hashing.fnv.hash:target_file": "目标文件",
+	"executor.implementation:data.hashing.fnv.hash:mode": "算法模式",
+	"executor.implementation:data.hashing.fnv.hash:bit_count": "位数",
 	// executor/implementation/data.encoding
 	"executor.implementation:data.encoding.base64.encode": "Base64 编码",
 	"executor.implementation:data.encoding.base64.encode:raw_file": "原始文件",
-	"executor.implementation:data.encoding.base64.encode:ripe_file": "成品文件",
+	"executor.implementation:data.encoding.base64.encode:ripe_file": "密文文件",
 	// 
 	"executor.implementation:data.encoding.base64.decode": "Base64 解码",
-	"executor.implementation:data.encoding.base64.decode:ripe_file": "成品文件",
+	"executor.implementation:data.encoding.base64.decode:ripe_file": "密文文件",
 	"executor.implementation:data.encoding.base64.decode:raw_file": "原始文件",
 	// executor/implementation/data.encryption
 	"executor.implementation:data.encryption.exor.encrypt": "EXOR 加密",
-	"executor.implementation:data.encryption.exor.encrypt:plain_file": "明文文件",
-	"executor.implementation:data.encryption.exor.encrypt:cipher_file": "密文文件",
+	"executor.implementation:data.encryption.exor.encrypt:raw_file": "原始文件",
+	"executor.implementation:data.encryption.exor.encrypt:ripe_file": "密文文件",
 	"executor.implementation:data.encryption.exor.encrypt:key": "密钥",
 	// 
 	"executor.implementation:data.encryption.rijndael.encrypt": "Rijndael 加密",
-	"executor.implementation:data.encryption.rijndael.encrypt:plain_file": "明文文件",
-	"executor.implementation:data.encryption.rijndael.encrypt:cipher_file": "密文文件",
+	"executor.implementation:data.encryption.rijndael.encrypt:raw_file": "原始文件",
+	"executor.implementation:data.encryption.rijndael.encrypt:ripe_file": "密文文件",
 	"executor.implementation:data.encryption.rijndael.encrypt:mode": "算法模式",
 	"executor.implementation:data.encryption.rijndael.encrypt:block_size": "块大小",
 	"executor.implementation:data.encryption.rijndael.encrypt:key": "密钥",
 	"executor.implementation:data.encryption.rijndael.encrypt:initialization_vector": "初始向量",
 	// 
 	"executor.implementation:data.encryption.rijndael.decrypt": "Rijndael 解密",
-	"executor.implementation:data.encryption.rijndael.decrypt:cipher_file": "密文文件",
-	"executor.implementation:data.encryption.rijndael.decrypt:plain_file": "明文文件",
+	"executor.implementation:data.encryption.rijndael.decrypt:ripe_file": "密文文件",
+	"executor.implementation:data.encryption.rijndael.decrypt:raw_file": "原始文件",
 	"executor.implementation:data.encryption.rijndael.decrypt:mode": "算法模式",
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "块大小",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "密钥",
@@ -132,46 +137,46 @@
 	// executor/implementation/data.compression
 	"executor.implementation:data.compression.deflate.compress": "Deflate 压缩",
 	"executor.implementation:data.compression.deflate.compress:raw_file": "原始文件",
-	"executor.implementation:data.compression.deflate.compress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.deflate.compress:ripe_file": "密文文件",
 	// 
 	"executor.implementation:data.compression.deflate.uncompress": "Deflate 解压",
-	"executor.implementation:data.compression.deflate.uncompress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.deflate.uncompress:ripe_file": "密文文件",
 	"executor.implementation:data.compression.deflate.uncompress:raw_file": "原始文件",
 	"executor.implementation:data.compression.deflate.uncompress:buffer_size": "内存缓冲区大小",
 	// 
 	"executor.implementation:data.compression.zlib.compress": "ZLib 压缩",
 	"executor.implementation:data.compression.zlib.compress:raw_file": "原始文件",
-	"executor.implementation:data.compression.zlib.compress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.zlib.compress:ripe_file": "密文文件",
 	// 
 	"executor.implementation:data.compression.zlib.uncompress": "ZLib 解压",
-	"executor.implementation:data.compression.zlib.uncompress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.zlib.uncompress:ripe_file": "密文文件",
 	"executor.implementation:data.compression.zlib.uncompress:raw_file": "原始文件",
 	"executor.implementation:data.compression.zlib.uncompress:buffer_size": "内存缓冲区大小",
 	// 
 	"executor.implementation:data.compression.gzip.compress": "GZip 压缩",
 	"executor.implementation:data.compression.gzip.compress:raw_file": "原始文件",
-	"executor.implementation:data.compression.gzip.compress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.gzip.compress:ripe_file": "密文文件",
 	// 
 	"executor.implementation:data.compression.gzip.uncompress": "GZip 解压",
-	"executor.implementation:data.compression.gzip.uncompress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.gzip.uncompress:ripe_file": "密文文件",
 	"executor.implementation:data.compression.gzip.uncompress:raw_file": "原始文件",
 	"executor.implementation:data.compression.gzip.uncompress:buffer_size": "内存缓冲区大小",
 	// 
 	"executor.implementation:data.compression.bzip2.compress": "BZip2 压缩",
 	"executor.implementation:data.compression.bzip2.compress:raw_file": "原始文件",
-	"executor.implementation:data.compression.bzip2.compress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.bzip2.compress:ripe_file": "密文文件",
 	// 
 	"executor.implementation:data.compression.bzip2.uncompress": "BZip2 解压",
-	"executor.implementation:data.compression.bzip2.uncompress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.bzip2.uncompress:ripe_file": "密文文件",
 	"executor.implementation:data.compression.bzip2.uncompress:raw_file": "原始文件",
 	"executor.implementation:data.compression.bzip2.uncompress:buffer_size": "内存缓冲区大小",
 	// 
 	"executor.implementation:data.compression.lzma.compress": "Lzma 压缩",
 	"executor.implementation:data.compression.lzma.compress:raw_file": "原始文件",
-	"executor.implementation:data.compression.lzma.compress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.lzma.compress:ripe_file": "密文文件",
 	// 
 	"executor.implementation:data.compression.lzma.uncompress": "Lzma 解压",
-	"executor.implementation:data.compression.lzma.uncompress:ripe_file": "成品文件",
+	"executor.implementation:data.compression.lzma.uncompress:ripe_file": "密文文件",
 	"executor.implementation:data.compression.lzma.uncompress:raw_file": "原始文件",
 	"executor.implementation:data.compression.lzma.uncompress:buffer_size": "内存缓冲区大小",
 	// executor/implementation/data.differentiation
@@ -201,7 +206,7 @@
 	// executor/implementation/texture.transformation
 	"executor.implementation:texture.transformation.filling.encode": "Texture 填充",
 	"executor.implementation:texture.transformation.filling.encode:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.filling.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.filling.encode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.filling.encode:fill_red": "填充R",
 	"executor.implementation:texture.transformation.filling.encode:fill_blue": "填充G",
 	"executor.implementation:texture.transformation.filling.encode:fill_green": "填充B",
@@ -209,35 +214,35 @@
 	// 
 	"executor.implementation:texture.transformation.flipping.encode": "Texture 翻转",
 	"executor.implementation:texture.transformation.flipping.encode:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.flipping.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.flipping.encode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.flipping.encode:flip_horizontal": "水平翻转",
 	"executor.implementation:texture.transformation.flipping.encode:flip_vertical": "垂直翻转",
 	// 
 	"executor.implementation:texture.transformation.rotating.encode": "Texture 旋转",
 	"executor.implementation:texture.transformation.rotating.encode:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.rotating.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.rotating.encode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.rotating.encode:rotate_90": "旋转90度",
 	"executor.implementation:texture.transformation.rotating.encode:rotate_180": "旋转180度",
 	// 
 	"executor.implementation:texture.transformation.scaling.encode": "Texture 缩放",
 	"executor.implementation:texture.transformation.scaling.encode:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.scaling.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.scaling.encode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.scaling.encode:target_width": "目标宽度",
 	"executor.implementation:texture.transformation.scaling.encode:target_height": "目标高度",
 	// 
 	"executor.implementation:texture.transformation.scaling.encode_rate": "Texture 比例缩放",
 	"executor.implementation:texture.transformation.scaling.encode_rate:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.scaling.encode_rate:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.scaling.encode_rate:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.scaling.encode_rate:target_rate": "目标比例",
 	// 
 	"executor.implementation:texture.transformation.tiling.encode": "Texture 分块",
 	"executor.implementation:texture.transformation.tiling.encode:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.tiling.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.tiling.encode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.tiling.encode:tile_width": "分块宽度",
 	"executor.implementation:texture.transformation.tiling.encode:tile_height": "分块高度",
 	// 
 	"executor.implementation:texture.transformation.tiling.decode": "Texture 解分块",
-	"executor.implementation:texture.transformation.tiling.decode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.tiling.decode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.tiling.decode:raw_file": "原始文件",
 	"executor.implementation:texture.transformation.tiling.decode:tile_width": "分块宽度",
 	"executor.implementation:texture.transformation.tiling.decode:tile_height": "分块高度",
@@ -252,10 +257,10 @@
 	// 
 	"executor.implementation:texture.transformation.premultiplying.encode": "Texture 预乘",
 	"executor.implementation:texture.transformation.premultiplying.encode:raw_file": "原始文件",
-	"executor.implementation:texture.transformation.premultiplying.encode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.premultiplying.encode:ripe_file": "密文文件",
 	// 
 	"executor.implementation:texture.transformation.premultiplying.decode": "Texture 解预乘",
-	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "成品文件",
+	"executor.implementation:texture.transformation.premultiplying.decode:ripe_file": "密文文件",
 	"executor.implementation:texture.transformation.premultiplying.decode:raw_file": "原始文件",
 	// executor/implementation/texture.encoding
 	"executor.implementation:texture.encoding.encode": "Texture 编码",
@@ -287,11 +292,11 @@
 	// executor/implementation/wwise.media
 	"executor.implementation:wwise.media.encode": "Wwise Media 编码",
 	"executor.implementation:wwise.media.encode:raw_file": "原始文件",
-	"executor.implementation:wwise.media.encode:ripe_file": "成品文件",
+	"executor.implementation:wwise.media.encode:ripe_file": "密文文件",
 	"executor.implementation:wwise.media.encode:format": "音频格式",
 	// 
 	"executor.implementation:wwise.media.decode": "Wwise Media 解码",
-	"executor.implementation:wwise.media.decode:ripe_file": "成品文件",
+	"executor.implementation:wwise.media.decode:ripe_file": "密文文件",
 	"executor.implementation:wwise.media.decode:raw_file": "原始文件",
 	// executor/implementation/wwise.sound_bank
 	"executor.implementation:wwise.sound_bank.encode": "Wwise Sound-Bank 编码",
@@ -323,23 +328,23 @@
 	// executor/implementation/popcap.zlib
 	"executor.implementation:popcap.zlib.compress": "PopCap ZLib 压缩",
 	"executor.implementation:popcap.zlib.compress:raw_file": "原始文件",
-	"executor.implementation:popcap.zlib.compress:ripe_file": "成品文件",
+	"executor.implementation:popcap.zlib.compress:ripe_file": "密文文件",
 	"executor.implementation:popcap.zlib.compress:version_variant_64": "使用64位变体",
 	// 
 	"executor.implementation:popcap.zlib.uncompress": "PopCap ZLib 解压",
-	"executor.implementation:popcap.zlib.uncompress:ripe_file": "成品文件",
+	"executor.implementation:popcap.zlib.uncompress:ripe_file": "密文文件",
 	"executor.implementation:popcap.zlib.uncompress:raw_file": "原始文件",
 	"executor.implementation:popcap.zlib.uncompress:version_variant_64": "使用64位变体",
 	// executor/implementation/popcap.crypt_data
 	"executor.implementation:popcap.crypt_data.encrypt": "PopCap Crypt-Data 加密",
-	"executor.implementation:popcap.crypt_data.encrypt:plain_file": "明文文件",
-	"executor.implementation:popcap.crypt_data.encrypt:cipher_file": "密文文件",
+	"executor.implementation:popcap.crypt_data.encrypt:raw_file": "原始文件",
+	"executor.implementation:popcap.crypt_data.encrypt:ripe_file": "密文文件",
 	"executor.implementation:popcap.crypt_data.encrypt:limit": "限度",
 	"executor.implementation:popcap.crypt_data.encrypt:key": "密钥",
 	// 
 	"executor.implementation:popcap.crypt_data.decrypt": "PopCap Crypt-Data 解密",
-	"executor.implementation:popcap.crypt_data.decrypt:cipher_file": "密文文件",
-	"executor.implementation:popcap.crypt_data.decrypt:plain_file": "明文文件",
+	"executor.implementation:popcap.crypt_data.decrypt:ripe_file": "密文文件",
+	"executor.implementation:popcap.crypt_data.decrypt:raw_file": "原始文件",
 	"executor.implementation:popcap.crypt_data.decrypt:limit": "限度",
 	"executor.implementation:popcap.crypt_data.decrypt:key": "密钥",
 	// executor/implementation/popcap.reflection_object_notation
@@ -357,13 +362,13 @@
 	"executor.implementation:popcap.reflection_object_notation.decode:version_native_string_encoding_use_utf8": "本地字符串编码使用UTF-8",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.encrypt": "PopCap Reflection-Object-Notation 加密",
-	"executor.implementation:popcap.reflection_object_notation.encrypt:plain_file": "明文文件",
-	"executor.implementation:popcap.reflection_object_notation.encrypt:cipher_file": "密文文件",
+	"executor.implementation:popcap.reflection_object_notation.encrypt:raw_file": "原始文件",
+	"executor.implementation:popcap.reflection_object_notation.encrypt:ripe_file": "密文文件",
 	"executor.implementation:popcap.reflection_object_notation.encrypt:key": "密钥",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.decrypt": "PopCap Reflection-Object-Notation 解密",
-	"executor.implementation:popcap.reflection_object_notation.decrypt:cipher_file": "密文文件",
-	"executor.implementation:popcap.reflection_object_notation.decrypt:plain_file": "明文文件",
+	"executor.implementation:popcap.reflection_object_notation.decrypt:ripe_file": "密文文件",
+	"executor.implementation:popcap.reflection_object_notation.decrypt:raw_file": "原始文件",
 	"executor.implementation:popcap.reflection_object_notation.decrypt:key": "密钥",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.encode_cipher": "PopCap Reflection-Object-Notation 编码为密文",
@@ -536,8 +541,8 @@
 	"executor.implementation:popcap.package.pack_automatic:version_compress_resource_data": "压缩资源数据",
 	// 
 	"executor.implementation:popcap.package.encrypt": "PopCap Package 加密",
-	"executor.implementation:popcap.package.encrypt:plain_file": "明文文件",
-	"executor.implementation:popcap.package.encrypt:cipher_file": "密文文件",
+	"executor.implementation:popcap.package.encrypt:raw_file": "原始文件",
+	"executor.implementation:popcap.package.encrypt:ripe_file": "密文文件",
 	"executor.implementation:popcap.package.encrypt:key": "密钥",
 	// executor/implementation/popcap.resource_stream_group
 	"executor.implementation:popcap.resource_stream_group.pack": "PopCap Resource-Stream-Group 打包",
@@ -623,10 +628,10 @@
 	// 
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.from": "PvZ-2 Resource-Manifest Regular 转换自官方数据",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.from:raw_file": "原始文件",
-	"executor.implementation:popcap.pvz2.resource_manifest.regular.from:ripe_file": "成品文件",
+	"executor.implementation:popcap.pvz2.resource_manifest.regular.from:ripe_file": "密文文件",
 	// 
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to": "PvZ-2 Resource-Manifest Regular 转换至官方数据",
-	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:ripe_file": "成品文件",
+	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:ripe_file": "密文文件",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:raw_file": "原始文件",
 	"executor.implementation:popcap.pvz2.resource_manifest.regular.to:use_array_style_path": "使用数组式路径",
 	// executor/implementation/popcap.pvz2.package_project

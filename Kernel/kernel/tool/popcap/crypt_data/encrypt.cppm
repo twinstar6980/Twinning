@@ -26,58 +26,58 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  plain,
-			OutputByteStreamView & cipher,
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe,
 			Size const &           limit,
 			String const &         key
 		) -> Void {
-			if (plain.reserve() >= limit) {
-				cipher.write_constant(k_magic_marker);
+			if (raw.reserve() >= limit) {
+				ripe.write_constant(k_magic_marker);
 				auto header = Header{};
-				header.plain_size = cast_box<IntegerU64>(plain.reserve());
-				cipher.write(header);
-				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{plain.forward_view(limit)}), cipher, to_byte_view(key.as_view()));
+				header.raw_size = cast_box<IntegerU64>(raw.reserve());
+				ripe.write(header);
+				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{raw.forward_view(limit)}), ripe, to_byte_view(key.as_view()));
 			}
-			cipher.write(plain.forward_view(plain.reserve()));
+			ripe.write(raw.forward_view(raw.reserve()));
 			return;
 		}
 
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size const & plain_size,
-			Size &       cipher_size,
+			Size const & raw_size,
+			Size &       ripe_size,
 			Size const & limit
 		) -> Void {
-			cipher_size = 0_sz;
-			if (plain_size >= limit) {
-				cipher_size += bs_static_size<MagicMarker>();
-				cipher_size += bs_static_size<Header>();
+			ripe_size = 0_sz;
+			if (raw_size >= limit) {
+				ripe_size += bs_static_size<MagicMarker>();
+				ripe_size += bs_static_size<Header>();
 			}
-			cipher_size += plain_size;
+			ripe_size += raw_size;
 			return;
 		}
 
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  plain_,
-			OutputByteStreamView & cipher_,
+			InputByteStreamView &  raw_,
+			OutputByteStreamView & ripe_,
 			Size const &           limit,
 			String const &         key
 		) -> Void {
-			M_use_zps_of(plain);
-			M_use_zps_of(cipher);
-			return process_whole(plain, cipher, limit, key);
+			M_use_zps_of(raw);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, limit, key);
 		}
 
 		inline static auto estimate(
-			Size const & plain_size,
-			Size &       cipher_size,
+			Size const & raw_size,
+			Size &       ripe_size,
 			Size const & limit
 		) -> Void {
-			restruct(cipher_size);
-			return estimate_whole(plain_size, cipher_size, limit);
+			restruct(ripe_size);
+			return estimate_whole(raw_size, ripe_size, limit);
 		}
 
 	};

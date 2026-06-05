@@ -237,7 +237,7 @@ namespace Twinning.Script.ConvertHelper {
 		if (value.length !== 1) {
 			return false;
 		}
-		var code = value.charCodeAt(0) | 0x20;
+		let code = value.charCodeAt(0) | 0x20;
 		return 'a'.charCodeAt(0) <= code && code <= 'z'.charCodeAt(0);
 	}
 

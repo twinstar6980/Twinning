@@ -34,7 +34,7 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 			StorageHelper.remove(ripe_file_fallback_temporary);
 		}
 		if (vgmstream_result.code !== 0n) {
-			throw new Error(`execute failed by vgmstream-cli: ${vgmstream_result.code}\n${vgmstream_result.output}\n${vgmstream_result.error}`);
+			ProcessHelper.throw_error(vgmstream_result);
 		}
 		let regex_result = /^encoding: (.+)$/m.exec(vgmstream_result.output);
 		assert_test(regex_result !== null);

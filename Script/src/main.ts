@@ -102,6 +102,7 @@ namespace Twinning.Script {
 		// #region variable
 
 		const k_partition: Array<string> = [
+			`utility/finalizer`,
 			`utility/timer`,
 			`utility/convert_helper`,
 			`utility/check_helper`,
@@ -122,6 +123,7 @@ namespace Twinning.Script {
 			`utility/console`,
 			`utility/language`,
 			`utility/home_path`,
+			`utility/external_helper`,
 			`utility/android_helper`,
 			`support/atlas/pack`,
 			`support/atlas/pack_automatic`,
@@ -163,7 +165,7 @@ namespace Twinning.Script {
 			`executor/generic`,
 			`executor/typical`,
 			`executor/implementation/common.utility`,
-			`executor/implementation/data.hash`,
+			`executor/implementation/data.hashing`,
 			`executor/implementation/data.encoding`,
 			`executor/implementation/data.encryption`,
 			`executor/implementation/data.compression`,
@@ -280,6 +282,9 @@ namespace Twinning.Script {
 				Console.success(los('main:load_finish'), [
 					los('main:load_duration', ((load_timer_end - load_timer_begin) / 1000).toFixed(3)),
 				]);
+
+				ExternalHelper.list_zip_content(new StoragePath('D:\\.dddd\\test\\kgtest\\test2.apk'))
+
 				result = Runner.run(argument.slice(1));
 			}
 			catch (e) {

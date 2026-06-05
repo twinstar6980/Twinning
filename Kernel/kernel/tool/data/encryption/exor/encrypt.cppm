@@ -16,24 +16,24 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &        plain,
-			OutputByteStreamView &       cipher,
+			InputByteStreamView &        raw,
+			OutputByteStreamView &       ripe,
 			ConstantByteListView const & key
 		) -> Void {
 			if (key.size() == 0_sz) {
-				while (!plain.full()) {
-					cipher.write(plain.read_of());
+				while (!raw.full()) {
+					ripe.write(raw.read_of());
 				}
 			}
 			else if (key.size() == 1_sz) {
-				while (!plain.full()) {
-					cipher.write(plain.read_of() ^ key.first());
+				while (!raw.full()) {
+					ripe.write(raw.read_of() ^ key.first());
 				}
 			}
 			else {
 				auto key_index = key.begin_index();
-				while (!plain.full()) {
-					cipher.write(plain.read_of() ^ key[key_index]);
+				while (!raw.full()) {
+					ripe.write(raw.read_of() ^ key[key_index]);
 					++key_index;
 					if (key_index == key.end_index()) {
 						key_index = key.begin_index();
@@ -46,13 +46,13 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &        plain_,
-			OutputByteStreamView &       cipher_,
+			InputByteStreamView &        raw_,
+			OutputByteStreamView &       ripe_,
 			ConstantByteListView const & key
 		) -> Void {
-			M_use_zps_of(plain);
-			M_use_zps_of(cipher);
-			return process_whole(plain, cipher, key);
+			M_use_zps_of(raw);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, key);
 		}
 
 	};

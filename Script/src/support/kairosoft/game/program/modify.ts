@@ -2,12 +2,20 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	// #region platform
 
-	type Platform = 'windows_intel32' | 'android_arm32' | 'android_arm64';
+	const PlatformTypeX = [
+		'windows_intel32',
+		'android_arm32',
+		'android_arm64',
+	] as const;
+
+	export type PlatformType = typeof PlatformTypeX[number];
+
+	export const PlatformTypeE = PlatformTypeX as unknown as PlatformType[];
 
 	// ----------------
 
 	function get_program_file_path(
-		platform: Platform,
+		platform: PlatformType,
 	): StoragePath {
 		let path = new StoragePath();
 		if (platform === 'windows_intel32') {
@@ -23,7 +31,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 	}
 
 	function get_metadata_file_path(
-		platform: Platform,
+		platform: PlatformType,
 	): StoragePath {
 		let path = new StoragePath();
 		if (platform === 'windows_intel32') {
@@ -40,9 +48,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	function detect_platform(
 		game_directory: StoragePath,
-	): Array<Platform> {
-		let result: Array<Platform> = [];
-		for (let platform of ['windows_intel32', 'android_arm32', 'android_arm64'] as Array<Platform>) {
+	): Array<PlatformType> {
+		let result: Array<PlatformType> = [];
+		for (let platform of ['windows_intel32', 'android_arm32', 'android_arm64'] as Array<PlatformType>) {
 			if (!StorageHelper.exist_file(game_directory.push(get_program_file_path(platform)))) {
 				continue;
 			}
@@ -56,113 +64,18 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	// #endregion
 
-	// #region il2cppdumper
+	// #region package
 
-	function run_il2cppdumper(
-		program_file: StoragePath,
-		metadata_file: StoragePath,
-	): Array<string> {
-		let dump_directory = StorageHelper.temporary('directory');
-		let il2cppdumper_result = ProcessHelper.run_process(
-			ProcessHelper.search_program_ensure('Il2CppDumper', true),
-			[
-				program_file.emit_native(),
-				metadata_file.emit_native(),
-				dump_directory.emit_native(),
-			],
-			null,
-			null,
-		);
-		if (!/\nDone!\n(Press any key to exit\.\.\.\n)?$/.test(ConvertHelper.normalize_string_line_feed(il2cppdumper_result.output))) {
-			throw new Error(`execute failed by Il2CppDumper: ${il2cppdumper_result.code}\n${il2cppdumper_result.output}\n${il2cppdumper_result.error}`);
-		}
-		let dump_data = StorageHelper.read_file_text(dump_directory.join(`dump.cs`)).split('\n');
-		StorageHelper.remove(dump_directory);
-		return dump_data;
-	}
+	const PackageTypeX = [
+		'flat',
+		'zip',
+		'apk',
+		'apks',
+	] as const;
 
-	// ----------------
+	export type PackageType = typeof PackageTypeX[number];
 
-	function do_il2cppdumper_search_field_from_dump_data(
-		source: Array<string>,
-		class_name: string,
-		field_name: string,
-	): Array<{
-		address: number;
-		modifier: string;
-		statically: boolean;
-		type: string;
-	}> {
-		let result: ReturnType<typeof do_il2cppdumper_search_field_from_dump_data> = [];
-		let class_rule = /^(private|protected|public) class ([^ ]+)/;
-		let field_rule = /^\t(private|protected|public)( static)? (.+) (.+); \/\/ 0x(.+)$/;
-		for (let index = 0; index < source.length; index++) {
-			let class_match = class_rule.exec(source[index]);
-			if (class_match === null || class_match[2] !== class_name) {
-				continue;
-			}
-			for (; index < source.length; index++) {
-				if (source[index] === '}') {
-					break;
-				}
-				let field_match = field_rule.exec(source[index]);
-				if (field_match === null || field_match[4] !== field_name) {
-					continue;
-				}
-				result.push({
-					address: Number.parseInt(field_match[5], 16),
-					modifier: field_match[1],
-					statically: field_match[2] !== undefined,
-					type: field_match[3],
-				});
-			}
-			break;
-		}
-		return result;
-	}
-
-	function do_il2cppdumper_search_method_from_dump_data(
-		source: Array<string>,
-		class_name: string,
-		method_name: string,
-	): Array<{
-		address: number;
-		modifier: string;
-		statically: boolean;
-		result: string;
-		parameter: string;
-	}> {
-		let result: ReturnType<typeof do_il2cppdumper_search_method_from_dump_data> = [];
-		let class_rule = /^(private|protected|public) class ([^ ]+)/;
-		let method_rule = /^\t(private|protected|public)( static)? (.+) (.+)\((.*)\) \{ \}$/;
-		let comment_rule = /^\t\/\/ RVA: 0x(.+) Offset: 0x(.+) VA: 0x(.+)$/;
-		for (let index = 0; index < source.length; index++) {
-			let class_match = class_rule.exec(source[index]);
-			if (class_match === null || class_match[2] !== class_name) {
-				continue;
-			}
-			for (; index < source.length; index++) {
-				if (source[index] === '}') {
-					break;
-				}
-				let method_match = method_rule.exec(source[index]);
-				if (method_match === null || method_match[4] !== method_name) {
-					continue;
-				}
-				let comment_match = comment_rule.exec(source[index - 1]);
-				assert_test(comment_match !== null);
-				result.push({
-					address: Number.parseInt(comment_match[2], 16),
-					modifier: method_match[1],
-					statically: method_match[2] !== undefined,
-					result: method_match[3],
-					parameter: method_match[5],
-				});
-			}
-			break;
-		}
-		return result;
-	}
+	export const PackageTypeE = PackageTypeX as unknown as PackageType[];
 
 	// #endregion
 
@@ -181,7 +94,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		limit: number,
 		address: Array<number>,
 		overwrite: boolean,
-		platform: Platform,
+		platform: PlatformType,
 	): boolean {
 		let state = false;
 		let dataEnd = Math.min(data.size(), data.p() + limit);
@@ -263,15 +176,15 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	// #region modify
 
-	function modify_program_flat(
-		platform: Platform,
+	function modify_flat(
+		platform: PlatformType,
 		program_file: StoragePath,
 		metadata_file: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
 		Console.information(`phase: dump program information`, []);
-		let dump_data = run_il2cppdumper(program_file, metadata_file);
+		let dump_data = ExternalHelper.run_il2cppdumper(program_file, metadata_file);
 		Console.information(`phase: parse symbol address`, []);
 		let symbol_address = {
 			CRC64: {
@@ -302,37 +215,37 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				return address_list;
 			};
 			symbol_address.CRC64.GetValue = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'CRC64', 'GetValue'),
+				ExternalHelper.do_il2cppdumper_search_method_from_dump_data(dump_data, 'CRC64', 'GetValue'),
 				1,
 				'CRC64.GetValue',
 			);
 			symbol_address.Encrypter.Encode = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'Encrypter', 'Encode'),
+				ExternalHelper.do_il2cppdumper_search_method_from_dump_data(dump_data, 'Encrypter', 'Encode'),
 				3,
 				'Encrypter.Encode',
 			);
 			symbol_address.Encrypter.Decode = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'Encrypter', 'Decode'),
+				ExternalHelper.do_il2cppdumper_search_method_from_dump_data(dump_data, 'Encrypter', 'Decode'),
 				3,
 				'Encrypter.Decode',
 			);
 			symbol_address.RecordStore.ReadRecord = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.statically && value.parameter === `int rcId`)),
+				ExternalHelper.do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'ReadRecord').filter((value) => (!value.statically && value.parameter === `int rcId`)),
 				1,
 				'RecordStore.ReadRecord',
 			);
 			symbol_address.RecordStore.WriteRecord = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.statically && value.parameter === `int rcId, byte[][] data`)),
+				ExternalHelper.do_il2cppdumper_search_method_from_dump_data(dump_data, 'RecordStore', 'WriteRecord').filter((value) => (!value.statically && value.parameter === `int rcId, byte[][] data`)),
 				1,
 				'RecordStore.WriteRecord',
 			);
 			symbol_address.MyConfig._cctor = check_search_result(
-				do_il2cppdumper_search_method_from_dump_data(dump_data, 'MyConfig', '.cctor'),
+				ExternalHelper.do_il2cppdumper_search_method_from_dump_data(dump_data, 'MyConfig', '.cctor'),
 				1,
 				'MyConfig..cctor',
 			);
 			symbol_address.MyConfig.DEBUG = check_search_result(
-				do_il2cppdumper_search_field_from_dump_data(dump_data, 'MyConfig', 'DEBUG'),
+				ExternalHelper.do_il2cppdumper_search_field_from_dump_data(dump_data, 'MyConfig', 'DEBUG'),
 				1,
 				'MyConfig.DEBUG',
 			);
@@ -456,18 +369,106 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		return;
 	}
 
-	function modify_program(
-		target_directory: StoragePath,
+	function modify(
+		target: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
+		let temporary_directory = StorageHelper.temporary('directory');
+		Console.information(`phase: detect package type`, []);
+		let package_type = null as PackageType | null;
+		if (StorageHelper.exist_directory(target)) {
+			package_type = 'flat';
+		}
+		if (StorageHelper.exist_file(target)) {
+			if (target.extension()?.toLowerCase() === 'zip') {
+				package_type = 'zip';
+			}
+			if (target.extension()?.toLowerCase() === 'apk') {
+				package_type = 'apk';
+			}
+			if (target.extension()?.toLowerCase() === 'apks') {
+				package_type = 'apks';
+			}
+		}
+		assert_test(package_type !== null);
+		Console.information(`tip: the package type is '${package_type}'`, []);
+		let package_state = null as null | {
+			bundle: null | StoragePath;
+			part: Array<{
+				path: StoragePath;
+				location: null | StoragePath;
+				content: Array<StoragePath>;
+			}>;
+		};
+		if (package_type !== 'flat') {
+			Console.information(`phase: load package file`, []);
+			let package_bundle = temporary_directory.join('bundle');
+			let package_bundle_content = ExternalHelper.list_zip_content(package_bundle);
+			StorageHelper.copy(target, package_bundle, false);
+			package_state = {
+				bundle: package_bundle,
+				part: [],
+			};
+			if (package_type === 'zip') {
+				package_state.part.push({
+					path: package_bundle,
+					location: null,
+					content: package_bundle_content,
+				});
+			}
+			if (package_type === 'apk') {
+				package_state.part.push({
+					path: package_bundle,
+					location: null,
+					content: package_bundle_content,
+				});
+			}
+			if (package_type === 'apks') {
+				for (let package_bundle_content_item of package_bundle_content) {
+					if (!package_bundle_content_item.name()!.toLowerCase().endsWith('.apk')) {
+						continue;
+					}
+					let package_part_file = temporary_directory.join('package').join(package_bundle_content_item.name()!);
+					ExternalHelper.extract_zip_content(package_bundle, package_bundle_content_item, package_part_file);
+					package_state.part.push({
+						path: package_part_file,
+						location: package_bundle_content_item,
+						content: ExternalHelper.list_zip_content(package_part_file),
+					});
+				}
+			}
+		}
+		Console.information(`phase: extract necessary file`, []);
+		let target_directory = temporary_directory.join('flat');
+		let necessary_file_list = new Set(PlatformTypeE.map((it) => [get_program_file_path(it), get_metadata_file_path(it)]).flat());
+		if (package_type === 'flat') {
+			for (let necessary_file of necessary_file_list) {
+				if (!StorageHelper.exist_file(target.push(necessary_file))) {
+					continue;
+				}
+				StorageHelper.copy(target.push(necessary_file), target_directory.push(necessary_file), false);
+			}
+		}
+		else {
+			assert_test(package_state !== null);
+			for (let package_part of package_state.part) {
+				for (let necessary_file of necessary_file_list) {
+					let necessary_file_in_package = package_part.content.find((it) => it.emit() === necessary_file.emit());
+					if (necessary_file_in_package === undefined) {
+						continue;
+					}
+					ExternalHelper.extract_zip_content(package_part.path, necessary_file_in_package, target_directory.push(necessary_file));
+				}
+			}
+		}
 		Console.information(`phase: detect platform`, []);
 		let platform_list = detect_platform(target_directory);
 		Console.information(`tip: the platform is '${platform_list.join('|')}'`, []);
 		assert_test(platform_list.length !== 0);
 		for (let platform of platform_list) {
 			Console.information(`phase: modify program of '${platform}'`, []);
-			modify_program_flat(
+			modify_flat(
 				platform,
 				target_directory.push(get_program_file_path(platform)),
 				target_directory.push(get_metadata_file_path(platform)),
@@ -475,6 +476,75 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				enable_debug_mode,
 			);
 		}
+		if (package_type !== 'flat') {
+			Console.information(`phase: repack package file`, []);
+			assert_test(package_state !== null);
+			let replace_task_list = [] as Array<{
+				platform: PlatformType;
+				target: typeof package_state.part[number];
+			}>;
+			for (let platform of platform_list) {
+				if (package_type === 'zip' || package_type === 'apk') {
+					replace_task_list.push({platform: platform, target: package_state.part[0]});
+				}
+				if (package_type === 'apks') {
+					let architecture_name = null as null | string;
+					if (platform === 'android_arm32') {
+						architecture_name = 'armeabi_v7a';
+					}
+					if (platform === 'android_arm64') {
+						architecture_name = 'arm64_v8a';
+					}
+					assert_test(architecture_name !== null);
+					let package_part_name = `split_config.${architecture_name}.apk`;
+					let package_part = package_state.part.find((it) => it.location!.name()! == package_part_name);
+					assert_test(package_part !== undefined);
+					replace_task_list.push({platform: platform, target: package_part});
+				}
+			}
+			for (let replace_task of replace_task_list) {
+				let program_file = get_program_file_path(replace_task.platform);
+				ExternalHelper.replace_zip_content(replace_task.target.path, program_file, target_directory.push(program_file));
+			}
+		}
+		if (package_type === 'apk' || package_type === 'apks') {
+			Console.information(`phase: post-processing apk file`, []);
+			assert_test(package_state !== null);
+			let enable_align = true;
+			let enable_sign = true;
+			// // TODO
+			for (let package_part of package_state.part) {
+				if (enable_align) {
+					ExternalHelper.run_zipalign(package_part.path);
+				}
+				if (enable_sign) {
+					ExternalHelper.run_apksigner(package_part.path, new StoragePath(), '');
+				}
+			}
+		}
+		Console.information(`phase: generate result.`, []);
+		if (package_type === 'flat') {
+			for (let platform of platform_list) {
+				let program_file = get_program_file_path(platform);
+				StorageHelper.remove(target.push(program_file));
+				StorageHelper.copy(target_directory.push(program_file), target.push(program_file), false);
+			}
+		}
+		if (package_type === 'zip' || package_type === 'apk') {
+			assert_test(package_state !== null);
+			StorageHelper.remove(target);
+			StorageHelper.copy(package_state.part[0].path, target, false);
+		}
+		if (package_type === 'apks') {
+			assert_test(package_state !== null);
+			assert_test(package_state.bundle !== null);
+			for (let package_part of package_state.part) {
+				ExternalHelper.replace_zip_content(package_state.bundle, package_part.location!, package_part.path);
+			}
+			StorageHelper.remove(target);
+			StorageHelper.copy(package_state.bundle, target, false);
+		}
+		StorageHelper.remove(temporary_directory);
 		Console.information(`phase: done`, []);
 		return;
 	}
@@ -482,11 +552,11 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 	// ----------------
 
 	export function process_fs(
-		target_directory: StoragePath,
+		target: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		modify_program(target_directory, disable_record_encryption, enable_debug_mode);
+		modify(target, disable_record_encryption, enable_debug_mode);
 		return;
 	}
 

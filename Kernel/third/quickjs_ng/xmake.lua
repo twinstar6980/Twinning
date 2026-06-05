@@ -1,5 +1,5 @@
 -- quickjs_ng
--- 0.14.0 3c051980ab7e783dfbfb1c70c014ce5e05ecf24c
+-- 0.15.1 fd0a0210b7be00957751871e7e01b8291268fc29
 -- https://github.com/quickjs-ng/quickjs
 
 target('third.quickjs_ng', function()

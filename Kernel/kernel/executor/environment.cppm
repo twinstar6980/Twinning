@@ -5,10 +5,10 @@ module;
 export module twinning.kernel.executor.environment;
 import twinning.kernel.utility;
 import twinning.kernel.executor.context;
-import twinning.kernel.tool.data.hash.fnv.common;
-import twinning.kernel.tool.data.hash.fnv.hash;
-import twinning.kernel.tool.data.hash.md5.common;
-import twinning.kernel.tool.data.hash.md5.hash;
+import twinning.kernel.tool.data.hashing.fnv.common;
+import twinning.kernel.tool.data.hashing.fnv.hash;
+import twinning.kernel.tool.data.hashing.md5.common;
+import twinning.kernel.tool.data.hashing.md5.hash;
 import twinning.kernel.tool.data.encoding.base64.common;
 import twinning.kernel.tool.data.encoding.base64.encode;
 import twinning.kernel.tool.data.encoding.base64.decode;
@@ -540,18 +540,18 @@ export namespace Twinning::Kernel::Executor::Environment {
 			{
 				auto s_Data = s_Tool.add_space("Data"_s);
 				{
-					auto s_Hash = s_Data.add_space("Hash"_s);
+					auto s_Hashing = s_Data.add_space("Hashing"_s);
 					{
-						auto s_Fnv = s_Hash.add_space("Fnv"_s);
-						define_generic_class<Tool::Data::Hash::Fnv::Mode>(s_Fnv, "Mode"_s);
-						define_generic_class<Tool::Data::Hash::Fnv::BitCount>(s_Fnv, "BitCount"_s);
+						auto s_Fnv = s_Hashing.add_space("Fnv"_s);
+						define_generic_class<Tool::Data::Hashing::Fnv::Mode>(s_Fnv, "Mode"_s);
+						define_generic_class<Tool::Data::Hashing::Fnv::BitCount>(s_Fnv, "BitCount"_s);
 						s_Fnv.add_space("Hash"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hash::Fnv::Hash::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hashing::Fnv::Hash::process>>("process"_s);
 					}
 					{
-						auto s_Md5 = s_Hash.add_space("Md5"_s);
+						auto s_Md5 = s_Hashing.add_space("Md5"_s);
 						s_Md5.add_space("Hash"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hash::Md5::Hash::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hashing::Md5::Hash::process>>("process"_s);
 					}
 				}
 				{
@@ -936,8 +936,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CryptData.add_space("Encrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							InputByteStreamView &  plain,
-							OutputByteStreamView & cipher,
+							InputByteStreamView &  raw,
+							OutputByteStreamView & ripe,
 							Size const &           limit,
 							String const &         key,
 							Version const &        version
@@ -945,22 +945,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CryptData::Encrypt<version>::process(plain, cipher, limit, key);
+										Tool::Popcap::CryptData::Encrypt<version>::process(raw, ripe, limit, key);
 									}
 								);
 							}
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							Size const &    plain_size,
-							Size &          cipher_size,
+							Size const &    raw_size,
+							Size &          ripe_size,
 							Size const &    limit,
 							Version const & version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CryptData::Encrypt<version>::estimate(plain_size, cipher_size, limit);
+										Tool::Popcap::CryptData::Encrypt<version>::estimate(raw_size, ripe_size, limit);
 									}
 								);
 							}
@@ -968,8 +968,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_CryptData.add_space("Decrypt"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							OutputByteStreamView & plain,
-							InputByteStreamView &  cipher,
+							OutputByteStreamView & raw,
+							InputByteStreamView &  ripe,
 							Size const &           limit,
 							String const &         key,
 							Version const &        version
@@ -977,22 +977,22 @@ export namespace Twinning::Kernel::Executor::Environment {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CryptData::Decrypt<version>::process(plain, cipher, limit, key);
+										Tool::Popcap::CryptData::Decrypt<version>::process(raw, ripe, limit, key);
 									}
 								);
 							}
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							Size &                       plain_size,
-							ConstantByteListView const & cipher,
+							Size &                       raw_size,
+							ConstantByteListView const & ripe,
 							Size const &                 limit,
 							Version const &              version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
 									[&]<auto index, auto version>(ValuePackage<index>, ValuePackage<version>) {
-										Tool::Popcap::CryptData::Decrypt<version>::estimate(plain_size, cipher, limit);
+										Tool::Popcap::CryptData::Decrypt<version>::estimate(raw_size, ripe, limit);
 									}
 								);
 							}

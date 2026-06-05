@@ -6,7 +6,7 @@
 
 - [script.js](#scriptjs)
 
-- [data.hash](#datahash)
+- [data.hashing](#datahashing)
 
 - [data.encoding](#dataencoding)
 
@@ -138,11 +138,19 @@
 
 	* `is_module` : `boolean` = `?input`
 
-## `data.hash`
+## `data.hashing`
 
-* `md5` `*`
+* `md5.hash` `*`
 
 	* `target_file` : `*`
+
+* `fnv.hash` `*`
+
+	* `target_file` : `*`
+
+	* `mode` : `string` = `?input`
+
+	* `bit_count` : `string` = `?input`
 
 ## `data.encoding`
 
@@ -162,17 +170,17 @@
 
 * `exor.encrypt` `*`
 
-	* `plain_file` : `*`
+	* `raw_file` : `*`
 
-	* `cipher_file` : `path` ~ `*.bin` = `?automatic`
+	* `ripe_file` : `path` ~ `*.bin` = `?automatic`
 
 	* `key` : `string` = `?input`
 
 * `rijndael.encrypt` `*`
 
-	* `plain_file` : `*`
+	* `raw_file` : `*`
 
-	* `cipher_file` : `path` ~ `*.bin` = `?automatic`
+	* `ripe_file` : `path` ~ `*.bin` = `?automatic`
 
 	* `mode` : `string` = `?input`
 
@@ -184,9 +192,9 @@
 
 * `rijndael.decrypt` `*`
 
-	* `cipher_file` : `*`
+	* `ripe_file` : `*`
 
-	* `plain_file` : `path` ~ `*.bin` = `?automatic`
+	* `raw_file` : `path` ~ `*.bin` = `?automatic`
 
 	* `mode` : `string` = `?input`
 
@@ -498,9 +506,9 @@
 
 * `encrypt` `*`
 
-	* `plain_file` : `*`
+	* `raw_file` : `*`
 
-	* `cipher_file` : `path` ~ `*.cdat` = `?automatic`
+	* `ripe_file` : `path` ~ `*.cdat` = `?automatic`
 
 	* `limit` : `integer` = `256`
 
@@ -508,9 +516,9 @@
 
 * `decrypt` `*`
 
-	* `cipher_file` : `*.cdat`
+	* `ripe_file` : `*.cdat`
 
-	* `plain_file` : `path` ~ `*` = `?automatic`
+	* `raw_file` : `path` ~ `*` = `?automatic`
 
 	* `limit` : `integer` = `256`
 
@@ -542,21 +550,21 @@
 
 * `encrypt` `*`
 
-	* `plain_file` : `*.rton`
+	* `raw_file` : `*.rton`
 
-	* `cipher_file` : `path` ~ `*.cipher.rton` = `?automatic`
+	* `ripe_file` : `path` ~ `*.ripe.rton` = `?automatic`
 
 	* `key` : `string` = `?input`
 
 * `decrypt` `*`
 
-	* `cipher_file` : `*.rton`
+	* `ripe_file` : `*.rton`
 
-	* `plain_file` : `path` ~ `*.plain.rton` = `?automatic`
+	* `raw_file` : `path` ~ `*.raw.rton` = `?automatic`
 
 	* `key` : `string` = `?input`
 
-* `encode_cipher` `*`
+* `encode_ripe` `*`
 
 	* `value_file` : `*.json`
 
@@ -570,7 +578,7 @@
 
 	* `buffer_size` : `size` = `64.0m`
 
-* `decode_cipher` `*`
+* `decode_ripe` `*`
 
 	* `data_file` : `*.rton`
 
@@ -860,9 +868,9 @@
 
 * `encrypt` `*`
 
-	* `plain_file` : `*.pak`
+	* `raw_file` : `*.pak`
 
-	* `cipher_file` : `path` ~ `*.cipher.pak` = `?automatic`
+	* `ripe_file` : `path` ~ `*.ripe.pak` = `?automatic`
 
 	* `key` : `integer` = `247`
 

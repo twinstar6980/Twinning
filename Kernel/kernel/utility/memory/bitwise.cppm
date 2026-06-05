@@ -16,27 +16,8 @@ export namespace Twinning::Kernel::Bitwise {
 
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
-		&& (IsBaseBox<TValue>)
-	inline auto reverse(
-		TValue const & value
-	) -> TValue {
-		if constexpr (k_type_size<TValue> == 1_sz) {
-			return value;
-		}
-		else {
-			auto forward = make_pointer_unsafe<ZByte>(&value);
-			auto backward = StaticArray<ZByte, k_type_size<TValue>>{};
-			for (auto & index : SizeRange{k_type_size<TValue>}) {
-				backward[index] = forward[k_type_size<TValue> - 1_sz - index];
-			}
-			return cast_pointer<TValue>(backward.begin()).dereference();
-		}
-	}
-
-	template <typename TValue> requires
-		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsIntegerBox<TValue>)
-	inline auto extract(
+	inline constexpr auto extract(
 		TValue const & value,
 		Size const &   begin,
 		Size const &   size
@@ -51,7 +32,7 @@ export namespace Twinning::Kernel::Bitwise {
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsIntegerBox<TValue>)
-	inline auto expand(
+	inline constexpr auto expand(
 		TValue const & value
 	) -> TValue {
 		auto result = value;
@@ -76,7 +57,7 @@ export namespace Twinning::Kernel::Bitwise {
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsIntegerBox<TValue>)
-	inline auto shrink(
+	inline constexpr auto shrink(
 		TValue const & value
 	) -> TValue {
 		auto result = value & cast_box_unsafe<TValue>(0b01010101'01010101'01010101'01010101'01010101'01010101'01010101'01010101_iu64);
@@ -96,6 +77,34 @@ export namespace Twinning::Kernel::Bitwise {
 			result = (result | (result >> 16_sz)) & cast_box_unsafe<TValue>(0b00000000'00000000'00000000'00000000'11111111'11111111'11111111'11111111_iu64);
 		}
 		return result;
+	}
+
+	#pragma endregion
+
+	#pragma region endian
+
+	inline constexpr auto query_endian(
+	) -> Boolean {
+		return std::endian::native == std::endian::big;
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsBaseBox<TValue>)
+	inline auto reverse_endian(
+		TValue const & value
+	) -> TValue {
+		if constexpr (k_type_size<TValue> == 1_sz) {
+			return value;
+		}
+		else {
+			auto forward = make_pointer_unsafe<ZByte>(&value);
+			auto backward = StaticArray<ZByte, k_type_size<TValue>>{};
+			for (auto & index : SizeRange{k_type_size<TValue>}) {
+				backward[index] = forward[k_type_size<TValue> - 1_sz - index];
+			}
+			return cast_pointer<TValue>(backward.begin()).dereference();
+		}
 	}
 
 	#pragma endregion

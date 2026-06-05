@@ -323,7 +323,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 				null,
 			);
 			if (wwise_result.code !== 0n) {
-				throw new Error(`execute failed by Wwise: ${wwise_result.code}\n${wwise_result.output}\n${wwise_result.error}`);
+				ProcessHelper.throw_error(wwise_result);
 			}
 			if (StorageHelper.exist_file(wwise_wproj_file)) {
 				break;
@@ -365,7 +365,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			null,
 		);
 		if (wwise_result.code !== 0n) {
-			throw new Error(`execute failed by Wwise: ${wwise_result.code}\n${wwise_result.output}\n${wwise_result.error}`);
+			ProcessHelper.throw_error(wwise_result);
 		}
 		StorageHelper.copy(wwise_project_directory.join('GeneratedSoundBanks').join(platform).join('Sample.wem'), ripe_file, false);
 		StorageHelper.remove(temporary_directory);

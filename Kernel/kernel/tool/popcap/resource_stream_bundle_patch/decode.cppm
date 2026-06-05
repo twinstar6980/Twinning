@@ -7,8 +7,8 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.version;
 import twinning.kernel.tool.popcap.resource_stream_bundle_patch.common;
 import twinning.kernel.tool.popcap.resource_stream_bundle.structure;
-import twinning.kernel.tool.data.hash.md5.common;
-import twinning.kernel.tool.data.hash.md5.hash;
+import twinning.kernel.tool.data.hashing.md5.common;
+import twinning.kernel.tool.data.hashing.md5.hash;
 import twinning.kernel.tool.data.differentiation.vcdiff.common;
 import twinning.kernel.tool.data.differentiation.vcdiff.encode;
 import twinning.kernel.tool.data.differentiation.vcdiff.decode;
@@ -50,7 +50,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundlePatch {
 			StaticByteArray<16_sz> const & hash
 		) -> Void {
 			auto hash_test = ByteArray{};
-			Data::Hash::Md5::Hash::process(data, hash_test);
+			Data::Hashing::Md5::Hash::process(data, hash_test);
 			assert_test(hash_test.as_view() == hash.view());
 			return;
 		}

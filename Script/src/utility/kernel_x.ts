@@ -199,7 +199,7 @@ namespace Twinning.Script.KernelX {
 
 		export namespace Data {
 
-			export namespace Hash {
+			export namespace Hashing {
 
 				export namespace Md5 {
 
@@ -208,7 +208,7 @@ namespace Twinning.Script.KernelX {
 					): bigint {
 						let data = StorageHelper.read_file(data_file);
 						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hash.Md5.Hash.process(data.view(), value);
+						Kernel.Tool.Data.Hashing.Md5.Hash.process(data.view(), value);
 						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
 					}
 
@@ -216,25 +216,39 @@ namespace Twinning.Script.KernelX {
 
 				export namespace Fnv {
 
+					const ModeX = ['m_0', 'm_1', 'm_1a'] as const;
+
+					export type Mode = typeof ModeX[number];
+
+					export const ModeE = ModeX as unknown as Mode[];
+
+					const BitCountX = ['b_32', 'b_64'] as const;
+
+					export type BitCount = typeof BitCountX[number];
+
+					export const BitCountE = BitCountX as unknown as BitCount[];
+
+					// ----------------
+
 					export function hash_s(
 						data_string: string,
-						mode: typeof Kernel.Tool.Data.Hash.Fnv.Mode.Value,
-						bit_count: typeof Kernel.Tool.Data.Hash.Fnv.BitCount.Value,
+						mode: Mode,
+						bit_count: BitCount,
 					): bigint {
 						let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data_string));
 						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hash.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.Fnv.Mode.value(mode), Kernel.Tool.Data.Hash.Fnv.BitCount.value(bit_count));
+						Kernel.Tool.Data.Hashing.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Fnv.Mode.value(mode), Kernel.Tool.Data.Hashing.Fnv.BitCount.value(bit_count));
 						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
 					export function hash_fs(
 						data_file: StoragePath,
-						mode: typeof Kernel.Tool.Data.Hash.Fnv.Mode.Value,
-						bit_count: typeof Kernel.Tool.Data.Hash.Fnv.BitCount.Value,
+						mode: Mode,
+						bit_count: BitCount,
 					): bigint {
 						let data = StorageHelper.read_file(data_file);
 						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hash.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hash.Fnv.Mode.value(mode), Kernel.Tool.Data.Hash.Fnv.BitCount.value(bit_count));
+						Kernel.Tool.Data.Hashing.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Fnv.Mode.value(mode), Kernel.Tool.Data.Hashing.Fnv.BitCount.value(bit_count));
 						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
 					}
 
@@ -285,18 +299,18 @@ namespace Twinning.Script.KernelX {
 				export namespace Exor {
 
 					export function encrypt_fs(
-						plain_file: StoragePath,
-						cipher_file: StoragePath,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						key: Array<bigint>,
 					): void {
-						let plain = StorageHelper.read_file(plain_file);
-						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-						let cipher = Kernel.ByteArray.allocate(plain.size());
-						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
+						let raw = StorageHelper.read_file(raw_file);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let ripe = Kernel.ByteArray.allocate(raw.size());
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						let key_c = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(key.length)));
 						new Uint8Array(key_c.view().value).set(key.map(Number));
-						Kernel.Tool.Data.Encryption.Exor.Encrypt.process(plain_stream, cipher_stream, key_c.view());
-						StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
+						Kernel.Tool.Data.Encryption.Exor.Encrypt.process(raw_stream, ripe_stream, key_c.view());
+						StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
 
@@ -319,36 +333,36 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function encrypt_fs(
-						plain_file: StoragePath,
-						cipher_file: StoragePath,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
 						key: Kernel.ByteListView,
 						initialization_vector: Kernel.ByteListView,
 					): void {
-						let plain = StorageHelper.read_file(plain_file);
-						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-						let cipher = Kernel.ByteArray.allocate(plain.size());
-						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-						Kernel.Tool.Data.Encryption.Rijndael.Encrypt.process(plain_stream, cipher_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), key, initialization_vector);
-						StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
+						let raw = StorageHelper.read_file(raw_file);
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let ripe = Kernel.ByteArray.allocate(raw.size());
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Encryption.Rijndael.Encrypt.process(raw_stream, ripe_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), key, initialization_vector);
+						StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 						return;
 					}
 
 					export function decrypt_fs(
-						plain_file: StoragePath,
-						cipher_file: StoragePath,
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
 						key: Kernel.ByteListView,
 						initialization_vector: Kernel.ByteListView,
 					): void {
-						let cipher = StorageHelper.read_file(cipher_file);
-						let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-						let plain = Kernel.ByteArray.allocate(cipher.size());
-						let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(plain_stream, cipher_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), key, initialization_vector);
-						StorageHelper.write_file(plain_file, plain_stream.stream_view());
+						let ripe = StorageHelper.read_file(ripe_file);
+						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						let raw = Kernel.ByteArray.allocate(ripe.size());
+						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(raw_stream, ripe_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), key, initialization_vector);
+						StorageHelper.write_file(raw_file, raw_stream.stream_view());
 						return;
 					}
 
@@ -1834,40 +1848,40 @@ namespace Twinning.Script.KernelX {
 			export namespace CryptData {
 
 				export function encrypt_fs(
-					plain_file: StoragePath,
-					cipher_file: StoragePath,
+					raw_file: StoragePath,
+					ripe_file: StoragePath,
 					limit: bigint,
 					key: string,
 					version: typeof Kernel.Tool.Popcap.CryptData.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.CryptData.Version.value(version);
-					let plain = StorageHelper.read_file(plain_file);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					let cipher_size = Kernel.Size.default();
-					Kernel.Tool.Popcap.CryptData.Encrypt.estimate(plain.size(), cipher_size, Kernel.Size.value(limit), version_c);
-					let cipher = Kernel.ByteArray.allocate(cipher_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					Kernel.Tool.Popcap.CryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
-					StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
+					let raw = StorageHelper.read_file(raw_file);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let ripe_size = Kernel.Size.default();
+					Kernel.Tool.Popcap.CryptData.Encrypt.estimate(raw.size(), ripe_size, Kernel.Size.value(limit), version_c);
+					let ripe = Kernel.ByteArray.allocate(ripe_size);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					Kernel.Tool.Popcap.CryptData.Encrypt.process(raw_stream, ripe_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
+					StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 					return;
 				}
 
 				export function decrypt_fs(
-					plain_file: StoragePath,
-					cipher_file: StoragePath,
+					raw_file: StoragePath,
+					ripe_file: StoragePath,
 					limit: bigint,
 					key: string,
 					version: typeof Kernel.Tool.Popcap.CryptData.Version.Value,
 				): void {
 					let version_c = Kernel.Tool.Popcap.CryptData.Version.value(version);
-					let cipher = StorageHelper.read_file(cipher_file);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Popcap.CryptData.Decrypt.estimate(plain_size, cipher.view(), Kernel.Size.value(limit), version_c);
-					let plain = Kernel.ByteArray.allocate(plain_size);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Popcap.CryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
-					StorageHelper.write_file(plain_file, plain_stream.stream_view());
+					let ripe = StorageHelper.read_file(ripe_file);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let raw_size = Kernel.Size.default();
+					Kernel.Tool.Popcap.CryptData.Decrypt.estimate(raw_size, ripe.view(), Kernel.Size.value(limit), version_c);
+					let raw = Kernel.ByteArray.allocate(raw_size);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					Kernel.Tool.Popcap.CryptData.Decrypt.process(raw_stream, ripe_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
+					StorageHelper.write_file(raw_file, raw_stream.stream_view());
 					return;
 				}
 
@@ -1931,13 +1945,13 @@ namespace Twinning.Script.KernelX {
 					let definition = Data.Serialization.Json.decode_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
 					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
-					let plain_stream = Kernel.ByteStreamView.watch(data_stream.stream_view());
-					let cipher_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(plain_stream.size(), cipher_size);
-					let cipher = Kernel.ByteArray.allocate(cipher_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					StorageHelper.write_file(data_file, cipher_stream.stream_view());
+					let raw_stream = Kernel.ByteStreamView.watch(data_stream.stream_view());
+					let ripe_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(raw_stream.size(), ripe_size);
+					let ripe = Kernel.ByteArray.allocate(ripe_size);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
+					StorageHelper.write_file(data_file, ripe_stream.stream_view());
 					return;
 				}
 
@@ -1951,14 +1965,14 @@ namespace Twinning.Script.KernelX {
 						return decode_fs(data_file, definition_file, version);
 					}
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
-					let cipher = StorageHelper.read_file(data_file);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(plain_size, cipher.size());
-					let plain = Kernel.ByteArray.allocate(plain_size);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					let data_stream = Kernel.ByteStreamView.watch(plain_stream.stream_view());
+					let ripe = StorageHelper.read_file(data_file);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let raw_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(raw_size, ripe.size());
+					let raw = Kernel.ByteArray.allocate(raw_size);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
+					let data_stream = Kernel.ByteStreamView.watch(raw_stream.stream_view());
 					let definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition);
@@ -2564,34 +2578,34 @@ namespace Twinning.Script.KernelX {
 			export namespace Pvz2cnCryptData {
 
 				export function encrypt_fs(
-					plain_file: StoragePath,
-					cipher_file: StoragePath,
+					raw_file: StoragePath,
+					ripe_file: StoragePath,
 					key: string,
 				): void {
-					let plain = StorageHelper.read_file(plain_file);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					let cipher_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(plain.size(), cipher_size);
-					let cipher = Kernel.ByteArray.allocate(cipher_size);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					StorageHelper.write_file(cipher_file, cipher_stream.stream_view());
+					let raw = StorageHelper.read_file(raw_file);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let ripe_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(raw.size(), ripe_size);
+					let ripe = Kernel.ByteArray.allocate(ripe_size);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
+					StorageHelper.write_file(ripe_file, ripe_stream.stream_view());
 					return;
 				}
 
 				export function decrypt_fs(
-					plain_file: StoragePath,
-					cipher_file: StoragePath,
+					raw_file: StoragePath,
+					ripe_file: StoragePath,
 					key: string,
 				): void {
-					let cipher = StorageHelper.read_file(cipher_file);
-					let cipher_stream = Kernel.ByteStreamView.watch(cipher.view());
-					let plain_size = Kernel.Size.default();
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(plain_size, cipher.size());
-					let plain = Kernel.ByteArray.allocate(plain_size);
-					let plain_stream = Kernel.ByteStreamView.watch(plain.view());
-					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(plain_stream, cipher_stream, Kernel.String.value(key));
-					StorageHelper.write_file(plain_file, plain_stream.stream_view());
+					let ripe = StorageHelper.read_file(ripe_file);
+					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let raw_size = Kernel.Size.default();
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(raw_size, ripe.size());
+					let raw = Kernel.ByteArray.allocate(raw_size);
+					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
+					StorageHelper.write_file(raw_file, raw_stream.stream_view());
 					return;
 				}
 

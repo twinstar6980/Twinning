@@ -97,9 +97,14 @@
 	"executor.implementation:common.utility.run_custom_script": "Chạy tập lệnh tùy chỉnh",
 	"executor.implementation:common.utility.run_custom_script:target_file": "Tệp mục tiêu",
 	"executor.implementation:common.utility.run_custom_script:is_module": "Chạy dưới dạng module",
-	// executor/implementation/data.hash
-	"executor.implementation:data.hash.md5": "Mã hoá MD5",
-	"executor.implementation:data.hash.md5:target_file": "Tệp mục tiêu",
+	// executor/implementation/data.hashing
+	"executor.implementation:data.hashing.md5.hash": "Mã hoá MD5",
+	"executor.implementation:data.hashing.md5.hash:target_file": "Tệp mục tiêu",
+	// 
+	"executor.implementation:data.hashing.fnv.hash": "FNV Hash",
+	"executor.implementation:data.hashing.fnv.hash:target_file": "Target File",
+	"executor.implementation:data.hashing.fnv.hash:mode": "Algorithm Mode",
+	"executor.implementation:data.hashing.fnv.hash:bit_count": "Bit Count",
 	// executor/implementation/data.encoding
 	"executor.implementation:data.encoding.base64.encode": "Mã hóa Base64",
 	"executor.implementation:data.encoding.base64.encode:raw_file": "Tệp gốc",
@@ -110,21 +115,21 @@
 	"executor.implementation:data.encoding.base64.decode:raw_file": "Tệp ra",
 	// executor/implementation/data.encryption
 	"executor.implementation:data.encryption.exor.encrypt": "Mã hóa EXOR",
-	"executor.implementation:data.encryption.exor.encrypt:plain_file": "Tệp văn bản gốc",
-	"executor.implementation:data.encryption.exor.encrypt:cipher_file": "Tệp mã hóa",
+	"executor.implementation:data.encryption.exor.encrypt:raw_file": "Tệp văn bản gốc",
+	"executor.implementation:data.encryption.exor.encrypt:ripe_file": "Tệp mã hóa",
 	"executor.implementation:data.encryption.exor.encrypt:key": "Khóa",
 	// 
 	"executor.implementation:data.encryption.rijndael.encrypt": "Mã hóa Rijndael",
-	"executor.implementation:data.encryption.rijndael.encrypt:plain_file": "Tệp văn bản gốc",
-	"executor.implementation:data.encryption.rijndael.encrypt:cipher_file": "Tệp mã hóa",
+	"executor.implementation:data.encryption.rijndael.encrypt:raw_file": "Tệp văn bản gốc",
+	"executor.implementation:data.encryption.rijndael.encrypt:ripe_file": "Tệp mã hóa",
 	"executor.implementation:data.encryption.rijndael.encrypt:mode": "Chế độ thuật toán",
 	"executor.implementation:data.encryption.rijndael.encrypt:block_size": "Kích thước khối",
 	"executor.implementation:data.encryption.rijndael.encrypt:key": "Khóa",
 	"executor.implementation:data.encryption.rijndael.encrypt:initialization_vector": "Vector khởi tạo",
 	// 
 	"executor.implementation:data.encryption.rijndael.decrypt": "Giải mã Rijndael",
-	"executor.implementation:data.encryption.rijndael.decrypt:cipher_file": "Tệp mã hóa",
-	"executor.implementation:data.encryption.rijndael.decrypt:plain_file": "Tệp văn bản gốc",
+	"executor.implementation:data.encryption.rijndael.decrypt:ripe_file": "Tệp mã hóa",
+	"executor.implementation:data.encryption.rijndael.decrypt:raw_file": "Tệp văn bản gốc",
 	"executor.implementation:data.encryption.rijndael.decrypt:mode": "Chế độ thuật toán",
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "Kích thước khối",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "Khóa",
@@ -332,14 +337,14 @@
 	"executor.implementation:popcap.zlib.uncompress:version_variant_64": "Sử dụng biến thể 64-bit",
 	// executor/implementation/popcap.crypt_data
 	"executor.implementation:popcap.crypt_data.encrypt": "Mã hoá PopCap Crypt-Data",
-	"executor.implementation:popcap.crypt_data.encrypt:plain_file": "Tệp văn bản",
-	"executor.implementation:popcap.crypt_data.encrypt:cipher_file": "Tệp mã hoá",
+	"executor.implementation:popcap.crypt_data.encrypt:raw_file": "Tệp văn bản",
+	"executor.implementation:popcap.crypt_data.encrypt:ripe_file": "Tệp mã hoá",
 	"executor.implementation:popcap.crypt_data.encrypt:limit": "Giới hạn",
 	"executor.implementation:popcap.crypt_data.encrypt:key": "Khoá",
 	// 
 	"executor.implementation:popcap.crypt_data.decrypt": "Giải Mã PopCap Crypt-Data",
-	"executor.implementation:popcap.crypt_data.decrypt:cipher_file": "Tệp mã hoá",
-	"executor.implementation:popcap.crypt_data.decrypt:plain_file": "Tệp văn bản",
+	"executor.implementation:popcap.crypt_data.decrypt:ripe_file": "Tệp mã hoá",
+	"executor.implementation:popcap.crypt_data.decrypt:raw_file": "Tệp văn bản",
 	"executor.implementation:popcap.crypt_data.decrypt:limit": "Giới hạn",
 	"executor.implementation:popcap.crypt_data.decrypt:key": "Khoá",
 	// executor/implementation/popcap.reflection_object_notation
@@ -357,13 +362,13 @@
 	"executor.implementation:popcap.reflection_object_notation.decode:version_native_string_encoding_use_utf8": "Mã hóa chuỗi sử dụng UTF-8",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.encrypt": "Mã hoá bảo mật PopCap Reflection-Object-Notation",
-	"executor.implementation:popcap.reflection_object_notation.encrypt:plain_file": "Tệp văn bản",
-	"executor.implementation:popcap.reflection_object_notation.encrypt:cipher_file": "Tệp mã hoá",
+	"executor.implementation:popcap.reflection_object_notation.encrypt:raw_file": "Tệp văn bản",
+	"executor.implementation:popcap.reflection_object_notation.encrypt:ripe_file": "Tệp mã hoá",
 	"executor.implementation:popcap.reflection_object_notation.encrypt:key": "Khoá",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.decrypt": "Giải mã bảo mật PopCap Reflection-Object-Notation",
-	"executor.implementation:popcap.reflection_object_notation.decrypt:cipher_file": "Tệp mã hoá",
-	"executor.implementation:popcap.reflection_object_notation.decrypt:plain_file": "Tệp văn bản",
+	"executor.implementation:popcap.reflection_object_notation.decrypt:ripe_file": "Tệp mã hoá",
+	"executor.implementation:popcap.reflection_object_notation.decrypt:raw_file": "Tệp văn bản",
 	"executor.implementation:popcap.reflection_object_notation.decrypt:key": "Khoá",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.encode_cipher": "PopCap Reflection-Object-Notation mã hóa với mật khẩu",
@@ -536,8 +541,8 @@
 	"executor.implementation:popcap.package.pack_automatic:version_compress_resource_data": "Nén dữ liệu tài nguyên",
 	// 
 	"executor.implementation:popcap.package.encrypt": "Mã hoá PopCap Package",
-	"executor.implementation:popcap.package.encrypt:plain_file": "Tệp văn bản",
-	"executor.implementation:popcap.package.encrypt:cipher_file": "Tệp mã hoá",
+	"executor.implementation:popcap.package.encrypt:raw_file": "Tệp văn bản",
+	"executor.implementation:popcap.package.encrypt:ripe_file": "Tệp mã hoá",
 	"executor.implementation:popcap.package.encrypt:key": "Mật mã",
 	// executor/implementation/popcap.resource_stream_group
 	"executor.implementation:popcap.resource_stream_group.pack": "Đóng Gói PopCap Resource-Stream-Group",

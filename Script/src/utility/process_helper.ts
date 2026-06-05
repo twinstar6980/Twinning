@@ -38,6 +38,7 @@ namespace Twinning.Script.ProcessHelper {
 		workspace: null | StoragePath,
 		environment: null | Record<string, string>,
 	): {
+		path: StoragePath;
 		code: bigint;
 		output: string;
 		error: string;
@@ -61,6 +62,7 @@ namespace Twinning.Script.ProcessHelper {
 			return ConvertHelper.normalize_string_line_feed(data);
 		};
 		let result: ReturnType<typeof run_process> = {
+			path: program,
 			code: code,
 			output: read_file(output_file),
 			error: read_file(error_file),
@@ -116,6 +118,18 @@ namespace Twinning.Script.ProcessHelper {
 			throw new Error(`could not find '${name}' program from 'PATH' environment`);
 		}
 		return result;
+	}
+
+	// #endregion
+
+	// #region error
+
+	export function throw_error(
+		result: ReturnType<typeof run_process>,
+	): never {
+		let error = new Error(`path: ${result.path}\ncode: ${result.code}\noutput:\n${result.output}\nerror:\n${result.error}`);
+		error.name = 'ExecutionError';
+		throw error;
 	}
 
 	// #endregion

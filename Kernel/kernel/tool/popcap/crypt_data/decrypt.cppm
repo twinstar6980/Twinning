@@ -26,22 +26,22 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView & plain,
-			InputByteStreamView &  cipher,
+			OutputByteStreamView & raw,
+			InputByteStreamView &  ripe,
 			Size const &           limit,
 			String const &         key
 		) -> Void {
-			if (cipher.reserve() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
-				cipher.read_constant(k_magic_marker);
+			if (ripe.reserve() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
+				ripe.read_constant(k_magic_marker);
 				auto header = Header{};
-				cipher.read(header);
-				auto plain_data_size = cast_box<Size>(header.plain_size);
-				assert_test(plain_data_size >= limit);
-				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{cipher.forward_view(limit)}), plain, to_byte_view(key.as_view()));
-				plain.write(cipher.forward_view(plain_data_size - limit));
+				ripe.read(header);
+				auto raw_data_size = cast_box<Size>(header.raw_size);
+				assert_test(raw_data_size >= limit);
+				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{ripe.forward_view(limit)}), raw, to_byte_view(key.as_view()));
+				raw.write(ripe.forward_view(raw_data_size - limit));
 			}
 			else {
-				plain.write(cipher.forward_view(cipher.reserve()));
+				raw.write(ripe.forward_view(ripe.reserve()));
 			}
 			return;
 		}
@@ -49,22 +49,22 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size &                       plain_size,
-			ConstantByteListView const & cipher,
+			Size &                       raw_size,
+			ConstantByteListView const & ripe,
 			Size const &                 limit
 		) -> Void {
-			plain_size = 0_sz;
-			if (cipher.size() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
-				auto cipher_stream = InputByteStreamView{cipher};
-				cipher_stream.read_constant(k_magic_marker);
+			raw_size = 0_sz;
+			if (ripe.size() >= limit + bs_static_size<MagicMarker>() + bs_static_size<Header>()) {
+				auto ripe_stream = InputByteStreamView{ripe};
+				ripe_stream.read_constant(k_magic_marker);
 				auto header = Header{};
-				cipher_stream.read(header);
-				auto plain_data_size = cast_box<Size>(header.plain_size);
-				assert_test(plain_data_size >= limit);
-				plain_size += plain_data_size;
+				ripe_stream.read(header);
+				auto raw_data_size = cast_box<Size>(header.raw_size);
+				assert_test(raw_data_size >= limit);
+				raw_size += raw_data_size;
 			}
 			else {
-				plain_size += cipher.size();
+				raw_size += ripe.size();
 			}
 			return;
 		}
@@ -72,23 +72,23 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView & plain_,
-			InputByteStreamView &  cipher_,
+			OutputByteStreamView & raw_,
+			InputByteStreamView &  ripe_,
 			Size const &           limit,
 			String const &         key
 		) -> Void {
-			M_use_zps_of(plain);
-			M_use_zps_of(cipher);
-			return process_whole(plain, cipher, limit, key);
+			M_use_zps_of(raw);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, limit, key);
 		}
 
 		inline static auto estimate(
-			Size &                       plain_size,
-			ConstantByteListView const & cipher,
+			Size &                       raw_size,
+			ConstantByteListView const & ripe,
 			Size const &                 limit
 		) -> Void {
-			restruct(plain_size);
-			return estimate_whole(plain_size, cipher, limit);
+			restruct(raw_size);
+			return estimate_whole(raw_size, ripe, limit);
 		}
 
 	};

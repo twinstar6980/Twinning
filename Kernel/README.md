@@ -30,7 +30,7 @@
 |                         [Rijndael ?](#)                            | Rijndael 加密与解密 |
 |           [zlib 1.3.2](https://github.com/madler/zlib)             |   ZLib 压缩与解压   |
 |           [bzip2 1.0.8](https://sourceware.org/bzip2/)             |  BZip2 压缩与解压   |
-|            [lzma 26.00](https://github.com/ip7z/7zip)              |   Lzma 压缩与解压   |
+|            [lzma 26.01](https://github.com/ip7z/7zip)              |   Lzma 压缩与解压   |
 |    [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)      |  VCDiff 差异分析    |
 |           [avir 3.1](https://github.com/avaneev/avir)              |      图像缩放       |
 | [libsquish 1.15.1.4](https://github.com/oblivioncth/libsquish)     |  DXTC 压缩与解压    |
@@ -38,7 +38,7 @@
 |         [etcpak 2.1](https://github.com/wolfpld/etcpak)            |    ETC 压缩与解压   |
 | [astc_encoder 5.4.0](https://github.com/ARM-software/astc-encoder) |  ASTC 压缩与解压    |
 |       [libpng 1.6.58](https://github.com/pnggroup/libpng)          |     PNG 读写        |
-|    [quickjs_ng 0.14.0](https://github.com/quickjs-ng/quickjs)      |     JS 引擎         |
+|    [quickjs_ng 0.15.1](https://github.com/quickjs-ng/quickjs)      |     JS 引擎         |
 
 ## 说明
 

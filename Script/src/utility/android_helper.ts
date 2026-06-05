@@ -17,7 +17,7 @@ namespace Twinning.Script.AndroidHelper {
 	): string {
 		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('sh', true), argument, null, null);
 		if (result.code !== 0n) {
-			throw new Error(`execute failed by sh: ${result.code}\n${result.output}\n${result.error}`);
+			ProcessHelper.throw_error(result);
 		}
 		return result.output;
 	}
@@ -27,7 +27,7 @@ namespace Twinning.Script.AndroidHelper {
 	): string {
 		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('adb', true), argument, null, null);
 		if (result.code !== 0n) {
-			throw new Error(`execute failed by adb: ${result.code}\n${result.output}\n${result.error}`);
+			ProcessHelper.throw_error(result);
 		}
 		return result.output;
 	}

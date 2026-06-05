@@ -130,17 +130,17 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /(\.rton)?$/i, '.cipher.rton'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.rton)?$/i, '.cipher.rton'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -153,7 +153,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -161,16 +161,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.encrypt'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.rton)?$/i, '.rton'),
 					}),
 				],
-				worker: ({plain_file, cipher_file, key}, store: {}) => {
-					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.encrypt_fs(plain_file, cipher_file, key);
+				worker: ({raw_file, ripe_file, key}, store: {}) => {
+					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.encrypt_fs(raw_file, ripe_file, key);
 					return;
 				},
 			}),
@@ -179,17 +179,17 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 				filter: ['file', /(\.rton)$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {cipher_file: StoragePath}) => ConvertHelper.replace_path_name(argument.cipher_file, /(\.rton)?$/i, '.plain.rton'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /(\.rton)?$/i, '.plain.rton'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -202,7 +202,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -210,16 +210,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {cipher_file: StoragePath}) => ConvertHelper.replace_path_name(argument.cipher_file, /()?$/i, '.decrypt'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.decrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.rton)?$/i, '.rton'),
 					}),
 				],
-				worker: ({cipher_file, plain_file, key}, store: {}) => {
-					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.decrypt_fs(plain_file, cipher_file, key);
+				worker: ({ripe_file, raw_file, key}, store: {}) => {
+					KernelX.Tool.Miscellaneous.Pvz2cnCryptData.decrypt_fs(raw_file, ripe_file, key);
 					return;
 				},
 			}),

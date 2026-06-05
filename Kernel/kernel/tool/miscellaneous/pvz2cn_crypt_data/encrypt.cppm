@@ -18,60 +18,60 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  plain,
-			OutputByteStreamView & cipher,
+			InputByteStreamView &  raw,
+			OutputByteStreamView & ripe,
 			String const &         key
 		) -> Void {
-			auto rijndael_plain_container = ByteArray{};
-			auto rijndael_plain = InputByteStreamView{};
-			auto plain_data = plain.forward_view(plain.reserve());
-			auto rijndael_data_size = Math::compute_padded_size(plain_data.size(), cast_box<Size>(k_rijndael_block_size));
-			if (plain_data.size() == rijndael_data_size) {
-				rijndael_plain.set(plain_data);
+			auto rijndael_raw_container = ByteArray{};
+			auto rijndael_raw = InputByteStreamView{};
+			auto raw_data = raw.forward_view(raw.reserve());
+			auto rijndael_data_size = Math::compute_padded_size(raw_data.size(), cast_box<Size>(k_rijndael_block_size));
+			if (raw_data.size() == rijndael_data_size) {
+				rijndael_raw.set(raw_data);
 			}
 			else {
-				rijndael_plain_container.allocate(rijndael_data_size);
-				Range::assign_from(rijndael_plain_container.head(plain_data.size()), plain_data);
-				rijndael_plain.set(rijndael_plain_container);
+				rijndael_raw_container.allocate(rijndael_data_size);
+				Range::assign_from(rijndael_raw_container.head(raw_data.size()), raw_data);
+				rijndael_raw.set(rijndael_raw_container);
 			}
-			cipher.write_constant(k_magic_marker);
-			auto rijndael_cipher = OutputByteStreamView{cipher.forward_view(rijndael_data_size)};
+			ripe.write_constant(k_magic_marker);
+			auto rijndael_ripe = OutputByteStreamView{ripe.forward_view(rijndael_data_size)};
 			auto rijndael_key = compute_rijndael_key(key);
 			auto rijndael_initialization_vector = compute_rijndael_initialization_vector(rijndael_key);
-			Data::Encryption::Rijndael::Encrypt::process(rijndael_plain, rijndael_cipher, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_rijndael_block_size, rijndael_key, rijndael_initialization_vector);
+			Data::Encryption::Rijndael::Encrypt::process(rijndael_raw, rijndael_ripe, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_rijndael_block_size, rijndael_key, rijndael_initialization_vector);
 			return;
 		}
 
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size const & plain_size,
-			Size &       cipher_size
+			Size const & raw_size,
+			Size &       ripe_size
 		) -> Void {
-			cipher_size = 0_sz;
-			cipher_size += bs_static_size<MagicMarker>();
-			cipher_size += Math::compute_padded_size(plain_size, cast_box<Size>(k_rijndael_block_size));
+			ripe_size = 0_sz;
+			ripe_size += bs_static_size<MagicMarker>();
+			ripe_size += Math::compute_padded_size(raw_size, cast_box<Size>(k_rijndael_block_size));
 			return;
 		}
 
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  plain_,
-			OutputByteStreamView & cipher_,
+			InputByteStreamView &  raw_,
+			OutputByteStreamView & ripe_,
 			String const &         key
 		) -> Void {
-			M_use_zps_of(plain);
-			M_use_zps_of(cipher);
-			return process_whole(plain, cipher, key);
+			M_use_zps_of(raw);
+			M_use_zps_of(ripe);
+			return process_whole(raw, ripe, key);
 		}
 
 		inline static auto estimate(
-			Size const & plain_size,
-			Size &       cipher_size
+			Size const & raw_size,
+			Size &       ripe_size
 		) -> Void {
-			restruct(cipher_size);
-			return estimate_whole(plain_size, cipher_size);
+			restruct(ripe_size);
+			return estimate_whole(raw_size, ripe_size);
 		}
 
 	};

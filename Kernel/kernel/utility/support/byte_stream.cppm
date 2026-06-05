@@ -61,11 +61,11 @@ export namespace Twinning::Kernel {
 			ThisOutput & thix,
 			That const & that
 		) -> Void {
-			if (g_byte_stream_use_big_endian != (std::endian::native == std::endian::little)) [[likely]] {
+			if (g_byte_stream_use_big_endian == Bitwise::query_endian()) [[likely]] {
 				std::memcpy(unmake_pointer_unsafe<void>(thix.current_pointer()), &that, unmake_box<std::size_t>(k_type_size<TValue>));
 			}
 			else [[unlikely]] {
-				auto that_reversed = Bitwise::reverse(that);
+				auto that_reversed = Bitwise::reverse_endian(that);
 				std::memcpy(unmake_pointer_unsafe<void>(thix.current_pointer()), &that_reversed, unmake_box<std::size_t>(k_type_size<TValue>));
 			}
 			thix.forward(k_type_size<TValue>);
@@ -76,9 +76,13 @@ export namespace Twinning::Kernel {
 			ThisInput & thix,
 			That &      that
 		) -> Void {
-			std::memcpy(&that, unmake_pointer_unsafe<void>(thix.current_pointer()), unmake_box<std::size_t>(k_type_size<TValue>));
-			if (g_byte_stream_use_big_endian == (std::endian::native == std::endian::little)) [[unlikely]] {
-				that = Bitwise::reverse(that);
+			if (g_byte_stream_use_big_endian == Bitwise::query_endian()) [[likely]] {
+				std::memcpy(&that, unmake_pointer_unsafe<void>(thix.current_pointer()), unmake_box<std::size_t>(k_type_size<TValue>));
+			}
+			else [[unlikely]] {
+				auto that_reversed = Bitwise::reverse_endian(that);
+				std::memcpy(&that_reversed, unmake_pointer_unsafe<void>(thix.current_pointer()), unmake_box<std::size_t>(k_type_size<TValue>));
+				that = Bitwise::reverse_endian(that_reversed);
 			}
 			thix.forward(k_type_size<TValue>);
 			return;

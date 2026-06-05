@@ -173,17 +173,17 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Package {
 				filter: ['file', /(\.pak)$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /(\.pak)?$/i, '.cipher.pak'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /(\.pak)?$/i, '.cipher.pak'),
 						condition: null,
 					}),
 					typical_argument_integer({
@@ -196,7 +196,7 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Package {
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -204,16 +204,16 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Package {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.encrypt'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.pak)?$/i, '.pak'),
 					}),
 				],
-				worker: ({plain_file, cipher_file, key}, store: {}) => {
-					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(plain_file, cipher_file, [key]);
+				worker: ({raw_file, ripe_file, key}, store: {}) => {
+					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(raw_file, ripe_file, [key]);
 					return;
 				},
 			}),

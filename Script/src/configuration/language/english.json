@@ -97,9 +97,14 @@
 	"executor.implementation:common.utility.run_custom_script": "Run Custom Script",
 	"executor.implementation:common.utility.run_custom_script:target_file": "Target File",
 	"executor.implementation:common.utility.run_custom_script:is_module": "Run As Module",
-	// executor/implementation/data.hash
-	"executor.implementation:data.hash.md5": "MD5 Hash",
-	"executor.implementation:data.hash.md5:target_file": "Target File",
+	// executor/implementation/data.hashing
+	"executor.implementation:data.hashing.md5.hash": "MD5 Hash",
+	"executor.implementation:data.hashing.md5.hash:target_file": "Target File",
+	// 
+	"executor.implementation:data.hashing.fnv.hash": "FNV Hash",
+	"executor.implementation:data.hashing.fnv.hash:target_file": "Target File",
+	"executor.implementation:data.hashing.fnv.hash:mode": "Algorithm Mode",
+	"executor.implementation:data.hashing.fnv.hash:bit_count": "Bit Count",
 	// executor/implementation/data.encoding
 	"executor.implementation:data.encoding.base64.encode": "Base64 Encode",
 	"executor.implementation:data.encoding.base64.encode:raw_file": "Raw File",
@@ -110,21 +115,21 @@
 	"executor.implementation:data.encoding.base64.decode:raw_file": "Ripe File",
 	// executor/implementation/data.encryption
 	"executor.implementation:data.encryption.exor.encrypt": "EXOR Encrypt",
-	"executor.implementation:data.encryption.exor.encrypt:plain_file": "Plain File",
-	"executor.implementation:data.encryption.exor.encrypt:cipher_file": "Cipher File",
+	"executor.implementation:data.encryption.exor.encrypt:raw_file": "Raw File",
+	"executor.implementation:data.encryption.exor.encrypt:ripe_file": "Ripe File",
 	"executor.implementation:data.encryption.exor.encrypt:key": "Key",
 	// 
 	"executor.implementation:data.encryption.rijndael.encrypt": "Rijndael Encrypt",
-	"executor.implementation:data.encryption.rijndael.encrypt:plain_file": "Plain File",
-	"executor.implementation:data.encryption.rijndael.encrypt:cipher_file": "Cipher File",
+	"executor.implementation:data.encryption.rijndael.encrypt:raw_file": "Raw File",
+	"executor.implementation:data.encryption.rijndael.encrypt:ripe_file": "Ripe File",
 	"executor.implementation:data.encryption.rijndael.encrypt:mode": "Algorithm Mode",
 	"executor.implementation:data.encryption.rijndael.encrypt:block_size": "Block Size",
 	"executor.implementation:data.encryption.rijndael.encrypt:key": "Key",
 	"executor.implementation:data.encryption.rijndael.encrypt:initialization_vector": "Initialization Vector",
 	// 
 	"executor.implementation:data.encryption.rijndael.decrypt": "Rijndael Decrypt",
-	"executor.implementation:data.encryption.rijndael.decrypt:cipher_file": "Cipher File",
-	"executor.implementation:data.encryption.rijndael.decrypt:plain_file": "Plain File",
+	"executor.implementation:data.encryption.rijndael.decrypt:ripe_file": "Ripe File",
+	"executor.implementation:data.encryption.rijndael.decrypt:raw_file": "Raw File",
 	"executor.implementation:data.encryption.rijndael.decrypt:mode": "Algorithm Mode",
 	"executor.implementation:data.encryption.rijndael.decrypt:block_size": "Block Size",
 	"executor.implementation:data.encryption.rijndael.decrypt:key": "Key",
@@ -332,14 +337,14 @@
 	"executor.implementation:popcap.zlib.uncompress:version_variant_64": "Use The 64-bit Variant",
 	// executor/implementation/popcap.crypt_data
 	"executor.implementation:popcap.crypt_data.encrypt": "PopCap Crypt-Data Encrypt",
-	"executor.implementation:popcap.crypt_data.encrypt:plain_file": "Plain File",
-	"executor.implementation:popcap.crypt_data.encrypt:cipher_file": "Cipher File",
+	"executor.implementation:popcap.crypt_data.encrypt:raw_file": "Raw File",
+	"executor.implementation:popcap.crypt_data.encrypt:ripe_file": "Ripe File",
 	"executor.implementation:popcap.crypt_data.encrypt:limit": "Limit",
 	"executor.implementation:popcap.crypt_data.encrypt:key": "Key",
 	// 
 	"executor.implementation:popcap.crypt_data.decrypt": "PopCap Crypt-Data Decrypt",
-	"executor.implementation:popcap.crypt_data.decrypt:cipher_file": "Cipher File",
-	"executor.implementation:popcap.crypt_data.decrypt:plain_file": "Plain File",
+	"executor.implementation:popcap.crypt_data.decrypt:ripe_file": "Ripe File",
+	"executor.implementation:popcap.crypt_data.decrypt:raw_file": "Raw File",
 	"executor.implementation:popcap.crypt_data.decrypt:limit": "Limit",
 	"executor.implementation:popcap.crypt_data.decrypt:key": "Key",
 	// executor/implementation/popcap.reflection_object_notation
@@ -357,13 +362,13 @@
 	"executor.implementation:popcap.reflection_object_notation.decode:version_native_string_encoding_use_utf8": "Native String Encoding Use UTF-8",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.encrypt": "PopCap Reflection-Object-Notation Encrypt",
-	"executor.implementation:popcap.reflection_object_notation.encrypt:plain_file": "Plain File",
-	"executor.implementation:popcap.reflection_object_notation.encrypt:cipher_file": "Cipher File",
+	"executor.implementation:popcap.reflection_object_notation.encrypt:raw_file": "Raw File",
+	"executor.implementation:popcap.reflection_object_notation.encrypt:ripe_file": "Ripe File",
 	"executor.implementation:popcap.reflection_object_notation.encrypt:key": "Key",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.decrypt": "PopCap Reflection-Object-Notation Decrypt",
-	"executor.implementation:popcap.reflection_object_notation.decrypt:cipher_file": "Cipher File",
-	"executor.implementation:popcap.reflection_object_notation.decrypt:plain_file": "Plain File",
+	"executor.implementation:popcap.reflection_object_notation.decrypt:ripe_file": "Ripe File",
+	"executor.implementation:popcap.reflection_object_notation.decrypt:raw_file": "Raw File",
 	"executor.implementation:popcap.reflection_object_notation.decrypt:key": "Key",
 	// 
 	"executor.implementation:popcap.reflection_object_notation.encode_cipher": "PopCap Reflection-Object-Notation Encode For Cipher",
@@ -536,8 +541,8 @@
 	"executor.implementation:popcap.package.pack_automatic:version_compress_resource_data": "Compress Resource Data",
 	// 
 	"executor.implementation:popcap.package.encrypt": "PopCap Package Encrypt",
-	"executor.implementation:popcap.package.encrypt:plain_file": "Plain File",
-	"executor.implementation:popcap.package.encrypt:cipher_file": "Cipher File",
+	"executor.implementation:popcap.package.encrypt:raw_file": "Raw File",
+	"executor.implementation:popcap.package.encrypt:ripe_file": "Ripe File",
 	"executor.implementation:popcap.package.encrypt:key": "Key",
 	// executor/implementation/popcap.resource_stream_group
 	"executor.implementation:popcap.resource_stream_group.pack": "PopCap Resource-Stream-Group Pack",

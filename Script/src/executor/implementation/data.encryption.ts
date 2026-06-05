@@ -10,17 +10,17 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.bin'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -33,7 +33,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -41,16 +41,16 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.encrypt'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({plain_file, cipher_file, key}, store: {}) => {
-					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(plain_file, cipher_file, ConvertHelper.make_string_to_byte_array(key));
+				worker: ({raw_file, ripe_file, key}, store: {}) => {
+					KernelX.Tool.Data.Encryption.Exor.encrypt_fs(raw_file, ripe_file, ConvertHelper.make_string_to_byte_array(key));
 					return;
 				},
 			}),
@@ -59,17 +59,17 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.bin'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -103,7 +103,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -111,18 +111,18 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {plain_file: StoragePath}) => ConvertHelper.replace_path_name(argument.plain_file, /()?$/i, '.encrypt'),
+						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.encrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({plain_file, cipher_file, mode, block_size, key, initialization_vector}, store: {}) => {
+				worker: ({raw_file, ripe_file, mode, block_size, key, initialization_vector}, store: {}) => {
 					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(key));
 					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(initialization_vector));
-					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(plain_file, cipher_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
+					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(raw_file, ripe_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
 					return;
 				},
 			}),
@@ -131,17 +131,17 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: ['file', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
 					}),
 					typical_argument_path({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: ['file', 'output'],
 						checker: null,
-						automatic: (argument: {cipher_file: StoragePath}) => ConvertHelper.replace_path_name(argument.cipher_file, /()?$/i, '.bin'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
 						condition: null,
 					}),
 					typical_argument_string({
@@ -175,7 +175,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 				],
 				batch: [
 					typical_argument_batch({
-						identifier: 'cipher_file',
+						identifier: 'ripe_file',
 						rule: 'input',
 						checker: null,
 						automatic: null,
@@ -183,18 +183,18 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 						item_mapper: (argument: {}, value) => (value),
 					}),
 					typical_argument_batch({
-						identifier: 'plain_file',
+						identifier: 'raw_file',
 						rule: 'output',
 						checker: null,
-						automatic: (argument: {cipher_file: StoragePath}) => ConvertHelper.replace_path_name(argument.cipher_file, /()?$/i, '.decrypt'),
+						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.decrypt'),
 						condition: null,
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({cipher_file, plain_file, mode, block_size, key, initialization_vector}, store: {}) => {
+				worker: ({ripe_file, raw_file, mode, block_size, key, initialization_vector}, store: {}) => {
 					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(key));
 					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(initialization_vector));
-					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(plain_file, cipher_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
+					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(raw_file, ripe_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
 					return;
 				},
 			}),

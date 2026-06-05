@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		M_record_of_data(
 			M_wrap(Header),
 			M_wrap(
-				(IntegerU64) plain_size,
+				(IntegerU64) raw_size,
 			),
 		);
 
