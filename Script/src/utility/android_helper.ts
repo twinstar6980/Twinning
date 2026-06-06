@@ -12,26 +12,6 @@ namespace Twinning.Script.AndroidHelper {
 		return source.replaceAll(/(?=['" ])/g, `\\`);
 	}
 
-	function run_sh(
-		argument: Array<string>,
-	): string {
-		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('sh', true), argument, null, null);
-		if (result.code !== 0n) {
-			ProcessHelper.throw_error(result);
-		}
-		return result.output;
-	}
-
-	function run_adb(
-		argument: Array<string>,
-	): string {
-		let result = ProcessHelper.run_process(ProcessHelper.search_program_ensure('adb', true), argument, null, null);
-		if (result.code !== 0n) {
-			ProcessHelper.throw_error(result);
-		}
-		return result.output;
-	}
-
 	// #endregion
 
 	// #region basic
@@ -45,10 +25,10 @@ namespace Twinning.Script.AndroidHelper {
 	): string {
 		let result: string;
 		if (k_mode === 'native') {
-			result = run_sh([`-c`, `su -c "${command}"`]);
+			result = ExternalHelper.run_sh([`-c`, `su -c "${command}"`]);
 		}
 		if (k_mode === 'bridge') {
-			result = run_adb([`shell`, `su -c "${command}"`]);
+			result = ExternalHelper.run_adb([`shell`, `su -c "${command}"`]);
 		}
 		return result!;
 	}
@@ -66,7 +46,7 @@ namespace Twinning.Script.AndroidHelper {
 			fs_copy(remote, local, false);
 		}
 		if (k_mode === 'bridge') {
-			run_adb([`pull`, remote.emit_posix(true), local.emit_native()]);
+			ExternalHelper.run_adb([`pull`, remote.emit_posix(true), local.emit_native()]);
 		}
 		return;
 	}
@@ -86,12 +66,12 @@ namespace Twinning.Script.AndroidHelper {
 		}
 		if (k_mode === 'bridge') {
 			if (fs_is_fuse_media_path(remote)) {
-				run_adb([`push`, local.emit_native(), remote.emit_posix(true)]);
+				ExternalHelper.run_adb([`push`, local.emit_native(), remote.emit_posix(true)]);
 			}
 			else {
 				fs_create_directory(k_temporary_directory, null);
 				let remote_temporary = k_temporary_directory.join(local.name() ?? '');
-				run_adb([`push`, local.emit_native(), remote_temporary.emit_posix(true)]);
+				ExternalHelper.run_adb([`push`, local.emit_native(), remote_temporary.emit_posix(true)]);
 				fs_copy(remote_temporary, remote, false);
 				fs_remove(remote_temporary);
 			}

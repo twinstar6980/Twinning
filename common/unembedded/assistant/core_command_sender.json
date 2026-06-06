@@ -6888,8 +6888,8 @@
 					"icon": "build",
 					"argument": [
 						{
-							"identifier": "target_directory",
-							"name": "Target Directory",
+							"identifier": "target",
+							"name": "Target",
 							"type": "path",
 							"option": null,
 						},

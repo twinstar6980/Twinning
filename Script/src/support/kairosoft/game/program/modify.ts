@@ -1,6 +1,6 @@
 namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
-	// #region platform
+	// #region platform type
 
 	const PlatformTypeX = [
 		'windows_intel32',
@@ -15,56 +15,56 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 	// ----------------
 
 	function get_program_file_path(
-		platform: PlatformType,
+		platform_type: PlatformType,
 	): StoragePath {
 		let path = new StoragePath();
-		if (platform === 'windows_intel32') {
+		if (platform_type === 'windows_intel32') {
 			path.parse('GameAssembly.dll');
 		}
-		if (platform === 'android_arm32') {
+		if (platform_type === 'android_arm32') {
 			path.parse('lib/armeabi-v7a/libil2cpp.so');
 		}
-		if (platform === 'android_arm64') {
+		if (platform_type === 'android_arm64') {
 			path.parse('lib/arm64-v8a/libil2cpp.so');
 		}
 		return path;
 	}
 
 	function get_metadata_file_path(
-		platform: PlatformType,
+		platform_type: PlatformType,
 	): StoragePath {
 		let path = new StoragePath();
-		if (platform === 'windows_intel32') {
+		if (platform_type === 'windows_intel32') {
 			path.parse('KairoGames_Data/il2cpp_data/Metadata/global-metadata.dat');
 		}
-		if (platform === 'android_arm32') {
+		if (platform_type === 'android_arm32') {
 			path.parse('assets/bin/Data/Managed/Metadata/global-metadata.dat');
 		}
-		if (platform === 'android_arm64') {
+		if (platform_type === 'android_arm64') {
 			path.parse('assets/bin/Data/Managed/Metadata/global-metadata.dat');
 		}
 		return path;
 	}
 
-	function detect_platform(
+	function detect_platform_type(
 		game_directory: StoragePath,
 	): Array<PlatformType> {
 		let result: Array<PlatformType> = [];
-		for (let platform of ['windows_intel32', 'android_arm32', 'android_arm64'] as Array<PlatformType>) {
-			if (!StorageHelper.exist_file(game_directory.push(get_program_file_path(platform)))) {
+		for (let platform_type of PlatformTypeE) {
+			if (!StorageHelper.exist_file(game_directory.push(get_program_file_path(platform_type)))) {
 				continue;
 			}
-			if (!StorageHelper.exist_file(game_directory.push(get_metadata_file_path(platform)))) {
+			if (!StorageHelper.exist_file(game_directory.push(get_metadata_file_path(platform_type)))) {
 				continue;
 			}
-			result.push(platform);
+			result.push(platform_type);
 		}
 		return result;
 	}
 
 	// #endregion
 
-	// #region package
+	// #region package type
 
 	const PackageTypeX = [
 		'flat',
@@ -79,112 +79,18 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	// #endregion
 
-	// #region asm
-
-	const k_instruction_code_nop_intel32 = 0x90n;
-
-	const k_instruction_code_nop_arm32 = 0xE320F000n;
-
-	const k_instruction_code_nop_arm64 = 0xD503201Fn;
-
-	// ----------------
-
-	function find_call_instruction(
-		data: ByteStreamView,
-		limit: number,
-		address: Array<number>,
-		overwrite: boolean,
-		platform: PlatformType,
-	): boolean {
-		let state = false;
-		let dataEnd = Math.min(data.size(), data.p() + limit);
-		if (platform === 'windows_intel32') {
-			while (data.p() < dataEnd) {
-				let instruction_code = data.u8();
-				// call #X = E8 XX XX XX XX
-				if (instruction_code !== 0xE8n) {
-					continue;
-				}
-				let jump_offset = data.i32();
-				let jump_address = data.p() + Number(jump_offset);
-				if (!address.includes(jump_address)) {
-					data.pr(-4);
-					continue;
-				}
-				if (overwrite) {
-					data.pr(-5);
-					data.u8(k_instruction_code_nop_intel32);
-					data.u8(k_instruction_code_nop_intel32);
-					data.u8(k_instruction_code_nop_intel32);
-					data.u8(k_instruction_code_nop_intel32);
-					data.u8(k_instruction_code_nop_intel32);
-				}
-				state = true;
-				break;
-			}
-		}
-		if (platform === 'android_arm32') {
-			while (data.p() < dataEnd) {
-				let instruction_code = data.u32();
-				// bl #X = EB XX XX XX
-				if ((instruction_code & 0xFF000000n) !== 0xEB000000n) {
-					continue;
-				}
-				let jump_offset = instruction_code & 0x00FFFFFFn;
-				if ((jump_offset & 0x800000n) === 0x800000n) {
-					jump_offset = -(0x1000000n - jump_offset);
-				}
-				let jump_address = data.p() - 4 + 8 + Number(jump_offset) * 4;
-				if (!address.includes(jump_address)) {
-					continue;
-				}
-				if (overwrite) {
-					data.pr(-4);
-					data.u32(k_instruction_code_nop_arm32);
-				}
-				state = true;
-				break;
-			}
-		}
-		if (platform === 'android_arm64') {
-			while (data.p() < dataEnd) {
-				let instruction_code = data.u32();
-				// bl #X = 97 XX XX XX
-				if ((instruction_code & 0xFF000000n) !== 0x97000000n) {
-					continue;
-				}
-				let jump_offset = instruction_code & 0x00FFFFFFn;
-				if ((jump_offset & 0x800000n) === 0x800000n) {
-					jump_offset = -(0x1000000n - jump_offset);
-				}
-				let jump_address = data.p() - 4 + Number(jump_offset) * 4;
-				if (!address.includes(jump_address)) {
-					continue;
-				}
-				if (overwrite) {
-					data.pr(-4);
-					data.u32(k_instruction_code_nop_arm64);
-				}
-				state = true;
-				break;
-			}
-		}
-		return state;
-	}
-
-	// #endregion
-
 	// #region modify
 
 	function modify_flat(
-		platform: PlatformType,
+		platform_type: PlatformType,
 		program_file: StoragePath,
 		metadata_file: StoragePath,
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
+		let assembly_platform_type = platform_type.split('_')[1] as AssemblyHelper.PlatformType;
 		Console.information(`phase: dump program information`, []);
-		let dump_data = ExternalHelper.run_il2cppdumper(program_file, metadata_file);
+		let dump_data = ExternalHelper.run_il2cppdumper_dump(program_file, metadata_file);
 		Console.information(`phase: parse symbol address`, []);
 		let symbol_address = {
 			CRC64: {
@@ -256,10 +162,10 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		if (disable_record_encryption) {
 			Console.information(`phase: modify method 'RecordStore.ReadRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.ReadRecord[0]);
-			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
-			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Decode, true, platform));
-			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.CRC64.GetValue, false, platform));
-			if (platform === 'windows_intel32') {
+			assert_test(AssemblyHelper.find_call_instruction(assembly_platform_type, program_stream, 0x1000, symbol_address.Encrypter.Decode, true));
+			assert_test(AssemblyHelper.find_call_instruction(assembly_platform_type, program_stream, 0x1000, symbol_address.Encrypter.Decode, true));
+			assert_test(AssemblyHelper.find_call_instruction(assembly_platform_type, program_stream, 0x1000, symbol_address.CRC64.GetValue, false));
+			if (assembly_platform_type === 'intel32') {
 				// add esp, .. = 83 C4 XX
 				assert_test(program_stream.u8() === 0x83n);
 				assert_test(program_stream.u8() === 0xC4n);
@@ -267,43 +173,43 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				// cmp eax, .. = 3B XX XX
 				assert_test(program_stream.u8() === 0x3Bn);
 				program_stream.pr(-1);
-				program_stream.u8(k_instruction_code_nop_intel32);
-				program_stream.u8(k_instruction_code_nop_intel32);
-				program_stream.u8(k_instruction_code_nop_intel32);
+				program_stream.u8(AssemblyHelper.k_instruction_code_nop_intel32);
+				program_stream.u8(AssemblyHelper.k_instruction_code_nop_intel32);
+				program_stream.u8(AssemblyHelper.k_instruction_code_nop_intel32);
 				// jnz .. = 75 XX
 				assert_test(program_stream.u8() === 0x75n);
 				program_stream.pr(-1);
-				program_stream.u8(k_instruction_code_nop_intel32);
-				program_stream.u8(k_instruction_code_nop_intel32);
+				program_stream.u8(AssemblyHelper.k_instruction_code_nop_intel32);
+				program_stream.u8(AssemblyHelper.k_instruction_code_nop_intel32);
 			}
-			if (platform === 'android_arm32') {
+			if (assembly_platform_type === 'arm32') {
 				// eor; eor; orrs
 				program_stream.pr(+12);
 				// bne #X = 1A XX XX XX
 				assert_test((program_stream.u32() & 0xFF000000n) === 0x1A000000n);
 				program_stream.pr(-4);
-				program_stream.u32(k_instruction_code_nop_arm32);
+				program_stream.u32(AssemblyHelper.k_instruction_code_nop_arm32);
 			}
-			if (platform === 'android_arm64') {
+			if (assembly_platform_type === 'arm64') {
 				// cmp; mov
 				program_stream.pr(+8);
 				// bne #X = 54 XX XX XX
 				assert_test((program_stream.u32() & 0xFF000000n) === 0x54000000n);
 				program_stream.pr(-4);
-				program_stream.u32(k_instruction_code_nop_arm64);
+				program_stream.u32(AssemblyHelper.k_instruction_code_nop_arm64);
 			}
 		}
 		if (disable_record_encryption) {
 			Console.information(`phase: modify method 'RecordStore.WriteRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.WriteRecord[0]);
-			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
-			assert_test(find_call_instruction(program_stream, 0x1000, symbol_address.Encrypter.Encode, true, platform));
+			assert_test(AssemblyHelper.find_call_instruction(assembly_platform_type, program_stream, 0x1000, symbol_address.Encrypter.Encode, true));
+			assert_test(AssemblyHelper.find_call_instruction(assembly_platform_type, program_stream, 0x1000, symbol_address.Encrypter.Encode, true));
 		}
 		if (enable_debug_mode) {
 			Console.information(`phase: modify method 'MyConfig..cctor'`, []);
 			program_stream.p(symbol_address.MyConfig._cctor[0]);
 			let program_stream_end = program_stream.p() + 0x200;
-			if (platform === 'windows_intel32') {
+			if (assembly_platform_type === 'intel32') {
 				while (program_stream.p() < program_stream_end) {
 					// mov byte ptr [eax+X], 0 = C6 40 XX 00
 					let instruction_code: bigint;
@@ -331,7 +237,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 					break;
 				}
 			}
-			if (platform === 'android_arm32') {
+			if (assembly_platform_type === 'arm32') {
 				while (program_stream.p() < program_stream_end) {
 					// strb rX, [rY, #Z] = 111001011100 YYYY XXXX ZZZZZZZZZZZZ
 					let instruction_code = program_stream.u32();
@@ -346,7 +252,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 					break;
 				}
 			}
-			if (platform === 'android_arm64') {
+			if (assembly_platform_type === 'arm64') {
 				while (program_stream.p() < program_stream_end) {
 					// strb wX, [xY, #Z] = 0011100100 ZZZZZZZZZZZZ YYYYY XXXXX
 					let instruction_code = program_stream.u32();
@@ -399,148 +305,173 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				path: StoragePath;
 				location: null | StoragePath;
 				content: Array<StoragePath>;
+				platform: Array<PlatformType>;
 			}>;
 		};
 		if (package_type !== 'flat') {
 			Console.information(`phase: load package file`, []);
-			let package_bundle = temporary_directory.join('bundle');
-			let package_bundle_content = ExternalHelper.list_zip_content(package_bundle);
-			StorageHelper.copy(target, package_bundle, false);
+			let package_file = temporary_directory.join('package.zip');
+			StorageHelper.copy(target, package_file, false);
+			let package_content = ExternalHelper.run_7z_list_content(package_file);
 			package_state = {
-				bundle: package_bundle,
+				bundle: null,
 				part: [],
 			};
-			if (package_type === 'zip') {
+			if (package_type === 'zip' || package_type === 'apk') {
 				package_state.part.push({
-					path: package_bundle,
+					path: package_file,
 					location: null,
-					content: package_bundle_content,
-				});
-			}
-			if (package_type === 'apk') {
-				package_state.part.push({
-					path: package_bundle,
-					location: null,
-					content: package_bundle_content,
+					content: package_content,
+					platform: [],
 				});
 			}
 			if (package_type === 'apks') {
-				for (let package_bundle_content_item of package_bundle_content) {
-					if (!package_bundle_content_item.name()!.toLowerCase().endsWith('.apk')) {
+				package_state.bundle = package_file;
+				for (let package_content_item of package_content) {
+					if (!package_content_item.name()!.toLowerCase().endsWith('.apk')) {
 						continue;
 					}
-					let package_part_file = temporary_directory.join('package').join(package_bundle_content_item.name()!);
-					ExternalHelper.extract_zip_content(package_bundle, package_bundle_content_item, package_part_file);
+					let package_part_file = temporary_directory.join('part').join(package_content_item.name()!);
+					ExternalHelper.run_7z_extract_content(
+						package_file,
+						[
+							{
+								location: package_content_item,
+								placement: package_part_file,
+							},
+						],
+					);
 					package_state.part.push({
 						path: package_part_file,
-						location: package_bundle_content_item,
-						content: ExternalHelper.list_zip_content(package_part_file),
+						location: package_content_item,
+						content: ExternalHelper.run_7z_list_content(package_part_file),
+						platform: [],
 					});
 				}
 			}
 		}
 		Console.information(`phase: extract necessary file`, []);
 		let target_directory = temporary_directory.join('flat');
-		let necessary_file_list = new Set(PlatformTypeE.map((it) => [get_program_file_path(it), get_metadata_file_path(it)]).flat());
-		if (package_type === 'flat') {
-			for (let necessary_file of necessary_file_list) {
-				if (!StorageHelper.exist_file(target.push(necessary_file))) {
-					continue;
+		if (package_state === null) {
+			for (let platform_type of PlatformTypeE) {
+				let metadata_file = get_metadata_file_path(platform_type);
+				if (!StorageHelper.exist_file(target_directory.push(metadata_file))) {
+					if (StorageHelper.exist_file(target.push(metadata_file))) {
+						StorageHelper.copy(target.push(metadata_file), target_directory.push(metadata_file), false);
+					}
 				}
-				StorageHelper.copy(target.push(necessary_file), target_directory.push(necessary_file), false);
+				let program_file = get_program_file_path(platform_type);
+				if (!StorageHelper.exist_file(target_directory.push(program_file))) {
+					if (StorageHelper.exist_file(target.push(program_file))) {
+						StorageHelper.copy(target.push(program_file), target_directory.push(program_file), false);
+					}
+				}
 			}
 		}
 		else {
-			assert_test(package_state !== null);
 			for (let package_part of package_state.part) {
-				for (let necessary_file of necessary_file_list) {
-					let necessary_file_in_package = package_part.content.find((it) => it.emit() === necessary_file.emit());
-					if (necessary_file_in_package === undefined) {
-						continue;
+				for (let platform_type of PlatformTypeE) {
+					let metadata_file = get_metadata_file_path(platform_type);
+					if (!StorageHelper.exist_file(target_directory.push(metadata_file))) {
+						let metadata_file_in_package = package_part.content.find((it) => it.emit() === metadata_file.emit());
+						if (metadata_file_in_package !== undefined) {
+							ExternalHelper.run_7z_extract_content(
+								package_part.path,
+								[
+									{
+										location: metadata_file_in_package,
+										placement: target_directory.push(metadata_file),
+									},
+								],
+							);
+						}
 					}
-					ExternalHelper.extract_zip_content(package_part.path, necessary_file_in_package, target_directory.push(necessary_file));
+					let program_file = get_program_file_path(platform_type);
+					if (!StorageHelper.exist_file(target_directory.push(program_file))) {
+						let program_file_in_package = package_part.content.find((it) => it.emit() === program_file.emit());
+						if (program_file_in_package !== undefined) {
+							ExternalHelper.run_7z_extract_content(
+								package_part.path,
+								[
+									{
+										location: program_file_in_package,
+										placement: target_directory.push(program_file),
+									},
+								],
+							);
+							package_part.platform.push(platform_type);
+						}
+					}
 				}
 			}
 		}
-		Console.information(`phase: detect platform`, []);
-		let platform_list = detect_platform(target_directory);
-		Console.information(`tip: the platform is '${platform_list.join('|')}'`, []);
-		assert_test(platform_list.length !== 0);
-		for (let platform of platform_list) {
-			Console.information(`phase: modify program of '${platform}'`, []);
+		Console.information(`phase: detect platform type`, []);
+		let platform_type_list = detect_platform_type(target_directory);
+		Console.information(`tip: the platform type is '${platform_type_list.join('|')}'`, []);
+		assert_test(platform_type_list.length !== 0);
+		for (let platform_type of platform_type_list) {
+			Console.information(`phase: modify program of '${platform_type}'`, []);
 			modify_flat(
-				platform,
-				target_directory.push(get_program_file_path(platform)),
-				target_directory.push(get_metadata_file_path(platform)),
+				platform_type,
+				target_directory.push(get_program_file_path(platform_type)),
+				target_directory.push(get_metadata_file_path(platform_type)),
 				disable_record_encryption,
 				enable_debug_mode,
 			);
 		}
-		if (package_type !== 'flat') {
+		if (package_state !== null) {
 			Console.information(`phase: repack package file`, []);
-			assert_test(package_state !== null);
-			let replace_task_list = [] as Array<{
-				platform: PlatformType;
-				target: typeof package_state.part[number];
-			}>;
-			for (let platform of platform_list) {
-				if (package_type === 'zip' || package_type === 'apk') {
-					replace_task_list.push({platform: platform, target: package_state.part[0]});
+			for (let package_part of package_state.part) {
+				if (package_part.platform.length === 0) {
+					continue;
 				}
-				if (package_type === 'apks') {
-					let architecture_name = null as null | string;
-					if (platform === 'android_arm32') {
-						architecture_name = 'armeabi_v7a';
-					}
-					if (platform === 'android_arm64') {
-						architecture_name = 'arm64_v8a';
-					}
-					assert_test(architecture_name !== null);
-					let package_part_name = `split_config.${architecture_name}.apk`;
-					let package_part = package_state.part.find((it) => it.location!.name()! == package_part_name);
-					assert_test(package_part !== undefined);
-					replace_task_list.push({platform: platform, target: package_part});
-				}
-			}
-			for (let replace_task of replace_task_list) {
-				let program_file = get_program_file_path(replace_task.platform);
-				ExternalHelper.replace_zip_content(replace_task.target.path, program_file, target_directory.push(program_file));
+				ExternalHelper.run_7z_append_content(
+					package_part.path,
+					package_part.platform
+						.map((it) => ({
+							location: get_program_file_path(it),
+							placement: target_directory.push(get_program_file_path(it)),
+						})),
+				);
 			}
 		}
 		if (package_type === 'apk' || package_type === 'apks') {
 			Console.information(`phase: post-processing apk file`, []);
 			assert_test(package_state !== null);
 			let enable_align = true;
-			let enable_sign = true;
-			// // TODO
+			let enable_sign = false;
+			// TODO
 			for (let package_part of package_state.part) {
 				if (enable_align) {
-					ExternalHelper.run_zipalign(package_part.path);
+					ExternalHelper.run_zipalign_align(package_part.path);
 				}
 				if (enable_sign) {
-					ExternalHelper.run_apksigner(package_part.path, new StoragePath(), '');
+					ExternalHelper.run_apksigner_sign(package_part.path, new StoragePath(), '');
 				}
 			}
 		}
-		Console.information(`phase: generate result.`, []);
-		if (package_type === 'flat') {
-			for (let platform of platform_list) {
-				let program_file = get_program_file_path(platform);
+		Console.information(`phase: generate result`, []);
+		if (package_state === null) {
+			for (let platform_type of platform_type_list) {
+				let program_file = get_program_file_path(platform_type);
 				StorageHelper.remove(target.push(program_file));
 				StorageHelper.copy(target_directory.push(program_file), target.push(program_file), false);
 			}
 		}
-		if (package_type === 'zip' || package_type === 'apk') {
-			assert_test(package_state !== null);
+		else if (package_state.bundle === null) {
 			StorageHelper.remove(target);
 			StorageHelper.copy(package_state.part[0].path, target, false);
 		}
-		if (package_type === 'apks') {
-			assert_test(package_state !== null);
-			assert_test(package_state.bundle !== null);
-			for (let package_part of package_state.part) {
-				ExternalHelper.replace_zip_content(package_state.bundle, package_part.location!, package_part.path);
-			}
+		else {
+			ExternalHelper.run_7z_append_content(
+				package_state.bundle,
+				package_state.part
+					.filter((it) => it.platform.length !== 0)
+					.map((it) => ({
+						location: it.location!,
+						placement: it.path,
+					})),
+			);
 			StorageHelper.remove(target);
 			StorageHelper.copy(package_state.bundle, target, false);
 		}

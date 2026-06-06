@@ -20,46 +20,31 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 		if (raw_file_directory !== null && !StorageHelper.exist_directory(raw_file_directory)) {
 			StorageHelper.create_directory(raw_file_directory);
 		}
-		let vgmstream_result = ProcessHelper.run_process(
-			ProcessHelper.search_program_ensure('vgmstream-cli', true),
-			[
-				'-o',
-				raw_file.emit_native(),
-				ripe_file_fallback.emit_native(),
-			],
-			null,
-			null,
-		);
+		let encoding_name = ExternalHelper.run_vgmstream_decode(raw_file, ripe_file_fallback);
 		if (ripe_file_fallback_temporary !== null) {
 			StorageHelper.remove(ripe_file_fallback_temporary);
 		}
-		if (vgmstream_result.code !== 0n) {
-			ProcessHelper.throw_error(vgmstream_result);
-		}
-		let regex_result = /^encoding: (.+)$/m.exec(vgmstream_result.output);
-		assert_test(regex_result !== null);
-		let encoding = regex_result[1];
 		let format: null | Format = null;
-		if (encoding === '16-bit Little Endian PCM') {
+		if (encoding_name === '16-bit Little Endian PCM') {
 			format = 'pcm';
 		}
-		if (encoding === 'Platinum 4-bit ADPCM') {
+		if (encoding_name === 'Platinum 4-bit ADPCM') {
 			format = 'adpcm';
 		}
-		if (encoding === 'Audiokinetic Wwise 4-bit IMA ADPCM') {
+		if (encoding_name === 'Audiokinetic Wwise 4-bit IMA ADPCM') {
 			format = 'adpcm';
 		}
-		if (encoding === 'Custom Vorbis') {
+		if (encoding_name === 'Custom Vorbis') {
 			format = 'vorbis';
 		}
-		if (encoding === 'AAC (Advanced Audio Coding)') {
+		if (encoding_name === 'AAC (Advanced Audio Coding)') {
 			format = 'aac';
 		}
-		if (encoding === 'libopus Opus') {
+		if (encoding_name === 'libopus Opus') {
 			format = 'wemopus'; // or opus
 		}
 		if (format === null) {
-			throw new Error(`unknown wem format '${encoding}'`);
+			throw new Error(`unknown wem format '${encoding_name}'`);
 		}
 		return format;
 	}

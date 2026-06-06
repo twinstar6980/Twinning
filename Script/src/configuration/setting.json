@@ -9,8 +9,10 @@
 	"external_program_path": {
 		"sh": null,
 		"adb": null,
-		"WwiseConsole.exe": null,
-		"WwiseConsole.sh": null,
+		"zipalign": null,
+		"apksigner": null,
+		"7z": null,
+		"WwiseConsole": null,
 		"vgmstream-cli": null,
 		"Il2CppDumper": null,
 	},
@@ -1313,7 +1315,7 @@
 			"program.modify": {
 				"filter": "()$",
 				"argument": {
-					"target_directory": "?input",
+					"target": "?input",
 					"disable_record_encryption": "?input",
 					"enable_debug_mode": "?input",
 				},

@@ -49,7 +49,7 @@ namespace Twinning.Script {
 				MainScript.g_thread_manager.resize(Number(value), null);
 			},
 			external_program_path: (value) => {
-				ProcessHelper.g_program_path_map = ConvertHelper.record_transform(value, (key, value) => [key, value === null ? null : new StoragePath(value)]);
+				ExternalHelper.g_program_path_map = ConvertHelper.record_transform(value, (key, value) => [key, value === null ? null : new StoragePath(value)]);
 			},
 			console_basic_disable_virtual_terminal_sequence: (value) => {
 				Console.g_basic_disable_virtual_terminal_sequence = value;

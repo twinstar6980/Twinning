@@ -4158,7 +4158,7 @@
 					"name": "Program Modify",
 					"icon": "build",
 					"filter": {
-						"type": "directory",
+						"type": "any",
 						"name": "()$",
 					},
 					"batch": false,

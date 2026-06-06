@@ -142,6 +142,22 @@
 
   > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
 
+* [7-Zip](https://7-zip.org/) `=26.01`
+
+  用于 **开罗游戏程序修改** 。
+
+  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `7z` 可执行程序。
+
+* [WwiseConsole](https://www.audiokinetic.com/en/download) `=2019.2`
+
+  用于 **WEM 音频编码** 。
+
+  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `WwiseConsole` 可执行程序。
+
+  > `WwiseConsole` 可执行程序的路径参见 [官方文档](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=bankscommandline.html) 。
+
+  > 该程序仅支持 `Windows` 、`Macintosh` 系统。
+
 * [vgmstream-cli](https://vgmstream.org/) `>=r2055`
 
   用于 **WEM 音频解码** 。
@@ -149,16 +165,6 @@
   安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `vgmstream-cli` 可执行程序。
 
   > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
-
-* [WwiseConsole](https://www.audiokinetic.com/en/download) `=2019.2`
-
-  用于 **WEM 音频编码** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `WwiseConsole.exe` 或 `WwiseConsole.sh` 可执行程序。
-
-  > `WwiseConsole` 可执行程序的路径参见 [官方文档](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=bankscommandline.html) 。
-
-  > 该程序仅支持 `Windows` 、`Macintosh` 系统。
 
 * [QuickTime](https://support.apple.com/kb/DL837) `>=7.6`
 

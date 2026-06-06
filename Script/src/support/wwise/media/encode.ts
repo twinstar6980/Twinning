@@ -299,32 +299,11 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		if (!KernelX.is_windows && !KernelX.is_macintosh) {
 			throw new Error(`unsupported system, this function only available for windows or macintosh`);
 		}
-		let wwise_program_name: string = undefined!;
-		if (KernelX.is_windows) {
-			wwise_program_name = 'WwiseConsole.exe';
-		}
-		if (KernelX.is_macintosh) {
-			wwise_program_name = 'WwiseConsole.sh';
-		}
 		let temporary_directory = StorageHelper.temporary('directory');
 		let wwise_project_directory = temporary_directory.join('Sample');
 		let wwise_wproj_file = wwise_project_directory.join('Sample.wproj');
 		while (true) {
-			let wwise_result = ProcessHelper.run_process(
-				ProcessHelper.search_program_ensure(wwise_program_name, true),
-				[
-					'create-new-project',
-					wwise_wproj_file.emit_native(),
-					'--platform',
-					'Android',
-					'iOS',
-				],
-				null,
-				null,
-			);
-			if (wwise_result.code !== 0n) {
-				ProcessHelper.throw_error(wwise_result);
-			}
+			ExternalHelper.run_wwise_create_new_project(wwise_wproj_file, ['Android', 'iOS',]);
 			if (StorageHelper.exist_file(wwise_wproj_file)) {
 				break;
 			}
@@ -351,22 +330,7 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			'opus': 'Android',
 			'wemopus': 'Android',
 		})[format];
-		let wwise_result = ProcessHelper.run_process(
-			ProcessHelper.search_program_ensure(wwise_program_name, true),
-			[
-				'convert-external-source',
-				wwise_wproj_file.emit_native(),
-				'--platform',
-				platform,
-				'--source-file',
-				wwise_wsources_file.emit_native(),
-			],
-			null,
-			null,
-		);
-		if (wwise_result.code !== 0n) {
-			ProcessHelper.throw_error(wwise_result);
-		}
+		ExternalHelper.run_wwise_convert_external_source(wwise_wproj_file, wwise_wsources_file, platform);
 		StorageHelper.copy(wwise_project_directory.join('GeneratedSoundBanks').join(platform).join('Sample.wem'), ripe_file, false);
 		StorageHelper.remove(temporary_directory);
 		return;

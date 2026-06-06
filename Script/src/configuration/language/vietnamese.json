@@ -677,7 +677,7 @@
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - Kích thước bộ nhớ đệm",
 	// executor/implementation/kairosoft.game
 	"executor.implementation:kairosoft.game.program.modify": "Kairosoft Game Program biến đổi",
-	"executor.implementation:kairosoft.game.program.modify:target_directory": "Thư mục đích",
+	"executor.implementation:kairosoft.game.program.modify:target": "Target",
 	"executor.implementation:kairosoft.game.program.modify:disable_record_encryption": "Tắt mã hóa bản ghi",
 	"executor.implementation:kairosoft.game.program.modify:enable_debug_mode": "Bật chế độ gỡ lỗi",
 	// 

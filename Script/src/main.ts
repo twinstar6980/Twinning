@@ -123,6 +123,7 @@ namespace Twinning.Script {
 			`utility/console`,
 			`utility/language`,
 			`utility/home_path`,
+			`utility/assembly_helper`,
 			`utility/external_helper`,
 			`utility/android_helper`,
 			`support/atlas/pack`,
@@ -282,9 +283,6 @@ namespace Twinning.Script {
 				Console.success(los('main:load_finish'), [
 					los('main:load_duration', ((load_timer_end - load_timer_begin) / 1000).toFixed(3)),
 				]);
-
-				ExternalHelper.list_zip_content(new StoragePath('D:\\.dddd\\test\\kgtest\\test2.apk'))
-
 				result = Runner.run(argument.slice(1));
 			}
 			catch (e) {

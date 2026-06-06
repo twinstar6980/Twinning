@@ -7,11 +7,11 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 		push_typical_method('kairosoft.game', [
 			typical_method({
 				identifier: 'program.modify',
-				filter: ['directory', /()$/i],
+				filter: ['any', /()$/i],
 				argument: [
 					typical_argument_path({
-						identifier: 'target_directory',
-						rule: ['directory', 'input'],
+						identifier: 'target',
+						rule: ['any', 'input'],
 						checker: null,
 						automatic: null,
 						condition: null,
@@ -30,8 +30,8 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 					}),
 				],
 				batch: null,
-				worker: ({target_directory, disable_record_encryption, enable_debug_mode}, store: {}) => {
-					Support.Kairosoft.Game.Program.Modify.process_fs(target_directory, disable_record_encryption, enable_debug_mode);
+				worker: ({target, disable_record_encryption, enable_debug_mode}, store: {}) => {
+					Support.Kairosoft.Game.Program.Modify.process_fs(target, disable_record_encryption, enable_debug_mode);
 					return;
 				},
 			}),

@@ -677,7 +677,7 @@
 	"executor.implementation:popcap.pvz2.remote_project.execute:rton_encode_buffer_size": "RTON - 内存缓冲区大小",
 	// executor/implementation/kairosoft.game
 	"executor.implementation:kairosoft.game.program.modify": "Kairosoft Game Program 修改",
-	"executor.implementation:kairosoft.game.program.modify:target_directory": "目标目录",
+	"executor.implementation:kairosoft.game.program.modify:target": "目标",
 	"executor.implementation:kairosoft.game.program.modify:disable_record_encryption": "禁用存档加密",
 	"executor.implementation:kairosoft.game.program.modify:enable_debug_mode": "启用调试模式",
 	// 
