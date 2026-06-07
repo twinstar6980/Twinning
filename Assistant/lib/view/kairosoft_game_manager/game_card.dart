@@ -153,64 +153,6 @@ class GameCard extends StatelessWidget {
         },
       ),
     );
-    return StatefulBuilder(
-      builder: (context, setState) => StyledCard.elevated(
-        margin: .symmetric(horizontal: 16, vertical: 12),
-        padding: .symmetric(horizontal: 16, vertical: 12),
-        content: FlexContainer.horizontal(crossAlign: .start, [
-          IconView.of(IconSet.abc, size: 48),
-          Gap.horizontal(12),
-          FlexContainer.vertical([
-            FlexContainer.horizontal([
-              StyledText.custom(
-                this.information.name,
-                typography: .labelLarge,
-                color: .primary,
-              ).withFlexExpanded(),
-            ]),
-            Gap.vertical(4),
-            FlexContainer.horizontal([
-              StyledText.custom(
-                '${this.information.identifier ?? ''} - ${this.information.version ?? ''}',
-                typography: .labelSmall,
-                color: .onSurfaceVariant,
-              ).withFlexExpanded(),
-            ]),
-            Gap.vertical(8),
-            StyledDivider.minimal(),
-            Gap.vertical(8),
-            FlexContainer.horizontal([
-              Gap.expanded(),
-              StyledButton.filled(
-                icon: IconView.of(IconSet.local_fire_department),
-                content: StyledText.inherit('Action'),
-                onPressed: (context) async {
-                  var action = await StyledMenuExtension.show(context, StyledMenu.standard(
-                    position: .under,
-                    content: [
-                      StyledMenuItem.standard(
-                        value: 'launch',
-                        leading: IconView.of(IconSet.play_circle),
-                        content: StyledText.inherit('Launch Game'),
-                      ),
-                    ],
-                  ));
-                  switch (action) {
-                    case null: {
-                      break;
-                    }
-                    case '': {
-                      break;
-                    }
-                    default: throw UnreachableException();
-                  }
-                },
-              ),
-            ]),
-          ]).withFlexExpanded(),
-        ]),
-      ),
-    );
   }
 
 }

@@ -50,13 +50,6 @@ class GameInformation {
     this.record = .none;
 }
 
-enum GameFunctionType {
-  modifyProgram,
-  encryptRecord,
-  importRecord,
-  exportRecord,
-}
-
 class GameRecordHelper {
 
   // #region common
@@ -80,7 +73,7 @@ class GameRecordHelper {
     }
     else if (itemList.firstWhereOrNull((it) => it.name()! == '0000') != null) {
       var itemFile = recordDirectory.join('0000');
-      var itemData = await StorageHelper.readFile(itemFile); // TODO: limit 8
+      var itemData = await StorageHelper.readFileLimited(itemFile, 8);
       if (itemData.length == 8) {
         if (itemData.buffer.asUint32List().first == 0x00000000) {
           state = .decrypted;

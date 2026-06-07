@@ -407,8 +407,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		}
 		Console.information(`phase: detect platform type`, []);
 		let platform_type_list = detect_platform_type(target_directory);
-		Console.information(`tip: the platform type is '${platform_type_list.join('|')}'`, []);
 		assert_test(platform_type_list.length !== 0);
+		Console.information(`tip: the platform type is '${platform_type_list.join('|')}'`, []);
 		for (let platform_type of platform_type_list) {
 			Console.information(`phase: modify program of '${platform_type}'`, []);
 			modify_flat(

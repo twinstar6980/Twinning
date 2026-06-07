@@ -1,4 +1,4 @@
-import '/common.dart'; // ignore: unused_import
+import '/common.dart';
 import '/setting.dart';
 import '/widget/export.dart';
 import '/view/home/main_page.dart' as home;

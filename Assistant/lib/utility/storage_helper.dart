@@ -275,6 +275,20 @@ class StorageHelper {
     return;
   }
 
+  // ----------------
+
+  static Future<Uint8List> readFileLimited(
+    StoragePath target,
+    Integer     limit,
+  ) async {
+    assertTest(await StorageHelper.existFile(target));
+    var targetString = target.emitNative();
+    var handle = await File(targetString).open(mode: .read);
+    var result = await handle.read(8);
+    await handle.close();
+    return result;
+  }
+
   // #endregion
 
   // #region directory
@@ -330,7 +344,7 @@ class StorageHelper {
         var currentTargetString = currentTarget.emitNative();
         await for (var item in Directory(currentTargetString).list(recursive: false, followLinks: false)) {
           var itemType = await FileSystemEntity.type(item.path, followLinks: false);
-          var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[/\\]')));
+          var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[/\\]')) + 1);
           var itemPath = currentItem.join(itemName);
           if (followLink && itemType == .link) {
             var referentType = await FileSystemEntity.type(item.path, followLinks: true);

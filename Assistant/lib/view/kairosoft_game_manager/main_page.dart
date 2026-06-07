@@ -42,7 +42,9 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   @override
   modulePageOpenView() async {
     if (!this.widget.setting.repository.isEmpty) {
+      MoreModalDialogExtension.showForConfirm(this.context);
       this._gameInformation = await GameRepositoryHelper.loadSteamRepository(this.widget.setting.repository.first);
+      Navigator.pop(context);
     }
     return;
   }
