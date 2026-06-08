@@ -1008,8 +1008,8 @@ export namespace Twinning::Kernel::StringParser {
 		OutputCharacterStreamView & stream,
 		Byte const &                value
 	) -> Void {
-		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(value, 5_ix, 4_sz))));
-		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(value, 1_ix, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(value, 4_sz, 4_sz))));
+		stream.write(CharacterType::to_number_hexadecimal_upper(cast_box<IntegerU8>(Bitwise::extract(value, 0_sz, 4_sz))));
 		return;
 	}
 
@@ -1018,8 +1018,8 @@ export namespace Twinning::Kernel::StringParser {
 		Byte &                     value
 	) -> Void {
 		value = 0x00_b;
-		value = value << 4_sz | cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
-		value = value << 4_sz | cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of()));
+		value |= Bitwise::infuse(cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of())), 4_sz, 0_sz);
+		value |= Bitwise::infuse(cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of())), 0_sz, 0_sz);
 		return;
 	}
 

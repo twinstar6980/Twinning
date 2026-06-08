@@ -50,8 +50,8 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 				&bz_stream
 			);
 			assert_test(bz_state == Third::bzip2::$BZ_OK);
-			ripe.forward(cast_box<Size>((make_box<IntegerU64>(bz_stream.total_in_hi32) << 32_sz) | (make_box<IntegerU64>(bz_stream.total_in_lo32) << 0_sz)));
-			raw.forward(cast_box<Size>((make_box<IntegerU64>(bz_stream.total_out_hi32) << 32_sz) | (make_box<IntegerU64>(bz_stream.total_out_lo32) << 0_sz)));
+			ripe.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_in_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_in_lo32), 1_ix * 32_sz, 32_sz)));
+			raw.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_out_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_out_lo32), 1_ix * 32_sz, 32_sz)));
 			return;
 		}
 

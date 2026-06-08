@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/message_type.dart';
-import '/view/core_task_worker/main_page.dart';
 import 'package:flutter/widgets.dart';
 
 // ----------------
@@ -26,7 +25,6 @@ class MessageCard extends StatelessWidget {
   @override
   build(context) {
     var cardColor = this.type.color(context);
-    var textStyle = getSpecialFontTextStyle(context);
     return StyledCard.elevated(
       padding: .fromLTRB(12, 8, 12, 8),
       color: .alphaBlend(cardColor.withValues(alpha: 0.02), StyledColor.surfaceContainerLow.query(context)),
@@ -42,7 +40,6 @@ class MessageCard extends StatelessWidget {
             '',
             typography: .titleSmall,
             overflow: .clip,
-            style: textStyle,
           ),
         ]),
         Gap.horizontal(8),
@@ -52,7 +49,6 @@ class MessageCard extends StatelessWidget {
             typography: .titleSmall,
             color: .onSurface,
             overflow: .clip,
-            style: textStyle,
           ).withSelectableArea(
           ),
           ...this.description.expand((item) => [
@@ -62,7 +58,6 @@ class MessageCard extends StatelessWidget {
               typography: .bodySmall,
               color: .onSurfaceVariant,
               overflow: .clip,
-              style: textStyle,
             ).withSelectableArea(
             ),
           ]),

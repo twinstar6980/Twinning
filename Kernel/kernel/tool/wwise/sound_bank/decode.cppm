@@ -523,7 +523,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 					else if constexpr (IsEnumerationBox<TCurrentValue>) {
 						auto index_value = Enumerated{};
 						for (auto & bit_index : SizeRange{EnumerationAttribute<TCurrentValue>::size}) {
-							index_value |= cast_box<Enumerated>(bit_set.get(current_index)) << bit_index;
+							index_value |= Bitwise::infuse(cast_box<Enumerated>(bit_set.get(current_index)), bit_index, 1_sz);
 							++current_index;
 						}
 						convert_enumeration_index(index_value, current_value);

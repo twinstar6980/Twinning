@@ -75,18 +75,6 @@ class SettingPanel extends StatelessWidget {
           setValue: (value) => this.data.immediateLaunch = value,
           onUpdate: this.onUpdate,
         ),
-        SettingListItemExtension.buildForStoragePathListVariable(
-          context: context,
-          setStateForOuter: setState,
-          icon: IconSet.text_fields,
-          label: 'Message Font',
-          comment: (negative: 'Default', positive: 'Custom'),
-          getValue: () => this.data.messageFont,
-          setValue: (value) => this.data.messageFont = value,
-          pickerTag: '${ModuleHelper.query(.coreTaskWorker).identifier}.message_font',
-          pickerType: [.loadFile],
-          onUpdate: this.onUpdate,
-        ),
         Gap.vertical(8),
       ]),
     );

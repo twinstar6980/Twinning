@@ -38,7 +38,14 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 					if (!with_alpha) {
 						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
 						assert_test(ripe_data_size <= data.reserve());
-						auto raw_format = Encoding::Format::Constant::rgb_888_r();
+						auto raw_format = Encoding::Format{
+							.endian = k_false,
+							.channel = make_list<Tuple<Encoding::Channel, Size>>(
+								make_tuple_of(Encoding::Channel::Constant::red(), 8_sz),
+								make_tuple_of(Encoding::Channel::Constant::green(), 8_sz),
+								make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
+							),
+						};
 						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(
 							unmake_pointer_unsafe<Third::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.begin()),
@@ -51,7 +58,15 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 					else {
 						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
 						assert_test(ripe_data_size <= data.reserve());
-						auto raw_format = Encoding::Format::Constant::argb_8888_r();
+						auto raw_format = Encoding::Format{
+							.endian = k_false,
+							.channel = make_list<Tuple<Encoding::Channel, Size>>(
+								make_tuple_of(Encoding::Channel::Constant::alpha(), 8_sz),
+								make_tuple_of(Encoding::Channel::Constant::red(), 8_sz),
+								make_tuple_of(Encoding::Channel::Constant::green(), 8_sz),
+								make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
+							),
+						};
 						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(
 							unmake_pointer_unsafe<Third::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.begin()),

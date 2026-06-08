@@ -298,10 +298,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
           ),
           secondary: [
             StyledBadge.standard(
-              label: StyledText.custom(
-                '${this._additionalArgument.length}',
-                style: getSpecialFontTextStyle(context),
-              ),
+              label: StyledText.inherit('${this._additionalArgument.length}'),
               child: StyledIconButton.filledTonal(
                 tooltip: 'Additional Argument',
                 icon: BoxContainer.of(
@@ -313,7 +310,6 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                     title: 'Additional Argument',
                     contentBuilder: (context, setStateForPanel) => [
                       StyledInput.outlined(
-                        style: getSpecialFontTextStyle(context),
                         type: .multiline,
                         format: null,
                         hint: null,
@@ -536,15 +532,4 @@ class _MainPageBridgeClient extends bridge.Client {
 
   // #endregion
 
-}
-
-TextStyle getSpecialFontTextStyle(
-  BuildContext context, {
-  Boolean      listen = true,
-}) {
-  var setting = Provider.of<SettingProvider>(context, listen: listen);
-  return TextStyle(inherit: true).copyWith(
-    fontFamily: '',
-    fontFamilyFallback: [...setting.state.coreTaskWorkerMessageFontFamily, ...setting.state.themeFontFamliy],
-  );
 }

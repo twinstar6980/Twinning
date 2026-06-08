@@ -686,6 +686,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 				}
 				{
 					auto s_Encoding = s_Texture.add_space("Encoding"_s);
+					define_generic_class<Tool::Texture::Encoding::Channel>(s_Encoding, "Channel"_s);
 					define_generic_class<Tool::Texture::Encoding::Format>(s_Encoding, "Format"_s);
 					s_Encoding.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Texture::Encoding::Encode::process>>("process"_s);
@@ -1044,10 +1045,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_UTexture.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							OutputByteStreamView &                  data,
-							Image::ConstantImageView const &        image,
-							Tool::Texture::Encoding::Format const & format,
-							Version const &                         version
+							OutputByteStreamView &           data,
+							Image::ConstantImageView const & image,
+							String const &                   format,
+							Version const &                  version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1059,10 +1060,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							Size &                                  data_size_bound,
-							Image::ImageSize const &                image_size,
-							Tool::Texture::Encoding::Format const & format,
-							Version const &                         version
+							Size &                   data_size_bound,
+							Image::ImageSize const & image_size,
+							String const &           format,
+							Version const &          version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1110,11 +1111,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					s_SexyTexture.add_space("Encode"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							OutputByteStreamView &                  data,
-							Image::ConstantImageView const &        image,
-							Tool::Texture::Encoding::Format const & format,
-							Boolean const &                         compress_texture_data,
-							Version const &                         version
+							OutputByteStreamView &           data,
+							Image::ConstantImageView const & image,
+							String const &                   format,
+							Boolean const &                  compress_texture_data,
+							Version const &                  version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,
@@ -1126,11 +1127,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 						>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&normalized_lambda<
 							[](
-							Size &                                  data_size_bound,
-							Image::ImageSize const &                image_size,
-							Tool::Texture::Encoding::Format const & format,
-							Boolean const &                         compress_texture_data,
-							Version const &                         version
+							Size &                   data_size_bound,
+							Image::ImageSize const & image_size,
+							String const &           format,
+							Boolean const &          compress_texture_data,
+							Version const &          version
 						) -> Void {
 								Generalization::match<VersionPackage>(
 									version,

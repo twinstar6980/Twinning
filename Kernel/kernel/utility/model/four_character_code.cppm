@@ -55,10 +55,10 @@ export namespace Twinning::Kernel {
 		IntegerU32 const & integer
 	) -> FourCharacterCode {
 		auto data = FourCharacterCode{};
-		data.fourth = cast_box<Character8>(Bitwise::extract(integer, 1_ix, 8_sz));
-		data.third = cast_box<Character8>(Bitwise::extract(integer, 9_ix, 8_sz));
-		data.second = cast_box<Character8>(Bitwise::extract(integer, 17_ix, 8_sz));
-		data.first = cast_box<Character8>(Bitwise::extract(integer, 25_ix, 8_sz));
+		data.fourth = cast_box<Character8>(Bitwise::extract(integer, 1_ix * 8_sz, 8_sz));
+		data.third = cast_box<Character8>(Bitwise::extract(integer, 2_ix * 8_sz, 8_sz));
+		data.second = cast_box<Character8>(Bitwise::extract(integer, 3_ix * 8_sz, 8_sz));
+		data.first = cast_box<Character8>(Bitwise::extract(integer, 4_ix * 8_sz, 8_sz));
 		return data;
 	}
 
@@ -66,10 +66,10 @@ export namespace Twinning::Kernel {
 		FourCharacterCode const & data
 	) -> IntegerU32 {
 		auto integer = IntegerU32{};
-		integer |= cast_box<IntegerU32>(data.fourth) << 0_sz;
-		integer |= cast_box<IntegerU32>(data.third) << 8_sz;
-		integer |= cast_box<IntegerU32>(data.second) << 16_sz;
-		integer |= cast_box<IntegerU32>(data.first) << 24_sz;
+		integer |= Bitwise::infuse(cast_box<IntegerU32>(data.fourth), 1_ix * 8_sz, 8_sz);
+		integer |= Bitwise::infuse(cast_box<IntegerU32>(data.third), 2_ix * 8_sz, 8_sz);
+		integer |= Bitwise::infuse(cast_box<IntegerU32>(data.second), 3_ix * 8_sz, 8_sz);
+		integer |= Bitwise::infuse(cast_box<IntegerU32>(data.first), 4_ix * 8_sz, 8_sz);
 		return integer;
 	}
 

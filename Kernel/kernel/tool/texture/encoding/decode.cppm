@@ -15,170 +15,130 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 		// ----------------
 
-		template <auto t_format> requires
+		template <auto t_size> requires
 			CategoryConstraint<>
-			&& (IsSameOf<t_format, Format>)
+			&& (IsSameOf<t_size, Size>)
 		inline static auto process_pixel(
 			InputByteStreamView & data,
-			Image::Pixel &        pixel
+			Image::Pixel &        pixel,
+			Format const &        format
 		) -> Void {
-			if constexpr (t_format == Format::Constant::a_8()) {
-				auto block = data.read_of<IntegerU8>();
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
+			auto block = IntegerU32{};
+			if (!format.endian) {
+				if constexpr (t_size == 1_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
+				if constexpr (t_size == 2_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
+				if constexpr (t_size == 3_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
+				if constexpr (t_size == 4_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 4_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
 			}
-			if constexpr (t_format == Format::Constant::rgb_332()) {
-				auto block = data.read_of<IntegerU8>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 3_sz)), 3_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 3_sz, 3_sz)), 3_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 6_sz, 2_sz)), 2_sz);
+			else {
+				if constexpr (t_size == 1_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
+				if constexpr (t_size == 2_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
+				if constexpr (t_size == 3_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
+				if constexpr (t_size == 4_sz) {
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 4_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+				}
 			}
-			if constexpr (t_format == Format::Constant::rgb_565()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 5_sz)), 5_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 5_sz, 6_sz)), 6_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 11_sz, 5_sz)), 5_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgba_5551()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 1_sz)), 1_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 1_sz, 5_sz)), 5_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 6_sz, 5_sz)), 5_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 11_sz, 5_sz)), 5_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgba_4444()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 4_sz)), 4_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 4_sz, 4_sz)), 4_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 4_sz)), 4_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 12_sz, 4_sz)), 4_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgba_8888()) {
-				auto block = data.read_of<IntegerU32>();
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 8_sz)), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 16_sz, 8_sz)), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 24_sz, 8_sz)), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::argb_1555()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 5_sz)), 5_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 5_sz, 5_sz)), 5_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 10_sz, 5_sz)), 5_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 15_sz, 1_sz)), 1_sz);
-			}
-			if constexpr (t_format == Format::Constant::argb_4444()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 4_sz)), 4_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 4_sz, 4_sz)), 4_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 4_sz)), 4_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 12_sz, 4_sz)), 4_sz);
-			}
-			if constexpr (t_format == Format::Constant::argb_8888()) {
-				auto block = data.read_of<IntegerU32>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 8_sz)), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 16_sz, 8_sz)), 8_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 24_sz, 8_sz)), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::l_8()) {
-				auto block = data.read_of<IntegerU8>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::la_44()) {
-				auto block = data.read_of<IntegerU8>();
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 4_sz)), 4_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 4_sz, 4_sz)), 4_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 4_sz, 4_sz)), 4_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 4_sz, 4_sz)), 4_sz);
-			}
-			if constexpr (t_format == Format::Constant::la_88()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 8_sz)), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 8_sz)), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 8_sz)), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::al_44()) {
-				auto block = data.read_of<IntegerU8>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 4_sz)), 4_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 4_sz)), 4_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 4_sz)), 4_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 4_sz, 4_sz)), 4_sz);
-			}
-			if constexpr (t_format == Format::Constant::al_88()) {
-				auto block = data.read_of<IntegerU16>();
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 0_sz, 8_sz)), 8_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(Bitwise::extract(block, 8_sz, 8_sz)), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgb_888_o()) {
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgb_888_r()) {
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgba_8888_o()) {
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::rgba_8888_r()) {
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::argb_8888_o()) {
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-			}
-			if constexpr (t_format == Format::Constant::argb_8888_r()) {
-				pixel.blue = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.green = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.red = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
-				pixel.alpha = Image::uncompress_color(cast_box<Image::Color>(data.read_of<IntegerU8>()), 8_sz);
+			for (auto & channel : Range::make_reverse_range_of(format.channel)) {
+				auto part = Bitwise::extract(block, 0_sz, channel.get<2_ix>());
+				block >>= channel.get<2_ix>();
+				auto color = Image::uncompress_color(cast_box_unsafe<Image::Color>(part), channel.get<2_ix>());
+				switch (channel.get<1_ix>().value) {
+					case Channel::Constant::minimum().value: {
+						break;
+					}
+					case Channel::Constant::maximum().value: {
+						break;
+					}
+					case Channel::Constant::red().value: {
+						pixel.red = color;
+						break;
+					}
+					case Channel::Constant::green().value: {
+						pixel.green = color;
+						break;
+					}
+					case Channel::Constant::blue().value: {
+						pixel.blue = color;
+						break;
+					}
+					case Channel::Constant::alpha().value: {
+						pixel.alpha = color;
+						break;
+					}
+					case Channel::Constant::luminance().value: {
+						pixel.red = color;
+						pixel.green = color;
+						pixel.blue = color;
+						break;
+					}
+					default: throw UnreachableException{};
+				}
 			}
 			return;
 		}
 
 		// ----------------
 
-		template <auto t_format> requires
-			CategoryConstraint<>
-			&& (IsSameOf<t_format, Format>)
-		inline static auto process_image(
-			InputByteStreamView &            data,
-			Image::VariableImageView const & image
-		) -> Void {
-			for (auto & row : image.data()) {
-				for (auto & pixel : row) {
-					process_pixel<t_format>(data, pixel);
-				}
-			}
-			return;
-		}
-
 		inline static auto process_image(
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image,
 			Format const &                   format
 		) -> Void {
-			Generalization::match<FormatPackage>(
-				format,
-				[&]<auto t_index, auto t_format>(ValuePackage<t_index>, ValuePackage<t_format>) {
-					process_image<t_format>(data, image);
+			auto byte_count = get_pixel_byte_count(format);
+			if (byte_count == 1_sz) {
+				for (auto & row : image.data()) {
+					for (auto & pixel : row) {
+						process_pixel<1_sz>(data, pixel, format);
+					}
 				}
-			);
+			}
+			if (byte_count == 2_sz) {
+				for (auto & row : image.data()) {
+					for (auto & pixel : row) {
+						process_pixel<2_sz>(data, pixel, format);
+					}
+				}
+			}
+			if (byte_count == 3_sz) {
+				for (auto & row : image.data()) {
+					for (auto & pixel : row) {
+						process_pixel<3_sz>(data, pixel, format);
+					}
+				}
+			}
+			if (byte_count == 4_sz) {
+				for (auto & row : image.data()) {
+					for (auto & pixel : row) {
+						process_pixel<4_sz>(data, pixel, format);
+					}
+				}
+			}
 			return;
 		}
 

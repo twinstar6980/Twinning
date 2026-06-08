@@ -29,10 +29,18 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 			assert_test(Math::is_padded_size(image.size().width, block_size.width) && Math::is_padded_size(image.size().height, block_size.height));
 			assert_test(Math::between(quality, 0_i, 100_i));
 			auto block_count = image.size().area() / block_size.area();
+			auto raw_format = Encoding::Format{
+				.endian = k_true,
+				.channel = make_list<Tuple<Encoding::Channel, Size>>(
+					make_tuple_of(Encoding::Channel::Constant::red(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::green(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::alpha(), 8_sz)
+				),
+			};
 			if (generation == Generation::Constant::v0()) {
 				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 				auto astc_error = Third::astc_encoder::astcenc_error{};

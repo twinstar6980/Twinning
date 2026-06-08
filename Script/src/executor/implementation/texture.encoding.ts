@@ -25,15 +25,15 @@ namespace Twinning.Script.Executor.Implementation.Texture.Encoding {
 					}),
 					typical_argument_string({
 						identifier: 'format',
-						option: KernelX.Tool.Texture.Encoding.CompositeFormatE,
-						checker: null,
+						option: null,
+						checker: (argument: {}, value) => (KernelX.Tool.Texture.Encoding.format_expression_regex.test(value) ? null : los('executor.implementation:*.invalid_texture_encoding_format_expression')),
 						automatic: null,
 						condition: null,
 					}),
 				],
 				batch: null,
 				worker: ({image_file, data_file, format}, store: {}) => {
-					KernelX.Tool.Texture.Encoding.encode_fs(data_file, image_file, format as any);
+					KernelX.Tool.Texture.Encoding.encode_fs(data_file, image_file, KernelX.Tool.Texture.Encoding.parse_format_expression(format));
 					return;
 				},
 			}),
@@ -57,8 +57,8 @@ namespace Twinning.Script.Executor.Implementation.Texture.Encoding {
 					}),
 					typical_argument_string({
 						identifier: 'format',
-						option: KernelX.Tool.Texture.Encoding.CompositeFormatE,
-						checker: null,
+						option: null,
+						checker: (argument: {}, value) => (KernelX.Tool.Texture.Encoding.format_expression_regex.test(value) ? null : los('executor.implementation:*.invalid_texture_encoding_format_expression')),
 						automatic: null,
 						condition: null,
 					}),
@@ -79,7 +79,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Encoding {
 				],
 				batch: null,
 				worker: ({data_file, image_file, format, image_width, image_height}, store: {}) => {
-					KernelX.Tool.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], format as any);
+					KernelX.Tool.Texture.Encoding.decode_fs(data_file, image_file, [image_width, image_height], KernelX.Tool.Texture.Encoding.parse_format_expression(format));
 					return;
 				},
 			}),

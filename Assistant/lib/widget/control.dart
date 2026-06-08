@@ -452,7 +452,6 @@ class StyledText extends StatelessWidget {
     required this.color,
     required this.overflow,
     required this.align,
-    required this.style,
   });
 
   const StyledText.inherit(
@@ -463,7 +462,6 @@ class StyledText extends StatelessWidget {
     StyledColor?        color = null,
     StyledTextOverflow? overflow = .ellipsis,
     StyledTextAlign?    align = null,
-    TextStyle?          style = null,
   }) : this._(
     key: key,
     text: text,
@@ -473,7 +471,6 @@ class StyledText extends StatelessWidget {
     color: color,
     overflow: overflow,
     align: align,
-    style: style,
   );
 
   const StyledText.custom(
@@ -485,7 +482,6 @@ class StyledText extends StatelessWidget {
     StyledColor?        color = null,
     StyledTextOverflow? overflow = .ellipsis,
     StyledTextAlign?    align = null,
-    TextStyle?          style = null,
   }) : this._(
     key: key,
     text: text,
@@ -495,7 +491,6 @@ class StyledText extends StatelessWidget {
     color: color,
     overflow: overflow,
     align: align,
-    style: style,
   );
 
   // ----------------
@@ -507,7 +502,6 @@ class StyledText extends StatelessWidget {
   final StyledColor?        color;
   final StyledTextOverflow? overflow;
   final StyledTextAlign?    align;
-  final TextStyle?          style;
 
   // ----------------
 
@@ -517,7 +511,7 @@ class StyledText extends StatelessWidget {
       this.text,
       overflow: this.overflow,
       textAlign: this.align,
-      style: (this.typography == null ? TextStyle(inherit: true) : this.typography!.query(context)).merge(this.style).copyWith(
+      style: (this.typography == null ? TextStyle(inherit: true) : this.typography!.query(context)).copyWith(
         color: this.color?.query(context),
       ),
     ).selfLet((it) => !this.tooltip ? it : it.withStyledTooltip(message: this.tooltipText ?? this.text));
@@ -1226,7 +1220,6 @@ class StyledInput extends StatefulWidget {
   const StyledInput._({
     super.key,
     required this.variant,
-    required this.style,
     required this.enabled,
     required this.type,
     required this.format,
@@ -1239,7 +1232,6 @@ class StyledInput extends StatefulWidget {
 
   const StyledInput.filled({
     Key?                                                       key = null,
-    TextStyle?                                                 style = null,
     Boolean                                                    enabled = true,
     required StyledInputType                                   type,
     required StyledInputFormatter?                             format,
@@ -1251,7 +1243,6 @@ class StyledInput extends StatefulWidget {
   }) : this._(
     key: key,
     variant: .filled,
-    style: style,
     enabled: enabled,
     type: type,
     format: format,
@@ -1264,7 +1255,6 @@ class StyledInput extends StatefulWidget {
 
   const StyledInput.outlined({
     Key?                                                       key = null,
-    TextStyle?                                                 style = null,
     Boolean                                                    enabled = true,
     required StyledInputType                                   type,
     required StyledInputFormatter?                             format,
@@ -1276,7 +1266,6 @@ class StyledInput extends StatefulWidget {
   }) : this._(
     key: key,
     variant: .outlined,
-    style: style,
     enabled: enabled,
     type: type,
     format: format,
@@ -1289,7 +1278,6 @@ class StyledInput extends StatefulWidget {
 
   const StyledInput.underlined({
     Key?                                                       key = null,
-    TextStyle?                                                 style = null,
     Boolean                                                    enabled = true,
     required StyledInputType                                   type,
     required StyledInputFormatter?                             format,
@@ -1301,7 +1289,6 @@ class StyledInput extends StatefulWidget {
   }) : this._(
     key: key,
     variant: .underlined,
-    style: style,
     enabled: enabled,
     type: type,
     format: format,
@@ -1315,7 +1302,6 @@ class StyledInput extends StatefulWidget {
   // ----------------
 
   final StyledInputVariant                                variant;
-  final TextStyle?                                        style; // TODO: remove?
   final Boolean                                           enabled;
   final StyledInputType                                   type;
   final StyledInputFormatter?                             format;
@@ -1373,7 +1359,6 @@ class _StyledInputState extends State<StyledInput> {
         }
       },
       child: material.TextField(
-        style: this.widget.style,
         enabled: this.widget.enabled,
         keyboardType: this.widget.type,
         maxLines: this.widget.type == .multiline ? null : 1,
@@ -1429,7 +1414,6 @@ class StyledInputCombo extends StatefulWidget {
   const StyledInputCombo._({
     super.key,
     required this.variant,
-    required this.style,
     required this.enabled,
     required this.hint,
     required this.prefix,
@@ -1441,7 +1425,6 @@ class StyledInputCombo extends StatefulWidget {
 
   const StyledInputCombo.filled({
     Key?                                                        key = null,
-    TextStyle?                                                  style = null,
     Boolean                                                     enabled = true,
     required String?                                            hint,
     required Widget?                                            prefix,
@@ -1452,7 +1435,6 @@ class StyledInputCombo extends StatefulWidget {
   }) : this._(
     key: key,
     variant: .filled,
-    style: style,
     enabled: enabled,
     hint: hint,
     prefix: prefix,
@@ -1464,7 +1446,6 @@ class StyledInputCombo extends StatefulWidget {
 
   const StyledInputCombo.outlined({
     Key?                                                        key = null,
-    TextStyle?                                                  style = null,
     Boolean                                                     enabled = true,
     required String?                                            hint,
     required Widget?                                            prefix,
@@ -1475,7 +1456,6 @@ class StyledInputCombo extends StatefulWidget {
   }) : this._(
     key: key,
     variant: .outlined,
-    style: style,
     enabled: enabled,
     hint: hint,
     prefix: prefix,
@@ -1487,7 +1467,6 @@ class StyledInputCombo extends StatefulWidget {
 
   const StyledInputCombo.underlined({
     Key?                                                        key = null,
-    TextStyle?                                                  style = null,
     Boolean                                                     enabled = true,
     required String?                                            hint,
     required Widget?                                            prefix,
@@ -1498,7 +1477,6 @@ class StyledInputCombo extends StatefulWidget {
   }) : this._(
     key: key,
     variant: .underlined,
-    style: style,
     enabled: enabled,
     hint: hint,
     prefix: prefix,
@@ -1511,7 +1489,6 @@ class StyledInputCombo extends StatefulWidget {
   // ----------------
 
   final StyledInputComboVariant                            variant;
-  final TextStyle?                                         style; // TODO: remove?
   final Boolean                                            enabled;
   final String?                                            hint;
   final Widget?                                            prefix;
@@ -1590,7 +1567,6 @@ class _StyledInputComboState extends State<StyledInputCombo> {
                   child: StyledText.custom(
                     value.name,
                     overflow: .clip,
-                    style: this.widget.style,
                   ),
                 ),
               ),
@@ -1602,7 +1578,6 @@ class _StyledInputComboState extends State<StyledInputCombo> {
           )),
         ],
         builder: (context, controller, child) => material.TextField(
-          style: this.widget.style,
           enabled: this.widget.enabled,
           keyboardType: .none,
           inputFormatters: [],

@@ -66,15 +66,15 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 				buffer[2_ix] = ripe.read_of();
 				buffer[3_ix] = ripe.read_of();
 				buffer[4_ix] = ripe.read_of();
-				raw.write(query_table(cast_box<Size>(buffer[1_ix])) << 2_sz | query_table(cast_box<Size>(buffer[2_ix])) >> 4_sz);
+				raw.write(Bitwise::infuse(query_table(cast_box<Size>(buffer[1_ix])), 2_sz, 6_sz) | Bitwise::extract(query_table(cast_box<Size>(buffer[2_ix])), 4_sz, 4_sz));
 				if (raw.position() == raw_end) {
 					break;
 				}
-				raw.write(query_table(cast_box<Size>(buffer[2_ix])) << 4_sz | query_table(cast_box<Size>(buffer[3_ix])) >> 2_sz);
+				raw.write(Bitwise::infuse(query_table(cast_box<Size>(buffer[2_ix])), 4_sz, 4_sz) | Bitwise::extract(query_table(cast_box<Size>(buffer[3_ix])), 2_sz, 6_sz));
 				if (raw.position() == raw_end) {
 					break;
 				}
-				raw.write(query_table(cast_box<Size>(buffer[3_ix])) << 6_sz | query_table(cast_box<Size>(buffer[4_ix])) >> 0_sz);
+				raw.write(Bitwise::infuse(query_table(cast_box<Size>(buffer[3_ix])), 6_sz, 2_sz) | Bitwise::extract(query_table(cast_box<Size>(buffer[4_ix])), 0_sz, 8_sz));
 			}
 			return;
 		}

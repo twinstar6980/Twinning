@@ -27,36 +27,42 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 		using typename Common::FormatFlag;
 
+		using Common::is_valid_format;
+
+		using Common::get_encoding_format;
+
 		// ----------------
 
 		inline static auto process_image(
-			OutputByteStreamView &            data,
-			Image::ConstantImageView const &  image,
-			Texture::Encoding::Format const & format
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image,
+			String const &                   format
 		) -> Void {
+			assert_test(is_valid_format(format));
+			auto encoding_format = get_encoding_format(format);
 			data.write_constant(k_magic_marker);
 			auto header_stream = OutputByteStreamView{data.forward_view(bs_static_size<Header>())};
 			auto image_format = Integer{};
-			switch (format.value) {
-				case Texture::Encoding::Format::Constant::rgba_8888_o().value: {
-					image_format = FormatFlag::rgba_8888_o;
+			switch (format.hash().value) {
+				case "rgba_8888"_shz: {
+					image_format = FormatFlag::rgba_8888;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_4444().value: {
+				case "rgba_4444"_shz: {
 					image_format = FormatFlag::rgba_4444;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_5551().value: {
+				case "rgba_5551"_shz: {
 					image_format = FormatFlag::rgba_5551;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgb_565().value: {
+				case "rgb_565"_shz: {
 					image_format = FormatFlag::rgb_565;
 					break;
 				}
-				default: throw UnsupportedException{};
+				default: throw UnreachableException{};
 			}
-			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
+			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(encoding_format);
 			auto texture_data_view = VariableByteListView{};
 			auto texture_data_container = ByteArray{};
 			if constexpr (check_version(t_version, {false})) {
@@ -66,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
-			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, format);
+			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, encoding_format);
 			if constexpr (check_version(t_version, {true})) {
 				auto texture_data_stream = InputByteStreamView{texture_data_container};
 				Data::Compression::Deflate::Compress::process(texture_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
@@ -82,14 +88,16 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 		// ----------------
 
 		inline static auto estimate_image(
-			Size &                            data_size_bound,
-			Image::ImageSize const &          image_size,
-			Texture::Encoding::Format const & format
+			Size &                   data_size_bound,
+			Image::ImageSize const & image_size,
+			String const &           format
 		) -> Void {
+			assert_test(is_valid_format(format));
+			auto encoding_format = get_encoding_format(format);
 			data_size_bound = 0_sz;
 			data_size_bound += bs_static_size<MagicMarker>();
 			data_size_bound += bs_static_size<Header>();
-			auto texture_data_size = image_size.area() * Texture::Encoding::Common::get_pixel_byte_count(format);
+			auto texture_data_size = image_size.area() * Texture::Encoding::Common::get_pixel_byte_count(encoding_format);
 			auto texture_data_size_bound = Size{};
 			if constexpr (check_version(t_version, {false})) {
 				texture_data_size_bound = texture_data_size;
@@ -104,18 +112,18 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &            data_,
-			Image::ConstantImageView const &  image,
-			Texture::Encoding::Format const & format
+			OutputByteStreamView &           data_,
+			Image::ConstantImageView const & image,
+			String const &                   format
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, format);
 		}
 
 		inline static auto estimate(
-			Size &                            data_size_bound,
-			Image::ImageSize const &          image_size,
-			Texture::Encoding::Format const & format
+			Size &                   data_size_bound,
+			Image::ImageSize const & image_size,
+			String const &           format
 		) -> Void {
 			restruct(data_size_bound);
 			return estimate_image(data_size_bound, image_size, format);

@@ -6,7 +6,6 @@ import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/submission_type.dart';
 import '/view/core_task_worker/value_expression.dart';
-import '/view/core_task_worker/main_page.dart';
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
@@ -56,10 +55,7 @@ class _BasicSubmissionBar extends StatelessWidget {
       secondary: [
         StyledBadge.standard(
           visible: this.history != null,
-          label: StyledText.custom(
-            '${this.history == null ? 0 : this.history!.length}',
-            style: getSpecialFontTextStyle(context),
-          ),
+          label: StyledText.inherit('${this.history == null ? 0 : this.history!.length}'),
           child: StyledIconButton.filledTonal(
             enabled: this.history != null,
             tooltip: 'History',
@@ -76,7 +72,6 @@ class _BasicSubmissionBar extends StatelessWidget {
                   content: StyledText.custom(
                     ValueExpressionHelper.makeString(value.value),
                     overflow: .clip,
-                    style: getSpecialFontTextStyle(context, listen: false),
                   ),
                 )),
               ));
@@ -92,7 +87,6 @@ class _BasicSubmissionBar extends StatelessWidget {
         ],
         if (this.value?.macro != null) ...[
           StyledInput.underlined(
-            style: getSpecialFontTextStyle(context),
             type: .text,
             format: null,
             hint: 'Macro',
@@ -106,10 +100,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                     position: .under,
                     content: this.macro!.mapIndexed((index, value) => StyledMenuItem.standard(
                       value: value.value,
-                      content: StyledText.custom(
-                        value.name,
-                        style: getSpecialFontTextStyle(context, listen: false),
-                      ),
+                      content: StyledText.inherit(value.name),
                     )),
                   ));
                   if (value != null) {
@@ -213,7 +204,6 @@ class _PauseSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.pause,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .none,
           format: null,
           hint: 'Pause',
@@ -276,7 +266,6 @@ class _BooleanSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.check_box,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .text,
           format: null,
           hint: 'Boolean',
@@ -369,7 +358,6 @@ class _IntegerSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.speed_1_2,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .numberWithOptions(signed: true, decimal: false),
           format: null,
           hint: 'Integer',
@@ -441,7 +429,6 @@ class _FloaterSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.speed_1_2,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .numberWithOptions(signed: true, decimal: true),
           format: null,
           hint: 'Floater',
@@ -514,7 +501,6 @@ class _StringSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.text_fields,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .text,
           format: null,
           hint: 'String',
@@ -583,7 +569,6 @@ class _SizeSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.memory,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .numberWithOptions(signed: false, decimal: true),
           format: null,
           hint: 'Size',
@@ -596,20 +581,14 @@ class _SizeSubmissionBar extends StatelessWidget {
                 : BoxContainer.of(
                   constraints: .tightFor(width: 24, height: 24),
                   align: .center,
-                  child: StyledText.custom(
-                    ['B', 'K', 'M', 'G'][this.value.value!.exponent],
-                    style: getSpecialFontTextStyle(context),
-                  ),
+                  child: StyledText.inherit(['B', 'K', 'M', 'G'][this.value.value!.exponent]),
                 ),
               onPressed: (context) async {
                 var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
                   position: .under,
                   content: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
                     value: index,
-                    content: StyledText.custom(
-                      value,
-                      style: getSpecialFontTextStyle(context, listen: false),
-                    ),
+                    content: StyledText.inherit(value),
                   )),
                 ));
                 if (value != null) {
@@ -689,7 +668,6 @@ class _PathSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.link,
         content: StyledInput.underlined(
-          style: getSpecialFontTextStyle(context),
           type: .text,
           format: null,
           hint: 'Path',
@@ -699,7 +677,7 @@ class _PathSubmissionBar extends StatelessWidget {
               tooltip: 'Pick',
               icon: IconView.of(IconSet.open_in_new),
               onPressed: (context) async {
-                var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.generic', [.loadFile, .loadDirectory, .saveFile], false, null, null, textStyle: getSpecialFontTextStyle(context, listen: false))).firstOrNull;
+                var target = (await MiscellaneousHelper.pickStorageItem(context, '${ModuleHelper.query(.coreTaskWorker).identifier}.generic', [.loadFile, .loadDirectory, .saveFile], false, null, null)).firstOrNull;
                 if (target != null) {
                   this.value.value = .new(null, target);
                   await refreshState(setState);
@@ -777,7 +755,6 @@ class _EnumerationSubmissionBar extends StatelessWidget {
         },
         icon: IconSet.menu,
         content: StyledInputCombo.underlined(
-          style: getSpecialFontTextStyle(context),
           hint: 'Enumeration',
           prefix: null,
           suffix: [

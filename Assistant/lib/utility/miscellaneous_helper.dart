@@ -18,9 +18,8 @@ class MiscellaneousHelper {
     List<StoragePickType> type,
     Boolean               multiply,
     StoragePath?          location,
-    String?               name, {
-    TextStyle?            textStyle = null, // TODO: remove?
-  }) async {
+    String?               name,
+  ) async {
     var setting = Provider.of<SettingProvider>(context, listen: false);
     var actualType = null as StoragePickType?;
     assertTest(!type.isEmpty);
@@ -42,10 +41,7 @@ class MiscellaneousHelper {
           ],
         ].map((value) => StyledMenuItem.standard(
           value: value.value,
-          content: StyledText.custom(
-            value.text,
-            style: textStyle,
-          ),
+          content: StyledText.inherit(value.text),
         )),
       ));
     }

@@ -89,6 +89,7 @@
 	"executor.implementation:*.resolution_should_be_bigger_then_zero": "resolution should be bigger than zero",
 	"executor.implementation:*.size_should_be_bigger_then_zero": "size should be bigger than zero",
 	"executor.implementation:*.rate_should_be_bigger_then_zero": "rate should be bigger than zero",
+	"executor.implementation:*.invalid_texture_encoding_format_expression": "invalid texture encoding format expression",
 	// executor/implementation/common.utility
 	"executor.implementation:common.utility.update_global_setting": "Update Global Setting",
 	"executor.implementation:common.utility.update_global_setting:data": "Data",
@@ -266,14 +267,26 @@
 	"executor.implementation:texture.encoding.encode": "Texture Encode",
 	"executor.implementation:texture.encoding.encode:image_file": "Image File",
 	"executor.implementation:texture.encoding.encode:data_file": "Data File",
-	"executor.implementation:texture.encoding.encode:format": "Texture Format",
+	"executor.implementation:texture.encoding.encode:format": "Format",
 	// 
 	"executor.implementation:texture.encoding.decode": "Texture Decode",
 	"executor.implementation:texture.encoding.decode:data_file": "Data File",
 	"executor.implementation:texture.encoding.decode:image_file": "Image File",
-	"executor.implementation:texture.encoding.decode:format": "Texture Format",
+	"executor.implementation:texture.encoding.decode:format": "Format",
 	"executor.implementation:texture.encoding.decode:image_width": "Image Width",
 	"executor.implementation:texture.encoding.decode:image_height": "Image Height",
+	// executor/implementation/texture.compression
+	"executor.implementation:texture.compression.compress": "Texture Compress",
+	"executor.implementation:texture.compression.compress:image_file": "Image File",
+	"executor.implementation:texture.compression.compress:data_file": "Data File",
+	"executor.implementation:texture.compression.compress:format": "Format",
+	// 
+	"executor.implementation:texture.compression.uncompress": "Texture Uncompress",
+	"executor.implementation:texture.compression.uncompress:data_file": "Data File",
+	"executor.implementation:texture.compression.uncompress:image_file": "Image File",
+	"executor.implementation:texture.compression.uncompress:format": "Format",
+	"executor.implementation:texture.compression.uncompress:image_width": "Image Width",
+	"executor.implementation:texture.compression.uncompress:image_height": "Image Height",
 	// executor/implementation/texture.atlas
 	"executor.implementation:texture.atlas.pack": "Texture Atlas Pack",
 	"executor.implementation:texture.atlas.pack:definition_file": "Definition File",

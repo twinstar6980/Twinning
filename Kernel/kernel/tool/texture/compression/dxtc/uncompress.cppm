@@ -28,10 +28,18 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 			assert_test(is_valid_block_size(block_size));
 			assert_test(Math::is_padded_size(image.size().width, block_size.width) && Math::is_padded_size(image.size().height, block_size.height));
 			auto block_count = image.size().area() / block_size.area();
+			auto raw_format = Encoding::Format{
+				.endian = k_true,
+				.channel = make_list<Tuple<Encoding::Channel, Size>>(
+					make_tuple_of(Encoding::Channel::Constant::red(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::green(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz),
+					make_tuple_of(!with_alpha ? Encoding::Channel::Constant::maximum() : Encoding::Channel::Constant::alpha(), 8_sz)
+				),
+			};
 			if (generation == Generation::Constant::v1()) {
 				auto ripe_data_size = block_count * k_block_bit_count_1 / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::libsquish::DecompressImage(
 					unmake_pointer_unsafe<Third::libsquish::u8>(raw_data.begin()),
@@ -46,7 +54,6 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 			if (generation == Generation::Constant::v3()) {
 				auto ripe_data_size = block_count * k_block_bit_count_3_5 / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::libsquish::DecompressImage(
 					unmake_pointer_unsafe<Third::libsquish::u8>(raw_data.begin()),
@@ -61,7 +68,6 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 			if (generation == Generation::Constant::v5()) {
 				auto ripe_data_size = block_count * k_block_bit_count_3_5 / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_format = Encoding::Format::Constant::rgba_8888_o();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Third::libsquish::DecompressImage(
 					unmake_pointer_unsafe<Third::libsquish::u8>(raw_data.begin()),

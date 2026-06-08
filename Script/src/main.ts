@@ -175,6 +175,7 @@ namespace Twinning.Script {
 			`executor/implementation/notation.xml`,
 			`executor/implementation/texture.transformation`,
 			`executor/implementation/texture.encoding`,
+			`executor/implementation/texture.compression`,
 			`executor/implementation/texture.atlas`,
 			`executor/implementation/wwise.media`,
 			`executor/implementation/wwise.sound_bank`,

@@ -47,10 +47,10 @@ export namespace Twinning::Kernel::Tool::Data::Encoding::Base64 {
 				buffer[1_ix] = raw.read_of();
 				buffer[2_ix] = !raw.full() ? (raw.read_of()) : (k_null_byte);
 				buffer[3_ix] = !raw.full() ? (raw.read_of()) : (k_null_byte);
-				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[1_ix], 3_ix, 6_sz) << 0_sz)));
-				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[1_ix], 1_ix, 2_sz) << 4_sz | Bitwise::extract(buffer[2_ix], 5_ix, 4_sz) << 0_sz)));
-				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[2_ix], 1_ix, 4_sz) << 2_sz | Bitwise::extract(buffer[3_ix], 7_ix, 2_sz) << 0_sz)));
-				ripe.write(query_table(cast_box<Size>(Bitwise::extract(buffer[3_ix], 1_ix, 6_sz) << 0_sz)));
+				ripe.write(query_table(cast_box<Size>(Bitwise::infuse(Bitwise::extract(buffer[1_ix], 2_sz, 6_sz), 0_sz, 6_sz))));
+				ripe.write(query_table(cast_box<Size>(Bitwise::infuse(Bitwise::extract(buffer[1_ix], 0_sz, 2_sz), 4_sz, 2_sz) | Bitwise::infuse(Bitwise::extract(buffer[2_ix], 4_sz, 4_sz), 0_sz, 4_sz))));
+				ripe.write(query_table(cast_box<Size>(Bitwise::infuse(Bitwise::extract(buffer[2_ix], 0_sz, 4_sz), 2_sz, 4_sz) | Bitwise::infuse(Bitwise::extract(buffer[3_ix], 6_sz, 2_sz), 0_sz, 2_sz))));
+				ripe.write(query_table(cast_box<Size>(Bitwise::infuse(Bitwise::extract(buffer[3_ix], 0_sz, 6_sz), 0_sz, 6_sz))));
 			}
 			switch ((raw_size % k_raw_block_size).value) {
 				case 0_sz .value: {

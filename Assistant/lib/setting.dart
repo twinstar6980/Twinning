@@ -78,7 +78,6 @@ class SettingState {
   Future<Void> Function()?                                                   homeShowOnboarding;
   Future<Void> Function()?                                                   homeShowLauncher;
   Future<Void> Function(ModuleLauncherConfiguration configuration)?          homeInsertPage;
-  List<String>                                                               coreTaskWorkerMessageFontFamily;
   List<List<core_task_worker.ValueExpression>>                               coreTaskWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
@@ -90,7 +89,6 @@ class SettingState {
     required this.homeShowOnboarding,
     required this.homeShowLauncher,
     required this.homeInsertPage,
-    required this.coreTaskWorkerMessageFontFamily,
     required this.coreTaskWorkerSubmissionHistory,
   });
 }
@@ -127,13 +125,6 @@ class SettingProvider with ChangeNotifier {
       var family = await ApplicationFontManager.instance.loadFile(this.data.themeFontPath[index]);
       if (family != null && !this.state.themeFontFamliy.contains(family)) {
         this.state.themeFontFamliy.add(family);
-      }
-    }
-    this.state.coreTaskWorkerMessageFontFamily.clear();
-    for (var index = 0; index < this.data.coreTaskWorker.messageFont.length; index++) {
-      var family = await ApplicationFontManager.instance.loadFile(this.data.coreTaskWorker.messageFont[index]);
-      if (family != null && !this.state.coreTaskWorkerMessageFontFamily.contains(family)) {
-        this.state.coreTaskWorkerMessageFontFamily.add(family);
       }
     }
     this.notifyListeners();
@@ -216,7 +207,6 @@ class SettingProvider with ChangeNotifier {
         script: .new(),
         argument: [],
         immediateLaunch: true,
-        messageFont: [],
       ),
       coreCommandSender: .new(
         parallelForward: false,
@@ -252,7 +242,6 @@ class SettingProvider with ChangeNotifier {
       homeShowOnboarding: null,
       homeShowLauncher: null,
       homeInsertPage: null,
-      coreTaskWorkerMessageFontFamily: [],
       coreTaskWorkerSubmissionHistory: core_task_worker.SubmissionType.values.map((value) => <core_task_worker.ValueExpression>[]).toList(),
     );
   }
@@ -302,7 +291,6 @@ class SettingProvider with ChangeNotifier {
         'script': data.coreTaskWorker.script.emit(),
         'argument': data.coreTaskWorker.argument,
         'immediate_launch': data.coreTaskWorker.immediateLaunch,
-        'message_font': data.coreTaskWorker.messageFont.map((it) => it.emit()).toList(),
       },
       'core_command_sender': {
         'parallel_forward': data.coreCommandSender.parallelForward,
@@ -369,7 +357,6 @@ class SettingProvider with ChangeNotifier {
         script: (jsonPart['script'] as String).selfLet((it) => StoragePath.of(it)),
         argument: (jsonPart['argument'] as List<dynamic>).cast<String>(),
         immediateLaunch: (jsonPart['immediate_launch'] as Boolean),
-        messageFont: (jsonPart['message_font'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
       )),
       coreCommandSender: (json['core_command_sender'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_command_sender.Setting(
         parallelForward: (jsonPart['parallel_forward'] as Boolean),

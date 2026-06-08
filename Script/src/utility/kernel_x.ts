@@ -460,7 +460,7 @@ namespace Twinning.Script.KernelX {
 					): void {
 						let raw = StorageHelper.read_file(raw_file);
 						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe_size_bound = Kernel.Size.value(raw.size().value + 128n); // TODO
+						let ripe_size_bound = Kernel.Size.value(raw.size().value + 1024n); // TODO
 						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
 						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
 						Kernel.Tool.Data.Compression.Bzip2.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(block_size), Kernel.Integer.value(0n));
@@ -972,34 +972,151 @@ namespace Twinning.Script.KernelX {
 
 			export namespace Encoding {
 
-				const FormatX = [
-					'a_8',
-					'rgb_332',
-					'rgb_565',
-					'rgba_5551',
-					'rgba_4444',
-					'rgba_8888',
-					'argb_1555',
-					'argb_4444',
-					'argb_8888',
-					'l_8',
-					'la_44',
-					'la_88',
-					'al_44',
-					'al_88',
-					'rgb_888_o',
-					'rgb_888_r',
-					'rgba_8888_o',
-					'rgba_8888_r',
-					'argb_8888_o',
-					'argb_8888_r',
+				const ChannelX = [
+					'minimum',
+					'maximum',
+					'red',
+					'green',
+					'blue',
+					'alpha',
+					'luminance',
 				] as const;
 
-				export type Format = typeof FormatX[number];
+				export type Channel = typeof ChannelX[number];
 
-				export const FormatE = FormatX as unknown as Format[];
+				export const ChannelE = ChannelX as unknown as Channel[];
 
-				const CompressionX = [
+				export type Format = typeof Kernel.Tool.Texture.Encoding.Format.Value;
+
+				// ----------------
+
+				export const format_expression_regex = /^(l|b)(,(minimum|maximum|red|green|blue|alpha|luminance):[1-8])+$/;
+
+				export function parse_format_expression(
+					expression: string,
+				): Format {
+					let result = {
+						endian: false,
+						channel: [],
+					} as Format;
+					assert_test(expression[0] === 'l' || expression[0] === 'b');
+					result.endian = expression[0] === 'l';
+					assert_test(expression[1] === ',');
+					for (let channel of expression.substring(2).split(',')) {
+						let channel_part = channel.split(':');
+						assert_test(channel_part.length === 2);
+						let channel_name = channel_part[0];
+						let channel_size = BigInt(channel_part[1]);
+						assert_test(ChannelE.includes(channel_name as any));
+						result.channel.push([channel_name as Channel, channel_size]);
+					}
+					return result;
+				}
+
+				// ----------------
+
+				export function get_dummy_channel_filler(
+					format: Format,
+				): [null | bigint, null | bigint, null | bigint, null | bigint] {
+					return [
+						format.channel.find((it) => it[0] === 'red' || it[0] === 'luminance') !== undefined ? null : 0n,
+						format.channel.find((it) => it[0] === 'green' || it[0] === 'luminance') !== undefined ? null : 0n,
+						format.channel.find((it) => it[0] === 'blue' || it[0] === 'luminance') !== undefined ? null : 0n,
+						format.channel.find((it) => it[0] === 'alpha') !== undefined ? null : 255n,
+					];
+				}
+
+				export function get_pixel_bit_count(
+					format: Format,
+				): bigint {
+					return format.channel.reduce((result, it) => result + it[1], 0n);
+				}
+
+				export function compute_data_size(
+					size: Image.ImageSize,
+					format: Format,
+				): bigint {
+					let block_bit_count = get_pixel_bit_count(format);
+					return (size[0] * size[1]) * block_bit_count / 8n;
+				}
+
+				// ----------------
+
+				export function encode(
+					data: Kernel.OutputByteStreamView,
+					image: Kernel.Image.ConstantImageView,
+					format: Format,
+				): void {
+					Kernel.Tool.Texture.Encoding.Encode.process(
+						data,
+						image,
+						Kernel.Tool.Texture.Encoding.Format.value(format),
+					);
+					return;
+				}
+
+				export function decode(
+					data: Kernel.InputByteStreamView,
+					image: Kernel.Image.VariableImageView,
+					format: Format,
+					fill_dummy: Boolean,
+				): void {
+					Kernel.Tool.Texture.Encoding.Decode.process(
+						data,
+						image,
+						Kernel.Tool.Texture.Encoding.Format.value(format),
+					);
+					if (fill_dummy) {
+						let dummy_channel_filler = get_dummy_channel_filler(format);
+						if (dummy_channel_filler.some((it) => it !== null)) {
+							Transformation.Filling.encode(image, image, dummy_channel_filler[0], dummy_channel_filler[1], dummy_channel_filler[2], dummy_channel_filler[3]);
+						}
+					}
+					return;
+				}
+
+				// ----------------
+
+				export function encode_fs(
+					data_file: StoragePath,
+					image_file: StoragePath,
+					format: Format,
+				): void {
+					let image_original = StorageHelper.read_file(image_file);
+					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
+					let image_size = Conversion.Png.size(image_stream.view());
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
+					let image_view = image.view();
+					Conversion.Png.decode(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					let data_size = compute_data_size(image_size, format);
+					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					encode(data_stream, image_view, format);
+					StorageHelper.write_file(data_file, data_stream.stream_view());
+					return;
+				}
+
+				export function decode_fs(
+					data_file: StoragePath,
+					image_file: StoragePath,
+					image_size: Image.ImageSize,
+					format: Format,
+				): void {
+					let data = StorageHelper.read_file(data_file);
+					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
+					let image_view = image.view();
+					decode(data_stream, image_view, format, true);
+					Conversion.Png.encode_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					return;
+				}
+
+			}
+
+			export namespace Compression {
+
+				const FormatX = [
+					'rgb_dxtc1',
 					'rgba_dxtc1',
 					'rgba_dxtc3',
 					'rgba_dxtc3_p',
@@ -1028,49 +1145,18 @@ namespace Twinning.Script.KernelX {
 					'rgba_astc_12x12',
 				] as const;
 
-				export type Compression = typeof CompressionX[number];
+				export type Format = typeof FormatX[number];
 
-				export const CompressionE = CompressionX as unknown as Compression[];
-
-				const CompositeFormatX = [
-					...FormatX,
-					...CompressionX,
-				] as const;
-
-				export type CompositeFormat = typeof CompositeFormatX[number];
-
-				export const CompositeFormatE = CompositeFormatX as unknown as CompositeFormat[];
+				export const FormatE = FormatX as unknown as Format[];
 
 				// ----------------
 
 				export function get_dummy_channel_filler(
-					format: CompositeFormat,
+					format: Format,
 				): [null | bigint, null | bigint, null | bigint, null | bigint] {
 					let channel: Array<string>;
 					switch (format) {
-						case 'a_8':
-						case 'rgb_332':
-						case 'rgb_565':
-						case 'rgba_5551':
-						case 'rgba_4444':
-						case 'rgba_8888':
-						case 'argb_1555':
-						case 'argb_4444':
-						case 'argb_8888':
-						case 'l_8':
-						case 'la_44':
-						case 'la_88':
-						case 'al_44':
-						case 'al_88':
-						case 'rgb_888_o':
-						case 'rgb_888_r':
-						case 'rgba_8888_o':
-						case 'rgba_8888_r':
-						case 'argb_8888_o':
-						case 'argb_8888_r': {
-							channel = format.split('_')[0].split('');
-							break;
-						}
+						case 'rgb_dxtc1':
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
 						case 'rgba_dxtc3_p':
@@ -1111,41 +1197,19 @@ namespace Twinning.Script.KernelX {
 						}
 					}
 					return [
-						channel.includes('r') ? null : 255n,
-						channel.includes('g') ? null : 255n,
-						channel.includes('b') ? null : 255n,
+						channel.includes('r') ? null : 0n,
+						channel.includes('g') ? null : 0n,
+						channel.includes('b') ? null : 0n,
 						channel.includes('a') ? null : 255n,
 					];
 				}
 
 				export function get_block_size(
-					format: CompositeFormat,
+					format: Format,
 				): Image.ImageSize {
 					let result: Image.ImageSize;
 					switch (format) {
-						case 'a_8':
-						case 'rgb_332':
-						case 'rgb_565':
-						case 'rgba_5551':
-						case 'rgba_4444':
-						case 'rgba_8888':
-						case 'argb_1555':
-						case 'argb_4444':
-						case 'argb_8888':
-						case 'l_8':
-						case 'la_44':
-						case 'la_88':
-						case 'al_44':
-						case 'al_88':
-						case 'rgb_888_o':
-						case 'rgb_888_r':
-						case 'rgba_8888_o':
-						case 'rgba_8888_r':
-						case 'argb_8888_o':
-						case 'argb_8888_r': {
-							result = [1n, 1n];
-							break;
-						}
+						case 'rgb_dxtc1':
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
 						case 'rgba_dxtc3_p':
@@ -1190,41 +1254,18 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function get_block_bit_count(
-					format: CompositeFormat,
+					format: Format,
 				): bigint {
 					let result: bigint;
 					switch (format) {
-						case 'a_8':
-						case 'rgb_332':
-						case 'rgb_565':
-						case 'rgba_5551':
-						case 'rgba_4444':
-						case 'rgba_8888':
-						case 'argb_1555':
-						case 'argb_4444':
-						case 'argb_8888':
-						case 'l_8':
-						case 'la_44':
-						case 'la_88':
-						case 'al_44':
-						case 'al_88':
-						case 'rgb_888_o':
-						case 'rgb_888_r':
-						case 'rgba_8888_o':
-						case 'rgba_8888_r':
-						case 'argb_8888_o':
-						case 'argb_8888_r': {
-							let channel_bit_count = format.split('_')[1].split('').map(BigInt);
-							result = channel_bit_count.reduce((a, b) => a + b, 0n);
-							break;
-						}
+						case 'rgb_dxtc1':
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
 						case 'rgba_dxtc3_p':
 						case 'rgba_dxtc5':
 						case 'rgba_dxtc5_p': {
 							result = 64n;
-							if (format !== 'rgba_dxtc1') {
+							if (format === 'rgba_dxtc3' || format === 'rgba_dxtc3_p' || format === 'rgba_dxtc5' || format === 'rgba_dxtc5_p') {
 								result += 64n;
 							}
 							break;
@@ -1268,7 +1309,7 @@ namespace Twinning.Script.KernelX {
 
 				export function compute_data_size(
 					size: Image.ImageSize,
-					format: CompositeFormat,
+					format: Format,
 				): bigint {
 					let block_size = get_block_size(format);
 					let block_bit_count = get_block_bit_count(format);
@@ -1277,7 +1318,7 @@ namespace Twinning.Script.KernelX {
 
 				export function compute_padded_image_size(
 					origin_size: Image.ImageSize,
-					format: CompositeFormat,
+					format: Format,
 				): Image.ImageSize {
 					let block_size = get_block_size(format);
 					let padded_size: Image.ImageSize = [
@@ -1299,45 +1340,20 @@ namespace Twinning.Script.KernelX {
 
 				// ----------------
 
-				export function encode(
+				export function compress(
 					data: Kernel.OutputByteStreamView,
 					image: Kernel.Image.ConstantImageView,
-					format: CompositeFormat,
+					format: Format,
 				): void {
 					switch (format) {
-						case 'a_8':
-						case 'rgb_332':
-						case 'rgb_565':
-						case 'rgba_5551':
-						case 'rgba_4444':
-						case 'rgba_8888':
-						case 'argb_1555':
-						case 'argb_4444':
-						case 'argb_8888':
-						case 'l_8':
-						case 'la_44':
-						case 'la_88':
-						case 'al_44':
-						case 'al_88':
-						case 'rgb_888_o':
-						case 'rgb_888_r':
-						case 'rgba_8888_o':
-						case 'rgba_8888_r':
-						case 'argb_8888_o':
-						case 'argb_8888_r': {
-							Kernel.Tool.Texture.Encoding.Encode.process(
-								data,
-								image,
-								Kernel.Tool.Texture.Encoding.Format.value(format),
-							);
-							break;
-						}
+						case 'rgb_dxtc1':
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
 						case 'rgba_dxtc3_p':
 						case 'rgba_dxtc5':
 						case 'rgba_dxtc5_p': {
 							let generation = ({
+								'rgb_dxtc1': 'v1',
 								'rgba_dxtc1': 'v1',
 								'rgba_dxtc3': 'v3',
 								'rgba_dxtc3_p': 'v3',
@@ -1351,7 +1367,7 @@ namespace Twinning.Script.KernelX {
 									image,
 									Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
 									Kernel.Image.ImageSize.value(get_block_size(format)),
-									Kernel.Boolean.value(true),
+									Kernel.Boolean.value(format !== 'rgb_dxtc1'),
 								);
 							}
 							else {
@@ -1440,42 +1456,21 @@ namespace Twinning.Script.KernelX {
 					return;
 				}
 
-				export function decode(
+				export function uncompress(
 					data: Kernel.InputByteStreamView,
 					image: Kernel.Image.VariableImageView,
-					format: CompositeFormat,
+					format: Format,
 					fill_dummy: Boolean,
 				): void {
 					switch (format) {
-						case 'a_8':
-						case 'rgb_332':
-						case 'rgb_565':
-						case 'rgba_5551':
-						case 'rgba_4444':
-						case 'rgba_8888':
-						case 'argb_1555':
-						case 'argb_4444':
-						case 'argb_8888':
-						case 'l_8':
-						case 'la_44':
-						case 'la_88':
-						case 'al_44':
-						case 'al_88':
-						case 'rgb_888_o':
-						case 'rgba_8888_o': {
-							Kernel.Tool.Texture.Encoding.Decode.process(
-								data,
-								image,
-								Kernel.Tool.Texture.Encoding.Format.value(format),
-							);
-							break;
-						}
+						case 'rgb_dxtc1':
 						case 'rgba_dxtc1':
 						case 'rgba_dxtc3':
 						case 'rgba_dxtc3_p':
 						case 'rgba_dxtc5':
 						case 'rgba_dxtc5_p': {
 							let generation = ({
+								'rgb_dxtc1': 'v1',
 								'rgba_dxtc1': 'v1',
 								'rgba_dxtc3': 'v3',
 								'rgba_dxtc3_p': 'v3',
@@ -1489,7 +1484,7 @@ namespace Twinning.Script.KernelX {
 									image,
 									Kernel.Tool.Texture.Compression.Dxtc.Generation.value(generation),
 									Kernel.Image.ImageSize.value(get_block_size(format)),
-									Kernel.Boolean.value(true),
+									Kernel.Boolean.value(format !== 'rgb_dxtc1'),
 								);
 							}
 							else {
@@ -1577,10 +1572,7 @@ namespace Twinning.Script.KernelX {
 					if (fill_dummy) {
 						let dummy_channel_filler = get_dummy_channel_filler(format);
 						if (dummy_channel_filler.some((it) => it !== null)) {
-							let filled_image = Kernel.Image.Image.allocate(image.size());
-							let filled_image_view = filled_image.view();
-							Transformation.Filling.encode(filled_image_view, image, dummy_channel_filler[0], dummy_channel_filler[1], dummy_channel_filler[2], dummy_channel_filler[3]);
-							image.draw(filled_image_view);
+							Transformation.Filling.encode(image, image, dummy_channel_filler[0], dummy_channel_filler[1], dummy_channel_filler[2], dummy_channel_filler[3]);
 						}
 					}
 					return;
@@ -1588,10 +1580,10 @@ namespace Twinning.Script.KernelX {
 
 				// ----------------
 
-				export function encode_fs(
+				export function compress_fs(
 					data_file: StoragePath,
 					image_file: StoragePath,
-					format: CompositeFormat,
+					format: Format,
 				): void {
 					let image_original = StorageHelper.read_file(image_file);
 					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
@@ -1603,23 +1595,23 @@ namespace Twinning.Script.KernelX {
 					let data_size = compute_data_size(image_size_padded, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					encode(data_stream, image_view, format);
+					compress(data_stream, image_view, format);
 					StorageHelper.write_file(data_file, data_stream.stream_view());
 					return;
 				}
 
-				export function decode_fs(
+				export function uncompress_fs(
 					data_file: StoragePath,
 					image_file: StoragePath,
 					image_size: Image.ImageSize,
-					format: CompositeFormat,
+					format: Format,
 				): void {
 					let data = StorageHelper.read_file(data_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
-					decode(data_stream, image_view, format, true);
+					uncompress(data_stream, image_view, format, true);
 					Conversion.Png.encode_fs(image_file, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
 					return;
 				}
@@ -1988,7 +1980,7 @@ namespace Twinning.Script.KernelX {
 				export const VersionCompressTextureDataE = [false, true] as VersionCompressTextureData[];
 
 				const FormatX = [
-					'rgba_8888_o',
+					'rgba_8888',
 					'rgba_4444',
 					'rgba_5551',
 					'rgb_565',
@@ -2010,10 +2002,10 @@ namespace Twinning.Script.KernelX {
 					let image = Texture.Conversion.Png.decode_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
-					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
+					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.String.value(format), version_c);
 					let data = Kernel.ByteArray.allocate(data_size_bound);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					Kernel.Tool.Popcap.UTexture.Encode.process(data_stream, image_view, Kernel.Tool.Texture.Encoding.Format.value(format), version_c);
+					Kernel.Tool.Popcap.UTexture.Encode.process(data_stream, image_view, Kernel.String.value(format), version_c);
 					StorageHelper.write_file(data_file, data_stream.stream_view());
 					return;
 				}
@@ -2044,14 +2036,15 @@ namespace Twinning.Script.KernelX {
 				export const VersionNumberE = [0n] as VersionNumber[];
 
 				const FormatX = [
+					'lut_8',
 					'argb_8888',
 					'argb_4444',
 					'argb_1555',
 					'rgb_565',
-					'rgba_8888_o',
+					'rgba_8888',
 					'rgba_4444',
 					'rgba_5551',
-					// 'xrgb_8888',
+					'xrgb_8888',
 					'la_88',
 				] as const;
 
@@ -2072,10 +2065,10 @@ namespace Twinning.Script.KernelX {
 					let image = Texture.Conversion.Png.decode_fs_of(image_file);
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
-					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
+					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.String.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
 					let data = Kernel.ByteArray.allocate(data_size_bound);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					Kernel.Tool.Popcap.SexyTexture.Encode.process(data_stream, image_view, Kernel.Tool.Texture.Encoding.Format.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
+					Kernel.Tool.Popcap.SexyTexture.Encode.process(data_stream, image_view, Kernel.String.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
 					StorageHelper.write_file(data_file, data_stream.stream_view());
 					return;
 				}
@@ -2651,7 +2644,7 @@ namespace Twinning.Script.KernelX {
 					let image_size = image.size().value;
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(image_size[0] * image_size[1] * 8n / 8n));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
-					Texture.Encoding.encode(data_stream, image, 'a_8');
+					Texture.Encoding.encode(data_stream, image, {endian: false, channel: [['alpha', 8n]]});
 					let alpha_count: Record<number, number> = {};
 					for (let value of new Uint8Array(data_stream.stream_view().value)) {
 						let alpha_4 = (value >> 4) & ~(~0 << 4);

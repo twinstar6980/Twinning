@@ -22,7 +22,20 @@ export namespace Twinning::Kernel::Bitwise {
 		Size const &   begin,
 		Size const &   size
 	) -> TValue {
-		return (value >> begin) & ~(~make_box<TValue>(0) << size);
+		auto mask = ~(~make_box<TValue>(0) << size);
+		return (value >> begin) & mask;
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsIntegerBox<TValue>)
+	inline constexpr auto infuse(
+		TValue const & value,
+		Size const &   begin,
+		Size const &   size
+	) -> TValue {
+		auto mask = ~(~make_box<TValue>(0) << size);
+		return (value & mask) << begin;
 	}
 
 	#pragma endregion

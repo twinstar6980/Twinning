@@ -29,55 +29,65 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 
 		using typename Common::FormatFlag;
 
+		using Common::is_valid_format;
+
+		using Common::get_encoding_format;
+
 		// ----------------
 
 		inline static auto process_image(
-			OutputByteStreamView &            data,
-			Image::ConstantImageView const &  image,
-			Texture::Encoding::Format const & format,
-			Boolean const &                   compress_texture_data
+			OutputByteStreamView &           data,
+			Image::ConstantImageView const & image,
+			String const &                   format,
+			Boolean const &                  compress_texture_data
 		) -> Void {
+			assert_test(is_valid_format(format));
+			auto encoding_format = get_encoding_format(format);
 			data.write_constant(k_magic_marker);
 			data.write_constant(cast_box<VersionNumber>(t_version.number));
 			auto header_stream = OutputByteStreamView{data.forward_view(bs_static_size<Header>())};
 			auto image_format = Integer{};
-			switch (format.value) {
-				case Texture::Encoding::Format::Constant::argb_8888().value: {
+			switch (format.hash().value) {
+				case "lut_8"_shz: {
+					image_format = FormatFlag::lut_8;
+					break;
+				}
+				case "argb_8888"_shz: {
 					image_format = FormatFlag::argb_8888;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::argb_4444().value: {
+				case "argb_4444"_shz: {
 					image_format = FormatFlag::argb_4444;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::argb_1555().value: {
+				case "argb_1555"_shz: {
 					image_format = FormatFlag::argb_1555;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgb_565().value: {
+				case "rgb_565"_shz: {
 					image_format = FormatFlag::rgb_565;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_8888_o().value: {
-					image_format = FormatFlag::rgba_8888_o;
+				case "rgba_8888"_shz: {
+					image_format = FormatFlag::rgba_8888;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_4444().value: {
+				case "rgba_4444"_shz: {
 					image_format = FormatFlag::rgba_4444;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::rgba_5551().value: {
+				case "rgba_5551"_shz: {
 					image_format = FormatFlag::rgba_5551;
 					break;
 				}
-				case Texture::Encoding::Format::Constant::la_88().value: {
+				case "la_88"_shz: {
 					image_format = FormatFlag::la_88;
 					break;
 				}
-				default: throw UnsupportedException{};
+				default: throw UnreachableException{};
 			}
 			auto compress_texture_data_size = Size{};
-			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
+			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(encoding_format);
 			auto texture_data_view = VariableByteListView{};
 			auto texture_data_container = ByteArray{};
 			if (!compress_texture_data) {
@@ -88,7 +98,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 				texture_data_container.allocate(texture_data_size);
 				texture_data_view = texture_data_container.as_view();
 			}
-			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, format);
+			Texture::Encoding::Encode::process(as_left(OutputByteStreamView{texture_data_view}), image, encoding_format);
 			if (compress_texture_data) {
 				auto texture_data_stream = InputByteStreamView{texture_data_container};
 				auto ripe_texture_data_stream = OutputByteStreamView{data.reserve_view()};
@@ -109,16 +119,18 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		// ----------------
 
 		inline static auto estimate_image(
-			Size &                            data_size_bound,
-			Image::ImageSize const &          image_size,
-			Texture::Encoding::Format const & format,
-			Boolean const &                   compress_texture_data
+			Size &                   data_size_bound,
+			Image::ImageSize const & image_size,
+			String const &           format,
+			Boolean const &          compress_texture_data
 		) -> Void {
+			assert_test(is_valid_format(format));
+			auto encoding_format = get_encoding_format(format);
 			data_size_bound = 0_sz;
 			data_size_bound += bs_static_size<MagicMarker>();
 			data_size_bound += bs_static_size<VersionNumber>();
 			data_size_bound += bs_static_size<Header>();
-			auto texture_data_size = image_size.area() * Texture::Encoding::Common::get_pixel_byte_count(format);
+			auto texture_data_size = image_size.area() * Texture::Encoding::Common::get_pixel_byte_count(encoding_format);
 			auto texture_data_size_bound = Size{};
 			if (!compress_texture_data) {
 				texture_data_size_bound = texture_data_size;
@@ -133,20 +145,20 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &            data_,
-			Image::ConstantImageView const &  image,
-			Texture::Encoding::Format const & format,
-			Boolean const &                   compress_texture_data
+			OutputByteStreamView &           data_,
+			Image::ConstantImageView const & image,
+			String const &                   format,
+			Boolean const &                  compress_texture_data
 		) -> Void {
 			M_use_zps_of(data);
 			return process_image(data, image, format, compress_texture_data);
 		}
 
 		inline static auto estimate(
-			Size &                            data_size_bound,
-			Image::ImageSize const &          image_size,
-			Texture::Encoding::Format const & format,
-			Boolean const &                   compress_texture_data
+			Size &                   data_size_bound,
+			Image::ImageSize const & image_size,
+			String const &           format,
+			Boolean const &          compress_texture_data
 		) -> Void {
 			restruct(data_size_bound);
 			return estimate_image(data_size_bound, image_size, format, compress_texture_data);

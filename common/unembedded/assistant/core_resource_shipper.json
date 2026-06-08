@@ -695,131 +695,251 @@
 						{
 							"name": "A-8",
 							"argument": {
-								"format": "a_8",
+								"format": "l,alpha:8",
 							},
 						},
 						null,
 						{
 							"name": "RGB-332",
 							"argument": {
-								"format": "rgb_332",
+								"format": "l,red:3,green:3,blue:2",
 							},
 						},
 						{
 							"name": "RGB-565",
 							"argument": {
-								"format": "rgb_565",
+								"format": "l,red:5,green:6,blue:5",
+							},
+						},
+						{
+							"name": "RGB-888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8",
 							},
 						},
 						null,
 						{
 							"name": "RGBA-5551",
 							"argument": {
-								"format": "rgba_5551",
+								"format": "l,red:5,green:5,blue:5,alpha:1",
 							},
 						},
 						{
 							"name": "RGBA-4444",
 							"argument": {
-								"format": "rgba_4444",
+								"format": "l,red:4,green:4,blue:4,alpha:4",
 							},
 						},
 						{
 							"name": "RGBA-8888",
 							"argument": {
-								"format": "rgba_8888",
+								"format": "l,red:8,green:8,blue:8,alpha:8",
 							},
 						},
 						null,
 						{
 							"name": "ARGB-1555",
 							"argument": {
-								"format": "argb_1555",
+								"format": "l,alpha:1,red:5,green:5,blue:5",
 							},
 						},
 						{
 							"name": "ARGB-4444",
 							"argument": {
-								"format": "argb_4444",
+								"format": "l,alpha:4,red:4,green:4,blue:4",
 							},
 						},
 						{
 							"name": "ARGB-8888",
 							"argument": {
-								"format": "argb_8888",
+								"format": "l,alpha:8,red:8,green:8,blue:8",
 							},
 						},
 						null,
 						{
 							"name": "L-8",
 							"argument": {
-								"format": "l_8",
+								"format": "l,luminance:8",
 							},
 						},
 						null,
 						{
 							"name": "LA-44",
 							"argument": {
-								"format": "la_44",
+								"format": "l,luminance:4,alpha:4",
 							},
 						},
 						{
 							"name": "LA-88",
 							"argument": {
-								"format": "la_88",
+								"format": "l,luminance:8,alpha:8",
 							},
 						},
 						null,
 						{
 							"name": "AL-44",
 							"argument": {
-								"format": "al_44",
+								"format": "l,alpha:4,luminance:4",
 							},
 						},
 						{
 							"name": "AL-88",
 							"argument": {
-								"format": "al_88",
+								"format": "l,alpha:8,luminance:8",
 							},
 						},
 						null,
 						{
-							"name": "RGB-888-O",
+							"name": "RGB-888-BE",
 							"argument": {
-								"format": "rgb_888_o",
+								"format": "b,red:8,green:8,blue:8",
 							},
 						},
 						{
-							"name": "RGB-888-R",
+							"name": "RGBA-8888-BE",
 							"argument": {
-								"format": "rgb_888_r",
+								"format": "b,red:8,green:8,blue:8,alpha:8",
 							},
 						},
+					],
+				},
+				{
+					"name": "Decode",
+					"icon": "skip_previous",
+					"filter": {
+						"type": "file",
+						"name": "(\\.bin)$",
+					},
+					"batch": false,
+					"method": "texture.encoding.decode",
+					"preset": [
 						{
-							"name": "RGBA-8888-O",
+							"name": "A-8",
 							"argument": {
-								"format": "rgba_8888_o",
-							},
-						},
-						{
-							"name": "RGBA-8888-R",
-							"argument": {
-								"format": "rgba_8888_r",
-							},
-						},
-						{
-							"name": "ARGB-8888-O",
-							"argument": {
-								"format": "argb_8888_o",
-							},
-						},
-						{
-							"name": "ARGB-8888-R",
-							"argument": {
-								"format": "argb_8888_r",
+								"format": "l,alpha:8",
 							},
 						},
 						null,
+						{
+							"name": "RGB-332",
+							"argument": {
+								"format": "l,red:3,green:3,blue:2",
+							},
+						},
+						{
+							"name": "RGB-565",
+							"argument": {
+								"format": "l,red:5,green:6,blue:5",
+							},
+						},
+						{
+							"name": "RGB-888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-5551",
+							"argument": {
+								"format": "l,red:5,green:5,blue:5,alpha:1",
+							},
+						},
+						{
+							"name": "RGBA-4444",
+							"argument": {
+								"format": "l,red:4,green:4,blue:4,alpha:4",
+							},
+						},
+						{
+							"name": "RGBA-8888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "ARGB-1555",
+							"argument": {
+								"format": "l,alpha:1,red:5,green:5,blue:5",
+							},
+						},
+						{
+							"name": "ARGB-4444",
+							"argument": {
+								"format": "l,alpha:4,red:4,green:4,blue:4",
+							},
+						},
+						{
+							"name": "ARGB-8888",
+							"argument": {
+								"format": "l,alpha:8,red:8,green:8,blue:8",
+							},
+						},
+						null,
+						{
+							"name": "L-8",
+							"argument": {
+								"format": "l,luminance:8",
+							},
+						},
+						null,
+						{
+							"name": "LA-44",
+							"argument": {
+								"format": "l,luminance:4,alpha:4",
+							},
+						},
+						{
+							"name": "LA-88",
+							"argument": {
+								"format": "l,luminance:8,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "AL-44",
+							"argument": {
+								"format": "l,alpha:4,luminance:4",
+							},
+						},
+						{
+							"name": "AL-88",
+							"argument": {
+								"format": "l,alpha:8,luminance:8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-888-BE",
+							"argument": {
+								"format": "b,red:8,green:8,blue:8",
+							},
+						},
+						{
+							"name": "RGBA-8888-BE",
+							"argument": {
+								"format": "b,red:8,green:8,blue:8,alpha:8",
+							},
+						},
+					],
+				},
+				{
+					"name": "Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "(\\.png)$",
+					},
+					"batch": false,
+					"method": "texture.compression.compress",
+					"preset": [
+						{
+							"name": "RGB-DXTC1",
+							"argument": {
+								"format": "rgb_dxtc1",
+							},
+						},
 						{
 							"name": "RGBA-DXTC1",
 							"argument": {
@@ -833,9 +953,21 @@
 							},
 						},
 						{
+							"name": "RGBA-DXTC3-P",
+							"argument": {
+								"format": "rgba_dxtc3_p",
+							},
+						},
+						{
 							"name": "RGBA-DXTC5",
 							"argument": {
 								"format": "rgba_dxtc5",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5-P",
+							"argument": {
+								"format": "rgba_dxtc5_p",
 							},
 						},
 						null,
@@ -970,143 +1102,21 @@
 					],
 				},
 				{
-					"name": "Decode",
-					"icon": "skip_previous",
+					"name": "Uncompress",
+					"icon": "open_in_full",
 					"filter": {
 						"type": "file",
 						"name": "(\\.bin)$",
 					},
 					"batch": false,
-					"method": "texture.encoding.decode",
+					"method": "texture.compression.uncompress",
 					"preset": [
 						{
-							"name": "A-8",
+							"name": "RGB-DXTC1",
 							"argument": {
-								"format": "a_8",
+								"format": "rgb_dxtc1",
 							},
 						},
-						null,
-						{
-							"name": "RGB-332",
-							"argument": {
-								"format": "rgb_332",
-							},
-						},
-						{
-							"name": "RGB-565",
-							"argument": {
-								"format": "rgb_565",
-							},
-						},
-						null,
-						{
-							"name": "RGBA-5551",
-							"argument": {
-								"format": "rgba_5551",
-							},
-						},
-						{
-							"name": "RGBA-4444",
-							"argument": {
-								"format": "rgba_4444",
-							},
-						},
-						{
-							"name": "RGBA-8888",
-							"argument": {
-								"format": "rgba_8888",
-							},
-						},
-						null,
-						{
-							"name": "ARGB-1555",
-							"argument": {
-								"format": "argb_1555",
-							},
-						},
-						{
-							"name": "ARGB-4444",
-							"argument": {
-								"format": "argb_4444",
-							},
-						},
-						{
-							"name": "ARGB-8888",
-							"argument": {
-								"format": "argb_8888",
-							},
-						},
-						null,
-						{
-							"name": "L-8",
-							"argument": {
-								"format": "l_8",
-							},
-						},
-						null,
-						{
-							"name": "LA-44",
-							"argument": {
-								"format": "la_44",
-							},
-						},
-						{
-							"name": "LA-88",
-							"argument": {
-								"format": "la_88",
-							},
-						},
-						null,
-						{
-							"name": "AL-44",
-							"argument": {
-								"format": "al_44",
-							},
-						},
-						{
-							"name": "AL-88",
-							"argument": {
-								"format": "al_88",
-							},
-						},
-						null,
-						{
-							"name": "RGB-888-O",
-							"argument": {
-								"format": "rgb_888_o",
-							},
-						},
-						{
-							"name": "RGB-888-R",
-							"argument": {
-								"format": "rgb_888_r",
-							},
-						},
-						{
-							"name": "RGBA-8888-O",
-							"argument": {
-								"format": "rgba_8888_o",
-							},
-						},
-						{
-							"name": "RGBA-8888-R",
-							"argument": {
-								"format": "rgba_8888_r",
-							},
-						},
-						{
-							"name": "ARGB-8888-O",
-							"argument": {
-								"format": "argb_8888_o",
-							},
-						},
-						{
-							"name": "ARGB-8888-R",
-							"argument": {
-								"format": "argb_8888_r",
-							},
-						},
-						null,
 						{
 							"name": "RGBA-DXTC1",
 							"argument": {
@@ -1120,9 +1130,21 @@
 							},
 						},
 						{
+							"name": "RGBA-DXTC3-P",
+							"argument": {
+								"format": "rgba_dxtc3_p",
+							},
+						},
+						{
 							"name": "RGBA-DXTC5",
 							"argument": {
 								"format": "rgba_dxtc5",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5-P",
+							"argument": {
+								"format": "rgba_dxtc5_p",
 							},
 						},
 						null,

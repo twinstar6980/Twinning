@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 140
+ * @version 141
  */
 declare namespace Twinning.Kernel {
 
@@ -2100,6 +2100,29 @@ declare namespace Twinning.Kernel {
 			/** 编码 */
 			namespace Encoding {
 
+				/** 通道 */
+				class Channel {
+
+					private _Tool_Texture_Encoding_Channel;
+
+					// ----------------
+
+					static default(): Channel;
+
+					static copy(it: Channel): Channel;
+
+					// ----------------
+
+					static Value: 'minimum' | 'maximum' | 'red' | 'green' | 'blue' | 'alpha' | 'luminance';
+
+					static value(it: typeof Channel.Value): Channel;
+
+					get value(): typeof Channel.Value;
+
+					set value(it: typeof Channel.Value);
+
+				}
+
 				/** 格式 */
 				class Format {
 
@@ -2113,7 +2136,10 @@ declare namespace Twinning.Kernel {
 
 					// ----------------
 
-					static Value: 'a_8' | 'rgb_332' | 'rgb_565' | 'rgba_5551' | 'rgba_4444' | 'rgba_8888' | 'argb_1555' | 'argb_4444' | 'argb_8888' | 'l_8' | 'la_44' | 'la_88' | 'al_44' | 'al_88' | 'rgb_888_o' | 'rgb_888_r' | 'rgba_8888_o' | 'rgba_8888_r' | 'argb_8888_o' | 'argb_8888_r';
+					static Value: {
+						endian: boolean;
+						channel: Array<[typeof Channel.Value, bigint]>;
+					};
 
 					static value(it: typeof Format.Value): Format;
 
@@ -3047,13 +3073,13 @@ declare namespace Twinning.Kernel {
 					 * 编码
 					 * @param data 数据
 					 * @param image 图像
-					 * @param format 格式
+					 * @param format 格式(rgba_8888, rgba_4444, rgba_5551, rgb_565)
 					 * @param version 版本
 					 */
 					function process(
 						data: OutputByteStreamView,
 						image: Image.ConstantImageView,
-						format: Texture.Encoding.Format,
+						format: String,
 						version: Version,
 					): Void;
 
@@ -3061,13 +3087,13 @@ declare namespace Twinning.Kernel {
 					 * 计算数据尺寸上限
 					 * @param data_size_bound 数据尺寸上限
 					 * @param image_size 图像尺寸
-					 * @param format 格式
+					 * @param format 格式(rgba_8888, rgba_4444, rgba_5551, rgb_565)
 					 * @param version 版本
 					 */
 					function estimate(
 						data_size_bound: Size,
 						image_size: Image.ImageSize,
-						format: Texture.Encoding.Format,
+						format: String,
 						version: Version,
 					): Void;
 
@@ -3139,14 +3165,14 @@ declare namespace Twinning.Kernel {
 					 * 编码
 					 * @param data 数据
 					 * @param image 图像
-					 * @param format 格式
+					 * @param format 格式(lut_8, argb_8888, argb_4444, argb_1555, rgb_565, rgba_8888, rgba_4444, rgba_5551, xrgb_8888, la_88)
 					 * @param compress_texture_data 压缩纹理数据
 					 * @param version 版本
 					 */
 					function process(
 						data: OutputByteStreamView,
 						image: Image.ConstantImageView,
-						format: Texture.Encoding.Format,
+						format: String,
 						compress_texture_data: Boolean,
 						version: Version,
 					): Void;
@@ -3155,14 +3181,14 @@ declare namespace Twinning.Kernel {
 					 * 计算数据尺寸上限
 					 * @param data_size_bound 数据尺寸上限
 					 * @param image_size 图像尺寸
-					 * @param format 格式
+					 * @param format 格式(lut_8, argb_8888, argb_4444, argb_1555, rgb_565, rgba_8888, rgba_4444, rgba_5551, xrgb_8888, la_88)
 					 * @param compress_texture_data 压缩纹理数据
 					 * @param version 版本
 					 */
 					function estimate(
 						data_size_bound: Size,
 						image_size: Image.ImageSize,
-						format: Texture.Encoding.Format,
+						format: String,
 						compress_texture_data: Boolean,
 						version: Version,
 					): Void;

@@ -465,6 +465,28 @@
 				"batch": null,
 			},
 		},
+		"texture.compression": {
+			"compress": {
+				"filter": "(\\.png)$",
+				"argument": {
+					"image_file": "?input",
+					"data_file": "?automatic",
+					"format": "?input",
+				},
+				"batch": null,
+			},
+			"uncompress": {
+				"filter": "(\\.bin)$",
+				"argument": {
+					"data_file": "?input",
+					"image_file": "?automatic",
+					"format": "?input",
+					"image_width": "?input",
+					"image_height": "?input",
+				},
+				"batch": null,
+			},
+		},
 		"texture.atlas": {
 			"pack": {
 				"filter": "(\\.atlas\\.json)$",

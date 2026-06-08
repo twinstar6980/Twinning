@@ -27,6 +27,10 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 
 		using typename Common::FormatFlag;
 
+		using Common::is_valid_format;
+
+		using Common::get_encoding_format;
+
 		// ----------------
 
 		inline static auto process_image(
@@ -38,27 +42,22 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 			data.read(header);
 			assert_test(image.size() == Image::ImageSize{cast_box<Size>(header.size_width), cast_box<Size>(header.size_height)});
 			auto image_format = cast_box<Integer>(header.format);
-			auto format = Texture::Encoding::Format{};
-			auto opacity = Boolean{};
+			auto format = String{};
 			switch (image_format.value) {
-				case FormatFlag::rgba_8888_o.value: {
-					format = Texture::Encoding::Format::Constant::rgba_8888_o();
-					opacity = k_false;
+				case FormatFlag::rgba_8888.value: {
+					format = "rgba_8888"_sv;
 					break;
 				}
 				case FormatFlag::rgba_4444.value: {
-					format = Texture::Encoding::Format::Constant::rgba_4444();
-					opacity = k_false;
+					format = "rgba_4444"_sv;
 					break;
 				}
 				case FormatFlag::rgba_5551.value: {
-					format = Texture::Encoding::Format::Constant::rgba_5551();
-					opacity = k_false;
+					format = "rgba_5551"_sv;
 					break;
 				}
 				case FormatFlag::rgb_565.value: {
-					format = Texture::Encoding::Format::Constant::rgb_565();
-					opacity = k_true;
+					format = "rgb_565"_sv;
 					break;
 				}
 				default: {
@@ -66,7 +65,8 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 					break;
 				}
 			}
-			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(format);
+			auto encoding_format = get_encoding_format(format);
+			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(encoding_format);
 			auto texture_data_view = ConstantByteListView{};
 			auto texture_data_container = ByteArray{};
 			if constexpr (check_version(t_version, {false})) {
@@ -81,8 +81,13 @@ export namespace Twinning::Kernel::Tool::Popcap::UTexture {
 				Data::Compression::Deflate::Uncompress::process(texture_data_stream, data, 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
 				assert_test(texture_data_stream.full());
 			}
-			Texture::Encoding::Decode::process(as_left(InputByteStreamView{texture_data_view}), image, format);
-			if (opacity) {
+			Texture::Encoding::Decode::process(as_left(InputByteStreamView{texture_data_view}), image, encoding_format);
+			if (!Range::has_if(
+				encoding_format.channel,
+				[](auto & it) {
+					return it.template get<1_ix>() == Texture::Encoding::Channel::Constant::alpha();
+				}
+			)) {
 				for (auto & row : image.data()) {
 					for (auto & pixel : row) {
 						pixel.alpha = Image::k_color_maximum;

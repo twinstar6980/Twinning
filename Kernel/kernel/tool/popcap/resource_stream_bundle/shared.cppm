@@ -202,7 +202,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 						auto current_position = stream.position();
 						stream.set_position(work_option[index].get().parent_offset * k_block_size);
 						auto composite_value = stream.read_of<IntegerU32>();
-						composite_value |= cast_box<IntegerU32>(current_position / k_block_size) << k_type_bit_count<IntegerU8>;
+						composite_value |= Bitwise::infuse(cast_box<IntegerU32>(current_position / k_block_size), k_type_bit_count<IntegerU8>, k_type_bit_count<IntegerU32> - k_type_bit_count<IntegerU8>);
 						stream.backward(bs_static_size<IntegerU32>());
 						stream.write(composite_value);
 						stream.set_position(current_position);

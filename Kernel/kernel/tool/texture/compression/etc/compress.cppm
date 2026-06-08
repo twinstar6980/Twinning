@@ -29,10 +29,18 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 			assert_test(is_valid_block_size(block_size));
 			assert_test(Math::is_padded_size(image.size().width, block_size.width) && Math::is_padded_size(image.size().height, block_size.height));
 			auto block_count = image.size().area() / block_size.area();
+			auto raw_format = Encoding::Format{
+				.endian = k_false,
+				.channel = make_list<Tuple<Encoding::Channel, Size>>(
+					make_tuple_of(Encoding::Channel::Constant::alpha(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::red(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::green(), 8_sz),
+					make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
+				),
+			};
 			if (generation == Generation::Constant::v1()) {
 				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_format = Encoding::Format::Constant::argb_8888();
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 				Third::etcpak::CompressEtc1Rgb(
@@ -47,7 +55,6 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				if (!with_alpha_eac) {
 					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_format = Encoding::Format::Constant::argb_8888();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEtc2Rgb(
@@ -62,7 +69,6 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				else {
 					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_format = Encoding::Format::Constant::argb_8888();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEtc2Rgba(
@@ -79,7 +85,6 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				if (!with_green_eac) {
 					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_format = Encoding::Format::Constant::argb_8888();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEacR(
@@ -93,7 +98,6 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				else {
 					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_format = Encoding::Format::Constant::argb_8888();
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
 					Third::etcpak::CompressEacRg(

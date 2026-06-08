@@ -1,0 +1,92 @@
+namespace Twinning.Script.Executor.Implementation.Texture.Compression {
+
+	// #region interface
+
+	export function activate(
+	): void {
+		push_typical_method('texture.compression', [
+			typical_method({
+				identifier: 'compress',
+				filter: ['file', /(\.png)$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'image_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'data_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {image_file: StoragePath}) => ConvertHelper.replace_path_name(argument.image_file, /(\.png)?$/i, '.bin'),
+						condition: null,
+					}),
+					typical_argument_string({
+						identifier: 'format',
+						option: KernelX.Tool.Texture.Compression.FormatE,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+				],
+				batch: null,
+				worker: ({image_file, data_file, format}, store: {}) => {
+					KernelX.Tool.Texture.Compression.compress_fs(data_file, image_file, format as any);
+					return;
+				},
+			}),
+			typical_method({
+				identifier: 'uncompress',
+				filter: ['file', /(\.bin)$/i],
+				argument: [
+					typical_argument_path({
+						identifier: 'data_file',
+						rule: ['file', 'input'],
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_path({
+						identifier: 'image_file',
+						rule: ['file', 'output'],
+						checker: null,
+						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /(\.bin)?$/i, '.png'),
+						condition: null,
+					}),
+					typical_argument_string({
+						identifier: 'format',
+						option: KernelX.Tool.Texture.Compression.FormatE,
+						checker: null,
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_integer({
+						identifier: 'image_width',
+						option: null,
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
+						automatic: null,
+						condition: null,
+					}),
+					typical_argument_integer({
+						identifier: 'image_height',
+						option: null,
+						checker: (argument: {}, value) => ((0n < value) ? null : los('executor.implementation:*.size_should_be_bigger_then_zero')),
+						automatic: null,
+						condition: null,
+					}),
+				],
+				batch: null,
+				worker: ({data_file, image_file, format, image_width, image_height}, store: {}) => {
+					KernelX.Tool.Texture.Compression.uncompress_fs(data_file, image_file, [image_width, image_height], format as any);
+					return;
+				},
+			}),
+		]);
+		return;
+	}
+
+	// #endregion
+
+}
