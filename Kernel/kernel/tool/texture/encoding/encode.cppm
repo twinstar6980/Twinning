@@ -111,6 +111,7 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			Image::ConstantImageView const & image,
 			Format const &                   format
 		) -> Void {
+			assert_test(is_valid_format(format));
 			auto byte_count = get_pixel_byte_count(format);
 			if (byte_count == 1_sz) {
 				for (auto & row : image.data()) {

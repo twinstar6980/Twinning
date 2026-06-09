@@ -851,7 +851,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						tile_size: Image.ImageSize,
 					): void {
-						let raw = Conversion.Png.decode_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file, [false, 'block', tile_size]);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
@@ -865,7 +865,7 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						tile_size: Image.ImageSize,
 					): void {
-						let ripe = Conversion.Png.decode_fs_of(ripe_file);
+						let ripe = Conversion.Png.decode_fs_of(ripe_file, [true, 'block', tile_size]);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
@@ -898,7 +898,7 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let raw = Conversion.Png.decode_fs_of(raw_file);
+						let raw = Conversion.Png.decode_fs_of(raw_file, [false, 'power_of_two', true]);
 						let raw_view = raw.view();
 						let ripe = Kernel.Image.Image.allocate(raw.size());
 						let ripe_view = ripe.view();
@@ -911,7 +911,7 @@ namespace Twinning.Script.KernelX {
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
 					): void {
-						let ripe = Conversion.Png.decode_fs_of(ripe_file);
+						let ripe = Conversion.Png.decode_fs_of(ripe_file, [true, 'power_of_two', true]);
 						let ripe_view = ripe.view();
 						let raw = Kernel.Image.Image.allocate(ripe.size());
 						let raw_view = raw.view();
@@ -990,7 +990,11 @@ namespace Twinning.Script.KernelX {
 
 				// ----------------
 
-				export const format_expression_regex = /^(l|b)(,(minimum|maximum|red|green|blue|alpha|luminance):[1-8])+$/;
+				export function check_format_expression(
+					expression: string,
+				): boolean {
+					return /^(l|b)(,(minimum|maximum|red|green|blue|alpha|luminance):[1-8])+$/.test(expression);
+				}
 
 				export function parse_format_expression(
 					expression: string,
@@ -1082,12 +1086,9 @@ namespace Twinning.Script.KernelX {
 					image_file: StoragePath,
 					format: Format,
 				): void {
-					let image_original = StorageHelper.read_file(image_file);
-					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
-					let image_size = Conversion.Png.size(image_stream.view());
-					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
+					let image = Conversion.Png.decode_fs_of(image_file);
 					let image_view = image.view();
-					Conversion.Png.decode(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+					let image_size = image_view.size().value;
 					let data_size = compute_data_size(image_size, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
@@ -1327,8 +1328,8 @@ namespace Twinning.Script.KernelX {
 					];
 					if (format.includes('etc') || format.includes('pvrtc')) {
 						padded_size = [
-							ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[0]),
-							ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[1]),
+							ConvertHelper.compute_padded_size_of_power_of_two(padded_size[0]),
+							ConvertHelper.compute_padded_size_of_power_of_two(padded_size[1]),
 						];
 					}
 					if (format.includes('pvrtc')) {
@@ -1585,14 +1586,10 @@ namespace Twinning.Script.KernelX {
 					image_file: StoragePath,
 					format: Format,
 				): void {
-					let image_original = StorageHelper.read_file(image_file);
-					let image_stream = Kernel.ByteStreamView.watch(image_original.view());
-					let image_size = Conversion.Png.size(image_stream.view());
-					let image_size_padded = compute_padded_image_size(image_size, format);
-					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
+					let image = Conversion.Png.decode_fs_of(image_file, [false, 'dynamic', (size) => compute_padded_image_size(size, format)]);
 					let image_view = image.view();
-					Conversion.Png.decode(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
-					let data_size = compute_data_size(image_size_padded, format);
+					let image_size = image_view.size().value;
+					let data_size = compute_data_size(image_size, format);
 					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					compress(data_stream, image_view, format);
@@ -1647,29 +1644,29 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function size_fs(
-						file: StoragePath,
+						data_file: StoragePath,
 					): Image.ImageSize {
-						let data = StorageHelper.read_file(file);
+						let data = StorageHelper.read_file(data_file);
 						let image_size = size(data.view());
 						return image_size;
 					}
 
 					export function encode_fs(
-						file: StoragePath,
+						data_file: StoragePath,
 						image: Kernel.Image.ConstantImageView,
 						data_buffer: Kernel.ByteListView = g_common_buffer.view(),
 					): void {
 						let data_stream = Kernel.ByteStreamView.watch(data_buffer);
 						encode(data_stream, image);
-						StorageHelper.write_file(file, data_stream.stream_view());
+						StorageHelper.write_file(data_file, data_stream.stream_view());
 						return;
 					}
 
 					export function decode_fs(
-						file: StoragePath,
+						data_file: StoragePath,
 						image: Kernel.Image.VariableImageView,
 					): void {
-						let data = StorageHelper.read_file(file);
+						let data = StorageHelper.read_file(data_file);
 						let data_stream = Kernel.ByteStreamView.watch(data.view());
 						decode(data_stream, image);
 						return;
@@ -1678,14 +1675,42 @@ namespace Twinning.Script.KernelX {
 					// ----------------
 
 					export function decode_fs_of(
-						file: StoragePath,
+						data_file: StoragePath,
+						padding_mode: null | [boolean, 'block', Image.ImageSize] | [boolean, 'power_of_two', boolean] | [boolean, 'dynamic', (size: Image.ImageSize) => Image.ImageSize] = null,
 					): Kernel.Image.Image {
-						let data = StorageHelper.read_file(file);
+						let data = StorageHelper.read_file(data_file);
 						let data_stream = Kernel.ByteStreamView.watch(data.view());
 						let image_size = size(data.view());
-						let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
-						decode(data_stream, image.view());
-						return image;
+						let image_size_padded = image_size;
+						if (padding_mode !== null) {
+							if (padding_mode[1] === 'block') {
+								image_size_padded = [
+									ConvertHelper.compute_padded_size(image_size[0], padding_mode[2][0]),
+									ConvertHelper.compute_padded_size(image_size[1], padding_mode[2][1]),
+								];
+							}
+							else if (padding_mode[1] === 'power_of_two') {
+								image_size_padded = [
+									ConvertHelper.compute_padded_size_of_power_of_two(image_size[0]),
+									ConvertHelper.compute_padded_size_of_power_of_two(image_size[1]),
+								];
+								if (padding_mode[2]) {
+									let length = image_size_padded[0] >= image_size_padded[1] ? image_size_padded[0] : image_size_padded[1];
+									image_size_padded = [length, length];
+								}
+							}
+							else if (padding_mode[1] === 'dynamic') {
+								image_size_padded = padding_mode[2](image_size);
+							}
+							if (padding_mode[0]) {
+								assert_test(image_size[0] === image_size_padded[0] && image_size[1] === image_size_padded[1]);
+							}
+						}
+						let raw = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
+						let raw_view = raw.view();
+						let raw_view_actual = raw_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size));
+						decode(data_stream, raw_view_actual);
+						return raw;
 					}
 
 				}

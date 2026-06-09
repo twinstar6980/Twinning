@@ -43,14 +43,14 @@ namespace Twinning.Script.Support.Atlas.Pack {
 
 	export function pack_automatic_fsh(
 		sprite_directory: StoragePath,
-		expand_value: number | 'exponent_of_2',
+		expand_value: number | 'power_of_two',
 	): [AtlasDefinition, Kernel.Image.Image] {
 		let sprite_file_list = StorageHelper.list_directory(sprite_directory, null, true, false, true, false).filter((value) => /.+(\.png)/i.test(value.name()!)).map((value) => value.parent()!.join(value.stem()!));
 		let sprite_box = ConvertHelper.record_from_array(sprite_file_list, (index, value) => {
 			let size = KernelX.Tool.Texture.Conversion.Png.size_fs(sprite_directory.push(value.parent()!).join(`${value.stem()}.png`));
 			return [value.emit(), {width: Number(size[0]), height: Number(size[1])}];
 		});
-		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'exponent_of_2' ? PackAutomatic.expander_exponent_of_2_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
+		let [atlas_box, sprite_rect] = PackAutomatic.pack_automatic_best(sprite_box, expand_value === 'power_of_two' ? PackAutomatic.expander_power_of_two_generator(false) : PackAutomatic.expander_fixed_generator(false, expand_value));
 		let definition: AtlasDefinition = {
 			size: [BigInt(atlas_box.width), BigInt(atlas_box.height)],
 			sprite: [],
@@ -106,7 +106,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		definition_file: StoragePath,
 		atlas_file: StoragePath,
 		sprite_directory: StoragePath,
-		expand_value: number | 'exponent_of_2',
+		expand_value: number | 'power_of_two',
 	): void {
 		let [definition, atlas] = pack_automatic_fsh(sprite_directory, expand_value);
 		JsonHelper.encode_file(definition_file, definition);

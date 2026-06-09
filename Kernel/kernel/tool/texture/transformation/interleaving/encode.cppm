@@ -30,7 +30,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Interleaving {
 			Image::VariableImageView const & ripe
 		) -> Void {
 			assert_test(raw.size() == ripe.size());
-			assert_test(Math::is_padded_size_of_exponent_of_2(raw.size().width) && Math::is_padded_size_of_exponent_of_2(raw.size().height));
+			assert_test(Math::is_padded_size_of_power_of_two(raw.size().width) && Math::is_padded_size_of_power_of_two(raw.size().height));
+			assert_test(raw.size().width == raw.size().height);
 			for (auto & y : SizeRange{raw.size().height}) {
 				for (auto & x : SizeRange{raw.size().width}) {
 					auto   ripe_position = convert_index(Image::ImagePosition{x, y}, raw.size().width);

@@ -2,8 +2,6 @@ module;
 
 #include "kernel/common.hpp"
 
-// TODO: remove make(_...)_range?
-
 export module twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
@@ -137,7 +135,7 @@ export namespace Twinning::Kernel::Range {
 	inline constexpr auto make_reverse_range(
 		TIterator const & end,
 		TIterator const & begin
-	) -> auto {
+	) -> GenericRange<ReverseIterator<TIterator>> {
 		return make_range(ReverseIterator{end}, ReverseIterator{begin});
 	}
 
@@ -147,7 +145,7 @@ export namespace Twinning::Kernel::Range {
 	inline constexpr auto make_reverse_range_n(
 		TIterator const & end,
 		Size const &      size
-	) -> auto {
+	) -> GenericRange<ReverseIterator<TIterator>> {
 		return make_reverse_range(end, end - size);
 	}
 
@@ -168,7 +166,7 @@ export namespace Twinning::Kernel::Range {
 	inline constexpr auto make_moveable_range(
 		TIterator const & begin,
 		TIterator const & end
-	) -> auto {
+	) -> GenericRange<MoveableIterator<TIterator>> {
 		return make_range(MoveableIterator{begin}, MoveableIterator{end});
 	}
 
@@ -178,7 +176,7 @@ export namespace Twinning::Kernel::Range {
 	inline constexpr auto make_moveable_range_n(
 		TIterator const & begin,
 		Size const &      size
-	) -> auto {
+	) -> GenericRange<MoveableIterator<TIterator>> {
 		return make_moveable_range(begin, begin + size);
 	}
 

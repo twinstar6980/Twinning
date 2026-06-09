@@ -41,12 +41,17 @@ class _MainPageState extends State<MainPage> {
       Navigator.pop(this.context);
     }
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    var moduleSetting = ModuleHelper.query(configuration.type).querySetting(context);
-    var moduleConfiguration = ModuleHelper.query(configuration.type).parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${ModuleHelper.query(configuration.type).identifier}.json')))!);
+    var moduleInformation = ModuleHelper.query(configuration.type);
+    if (moduleInformation.draft) {
+      await StyledSnackExtension.show(context, 'unimplemented!');
+      return;
+    }
+    var moduleSetting = moduleInformation.querySetting(context);
+    var moduleConfiguration = moduleInformation.parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${ModuleHelper.query(configuration.type).identifier}.json')))!);
     this._pageList.add((
       title: configuration.title,
       type: configuration.type,
-      page: ModuleHelper.query(configuration.type).buildMainPage(
+      page: moduleInformation.buildMainPage(
         moduleSetting,
         moduleConfiguration,
         configuration.option,

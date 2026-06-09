@@ -97,7 +97,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Atlas {
 				],
 				batch: null,
 				worker: ({sprite_directory, atlas_file, definition_file}, store: {}) => {
-					Support.Atlas.Pack.pack_automatic_fs(definition_file, atlas_file, sprite_directory, 'exponent_of_2');
+					Support.Atlas.Pack.pack_automatic_fs(definition_file, atlas_file, sprite_directory, 'power_of_two');
 					return;
 				},
 			}),

@@ -140,7 +140,7 @@ export namespace Twinning::Kernel {
 			using SourceValue = decltype(map_underlying_type.template operator ()<TSource>());
 			using DestinationValue = decltype(map_underlying_type.template operator ()<TDestination>());
 			constexpr auto will_lose_digit = std::numeric_limits<SourceValue>::digits > std::numeric_limits<DestinationValue>::digits;
-			constexpr auto compute_exponent_of_2 = []<typename TValue>(ZSize const & count) -> TValue {
+			constexpr auto compute_power_of_two = []<typename TValue>(ZSize const & count) -> TValue {
 				auto result = static_cast<TValue>(1);
 				for (auto index = 0_szz; index < count; ++index) {
 					result *= static_cast<TValue>(2);
@@ -167,12 +167,12 @@ export namespace Twinning::Kernel {
 			}
 			if constexpr (IsBuiltinInteger<SourceValue> && IsBuiltinFloater<DestinationValue>) {
 				if constexpr (IsBuiltinSignedInteger<SourceValue> && (will_lose_digit)) {
-					if (source_value < -compute_exponent_of_2.template operator()<SourceValue>(std::numeric_limits<DestinationValue>::digits)) {
+					if (source_value < -compute_power_of_two.template operator()<SourceValue>(std::numeric_limits<DestinationValue>::digits)) {
 						throw ConversionException{typeid(TSource), typeid(TDestination)};
 					}
 				}
 				if constexpr (will_lose_digit) {
-					if (source_value > +compute_exponent_of_2.template operator()<SourceValue>(std::numeric_limits<DestinationValue>::digits)) {
+					if (source_value > +compute_power_of_two.template operator()<SourceValue>(std::numeric_limits<DestinationValue>::digits)) {
 						throw ConversionException{typeid(TSource), typeid(TDestination)};
 					}
 				}
@@ -201,7 +201,7 @@ export namespace Twinning::Kernel {
 					}
 				}
 				else {
-					if (source_value < -compute_exponent_of_2.template operator()<SourceValue>(std::numeric_limits<SourceValue>::digits)) {
+					if (source_value < -compute_power_of_two.template operator()<SourceValue>(std::numeric_limits<SourceValue>::digits)) {
 						throw ConversionException{typeid(TSource), typeid(TDestination)};
 					}
 				}
@@ -211,7 +211,7 @@ export namespace Twinning::Kernel {
 					}
 				}
 				else {
-					if (source_value > +compute_exponent_of_2.template operator()<SourceValue>(std::numeric_limits<SourceValue>::digits)) {
+					if (source_value > +compute_power_of_two.template operator()<SourceValue>(std::numeric_limits<SourceValue>::digits)) {
 						throw ConversionException{typeid(TSource), typeid(TDestination)};
 					}
 				}

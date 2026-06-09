@@ -85,7 +85,7 @@ export namespace Twinning::Kernel::Math {
 
 	// ----------------
 
-	inline constexpr auto is_padded_size_of_exponent_of_2(
+	inline constexpr auto is_padded_size_of_power_of_two(
 		Size const & value
 	) -> Boolean {
 		return (value != 0_sz) && ((value & (value - 1_sz)) == 0_sz);

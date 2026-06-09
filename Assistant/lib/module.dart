@@ -13,10 +13,22 @@ import '/view/core_command_sender/configuration.dart' as core_command_sender;
 import '/view/core_resource_shipper/main_page.dart' as core_resource_shipper;
 import '/view/core_resource_shipper/setting_panel.dart' as core_resource_shipper;
 import '/view/core_resource_shipper/configuration.dart' as core_resource_shipper;
+import '/view/popcap_reflection_descriptor/main_page.dart' as popcap_reflection_descriptor;
+import '/view/popcap_reflection_descriptor/setting_panel.dart' as popcap_reflection_descriptor;
+import '/view/popcap_reflection_descriptor/configuration.dart' as popcap_reflection_descriptor;
 import '/view/popcap_animation_viewer/main_page.dart' as popcap_animation_viewer;
 import '/view/popcap_animation_viewer/setting_panel.dart' as popcap_animation_viewer;
 import '/view/popcap_animation_viewer/configuration.dart' as popcap_animation_viewer;
 import '/view/popcap_animation_viewer/visual_helper.dart' as popcap_animation_viewer;
+import '/view/popcap_map_designer/main_page.dart' as popcap_map_designer;
+import '/view/popcap_map_designer/setting_panel.dart' as popcap_map_designer;
+import '/view/popcap_map_designer/configuration.dart' as popcap_map_designer;
+import '/view/popcap_package_previewer/main_page.dart' as popcap_package_previewer;
+import '/view/popcap_package_previewer/setting_panel.dart' as popcap_package_previewer;
+import '/view/popcap_package_previewer/configuration.dart' as popcap_package_previewer;
+import '/view/popcap_package_builder/main_page.dart' as popcap_package_builder;
+import '/view/popcap_package_builder/setting_panel.dart' as popcap_package_builder;
+import '/view/popcap_package_builder/configuration.dart' as popcap_package_builder;
 import '/view/kairosoft_game_manager/main_page.dart' as kairosoft_game_manager;
 import '/view/kairosoft_game_manager/setting_panel.dart' as kairosoft_game_manager;
 import '/view/kairosoft_game_manager/configuration.dart' as kairosoft_game_manager;
@@ -30,13 +42,16 @@ enum ModuleType {
   coreTaskWorker,
   coreCommandSender,
   coreResourceShipper,
+  popcapReflectionDescriptor,
   popcapAnimationViewer,
-  // TODO: popcapReflectionDescriptor,
-  // TODO: popcapPackageBuilder,
+  popcapMapDesigner,
+  popcapPackagePreviewer,
+  popcapPackageBuilder,
   kairosoftGameManager,
 }
 
 class ModuleInformation {
+  Boolean                                                                    draft;
   ModuleType                                                                 type;
   String                                                                     identifier;
   String                                                                     name;
@@ -47,6 +62,7 @@ class ModuleInformation {
   Object Function(Object json)                                               parseConfiguration;
   Future<List<String>?> Function(List<StoragePath> resource)                 generateForwardOption;
   ModuleInformation({
+    required this.draft,
     required this.type,
     required this.identifier,
     required this.name,
@@ -95,6 +111,7 @@ class ModuleHelper {
 
   static final List<ModuleInformation> _information = [
     .new(
+      draft: false,
       type: .coreTaskWorker,
       identifier: ModuleType.coreTaskWorker.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Task Worker',
@@ -116,6 +133,7 @@ class ModuleHelper {
       },
     ),
     .new(
+      draft: false,
       type: .coreCommandSender,
       identifier: ModuleType.coreCommandSender.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Command Sender',
@@ -137,6 +155,7 @@ class ModuleHelper {
       },
     ),
     .new(
+      draft: false,
       type: .coreResourceShipper,
       identifier: ModuleType.coreResourceShipper.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Resource Shipper',
@@ -163,6 +182,29 @@ class ModuleHelper {
       },
     ),
     .new(
+      draft: true, // TODO: draft
+      type: .popcapReflectionDescriptor,
+      identifier: ModuleType.popcapReflectionDescriptor.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
+      name: 'PopCap Reflection Descriptor',
+      icon: IconSet.add,
+      buildMainPage: (setting, configuration, option) => popcap_reflection_descriptor.MainPage(
+        key: GlobalKey(),
+        setting: setting.as(),
+        configuration: configuration.as(),
+        option: option,
+      ),
+      buildSettingPanel: (context) => popcap_reflection_descriptor.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.popcapReflectionDescriptor,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.popcapReflectionDescriptor,
+      parseConfiguration: (json) => popcap_reflection_descriptor.ConfigurationHelper.parseDataFromJson(json),
+      generateForwardOption: (resource) async {
+        return null;
+      },
+    ),
+    .new(
+      draft: false,
       type: .popcapAnimationViewer,
       identifier: ModuleType.popcapAnimationViewer.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Animation Viewer',
@@ -197,6 +239,73 @@ class ModuleHelper {
       },
     ),
     .new(
+      draft: true, // TODO: draft
+      type: .popcapMapDesigner,
+      identifier: ModuleType.popcapMapDesigner.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
+      name: 'PopCap Map Designer',
+      icon: IconSet.add,
+      buildMainPage: (setting, configuration, option) => popcap_map_designer.MainPage(
+        key: GlobalKey(),
+        setting: setting.as(),
+        configuration: configuration.as(),
+        option: option,
+      ),
+      buildSettingPanel: (context) => popcap_map_designer.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.popcapMapDesigner,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.popcapMapDesigner,
+      parseConfiguration: (json) => popcap_map_designer.ConfigurationHelper.parseDataFromJson(json),
+      generateForwardOption: (resource) async {
+        return null;
+      },
+    ),
+    .new(
+      draft: true, // TODO: draft
+      type: .popcapPackagePreviewer,
+      identifier: ModuleType.popcapPackagePreviewer.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
+      name: 'PopCap Package Previewer',
+      icon: IconSet.add,
+      buildMainPage: (setting, configuration, option) => popcap_package_previewer.MainPage(
+        key: GlobalKey(),
+        setting: setting.as(),
+        configuration: configuration.as(),
+        option: option,
+      ),
+      buildSettingPanel: (context) => popcap_package_previewer.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.popcapPackagePreviewer,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.popcapPackagePreviewer,
+      parseConfiguration: (json) => popcap_package_previewer.ConfigurationHelper.parseDataFromJson(json),
+      generateForwardOption: (resource) async {
+        return null;
+      },
+    ),
+    .new(
+      draft: true, // TODO: draft
+      type: .popcapPackageBuilder,
+      identifier: ModuleType.popcapPackageBuilder.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
+      name: 'PopCap Package Builder',
+      icon: IconSet.add,
+      buildMainPage: (setting, configuration, option) => popcap_package_builder.MainPage(
+        key: GlobalKey(),
+        setting: setting.as(),
+        configuration: configuration.as(),
+        option: option,
+      ),
+      buildSettingPanel: (context) => popcap_package_builder.SettingPanel(
+        data: Provider.of<SettingProvider>(context, listen: false).data.popcapPackageBuilder,
+        onUpdate: () => Provider.of<SettingProvider>(context, listen: false).save(),
+      ),
+      querySetting: (context) => Provider.of<SettingProvider>(context, listen: false).data.popcapPackageBuilder,
+      parseConfiguration: (json) => popcap_package_builder.ConfigurationHelper.parseDataFromJson(json),
+      generateForwardOption: (resource) async {
+        return null;
+      },
+    ),
+    .new(
+      draft: true, // TODO: draft
       type: .kairosoftGameManager,
       identifier: ModuleType.kairosoftGameManager.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Kairosoft Game Manager',

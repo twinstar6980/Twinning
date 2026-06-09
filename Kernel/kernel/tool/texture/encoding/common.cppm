@@ -32,6 +32,27 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 
 	struct Common {
 
+		inline static constexpr auto is_valid_format(
+			Format const & format
+		) -> Boolean {
+			auto result = k_true;
+			auto bit_count = 0_sz;
+			for (auto & channel : format.channel) {
+				if (!Math::between(channel.get<2_ix>(), 1_sz, k_type_bit_count<Byte>)) {
+					result = k_false;
+					break;
+				}
+				bit_count += channel.get<2_ix>();
+			}
+			if (!Math::is_padded_size(bit_count, k_type_bit_count<Byte>)) {
+				result = k_false;
+			}
+			if (!Math::between(bit_count, 1_sz * k_type_bit_count<Byte>, 4_sz * k_type_bit_count<Byte>)) {
+				result = k_false;
+			}
+			return result;
+		}
+
 		inline static constexpr auto get_pixel_byte_count(
 			Format const & format
 		) -> Size {
@@ -40,7 +61,8 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 				bit_count += channel.get<2_ix>();
 			}
 			assert_test(Math::is_padded_size(bit_count, k_type_bit_count<Byte>));
-			return bit_count / k_type_bit_count<Byte>;
+			auto byte_count = bit_count / k_type_bit_count<Byte>;
+			return byte_count;
 		}
 
 	};

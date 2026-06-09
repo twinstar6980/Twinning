@@ -488,7 +488,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			CategoryConstraint<IsPureInstance<TRawValue> && IsInstance<TValue ...>>
 			&& (IsIntegerBox<TRawValue>)
 			&& (IsSameOf<t_ignore_reserve, Boolean>)
-		// NOTE: avoid clang bug since v22
+		// NOTE: BUG: avoid clang bug since v22
 		// && ((IsSame<TValue, Boolean> || IsEnumerationBox<TValue>) && ...)
 		inline static auto exchange_bit_multi(
 			OutputByteStreamView & data,

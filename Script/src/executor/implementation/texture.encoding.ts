@@ -26,7 +26,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Encoding {
 					typical_argument_string({
 						identifier: 'format',
 						option: null,
-						checker: (argument: {}, value) => (KernelX.Tool.Texture.Encoding.format_expression_regex.test(value) ? null : los('executor.implementation:*.invalid_texture_encoding_format_expression')),
+						checker: (argument: {}, value) => (KernelX.Tool.Texture.Encoding.check_format_expression(value) ? null : los('executor.implementation:*.invalid_texture_encoding_format_expression')),
 						automatic: null,
 						condition: null,
 					}),
@@ -58,7 +58,7 @@ namespace Twinning.Script.Executor.Implementation.Texture.Encoding {
 					typical_argument_string({
 						identifier: 'format',
 						option: null,
-						checker: (argument: {}, value) => (KernelX.Tool.Texture.Encoding.format_expression_regex.test(value) ? null : los('executor.implementation:*.invalid_texture_encoding_format_expression')),
+						checker: (argument: {}, value) => (KernelX.Tool.Texture.Encoding.check_format_expression(value) ? null : los('executor.implementation:*.invalid_texture_encoding_format_expression')),
 						automatic: null,
 						condition: null,
 					}),

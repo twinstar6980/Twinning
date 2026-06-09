@@ -31,6 +31,8 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 			assert_test(Math::is_padded_size(image.size().width, block_size.width) && Math::is_padded_size(image.size().height, block_size.height));
 			auto block_count = image.size().area() / block_size.area();
 			if (generation == Generation::Constant::v1()) {
+				assert_test(Math::is_padded_size_of_power_of_two(image.size().width) && Math::is_padded_size_of_power_of_two(image.size().height));
+				assert_test(image.size().width == image.size().height);
 				if (!use_bpp4) {
 					throw UnsupportedException{};
 				}

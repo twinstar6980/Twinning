@@ -264,8 +264,8 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		];
 		if (format.includes('etc') || format.includes('pvrtc')) {
 			padded_size = [
-				ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[0]),
-				ConvertHelper.compute_padded_size_of_exponent_of_2(padded_size[1]),
+				ConvertHelper.compute_padded_size_of_power_of_two(padded_size[0]),
+				ConvertHelper.compute_padded_size_of_power_of_two(padded_size[1]),
 			];
 		}
 		if (format.includes('pvrtc')) {
@@ -463,13 +463,9 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		image_file: StoragePath,
 		format: Format,
 	): void {
-		let image_data = StorageHelper.read_file(image_file);
-		let image_stream = Kernel.ByteStreamView.watch(image_data.view());
-		let image_size = KernelX.Tool.Texture.Conversion.Png.size(image_stream.view());
-		let image_size_padded = compute_padded_image_size(image_size, format);
-		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
+		let image = KernelX.Tool.Texture.Conversion.Png.decode_fs_of(image_file, [false, 'dynamic', (size) => compute_padded_image_size(size, format)]);
 		let image_view = image.view();
-		KernelX.Tool.Texture.Conversion.Png.decode(image_stream, image_view.sub(Kernel.Image.ImagePosition.value([0n, 0n]), Kernel.Image.ImageSize.value(image_size)));
+		let image_size = image_view.size().value;
 		let option: EncodeOption = {
 			rgb_etc1_a_palette: null,
 		};
@@ -478,7 +474,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 				palette: KernelX.Tool.Miscellaneous.Pvz2cnAlphaPaletteTexture.evaluate_palette(image_view),
 			};
 		}
-		let data_size = compute_data_size(image_size_padded, format, option);
+		let data_size = compute_data_size(image_size, format, option);
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 		let data_stream = Kernel.ByteStreamView.watch(data.view());
 		encode(data_stream, image_view, format, option);

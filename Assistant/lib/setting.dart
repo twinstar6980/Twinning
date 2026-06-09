@@ -11,36 +11,44 @@ import '/view/core_task_worker/submission_type.dart' as core_task_worker;
 import '/view/core_task_worker/value_expression.dart' as core_task_worker;
 import '/view/core_command_sender/setting.dart' as core_command_sender;
 import '/view/core_resource_shipper/setting.dart' as core_resource_shipper;
+import '/view/popcap_reflection_descriptor/setting.dart' as popcap_reflection_descriptor;
 import '/view/popcap_animation_viewer/setting.dart' as popcap_animation_viewer;
+import '/view/popcap_map_designer/setting.dart' as popcap_map_designer;
+import '/view/popcap_package_previewer/setting.dart' as popcap_package_previewer;
+import '/view/popcap_package_builder/setting.dart' as popcap_package_builder;
 import '/view/kairosoft_game_manager/setting.dart' as kairosoft_game_manager;
 import 'package:flutter/widgets.dart';
 
 // ----------------
 
 class SettingData {
-  String                          version;
-  StyledThemeMode                 themeMode;
-  Boolean                         themeColorState;
-  Color                           themeColorLight;
-  Color                           themeColorDark;
-  Boolean                         themeFontState;
-  List<StoragePath>               themeFontPath;
-  Boolean                         windowPositionState;
-  Integer                         windowPositionX;
-  Integer                         windowPositionY;
-  Boolean                         windowSizeState;
-  Integer                         windowSizeWidth;
-  Integer                         windowSizeHeight;
-  ModuleType                      forwarderDefaultTarget;
-  Boolean                         forwarderImmediateJump;
-  StoragePath                     moduleConfigurationDirectory;
-  Map<String, StoragePath>        storagePickerHistoryLocation;
-  ModuleLauncherSetting           moduleLauncher;
-  core_task_worker.Setting        coreTaskWorker;
-  core_command_sender.Setting     coreCommandSender;
-  core_resource_shipper.Setting   coreResourceShipper;
-  popcap_animation_viewer.Setting popcapAnimationViewer;
-  kairosoft_game_manager.Setting  kairosoftGameManager;
+  String                               version;
+  StyledThemeMode                      themeMode;
+  Boolean                              themeColorState;
+  Color                                themeColorLight;
+  Color                                themeColorDark;
+  Boolean                              themeFontState;
+  List<StoragePath>                    themeFontPath;
+  Boolean                              windowPositionState;
+  Integer                              windowPositionX;
+  Integer                              windowPositionY;
+  Boolean                              windowSizeState;
+  Integer                              windowSizeWidth;
+  Integer                              windowSizeHeight;
+  ModuleType                           forwarderDefaultTarget;
+  Boolean                              forwarderImmediateJump;
+  StoragePath                          moduleConfigurationDirectory;
+  Map<String, StoragePath>             storagePickerHistoryLocation;
+  ModuleLauncherSetting                moduleLauncher;
+  core_task_worker.Setting             coreTaskWorker;
+  core_command_sender.Setting          coreCommandSender;
+  core_resource_shipper.Setting        coreResourceShipper;
+  popcap_reflection_descriptor.Setting popcapReflectionDescriptor;
+  popcap_animation_viewer.Setting      popcapAnimationViewer;
+  popcap_map_designer.Setting          popcapMapDesigner;
+  popcap_package_previewer.Setting     popcapPackagePreviewer;
+  popcap_package_builder.Setting       popcapPackageBuilder;
+  kairosoft_game_manager.Setting       kairosoftGameManager;
   SettingData({
     required this.version,
     required this.themeMode,
@@ -63,7 +71,11 @@ class SettingData {
     required this.coreTaskWorker,
     required this.coreCommandSender,
     required this.coreResourceShipper,
+    required this.popcapReflectionDescriptor,
     required this.popcapAnimationViewer,
+    required this.popcapMapDesigner,
+    required this.popcapPackagePreviewer,
+    required this.popcapPackageBuilder,
     required this.kairosoftGameManager,
   });
 }
@@ -194,7 +206,7 @@ class SettingProvider with ChangeNotifier {
       moduleConfigurationDirectory: .new(),
       storagePickerHistoryLocation: {},
       moduleLauncher: .new(
-        module: ModuleType.values.map(ModuleHelper.query).map((it) => ModuleLauncherConfiguration(
+        module: ModuleType.values.map(ModuleHelper.query).where((it) => !it.draft).map((it) => ModuleLauncherConfiguration(
           title: it.name,
           type: it.type,
           option: [],
@@ -216,6 +228,8 @@ class SettingProvider with ChangeNotifier {
         enableFilter: true,
         enableBatch: false,
       ),
+      popcapReflectionDescriptor: .new(
+      ),
       popcapAnimationViewer: .new(
         immediateSelect: true,
         automaticPlay: true,
@@ -223,6 +237,12 @@ class SettingProvider with ChangeNotifier {
         reversePlay: false,
         keepSpeed: false,
         showBoundary: false,
+      ),
+      popcapMapDesigner: .new(
+      ),
+      popcapPackagePreviewer: .new(
+      ),
+      popcapPackageBuilder: .new(
       ),
       kairosoftGameManager: .new(
         repository: [],
@@ -300,6 +320,8 @@ class SettingProvider with ChangeNotifier {
         'enable_filter': data.coreResourceShipper.enableFilter,
         'enable_batch': data.coreResourceShipper.enableBatch,
       },
+      'popcap_reflection_descriptor': {
+      },
       'popcap_animation_viewer': {
         'immediate_select': data.popcapAnimationViewer.immediateSelect,
         'automatic_play': data.popcapAnimationViewer.automaticPlay,
@@ -307,6 +329,12 @@ class SettingProvider with ChangeNotifier {
         'reverse_play': data.popcapAnimationViewer.reversePlay,
         'keep_speed': data.popcapAnimationViewer.keepSpeed,
         'show_boundary': data.popcapAnimationViewer.showBoundary,
+      },
+      'popcap_map_designer': {
+      },
+      'popcap_package_previewer': {
+      },
+      'popcap_package_builder': {
       },
       'kairosoft_game_manager': {
         'repository': data.kairosoftGameManager.repository.map((it) => it.emit()).toList(),
@@ -366,6 +394,8 @@ class SettingProvider with ChangeNotifier {
         enableFilter: (jsonPart['enable_filter'] as Boolean),
         enableBatch: (jsonPart['enable_batch'] as Boolean),
       )),
+      popcapReflectionDescriptor: (json['popcap_reflection_descriptor'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_reflection_descriptor.Setting(
+      )),
       popcapAnimationViewer: (json['popcap_animation_viewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_animation_viewer.Setting(
         immediateSelect: (jsonPart['immediate_select'] as Boolean),
         automaticPlay: (jsonPart['automatic_play'] as Boolean),
@@ -373,6 +403,12 @@ class SettingProvider with ChangeNotifier {
         reversePlay: (jsonPart['reverse_play'] as Boolean),
         keepSpeed: (jsonPart['keep_speed'] as Boolean),
         showBoundary: (jsonPart['show_boundary'] as Boolean),
+      )),
+      popcapMapDesigner: (json['popcap_map_designer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_map_designer.Setting(
+      )),
+      popcapPackagePreviewer: (json['popcap_package_previewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_package_previewer.Setting(
+      )),
+      popcapPackageBuilder: (json['popcap_package_builder'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_package_builder.Setting(
       )),
       kairosoftGameManager: (json['kairosoft_game_manager'] as Map<dynamic, dynamic>).selfLet((jsonPart) => kairosoft_game_manager.Setting(
         repository: (jsonPart['repository'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),

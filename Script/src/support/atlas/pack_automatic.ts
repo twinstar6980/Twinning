@@ -90,7 +90,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 
 	// ----------------
 
-	export function expander_exponent_of_2_generator(
+	export function expander_power_of_two_generator(
 		square: boolean,
 	): (it: Box, step: number) => void {
 		return (it, step) => {

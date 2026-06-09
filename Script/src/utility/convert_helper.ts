@@ -211,13 +211,13 @@ namespace Twinning.Script.ConvertHelper {
 
 	// ----------------
 
-	export function is_padded_size_of_exponent_of_2(
+	export function is_padded_size_of_power_of_two(
 		value: bigint,
 	): boolean {
 		return(value !== 0n) && ((value & (value - 1n)) === 0n);
 	}
 
-	export function compute_padded_size_of_exponent_of_2(
+	export function compute_padded_size_of_power_of_two(
 		value: bigint,
 	): bigint {
 		let result = 0b1n << 1n;

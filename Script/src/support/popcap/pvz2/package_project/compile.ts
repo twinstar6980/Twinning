@@ -227,7 +227,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 						}
 					}
 					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, {width: Number(value[1].size().value[0]), height: Number(value[1].size().value[1])}]));
-					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_exponent_of_2_generator(false));
+					let [atlas_box, sprite_rect_list] = Support.Atlas.PackAutomatic.pack_automatic_best(sprite_item_map, Support.Atlas.PackAutomatic.expander_power_of_two_generator(false));
 					let atlas_size = Popcap.Texture.Encoding.compute_padded_image_size([BigInt(atlas_box.width), BigInt(atlas_box.height)], conversion_setting.format);
 					let atlas = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(atlas_size));
 					let atlas_view = atlas.view();
