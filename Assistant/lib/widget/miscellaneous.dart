@@ -453,23 +453,64 @@ class NavigationDrawerDivider extends StatelessWidget {
 
 extension MoreModalDialogExtension on StyledModalDialog {
 
+  static List<StyledButton> createButton<TResult>(
+    BuildContext                         context,
+    List<({String name, TResult value})> option,
+  ) {
+    return option.map((it) => StyledButton.text(
+      content: StyledText.inherit(it.name),
+      onPressed: (context) => Navigator.pop(context, it.value),
+    )).toList();
+  }
+
+  static List<StyledButton> createButtonForContinue<TResult>(
+    BuildContext context,
+  ) {
+    return createButton(context, [
+      (name: 'Cancel', value: false),
+      (name: 'Continue', value: true),
+    ]);
+  }
+
+  // ----------------
+
   static Future<Boolean> showForConfirm(
     BuildContext context,
   ) async {
     return await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
       title: 'Confirm ?',
       contentBuilder: (context, setStateForPanel) => [],
-      actionBuilder: (context) => [
-        StyledButton.text(
-          content: StyledText.inherit('Cancel'),
-          onPressed: (context) => Navigator.pop(context, false),
-        ),
-        StyledButton.text(
-          content: StyledText.inherit('Continue'),
-          onPressed: (context) => Navigator.pop(context, true),
+      actionBuilder: (context) => createButtonForContinue(context),
+    )) ?? false;
+  }
+
+  static Future<String?> showForRename(
+    BuildContext context,
+    String       initial,
+    RegExp?      rule,
+  ) async {
+    var newName = initial;
+    var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
+      title: 'Rename',
+      contentBuilder: (context, setStateForPanel) => [
+        StyledInput.outlined(
+          type: .text,
+          format: null,
+          hint: null,
+          prefix: null,
+          suffix: null,
+          value: newName,
+          onChanged: (context, value) async {
+            if (rule == null || rule.hasMatch(value)) {
+              newName = value;
+            }
+            await refreshState(setStateForPanel);
+          },
         ),
       ],
+      actionBuilder: (context) => createButtonForContinue(context),
     )) ?? false;
+    return !canContinue ? null : newName;
   }
 
   static Future<Void> showForRevealStoragePath(
@@ -477,7 +518,7 @@ extension MoreModalDialogExtension on StyledModalDialog {
     String       title,
     StoragePath  path,
   ) async {
-    var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
+    var wantReveal = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
       title: title,
       contentBuilder: (context, setStateForPanel) => [
         StyledInput.outlined(
@@ -491,18 +532,12 @@ extension MoreModalDialogExtension on StyledModalDialog {
           },
         ),
       ],
-      actionBuilder: (context) => [
-        StyledButton.text(
-          content: StyledText.inherit('Cancel'),
-          onPressed: (context) => Navigator.pop(context, false),
-        ),
-        StyledButton.text(
-          content: StyledText.inherit('Reveal'),
-          onPressed: (context) => Navigator.pop(context, true),
-        ),
-      ],
+      actionBuilder: (context) => createButton(context, [
+        (name: 'Cancel', value: false),
+        (name: 'Reveal', value: true),
+      ]),
     )) ?? false;
-    if (canContinue) {
+    if (wantReveal) {
       await StorageHelper.reveal(path);
     }
     return;

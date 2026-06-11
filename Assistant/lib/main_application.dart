@@ -174,16 +174,7 @@ class MainApplication {
             content: StyledText.inherit(ModuleHelper.query(item).name),
           )),
         ],
-        actionBuilder: (context) => [
-          StyledButton.text(
-            content: StyledText.inherit('Cancel'),
-            onPressed: (context) => Navigator.pop(context, false),
-          ),
-          StyledButton.text(
-            content: StyledText.inherit('Continue'),
-            onPressed: (context) => Navigator.pop(context, true),
-          ),
-        ],
+        actionBuilder: (context) => MoreModalDialogExtension.createButtonForContinue(context),
       )) ?? false;
     }
     if (canContinue && targetType != null) {

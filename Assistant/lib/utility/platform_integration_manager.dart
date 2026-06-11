@@ -198,6 +198,20 @@ class PlatformIntegrationManager {
     );
   }
 
+  Future<({Integer width, Integer height, Uint8List data})> invokeOnWindowsExtractAssociatedIcon(
+    String target,
+  ) async {
+    assertTest(SystemChecker.isWindows);
+    var detail = await this._invoke('on_windows_extract_associated_icon', {
+      'target': target,
+    });
+    return (
+      width: detail['width']!.as<Integer>(),
+      height: detail['height']!.as<Integer>(),
+      data: detail['data']!.as<Uint8List>(),
+    );
+  }
+
   // #endregion
 
   // #region utility

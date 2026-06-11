@@ -42,12 +42,8 @@ class _MainPageState extends State<MainPage> {
     }
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var moduleInformation = ModuleHelper.query(configuration.type);
-    if (moduleInformation.draft) {
-      await StyledSnackExtension.show(context, 'unimplemented!');
-      return;
-    }
     var moduleSetting = moduleInformation.querySetting(context);
-    var moduleConfiguration = moduleInformation.parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${ModuleHelper.query(configuration.type).identifier}.json')))!);
+    var moduleConfiguration = moduleInformation.parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${moduleInformation.identifier}.json')))!);
     this._pageList.add((
       title: configuration.title,
       type: configuration.type,
@@ -148,7 +144,7 @@ class _MainPageState extends State<MainPage> {
 
   Future<Void> _showLauncher(
   ) async {
-    await StyledBottomSheetExtension.show<Void>(this.context, StyledModalBottomSheet.standard(
+    await StyledModalBottomSheetExtension.show<Void>(this.context, StyledModalBottomSheet.standard(
       title: 'Launcher',
       contentBuilder: (context, setStateForPanel) => [
         LauncherPanel(
@@ -295,35 +291,8 @@ class _MainPageState extends State<MainPage> {
                         break;
                       }
                       case 'rename': {
-                        var title = item.title;
-                        var canContinue = await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-                          title: 'Rename',
-                          contentBuilder: (context, setStateForPanel) => [
-                            StyledInput.outlined(
-                              type: .multiline,
-                              format: null,
-                              hint: null,
-                              prefix: null,
-                              suffix: null,
-                              value: title,
-                              onChanged: (context, value) async {
-                                title = value;
-                                await refreshState(setStateForPanel);
-                              },
-                            ),
-                          ],
-                          actionBuilder: (context) => [
-                            StyledButton.text(
-                              content: StyledText.inherit('Cancel'),
-                              onPressed: (context) => Navigator.pop(context, false),
-                            ),
-                            StyledButton.text(
-                              content: StyledText.inherit('Continue'),
-                              onPressed: (context) => Navigator.pop(context, true),
-                            ),
-                          ],
-                        )) ?? false;
-                        if (canContinue) {
+                        var title = await MoreModalDialogExtension.showForRename(context, item.title, null);
+                        if (title != null) {
                           await this._renamePage(index, title);
                         }
                         break;

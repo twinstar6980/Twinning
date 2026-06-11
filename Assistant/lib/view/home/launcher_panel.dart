@@ -51,16 +51,7 @@ class LauncherPanel extends StatelessWidget {
                     },
                   ),
                 ],
-                actionBuilder: (context) => [
-                  StyledButton.text(
-                    content: StyledText.inherit('Cancel'),
-                    onPressed: (context) => Navigator.pop(context, false),
-                  ),
-                  StyledButton.text(
-                    content: StyledText.inherit('Continue'),
-                    onPressed: (context) => Navigator.pop(context, true),
-                  ),
-                ],
+                actionBuilder: (context) => MoreModalDialogExtension.createButtonForContinue(context),
               )) ?? false;
               if (canContinue) {
                 await setting.state.handleCommand!(command);

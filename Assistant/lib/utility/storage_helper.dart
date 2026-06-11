@@ -78,7 +78,7 @@ class StorageHelper {
     else if (type == .directory) {
       await StorageHelper.createDirectory(placement);
       await for (var item in Directory(targetString).list(recursive: false, followLinks: false)) {
-        var itemName = item.path.substring(item.path.lastIndexOf(r'[\/]'));
+        var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[/\\]')) + 1);
         await StorageHelper.copy(target.join(itemName), placement.join(itemName), followLink);
       }
     }

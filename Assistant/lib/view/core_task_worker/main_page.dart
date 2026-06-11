@@ -165,7 +165,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     if (this._sessionRunning) {
       await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
         title: 'Session In Progress',
-        contentBuilder: (context, setStaate) => [],
+        contentBuilder: (context, setStateForPanel) => [],
         actionBuilder: null,
       ));
       return false;

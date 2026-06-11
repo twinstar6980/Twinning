@@ -1,12 +1,12 @@
 import '/common.dart';
 import '/utility/command_line_reader.dart';
 import '/utility/command_line_writer.dart';
-import '/utility/kairosoft_game_helper.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/kairosoft_game_manager/setting.dart';
 import '/view/kairosoft_game_manager/configuration.dart';
 import '/view/kairosoft_game_manager/game_card.dart';
+import '/view/kairosoft_game_manager/game_helper.dart';
 import 'package:flutter/widgets.dart';
 
 // ----------------
@@ -36,6 +36,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
   late List<GameInformation> _gameInformation;
+  late ScrollController      _gameListScrollController;
 
   // ----------------
 
@@ -43,7 +44,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   modulePageOpenView() async {
     if (!this.widget.setting.repository.isEmpty) {
       MoreModalDialogExtension.showForConfirm(this.context);
-      this._gameInformation = await GameRepositoryHelper.loadSteamRepository(this.widget.setting.repository.first);
+      this._gameInformation = await GameRepositoryHelper.loadWindowsSteamRepository(this.widget.setting.repository.first);
       Navigator.pop(context);
     }
     return;
@@ -86,6 +87,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   initState() {
     super.initState();
     this._gameInformation = [];
+    this._gameListScrollController = .new();
     postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
@@ -101,6 +103,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   dispose() {
+    this._gameListScrollController.dispose();
     super.dispose();
     return;
   }
@@ -113,11 +116,14 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       },
       content: FlexContainer.vertical([
         ListContainer.of(
+          padding: .fromLTRB(0, 8, 0, 8),
+          controller: this._gameListScrollController,
           itemCount: this._gameInformation.length,
           itemBuilder: (context, index) => GameCard(
             information: this._gameInformation[index],
-            onX: () {},
           ),
+        ).withStyledScrollBar(
+          controller: this._gameListScrollController,
         ).withFlexExpanded(),
       ]),
       bottom: StyledBottomBar.standard(

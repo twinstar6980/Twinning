@@ -166,15 +166,15 @@ export {
 					return thiz.extract_flutter_value_map(raw_argument, name);
 				};
 				auto raw_result = fl_value_new_map();
-				auto set_result = [&](std::string_view const & name, FlValue * const & value) -> void {
-					return thiz.infuse_flutter_value_map(raw_result, name, value);
+				auto set_result = [&](std::string_view const & name, FlValue * && value) -> void {
+					return thiz.infuse_flutter_value_map(raw_result, name, std::move(value));
 				};
 				switch (hash_string(method)) {
 					case hash_string("check_application_permission"): {
 						auto detail = thiz.handle_check_application_permission(
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
-						set_result("state", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("update_application_permission"): {
@@ -188,7 +188,7 @@ export {
 						auto detail = thiz.handle_check_application_extension(
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
-						set_result("state", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("update_application_extension"): {
@@ -203,7 +203,7 @@ export {
 						auto detail = thiz.handle_query_storage_item(
 							thiz.decode_flutter_value<std::string>(get_argument("type"))
 						);
-						set_result("target", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("reveal_storage_item"): {
@@ -220,7 +220,7 @@ export {
 							thiz.decode_flutter_value<std::string>(get_argument("location")),
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
-						set_result("target", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("push_system_notification"): {
@@ -254,7 +254,7 @@ export {
 			if (name == "notification") {
 				state = true;
 			}
-			return std::make_tuple(state);
+			return std::make_tuple(std::mvoe(state));
 		}
 
 		auto handle_update_application_permission(
@@ -278,7 +278,7 @@ export {
 			if (name == "forwarder") {
 				state = false;
 			}
-			return std::make_tuple(state);
+			return std::make_tuple(std::mvoe(state));
 		}
 
 		auto handle_update_application_extension(
@@ -307,7 +307,7 @@ export {
 			if (type == "application_temporary") {
 				target = std::string{g_get_user_data_dir()} + "/" + thiz.query_application_identifier() + "/temporary";
 			}
-			return std::make_tuple(target);
+			return std::make_tuple(std::mvoe(target));
 		}
 
 		auto handle_reveal_storage_item(
@@ -362,7 +362,7 @@ export {
 					target.emplace_back(static_cast<gchar *>(target_item->data));
 				}
 			}
-			return std::make_tuple(target);
+			return std::make_tuple(std::mvoe(target));
 		}
 
 		// ----------------
@@ -410,12 +410,12 @@ export {
 		#pragma region invoke
 
 		auto invoke(
-			std::string const &                      method,
-			std::map<std::string, FlValue *> const & argument
+			std::string const &                 method,
+			std::map<std::string, FlValue *> && argument
 		) -> void {
 			auto raw_argument = fl_value_new_map();
 			for (auto & argument_item : argument) {
-				thiz.infuse_flutter_value_map(raw_argument, argument_item.first, argument_item.second);
+				thiz.infuse_flutter_value_map(raw_argument, argument_item.first, std::move(argument_item.second));
 			}
 			fl_method_channel_invoke_method(
 				thiz.m_channel,
@@ -436,7 +436,7 @@ export {
 			return thiz.invoke(
 				"receive_application_link",
 				std::map<std::string, FlValue *>{{
-					std::make_pair("target", thiz.encode_flutter_value(target)),
+					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
 		}
@@ -445,9 +445,22 @@ export {
 
 		#pragma region utility
 
+		template <typename TFinalizer>
+		auto make_finalizer(
+			TFinalizer const & finalizer
+		) -> auto {
+			auto finalizer_wrapper = [&](auto it) {
+				delete it;
+				finalizer();
+			};
+			return std::unique_ptr<std::uint8_t, decltype(finalizer_wrapper)>{new std::uint8_t{}, std::move(finalizer_wrapper)};
+		}
+
+		// ----------------
+
 		template <typename TValue>
 		auto encode_flutter_value(
-			TValue const & ripe
+			TValue && ripe
 		) const -> FlValue * {
 			auto raw = std::add_pointer_t<FlValue>{nullptr};
 			if constexpr (std::is_same_v<TValue, bool>) {
@@ -494,7 +507,7 @@ export {
 		auto infuse_flutter_value_map(
 			FlValue * &              map,
 			std::string_view const & name,
-			FlValue * const &        value
+			FlValue * &&             value
 		) const -> void {
 			assert_test(fl_value_get_type(map) == FL_VALUE_TYPE_MAP);
 			fl_value_set_string_take(map, name.data(), value);

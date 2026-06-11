@@ -2620,7 +2620,7 @@ class _StyledModalBottomSheetState extends State<StyledModalBottomSheet> {
 
 }
 
-extension StyledBottomSheetExtension on StyledModalBottomSheet {
+extension StyledModalBottomSheetExtension on StyledModalBottomSheet {
 
   static Future<TResult?> show<TResult>(
     BuildContext           context,

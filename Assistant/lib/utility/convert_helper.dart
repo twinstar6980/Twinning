@@ -185,6 +185,16 @@ class ConvertHelper {
 
   // #endregion
 
+  // #region datetime
+
+  static String makeDateTimeToString(
+    DateTime value,
+  ) {
+    return '${value.year.toString().padLeft(4, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')} ${value.hour.toString().padLeft(2, '0')}-${value.minute.toString().padLeft(2, '0')}-${value.second.toString().padLeft(2, '0')} ${value.millisecond.toString().padLeft(3, '0')}';
+  }
+
+  // #endregion
+
   // #region image
 
   static Future<Image> parseImageFromData(

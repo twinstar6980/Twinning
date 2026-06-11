@@ -210,15 +210,15 @@ export {
 					return thiz.extract_flutter_value_map(raw_argument, name);
 				};
 				auto raw_result = flutter::EncodableMap{};
-				auto set_result = [&](std::string_view const & name, flutter::EncodableValue const & value) -> void {
-					return thiz.infuse_flutter_value_map(raw_result, name, value);
+				auto set_result = [&](std::string_view const & name, flutter::EncodableValue && value) -> void {
+					return thiz.infuse_flutter_value_map(raw_result, name, std::move(value));
 				};
 				switch (hash_string(method)) {
 					case hash_string("check_application_permission"): {
 						auto detail = thiz.handle_check_application_permission(
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
-						set_result("state", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("update_application_permission"): {
@@ -231,7 +231,7 @@ export {
 						auto detail = thiz.handle_check_application_extension(
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
-						set_result("state", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("update_application_extension"): {
@@ -245,7 +245,7 @@ export {
 						auto detail = thiz.handle_query_storage_item(
 							thiz.decode_flutter_value<std::string>(get_argument("type"))
 						);
-						set_result("target", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("reveal_storage_item"): {
@@ -261,7 +261,7 @@ export {
 							thiz.decode_flutter_value<std::string>(get_argument("location")),
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
-						set_result("target", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
 					case hash_string("push_system_notification"): {
@@ -275,7 +275,16 @@ export {
 						auto detail = thiz.handle_on_windows_query_storage_long_path(
 							thiz.decode_flutter_value<std::string>(get_argument("source"))
 						);
-						set_result("destination", thiz.encode_flutter_value(std::get<0>(detail)));
+						set_result("destination", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						break;
+					}
+					case hash_string("on_windows_extract_associated_icon"): {
+						auto detail = thiz.handle_on_windows_extract_associated_icon(
+							thiz.decode_flutter_value<std::string>(get_argument("target"))
+						);
+						set_result("width", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						set_result("height", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+						set_result("data", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
 						break;
 					}
 					default: throw std::runtime_error{"Exception: invalid method"};
@@ -301,7 +310,7 @@ export {
 			if (name == "notification") {
 				state = true;
 			}
-			return std::make_tuple(state);
+			return std::make_tuple(std::move(state));
 		}
 
 		auto handle_update_application_permission(
@@ -329,7 +338,7 @@ export {
 				auto state_exist = std::filesystem::exists(state_path);
 				state = state_exist;
 			}
-			return std::make_tuple(state);
+			return std::make_tuple(std::move(state));
 		}
 
 		auto handle_update_application_extension(
@@ -367,7 +376,7 @@ export {
 			if (type == "application_temporary") {
 				target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\temporary";
 			}
-			return std::make_tuple(target);
+			return std::make_tuple(std::move(target));
 		}
 
 		auto handle_reveal_storage_item(
@@ -459,7 +468,7 @@ export {
 					target.emplace_back(target_item_path_long);
 				}
 			}
-			return std::make_tuple(target);
+			return std::make_tuple(std::move(target));
 		}
 
 		// ----------------
@@ -510,18 +519,63 @@ export {
 			return std::make_tuple(destination);
 		}
 
+		auto handle_on_windows_extract_associated_icon(
+			std::string const & target
+		) -> std::tuple<std::int64_t, std::int64_t, std::vector<std::uint8_t>> {
+			auto target_h = winrt::to_hstring(target) | std::ranges::to<std::vector<wchar_t>>();
+			target_h.emplace_back(L'\0');
+			auto icon_index = WORD{};
+			auto icon = ExtractAssociatedIconW(nullptr, target_h.data(), &icon_index);
+			assert_test(icon != nullptr);
+			auto icon_finalizer = thiz.make_finalizer(
+				[&]() {
+					DestroyIcon(icon);
+				}
+			);
+			auto icon_info = ICONINFO{};
+			assert_test(GetIconInfo(icon, &icon_info) != FALSE);
+			auto icon_info_finalizer = thiz.make_finalizer(
+				[&]() {
+					DeleteObject(icon_info.hbmColor);
+					DeleteObject(icon_info.hbmMask);
+				}
+			);
+			auto bitmap = BITMAP{};
+			assert_test(GetObjectW(icon_info.hbmColor, sizeof(bitmap), &bitmap) != 0);
+			auto width = static_cast<std::int64_t>(bitmap.bmWidth);
+			auto height = static_cast<std::int64_t>(bitmap.bmHeight);
+			auto bitmap_info = BITMAPINFO{};
+			bitmap_info.bmiHeader.biSize = sizeof(bitmap_info.bmiHeader);
+			bitmap_info.bmiHeader.biWidth = bitmap.bmWidth;
+			bitmap_info.bmiHeader.biHeight = -bitmap.bmHeight;
+			bitmap_info.bmiHeader.biPlanes = 1;
+			bitmap_info.bmiHeader.biBitCount = 32;
+			bitmap_info.bmiHeader.biCompression = BI_RGB;
+			auto device_context = GetDC(nullptr);
+			assert_test(device_context != nullptr);
+			auto device_context_finalizer = thiz.make_finalizer(
+				[&]() {
+					ReleaseDC(nullptr, device_context);
+				}
+			);
+			auto data = std::vector<std::uint8_t>{};
+			data.resize(static_cast<std::size_t>(bitmap.bmWidth * bitmap.bmHeight * 4));
+			assert_test(GetDIBits(device_context, icon_info.hbmColor, 0, bitmap.bmHeight, data.data(), &bitmap_info, DIB_RGB_COLORS) != 0);
+			return std::make_tuple(std::move(width), std::move(height), std::move(data));
+		}
+
 		#pragma endregion
 
 		#pragma region invoke
 
 		auto invoke(
-			std::string const &                                    method,
-			std::map<std::string, flutter::EncodableValue> const & argument
+			std::string const &                               method,
+			std::map<std::string, flutter::EncodableValue> && argument
 		) -> void {
 			auto raw_argument = std::make_unique<flutter::EncodableValue>();
 			raw_argument->emplace<flutter::EncodableMap>();
 			for (auto & argument_item : argument) {
-				thiz.infuse_flutter_value_map(std::get<flutter::EncodableMap>(*raw_argument), argument_item.first, argument_item.second);
+				thiz.infuse_flutter_value_map(std::get<flutter::EncodableMap>(*raw_argument), argument_item.first, std::move(argument_item.second));
 			}
 			thiz.m_channel->InvokeMethod(method, std::move(raw_argument), nullptr);
 			return;
@@ -535,7 +589,7 @@ export {
 			return thiz.invoke(
 				"receive_application_link",
 				std::map<std::string, flutter::EncodableValue>{{
-					std::make_pair("target", thiz.encode_flutter_value(target)),
+					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
 		}
@@ -544,21 +598,40 @@ export {
 
 		#pragma region utility
 
+		template <typename TFinalizer>
+		auto make_finalizer(
+			TFinalizer const & finalizer
+		) -> auto {
+			auto finalizer_wrapper = [&](auto it) {
+				delete it;
+				finalizer();
+			};
+			return std::unique_ptr<std::uint8_t, decltype(finalizer_wrapper)>{new std::uint8_t{}, std::move(finalizer_wrapper)};
+		}
+
+		// ----------------
+
 		template <typename TValue>
 		auto encode_flutter_value(
-			TValue const & ripe
+			TValue && ripe
 		) const -> flutter::EncodableValue {
 			auto raw = flutter::EncodableValue{};
 			if constexpr (std::is_same_v<TValue, bool>) {
-				raw.emplace<bool>(ripe);
+				raw.emplace<bool>(std::move(ripe));
+			}
+			if constexpr (std::is_same_v<TValue, std::int64_t>) {
+				raw.emplace<std::int64_t>(std::move(ripe));
 			}
 			if constexpr (std::is_same_v<TValue, std::string>) {
-				raw.emplace<std::string>(ripe.data());
+				raw.emplace<std::string>(std::move(ripe));
+			}
+			if constexpr (std::is_same_v<TValue, std::vector<std::uint8_t>>) {
+				raw.emplace<std::vector<std::uint8_t>>(std::move(ripe));
 			}
 			if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
 				raw.emplace<flutter::EncodableList>();
 				for (auto & ripe_item : ripe) {
-					std::get<flutter::EncodableList>(raw).emplace_back<std::string>(ripe_item.data());
+					std::get<flutter::EncodableList>(raw).emplace_back<std::string>(std::move(ripe_item));
 				}
 			}
 			return raw;
@@ -587,12 +660,12 @@ export {
 		}
 
 		auto infuse_flutter_value_map(
-			flutter::EncodableMap &         map,
-			std::string_view const &        name,
-			flutter::EncodableValue const & value
+			flutter::EncodableMap &    map,
+			std::string_view const &   name,
+			flutter::EncodableValue && value
 		) const -> void {
 			auto raw_name = flutter::EncodableValue{std::in_place_type_t<std::string>{}, name.data()};
-			map.emplace(std::move(raw_name), value);
+			map.emplace(std::move(raw_name), std::move(value));
 			return;
 		}
 

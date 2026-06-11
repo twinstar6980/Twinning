@@ -234,7 +234,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
             tooltip: 'Method',
             icon: IconView.of(IconSet.format_list_bulleted_add),
             onPressed: (context) async {
-              await StyledBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
+              await StyledModalBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
                 title: 'Method',
                 contentBuilder: (context, setStateForPanel) => [
                   ListContainer.of(

@@ -284,7 +284,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
             tooltip: 'Resource',
             icon: IconView.of(IconSet.attach_file),
             onPressed: (context) async {
-              await StyledBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
+              await StyledModalBottomSheetExtension.show<Void>(context, StyledModalBottomSheet.standard(
                 title: 'Resource',
                 contentBuilder: (context, setStateForPanel) => [
                   Gap.vertical(12),
@@ -322,16 +322,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                               },
                             ),
                           ],
-                          actionBuilder: (context) => [
-                            StyledButton.text(
-                              content: StyledText.inherit('Cancel'),
-                              onPressed: (context) => Navigator.pop(context, false),
-                            ),
-                            StyledButton.text(
-                              content: StyledText.inherit('Continue'),
-                              onPressed: (context) => Navigator.pop(context, true),
-                            ),
-                          ],
+                          actionBuilder: (context) => MoreModalDialogExtension.createButtonForContinue(context),
                         )) ?? false;
                         if (canContinue) {
                           await this._appendResource(item);
