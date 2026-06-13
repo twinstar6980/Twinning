@@ -51,16 +51,16 @@ enum ModuleType {
 }
 
 class ModuleInformation {
-  Boolean                                                                    draft;
-  ModuleType                                                                 type;
-  String                                                                     identifier;
-  String                                                                     name;
-  IconData                                                                   icon;
-  Widget Function(Object setting, Object configuration, List<String> option) buildMainPage;
-  Widget Function(BuildContext context)                                      buildSettingPanel;
-  Object Function(BuildContext context)                                      querySetting;
-  Object Function(Object json)                                               parseConfiguration;
-  Future<List<String>?> Function(List<StoragePath> resource)                 generateForwardOption;
+  Boolean                                                                                   draft;
+  ModuleType                                                                                type;
+  String                                                                                    identifier;
+  String                                                                                    name;
+  IconData                                                                                  icon;
+  Widget Function(GlobalKey key, Object setting, Object configuration, List<String> option) buildMainPage;
+  Widget Function(BuildContext context)                                                     buildSettingPanel;
+  Object Function(BuildContext context)                                                     querySetting;
+  Object Function(Object json)                                                              parseConfiguration;
+  Future<List<String>?> Function(List<StoragePath> resource)                                generateForwardOption;
   ModuleInformation({
     required this.draft,
     required this.type,
@@ -116,8 +116,8 @@ class ModuleHelper {
       identifier: ModuleType.coreTaskWorker.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Task Worker',
       icon: IconSet.rule_settings,
-      buildMainPage: (setting, configuration, option) => core_task_worker.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => core_task_worker.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -138,8 +138,8 @@ class ModuleHelper {
       identifier: ModuleType.coreCommandSender.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Command Sender',
       icon: IconSet.send,
-      buildMainPage: (setting, configuration, option) => core_command_sender.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => core_command_sender.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -160,8 +160,8 @@ class ModuleHelper {
       identifier: ModuleType.coreResourceShipper.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Resource Shipper',
       icon: IconSet.share_windows,
-      buildMainPage: (setting, configuration, option) => core_resource_shipper.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => core_resource_shipper.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -187,8 +187,8 @@ class ModuleHelper {
       identifier: ModuleType.popcapReflectionDescriptor.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Reflection Descriptor',
       icon: IconSet.add,
-      buildMainPage: (setting, configuration, option) => popcap_reflection_descriptor.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => popcap_reflection_descriptor.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -209,8 +209,8 @@ class ModuleHelper {
       identifier: ModuleType.popcapAnimationViewer.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Animation Viewer',
       icon: IconSet.thread_unread,
-      buildMainPage: (setting, configuration, option) => popcap_animation_viewer.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => popcap_animation_viewer.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -244,8 +244,8 @@ class ModuleHelper {
       identifier: ModuleType.popcapMapDesigner.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Map Designer',
       icon: IconSet.add,
-      buildMainPage: (setting, configuration, option) => popcap_map_designer.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => popcap_map_designer.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -266,8 +266,8 @@ class ModuleHelper {
       identifier: ModuleType.popcapPackagePreviewer.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Package Previewer',
       icon: IconSet.add,
-      buildMainPage: (setting, configuration, option) => popcap_package_previewer.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => popcap_package_previewer.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -288,8 +288,8 @@ class ModuleHelper {
       identifier: ModuleType.popcapPackageBuilder.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'PopCap Package Builder',
       icon: IconSet.add,
-      buildMainPage: (setting, configuration, option) => popcap_package_builder.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => popcap_package_builder.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,
@@ -305,13 +305,13 @@ class ModuleHelper {
       },
     ),
     .new(
-      draft: true, // TODO: draft
+      draft: false,
       type: .kairosoftGameManager,
       identifier: ModuleType.kairosoftGameManager.selfLet(ConvertHelper.makeEnumerationToStringOfSnakeCase),
       name: 'Kairosoft Game Manager',
       icon: IconSet.history_edu,
-      buildMainPage: (setting, configuration, option) => kairosoft_game_manager.MainPage(
-        key: GlobalKey(),
+      buildMainPage: (key, setting, configuration, option) => kairosoft_game_manager.MainPage(
+        key: key,
         setting: setting.as(),
         configuration: configuration.as(),
         option: option,

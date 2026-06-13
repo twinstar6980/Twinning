@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/module.dart';
+import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/kairosoft_game_manager/setting.dart';
 import 'package:flutter/widgets.dart';
@@ -26,15 +27,16 @@ class SettingPanel extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) => FlexContainer.vertical([
         Gap.vertical(8),
-        SettingListItemExtension.buildForStoragePathListVariable(
+        SettingListItemExtension.buildForStoragePathVariable(
           context: context,
           setStateForOuter: setState,
-          icon: IconSet.format_list_bulleted,
-          label: 'Repository',
-          comment: (negative: 'Empty', positive: 'Defined'),
-          getValue: () => this.data.repository,
-          setValue: (value) => this.data.repository = value,
-          pickerTag: '${ModuleHelper.query(.kairosoftGameManager).identifier}.repository',
+          icon: IconSet.cards_stack,
+          label: 'Repository Of Windows Steam',
+          comment: (negative: 'Invalid', positive: 'Available'),
+          getValue: () => this.data.repositoryOfWindowsSteam,
+          setValue: (value) => this.data.repositoryOfWindowsSteam = value,
+          checkValue: (value) => StorageHelper.existDirectorySync(value),
+          pickerTag: '${ModuleHelper.query(.kairosoftGameManager).identifier}.repository_of_windows_steam',
           pickerType: [.loadDirectory],
           onUpdate: this.onUpdate,
         ),

@@ -73,7 +73,7 @@ class GameRecordPanel extends StatelessWidget {
               tooltip: 'Remove',
               icon: IconView.of(IconSet.remove),
               onPressed: (context) async {
-                if (await MoreModalDialogExtension.showForConfirm(context)) {
+                if (await MoreModalDialogExtension.showForConfirm(context, 'Remove')) {
                   await GameRecordHelper.deleteBackup(this.information, it);
                   await refreshState(setState);
                   this.onUpdate();
@@ -95,7 +95,7 @@ class GameRecordPanel extends StatelessWidget {
             ),
           ]),
           onPressed: (context) async {
-            if (await MoreModalDialogExtension.showForConfirm(context)) {
+            if (await MoreModalDialogExtension.showForConfirm(context, 'Restore')) {
               await GameRecordHelper.restoreBackup(this.information, it);
               await refreshState(setState);
               this.onUpdate();

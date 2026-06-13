@@ -2,6 +2,7 @@ import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
 import '/utility/json_helper.dart';
+import '/view/home/module_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,30 @@ class ForwardHelper {
 
   // #region utility
 
+  static Future<List<String>> execute(
+    BuildContext context,
+    List<String> argument,
+  ) async {
+    var setting = Provider.of<SettingProvider>(context, listen: false);
+    var key = GlobalKey();
+    await setting.state.homeInsertPage!(
+      key,
+      .new(
+        title: ModuleHelper.query(.coreTaskWorker).name,
+        type: .coreTaskWorker,
+        option: [
+          '-immediate_launch', 'false',
+        ],
+      ),
+      true,
+    );
+    var result = await key.currentState!.as<ModulePageState>().modulePageExecuteCommand('launch', argument);
+    await setting.state.homeRemovePage!(key);
+    return result;
+  }
+
+  // ----------------
+
   static Future<Void> forward(
     BuildContext context,
     List<String> argument,
@@ -19,7 +44,10 @@ class ForwardHelper {
     await setting.state.handleLaunch!(
       ModuleHelper.query(.coreTaskWorker).name,
       .coreTaskWorker,
-      ['-additional_argument', ...argument],
+      [
+        '-immediate_launch', 'true',
+        '-additional_argument', ...argument,
+      ],
     );
     return;
   }

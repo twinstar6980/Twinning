@@ -35,18 +35,35 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> implements ModulePageState {
 
+  late Boolean               _gameLoading;
   late List<GameInformation> _gameInformation;
   late ScrollController      _gameListScrollController;
+
+  Future<Void> _loadGame(
+  ) async {
+    this._gameInformation = [];
+    this._gameLoading = true;
+    await refreshState(this.setState);
+    try {
+      if (SystemChecker.isWindows) {
+        this._gameInformation = await GameRepositoryHelper.loadWindowsSteamRepository(this.widget.setting.repositoryOfWindowsSteam);
+      }
+    }
+    catch (e) {
+      rethrow;
+    }
+    finally {
+      this._gameLoading = false;
+      await refreshState(this.setState);
+    }
+    return;
+  }
 
   // ----------------
 
   @override
   modulePageOpenView() async {
-    if (!this.widget.setting.repository.isEmpty) {
-      MoreModalDialogExtension.showForConfirm(this.context);
-      this._gameInformation = await GameRepositoryHelper.loadWindowsSteamRepository(this.widget.setting.repository.first);
-      Navigator.pop(context);
-    }
+    await this._loadGame();
     return;
   }
 
@@ -81,11 +98,21 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     return option.done();
   }
 
+  @override
+  modulePageExecuteCommand(method, argument) async {
+    var result = <String>[];
+    switch (method) {
+      default: throw UnsupportedException();
+    }
+    return result; // ignore: dead_code
+  }
+
   // ----------------
 
   @override
   initState() {
     super.initState();
+    this._gameLoading = false;
     this._gameInformation = [];
     this._gameListScrollController = .new();
     postTask(() async {
@@ -125,9 +152,23 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         ).withStyledScrollBar(
           controller: this._gameListScrollController,
         ).withFlexExpanded(),
+        FlexContainer.horizontal([
+          StyledProgress.linear(
+            value: !this._gameLoading ? 1.0 : null,
+          ).withFlexExpanded(),
+        ]),
       ]),
       bottom: StyledBottomBar.standard(
-        primary: null,
+        primary: StyledBadge.standard(
+          label: StyledText.inherit('${this._gameInformation.length}'),
+          child: StyledFloatingButton.standard(
+            tooltip: 'Reload',
+            icon: IconView.of(IconSet.refresh),
+            onPressed: (context) async {
+              await _loadGame();
+            },
+          ),
+        ),
         secondary: [
         ],
       ),

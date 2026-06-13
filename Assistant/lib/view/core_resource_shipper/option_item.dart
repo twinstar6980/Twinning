@@ -43,18 +43,15 @@ class OptionItem extends StatelessWidget {
             StyledButton.text(
               enabled: enabled,
               tooltip: 'Preset',
-              content: FlexContainer.horizontal([
-                Gap.horizontal(8),
-                StyledText.inherit('${this.configuration.preset.nonNulls.length}'),
-                Gap.horizontal(6),
-                IconView.of(IconSet.flash_on),
-              ]),
+              iconAlign: .end,
+              icon: IconView.of(IconSet.flash_on),
+              content: StyledText.inherit('${this.configuration.preset.nonNulls.length}'),
               onPressed: (context) async {
                 var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
                   position: .under,
                   content: this.configuration.preset.map((preset) => preset == null ? null : StyledMenuItem.standard(
                     value: preset,
-                    content: StyledText.inherit(preset.name),
+                    content: StyledText.inherit(tooltip: true, preset.name),
                   )),
                 ));
                 if (preset != null) {

@@ -365,13 +365,16 @@ export {
 		auto handle_query_storage_item(
 			std::string const & type
 		) -> std::tuple<std::string> {
-			assert_test(type == "user_home" || type == "application_shared" || type == "application_temporary");
+			assert_test(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary");
 			auto target = std::string{};
 			if (type == "user_home") {
 				target = thiz.query_known_folder_path(FOLDERID_Profile);
 			}
 			if (type == "application_shared") {
 				target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier();
+			}
+			if (type == "application_persistent") {
+				target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\persistent";
 			}
 			if (type == "application_temporary") {
 				target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\temporary";

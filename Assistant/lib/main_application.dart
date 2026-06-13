@@ -142,11 +142,11 @@ class MainApplication {
     ModuleType   type,
     List<String> option,
   ) async {
-    await this._setting.state.homeInsertPage!(.new(
+    await this._setting.state.homeInsertPage!(.new(), .new(
       title: title,
       type: type,
       option: option,
-    ));
+    ), false);
     return;
   }
 

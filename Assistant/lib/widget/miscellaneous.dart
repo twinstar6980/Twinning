@@ -476,9 +476,10 @@ extension MoreModalDialogExtension on StyledModalDialog {
 
   static Future<Boolean> showForConfirm(
     BuildContext context,
+    String       title,
   ) async {
     return await StyledModalDialogExtension.show<Boolean>(context, StyledModalDialog.standard(
-      title: 'Confirm ?',
+      title: title,
       contentBuilder: (context, setStateForPanel) => [],
       actionBuilder: (context) => createButtonForContinue(context),
     )) ?? false;

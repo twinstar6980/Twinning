@@ -125,7 +125,7 @@ export {
 				FlMethodCall *    method_call,
 				gpointer          user_data
 			) -> void {
-					auto & self = *reinterpret_cast<PlatformIntegrationManager *>(user_data);
+					auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
 					g_autoptr(FlMethodResponse) response = nullptr;
 					self.handle(method_call, response);
 					g_autoptr(GError) error = nullptr;
@@ -254,7 +254,7 @@ export {
 			if (name == "notification") {
 				state = true;
 			}
-			return std::make_tuple(std::mvoe(state));
+			return std::make_tuple(std::move(state));
 		}
 
 		auto handle_update_application_permission(
@@ -278,7 +278,7 @@ export {
 			if (name == "forwarder") {
 				state = false;
 			}
-			return std::make_tuple(std::mvoe(state));
+			return std::make_tuple(std::move(state));
 		}
 
 		auto handle_update_application_extension(
@@ -296,7 +296,7 @@ export {
 		auto handle_query_storage_item(
 			std::string const & type
 		) -> std::tuple<std::string> {
-			assert_test(type == "user_home" || type == "application_shared" || type == "application_temporary");
+			assert_test(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary");
 			auto target = std::string{};
 			if (type == "user_home") {
 				target = std::string{g_get_home_dir()};
@@ -304,10 +304,13 @@ export {
 			if (type == "application_shared") {
 				target = std::string{g_get_user_data_dir()} + "/" + thiz.query_application_identifier();
 			}
+			if (type == "application_persistent") {
+				target = std::string{g_get_user_data_dir()} + "/" + thiz.query_application_identifier() + "/persistent";
+			}
 			if (type == "application_temporary") {
 				target = std::string{g_get_user_data_dir()} + "/" + thiz.query_application_identifier() + "/temporary";
 			}
-			return std::make_tuple(std::mvoe(target));
+			return std::make_tuple(std::move(target));
 		}
 
 		auto handle_reveal_storage_item(
@@ -362,7 +365,7 @@ export {
 					target.emplace_back(static_cast<gchar *>(target_item->data));
 				}
 			}
-			return std::make_tuple(std::mvoe(target));
+			return std::make_tuple(std::move(target));
 		}
 
 		// ----------------

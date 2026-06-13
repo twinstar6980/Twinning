@@ -81,16 +81,17 @@ class SettingData {
 }
 
 class SettingState {
-  Future<Void> Function(String title, ModuleType type, List<String> option)? handleLaunch;
-  Future<Void> Function(List<StoragePath> resource)?                         handleForward;
-  Future<Void> Function(List<String> command)?                               handleCommand;
-  Future<Void> Function(Uri link)?                                           handleLink;
-  GlobalKey<NavigatorState>                                                  applicationNavigatorKey;
-  List<String>                                                               themeFontFamliy;
-  Future<Void> Function()?                                                   homeShowOnboarding;
-  Future<Void> Function()?                                                   homeShowLauncher;
-  Future<Void> Function(ModuleLauncherConfiguration configuration)?          homeInsertPage;
-  List<List<core_task_worker.ValueExpression>>                               coreTaskWorkerSubmissionHistory;
+  Future<Void> Function(String title, ModuleType type, List<String> option)?                        handleLaunch;
+  Future<Void> Function(List<StoragePath> resource)?                                                handleForward;
+  Future<Void> Function(List<String> command)?                                                      handleCommand;
+  Future<Void> Function(Uri link)?                                                                  handleLink;
+  GlobalKey<NavigatorState>                                                                         applicationNavigatorKey;
+  List<String>                                                                                      themeFontFamliy;
+  Future<Void> Function()?                                                                          homeShowOnboarding;
+  Future<Void> Function()?                                                                          homeShowLauncher;
+  Future<Void> Function(GlobalKey key, ModuleLauncherConfiguration configuration, Boolean slience)? homeInsertPage;
+  Future<Void> Function(GlobalKey key)?                                                             homeRemovePage;
+  List<List<core_task_worker.ValueExpression>>                                                      coreTaskWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
     required this.handleForward,
@@ -101,6 +102,7 @@ class SettingState {
     required this.homeShowOnboarding,
     required this.homeShowLauncher,
     required this.homeInsertPage,
+    required this.homeRemovePage,
     required this.coreTaskWorkerSubmissionHistory,
   });
 }
@@ -245,7 +247,7 @@ class SettingProvider with ChangeNotifier {
       popcapPackageBuilder: .new(
       ),
       kairosoftGameManager: .new(
-        repository: [],
+        repositoryOfWindowsSteam: .new(),
       ),
     );
   }
@@ -262,6 +264,7 @@ class SettingProvider with ChangeNotifier {
       homeShowOnboarding: null,
       homeShowLauncher: null,
       homeInsertPage: null,
+      homeRemovePage: null,
       coreTaskWorkerSubmissionHistory: core_task_worker.SubmissionType.values.map((value) => <core_task_worker.ValueExpression>[]).toList(),
     );
   }
@@ -337,7 +340,7 @@ class SettingProvider with ChangeNotifier {
       'popcap_package_builder': {
       },
       'kairosoft_game_manager': {
-        'repository': data.kairosoftGameManager.repository.map((it) => it.emit()).toList(),
+        'repository_of_windows_steam': data.kairosoftGameManager.repositoryOfWindowsSteam.emit(),
       },
     };
   }
@@ -411,7 +414,7 @@ class SettingProvider with ChangeNotifier {
       popcapPackageBuilder: (json['popcap_package_builder'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_package_builder.Setting(
       )),
       kairosoftGameManager: (json['kairosoft_game_manager'] as Map<dynamic, dynamic>).selfLet((jsonPart) => kairosoft_game_manager.Setting(
-        repository: (jsonPart['repository'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
+        repositoryOfWindowsSteam: (jsonPart['repository_of_windows_steam'] as String).selfLet((it) => StoragePath.of(it)),
       )),
     );
   }

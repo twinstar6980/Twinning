@@ -1,15 +1,18 @@
 import '/common.dart';
+import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/process_helper.dart';
 import '/utility/vdf_helper.dart';
 import '/utility/platform_integration_manager.dart';
+import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
 import 'dart:ui';
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:archive/archive_io.dart' as lib;
+import 'package:flutter/widgets.dart' show BuildContext;
 
 // ----------------
 
@@ -28,35 +31,31 @@ enum GameRecordState {
 
 enum GamePackageType {
   windowsSteam,
-  windowsStandalone,
-  android,
 }
 
 class GameInformation {
   GamePackageType  packageType;
   StoragePath      packagePath;
-  String?          packageIdentifier;
-  String?          packageVersion;
+  String           packageIdentifier;
+  String           packageVersion;
   String           packageName;
   Image?           packageIcon;
-  String?          key; // TODO: rename
-  Uint8List?       keyEx; // TODO: rename
+  String?          userIdentifier;
+  Uint8List?       userKey;
   GameProgramState programState;
-  List<String>     programBackup;
   GameRecordState  recordState;
   List<String>     recordBackup;
   GameInformation(
   ) :
     this.packageType = .windowsSteam,
     this.packagePath = .new(),
-    this.packageIdentifier = null,
-    this.packageVersion = null,
+    this.packageIdentifier = '',
+    this.packageVersion = '',
     this.packageName = '',
     this.packageIcon = null,
-    this.key = null,
-    this.keyEx = null,
+    this.userIdentifier = null,
+    this.userKey = null,
     this.programState = .none,
-    this.programBackup = [],
     this.recordState = .none,
     this.recordBackup = [];
 }
@@ -69,8 +68,8 @@ class GameRecordHelper {
     GameInformation game,
   ) async {
     var result = null as StoragePath?;
-    if (game.packageType == .windowsSteam || game.packageType == .windowsStandalone) {
-      result = game.packagePath.join('saves').join(game.key ?? '0');
+    if (game.packageType == .windowsSteam) {
+      result = game.packagePath.join('saves').join(game.userIdentifier ?? '0');
     }
     result!;
     return result;
@@ -90,31 +89,35 @@ class GameRecordHelper {
 
   // #region state
 
-  static Future<GameRecordState> detectState(
-    StoragePath recordDirectory,
-    Uint8List?  key,
+  static Future<Void> detectState(
+    GameInformation game,
   ) async {
-    var state = GameRecordState.invalid;
-    var itemList = await GameRecordHelper._listContent(recordDirectory);
-    if (itemList.isEmpty) {
-      state = .none;
-    }
-    else if (itemList.firstWhereOrNull((it) => it.name()! == '0000') != null) {
-      var itemFile = recordDirectory.join('0000');
-      var itemData = await StorageHelper.readFileLimited(itemFile, 8);
-      if (itemData.length == 8) {
-        if (itemData.buffer.asUint32List().first == 0x00000000) {
-          state = .decrypted;
+    game.recordState = .none;
+    var originalDirectory = await GameRecordHelper._queryOriginalDirectory(game);
+    if (await StorageHelper.existDirectory(originalDirectory)) {
+      var contentItemList = await GameRecordHelper._listContent(originalDirectory);
+      if (!contentItemList.isEmpty) {
+        var contentItemFile = contentItemList.firstWhereOrNull((it) => it.name()! == '0000');
+        if (contentItemFile == null) {
+          game.recordState = .invalid;
         }
-        else if (key != null) {
-          GameRecordHelper._encryptData(itemData, key);
-          if (itemData.buffer.asUint32List().first == 0x00000000) {
-            state = .original;
+        else {
+          var contentItemData = await StorageHelper.readFileLimited(originalDirectory.push(contentItemFile), 8);
+          if (contentItemData.length == 8) {
+            if (contentItemData.buffer.asUint32List().first == 0x00000000) {
+              game.recordState = .decrypted;
+            }
+            else if (game.userKey != null) {
+              GameRecordHelper._encryptData(contentItemData, game.userKey!);
+              if (contentItemData.buffer.asUint32List().first == 0x00000000) {
+                game.recordState = .original;
+              }
+            }
           }
         }
       }
     }
-    return state;
+    return;
   }
 
   // #endregion
@@ -149,12 +152,12 @@ class GameRecordHelper {
   }
 
   static Future<Void> _encryptDirectory(
-    StoragePath recordDirectory,
+    StoragePath targetDirectory,
     Uint8List?  key,
   ) async {
-    var itemList = await GameRecordHelper._listContent(recordDirectory);
-    for (var item in itemList) {
-      await GameRecordHelper._encryptFile(recordDirectory.push(item), recordDirectory.push(item), key);
+    var contentItemList = await GameRecordHelper._listContent(targetDirectory);
+    for (var contentItem in contentItemList) {
+      await GameRecordHelper._encryptFile(targetDirectory.push(contentItem), targetDirectory.push(contentItem), key);
     }
     return;
   }
@@ -164,9 +167,9 @@ class GameRecordHelper {
   static Future<Void> encrypt(
     GameInformation game,
   ) async {
-    var recordDirectory = await _queryOriginalDirectory(game);
-    await _encryptDirectory(recordDirectory, game.keyEx);
-    game.recordState = await detectState(recordDirectory, game.keyEx);
+    var originalDirectory = await GameRecordHelper._queryOriginalDirectory(game);
+    await GameRecordHelper._encryptDirectory(originalDirectory, game.userKey);
+    await GameRecordHelper.detectState(game);
     return;
   }
 
@@ -178,7 +181,7 @@ class GameRecordHelper {
     GameInformation game,
     String?         identifier,
   ) async {
-    var result = await GameRepositoryHelper.queryPackageDirectory(game);
+    var result = await GameRepositoryHelper.queryStoreDirectory(game);
     result = result.join('record');
     if (identifier != null) {
       result = result.join(identifier);
@@ -188,25 +191,25 @@ class GameRecordHelper {
 
   // ----------------
 
-  static Future<List<String>> listBackup(
+  static Future<Void> listBackup(
     GameInformation game,
   ) async {
     var backupRootDirectory = await _queryBackupDirectory(game, null);
-    var backupNameList = <String>[];
+    game.recordBackup = [];
     if (await StorageHelper.existDirectory(backupRootDirectory)) {
-      backupNameList = (await StorageHelper.listDirectory(backupRootDirectory, 1, false, false, false, true)).map((it) => it.name()!).toList();
+      game.recordBackup = (await StorageHelper.listDirectory(backupRootDirectory, 1, false, false, false, true)).map((it) => it.name()!).toList();
     }
-    return backupNameList;
+    return;
   }
 
   static Future<Void> createBackup(
     GameInformation game,
     String          identifier,
   ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
+    var backupDirectory = await GameRecordHelper._queryBackupDirectory(game, identifier);
     assertTest(!await StorageHelper.exist(backupDirectory));
-    var originalDirectory = await _queryOriginalDirectory(game);
-    var contentFileList = await _listContent(originalDirectory);
+    var originalDirectory = await GameRecordHelper._queryOriginalDirectory(game);
+    var contentFileList = await GameRecordHelper._listContent(originalDirectory);
     await StorageHelper.createDirectory(backupDirectory);
     for (var contentFile in contentFileList) {
       await StorageHelper.copy(originalDirectory.push(contentFile), backupDirectory.push(contentFile), false);
@@ -219,7 +222,7 @@ class GameRecordHelper {
     GameInformation game,
     String          identifier,
   ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
+    var backupDirectory = await GameRecordHelper._queryBackupDirectory(game, identifier);
     assertTest(await StorageHelper.existDirectory(backupDirectory));
     await StorageHelper.remove(backupDirectory);
     game.recordBackup.remove(identifier);
@@ -231,10 +234,10 @@ class GameRecordHelper {
     String          identifier,
     String          newIdentifier,
   ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
+    var backupDirectory = await GameRecordHelper._queryBackupDirectory(game, identifier);
     assertTest(await StorageHelper.existDirectory(backupDirectory));
     if (newIdentifier != identifier) {
-      var newBackupDirectory = await _queryBackupDirectory(game, newIdentifier);
+      var newBackupDirectory = await GameRecordHelper._queryBackupDirectory(game, newIdentifier);
       assertTest(!await StorageHelper.exist(newBackupDirectory));
       await StorageHelper.rename(backupDirectory, newBackupDirectory);
       game.recordBackup[game.recordBackup.indexOf(identifier)] = newIdentifier;
@@ -246,13 +249,14 @@ class GameRecordHelper {
     GameInformation game,
     String          identifier,
   ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
+    var backupDirectory = await GameRecordHelper._queryBackupDirectory(game, identifier);
     assertTest(await StorageHelper.existDirectory(backupDirectory));
-    var originalDirectory = await _queryOriginalDirectory(game);
+    var originalDirectory = await GameRecordHelper._queryOriginalDirectory(game);
     if (await StorageHelper.exist(originalDirectory)) {
       await StorageHelper.remove(originalDirectory);
     }
     await StorageHelper.copy(backupDirectory, originalDirectory, false);
+    await GameRecordHelper.detectState(game);
     return;
   }
 
@@ -318,11 +322,32 @@ class GameProgramHelper {
     GameInformation game,
   ) async {
     var result = null as StoragePath?;
-    if (game.packageType == .windowsSteam || game.packageType == .windowsStandalone) {
+    if (game.packageType == .windowsSteam) {
       result = game.packagePath.join('GameAssembly.dll');
     }
     result!;
     return result;
+  }
+
+  // #endregion
+
+  // #region state
+
+  static Future<Void> detectState(
+    GameInformation game,
+  ) async {
+    game.programState = .none;
+    var originalFile = await GameProgramHelper._queryOriginalFile(game);
+    if (await StorageHelper.existFile(originalFile)) {
+      var backupDirectory = await GameProgramHelper._queryBackupDirectory(game);
+      if (!await StorageHelper.existDirectory(backupDirectory)) {
+        game.programState = .original;
+      }
+      else {
+        game.programState = .modified;
+      }
+    }
+    return;
   }
 
   // #endregion
@@ -333,10 +358,24 @@ class GameProgramHelper {
     GameInformation game,
     Boolean         disableRecordEncryption,
     Boolean         enableDebugMode,
+    BuildContext    context,
   ) async {
-    var originalFile = await _queryOriginalFile(game);
+    if (game.programState == .modified) {
+      await GameProgramHelper.restoreBackup(game);
+    }
+    await GameProgramHelper.createBackup(game);
+    var originalFile = await GameProgramHelper._queryOriginalFile(game);
     assertTest(await StorageHelper.existFile(originalFile));
-    // TODO
+    var taskResult = await core_task_worker.ForwardHelper.execute(context, core_task_worker.ForwardHelper.makeArgumentForCommand(
+      null,
+      'kairosoft.game.program.modify',
+      {
+        'target': game.packagePath.emit(),
+        'disable_record_encryption': disableRecordEncryption,
+        'enable_debug_mode': enableDebugMode,
+      },
+    ));
+    assertTest(taskResult.first == 's');
     return;
   }
 
@@ -346,81 +385,42 @@ class GameProgramHelper {
 
   static Future<StoragePath> _queryBackupDirectory(
     GameInformation game,
-    String?         identifier,
   ) async {
-    var result = await GameRepositoryHelper.queryPackageDirectory(game);
-    result = result.join('program');
-    if (identifier != null) {
-      result = result.join(identifier);
+    var result = null as StoragePath?;
+    if (game.packageType == .windowsSteam) {
+      result = game.packagePath.join('.${ApplicationInformation.identifier}').join('backup_${game.packageVersion}');
     }
+    result!;
     return result;
   }
 
   // ----------------
 
-  static Future<List<String>> listBackup(
-    GameInformation game,
-  ) async {
-    var backupRootDirectory = await _queryBackupDirectory(game, null);
-    var backupNameList = <String>[];
-    if (await StorageHelper.existDirectory(backupRootDirectory)) {
-      backupNameList = (await StorageHelper.listDirectory(backupRootDirectory, 1, false, false, false, true)).map((it) => it.name()!).toList();
-    }
-    return backupNameList;
-  }
-
   static Future<Void> createBackup(
     GameInformation game,
-    String          identifier,
   ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
+    var backupDirectory = await GameProgramHelper._queryBackupDirectory(game);
     assertTest(!await StorageHelper.exist(backupDirectory));
-    var originalFile = await _queryOriginalFile(game);
+    var originalFile = await GameProgramHelper._queryOriginalFile(game);
     assertTest(await StorageHelper.existFile(originalFile));
     await StorageHelper.createDirectory(backupDirectory);
     await StorageHelper.copy(originalFile, backupDirectory.join(originalFile.name()!), false);
-    game.programBackup.add(identifier);
-    return;
-  }
-
-  static Future<Void> deleteBackup(
-    GameInformation game,
-    String          identifier,
-  ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
-    assertTest(await StorageHelper.existDirectory(backupDirectory));
-    await StorageHelper.remove(backupDirectory);
-    game.programBackup.remove(identifier);
-    return;
-  }
-
-  static Future<Void> renameBackup(
-    GameInformation game,
-    String          identifier,
-    String          newIdentifier,
-  ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
-    assertTest(await StorageHelper.existDirectory(backupDirectory));
-    if (newIdentifier != identifier) {
-      var newBackupDirectory = await _queryBackupDirectory(game, newIdentifier);
-      assertTest(!await StorageHelper.exist(newBackupDirectory));
-      await StorageHelper.rename(backupDirectory, newBackupDirectory);
-      game.programBackup[game.programBackup.indexOf(identifier)] = newIdentifier;
-    }
+    game.programState = .modified;
     return;
   }
 
   static Future<Void> restoreBackup(
     GameInformation game,
-    String          identifier,
   ) async {
-    var backupDirectory = await _queryBackupDirectory(game, identifier);
+    var backupDirectory = await GameProgramHelper._queryBackupDirectory(game);
     assertTest(await StorageHelper.existDirectory(backupDirectory));
-    var originalFile = await _queryOriginalFile(game);
+    var originalFile = await GameProgramHelper._queryOriginalFile(game);
     if (await StorageHelper.exist(originalFile)) {
       await StorageHelper.remove(originalFile);
     }
     await StorageHelper.copy(backupDirectory.join(originalFile.name()!), originalFile, false);
+    await StorageHelper.remove(backupDirectory);
+    game.programState = .original;
     return;
   }
 
@@ -432,82 +432,19 @@ class GameRepositoryHelper {
 
   // #region common
 
-  static Future<StoragePath> queryPackageDirectory(
+  static Future<StoragePath> queryStoreDirectory(
     GameInformation game,
   ) async {
-    return (await StorageHelper.query(.applicationShared)).join('kr').join(game.packageName);
+    return (await StorageHelper.query(.applicationPersistent))
+      .join(ModuleHelper.query(.kairosoftGameManager).identifier)
+      .join(game.packageName);
   }
 
-  static Future<Image?> extractProgramIcon(
+  static Future<Image?> extractWindowsProgramIcon(
     StoragePath programFile,
   ) async {
     var icon = await PlatformIntegrationManager.instance.invokeOnWindowsExtractAssociatedIcon(programFile.emitNative());
     return await ConvertHelper.parseImageFromData(icon.data, width: icon.width, height: icon.height, isRawBgra: true);
-  }
-
-  static Future<({GameProgramState program, GameRecordState record})> checkGameState(
-    StoragePath gameDirectory,
-    String?     version,
-    String      user,
-  ) async {
-    var programState = GameProgramState.none;
-    var recordState = GameRecordState.none;
-    if (await StorageHelper.existFile(gameDirectory.join('KairoGames.exe'))) {
-      programState = !await StorageHelper.existFile(gameDirectory.join('KairoGames.exe.${version ?? '0'}.bak'))
-        ? .original
-        : .modified;
-    }
-    if (await StorageHelper.existDirectory(gameDirectory.join('saves').join('${user}'))) {
-      recordState = await GameRecordHelper.detectState(gameDirectory.join('saves').join('${user}'), GameRepositoryHelper.makeKeyFromWindowsSteamUser(user));
-    }
-    return (program: programState, record: recordState);
-  }
-
-  // #endregion
-
-  // #region windows standalone
-
-  static Future<GameInformation?> loadWindowsStandaloneGame(
-    StoragePath gameDirectory,
-  ) async {
-    if (!await StorageHelper.existFile(gameDirectory.join('KairoGames.exe'))) {
-      return null;
-    }
-    var information = GameInformation();
-    information.packagePath = gameDirectory;
-    information.packageIdentifier = null;
-    information.packageVersion = null;
-    information.packageName = gameDirectory.name()!;
-    information.packageIcon = await GameRepositoryHelper.extractProgramIcon(gameDirectory.join('KairoGames.exe'));
-    information.key = '0';
-    if (!await StorageHelper.existDirectory(gameDirectory.join('saves'))) {
-      information.key = (await StorageHelper.listDirectory(gameDirectory.join('saves'), 1, true, false, false, true)).firstWhereOrNull((it) => RegExp(r'^\d+$').hasMatch(it.name()!))?.name()! ?? '0';
-    }
-    var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.packageVersion, information.key!);
-    information.programState = gameState.program;
-    information.recordState = gameState.record;
-    return information;
-  }
-
-  static Future<List<GameInformation>> loadWindowsStandaloneRepository(
-    StoragePath repositoryDirectory,
-  ) async {
-    var libraryList = await StorageHelper.listDirectory(repositoryDirectory, 1, true, false, false, true);
-    var result = <GameInformation>[];
-    for (var library in libraryList) {
-      var libraryDirectory = repositoryDirectory.push(library);
-      var gameConfiguration = await GameRepositoryHelper.loadWindowsStandaloneGame(libraryDirectory);
-      if (gameConfiguration != null) {
-        result.add(gameConfiguration);
-      }
-    }
-    return result;
-  }
-
-  static Future<Boolean> checkWindowsStandaloneRepository(
-    StoragePath repositoryDirectory,
-  ) async {
-    return await StorageHelper.existDirectory(repositoryDirectory);
   }
 
   // #endregion
@@ -541,24 +478,24 @@ class GameRepositoryHelper {
       return null;
     }
     var information = GameInformation();
+    information.packageType = .windowsSteam;
     information.packagePath = gameDirectory;
     information.packageIdentifier = gameIdentifier;
     information.packageVersion = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['buildid']!.as<Integer>().toString();
     information.packageName = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['name']!.as<String>();
-    information.packageIcon = await GameRepositoryHelper.extractProgramIcon(gameDirectory.join('KairoGames.exe'));
-    information.key = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
-    information.keyEx = GameRepositoryHelper.makeKeyFromWindowsSteamUser(information.key!);
-    var gameState = await GameRepositoryHelper.checkGameState(gameDirectory, information.packageVersion, information.key!);
-    information.programState = gameState.program;
-    information.programBackup = await GameProgramHelper.listBackup(information);
-    information.recordState = gameState.record;
-    information.recordBackup = await GameRecordHelper.listBackup(information);
+    information.packageIcon = await GameRepositoryHelper.extractWindowsProgramIcon(gameDirectory.join('KairoGames.exe'));
+    information.userIdentifier = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
+    information.userKey = GameRepositoryHelper.makeKeyFromWindowsSteamUser(information.userIdentifier!);
+    await GameProgramHelper.detectState(information);
+    await GameRecordHelper.detectState(information);
+    await GameRecordHelper.listBackup(information);
     return information;
   }
 
   static Future<List<GameInformation>> loadWindowsSteamRepository(
     StoragePath repositoryDirectory,
   ) async {
+    assertTest(await GameRepositoryHelper.checkWindowsSteamRepository(repositoryDirectory));
     var libraryList = await VdfHelper.decodeFile(repositoryDirectory.join('steamapps').join('libraryfolders.vdf'));
     assertTest(libraryList.length == 1);
     assertTest(libraryList.entries.first.key == 'libraryfolders');
@@ -593,9 +530,22 @@ class GameActionHelper {
   static Future<Void> reload(
     GameInformation game,
   ) async {
+    var newInformation = null as GameInformation?;
     if (game.packageType == .windowsSteam) {
-      // GameRepositoryHelper.loadWindowsSteamGame(libraryDirectory, gameIdentifier)
+      newInformation = await GameRepositoryHelper.loadWindowsSteamGame(game.packagePath.parent()!.parent()!.parent()!, game.packageIdentifier);
     }
+    newInformation!;
+    game.packageType = newInformation.packageType;
+    game.packagePath = newInformation.packagePath;
+    game.packageIdentifier = newInformation.packageIdentifier;
+    game.packageVersion = newInformation.packageVersion;
+    game.packageName = newInformation.packageName;
+    game.packageIcon = newInformation.packageIcon;
+    game.userIdentifier = newInformation.userIdentifier;
+    game.userKey = newInformation.userKey;
+    game.programState = newInformation.programState;
+    game.recordState = newInformation.recordState;
+    game.recordBackup = newInformation.recordBackup;
     return;
   }
 
@@ -609,7 +559,7 @@ class GameActionHelper {
   static Future<Void> launch(
     GameInformation game,
   ) async {
-    if (game.packageType == .windowsSteam || game.packageType == .windowsStandalone) {
+    if (game.packageType == .windowsSteam) {
       await ProcessHelper.runProcess(game.packagePath.join('KairoGames.exe'), [], null, null);
     }
     return;

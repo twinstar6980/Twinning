@@ -217,7 +217,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   private func handleQueryStorageItem(
     _ type: String,
   ) async throws -> String {
-    guard type == "user_home" || type == "application_shared" || type == "application_temporary" else {
+    guard type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     var target: String? = nil
@@ -226,6 +226,9 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     }
     if type == "application_shared" {
       target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!))"
+    }
+    if type == "application_persistent" {
+      target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!))/persistent"
     }
     if type == "application_temporary" {
       target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!))/temporary"

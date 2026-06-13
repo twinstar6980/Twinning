@@ -39,7 +39,7 @@ class CommandPanel extends StatelessWidget {
   @override
   build(context) {
     return StatefulBuilder(
-      builder: (context, setState) => StyledCard.outlined(
+      builder: (context, setState) => StyledCard.elevated(
         padding: .fromLTRB(16, 8, 16, 16),
         content: FlexContainer.vertical([
           FlexContainer.horizontal([
@@ -72,7 +72,7 @@ class CommandPanel extends StatelessWidget {
               tooltip: 'Remove',
               icon: IconView.of(IconSet.clear_all),
               onPressed: (context) async {
-                if (this.argument.every((value) => value.value == null) || await MoreModalDialogExtension.showForConfirm(context)) {
+                if (this.argument.every((value) => value.value == null) || await MoreModalDialogExtension.showForConfirm(context, 'Remove')) {
                   this.onRemove();
                 }
               },
@@ -100,41 +100,35 @@ class CommandPanel extends StatelessWidget {
           Gap.vertical(8),
           FlexContainer.horizontal([
             Gap.expanded(),
-            Gap.horizontal(8),
-            StyledIconButton.filledTonal(
-              tooltip: 'Preset',
-              selected: false,
-              icon: FlexContainer.horizontal([
-                Gap.horizontal(8),
-                StyledText.inherit('${this.itemConfiguration.preset.nonNulls.length}'),
-                Gap.horizontal(4),
-                IconView.of(IconSet.flash_on),
-              ]),
-              onPressed: (context) async {
-                var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
-                  position: .under,
-                  content: this.itemConfiguration.preset.map((preset) => preset == null ? null : StyledMenuItem.standard(
-                    value: preset,
-                    content: StyledText.inherit(preset.name),
-                  )),
-                ));
-                if (preset != null) {
-                  for (var argument in preset.argument.entries) {
-                    var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
-                    assertTest(argumentIndex != -1);
-                    this.argument[argumentIndex] = .of(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
+            StyledBadge.standard(
+              label: StyledText.inherit('${this.itemConfiguration.preset.nonNulls.length}'),
+              child: StyledButton.outlined(
+                tooltip: 'Preset',
+                content: IconView.of(IconSet.flash_on),
+                onPressed: (context) async {
+                  var preset = await StyledMenuExtension.show<PresetConfiguration>(context, StyledMenu.standard(
+                    position: .under,
+                    content: this.itemConfiguration.preset.map((preset) => preset == null ? null : StyledMenuItem.standard(
+                      value: preset,
+                      content: StyledText.inherit(tooltip: true, preset.name),
+                    )),
+                  ));
+                  if (preset != null) {
+                    for (var argument in preset.argument.entries) {
+                      var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
+                      assertTest(argumentIndex != -1);
+                      this.argument[argumentIndex] = .of(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
+                    }
+                    await refreshState(setState);
                   }
-                  await refreshState(setState);
-                }
-              },
+                },
+              ),
             ),
             Gap.horizontal(8),
-            StyledIconButton.filledTonal(
+            StyledButton.filledTonal(
               enabled: this.itemConfiguration.batch != null,
               tooltip: 'Batch',
-              selected: this.batch.value,
-              icon: IconView.of(IconSet.layers),
-              iconOnSelected: IconView.of(IconSet.layers, fill: 1),
+              content: IconView.of(IconSet.layers, fill: !this.batch.value ? 0 : 1),
               onPressed: (context) async {
                 this.batch.value = !this.batch.value;
                 await refreshState(setState);

@@ -31,47 +31,58 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  late List<({String title, ModuleType type, Widget page})> _pageList;
-  late Integer                                              _pageIndex;
+  late List<({GlobalKey key, String title, ModuleType type, Widget page})> _pageList;
+  late Integer                                                             _pageIndex;
 
   Future<Void> _insertPage(
+    GlobalKey                   key,
     ModuleLauncherConfiguration configuration,
+    Boolean                     slience,
   ) async {
-    while (Navigator.canPop(this.context)) {
-      Navigator.pop(this.context);
+    if (!slience) {
+      while (Navigator.canPop(this.context)) {
+        Navigator.pop(this.context);
+      }
     }
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     var moduleInformation = ModuleHelper.query(configuration.type);
     var moduleSetting = moduleInformation.querySetting(context);
     var moduleConfiguration = moduleInformation.parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${moduleInformation.identifier}.json')))!);
     this._pageList.add((
+      key: key,
       title: configuration.title,
       type: configuration.type,
       page: moduleInformation.buildMainPage(
+        key,
         moduleSetting,
         moduleConfiguration,
         configuration.option,
       ),
     ));
-    if (this._pageIndex != -1) {
-      await this._pageList[this._pageIndex].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
+    if (!slience) {
+      if (this._pageIndex != -1) {
+        await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageExitView();
+      }
+      this._pageIndex = this._pageList.length - 1;
     }
-    this._pageIndex = this._pageList.length - 1;
     await refreshState(this.setState);
-    await this._pageList[this._pageIndex].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
+    if (!slience) {
+      await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageEnterView();
+    }
     await Future.delayed(.new(milliseconds: 10));
     return;
   }
 
   Future<Void> _removePage(
-    Integer index,
+    GlobalKey key,
   ) async {
-    assertTest(0 <= index && index < this._pageList.length);
-    if (!await this._pageList[index].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCloseView()) {
+    var index = this._pageList.indexWhere((it) => it.key == key);
+    assertTest(index != -1);
+    if (!await this._pageList[index].key.currentState!.as<ModulePageState>().modulePageCloseView()) {
       return;
     }
     if (this._pageIndex == index) {
-      await this._pageList[this._pageIndex].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
+      await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageExitView();
     }
     this._pageList.removeAt(index);
     if (this._pageIndex > index) {
@@ -82,7 +93,7 @@ class _MainPageState extends State<MainPage> {
         this._pageIndex--;
       }
       if (this._pageIndex != -1) {
-        await this._pageList[this._pageIndex].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
+        await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageEnterView();
       }
     }
     await refreshState(this.setState);
@@ -90,11 +101,13 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<Void> _renamePage(
-    Integer index,
-    String  title,
+    GlobalKey key,
+    String    title,
   ) async {
-    assertTest(0 <= index && index < this._pageList.length);
+    var index = this._pageList.indexWhere((it) => it.key == key);
+    assertTest(index != -1);
     this._pageList[index] = (
+      key: this._pageList[index].key,
       title: title,
       type: this._pageList[index].type,
       page: this._pageList[index].page,
@@ -104,13 +117,14 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<Void> _memorizePage(
-    Integer index,
+    GlobalKey key,
   ) async {
-    assertTest(0 <= index && index < this._pageList.length);
+    var index = this._pageList.indexWhere((it) => it.key == key);
+    assertTest(index != -1);
     var configuration = ModuleLauncherConfiguration(
       title: this._pageList[index].title,
       type: this._pageList[index].type,
-      option: await this._pageList[index].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
+      option: await this._pageList[index].key.currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
     var setting = Provider.of<SettingProvider>(this.context, listen: false);
     setting.data.moduleLauncher.pinned.add(configuration);
@@ -119,26 +133,28 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<Void> _duplicatePage(
-    Integer index,
+    GlobalKey key,
   ) async {
-    assertTest(0 <= index && index < this._pageList.length);
+    var index = this._pageList.indexWhere((it) => it.key == key);
+    assertTest(index != -1);
     var configuration = ModuleLauncherConfiguration(
       title: this._pageList[index].title,
       type: this._pageList[index].type,
-      option: await this._pageList[index].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageCollectOption(),
+      option: await this._pageList[index].key.currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
-    await this._insertPage(configuration);
+    await this._insertPage(.new(), configuration, false);
     return;
   }
 
   Future<Void> _togglePage(
-    Integer index,
+    GlobalKey key,
   ) async {
-    assertTest(0 <= index && index < this._pageList.length);
-    await this._pageList[this._pageIndex].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageExitView();
+    var index = this._pageList.indexWhere((it) => it.key == key);
+    assertTest(index != -1);
+    await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageExitView();
     this._pageIndex = index;
     await refreshState(this.setState);
-    await this._pageList[this._pageIndex].page.key!.as<GlobalKey>().currentState!.as<ModulePageState>().modulePageEnterView();
+    await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageEnterView();
     return;
   }
 
@@ -150,7 +166,7 @@ class _MainPageState extends State<MainPage> {
         LauncherPanel(
           onLaunch: (configuration) async {
             Navigator.pop(context);
-            await this._insertPage(configuration);
+            await this._insertPage(.new(), configuration, false);
           },
         ),
       ],
@@ -186,6 +202,7 @@ class _MainPageState extends State<MainPage> {
       setting.state.homeShowOnboarding = this._showOnboarding;
       setting.state.homeShowLauncher = this._showLauncher;
       setting.state.homeInsertPage = this._insertPage;
+      setting.state.homeRemovePage = this._removePage;
     }
     return;
   }
@@ -281,28 +298,28 @@ class _MainPageState extends State<MainPage> {
                     ].map((value) => StyledMenuItem.standard(
                       value: value.value,
                       leading: IconView.of(value.icon),
-                      content: StyledText.inherit(value.text),
+                      content: StyledText.inherit(tooltip: true, value.text),
                     )),
                   ));
                   if (action != null) {
                     switch (action) {
                       case 'remove': {
-                        await this._removePage(index);
+                        await this._removePage(item.key);
                         break;
                       }
                       case 'rename': {
                         var title = await MoreModalDialogExtension.showForRename(context, item.title, null);
                         if (title != null) {
-                          await this._renamePage(index, title);
+                          await this._renamePage(item.key, title);
                         }
                         break;
                       }
                       case 'memorize': {
-                        await this._memorizePage(index);
+                        await this._memorizePage(item.key);
                         break;
                       }
                       case 'duplicate': {
-                        await this._duplicatePage(index);
+                        await this._duplicatePage(item.key);
                         break;
                       }
                       default: throw UnreachableException();
@@ -313,7 +330,7 @@ class _MainPageState extends State<MainPage> {
             ],
             onPressed: (context) async {
               Navigator.pop(context);
-              await this._togglePage(index);
+              await this._togglePage(item.key);
             },
           )),
           Gap.vertical(16),

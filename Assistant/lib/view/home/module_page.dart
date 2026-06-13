@@ -68,6 +68,13 @@ abstract class ModulePageState {
   Future<List<String>> modulePageCollectOption(
   );
 
+  // ----------------
+
+  Future<List<String>> modulePageExecuteCommand(
+    String       method,
+    List<String> argument,
+  );
+
   // #endregion
 
 }

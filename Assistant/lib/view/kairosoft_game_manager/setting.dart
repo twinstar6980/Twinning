@@ -4,8 +4,8 @@ import '/utility/storage_path.dart';
 // ----------------
 
 class Setting {
-  List<StoragePath> repository;
+  StoragePath repositoryOfWindowsSteam;
   Setting({
-    required this.repository,
+    required this.repositoryOfWindowsSteam,
   });
 }

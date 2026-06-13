@@ -41,7 +41,7 @@ class MiscellaneousHelper {
           ],
         ].map((value) => StyledMenuItem.standard(
           value: value.value,
-          content: StyledText.inherit(value.text),
+          content: StyledText.inherit(tooltip: true, value.text),
         )),
       ));
     }

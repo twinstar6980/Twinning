@@ -1,6 +1,6 @@
 {
 	"name": "script",
-	"version": "198.0.0",
+	"version": "199.0.0",
 	"scripts": {
 		"build": "tspc"
 	},

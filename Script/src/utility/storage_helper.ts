@@ -184,7 +184,7 @@ namespace Twinning.Script.StorageHelper {
 	// #region shell
 
 	export function query_storage_item(
-		type: 'user_home' | 'application_shared' | 'application_temporary',
+		type: 'user_home' | 'application_shared' | 'application_persistent' | 'application_temporary',
 	): null | StoragePath {
 		let target: null | StoragePath = undefined!;
 		if (Shell.is_basic) {

@@ -217,6 +217,15 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     return option.done();
   }
 
+  @override
+  modulePageExecuteCommand(method, argument) async {
+    var result = <String>[];
+    switch (method) {
+      default: throw UnsupportedException();
+    }
+    return result; // ignore: dead_code
+  }
+
   // ----------------
 
   @override
@@ -294,7 +303,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
                       icon: IconView.of(IconSet.tab_close),
                       content: StyledText.inherit('Remove All'),
                       onPressed: (context) async {
-                        if (await MoreModalDialogExtension.showForConfirm(context)) {
+                        if (await MoreModalDialogExtension.showForConfirm(context, 'Remove All')) {
                           await this._removeResource(this._resource.map((value) => value.path).toList());
                           await refreshState(setStateForPanel);
                         }

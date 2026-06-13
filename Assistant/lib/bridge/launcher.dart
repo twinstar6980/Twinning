@@ -76,7 +76,8 @@ class Launcher {
       catch (e, s) {
         exception = (exception: e, stack: s);
       }
-      await streamQueue.cancel();
+      await streamQueue.cancel(immediate: true);
+      receivePort.close();
       sendPort.send(null);
       sendPort.send([result, exception]);
       return;
@@ -86,7 +87,7 @@ class Launcher {
       var portMessage = null as List<dynamic>?;
       var receivePort = ReceivePort();
       var streamQueue = StreamQueue<dynamic>(receivePort);
-      await Isolate.spawn(subWorker, receivePort.sendPort);
+      var isolate = await Isolate.spawn(subWorker, receivePort.sendPort);
       var sendPort = await streamQueue.next as SendPort;
       var result = null as List<String>?;
       var exception = null as ({Object exception, StackTrace stack})?;
@@ -118,7 +119,9 @@ class Launcher {
         }
       }
       await client.finish();
-      await streamQueue.cancel();
+      await streamQueue.cancel(immediate: true);
+      receivePort.close();
+      isolate.kill(priority: Isolate.immediate);
       if (exception != null) {
         Error.throwWithStackTrace(exception.exception, exception.stack);
       }

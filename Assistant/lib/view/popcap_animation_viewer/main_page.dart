@@ -515,6 +515,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     return option.done();
   }
 
+  @override
+  modulePageExecuteCommand(method, argument) async {
+    var result = <String>[];
+    switch (method) {
+      default: throw UnsupportedException();
+    }
+    return result; // ignore: dead_code
+  }
+
   // ----------------
 
   @override
@@ -700,7 +709,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                                   ...this._activeFrameLabel!.map((value) => (value: value.begin + 1, text: value.name)),
                                 ].map((value) => value == null ? null : StyledMenuItem.standard(
                                   value: value.value,
-                                  content: StyledText.inherit(value.text),
+                                  content: StyledText.inherit(tooltip: true, value.text),
                                   trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.value)),
                                 )),
                               ));
@@ -742,7 +751,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                                   ...this._activeFrameLabel!.map((value) => (value: value.end + 1, text: value.name)),
                                 ].map((value) => value == null ? null : StyledMenuItem.standard(
                                   value: value.value,
-                                  content: StyledText.inherit(value.text),
+                                  content: StyledText.inherit(tooltip: true, value.text),
                                   trailing: StyledText.inherit(ConvertHelper.makeIntegerToString(value.value)),
                                 )),
                               ));
@@ -843,7 +852,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                                   (value: normalSpeed * 2.0, text: 'Fast'),
                                 ].map((value) => StyledMenuItem.standard(
                                   value: value.value,
-                                  content: StyledText.inherit(value.text),
+                                  content: StyledText.inherit(tooltip: true, value.text),
                                   trailing: StyledText.inherit(ConvertHelper.makeFloaterToString(value.value)),
                                 )),
                               ));

@@ -229,6 +229,22 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     return option.done();
   }
 
+  @override
+  modulePageExecuteCommand(method, argument) async {
+    var result = <String>[];
+    switch (method) {
+      case 'launch': {
+        this._additionalArgument = [...argument];
+        await refreshState(this.setState);
+        var launchResult = await _launchSession();
+        result.addAll(launchResult ?? []);
+        break;
+      }
+      default: throw UnsupportedException();
+    }
+    return result;
+  }
+
   // ----------------
 
   @override

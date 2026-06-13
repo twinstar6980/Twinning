@@ -463,7 +463,7 @@ class _SettingPanelState extends State<SettingPanel> {
             leading: IconView.of(IconSet.reset_wrench),
             content: StyledText.inherit('Reset'),
             onPressed: (context) async {
-              if (await MoreModalDialogExtension.showForConfirm(context)) {
+              if (await MoreModalDialogExtension.showForConfirm(context, 'Reset')) {
                 Navigator.pop(context);
                 await setting.reset();
                 await setting.save();

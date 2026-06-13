@@ -12,6 +12,7 @@ import 'package:win32/win32.dart' as lib;
 enum StorageQueryType {
   userHome,
   applicationShared,
+  applicationPersistent,
   applicationTemporary,
 }
 

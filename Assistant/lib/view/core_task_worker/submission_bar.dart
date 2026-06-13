@@ -100,7 +100,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                     position: .under,
                     content: this.macro!.mapIndexed((index, value) => StyledMenuItem.standard(
                       value: value.value,
-                      content: StyledText.inherit(value.name),
+                      content: StyledText.inherit(tooltip: true, value.name),
                     )),
                   ));
                   if (value != null) {
@@ -588,7 +588,7 @@ class _SizeSubmissionBar extends StatelessWidget {
                   position: .under,
                   content: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
                     value: index,
-                    content: StyledText.inherit(value),
+                    content: StyledText.inherit(tooltip: true, value),
                   )),
                 ));
                 if (value != null) {

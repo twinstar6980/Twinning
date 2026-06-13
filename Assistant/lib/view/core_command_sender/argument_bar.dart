@@ -353,7 +353,7 @@ class _SizeArgumentBar extends StatelessWidget {
                   position: .under,
                   content: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
                     value: index,
-                    content: StyledText.inherit(value),
+                    content: StyledText.inherit(tooltip: true, value),
                   )),
                 ));
                 if (value != null) {

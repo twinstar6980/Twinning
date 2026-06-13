@@ -71,6 +71,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     return option.done();
   }
 
+  @override
+  modulePageExecuteCommand(method, argument) async {
+    var result = <String>[];
+    switch (method) {
+      default: throw UnsupportedException();
+    }
+    return result; // ignore: dead_code
+  }
+
   // ----------------
 
   @override

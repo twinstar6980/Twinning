@@ -129,7 +129,7 @@ class LauncherPanel extends StatelessWidget {
               tooltip: 'Remove',
               icon: IconView.of(IconSet.remove),
               onPressed: (context) async {
-                if (await MoreModalDialogExtension.showForConfirm(context)) {
+                if (await MoreModalDialogExtension.showForConfirm(context, 'Remove')) {
                   setting.data.moduleLauncher.pinned.remove(item);
                   await setting.save();
                 }
@@ -166,7 +166,7 @@ class LauncherPanel extends StatelessWidget {
             tooltip: 'Clear',
             icon: IconView.of(IconSet.clear),
             onPressed: (context) async {
-              if (await MoreModalDialogExtension.showForConfirm(context)) {
+              if (await MoreModalDialogExtension.showForConfirm(context, 'Clear')) {
                 setting.data.moduleLauncher.recent.clear();
                 await setting.save();
               }
