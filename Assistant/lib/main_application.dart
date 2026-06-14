@@ -64,18 +64,7 @@ class MainApplication {
       await ApplicationLinkManager.instance.initialize();
       await SystemUiHelper.applyMode(.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
-        await WindowHelper.ensureInitialized();
-        if (this._setting.data.windowSizeState) {
-          await WindowHelper.setSize(this._setting.data.windowSizeWidth, this._setting.data.windowSizeHeight);
-        }
-        if (this._setting.data.windowPositionState) {
-          await WindowHelper.setPosition(this._setting.data.windowPositionX, this._setting.data.windowPositionY);
-        }
-        else {
-          await WindowHelper.setAtCenter();
-        }
-        await WindowHelper.waitUntilReadyToShow();
-        await WindowHelper.show();
+        await WindowHelper.bringToCenter(this._setting.data.windowSizeWidth, this._setting.data.windowSizeHeight);
       }
       postTask(() async {
         if (needShowOnboarding) {

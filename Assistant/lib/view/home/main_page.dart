@@ -37,9 +37,9 @@ class _MainPageState extends State<MainPage> {
   Future<Void> _insertPage(
     GlobalKey                   key,
     ModuleLauncherConfiguration configuration,
-    Boolean                     slience,
+    Boolean                     silent,
   ) async {
-    if (!slience) {
+    if (!silent) {
       while (Navigator.canPop(this.context)) {
         Navigator.pop(this.context);
       }
@@ -59,14 +59,14 @@ class _MainPageState extends State<MainPage> {
         configuration.option,
       ),
     ));
-    if (!slience) {
+    if (!silent) {
       if (this._pageIndex != -1) {
         await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageExitView();
       }
       this._pageIndex = this._pageList.length - 1;
     }
     await refreshState(this.setState);
-    if (!slience) {
+    if (!silent) {
       await this._pageList[this._pageIndex].key.currentState!.as<ModulePageState>().modulePageEnterView();
     }
     await Future.delayed(.new(milliseconds: 10));

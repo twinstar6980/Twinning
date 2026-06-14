@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'package:window_manager/window_manager.dart' as lib;
+import '/utility/platform_integration_manager.dart';
 
 // ----------------
 
@@ -7,53 +7,43 @@ class WindowHelper {
 
   // #region utility
 
-  static Future<Void> setPosition(
-    Integer x,
-    Integer y,
+  static Future<({Integer x, Integer y, Integer width, Integer height})> queryScreenPlacement(
   ) async {
     assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    await lib.windowManager.setPosition(.new(x.toDouble(), y.toDouble()));
-    return;
+    var platformResult = await PlatformIntegrationManager.instance.invokeOnDesktopQueryScreenPlacement();
+    return platformResult;
   }
 
-  static Future<Void> setSize(
+  static Future<({Integer x, Integer y, Integer width, Integer height})> queryWindowPlacement(
+  ) async {
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
+    var platformResult = await PlatformIntegrationManager.instance.invokeOnDesktopQueryWindowPlacement();
+    return platformResult;
+  }
+
+  static Future<Void> updateWindowPlacement(
+    Integer x,
+    Integer y,
     Integer width,
     Integer height,
   ) async {
     assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    await lib.windowManager.setSize(.new(width.toDouble(), height.toDouble()));
-    return;
-  }
-
-  static Future<Void> setAtCenter(
-  ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    await lib.windowManager.center();
+    // ignore: unused_local_variable
+    var platformResult = await PlatformIntegrationManager.instance.invokeOnDesktopUpdateWindowPlacement(x, y, width, height);
     return;
   }
 
   // ----------------
 
-  static Future<Void> show(
+  static Future<Void> bringToCenter(
+    Integer width,
+    Integer height,
   ) async {
     assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    await lib.windowManager.show();
-    return;
-  }
-
-  // ----------------
-
-  static Future<Void> ensureInitialized(
-  ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    await lib.windowManager.ensureInitialized();
-    return;
-  }
-
-  static Future<Void> waitUntilReadyToShow(
-  ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    await lib.windowManager.waitUntilReadyToShow();
+    var screenPlacement = await WindowHelper.queryScreenPlacement();
+    var x = screenPlacement.x + (screenPlacement.width - width) ~/ 2;
+    var y = screenPlacement.y + (screenPlacement.height - height) ~/ 2;
+    await WindowHelper.updateWindowPlacement(x, y, width, height);
     return;
   }
 

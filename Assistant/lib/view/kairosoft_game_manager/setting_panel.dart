@@ -35,7 +35,7 @@ class SettingPanel extends StatelessWidget {
           comment: (negative: 'Invalid', positive: 'Available'),
           getValue: () => this.data.repositoryOfWindowsSteam,
           setValue: (value) => this.data.repositoryOfWindowsSteam = value,
-          checkValue: (value) => StorageHelper.existDirectorySync(value),
+          checkValue: (value) async => await StorageHelper.existDirectory(value),
           pickerTag: '${ModuleHelper.query(.kairosoftGameManager).identifier}.repository_of_windows_steam',
           pickerType: [.loadDirectory],
           onUpdate: this.onUpdate,

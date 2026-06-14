@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:dynamic_color/dynamic_color.dart' as lib;
 
 // ----------------
 
@@ -2752,17 +2751,11 @@ class StyledApplication extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      .standard => lib.DynamicColorBuilder(
-        builder: (lightColor, darkColor) {
-          // fix for dynamic color error on flutter 3.22+, see https://github.com/material-foundation/flutter-packages/issues/582#issuecomment-2209591668
-          if (SystemChecker.isAndroid) {
-            if (lightColor != null) {
-              lightColor = .fromSeed(seedColor: lightColor.primary, brightness: .light);
-            }
-            if (darkColor != null) {
-              darkColor = .fromSeed(seedColor: darkColor.primary, brightness: .dark);
-            }
-          }
+      .standard => FutureBuilder(
+        future: SystemUiHelper.queryThemePalette(),
+        builder: (context, snapshot) {
+          var lightColor = snapshot.data?.light;
+          var darkColor = snapshot.data?.dark;
           return material.MaterialApp(
             navigatorKey: this.navigatorKey,
             theme: .new(

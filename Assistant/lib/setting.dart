@@ -29,10 +29,6 @@ class SettingData {
   Color                                themeColorDark;
   Boolean                              themeFontState;
   List<StoragePath>                    themeFontPath;
-  Boolean                              windowPositionState;
-  Integer                              windowPositionX;
-  Integer                              windowPositionY;
-  Boolean                              windowSizeState;
   Integer                              windowSizeWidth;
   Integer                              windowSizeHeight;
   ModuleType                           forwarderDefaultTarget;
@@ -57,10 +53,6 @@ class SettingData {
     required this.themeColorDark,
     required this.themeFontState,
     required this.themeFontPath,
-    required this.windowPositionState,
-    required this.windowPositionX,
-    required this.windowPositionY,
-    required this.windowSizeState,
     required this.windowSizeWidth,
     required this.windowSizeHeight,
     required this.forwarderDefaultTarget,
@@ -81,17 +73,17 @@ class SettingData {
 }
 
 class SettingState {
-  Future<Void> Function(String title, ModuleType type, List<String> option)?                        handleLaunch;
-  Future<Void> Function(List<StoragePath> resource)?                                                handleForward;
-  Future<Void> Function(List<String> command)?                                                      handleCommand;
-  Future<Void> Function(Uri link)?                                                                  handleLink;
-  GlobalKey<NavigatorState>                                                                         applicationNavigatorKey;
-  List<String>                                                                                      themeFontFamliy;
-  Future<Void> Function()?                                                                          homeShowOnboarding;
-  Future<Void> Function()?                                                                          homeShowLauncher;
-  Future<Void> Function(GlobalKey key, ModuleLauncherConfiguration configuration, Boolean slience)? homeInsertPage;
-  Future<Void> Function(GlobalKey key)?                                                             homeRemovePage;
-  List<List<core_task_worker.ValueExpression>>                                                      coreTaskWorkerSubmissionHistory;
+  Future<Void> Function(String title, ModuleType type, List<String> option)?                       handleLaunch;
+  Future<Void> Function(List<StoragePath> resource)?                                               handleForward;
+  Future<Void> Function(List<String> command)?                                                     handleCommand;
+  Future<Void> Function(Uri link)?                                                                 handleLink;
+  GlobalKey<NavigatorState>                                                                        applicationNavigatorKey;
+  List<String>                                                                                     themeFontFamliy;
+  Future<Void> Function()?                                                                         homeShowOnboarding;
+  Future<Void> Function()?                                                                         homeShowLauncher;
+  Future<Void> Function(GlobalKey key, ModuleLauncherConfiguration configuration, Boolean silent)? homeInsertPage;
+  Future<Void> Function(GlobalKey key)?                                                            homeRemovePage;
+  List<List<core_task_worker.ValueExpression>>                                                     coreTaskWorkerSubmissionHistory;
   SettingState({
     required this.handleLaunch,
     required this.handleForward,
@@ -197,10 +189,6 @@ class SettingProvider with ChangeNotifier {
       themeColorDark: .new(0xFFBB86FC),
       themeFontState: false,
       themeFontPath: [],
-      windowPositionState: false,
-      windowPositionX: 0,
-      windowPositionY: 0,
-      windowSizeState: true,
       windowSizeWidth: 480,
       windowSizeHeight: 840,
       forwarderDefaultTarget: .coreResourceShipper,
@@ -247,7 +235,7 @@ class SettingProvider with ChangeNotifier {
       popcapPackageBuilder: .new(
       ),
       kairosoftGameManager: .new(
-        repositoryOfWindowsSteam: .new(),
+        repositoryOfWindowsSteam: .of('C:/Program Files (x86)/Steam'),
       ),
     );
   }
@@ -282,10 +270,6 @@ class SettingProvider with ChangeNotifier {
       'theme_color_dark': data.themeColorDark.toARGB32(),
       'theme_font_state': data.themeFontState,
       'theme_font_path': data.themeFontPath.map((it) => it.emit()).toList(),
-      'window_position_state': data.windowPositionState,
-      'window_position_x': data.windowPositionX,
-      'window_position_y': data.windowPositionY,
-      'window_size_state': data.windowSizeState,
       'window_size_width': data.windowSizeWidth,
       'window_size_height': data.windowSizeHeight,
       'forwarder_default_target': data.forwarderDefaultTarget.selfLet((it) => ModuleHelper.query(it).identifier),
@@ -356,10 +340,6 @@ class SettingProvider with ChangeNotifier {
       themeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => .new(it)),
       themeFontState: (json['theme_font_state'] as Boolean),
       themeFontPath: (json['theme_font_path'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
-      windowPositionState: (json['window_position_state'] as Boolean),
-      windowPositionX: (json['window_position_x'] as Integer),
-      windowPositionY: (json['window_position_y'] as Integer),
-      windowSizeState: (json['window_size_state'] as Boolean),
       windowSizeWidth: (json['window_size_width'] as Integer),
       windowSizeHeight: (json['window_size_height'] as Integer),
       forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),

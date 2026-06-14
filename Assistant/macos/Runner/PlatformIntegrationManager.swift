@@ -8,11 +8,14 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   private var channel: FlutterMethodChannel!
 
+  private var window: NSWindow!
+
   // MARK: - construct
 
   private override init(
   ) {
     self.channel = nil
+    self.window = nil
     return
   }
 
@@ -44,6 +47,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   public func inject_MainFlutterWindow_awakeFromNib(
     _ host: MainFlutterWindow,
   ) -> Void {
+    self.window = host
     self.channel = FlutterMethodChannel(
       name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
       binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
@@ -115,10 +119,35 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           try self.decodeFlutterValue(try getArgument("name")),
         )
         try setResult("target", try self.encodeFlutterValue(detail))
+      case "query_system_theme":
+        let detail = try await self.handleQuerySystemTheme(
+        )
+        try setResult("accent", try self.encodeFlutterValue(detail))
       case "push_system_notification":
         let _ = try await self.handlePushSystemNotification(
           try self.decodeFlutterValue(try getArgument("title")),
           try self.decodeFlutterValue(try getArgument("description")),
+        )
+      case "on_desktop_query_screen_placement":
+        let detail = try await self.handleOnDesktopQueryScreenPlacement(
+        )
+        try setResult("x", try self.encodeFlutterValue(detail.x))
+        try setResult("y", try self.encodeFlutterValue(detail.y))
+        try setResult("width", try self.encodeFlutterValue(detail.width))
+        try setResult("height", try self.encodeFlutterValue(detail.height))
+      case "on_desktop_query_window_placement":
+        let detail = try await self.handleOnDesktopQueryWindowPlacement(
+        )
+        try setResult("x", try self.encodeFlutterValue(detail.x))
+        try setResult("y", try self.encodeFlutterValue(detail.y))
+        try setResult("width", try self.encodeFlutterValue(detail.width))
+        try setResult("height", try self.encodeFlutterValue(detail.height))
+      case "on_desktop_update_window_placement":
+        let _ = try await self.handleOnDesktopUpdateWindowPlacement(
+          try self.decodeFlutterValue(try getArgument("x")),
+          try self.decodeFlutterValue(try getArgument("y")),
+          try self.decodeFlutterValue(try getArgument("width")),
+          try self.decodeFlutterValue(try getArgument("height")),
         )
       default:
         throw NSError(domain: "invalid method.", code: 0)
@@ -304,6 +333,25 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   // ----------------
 
+  private func handleQuerySystemTheme(
+  ) async throws -> Int? {
+    let accentColor = NSColor.controlAccentColor.usingColorSpace(.sRGB)
+    guard accentColor != nil else {
+      throw NSError(domain: "failed to get color.", code: 0)
+    }
+    let accent: Int? = {
+      return (
+        (Int(accentColor!.alphaComponent * 255.0) << 24) |
+        (Int(accentColor!.redComponent * 255.0) << 16) |
+        (Int(accentColor!.greenComponent * 255.0) << 8) |
+        (Int(accentColor!.blueComponent * 255.0) << 0)
+      )
+    }()
+    return accent
+  }
+
+  // ----------------
+
   private func handlePushSystemNotification(
     _ title: String,
     _ description: String,
@@ -314,6 +362,45 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     content.sound = .default
     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
     try await UNUserNotificationCenter.current().add(request)
+    return
+  }
+
+  // ----------------
+
+  @MainActor
+  private func handleOnDesktopQueryScreenPlacement(
+  ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
+    let screen = self.window.screen
+    guard screen != nil else {
+      throw NSError(domain: "failed to get screen.", code: 0)
+    }
+    let rect = screen!.visibleFrame
+    let x = Int(rect.origin.x)
+    let y = Int(rect.origin.y)
+    let width = Int(rect.size.width)
+    let height = Int(rect.size.height)
+    return (x, y, width, height)
+  }
+
+  private func handleOnDesktopQueryWindowPlacement(
+  ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
+    let rect = self.window.frame
+    let x = Int(rect.origin.x)
+    let y = Int(rect.origin.y)
+    let width = Int(rect.size.width)
+    let height = Int(rect.size.height)
+    return (x, y, width, height)
+  }
+
+  @MainActor
+  private func handleOnDesktopUpdateWindowPlacement(
+    _ x: Int,
+    _ y: Int,
+    _ width: Int,
+    _ height: Int,
+  ) async throws -> Void {
+    let rect = NSRect(x: x, y: y, width: width, height: height)
+    window.setFrame(rect, display: false)
     return
   }
 

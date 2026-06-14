@@ -136,6 +136,10 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
           try self.decodeFlutterValue(try getArgument("name")),
         )
         try setResult("target", try self.encodeFlutterValue(detail))
+      case "query_system_theme":
+        let detail = try await self.handleQuerySystemTheme(
+        )
+        try setResult("accent", try self.encodeFlutterValue(detail))
       case "push_system_notification":
         let _ = try await self.handlePushSystemNotification(
           try self.decodeFlutterValue(try getArgument("title")),
@@ -272,6 +276,13 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     self.continuation = nil
     let target = try targetUrl.map({ (item) in try self.resolveFileUrl(item) })
     return target
+  }
+
+  // ----------------
+
+  private func handleQuerySystemTheme(
+  ) async throws -> Int? {
+    return nil
   }
 
   // ----------------

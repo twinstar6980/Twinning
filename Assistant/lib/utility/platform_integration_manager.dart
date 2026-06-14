@@ -171,6 +171,17 @@ class PlatformIntegrationManager {
 
   // ----------------
 
+  Future<({Integer? accent})> invokeQuerySystemTheme(
+  ) async {
+    var detail = await this._invoke('query_system_theme', {
+    });
+    return (
+      accent: detail['accent']?.as<Integer>(),
+    );
+  }
+
+  // ----------------
+
   Future<()> invokePushSystemNotification(
     String title,
     String description,
@@ -179,6 +190,52 @@ class PlatformIntegrationManager {
     var detail = await this._invoke('push_system_notification', {
       'title': title,
       'description': description,
+    });
+    return (
+    );
+  }
+
+  // ----------------
+
+  Future<({Integer x, Integer y, Integer width, Integer height})> invokeOnDesktopQueryScreenPlacement(
+  ) async {
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
+    var detail = await this._invoke('on_desktop_query_screen_placement', {
+    });
+    return (
+      x: detail['x']!.as<Integer>(),
+      y: detail['y']!.as<Integer>(),
+      width: detail['width']!.as<Integer>(),
+      height: detail['height']!.as<Integer>(),
+    );
+  }
+
+  Future<({Integer x, Integer y, Integer width, Integer height})> invokeOnDesktopQueryWindowPlacement(
+  ) async {
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
+    var detail = await this._invoke('on_desktop_query_window_placement', {
+    });
+    return (
+      x: detail['x']!.as<Integer>(),
+      y: detail['y']!.as<Integer>(),
+      width: detail['width']!.as<Integer>(),
+      height: detail['height']!.as<Integer>(),
+    );
+  }
+
+  Future<()> invokeOnDesktopUpdateWindowPlacement(
+    Integer x,
+    Integer y,
+    Integer width,
+    Integer height,
+  ) async {
+    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
+    // ignore: unused_local_variable
+    var detail = await this._invoke('on_desktop_update_window_placement', {
+      'x': x,
+      'y': y,
+      'width': width,
+      'height': height,
     });
     return (
     );

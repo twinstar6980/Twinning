@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
@@ -225,6 +226,11 @@ class PlatformIntegrationManager {
           )
           setResult("target", this.encodeFlutterValue(detail))
         }
+        "query_system_theme" -> {
+          val detail = this.handleQuerySystemTheme(
+          )
+          setResult("accent", this.encodeFlutterValue(detail))
+        }
         "push_system_notification" -> {
           val detail = this.handlePushSystemNotification(
             this.decodeFlutterValue<String>(getArgument("title")),
@@ -403,6 +409,18 @@ class PlatformIntegrationManager {
     }
     val target = targetUri.map({ item -> this.resolveContentUri(item) })
     return target
+  }
+
+  // ----------------
+
+  private suspend fun handleQuerySystemTheme(
+  ): Long? {
+    var accentColor = null as Long?
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      accentColor = android.R.color.system_accent1_0.toLong()
+    }
+    val accent = accentColor
+    return accent
   }
 
   // ----------------

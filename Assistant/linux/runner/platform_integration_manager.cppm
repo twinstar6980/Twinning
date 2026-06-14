@@ -223,11 +223,45 @@ export {
 						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
+					case hash_string("query_system_theme"): {
+						auto detail = thiz.handle_query_system_theme(
+						);
+						set_result("accent", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						break;
+					}
 					case hash_string("push_system_notification"): {
 						[[maybe_unused]]
 						auto detail = thiz.handle_push_system_notification(
 							thiz.decode_flutter_value<std::string>(get_argument("title")),
 							thiz.decode_flutter_value<std::string>(get_argument("description"))
+						);
+						break;
+					}
+					case hash_string("on_desktop_query_screen_placement"): {
+						auto detail = thiz.handle_on_desktop_query_screen_placement(
+						);
+						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+						set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
+						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
+						break;
+					}
+					case hash_string("on_desktop_query_window_placement"): {
+						auto detail = thiz.handle_on_desktop_query_window_placement(
+						);
+						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+						set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
+						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
+						break;
+					}
+					case hash_string("on_desktop_update_window_placement"): {
+						[[maybe_unused]]
+						auto detail = thiz.handle_on_desktop_update_window_placement(
+							thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
+							thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
+							thiz.decode_flutter_value<std::int64_t>(get_argument("width")),
+							thiz.decode_flutter_value<std::int64_t>(get_argument("height"))
 						);
 						break;
 					}
@@ -328,6 +362,7 @@ export {
 		) -> std::tuple<std::vector<std::string>> {
 			assert_test(type == "load_file" || type == "load_directory" || type == "save_file");
 			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
+			assert_test(window != nullptr);
 			auto dialog_action = GtkFileChooserAction{};
 			if (type == "load_file") {
 				dialog_action = GTK_FILE_CHOOSER_ACTION_OPEN;
@@ -370,6 +405,30 @@ export {
 
 		// ----------------
 
+		auto handle_query_system_theme(
+		) -> std::tuple<std::optional<std::int64_t>> {
+			auto state_b = gboolean{};
+			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
+			assert_test(window != nullptr);
+			auto context = gtk_widget_get_style_context(GTK_WIDGET(window));
+			auto accent_color = GdkRGBA{};
+			state_b = gtk_style_context_lookup_color(context, "theme_selected_bg_color", &accent_color);
+			auto accent = std::optional<std::int64_t>{};
+			if (state_b) {
+				accent.emplace(
+					static_cast<std::int64_t>(
+						(std::llround(accent_color.alpha * 255.0) << 24) |
+						(std::llround(accent_color.red * 255.0) << 16) |
+						(std::llround(accent_color.green * 255.0) << 8) |
+						(std::llround(accent_color.blue * 255.0) << 0)
+					)
+				);
+			}
+			return std::make_tuple(std::move(accent));
+		}
+
+		// ----------------
+
 		auto handle_push_system_notification(
 			std::string const & title,
 			std::string const & description
@@ -405,6 +464,59 @@ export {
 				nullptr,
 				nullptr
 			);
+			return std::make_tuple();
+		}
+
+		// ----------------
+
+		auto handle_on_desktop_query_screen_placement(
+		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
+			auto display = gdk_display_get_default();
+			assert_test(display != nullptr);
+			auto monitor = gdk_display_get_primary_monitor(display);
+			if (monitor == nullptr) {
+				auto monitor_count = gdk_display_get_n_monitors(display);
+				assert_test(monitor_count != 0);
+				monitor = gdk_display_get_monitor(display, 0);
+				assert_test(monitor != nullptr);
+			}
+			auto rect = GdkRectangle{};
+			gdk_monitor_get_geometry(monitor, &rect);
+			auto x = static_cast<std::int64_t>(rect.x);
+			auto y = static_cast<std::int64_t>(rect.y);
+			auto width = static_cast<std::int64_t>(rect.width);
+			auto height = static_cast<std::int64_t>(rect.height);
+			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
+		}
+
+		auto handle_on_desktop_query_window_placement(
+		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
+			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
+			assert_test(window != nullptr);
+			auto rect = GdkRectangle{};
+			gtk_window_get_position(window, &rect.x, &rect.y);
+			gtk_window_get_size(window, &rect.width, &rect.height);
+			auto x = static_cast<std::int64_t>(rect.x);
+			auto y = static_cast<std::int64_t>(rect.y);
+			auto width = static_cast<std::int64_t>(rect.width);
+			auto height = static_cast<std::int64_t>(rect.height);
+			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
+		}
+
+		auto handle_on_desktop_update_window_placement(
+			std::int64_t const & x,
+			std::int64_t const & y,
+			std::int64_t const & width,
+			std::int64_t const & height
+		) -> std::tuple<> {
+			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
+			assert_test(window != nullptr);
+			auto actual_x = static_cast<gint>(x);
+			auto actual_y = static_cast<gint>(y);
+			auto actual_width = static_cast<gint>(width);
+			auto actual_height = static_cast<gint>(height);
+			gtk_window_move(window, actual_x, actual_y);
+			gtk_window_resize(window, actual_width, actual_height);
 			return std::make_tuple();
 		}
 
@@ -469,14 +581,28 @@ export {
 			if constexpr (std::is_same_v<TValue, bool>) {
 				raw = fl_value_new_bool(ripe);
 			}
-			if constexpr (std::is_same_v<TValue, std::string>) {
-				raw = fl_value_new_string(ripe.data());
+			else if constexpr (std::is_same_v<TValue, std::int64_t>) {
+				raw = fl_value_new_int(ripe);
 			}
-			if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
+			else if constexpr (std::is_same_v<TValue, std::optional<std::int64_t>>) {
+				if (!ripe.has_value()) {
+					raw = fl_value_new_null();
+				}
+				else {
+					raw = fl_value_new_int(ripe.value());
+				}
+			}
+			else if constexpr (std::is_same_v<TValue, std::string>) {
+				raw = fl_value_new_string_sized(ripe.data(), ripe.size());
+			}
+			else if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
 				raw = fl_value_new_list();
 				for (auto & ripe_item : ripe) {
-					fl_value_append(raw, fl_value_new_string(ripe_item.data()));
+					fl_value_append(raw, fl_value_new_string_sized(ripe_item.data(), ripe_item.size()));
 				}
+			}
+			else {
+				static_assert(false);
 			}
 			return raw;
 		}
@@ -490,9 +616,16 @@ export {
 				assert_test(fl_value_get_type(raw) == FL_VALUE_TYPE_BOOL);
 				ripe = fl_value_get_bool(raw);
 			}
-			if constexpr (std::is_same_v<TValue, std::string>) {
+			else if constexpr (std::is_same_v<TValue, std::int64_t>) {
+				assert_test(fl_value_get_type(raw) == FL_VALUE_TYPE_INT);
+				ripe = fl_value_get_int(raw);
+			}
+			else if constexpr (std::is_same_v<TValue, std::string>) {
 				assert_test(fl_value_get_type(raw) == FL_VALUE_TYPE_STRING);
 				ripe = std::string{fl_value_get_string(raw)};
+			}
+			else {
+				static_assert(false);
 			}
 			return ripe;
 		}
@@ -512,6 +645,7 @@ export {
 			std::string_view const & name,
 			FlValue * &&             value
 		) const -> void {
+			assert_test(value != nullptr);
 			assert_test(fl_value_get_type(map) == FL_VALUE_TYPE_MAP);
 			fl_value_set_string_take(map, name.data(), value);
 			return;
@@ -549,8 +683,9 @@ export {
 		auto open_external_link(
 			std::string const & link
 		) const -> void {
+			auto state_b = gboolean{};
 			g_autoptr(GError) error = nullptr;
-			auto state_b = gtk_show_uri_on_window(nullptr, link.data(), GDK_CURRENT_TIME, &error);
+			state_b = gtk_show_uri_on_window(nullptr, link.data(), GDK_CURRENT_TIME, &error);
 			if (!state_b) {
 				throw std::runtime_error{std::string{"Exception: "} + error->message};
 			}

@@ -8,6 +8,7 @@ module;
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Data.Xml.Dom.h>
 #include <winrt/Windows.UI.Notifications.h>
+#include <winrt/Windows.UI.ViewManagement.h>
 #include <winrt/windows.applicationmodel.h>
 #include <flutter/flutter_view_controller.h>
 #include <flutter/method_channel.h>
@@ -264,10 +265,43 @@ export {
 						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						break;
 					}
+					case hash_string("query_system_theme"): {
+						auto detail = thiz.handle_query_system_theme(
+						);
+						set_result("accent", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						break;
+					}
 					case hash_string("push_system_notification"): {
 						auto detail = thiz.handle_push_system_notification(
 							thiz.decode_flutter_value<std::string>(get_argument("title")),
 							thiz.decode_flutter_value<std::string>(get_argument("description"))
+						);
+						break;
+					}
+					case hash_string("on_desktop_query_screen_placement"): {
+						auto detail = thiz.handle_on_desktop_query_screen_placement(
+						);
+						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+						set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
+						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
+						break;
+					}
+					case hash_string("on_desktop_query_window_placement"): {
+						auto detail = thiz.handle_on_desktop_query_window_placement(
+						);
+						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+						set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
+						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
+						break;
+					}
+					case hash_string("on_desktop_update_window_placement"): {
+						auto detail = thiz.handle_on_desktop_update_window_placement(
+							thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
+							thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
+							thiz.decode_flutter_value<std::int64_t>(get_argument("width")),
+							thiz.decode_flutter_value<std::int64_t>(get_argument("height"))
 						);
 						break;
 					}
@@ -476,6 +510,24 @@ export {
 
 		// ----------------
 
+		auto handle_query_system_theme(
+		) -> std::tuple<std::optional<std::int64_t>> {
+			auto setting = winrt::Windows::UI::ViewManagement::UISettings{};
+			auto accent_color = setting.GetColorValue(winrt::Windows::UI::ViewManagement::UIColorType::Accent);
+			auto accent = std::optional<std::int64_t>{};
+			accent.emplace(
+				static_cast<std::int64_t>(
+					(accent_color.A << 24) |
+					(accent_color.R << 16) |
+					(accent_color.G << 8) |
+					(accent_color.B << 0)
+				)
+			);
+			return std::make_tuple(std::move(accent));
+		}
+
+		// ----------------
+
 		auto handle_push_system_notification(
 			std::string const & title,
 			std::string const & description
@@ -515,6 +567,57 @@ export {
 
 		// ----------------
 
+		auto handle_on_desktop_query_screen_placement(
+		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
+			auto state_b = BOOL{};
+			auto scale_factor = thiz.query_display_scale_factor();
+			auto monitor = MonitorFromWindow(thiz.m_window->GetHandle(), MONITOR_DEFAULTTONEAREST);
+			auto monitor_info = MONITORINFO{
+				.cbSize = sizeof(MONITORINFO),
+			};
+			state_b = GetMonitorInfoW(monitor, &monitor_info);
+			assert_test(state_b != FALSE);
+			auto rect = monitor_info.rcWork;
+			auto x = static_cast<std::int64_t>(std::llround(rect.left / scale_factor));
+			auto y = static_cast<std::int64_t>(std::llround(rect.top / scale_factor));
+			auto width = static_cast<std::int64_t>(std::llround((rect.right - rect.left) / scale_factor));
+			auto height = static_cast<std::int64_t>(std::llround((rect.bottom - rect.top) / scale_factor));
+			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
+		}
+
+		auto handle_on_desktop_query_window_placement(
+		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
+			auto state_b = BOOL{};
+			auto scale_factor = thiz.query_display_scale_factor();
+			auto rect = RECT{};
+			state_b = GetWindowRect(thiz.m_window->GetHandle(), &rect);
+			assert_test(state_b != FALSE);
+			auto x = static_cast<std::int64_t>(std::llround(rect.left / scale_factor));
+			auto y = static_cast<std::int64_t>(std::llround(rect.top / scale_factor));
+			auto width = static_cast<std::int64_t>(std::llround((rect.right - rect.left) / scale_factor));
+			auto height = static_cast<std::int64_t>(std::llround((rect.bottom - rect.top) / scale_factor));
+			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
+		}
+
+		auto handle_on_desktop_update_window_placement(
+			std::int64_t const & x,
+			std::int64_t const & y,
+			std::int64_t const & width,
+			std::int64_t const & height
+		) -> std::tuple<> {
+			auto state_b = BOOL{};
+			auto scale_factor = thiz.query_display_scale_factor();
+			auto actual_x = static_cast<int>(std::llround(x * scale_factor));
+			auto actual_y = static_cast<int>(std::llround(y * scale_factor));
+			auto actual_width = static_cast<int>(std::llround(width * scale_factor));
+			auto actual_height = static_cast<int>(std::llround(height * scale_factor));
+			state_b = SetWindowPos(thiz.m_window->GetHandle(), nullptr, actual_x, actual_y, actual_width, actual_height, SWP_NOZORDER);
+			assert_test(state_b != FALSE);
+			return std::make_tuple();
+		}
+
+		// ----------------
+
 		auto handle_on_windows_query_storage_long_path(
 			std::string const & source
 		) -> std::tuple<std::string> {
@@ -525,6 +628,8 @@ export {
 		auto handle_on_windows_extract_associated_icon(
 			std::string const & target
 		) -> std::tuple<std::int64_t, std::int64_t, std::vector<std::uint8_t>> {
+			auto state_b = BOOL{};
+			auto state_i = int{};
 			auto target_h = winrt::to_hstring(target) | std::ranges::to<std::vector<wchar_t>>();
 			target_h.emplace_back(L'\0');
 			auto icon_index = WORD{};
@@ -536,7 +641,8 @@ export {
 				}
 			);
 			auto icon_info = ICONINFO{};
-			assert_test(GetIconInfo(icon, &icon_info) != FALSE);
+			state_b = GetIconInfo(icon, &icon_info);
+			assert_test(state_b != FALSE);
 			auto icon_info_finalizer = thiz.make_finalizer(
 				[&]() {
 					DeleteObject(icon_info.hbmColor);
@@ -544,9 +650,8 @@ export {
 				}
 			);
 			auto bitmap = BITMAP{};
-			assert_test(GetObjectW(icon_info.hbmColor, sizeof(bitmap), &bitmap) != 0);
-			auto width = static_cast<std::int64_t>(bitmap.bmWidth);
-			auto height = static_cast<std::int64_t>(bitmap.bmHeight);
+			state_i = GetObjectW(icon_info.hbmColor, sizeof(bitmap), &bitmap);
+			assert_test(state_i != 0);
 			auto bitmap_info = BITMAPINFO{};
 			bitmap_info.bmiHeader.biSize = sizeof(bitmap_info.bmiHeader);
 			bitmap_info.bmiHeader.biWidth = bitmap.bmWidth;
@@ -561,9 +666,12 @@ export {
 					ReleaseDC(nullptr, device_context);
 				}
 			);
+			auto width = static_cast<std::int64_t>(bitmap.bmWidth);
+			auto height = static_cast<std::int64_t>(bitmap.bmHeight);
 			auto data = std::vector<std::uint8_t>{};
 			data.resize(static_cast<std::size_t>(bitmap.bmWidth * bitmap.bmHeight * 4));
-			assert_test(GetDIBits(device_context, icon_info.hbmColor, 0, bitmap.bmHeight, data.data(), &bitmap_info, DIB_RGB_COLORS) != 0);
+			state_i = GetDIBits(device_context, icon_info.hbmColor, 0, bitmap.bmHeight, data.data(), &bitmap_info, DIB_RGB_COLORS);
+			assert_test(state_i != 0);
 			return std::make_tuple(std::move(width), std::move(height), std::move(data));
 		}
 
@@ -622,20 +730,31 @@ export {
 			if constexpr (std::is_same_v<TValue, bool>) {
 				raw.emplace<bool>(std::move(ripe));
 			}
-			if constexpr (std::is_same_v<TValue, std::int64_t>) {
+			else if constexpr (std::is_same_v<TValue, std::int64_t>) {
 				raw.emplace<std::int64_t>(std::move(ripe));
 			}
-			if constexpr (std::is_same_v<TValue, std::string>) {
+			else if constexpr (std::is_same_v<TValue, std::optional<std::int64_t>>) {
+				if (!ripe.has_value()) {
+					raw.emplace<std::monostate>();
+				}
+				else {
+					raw.emplace<std::int64_t>(std::move(ripe.value()));
+				}
+			}
+			else if constexpr (std::is_same_v<TValue, std::string>) {
 				raw.emplace<std::string>(std::move(ripe));
 			}
-			if constexpr (std::is_same_v<TValue, std::vector<std::uint8_t>>) {
-				raw.emplace<std::vector<std::uint8_t>>(std::move(ripe));
-			}
-			if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
+			else if constexpr (std::is_same_v<TValue, std::vector<std::string>>) {
 				raw.emplace<flutter::EncodableList>();
 				for (auto & ripe_item : ripe) {
 					std::get<flutter::EncodableList>(raw).emplace_back<std::string>(std::move(ripe_item));
 				}
+			}
+			else if constexpr (std::is_same_v<TValue, std::vector<std::uint8_t>>) {
+				raw.emplace<std::vector<std::uint8_t>>(std::move(ripe));
+			}
+			else {
+				static_assert(false);
 			}
 			return raw;
 		}
@@ -646,10 +765,28 @@ export {
 		) const -> TValue {
 			auto ripe = TValue{};
 			if constexpr (std::is_same_v<TValue, bool>) {
-				ripe = std::get<TValue>(raw);
+				assert_test(std::holds_alternative<bool>(raw));
+				if (std::holds_alternative<bool>(raw)) {
+					ripe = std::get<bool>(raw);
+				}
 			}
-			if constexpr (std::is_same_v<TValue, std::string>) {
-				ripe = std::get<TValue>(raw);
+			else if constexpr (std::is_same_v<TValue, std::int64_t>) {
+				assert_test(std::holds_alternative<std::int32_t>(raw) || std::holds_alternative<std::int64_t>(raw));
+				if (std::holds_alternative<std::int32_t>(raw)) {
+					ripe = std::get<std::int32_t>(raw);
+				}
+				if (std::holds_alternative<std::int64_t>(raw)) {
+					ripe = std::get<std::int64_t>(raw);
+				}
+			}
+			else if constexpr (std::is_same_v<TValue, std::string>) {
+				assert_test(std::holds_alternative<std::string>(raw));
+				if (std::holds_alternative<std::string>(raw)) {
+					ripe = std::get<std::string>(raw);
+				}
+			}
+			else {
+				static_assert(false);
 			}
 			return ripe;
 		}
@@ -766,6 +903,12 @@ export {
 			auto item_display_h = std::wstring{item_display};
 			CoTaskMemFree(item_display);
 			return winrt::to_string(item_display_h);
+		}
+
+		auto query_display_scale_factor(
+		) const -> double {
+			auto dpi = GetDpiForWindow(thiz.m_window->GetHandle());
+			return dpi / 96.0;
 		}
 
 		auto bring_window_to_foreground(

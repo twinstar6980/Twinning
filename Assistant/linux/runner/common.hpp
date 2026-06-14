@@ -28,6 +28,7 @@
 #include <type_traits>
 #include <exception>
 #include <cstdint>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <format>

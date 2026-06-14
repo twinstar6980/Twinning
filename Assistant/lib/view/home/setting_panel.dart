@@ -205,80 +205,13 @@ class _SettingPanelState extends State<SettingPanel> {
       ),
       SettingListItem(
         enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
-        icon: IconSet.recenter,
-        label: 'Position',
-        comment: [
-          StyledText.inherit(!setting.data.windowPositionState ? 'Default' : 'Custom'),
-        ],
-        onPressed: null,
-        panelBuilder: (context, setStateForPanel) => [
-          StyledListTile.standardTight(
-            leading: StyledSwitch.standard(
-              value: setting.data.windowPositionState,
-              onChanged: (context, value) async {
-                setting.data.windowPositionState = value;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-            content: StyledText.inherit('Enable'),
-          ),
-          StyledListTile.standardTight(
-            content: StyledInput.outlined(
-              type: .number,
-              format: .new(r'[0-9]'),
-              hint: null,
-              prefix: IconView.of(IconSet.swap_horiz),
-              suffix: null,
-              value: setting.data.windowPositionX.toString(),
-              onChanged: (context, value) async {
-                setting.data.windowPositionX = Integer.tryParse(value) ?? setting.data.windowPositionX;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-          ),
-          StyledListTile.standardTight(
-            content: StyledInput.outlined(
-              type: .number,
-              format: .new(r'[0-9]'),
-              hint: null,
-              prefix: IconView.of(IconSet.swap_vert),
-              suffix: null,
-              value: setting.data.windowPositionY.toString(),
-              onChanged: (context, value) async {
-                setting.data.windowPositionY = Integer.tryParse(value) ?? setting.data.windowPositionY;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-          ),
-        ],
-      ),
-      SettingListItem(
-        enabled: SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh,
         icon: IconSet.fit_screen,
         label: 'Size',
         comment: [
-          StyledText.inherit(!setting.data.windowSizeState ? 'Default' : 'Custom'),
+          StyledText.inherit('${setting.data.windowSizeWidth} x ${setting.data.windowSizeHeight}'),
         ],
         onPressed: null,
         panelBuilder: (context, setStateForPanel) => [
-          StyledListTile.standardTight(
-            leading: StyledSwitch.standard(
-              value: setting.data.windowSizeState,
-              onChanged: (context, value) async {
-                setting.data.windowSizeState = value;
-                await refreshState(setStateForPanel);
-                await refreshState(this.setState);
-                await setting.save();
-              },
-            ),
-            content: StyledText.inherit('Enable'),
-          ),
           StyledListTile.standardTight(
             content: StyledInput.outlined(
               type: .number,
@@ -350,7 +283,7 @@ class _SettingPanelState extends State<SettingPanel> {
         comment: (negative: 'Invalid', positive: 'Available'),
         getValue: () => setting.data.moduleConfigurationDirectory,
         setValue: (value) => setting.data.moduleConfigurationDirectory = value,
-        checkValue: (value) => StorageHelper.existDirectorySync(value),
+        checkValue: (value) async => await StorageHelper.existDirectory(value),
         pickerTag: 'application.module_configuration_directory',
         pickerType: [.loadDirectory],
         onUpdate: setting.save,

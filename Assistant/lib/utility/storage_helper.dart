@@ -202,17 +202,6 @@ class StorageHelper {
     return await FileSystemEntity.type(targetString, followLinks: true) == .file;
   }
 
-  // TODO: remove?
-  static Boolean existFileSync(
-    StoragePath target,
-  ) {
-    if (target.type() != .absolute) {
-      return false;
-    }
-    var targetString = target.emitNative();
-    return FileSystemEntity.typeSync(targetString, followLinks: true) == .file;
-  }
-
   static Future<Void> createFile(
     StoragePath target,
   ) async {
@@ -302,17 +291,6 @@ class StorageHelper {
     }
     var targetString = target.emitNative();
     return await FileSystemEntity.type(targetString, followLinks: true) == .directory;
-  }
-
-  // TODO: remove?
-  static Boolean existDirectorySync(
-    StoragePath target,
-  ) {
-    if (target.type() != .absolute) {
-      return false;
-    }
-    var targetString = target.emitNative();
-    return FileSystemEntity.typeSync(targetString, followLinks: true) == .directory;
   }
 
   static Future<Void> createDirectory(
