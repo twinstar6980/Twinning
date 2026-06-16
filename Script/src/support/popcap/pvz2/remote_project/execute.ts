@@ -83,6 +83,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 			player_profile: project_directory.join('player.json'),
 		};
 		let local_temporary_directory = StorageHelper.temporary('directory');
+		using local_temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(local_temporary_directory);
+		});
 		let local_temporary = {
 			content_delivery: local_temporary_directory.join('content_delivery'),
 			local_profile: local_temporary_directory.join('local_temporary_directory}/local.rton'),
@@ -205,7 +208,6 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 			}
 		}
 		Console.success(los('support.popcap.pvz2.remote_project.execute:finish'), []);
-		StorageHelper.remove(local_temporary_directory);
 		return;
 	}
 

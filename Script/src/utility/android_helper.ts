@@ -2,14 +2,21 @@ namespace Twinning.Script.AndroidHelper {
 
 	// #region common
 
-	const k_temporary_directory = new StoragePath(`/data/local/tmp/twinning`);
-
-	// ----------------
-
 	function escape(
 		source: string,
 	): string {
 		return source.replaceAll(/(?=['" ])/g, `\\`);
+	}
+
+	// ----------------
+
+	const k_temporary_directory = new StoragePath(`/data/local/tmp/twinning`);
+
+	function make_temporary_directory(
+	): StoragePath {
+		fs_create_directory(k_temporary_directory, null);
+		fs_ensure_public_access([k_temporary_directory]);
+		return k_temporary_directory;
 	}
 
 	// #endregion
@@ -69,8 +76,7 @@ namespace Twinning.Script.AndroidHelper {
 				ExternalHelper.run_adb([`push`, local.emit_native(), remote.emit_posix(true)]);
 			}
 			else {
-				fs_create_directory(k_temporary_directory, null);
-				let remote_temporary = k_temporary_directory.join(local.name() ?? '');
+				let remote_temporary = make_temporary_directory().join(local.name() ?? '');
 				ExternalHelper.run_adb([`push`, local.emit_native(), remote_temporary.emit_posix(true)]);
 				fs_copy(remote_temporary, remote, false);
 				fs_remove(remote_temporary);
@@ -236,6 +242,18 @@ namespace Twinning.Script.AndroidHelper {
 		return;
 	}
 
+	// ----------------
+
+	export function fs_ensure_public_access(
+		target: Array<StoragePath>,
+	): void {
+		for (let target_item of target) {
+			fs_change_mode(target_item, '777');
+			fs_change_owner_group(target_item, 'root', 'root');
+		}
+		return;
+	}
+
 	// #endregion
 
 	// #region application
@@ -265,17 +283,24 @@ namespace Twinning.Script.AndroidHelper {
 		let match: null | RegExpMatchArray;
 		let result: ApplicationInformation = {} as any;
 		result.identifier = application;
+		shell_result = shell(`pm list packages -U ${escape(application)}`);
+		{
+			match = new RegExp(`^package:${application.replaceAll('.', '\.')} uid\:([0-9]+)$`, 'm').exec(shell_result);
+			assert_test(match !== null);
+			let user_number = BigInt(match[1]);
+			result.user = `u${user_number / 100000n}_a${user_number - 10000n}`;
+		}
 		shell_result = shell(`pm dump ${escape(application)}`);
-		match = /versionCode=([0-9]+)/.exec(shell_result);
-		assert_test(match !== null);
-		result.version_code = BigInt(match[1]);
-		match = /versionName=([0-9a-zA-Z.+-]+)/.exec(shell_result);
-		assert_test(match !== null);
-		result.version_name = match[1];
-		match = /userId=([0-9]+)/.exec(shell_result);
-		assert_test(match !== null);
-		let user_number = BigInt(match[1]);
-		result.user = `u${user_number / 100000n}_a${user_number - 10000n}`;
+		{
+			match = /versionCode=([0-9]+)/.exec(shell_result);
+			assert_test(match !== null);
+			result.version_code = BigInt(match[1]);
+		}
+		{
+			match = /versionName=([0-9a-zA-Z.+-]+)/.exec(shell_result);
+			assert_test(match !== null);
+			result.version_name = match[1];
+		}
 		return result;
 	}
 
@@ -286,6 +311,69 @@ namespace Twinning.Script.AndroidHelper {
 		let shell_result: string;
 		shell_result = shell(`am start -n ${escape(application)}/${escape(activity)}`);
 		return;
+	}
+
+	// #endregion
+
+	// #region termux
+
+	export function termux_run_process(
+		program: StoragePath,
+		argument: Array<string>,
+	): ReturnType<typeof ProcessHelper.run_process> {
+		let shell_result: string;
+		let temporary_directory_fallback = StorageHelper.temporary('directory');
+		let temporary_directory = make_temporary_directory().join(temporary_directory_fallback.name()!);
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+			StorageHelper.remove(temporary_directory_fallback);
+		});
+		let script_file = temporary_directory.join('script');
+		let input_file = temporary_directory.join('stdin');
+		let output_file = temporary_directory.join('stdout');
+		let error_file = temporary_directory.join('stderr');
+		let code_file = temporary_directory.join('exit_code');
+		StorageHelper.create_directory(temporary_directory);
+		StorageHelper.write_file_text(script_file, `#!/usr/bin/bash\n${[program.emit_native(), ...argument].map((it) => `"${escape(it)}"`).join(' ')}\n`);
+		StorageHelper.write_file_text(input_file, '');
+		StorageHelper.create_file(output_file);
+		StorageHelper.create_file(error_file);
+		fs_ensure_public_access([
+			temporary_directory,
+			script_file,
+			input_file,
+			output_file,
+			error_file,
+		]);
+		shell_result = shell([
+			`am startservice`,
+			`--user 0`,
+			`-n com.termux/com.termux.app.RunCommandService`,
+			`-a com.termux.RUN_COMMAND`,
+			`--es com.termux.RUN_COMMAND_PATH               ${escape(script_file.emit_native())}`,
+			`--es com.termux.RUN_COMMAND_WORKDIR            ${escape(temporary_directory.emit_native())}`,
+			`--ez com.termux.RUN_COMMAND_BACKGROUND         ${escape(`true`)}`,
+			`--es com.termux.RUN_COMMAND_SESSION_ACTION     ${escape(`0`)}`,
+			`--es com.termux.RUN_COMMAND_STDIN              ${escape(input_file.emit_native())}`,
+			`--es com.termux.RUN_COMMAND_RESULT_DIRECTORY   ${escape(temporary_directory.emit_native())}`,
+			`--ez com.termux.RUN_COMMAND_RESULT_SINGLE_FILE ${escape(`false`)}`,
+		].join(' '));
+		while (!StorageHelper.exist_file(code_file)) {
+			Kernel.Miscellaneous.Thread.sleep(Kernel.Size.value(200n));
+		}
+		fs_ensure_public_access([
+			code_file,
+		]);
+		let read_file = (path: StoragePath): string => {
+			let data = StorageHelper.read_file_text(path);
+			return ConvertHelper.normalize_string_line_feed(data);
+		};
+		return {
+			path: program,
+			code: BigInt(read_file(code_file)),
+			output: read_file(output_file),
+			error: read_file(error_file),
+		};
 	}
 
 	// #endregion

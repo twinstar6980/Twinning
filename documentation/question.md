@@ -78,9 +78,7 @@
 
 [Android FUSE](https://source.android.com/docs/core/storage/scoped) 会影响应用对系统的外部存储空间的访问性能，这在处理大量文件时尤为突出。
 
-为了提高工具的执行效率，可以考虑将工具的主目录移动至非外部存储空间中。
-
-> 外部存储空间 `/storage/emulated/<user>` 内的 `Android/data` 与 `Android/obb` 不受 FUSE 的影响。
+为了提高工具的执行效率，可以考虑将工具的主目录移动至非外部存储空间中，但这可能导致程序在调用外部程序进行互操作时出现权限冲突问题。
 
 ## Android Content URI 处理方式
 

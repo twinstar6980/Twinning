@@ -10,6 +10,11 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 			throw new Error(`unsupported system, this function only available for windows or linux or macintosh`);
 		}
 		let ripe_file_fallback_temporary: null | StoragePath = null;
+		using ripe_file_fallback_temporary_finalizer = new Finalizer(() => {
+			if (ripe_file_fallback_temporary !== null) {
+				StorageHelper.remove(ripe_file_fallback_temporary);
+			}
+		});
 		let ripe_file_fallback = ripe_file;
 		if (ripe_file.extension()?.toLowerCase() !== 'wem') {
 			ripe_file_fallback_temporary = StorageHelper.temporary('directory');
@@ -21,9 +26,6 @@ namespace Twinning.Script.Support.Wwise.Media.Decode {
 			StorageHelper.create_directory(raw_file_directory);
 		}
 		let encoding_name = ExternalHelper.run_vgmstream_decode(raw_file, ripe_file_fallback);
-		if (ripe_file_fallback_temporary !== null) {
-			StorageHelper.remove(ripe_file_fallback_temporary);
-		}
 		let format: null | Format = null;
 		if (encoding_name === '16-bit Little Endian PCM') {
 			format = 'pcm';

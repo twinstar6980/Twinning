@@ -234,9 +234,6 @@ namespace Twinning.Script.StorageHelper {
 		create: null | 'file' | 'directory',
 	): StoragePath {
 		let parent = HomePath.temporary();
-		if (Shell.is_assistant) {
-			parent = StorageHelper.query_storage_item('application_temporary')!;
-		}
 		let name = ConvertHelper.make_date_to_string_simple(new Date());
 		let target = StorageHelper.generate_suffix_path(parent.join(name), null);
 		if (create === 'file') {

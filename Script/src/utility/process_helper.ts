@@ -50,6 +50,9 @@ namespace Twinning.Script.ProcessHelper {
 			environment = get_environment();
 		}
 		let temporary_directory = StorageHelper.temporary('directory');
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
 		let input_file = temporary_directory.join('input');
 		let output_file = temporary_directory.join('output');
 		let error_file = temporary_directory.join('error');
@@ -61,14 +64,12 @@ namespace Twinning.Script.ProcessHelper {
 			let data = StorageHelper.read_file_text(path);
 			return ConvertHelper.normalize_string_line_feed(data);
 		};
-		let result: ReturnType<typeof run_process> = {
+		return {
 			path: program,
 			code: code,
 			output: read_file(output_file),
 			error: read_file(error_file),
 		};
-		StorageHelper.remove(temporary_directory);
-		return result;
 	}
 
 	// #endregion

@@ -300,6 +300,9 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 			throw new Error(`unsupported system, this function only available for windows or macintosh`);
 		}
 		let temporary_directory = StorageHelper.temporary('directory');
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
 		let wwise_project_directory = temporary_directory.join('Sample');
 		let wwise_wproj_file = wwise_project_directory.join('Sample.wproj');
 		while (true) {
@@ -332,7 +335,6 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		})[format];
 		ExternalHelper.run_wwise_convert_external_source(wwise_wproj_file, wwise_wsources_file, platform);
 		StorageHelper.copy(wwise_project_directory.join('GeneratedSoundBanks').join(platform).join('Sample.wem'), ripe_file, false);
-		StorageHelper.remove(temporary_directory);
 		return;
 	}
 

@@ -281,6 +281,9 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		enable_debug_mode: boolean,
 	): void {
 		let temporary_directory = StorageHelper.temporary('directory');
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
 		Console.information(`phase: detect package type`, []);
 		let package_type = null as PackageType | null;
 		if (StorageHelper.exist_directory(target)) {
@@ -475,7 +478,6 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			StorageHelper.remove(target);
 			StorageHelper.copy(package_state.bundle, target, false);
 		}
-		StorageHelper.remove(temporary_directory);
 		Console.information(`phase: done`, []);
 		return;
 	}

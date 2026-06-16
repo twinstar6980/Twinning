@@ -6,12 +6,17 @@ namespace Twinning.Script.ExternalHelper {
 
 	// ----------------
 
+	function throw_execution_error(
+		result: ReturnType<typeof ProcessHelper.run_process>,
+	): never {
+		let error = new Error(`path: ${result.path.emit()}\ncode: ${result.code}\noutput:\n${result.output}\nerror:\n${result.error}`);
+		error.name = 'ExecutionError';
+		throw error;
+	}
+
 	function search_program(
 		name: string,
 	): StoragePath {
-		if (g_program_path_map[name] !== undefined && g_program_path_map[name] !== null) {
-			return g_program_path_map[name];
-		}
 		let result: null | StoragePath = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
 		let path_environment = ProcessHelper.find_environment('PATH');
@@ -41,12 +46,29 @@ namespace Twinning.Script.ExternalHelper {
 		return result;
 	}
 
-	function throw_execution_error(
-		result: ReturnType<typeof ProcessHelper.run_process>,
-	): never {
-		let error = new Error(`path: ${result.path.emit()}\ncode: ${result.code}\noutput:\n${result.output}\nerror:\n${result.error}`);
-		error.name = 'ExecutionError';
-		throw error;
+	function run_process(
+		program: string,
+		argument: Array<string>,
+		workspace: null | StoragePath,
+		environment: null | Record<string, string>,
+		android_termux_allowed: boolean,
+	): ReturnType<typeof ProcessHelper.run_process> {
+		let program_path: null | StoragePath = null;
+		if (g_program_path_map[program] !== undefined) {
+			program_path = g_program_path_map[program];
+		}
+		if (!KernelX.is_android || !android_termux_allowed) {
+			if (program_path === null) {
+				program_path = search_program(program)
+			}
+			return ProcessHelper.run_process(program_path, argument, workspace, environment);
+		}
+		else {
+			if (program_path === null) {
+				program_path = new StoragePath(program);
+			}
+			return AndroidHelper.termux_run_process(program_path, argument);
+		}
 	}
 
 	// #endregion
@@ -56,11 +78,12 @@ namespace Twinning.Script.ExternalHelper {
 	export function run_sh(
 		argument: Array<string>,
 	): string {
-		let process_result = ProcessHelper.run_process(
-			search_program('sh'),
+		let process_result = run_process(
+			'sh',
 			argument,
 			null,
 			null,
+			false,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -75,11 +98,12 @@ namespace Twinning.Script.ExternalHelper {
 	export function run_adb(
 		argument: Array<string>,
 	): string {
-		let process_result = ProcessHelper.run_process(
-			search_program('adb'),
+		let process_result = run_process(
+			'adb',
 			argument,
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -92,9 +116,13 @@ namespace Twinning.Script.ExternalHelper {
 	export function run_zipalign_align(
 		zip_file: StoragePath,
 	): void {
-		let aligned_file = StorageHelper.temporary('file');
-		let process_result = ProcessHelper.run_process(
-			search_program('zipalign'),
+		let temporary_directory = StorageHelper.temporary('directory');
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
+		let aligned_file = temporary_directory.join('aligned');
+		let process_result = run_process(
+			'zipalign',
 			[
 				'-P', '16',
 				'-f',
@@ -104,13 +132,13 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
 		}
 		StorageHelper.remove(zip_file);
 		StorageHelper.copy(aligned_file, zip_file, false);
-		StorageHelper.remove(aligned_file);
 		return;
 	}
 
@@ -119,8 +147,8 @@ namespace Twinning.Script.ExternalHelper {
 		keystore_file: StoragePath,
 		keystore_password: String,
 	): void {
-		let process_result = ProcessHelper.run_process(
-			search_program('apksigner'),
+		let process_result = run_process(
+			'apksigner',
 			[
 				'sign',
 				'--v1-signing-enabled', 'true',
@@ -133,6 +161,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -147,8 +176,8 @@ namespace Twinning.Script.ExternalHelper {
 	export function run_7z_list_content(
 		zip_file: StoragePath,
 	): Array<StoragePath> {
-		let process_result = ProcessHelper.run_process(
-			search_program('7z'),
+		let process_result = run_process(
+			'7z',
 			[
 				'l',
 				'-sccUTF-8',
@@ -157,6 +186,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -179,8 +209,11 @@ namespace Twinning.Script.ExternalHelper {
 		content: Array<{location: StoragePath; placement: StoragePath}>,
 	): void {
 		let temporary_directory = StorageHelper.temporary('directory');
-		let process_result = ProcessHelper.run_process(
-			search_program('7z'),
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
+		let process_result = run_process(
+			'7z',
 			[
 				'x',
 				'-sccUTF-8',
@@ -191,6 +224,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -198,7 +232,6 @@ namespace Twinning.Script.ExternalHelper {
 		for (let content_item of content) {
 			StorageHelper.copy(temporary_directory.push(content_item.location), content_item.placement, false);
 		}
-		StorageHelper.remove(temporary_directory);
 		return;
 	}
 
@@ -207,12 +240,14 @@ namespace Twinning.Script.ExternalHelper {
 		content: Array<{location: StoragePath; placement: StoragePath}>,
 	): void {
 		let temporary_directory = StorageHelper.temporary('directory');
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
 		for (let content_item of content) {
 			StorageHelper.copy(content_item.placement, temporary_directory.push(content_item.location), false);
 		}
-		Console.pause();
-		let process_result = ProcessHelper.run_process(
-			search_program('7z'),
+		let process_result = run_process(
+			'7z',
 			[
 				'a',
 				'-sccUTF-8',
@@ -223,11 +258,11 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
 		}
-		StorageHelper.remove(temporary_directory);
 		return;
 	}
 
@@ -239,8 +274,8 @@ namespace Twinning.Script.ExternalHelper {
 		project_file: StoragePath,
 		platform_list: Array<string>,
 	): void {
-		let process_result = ProcessHelper.run_process(
-			search_program('WwiseConsole'),
+		let process_result = run_process(
+			'WwiseConsole',
 			[
 				'create-new-project',
 				project_file.emit_native(),
@@ -249,6 +284,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -261,8 +297,8 @@ namespace Twinning.Script.ExternalHelper {
 		sources_file: StoragePath,
 		platform: string,
 	): void {
-		let process_result = ProcessHelper.run_process(
-			search_program('WwiseConsole'),
+		let process_result = run_process(
+			'WwiseConsole',
 			[
 				'convert-external-source',
 				project_file.emit_native(),
@@ -273,6 +309,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -288,8 +325,8 @@ namespace Twinning.Script.ExternalHelper {
 		raw_file: StoragePath,
 		ripe_file: StoragePath,
 	): string {
-		let process_result = ProcessHelper.run_process(
-			search_program('vgmstream-cli'),
+		let process_result = run_process(
+			'vgmstream-cli',
 			[
 				'-o',
 				raw_file.emit_native(),
@@ -297,6 +334,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
@@ -315,9 +353,14 @@ namespace Twinning.Script.ExternalHelper {
 		program_file: StoragePath,
 		metadata_file: StoragePath,
 	): Array<string> {
-		let dump_directory = StorageHelper.temporary('directory');
-		let process_result = ProcessHelper.run_process(
-			search_program('Il2CppDumper'),
+		let temporary_directory = StorageHelper.temporary('directory');
+		using temporary_directory_finalizer = new Finalizer(() => {
+			StorageHelper.remove(temporary_directory);
+		});
+		let dump_directory = temporary_directory.join('dump');
+		StorageHelper.create_directory(dump_directory);
+		let process_result = run_process(
+			'Il2CppDumper',
 			[
 				program_file.emit_native(),
 				metadata_file.emit_native(),
@@ -325,12 +368,12 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			true,
 		);
 		if (!/\nDone!\n(Press any key to exit\.\.\.\n)?$/.test(ConvertHelper.normalize_string_line_feed(process_result.output))) {
 			throw_execution_error(process_result);
 		}
 		let dump_data = ConvertHelper.split_string_by_line_feed(StorageHelper.read_file_text(dump_directory.join(`dump.cs`)), true);
-		StorageHelper.remove(dump_directory);
 		return dump_data;
 	}
 
