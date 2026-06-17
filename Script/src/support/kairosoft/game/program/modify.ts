@@ -280,10 +280,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		disable_record_encryption: boolean,
 		enable_debug_mode: boolean,
 	): void {
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		Console.information(`phase: detect package type`, []);
 		let package_type = null as PackageType | null;
 		if (StorageHelper.exist_directory(target)) {

@@ -5,7 +5,7 @@ namespace Twinning.Script.AndroidHelper {
 	function escape(
 		source: string,
 	): string {
-		return source.replaceAll(/(?=['" ])/g, `\\`);
+		return source.replaceAll(/(?=[ '"|&<>$*?#\\])/g, `\\`);
 	}
 
 	// ----------------
@@ -320,50 +320,38 @@ namespace Twinning.Script.AndroidHelper {
 	export function termux_run_process(
 		program: StoragePath,
 		argument: Array<string>,
+		input_data: null | string,
 	): ReturnType<typeof ProcessHelper.run_process> {
+		if (input_data === null) {
+			input_data = '';
+		}
 		let shell_result: string;
-		let temporary_directory_fallback = StorageHelper.temporary('directory');
-		let temporary_directory = make_temporary_directory().join(temporary_directory_fallback.name()!);
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-			StorageHelper.remove(temporary_directory_fallback);
-		});
-		let script_file = temporary_directory.join('script');
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		let input_file = temporary_directory.join('stdin');
 		let output_file = temporary_directory.join('stdout');
 		let error_file = temporary_directory.join('stderr');
 		let code_file = temporary_directory.join('exit_code');
-		StorageHelper.create_directory(temporary_directory);
-		StorageHelper.write_file_text(script_file, `#!/usr/bin/bash\n${[program.emit_native(), ...argument].map((it) => `"${escape(it)}"`).join(' ')}\n`);
-		StorageHelper.write_file_text(input_file, '');
+		StorageHelper.write_file_text(input_file, input_data);
 		StorageHelper.create_file(output_file);
 		StorageHelper.create_file(error_file);
-		fs_ensure_public_access([
-			temporary_directory,
-			script_file,
-			input_file,
-			output_file,
-			error_file,
-		]);
+		let command = `${[program.emit_native(), ...argument].map((it) => `"${it}"`).join(' ')} < "${input_file.emit_native()}"`;
 		shell_result = shell([
 			`am startservice`,
 			`--user 0`,
 			`-n com.termux/com.termux.app.RunCommandService`,
 			`-a com.termux.RUN_COMMAND`,
-			`--es com.termux.RUN_COMMAND_PATH               ${escape(script_file.emit_native())}`,
-			`--es com.termux.RUN_COMMAND_WORKDIR            ${escape(temporary_directory.emit_native())}`,
-			`--ez com.termux.RUN_COMMAND_BACKGROUND         ${escape(`true`)}`,
-			`--es com.termux.RUN_COMMAND_SESSION_ACTION     ${escape(`0`)}`,
-			`--es com.termux.RUN_COMMAND_STDIN              ${escape(input_file.emit_native())}`,
-			`--es com.termux.RUN_COMMAND_RESULT_DIRECTORY   ${escape(temporary_directory.emit_native())}`,
-			`--ez com.termux.RUN_COMMAND_RESULT_SINGLE_FILE ${escape(`false`)}`,
+			`--es  com.termux.RUN_COMMAND_PATH               ${escape(`/data/data/com.termux/files/usr/bin/bash`)}`,
+			`--esa com.termux.RUN_COMMAND_ARGUMENTS          ${escape(`-c`)},${escape(command).replaceAll(',', '\\,')}`,
+			`--es  com.termux.RUN_COMMAND_WORKDIR            ${escape(temporary_directory.emit_native())}`,
+			`--ez  com.termux.RUN_COMMAND_BACKGROUND         ${escape(`true`)}`,
+			`--es  com.termux.RUN_COMMAND_SESSION_ACTION     ${escape(`0`)}`,
+			`--es  com.termux.RUN_COMMAND_RESULT_DIRECTORY   ${escape(temporary_directory.emit_native())}`,
+			`--ez  com.termux.RUN_COMMAND_RESULT_SINGLE_FILE ${escape(`false`)}`,
 		].join(' '));
 		while (!StorageHelper.exist_file(code_file)) {
 			Kernel.Miscellaneous.Thread.sleep(Kernel.Size.value(200n));
 		}
-		fs_ensure_public_access([
-			code_file,
-		]);
 		let read_file = (path: StoragePath): string => {
 			let data = StorageHelper.read_file_text(path);
 			return ConvertHelper.normalize_string_line_feed(data);

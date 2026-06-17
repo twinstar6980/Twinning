@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/finalizer.dart';
 import '/utility/storage_path.dart';
 import '/utility/convert_helper.dart';
 import '/utility/platform_integration_manager.dart';
@@ -14,6 +15,7 @@ enum StorageQueryType {
   applicationShared,
   applicationPersistent,
   applicationTemporary,
+  applicationCache,
 }
 
 enum StoragePickType {
@@ -61,10 +63,10 @@ class StorageHelper {
       var referent = await StorageHelper.resolveLink(target);
       var isDirectory = false;
       if (SystemChecker.isWindows) {
-        var hTarget = targetString.toNativeUtf16();
+        var hTarget = targetString.toPcwstr();
         var attribute = lib.GetFileAttributes(hTarget);
         lib.calloc.free(hTarget);
-        isDirectory = attribute != -1 && (attribute & lib.FILE_ATTRIBUTE_DIRECTORY) != 0;
+        isDirectory = attribute.value != -1 && (attribute.value & lib.FILE_ATTRIBUTE_DIRECTORY) != 0;
       }
       if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
         isDirectory = false;
@@ -165,12 +167,12 @@ class StorageHelper {
     var targetString = target.emitNative();
     var referentString = referent.emitNative();
     if (SystemChecker.isWindows) {
-      var hTarget = targetString.toNativeUtf16();
-      var hReferent = referentString.toNativeUtf16();
+      var hTarget = targetString.toPcwstr();
+      var hReferent = referentString.toPcwstr();
       var result = lib.CreateSymbolicLink(hTarget, hReferent, lib.SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE | (!isDirectory ? 0 : lib.SYMBOLIC_LINK_FLAG_DIRECTORY));
       lib.calloc.free(hTarget);
       lib.calloc.free(hReferent);
-      assertTest(result != 0);
+      assertTest(result.value);
     }
     if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
       await Link(targetString).create(referentString, recursive: false);
@@ -389,17 +391,24 @@ class StorageHelper {
 
   // ----------------
 
-  static Future<StoragePath> temporary(
-  ) async {
-    var parent = await StorageHelper.query(.applicationTemporary);
-    var name = DateTime.now().millisecondsSinceEpoch.toString();
+  static Future<(StoragePath, Finalizer)> temporary({
+    Boolean useCache = false,
+  }) async {
+    var parent = await StorageHelper.query(!useCache ? .applicationTemporary : .applicationCache);
+    var name = ConvertHelper.makeDateTimeToString(DateTime.now());
     var target = parent.join(name);
     var suffix = 0;
     while (await exist(target)) {
       suffix += 1;
       target = parent.join('${name}.${suffix}');
     }
-    return target;
+    {
+      await StorageHelper.createDirectory(target);
+    }
+    var targetFinalizer = Finalizer(() async {
+      await StorageHelper.remove(target);
+    });
+    return (target, targetFinalizer);
   }
 
   // #endregion

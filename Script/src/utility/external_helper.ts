@@ -2,6 +2,8 @@ namespace Twinning.Script.ExternalHelper {
 
 	// #region common
 
+	export let g_enable_android_termux: boolean = false;
+
 	export let g_program_path_map: Record<string, null | StoragePath> = {};
 
 	// ----------------
@@ -51,23 +53,24 @@ namespace Twinning.Script.ExternalHelper {
 		argument: Array<string>,
 		workspace: null | StoragePath,
 		environment: null | Record<string, string>,
-		android_termux_allowed: boolean,
+		input_data: null | string,
+		allow_android_termux: boolean,
 	): ReturnType<typeof ProcessHelper.run_process> {
 		let program_path: null | StoragePath = null;
 		if (g_program_path_map[program] !== undefined) {
 			program_path = g_program_path_map[program];
 		}
-		if (!KernelX.is_android || !android_termux_allowed) {
+		if (!(KernelX.is_android && allow_android_termux && g_enable_android_termux)) {
 			if (program_path === null) {
 				program_path = search_program(program)
 			}
-			return ProcessHelper.run_process(program_path, argument, workspace, environment);
+			return ProcessHelper.run_process(program_path, argument, workspace, environment, input_data);
 		}
 		else {
 			if (program_path === null) {
 				program_path = new StoragePath(program);
 			}
-			return AndroidHelper.termux_run_process(program_path, argument);
+			return AndroidHelper.termux_run_process(program_path, argument, input_data);
 		}
 	}
 
@@ -81,6 +84,7 @@ namespace Twinning.Script.ExternalHelper {
 		let process_result = run_process(
 			'sh',
 			argument,
+			null,
 			null,
 			null,
 			false,
@@ -103,6 +107,7 @@ namespace Twinning.Script.ExternalHelper {
 			argument,
 			null,
 			null,
+			null,
 			true,
 		);
 		if (process_result.code !== 0n) {
@@ -116,10 +121,8 @@ namespace Twinning.Script.ExternalHelper {
 	export function run_zipalign_align(
 		zip_file: StoragePath,
 	): void {
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		let aligned_file = temporary_directory.join('aligned');
 		let process_result = run_process(
 			'zipalign',
@@ -130,6 +133,7 @@ namespace Twinning.Script.ExternalHelper {
 				`${zip_file.emit_native()}`,
 				`${aligned_file.emit_native()}`,
 			],
+			null,
 			null,
 			null,
 			true,
@@ -161,6 +165,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			null,
 			true,
 		);
 		if (process_result.code !== 0n) {
@@ -186,6 +191,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			null,
 			true,
 		);
 		if (process_result.code !== 0n) {
@@ -208,10 +214,8 @@ namespace Twinning.Script.ExternalHelper {
 		zip_file: StoragePath,
 		content: Array<{location: StoragePath; placement: StoragePath}>,
 	): void {
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		let process_result = run_process(
 			'7z',
 			[
@@ -222,6 +226,7 @@ namespace Twinning.Script.ExternalHelper {
 				...content.map((it) => `${it.location.emit_posix()}`),
 				`-o${temporary_directory.emit_native()}`,
 			],
+			null,
 			null,
 			null,
 			true,
@@ -239,10 +244,8 @@ namespace Twinning.Script.ExternalHelper {
 		zip_file: StoragePath,
 		content: Array<{location: StoragePath; placement: StoragePath}>,
 	): void {
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		for (let content_item of content) {
 			StorageHelper.copy(content_item.placement, temporary_directory.push(content_item.location), false);
 		}
@@ -256,6 +259,7 @@ namespace Twinning.Script.ExternalHelper {
 				`${zip_file.emit_native()}`,
 				`${temporary_directory.join('*').emit_native()}`,
 			],
+			null,
 			null,
 			null,
 			true,
@@ -284,6 +288,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			null,
 			true,
 		);
 		if (process_result.code !== 0n) {
@@ -309,6 +314,7 @@ namespace Twinning.Script.ExternalHelper {
 			],
 			null,
 			null,
+			null,
 			true,
 		);
 		if (process_result.code !== 0n) {
@@ -324,14 +330,27 @@ namespace Twinning.Script.ExternalHelper {
 	export function run_vgmstream_decode(
 		raw_file: StoragePath,
 		ripe_file: StoragePath,
+		extension: string,
 	): string {
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
+		let ripe_file_fallback = ripe_file;
+		if (ripe_file.extension()?.toLowerCase() !== extension) {
+			ripe_file_fallback = temporary_directory.join(`ripe.${extension}`);
+			StorageHelper.copy(ripe_file, ripe_file_fallback, false);
+		}
+		let raw_file_directory = raw_file.parent();
+		if (raw_file_directory !== null && !StorageHelper.exist_directory(raw_file_directory)) {
+			StorageHelper.create_directory(raw_file_directory);
+		}
 		let process_result = run_process(
 			'vgmstream-cli',
 			[
 				'-o',
 				raw_file.emit_native(),
-				ripe_file.emit_native(),
+				ripe_file_fallback.emit_native(),
 			],
+			null,
 			null,
 			null,
 			true,
@@ -353,10 +372,8 @@ namespace Twinning.Script.ExternalHelper {
 		program_file: StoragePath,
 		metadata_file: StoragePath,
 	): Array<string> {
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		let dump_directory = temporary_directory.join('dump');
 		StorageHelper.create_directory(dump_directory);
 		let process_result = run_process(
@@ -366,6 +383,7 @@ namespace Twinning.Script.ExternalHelper {
 				metadata_file.emit_native(),
 				dump_directory.emit_native(),
 			],
+			null,
 			null,
 			null,
 			true,

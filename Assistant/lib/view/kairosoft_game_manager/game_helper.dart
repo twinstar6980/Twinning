@@ -265,7 +265,7 @@ class GameRecordHelper {
     StoragePath archiveFile,
     Uint8List?  key,
   ) async {
-    var archiveDirectory = await StorageHelper.temporary();
+    var (archiveDirectory, archiveDirectoryFinalizer) = await StorageHelper.temporary();
     await StorageHelper.createDirectory(archiveDirectory);
     // TODO
     await StorageHelper.createFile(archiveDirectory.join('configuration'));
@@ -283,7 +283,7 @@ class GameRecordHelper {
       await StorageHelper.createFile(archiveFile);
     }
     await StorageHelper.writeFile(archiveFile, archiveData);
-    await StorageHelper.remove(archiveDirectory);
+    await archiveDirectoryFinalizer.dispose();
     return;
   }
 
@@ -292,8 +292,7 @@ class GameRecordHelper {
     StoragePath archiveFile,
     Uint8List?  key,
   ) async {
-    var archiveDirectory = await StorageHelper.temporary();
-    await StorageHelper.createDirectory(archiveDirectory);
+    var (archiveDirectory, archiveDirectoryFinalizer) = await StorageHelper.temporary();
     var archiveData = await StorageHelper.readFile(archiveFile);
     var archive = lib.ZipDecoder().decodeBytes(archiveData);
     await lib.extractArchiveToDisk(archive, archiveDirectory.emit());
@@ -306,7 +305,7 @@ class GameRecordHelper {
     for (var dataFile in await GameRecordHelper._listContent(archiveDirectory.join('data'))) {
       await GameRecordHelper._encryptFile(archiveDirectory.join('configuration').push(dataFile), targetDirectory.push(dataFile), key);
     }
-    await StorageHelper.remove(archiveDirectory);
+    await archiveDirectoryFinalizer.dispose();
     return;
   }
 

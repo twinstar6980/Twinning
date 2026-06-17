@@ -243,18 +243,6 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  Future<({String destination})> invokeOnWindowsQueryStorageLongPath(
-    String source,
-  ) async {
-    assertTest(SystemChecker.isWindows);
-    var detail = await this._invoke('on_windows_query_storage_long_path', {
-      'source': source,
-    });
-    return (
-      destination: detail['destination']!.as<String>(),
-    );
-  }
-
   Future<({Integer width, Integer height, Uint8List data})> invokeOnWindowsExtractAssociatedIcon(
     String target,
   ) async {

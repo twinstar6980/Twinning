@@ -252,9 +252,14 @@ namespace Twinning.Script {
 				let partition_name = `script/${partition}.js`;
 				load_script_file(`${home_path}/${partition_name}`, partition_name);
 			}
-			// initialize resource
-			g_thread_manager = new ThreadManager();
-			HomePath.initialize(home_path);
+			// resource
+			{
+				g_thread_manager = new ThreadManager();
+				HomePath.initialize(home_path);
+			}
+			using resource_finalizer = new Finalizer(() => {
+				g_thread_manager.resize(0, null);
+			});
 			// load setting
 			let setting_data = JsonHelper.decode_file(HomePath.script().join('configuration').join('setting.json'));
 			if (!CheckHelper.is_object_of_object(setting_data)) {
@@ -289,8 +294,6 @@ namespace Twinning.Script {
 			catch (e) {
 				Console.error_of(e);
 			}
-			// finalize resource
-			g_thread_manager.resize(0, null);
 			// check result
 			if (result === null) {
 				throw '';

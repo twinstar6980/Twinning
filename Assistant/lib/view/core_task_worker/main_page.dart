@@ -122,7 +122,8 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._messageList.clear();
     await refreshState(this.setState);
     try {
-      var kernel = await StorageHelper.temporary();
+      var (temporaryDirectory, temporaryDirectoryFinalizer) = await StorageHelper.temporary(useCache: true);
+      var kernel = temporaryDirectory.join('kernel');
       var library = bridge.Library();
       try {
         await StorageHelper.copy(this.widget.setting.kernel, kernel, true);
@@ -135,9 +136,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       if (library.state()) {
         library.close();
       }
-      if (await StorageHelper.exist(kernel)) {
-        await StorageHelper.remove(kernel);
-      }
+      await temporaryDirectoryFinalizer.dispose();
     }
     catch (e, s) {
         exception = (exception: e, stack: s);

@@ -37,6 +37,7 @@ namespace Twinning.Script.ProcessHelper {
 		argument: Array<string>,
 		workspace: null | StoragePath,
 		environment: null | Record<string, string>,
+		input_data: null | string,
 	): {
 		path: StoragePath;
 		code: bigint;
@@ -49,14 +50,15 @@ namespace Twinning.Script.ProcessHelper {
 		if (environment === null) {
 			environment = get_environment();
 		}
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		if (input_data === null) {
+			input_data = '';
+		}
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary(true);
+		using temporary_directory_using = temporary_directory_finalizer;
 		let input_file = temporary_directory.join('input');
 		let output_file = temporary_directory.join('output');
 		let error_file = temporary_directory.join('error');
-		StorageHelper.write_file_text(input_file, '');
+		StorageHelper.write_file_text(input_file, input_data);
 		StorageHelper.create_file(output_file);
 		StorageHelper.create_file(error_file);
 		let code = KernelX.Process.run_process(program, argument, workspace, ConvertHelper.record_to_array(environment, (key, value) => `${key}=${value}`), input_file, output_file, error_file);

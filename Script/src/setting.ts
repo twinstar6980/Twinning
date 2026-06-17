@@ -10,6 +10,7 @@ namespace Twinning.Script {
 		json_format_disable_object_trailing_comma: boolean;
 		json_format_disable_object_line_breaking: boolean;
 		thread_limit: bigint;
+		external_enable_android_termux: boolean;
 		external_program_path: Record<string, null | string>;
 		console_basic_disable_virtual_terminal_sequence: boolean;
 		language: string;
@@ -47,6 +48,9 @@ namespace Twinning.Script {
 			},
 			thread_limit: (value) => {
 				MainScript.g_thread_manager.resize(Number(value), null);
+			},
+			external_enable_android_termux: (value) => {
+				ExternalHelper.g_enable_android_termux = value;
 			},
 			external_program_path: (value) => {
 				ExternalHelper.g_program_path_map = ConvertHelper.record_transform(value, (key, value) => [key, value === null ? null : new StoragePath(value)]);

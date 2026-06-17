@@ -25,6 +25,7 @@ import twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.container.optional.optional;
+import twinning.kernel.utility.container.optional.null_optional;
 import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.third.system.windows;
 import twinning.kernel.third.system.posix;
@@ -35,7 +36,38 @@ export namespace Twinning::Kernel::Process {
 
 	namespace Detail {
 
-		#pragma region windows command
+		#pragma region posix
+
+		inline auto make_posix_string_data_list(
+			Optional<String> const & first,
+			List<String> const &     source
+		) -> List<String> {
+			auto destination = List<String>{};
+			destination.allocate(1_sz + source.size());
+			if (first.has()) {
+				destination.append(make_null_terminated_string(first.get()));
+			}
+			for (auto & element : source) {
+				destination.append(make_null_terminated_string(element));
+			}
+			return destination;
+		}
+
+		inline auto make_posix_string_pointer_list(
+			List<String> & source
+		) -> List<char *> {
+			auto destination = List<char *>{};
+			destination.allocate(source.size() + 1_sz);
+			for (auto & element : source) {
+				destination.append(unmake_pointer_unsafe<char>(element.begin()));
+			}
+			destination.append(nullptr);
+			return destination;
+		}
+
+		#pragma endregion
+
+		#pragma region windows
 
 		// NOTE: EXPLAIN: see https://learn.microsoft.com/cpp/c-language/parsing-c-command-line-arguments?view=msvc-170
 
@@ -77,8 +109,6 @@ export namespace Twinning::Kernel::Process {
 			return;
 		}
 
-		// ----------------
-
 		inline auto encode_windows_command_string(
 			Path const &         program,
 			List<String> const & argument
@@ -97,9 +127,7 @@ export namespace Twinning::Kernel::Process {
 			return destination;
 		}
 
-		#pragma endregion
-
-		#pragma region windows environment
+		// ----------------
 
 		// NOTE: EXPLAIN: see https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
 
@@ -220,13 +248,8 @@ export namespace Twinning::Kernel::Process {
 		auto state_b = Third::system::windows::$BOOL{};
 		auto state_d = Third::system::windows::$DWORD{};
 		auto null_device = Path{"/NUL"_s};
-		auto program_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(program.emit_native())));
-		auto argument_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_command_string(program, argument))));
-		auto workspace_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(workspace.emit_native())));
-		auto environment_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(Detail::encode_windows_environment_string(environment))));
-		auto input_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).emit_native())));
-		auto output_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).emit_native())));
-		auto error_string = make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).emit_native())));
+		auto argument_string = Detail::encode_windows_command_string(program, argument);
+		auto environment_string = Detail::encode_windows_environment_string(environment);
 		auto security_attribute = Third::system::windows::$SECURITY_ATTRIBUTES{};
 		security_attribute.nLength = sizeof(Third::system::windows::$SECURITY_ATTRIBUTES);
 		security_attribute.lpSecurityDescriptor = nullptr;
@@ -235,7 +258,7 @@ export namespace Twinning::Kernel::Process {
 		startup_information.cb = sizeof(Third::system::windows::$STARTUPINFOW);
 		startup_information.dwFlags = Third::system::windows::$STARTF_USESTDHANDLES;
 		startup_information.hStdInput = Third::system::windows::$CreateFileW(
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(input_string.begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>((!input.has() ? (null_device) : (input.get())).emit_native()))).begin()),
 			Third::system::windows::$GENERIC_READ,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -245,7 +268,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		assert_test(startup_information.hStdInput != Third::system::windows::$INVALID_HANDLE_VALUE);
 		startup_information.hStdOutput = Third::system::windows::$CreateFileW(
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(output_string.begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>((!output.has() ? (null_device) : (output.get())).emit_native()))).begin()),
 			Third::system::windows::$GENERIC_WRITE,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -255,7 +278,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		assert_test(startup_information.hStdOutput != Third::system::windows::$INVALID_HANDLE_VALUE);
 		startup_information.hStdError = Third::system::windows::$CreateFileW(
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(error_string.begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>((!error.has() ? (null_device) : (error.get())).emit_native()))).begin()),
 			Third::system::windows::$GENERIC_WRITE,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -266,22 +289,28 @@ export namespace Twinning::Kernel::Process {
 		assert_test(startup_information.hStdError != Third::system::windows::$INVALID_HANDLE_VALUE);
 		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
 		state_b = Third::system::windows::$CreateProcessW(
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(program_string.begin()),
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(argument_string.begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(program.emit_native()))).begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(argument_string))).begin()),
 			nullptr,
 			nullptr,
 			Third::system::windows::$TRUE,
 			Third::system::windows::$CREATE_UNICODE_ENVIRONMENT | Third::system::windows::$DETACHED_PROCESS,
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(environment_string.begin()),
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(workspace_string.begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(environment_string))).begin()),
+			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<ConstantBasicStringView<CharacterN>>(workspace.emit_native()))).begin()),
 			&startup_information,
 			&process_information
 		);
 		assert_test(state_b != Third::system::windows::$FALSE);
-		state_d = Third::system::windows::$WaitForSingleObject(process_information.hProcess, Third::system::windows::$INFINITE);
+		state_d = Third::system::windows::$WaitForSingleObject(
+			process_information.hProcess,
+			Third::system::windows::$INFINITE
+		);
 		assert_test(state_d == Third::system::windows::$WAIT_OBJECT_0);
 		auto exit_code = Third::system::windows::$DWORD{};
-		state_b = Third::system::windows::$GetExitCodeProcess(process_information.hProcess, &exit_code);
+		state_b = Third::system::windows::$GetExitCodeProcess(
+			process_information.hProcess,
+			&exit_code
+		);
 		assert_test(state_b != Third::system::windows::$FALSE);
 		result = make_box<IntegerU32>(exit_code);
 		state_b = Third::system::windows::$CloseHandle(startup_information.hStdInput);
@@ -298,50 +327,56 @@ export namespace Twinning::Kernel::Process {
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		auto state_i = int{};
 		auto null_device = Path{"/dev/null"_s};
-		auto program_string = make_null_terminated_string(program.emit_native());
-		auto argument_string = List<String>{};
-		argument_string.allocate(1_sz + argument.size());
-		argument_string.append(program_string);
-		for (auto & element : argument) {
-			argument_string.append(make_null_terminated_string(element));
-		}
-		auto argument_string_list = List<char *>{};
-		argument_string_list.allocate(argument_string.size() + 1_sz);
-		for (auto & element : argument_string) {
-			argument_string_list.append(unmake_pointer_unsafe<char>(element.begin()));
-		}
-		argument_string_list.append(nullptr);
-		auto workspace_string = make_null_terminated_string(workspace.emit_native());
-		auto environment_string = List<String>{};
-		environment_string.allocate(environment.size());
-		for (auto & element : environment) {
-			environment_string.append(make_null_terminated_string(element));
-		}
-		auto environment_string_list = List<char *>{};
-		environment_string_list.allocate(environment_string.size() + 1_sz);
-		for (auto & element : environment_string) {
-			environment_string_list.append(unmake_pointer_unsafe<char>(element.begin()));
-		}
-		environment_string_list.append(nullptr);
-		auto input_string = make_null_terminated_string((!input.has() ? (null_device) : (input.get())).emit_native());
-		auto output_string = make_null_terminated_string((!output.has() ? (null_device) : (output.get())).emit_native());
-		auto error_string = make_null_terminated_string((!error.has() ? (null_device) : (error.get())).emit_native());
+		auto argument_string = Detail::make_posix_string_data_list(make_optional_of(program.emit_native()), argument);
+		auto argument_string_list = Detail::make_posix_string_pointer_list(argument_string);
+		auto environment_string = Detail::make_posix_string_data_list(k_null_optional, environment);
+		auto environment_string_list = Detail::make_posix_string_pointer_list(environment_string);
 		auto spawn_file_action = Third::system::posix::$posix_spawn_file_actions_t{};
 		state_i = Third::system::posix::$posix_spawn_file_actions_init(&spawn_file_action);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDIN_FILENO, unmake_pointer_unsafe<char>(input_string.begin()), Third::system::posix::$O_RDONLY, 0);
+		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(
+			&spawn_file_action,
+			Third::system::posix::$STDIN_FILENO,
+			unmake_pointer_unsafe<char>(make_null_terminated_string((!input.has() ? (null_device) : (input.get())).emit_native()).begin()),
+			Third::system::posix::$O_RDONLY,
+			0
+		);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDOUT_FILENO, unmake_pointer_unsafe<char>(output_string.begin()), Third::system::posix::$O_WRONLY, 0);
+		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(
+			&spawn_file_action,
+			Third::system::posix::$STDOUT_FILENO,
+			unmake_pointer_unsafe<char>(make_null_terminated_string((!output.has() ? (null_device) : (output.get())).emit_native()).begin()),
+			Third::system::posix::$O_WRONLY,
+			0
+		);
 		assert_test(state_i == 0);
-		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(&spawn_file_action, Third::system::posix::$STDERR_FILENO, unmake_pointer_unsafe<char>(error_string.begin()), Third::system::posix::$O_WRONLY, 0);
+		state_i = Third::system::posix::$posix_spawn_file_actions_addopen(
+			&spawn_file_action,
+			Third::system::posix::$STDERR_FILENO,
+			unmake_pointer_unsafe<char>(make_null_terminated_string((!error.has() ? (null_device) : (error.get())).emit_native()).begin()),
+			Third::system::posix::$O_WRONLY,
+			0
+		);
 		assert_test(state_i == 0);
 		auto process_identifier = Third::system::posix::$pid_t{};
-		state_i = Third::system::posix::$posix_spawn(&process_identifier, unmake_pointer_unsafe<char>(program_string.begin()), &spawn_file_action, nullptr, unmake_pointer_unsafe<char *>(argument_string_list.begin()), unmake_pointer_unsafe<char *>(environment_string_list.begin()));
+		state_i = Third::system::posix::$posix_spawn(
+			&process_identifier,
+			unmake_pointer_unsafe<char>(make_null_terminated_string(program.emit_native()).begin()),
+			&spawn_file_action,
+			nullptr,
+			unmake_pointer_unsafe<char *>(argument_string_list.begin()),
+			unmake_pointer_unsafe<char *>(environment_string_list.begin())
+		);
 		assert_test(state_i == 0);
 		state_i = Third::system::posix::$posix_spawn_file_actions_destroy(&spawn_file_action);
 		assert_test(state_i == 0);
 		auto wait_information = Third::system::posix::$siginfo_t{};
-		state_i = Third::system::posix::$waitid(Third::system::posix::$P_PID, static_cast<Third::system::posix::$id_t>(process_identifier), &wait_information, Third::system::posix::$WEXITED | Third::system::posix::$WSTOPPED);
+		state_i = Third::system::posix::$waitid(
+			Third::system::posix::$P_PID,
+			static_cast<Third::system::posix::$id_t>(process_identifier),
+			&wait_information,
+			Third::system::posix::$WEXITED | Third::system::posix::$WSTOPPED
+		);
 		assert_test(state_i == 0);
 		result = make_box<IntegerU32>(wait_information.si_status);
 		#endif

@@ -330,7 +330,7 @@ export {
 		auto handle_query_storage_item(
 			std::string const & type
 		) -> std::tuple<std::string> {
-			assert_test(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary");
+			assert_test(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary" || type == "application_cache");
 			auto target = std::string{};
 			if (type == "user_home") {
 				target = std::string{g_get_home_dir()};
@@ -343,6 +343,9 @@ export {
 			}
 			if (type == "application_temporary") {
 				target = std::string{g_get_user_data_dir()} + "/" + thiz.query_application_identifier() + "/temporary";
+			}
+			if (type == "application_cache") {
+				target = std::string{g_get_user_data_dir()} + "/" + thiz.query_application_identifier() + "/cache";
 			}
 			return std::make_tuple(std::move(target));
 		}

@@ -3,13 +3,11 @@ import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/miscellaneous_helper.dart';
-import '/utility/platform_integration_manager.dart';
 import '/widget/common.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:super_drag_and_drop/super_drag_and_drop.dart' as lib;
 
 // ----------------
 
@@ -575,56 +573,8 @@ class StorageDropRegion extends StatelessWidget {
 
   @override
   build(context) {
-    return !(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh)
-      ? this.child
-      : lib.DropRegion(
-        hitTestBehavior: .opaque,
-        formats: [lib.Formats.fileUri],
-        onDropOver: (event) async {
-          if (this.onDrop != null && event.session.items.every((item) => item.canProvide(lib.Formats.fileUri))) {
-            return .link;
-          }
-          return .none;
-        },
-        onPerformDrop: (event) async {
-          var itemList = <Uri>[];
-          for (var item in event.session.items) {
-            var progress = item.dataReader!.getValue(lib.Formats.fileUri, (value) {
-              value!;
-              itemList.add(value);
-              return;
-            })!;
-            while (progress.fraction.value != 1.0) {
-              await Future.delayed(.zero);
-            }
-          }
-          var result = <StoragePath>[];
-          for (var uri in itemList) {
-            var path = Uri.decodeComponent(uri.path);
-            assertTest(path.startsWith('/'));
-            if (SystemChecker.isWindows) {
-              path = path.substring(1);
-              if (uri.authority != '') {
-                path = '//${uri.authority}/${path}';
-              }
-              path = (await PlatformIntegrationManager.instance.invokeOnWindowsQueryStorageLongPath(path)).destination;
-            }
-            if (SystemChecker.isLinux) {
-              assertTest(uri.authority == '');
-            }
-            if (SystemChecker.isMacintosh) {
-              assertTest(uri.authority == '');
-              if (path.length > 1 && path[path.length - 1] == '/') {
-                path = path.substring(0, path.length - 1);
-              }
-            }
-            result.add(.of(path));
-          }
-          this.onDrop!(result);
-          return;
-        },
-        child: this.child,
-      );
+    // TODO
+    return this.child;
   }
 
 }

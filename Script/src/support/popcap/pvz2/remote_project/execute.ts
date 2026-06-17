@@ -65,6 +65,19 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 			los('support.popcap.pvz2.remote_project.execute:version_code', application.version_code),
 			los('support.popcap.pvz2.remote_project.execute:version_name', application.version_name),
 		]);
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
+		let local = {
+			main_package: project_directory.join('main.rsb'),
+			content_delivery: project_directory.join('content_delivery'),
+			local_profile: project_directory.join('local.json'),
+			player_profile: project_directory.join('player.json'),
+		};
+		let local_temporary = {
+			content_delivery: temporary_directory.join('content_delivery'),
+			local_profile: temporary_directory.join('local_temporary_directory}/local.rton'),
+			player_profile: temporary_directory.join('local_temporary_directory}/player.rton'),
+		};
 		let remote_external_directory = new StoragePath(`/storage/emulated/0`);
 		let remote_application_data_directory = remote_external_directory.join('Android').join('data').join(application.identifier);
 		let remote_application_obb_directory = remote_external_directory.join('Android').join('obb').join(application.identifier);
@@ -75,21 +88,6 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 			player_profile: remote_application_data_directory.join('files').join('No_Backup').join('pp.dat'),
 			player_profile_snapshot_1: remote_application_data_directory.join('files').join('No_Backup').join('snapshot1.dat'),
 			player_profile_snapshot_2: remote_application_data_directory.join('files').join('No_Backup').join('snapshot2.dat'),
-		};
-		let local = {
-			main_package: project_directory.join('main.rsb'),
-			content_delivery: project_directory.join('content_delivery'),
-			local_profile: project_directory.join('local.json'),
-			player_profile: project_directory.join('player.json'),
-		};
-		let local_temporary_directory = StorageHelper.temporary('directory');
-		using local_temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(local_temporary_directory);
-		});
-		let local_temporary = {
-			content_delivery: local_temporary_directory.join('content_delivery'),
-			local_profile: local_temporary_directory.join('local_temporary_directory}/local.rton'),
-			player_profile: local_temporary_directory.join('local_temporary_directory}/player.rton'),
 		};
 		switch (action) {
 			case 'launch': {

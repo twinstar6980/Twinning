@@ -121,10 +121,16 @@ export namespace Twinning::Kernel::Storage {
 			Pointer<std::FILE> &    handler
 		) -> auto {
 			#if defined M_system_windows
-			auto file = Third::system::windows::$_wfopen(unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(target.emit_native()))).begin()), unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin()));
+			auto file = Third::system::windows::$_wfopen(
+				unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(target.emit_native()))).begin()),
+				unmake_pointer_unsafe<Third::system::windows::$WCHAR>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(make_string_view(mode)))).begin())
+			);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto file = std::fopen(unmake_pointer_unsafe<char>(make_null_terminated_string(target.emit_native()).begin()), mode);
+			auto file = std::fopen(
+				unmake_pointer_unsafe<char>(make_null_terminated_string(target.emit_native()).begin()),
+				mode
+			);
 			#endif
 			assert_test(file != nullptr);
 			handler = make_pointer(file);

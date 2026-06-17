@@ -140,8 +140,6 @@
 
   安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `adb` 可执行程序。
 
-  > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
-
 * [7-Zip](https://7-zip.org/) `=26.01`
 
   用于 **开罗游戏程序修改** 。
@@ -163,8 +161,6 @@
   用于 **WEM 音频解码** 。
 
   安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `vgmstream-cli` 可执行程序。
-
-  > 该程序仅支持 `Windows` 、`Linux` 、`Macintosh` 系统。
 
 * [QuickTime](https://support.apple.com/kb/DL837) `>=7.6`
 

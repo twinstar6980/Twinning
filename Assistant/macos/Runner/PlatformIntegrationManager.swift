@@ -252,7 +252,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   private func handleQueryStorageItem(
     _ type: String,
   ) async throws -> String {
-    guard type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary" else {
+    guard type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary" || type == "application_cache" else {
       throw NSError(domain: "invalid type.", code: 0)
     }
     var target: String? = nil
@@ -267,6 +267,9 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     if type == "application_temporary" {
       target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/temporary"
+    }
+    if type == "application_cache" {
+      target = "\(try self.resolveFileUrl(FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!))/\(try self.queryApplicationIdentifier())/cache"
     }
     return target!
   }

@@ -329,7 +329,7 @@ class PlatformIntegrationManager {
   private suspend fun handleQueryStorageItem(
     type: String,
   ): String {
-    check(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary")
+    check(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary" || type == "application_cache")
     var target = null as String?
     if (type == "user_home") {
       target = "${Environment.getExternalStorageDirectory().absolutePath}"
@@ -341,7 +341,10 @@ class PlatformIntegrationManager {
       target = "${this.activity.getExternalFilesDir(null)!!.absolutePath}/persistent"
     }
     if (type == "application_temporary") {
-      target = "${this.activity.getCacheDir().absolutePath}/temporary"
+      target = "${this.activity.getExternalFilesDir(null)!!.absolutePath}/temporary"
+    }
+    if (type == "application_cache") {
+      target = "${this.activity.getCacheDir().absolutePath}/cache"
     }
     return target!!
   }

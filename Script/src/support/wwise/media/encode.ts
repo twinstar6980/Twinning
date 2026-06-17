@@ -275,16 +275,13 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 	function cast_wwise_internal_path(
 		raw: StoragePath,
 	): string {
-		if (KernelX.is_windows) {
-			return raw.emit_native();
-		}
 		if (KernelX.is_macintosh) {
 			// locate at wine drive Z
 			assert_test(raw.type() === StoragePathType.absolute);
 			assert_test(raw.root() === null);
 			return `Z:${raw.emit_native()}`;
 		}
-		throw new Error();
+		return raw.emit_native();
 	}
 
 	// #endregion
@@ -296,13 +293,8 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		ripe_file: StoragePath,
 		format: Format,
 	): void {
-		if (!KernelX.is_windows && !KernelX.is_macintosh) {
-			throw new Error(`unsupported system, this function only available for windows or macintosh`);
-		}
-		let temporary_directory = StorageHelper.temporary('directory');
-		using temporary_directory_finalizer = new Finalizer(() => {
-			StorageHelper.remove(temporary_directory);
-		});
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
 		let wwise_project_directory = temporary_directory.join('Sample');
 		let wwise_wproj_file = wwise_project_directory.join('Sample.wproj');
 		while (true) {

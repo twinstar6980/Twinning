@@ -366,7 +366,7 @@ namespace Twinning.Script.ConvertHelper {
 		value: Date,
 	): string {
 		let p = (source: number, maximum_length: number) => (source.toString().padStart(maximum_length, '0'));
-		return `${p(value.getFullYear() % 100, 2)}-${p(value.getMonth() + 1, 2)}-${p(value.getDate(), 2)}.${p(value.getHours(), 2)}-${p(value.getMinutes(), 2)}-${p(value.getSeconds(), 2)}.${p(value.getMilliseconds(), 3)}`;
+		return `${p(value.getFullYear() % 100, 2)}-${p(value.getMonth() + 1, 2)}-${p(value.getDate(), 2)} ${p(value.getHours(), 2)}-${p(value.getMinutes(), 2)}-${p(value.getSeconds(), 2)} ${p(value.getMilliseconds(), 3)}`;
 	}
 
 	// #endregion

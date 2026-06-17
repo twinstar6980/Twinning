@@ -49,6 +49,8 @@ void FlutterWindow::OnDestroy() {
     flutter_controller_ = nullptr;
   }
 
+  PlatformIntegrationManager::instance().inject_FlutterWindow_OnDestroy(*this);
+
   Win32Window::OnDestroy();
 }
 
@@ -71,6 +73,8 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
       flutter_controller_->engine()->ReloadSystemFonts();
       break;
   }
+
+  PlatformIntegrationManager::instance().inject_FlutterWindow_MessageHandler(*this, hwnd, message, wparam, lparam);
 
   return Win32Window::MessageHandler(hwnd, message, wparam, lparam);
 }

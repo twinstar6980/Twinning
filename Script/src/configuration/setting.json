@@ -6,6 +6,7 @@
 	"json_format_disable_object_trailing_comma": false,
 	"json_format_disable_object_line_breaking": false,
 	"thread_limit": 0,
+	"external_enable_android_termux": true,
 	"external_program_path": {
 		"sh": null,
 		"adb": null,

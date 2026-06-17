@@ -459,9 +459,17 @@ class _SettingPanelState extends State<SettingPanel> {
             content: StyledText.inherit('Clear'),
             onPressed: (context) async {
               Navigator.pop(context);
-              var target = await StorageHelper.query(.applicationTemporary);
-              if (await StorageHelper.exist(target)) {
-                await StorageHelper.remove(target);
+              {
+                var target = await StorageHelper.query(.applicationTemporary);
+                if (await StorageHelper.exist(target)) {
+                  await StorageHelper.remove(target);
+                }
+              }
+              {
+                var target = await StorageHelper.query(.applicationCache);
+                if (await StorageHelper.exist(target)) {
+                  await StorageHelper.remove(target);
+                }
               }
               await StyledSnackExtension.show(context, 'done!');
             },

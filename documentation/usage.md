@@ -266,6 +266,10 @@
 
 	  线程池上限数。目前无实际作用。
 
+	* `external_enable_android_termux` : `boolean` = `true`
+
+	  在 `Android` 上调用外部程序时，将调用 `Termux` 环境中的程序，而非系统原生的程序。
+
 	* `external_program_path` : `Record<string, null | string>` = `{ ... }`
 
 	  指定可能会调用的外部程序的路径，若为 `null` ，则将在运行时检索 `PATH` 环境变量。

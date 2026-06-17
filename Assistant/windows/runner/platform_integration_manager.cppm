@@ -14,7 +14,6 @@ module;
 #include <flutter/method_channel.h>
 #include <flutter/standard_method_codec.h>
 #include "./utils.h"
-#include "./win32_window.h"
 #include "./flutter_window.h"
 #include "./common.hpp"
 
@@ -29,6 +28,8 @@ export {
 		std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> m_channel;
 
 		std::add_pointer_t<FlutterWindow> m_window;
+
+		winrt::com_ptr<IDropTarget> m_drop_target;
 
 	public:
 
@@ -72,7 +73,8 @@ export {
 			std::nullptr_t _
 		) :
 			m_channel{},
-			m_window{} {
+			m_window{},
+			m_drop_target{} {
 			return;
 		}
 
@@ -148,12 +150,12 @@ export {
 		}
 
 		// ReSharper disable once CppInconsistentNaming
-		auto inject_Win32Window_MessageHandler(
-			Win32Window &  host,
-			HWND &         with_window,
-			UINT const &   with_message,
-			WPARAM const & with_wparam,
-			LPARAM const & with_lparam
+		auto inject_FlutterWindow_MessageHandler(
+			FlutterWindow &  host,
+			HWND &           with_window,
+			UINT const &     with_message,
+			WPARAM const &   with_wparam,
+			LPARAM const &   with_lparam
 		) -> void {
 			if (with_message == WM_COPYDATA) {
 				auto & data = *reinterpret_cast<COPYDATASTRUCT *>(with_lparam);
@@ -186,11 +188,25 @@ export {
 					return;
 				}
 			);
+			OleInitialize(nullptr);
 			thiz.register_notification_activation_callback();
+			// thiz.register_drop_target();
 			auto argument = GetCommandLineArguments();
 			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
 				thiz.invoke_receive_application_link(argument.front());
 			}
+			return;
+		}
+
+		// ReSharper disable once CppInconsistentNaming
+		auto inject_FlutterWindow_OnDestroy(
+			FlutterWindow & host
+		) -> void {
+			if (thiz.m_window == nullptr) {
+				return;
+			}
+			OleUninitialize();
+			// thiz.unregister_drop_target();
 			return;
 		}
 
@@ -305,13 +321,6 @@ export {
 						);
 						break;
 					}
-					case hash_string("on_windows_query_storage_long_path"): {
-						auto detail = thiz.handle_on_windows_query_storage_long_path(
-							thiz.decode_flutter_value<std::string>(get_argument("source"))
-						);
-						set_result("destination", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						break;
-					}
 					case hash_string("on_windows_extract_associated_icon"): {
 						auto detail = thiz.handle_on_windows_extract_associated_icon(
 							thiz.decode_flutter_value<std::string>(get_argument("target"))
@@ -399,7 +408,7 @@ export {
 		auto handle_query_storage_item(
 			std::string const & type
 		) -> std::tuple<std::string> {
-			assert_test(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary");
+			assert_test(type == "user_home" || type == "application_shared" || type == "application_persistent" || type == "application_temporary" || type == "application_cache");
 			auto target = std::string{};
 			if (type == "user_home") {
 				target = thiz.query_known_folder_path(FOLDERID_Profile);
@@ -412,6 +421,9 @@ export {
 			}
 			if (type == "application_temporary") {
 				target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\temporary";
+			}
+			if (type == "application_cache") {
+				target = thiz.query_known_folder_path(FOLDERID_RoamingAppData) + "\\" + thiz.query_application_identifier() + "\\cache";
 			}
 			return std::make_tuple(std::move(target));
 		}
@@ -618,13 +630,6 @@ export {
 
 		// ----------------
 
-		auto handle_on_windows_query_storage_long_path(
-			std::string const & source
-		) -> std::tuple<std::string> {
-			auto destination = thiz.query_storage_long_path(source);
-			return std::make_tuple(destination);
-		}
-
 		auto handle_on_windows_extract_associated_icon(
 			std::string const & target
 		) -> std::tuple<std::int64_t, std::int64_t, std::vector<std::uint8_t>> {
@@ -636,7 +641,7 @@ export {
 			auto icon = ExtractAssociatedIconW(nullptr, target_h.data(), &icon_index);
 			assert_test(icon != nullptr);
 			auto icon_finalizer = thiz.make_finalizer(
-				[&]() {
+				[&] {
 					DestroyIcon(icon);
 				}
 			);
@@ -644,7 +649,7 @@ export {
 			state_b = GetIconInfo(icon, &icon_info);
 			assert_test(state_b != FALSE);
 			auto icon_info_finalizer = thiz.make_finalizer(
-				[&]() {
+				[&] {
 					DeleteObject(icon_info.hbmColor);
 					DeleteObject(icon_info.hbmMask);
 				}
@@ -662,7 +667,7 @@ export {
 			auto device_context = GetDC(nullptr);
 			assert_test(device_context != nullptr);
 			auto device_context_finalizer = thiz.make_finalizer(
-				[&]() {
+				[&] {
 					ReleaseDC(nullptr, device_context);
 				}
 			);
@@ -926,7 +931,7 @@ export {
 		// ----------------
 
 		auto register_notification_activation_callback(
-		) const -> void {
+		) -> void {
 			if (!thiz.check_application_packaged()) {
 				return;
 			}
@@ -1009,6 +1014,148 @@ export {
 				BOOL fLock
 			) override {
 				return S_OK;
+			}
+
+			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			#pragma endregion
+
+		};
+
+		// ----------------
+
+		auto register_drop_target(
+		) -> void {
+			auto state_h = HRESULT{};
+			thiz.m_drop_target = winrt::make<DropTarget>(&thiz);
+			state_h = RegisterDragDrop(thiz.m_window->GetHandle(), thiz.m_drop_target.get());
+			winrt::check_hresult(state_h);
+			return;
+		}
+
+		auto unregister_drop_target(
+		) -> void {
+			auto state_h = HRESULT{};
+			state_h = RevokeDragDrop(thiz.m_window->GetHandle());
+			winrt::check_hresult(state_h);
+			thiz.m_drop_target = nullptr;
+			return;
+		}
+
+		class DropTarget :
+			public winrt::implements<DropTarget, IDropTarget> {
+
+	private:
+
+		std::add_pointer_t<PlatformIntegrationManager> m_host;
+
+		public:
+
+			#pragma region constructor
+
+			explicit DropTarget(
+				PlatformIntegrationManager * const & host
+			) :
+				winrt::implements<DropTarget, IDropTarget>{},
+				m_host{host} {
+				return;
+			}
+
+			#pragma endregion
+
+			#pragma region implement IDropTarget
+
+			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			virtual IFACEMETHODIMP DragEnter(
+				IDataObject * pDataObj,
+				DWORD grfKeyState,
+				POINTL pt,
+				DWORD * pdwEffect
+			) override {
+				std::cout << "@@ DragEnter" << std::endl;
+				try {
+					*pdwEffect = DROPEFFECT_LINK;
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP DragOver(
+				DWORD grfKeyState,
+				POINTL pt,
+				DWORD * pdwEffect
+			) override {
+				std::cout << "@@ DragOver" << std::endl;
+				try {
+					*pdwEffect = DROPEFFECT_LINK;
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP DragLeave(
+			) override {
+				std::cout << "@@ DragLeave" << std::endl;
+				try {
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP Drop(
+				IDataObject * pDataObj,
+				DWORD grfKeyState,
+				POINTL pt,
+				DWORD * pdwEffect
+			) override {
+				std::cout << "@@ Drop" << std::endl;
+				try {
+					auto state_h = HRESULT{};
+					auto format = FORMATETC{
+						.cfFormat = CF_HDROP,
+						.ptd = nullptr,
+						.dwAspect = DVASPECT_CONTENT,
+						.lindex = -1,
+						.tymed = TYMED_HGLOBAL,
+					};
+					auto stg = STGMEDIUM{
+					};
+					state_h = pDataObj->GetData(&format, &stg);
+					winrt::check_hresult(state_h);
+					auto stg_finalizer = thiz.m_host->make_finalizer([&] {
+						ReleaseStgMedium(&stg);
+					});
+					auto drop_handle = static_cast<HDROP>(GlobalLock(stg.hGlobal));
+					assert_test(drop_handle != nullptr);
+					auto drop_handle_finalizer = thiz.m_host->make_finalizer([&] {
+						GlobalUnlock(stg.hGlobal);
+					});
+					auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
+					std::cout << drop_count << std::endl;
+					auto drop_item_list = std::vector<std::string>{};
+					for (auto drop_index = UINT{0}; drop_index < drop_count; ++drop_index) {
+						auto drop_item_path_length = DragQueryFileW(drop_handle, drop_index, nullptr, 0);
+						auto drop_item_path_data = std::vector<WCHAR>{};
+						drop_item_path_data.resize(static_cast<std::size_t>(drop_item_path_length + 1));
+						drop_item_path_length = DragQueryFileW(drop_handle, drop_index, drop_item_path_data.data(), static_cast<UINT>(drop_item_path_data.size()));
+						assert_test(drop_item_path_length == static_cast<UINT>(drop_item_path_data.size() - 1));
+						auto drop_item_path = winrt::to_string(std::wstring_view{drop_item_path_data.data(), static_cast<std::size_t>(drop_item_path_length)});
+						auto drop_item_path_long = thiz.m_host->query_storage_long_path(drop_item_path);
+						drop_item_list.emplace_back(drop_item_path_long);
+						std::cout << "@@ = " << drop_item_path_long << std::endl;
+					}
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
 			}
 
 			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
