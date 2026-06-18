@@ -2,21 +2,20 @@ namespace Twinning.Script.AndroidHelper {
 
 	// #region common
 
-	function escape(
+	export function escape(
 		source: string,
 	): string {
-		return source.replaceAll(/(?=[ '"|&<>$*?#\\])/g, `\\`);
+		return source.replaceAll(/(?=[ \t\n\r'"|<>&;()*?\[\]$#\\])/g, `\\`);
 	}
 
 	// ----------------
 
-	const k_temporary_directory = new StoragePath(`/data/local/tmp/twinning`);
-
-	function make_temporary_directory(
+	export function make_temporary_directory(
 	): StoragePath {
-		fs_create_directory(k_temporary_directory, null);
-		fs_ensure_public_access([k_temporary_directory]);
-		return k_temporary_directory;
+		let path = new StoragePath(`/data/local/tmp/twinning`);
+		fs_create_directory(path, null);
+		fs_ensure_public_access([path]);
+		return path;
 	}
 
 	// #endregion
@@ -28,14 +27,19 @@ namespace Twinning.Script.AndroidHelper {
 	// ----------------
 
 	export function shell(
+		run_as_root: boolean | 'only_native',
 		command: string,
 	): string {
 		let result: string;
+		if (run_as_root === 'only_native') {
+			run_as_root = k_mode === 'native';
+		}
+		let interpreter = !run_as_root ? 'sh' : 'su';
 		if (k_mode === 'native') {
-			result = ExternalHelper.run_sh([`-c`, `su -c "${command}"`]);
+			result = ExternalHelper.run_sh([`-c`, `${interpreter} -c ${escape(command)}`], true);
 		}
 		if (k_mode === 'bridge') {
-			result = ExternalHelper.run_adb([`shell`, `su -c "${command}"`]);
+			result = ExternalHelper.run_adb([`shell`, `${interpreter} -c ${(escape(command))}`]);
 		}
 		return result!;
 	}
@@ -53,7 +57,16 @@ namespace Twinning.Script.AndroidHelper {
 			fs_copy(remote, local, false);
 		}
 		if (k_mode === 'bridge') {
-			ExternalHelper.run_adb([`pull`, remote.emit_posix(true), local.emit_native()]);
+			if (fs_is_fuse_path(remote)) {
+				ExternalHelper.run_adb([`pull`, remote.emit_posix(true), local.emit_native()]);
+			}
+			else {
+				let remote_temporary = make_temporary_directory().join(local.name() ?? '');
+				fs_copy(remote, remote_temporary, false);
+				fs_ensure_public_access([remote_temporary]);
+				ExternalHelper.run_adb([`pull`, remote_temporary.emit_posix(true), local.emit_native()]);
+				fs_remove(remote_temporary);
+			}
 		}
 		return;
 	}
@@ -72,7 +85,7 @@ namespace Twinning.Script.AndroidHelper {
 			fs_copy(local, remote, false);
 		}
 		if (k_mode === 'bridge') {
-			if (fs_is_fuse_media_path(remote)) {
+			if (fs_is_fuse_path(remote)) {
 				ExternalHelper.run_adb([`push`, local.emit_native(), remote.emit_posix(true)]);
 			}
 			else {
@@ -128,7 +141,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -e ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(true, `if [ -e ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
@@ -138,7 +151,7 @@ namespace Twinning.Script.AndroidHelper {
 		follow_link: boolean,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target.emit_posix(true))} ${escape(placement.emit_posix(true))}`);
+		shell_result = shell(true, `cp -rf ${!follow_link ? '-P' : '-L'} ${escape(target.emit_posix(true))} ${escape(placement.emit_posix(true))}`);
 		return;
 	}
 
@@ -147,7 +160,7 @@ namespace Twinning.Script.AndroidHelper {
 		placement: StoragePath,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`mv -f ${escape(target.emit_posix(true))} ${escape(placement.emit_posix(true))}`);
+		shell_result = shell(true, `mv -f ${escape(target.emit_posix(true))} ${escape(placement.emit_posix(true))}`);
 		return;
 	}
 
@@ -155,7 +168,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`rm -rf ${escape(target.emit_posix(true))}`);
+		shell_result = shell(true, `rm -rf ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -163,7 +176,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -f ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(true, `if [ -f ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
@@ -171,7 +184,7 @@ namespace Twinning.Script.AndroidHelper {
 		target: StoragePath,
 	): boolean {
 		let shell_result: string;
-		shell_result = shell(`if [ -d ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
+		shell_result = shell(true, `if [ -d ${escape(target.emit_posix(true))} ] ; then echo y ; else echo n ; fi`);
 		return ConvertHelper.split_string_by_line_feed(shell_result, true)[0] === 'y';
 	}
 
@@ -181,7 +194,7 @@ namespace Twinning.Script.AndroidHelper {
 	): void {
 		mode = CheckHelper.not_null_or(mode, '777');
 		let shell_result: string;
-		shell_result = shell(`mkdir -p -m ${escape(mode)} ${escape(target.emit_posix(true))}`);
+		shell_result = shell(true, `mkdir -p -m ${escape(mode)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -192,7 +205,7 @@ namespace Twinning.Script.AndroidHelper {
 		mode: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chmod -R ${escape(mode)} ${escape(target.emit_posix(true))}`);
+		shell_result = shell(true, `chmod -R ${escape(mode)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -201,7 +214,7 @@ namespace Twinning.Script.AndroidHelper {
 		owner: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chown -R ${escape(owner)} ${escape(target.emit_posix(true))}`);
+		shell_result = shell(true, `chown -R ${escape(owner)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -210,7 +223,7 @@ namespace Twinning.Script.AndroidHelper {
 		group: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chgrp -R ${escape(group)} ${escape(target.emit_posix(true))}`);
+		shell_result = shell(true, `chgrp -R ${escape(group)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -220,7 +233,7 @@ namespace Twinning.Script.AndroidHelper {
 		group: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`chown -R ${escape(owner)}:${escape(group)} ${escape(target.emit_posix(true))}`);
+		shell_result = shell(true, `chown -R ${escape(owner)}:${escape(group)} ${escape(target.emit_posix(true))}`);
 		return;
 	}
 
@@ -271,7 +284,7 @@ namespace Twinning.Script.AndroidHelper {
 		rule: RegExp,
 	): Array<string> {
 		let shell_result: string;
-		shell_result = shell(`pm list packages`);
+		shell_result = shell('only_native', `pm list packages`);
 		let result = ConvertHelper.split_string_by_line_feed(shell_result, true).map((value) => (value.slice(8))).filter((value) => (rule.test(value)));
 		return result;
 	}
@@ -283,14 +296,14 @@ namespace Twinning.Script.AndroidHelper {
 		let match: null | RegExpMatchArray;
 		let result: ApplicationInformation = {} as any;
 		result.identifier = application;
-		shell_result = shell(`pm list packages -U ${escape(application)}`);
+		shell_result = shell('only_native', `pm list packages -U ${escape(application)}`);
 		{
 			match = new RegExp(`^package:${application.replaceAll('.', '\.')} uid\:([0-9]+)$`, 'm').exec(shell_result);
 			assert_test(match !== null);
 			let user_number = BigInt(match[1]);
 			result.user = `u${user_number / 100000n}_a${user_number - 10000n}`;
 		}
-		shell_result = shell(`pm dump ${escape(application)}`);
+		shell_result = shell('only_native', `pm dump ${escape(application)}`);
 		{
 			match = /versionCode=([0-9]+)/.exec(shell_result);
 			assert_test(match !== null);
@@ -309,7 +322,7 @@ namespace Twinning.Script.AndroidHelper {
 		activity: string,
 	): void {
 		let shell_result: string;
-		shell_result = shell(`am start -n ${escape(application)}/${escape(activity)}`);
+		shell_result = shell('only_native', `am start --user 0 -n ${escape(application)}/${escape(activity)}`);
 		return;
 	}
 
@@ -322,6 +335,7 @@ namespace Twinning.Script.AndroidHelper {
 		argument: Array<string>,
 		input_data: null | string,
 	): ReturnType<typeof ProcessHelper.run_process> {
+		assert_test(KernelX.is_android);
 		if (input_data === null) {
 			input_data = '';
 		}
@@ -332,36 +346,49 @@ namespace Twinning.Script.AndroidHelper {
 		let output_file = temporary_directory.join('stdout');
 		let error_file = temporary_directory.join('stderr');
 		let code_file = temporary_directory.join('exit_code');
+		let internal_error_code_file = temporary_directory.join('err');
+		let internal_error_message_file = temporary_directory.join('errmsg');
 		StorageHelper.write_file_text(input_file, input_data);
 		StorageHelper.create_file(output_file);
 		StorageHelper.create_file(error_file);
-		let command = `${[program.emit_native(), ...argument].map((it) => `"${it}"`).join(' ')} < "${input_file.emit_native()}"`;
-		shell_result = shell([
+		let command = `${[program.emit_native(), ...argument].map((it) => escape(it)).join(' ')} < ${escape(input_file.emit_native())}`;
+		shell_result = shell(false, [
 			`am startservice`,
 			`--user 0`,
 			`-n com.termux/com.termux.app.RunCommandService`,
 			`-a com.termux.RUN_COMMAND`,
-			`--es  com.termux.RUN_COMMAND_PATH               ${escape(`/data/data/com.termux/files/usr/bin/bash`)}`,
-			`--esa com.termux.RUN_COMMAND_ARGUMENTS          ${escape(`-c`)},${escape(command).replaceAll(',', '\\,')}`,
-			`--es  com.termux.RUN_COMMAND_WORKDIR            ${escape(temporary_directory.emit_native())}`,
-			`--ez  com.termux.RUN_COMMAND_BACKGROUND         ${escape(`true`)}`,
-			`--es  com.termux.RUN_COMMAND_SESSION_ACTION     ${escape(`0`)}`,
-			`--es  com.termux.RUN_COMMAND_RESULT_DIRECTORY   ${escape(temporary_directory.emit_native())}`,
-			`--ez  com.termux.RUN_COMMAND_RESULT_SINGLE_FILE ${escape(`false`)}`,
+			`--es com.termux.RUN_COMMAND_PATH               ${escape(`/data/data/com.termux/files/usr/bin/bash`)}`,
+			`--es com.termux.RUN_COMMAND_STDIN              ${escape(command)}`,
+			`--es com.termux.RUN_COMMAND_WORKDIR            ${escape(temporary_directory.emit_native())}`,
+			`--ez com.termux.RUN_COMMAND_BACKGROUND         ${escape(`true`)}`,
+			`--es com.termux.RUN_COMMAND_SESSION_ACTION     ${escape(`0`)}`,
+			`--es com.termux.RUN_COMMAND_RESULT_DIRECTORY   ${escape(temporary_directory.emit_native())}`,
+			`--ez com.termux.RUN_COMMAND_RESULT_SINGLE_FILE ${escape(`false`)}`,
 		].join(' '));
-		while (!StorageHelper.exist_file(code_file)) {
+		while (!StorageHelper.exist_file(internal_error_code_file)) {
 			Kernel.Miscellaneous.Thread.sleep(Kernel.Size.value(200n));
 		}
 		let read_file = (path: StoragePath): string => {
 			let data = StorageHelper.read_file_text(path);
 			return ConvertHelper.normalize_string_line_feed(data);
 		};
-		return {
+		let result = {
 			path: program,
-			code: BigInt(read_file(code_file)),
-			output: read_file(output_file),
-			error: read_file(error_file),
+			code: 0n,
+			output: '',
+			error: '',
 		};
+		let internal_error_code = BigInt(read_file(internal_error_code_file));
+		if (internal_error_code !== -1n) {
+			result.code = (1n << 32n) + internal_error_code;
+			result.error = read_file(internal_error_message_file);
+		}
+		else {
+			result.code = BigInt(read_file(code_file));
+			result.output = read_file(output_file);
+			result.error = read_file(error_file);
+		}
+		return result;
 	}
 
 	// #endregion

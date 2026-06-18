@@ -80,6 +80,7 @@ namespace Twinning.Script.ExternalHelper {
 
 	export function run_sh(
 		argument: Array<string>,
+		always_in_native: boolean = false,
 	): string {
 		let process_result = run_process(
 			'sh',
@@ -87,7 +88,7 @@ namespace Twinning.Script.ExternalHelper {
 			null,
 			null,
 			null,
-			false,
+			!always_in_native,
 		);
 		if (process_result.code !== 0n) {
 			throw_execution_error(process_result);
