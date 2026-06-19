@@ -365,8 +365,8 @@ namespace Twinning.Script.ConvertHelper {
 	export function make_date_to_string_simple(
 		value: Date,
 	): string {
-		let p = (source: number, maximum_length: number) => (source.toString().padStart(maximum_length, '0'));
-		return `${p(value.getFullYear() % 100, 2)}-${p(value.getMonth() + 1, 2)}-${p(value.getDate(), 2)} ${p(value.getHours(), 2)}-${p(value.getMinutes(), 2)}-${p(value.getSeconds(), 2)} ${p(value.getMilliseconds(), 3)}`;
+		let pad = (source: number, maximum_length: number) => (source.toString().padStart(maximum_length, '0'));
+		return `${pad(value.getFullYear() % 100, 2)}-${pad(value.getMonth() + 1, 2)}-${pad(value.getDate(), 2)}_${pad(value.getHours(), 2)}-${pad(value.getMinutes(), 2)}-${pad(value.getSeconds(), 2)}_${pad(value.getMilliseconds(), 3)}`;
 	}
 
 	// #endregion

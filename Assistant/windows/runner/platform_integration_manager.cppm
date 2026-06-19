@@ -151,11 +151,11 @@ export {
 
 		// ReSharper disable once CppInconsistentNaming
 		auto inject_FlutterWindow_MessageHandler(
-			FlutterWindow &  host,
-			HWND &           with_window,
-			UINT const &     with_message,
-			WPARAM const &   with_wparam,
-			LPARAM const &   with_lparam
+			FlutterWindow & host,
+			HWND &          with_window,
+			UINT const &    with_message,
+			WPARAM const &  with_wparam,
+			LPARAM const &  with_lparam
 		) -> void {
 			if (with_message == WM_COPYDATA) {
 				auto & data = *reinterpret_cast<COPYDATASTRUCT *>(with_lparam);
@@ -190,7 +190,7 @@ export {
 			);
 			OleInitialize(nullptr);
 			thiz.register_notification_activation_callback();
-			// thiz.register_drop_target();
+			thiz.register_drop_target();
 			auto argument = GetCommandLineArguments();
 			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
 				thiz.invoke_receive_application_link(argument.front());
@@ -206,7 +206,7 @@ export {
 				return;
 			}
 			OleUninitialize();
-			// thiz.unregister_drop_target();
+			thiz.unregister_drop_target();
 			return;
 		}
 
@@ -588,7 +588,7 @@ export {
 				.cbSize = sizeof(MONITORINFO),
 			};
 			state_b = GetMonitorInfoW(monitor, &monitor_info);
-			assert_test(state_b != FALSE);
+			winrt::check_bool(state_b);
 			auto rect = monitor_info.rcWork;
 			auto x = static_cast<std::int64_t>(std::llround(rect.left / scale_factor));
 			auto y = static_cast<std::int64_t>(std::llround(rect.top / scale_factor));
@@ -603,7 +603,7 @@ export {
 			auto scale_factor = thiz.query_display_scale_factor();
 			auto rect = RECT{};
 			state_b = GetWindowRect(thiz.m_window->GetHandle(), &rect);
-			assert_test(state_b != FALSE);
+			winrt::check_bool(state_b);
 			auto x = static_cast<std::int64_t>(std::llround(rect.left / scale_factor));
 			auto y = static_cast<std::int64_t>(std::llround(rect.top / scale_factor));
 			auto width = static_cast<std::int64_t>(std::llround((rect.right - rect.left) / scale_factor));
@@ -624,7 +624,7 @@ export {
 			auto actual_width = static_cast<int>(std::llround(width * scale_factor));
 			auto actual_height = static_cast<int>(std::llround(height * scale_factor));
 			state_b = SetWindowPos(thiz.m_window->GetHandle(), nullptr, actual_x, actual_y, actual_width, actual_height, SWP_NOZORDER);
-			assert_test(state_b != FALSE);
+			winrt::check_bool(state_b);
 			return std::make_tuple();
 		}
 
@@ -639,7 +639,7 @@ export {
 			target_h.emplace_back(L'\0');
 			auto icon_index = WORD{};
 			auto icon = ExtractAssociatedIconW(nullptr, target_h.data(), &icon_index);
-			assert_test(icon != nullptr);
+			winrt::check_pointer(icon);
 			auto icon_finalizer = thiz.make_finalizer(
 				[&] {
 					DestroyIcon(icon);
@@ -647,7 +647,7 @@ export {
 			);
 			auto icon_info = ICONINFO{};
 			state_b = GetIconInfo(icon, &icon_info);
-			assert_test(state_b != FALSE);
+			winrt::check_bool(state_b);
 			auto icon_info_finalizer = thiz.make_finalizer(
 				[&] {
 					DeleteObject(icon_info.hbmColor);
@@ -665,7 +665,7 @@ export {
 			bitmap_info.bmiHeader.biBitCount = 32;
 			bitmap_info.bmiHeader.biCompression = BI_RGB;
 			auto device_context = GetDC(nullptr);
-			assert_test(device_context != nullptr);
+			winrt::check_pointer(device_context);
 			auto device_context_finalizer = thiz.make_finalizer(
 				[&] {
 					ReleaseDC(nullptr, device_context);
@@ -704,6 +704,50 @@ export {
 		) -> void {
 			return thiz.invoke(
 				"receive_application_link",
+				std::map<std::string, flutter::EncodableValue>{{
+					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
+				}}
+			);
+		}
+
+		// ----------------
+
+		auto invoke_on_desktop_receive_storage_drag_enter(
+		) -> void {
+			return thiz.invoke(
+				"on_desktop_receive_storage_drag_enter",
+				std::map<std::string, flutter::EncodableValue>{{
+				}}
+			);
+		}
+
+		auto invoke_on_desktop_receive_storage_drag_over(
+			std::int64_t const & location_x,
+			std::int64_t const & location_y
+		) -> void {
+			return thiz.invoke(
+				"on_desktop_receive_storage_drag_over",
+				std::map<std::string, flutter::EncodableValue>{{
+					std::make_pair("location_x", thiz.encode_flutter_value(auto{location_x})),
+					std::make_pair("location_y", thiz.encode_flutter_value(auto{location_y})),
+				}}
+			);
+		}
+
+		auto invoke_on_desktop_receive_storage_drag_leave(
+		) -> void {
+			return thiz.invoke(
+				"on_desktop_receive_storage_drag_leave",
+				std::map<std::string, flutter::EncodableValue>{{
+				}}
+			);
+		}
+
+		auto invoke_on_desktop_receive_storage_drag_drop(
+			std::vector<std::string> const & target
+		) -> void {
+			return thiz.invoke(
+				"on_desktop_receive_storage_drag_drop",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
@@ -1045,9 +1089,11 @@ export {
 		class DropTarget :
 			public winrt::implements<DropTarget, IDropTarget> {
 
-	private:
+		private:
 
-		std::add_pointer_t<PlatformIntegrationManager> m_host;
+			winrt::com_ptr<IDropTargetHelper> m_helper;
+
+			std::add_pointer_t<PlatformIntegrationManager> m_host;
 
 		public:
 
@@ -1057,7 +1103,9 @@ export {
 				PlatformIntegrationManager * const & host
 			) :
 				winrt::implements<DropTarget, IDropTarget>{},
+				m_helper{},
 				m_host{host} {
+				winrt::check_hresult(CoCreateInstance(CLSID_DragDropHelper, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(thiz.m_helper.put())));
 				return;
 			}
 
@@ -1069,13 +1117,20 @@ export {
 
 			virtual IFACEMETHODIMP DragEnter(
 				IDataObject * pDataObj,
-				DWORD grfKeyState,
-				POINTL pt,
-				DWORD * pdwEffect
+				DWORD         grfKeyState,
+				POINTL        pt,
+				DWORD *       pdwEffect
 			) override {
-				std::cout << "@@ DragEnter" << std::endl;
 				try {
-					*pdwEffect = DROPEFFECT_LINK;
+					auto state_h = HRESULT{};
+					auto point = POINT{
+						.x = pt.x,
+						.y = pt.y,
+					};
+					*pdwEffect = DROPEFFECT_NONE;
+					state_h = thiz.m_helper->DragEnter(thiz.m_host->m_window->GetHandle(), pDataObj, &point, *pdwEffect);
+					winrt::check_hresult(state_h);
+					thiz.m_host->invoke_on_desktop_receive_storage_drag_enter();
 					return S_OK;
 				}
 				catch (...) {
@@ -1084,13 +1139,27 @@ export {
 			}
 
 			virtual IFACEMETHODIMP DragOver(
-				DWORD grfKeyState,
-				POINTL pt,
+				DWORD   grfKeyState,
+				POINTL  pt,
 				DWORD * pdwEffect
 			) override {
-				std::cout << "@@ DragOver" << std::endl;
 				try {
+					auto state_b = BOOL{};
+					auto state_h = HRESULT{};
+					auto point = POINT{
+						.x = pt.x,
+						.y = pt.y,
+					};
 					*pdwEffect = DROPEFFECT_LINK;
+					state_h = thiz.m_helper->DragOver(&point, *pdwEffect);
+					winrt::check_hresult(state_h);
+					auto point_client = POINT{point};
+					state_b = ScreenToClient(thiz.m_host->m_window->GetHandle(), &point_client);
+					winrt::check_bool(state_b);
+					auto scale_factor = thiz.m_host->query_display_scale_factor();
+					auto location_x = static_cast<std::int64_t>(std::llround(point_client.x / scale_factor));
+					auto location_y = static_cast<std::int64_t>(std::llround(point_client.y / scale_factor));
+					thiz.m_host->invoke_on_desktop_receive_storage_drag_over(location_x, location_y);
 					return S_OK;
 				}
 				catch (...) {
@@ -1100,8 +1169,11 @@ export {
 
 			virtual IFACEMETHODIMP DragLeave(
 			) override {
-				std::cout << "@@ DragLeave" << std::endl;
 				try {
+					auto state_h = HRESULT{};
+					state_h = thiz.m_helper->DragLeave();
+					winrt::check_hresult(state_h);
+					thiz.m_host->invoke_on_desktop_receive_storage_drag_leave();
 					return S_OK;
 				}
 				catch (...) {
@@ -1111,46 +1183,54 @@ export {
 
 			virtual IFACEMETHODIMP Drop(
 				IDataObject * pDataObj,
-				DWORD grfKeyState,
-				POINTL pt,
-				DWORD * pdwEffect
+				DWORD         grfKeyState,
+				POINTL        pt,
+				DWORD *       pdwEffect
 			) override {
-				std::cout << "@@ Drop" << std::endl;
 				try {
 					auto state_h = HRESULT{};
-					auto format = FORMATETC{
+					auto point = POINT{
+						.x = pt.x,
+						.y = pt.y,
+					};
+					*pdwEffect = DROPEFFECT_NONE;
+					state_h = thiz.m_helper->Drop(pDataObj, &point, *pdwEffect);
+					winrt::check_hresult(state_h);
+					auto drop_format = FORMATETC{
 						.cfFormat = CF_HDROP,
 						.ptd = nullptr,
 						.dwAspect = DVASPECT_CONTENT,
 						.lindex = -1,
 						.tymed = TYMED_HGLOBAL,
 					};
-					auto stg = STGMEDIUM{
-					};
-					state_h = pDataObj->GetData(&format, &stg);
+					auto drop_storage = STGMEDIUM{};
+					state_h = pDataObj->GetData(&drop_format, &drop_storage);
 					winrt::check_hresult(state_h);
-					auto stg_finalizer = thiz.m_host->make_finalizer([&] {
-						ReleaseStgMedium(&stg);
-					});
-					auto drop_handle = static_cast<HDROP>(GlobalLock(stg.hGlobal));
-					assert_test(drop_handle != nullptr);
-					auto drop_handle_finalizer = thiz.m_host->make_finalizer([&] {
-						GlobalUnlock(stg.hGlobal);
-					});
+					auto drop_storage_finalizer = thiz.m_host->make_finalizer(
+						[&] {
+							ReleaseStgMedium(&drop_storage);
+						}
+					);
+					auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
+					winrt::check_pointer(drop_handle);
+					auto drop_handle_finalizer = thiz.m_host->make_finalizer(
+						[&] {
+							GlobalUnlock(drop_storage.hGlobal);
+						}
+					);
 					auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
-					std::cout << drop_count << std::endl;
-					auto drop_item_list = std::vector<std::string>{};
-					for (auto drop_index = UINT{0}; drop_index < drop_count; ++drop_index) {
-						auto drop_item_path_length = DragQueryFileW(drop_handle, drop_index, nullptr, 0);
-						auto drop_item_path_data = std::vector<WCHAR>{};
-						drop_item_path_data.resize(static_cast<std::size_t>(drop_item_path_length + 1));
-						drop_item_path_length = DragQueryFileW(drop_handle, drop_index, drop_item_path_data.data(), static_cast<UINT>(drop_item_path_data.size()));
-						assert_test(drop_item_path_length == static_cast<UINT>(drop_item_path_data.size() - 1));
-						auto drop_item_path = winrt::to_string(std::wstring_view{drop_item_path_data.data(), static_cast<std::size_t>(drop_item_path_length)});
-						auto drop_item_path_long = thiz.m_host->query_storage_long_path(drop_item_path);
-						drop_item_list.emplace_back(drop_item_path_long);
-						std::cout << "@@ = " << drop_item_path_long << std::endl;
+					auto target = std::vector<std::string>{};
+					for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
+						auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
+						auto target_item_path_data = std::vector<WCHAR>{};
+						target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
+						target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
+						assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
+						auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
+						auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
+						target.emplace_back(target_item_path_long);
 					}
+					thiz.m_host->invoke_on_desktop_receive_storage_drag_drop(target);
 					return S_OK;
 				}
 				catch (...) {

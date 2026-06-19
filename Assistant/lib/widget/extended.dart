@@ -554,7 +554,7 @@ extension MoreModalDialogExtension on StyledModalDialog {
 
 // #endregion
 
-// #region storage
+// #region drop
 
 class StorageDropRegion extends StatelessWidget {
 
@@ -573,8 +573,23 @@ class StorageDropRegion extends StatelessWidget {
 
   @override
   build(context) {
-    // TODO
-    return this.child;
+    return DropRegion(
+      enabled: this.onDrop != null,
+      onEnter: () async {
+        return;
+      },
+      onOver: () async {
+        return;
+      },
+      onLeave: () async {
+        return;
+      },
+      onDrop: (target) async {
+        this.onDrop!.call(target.map((it) => StoragePath.of(it)).toList());
+        return;
+      },
+      child: this.child,
+    );
   }
 
 }

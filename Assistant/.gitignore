@@ -4,9 +4,6 @@
 /windows/out
 /linux/flutter/ephemeral
 /macos/Flutter/ephemeral
-/macos/Pods
-/macos/Podfile
-/macos/Podfile.lock
 /android/local.properties
 /android/.kotlin
 /android/build
@@ -14,8 +11,4 @@
 /ios/Flutter/ephemeral
 /ios/Flutter/Generated.xcconfig
 /ios/Flutter/flutter_export_environment.sh
-/ios/Flutter/Flutter.podspec
-/ios/Pods
-/ios/Podfile
-/ios/Podfile.lock
 /ios/.symlinks

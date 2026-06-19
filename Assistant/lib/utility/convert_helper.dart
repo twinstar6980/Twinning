@@ -190,7 +190,7 @@ class ConvertHelper {
   static String makeDateTimeToString(
     DateTime value,
   ) {
-    return '${(value.year % 100).toString().padLeft(2, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')} ${value.hour.toString().padLeft(2, '0')}-${value.minute.toString().padLeft(2, '0')}-${value.second.toString().padLeft(2, '0')} ${value.millisecond.toString().padLeft(3, '0')}';
+    return '${(value.year % 100).toString().padLeft(2, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}_${value.hour.toString().padLeft(2, '0')}-${value.minute.toString().padLeft(2, '0')}-${value.second.toString().padLeft(2, '0')}_${value.millisecond.toString().padLeft(3, '0')}';
   }
 
   // #endregion

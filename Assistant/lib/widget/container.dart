@@ -1,5 +1,7 @@
 import '/common.dart';
 import 'dart:ui' as lib;
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart' as lib;
@@ -860,6 +862,150 @@ class ImageView extends StatelessWidget {
       image: this.source,
     );
   }
+
+}
+
+// #endregion
+
+// #region drop
+
+class DropRegionRenderBox extends RenderProxyBoxWithHitTestBehavior {
+
+  DropRegionRenderBox({
+    required this.enabled,
+    required this.onEnter,
+    required this.onOver,
+    required this.onLeave,
+    required this.onDrop,
+  });
+
+  // ----------------
+
+  late Boolean                                    enabled;
+  late Future<Void> Function()                    onEnter;
+  late Future<Void> Function()                    onOver;
+  late Future<Void> Function()                    onLeave;
+  late Future<Void> Function(List<String> target) onDrop;
+
+}
+
+class DropRegion extends SingleChildRenderObjectWidget {
+
+  const DropRegion({
+    super.key,
+    required this.enabled,
+    required this.onEnter,
+    required this.onOver,
+    required this.onLeave,
+    required this.onDrop,
+    required super.child,
+  });
+
+  // ----------------
+
+  final Boolean                                    enabled;
+  final Future<Void> Function()                    onEnter;
+  final Future<Void> Function()                    onOver;
+  final Future<Void> Function()                    onLeave;
+  final Future<Void> Function(List<String> target) onDrop;
+
+  // ----------------
+
+  @override
+  createRenderObject(context) {
+    return DropRegionRenderBox(
+      enabled: this.enabled,
+      onEnter: this.onEnter,
+      onOver: this.onOver,
+      onLeave: this.onLeave,
+      onDrop: this.onDrop,
+    );
+  }
+
+  @override
+  updateRenderObject(context, renderObject) {
+    renderObject as DropRegionRenderBox;
+    renderObject.enabled = this.enabled;
+    renderObject.onEnter = this.onEnter;
+    renderObject.onOver = this.onOver;
+    renderObject.onLeave = this.onLeave;
+    renderObject.onDrop = this.onDrop;
+    return;
+  }
+
+}
+
+// ----------------
+
+class DropRegionManager {
+
+  // #region singleton
+
+  static final DropRegionManager instance = ._();
+
+  // #endregion
+
+  // #region constructor
+
+  DropRegionRenderBox? _currentRegion;
+
+  // ----------------
+
+  DropRegionManager._(
+  ) :
+    this._currentRegion = null;
+
+  // #endregion
+
+  // #region event
+
+  Future<Void> onEnter(
+  ) async {
+    return;
+  }
+
+  Future<Void> onOver(
+    Offset location,
+  ) async {
+    var hitTestResult = HitTestResult();
+    GestureBinding.instance.hitTestInView(hitTestResult, location, GestureBinding.instance.platformDispatcher.implicitView!.viewId);
+    var targetRegion = null as DropRegionRenderBox?;
+    for (var hitItem in hitTestResult.path) {
+      var hitTarget = hitItem.target;
+      if (hitTarget is DropRegionRenderBox && hitTarget.attached && hitTarget.enabled) {
+        targetRegion = hitTarget;
+        break;
+      }
+    }
+    if (this._currentRegion != targetRegion) {
+      await this._currentRegion?.onLeave();
+      this._currentRegion = targetRegion;
+      await this._currentRegion?.onEnter();
+    }
+    await this._currentRegion?.onOver();
+    return;
+  }
+
+  Future<Void> onLeave(
+  ) async {
+    if (this._currentRegion != null) {
+      await this._currentRegion!.onLeave();
+      this._currentRegion = null;
+    }
+    return;
+  }
+
+  Future<Void> onDrop(
+    List<String> target,
+  ) async {
+    if (this._currentRegion != null) {
+      await this._currentRegion!.onDrop(target);
+      this._currentRegion = null;
+    }
+    return;
+  }
+
+  // #endregion
 
 }
 

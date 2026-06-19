@@ -385,6 +385,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     return (x, y, width, height)
   }
 
+  @MainActor
   private func handleOnDesktopQueryWindowPlacement(
   ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
     let rect = self.window.frame

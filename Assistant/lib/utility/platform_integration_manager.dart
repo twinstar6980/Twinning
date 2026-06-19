@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/widget/container.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 
@@ -48,7 +49,34 @@ class PlatformIntegrationManager {
       case 'receive_application_link': {
         // ignore: unused_local_variable
         var detail = await this._handleReceiveApplicationLink(
-          getArgument('target') as String,
+          getArgument('target')!.as<String>(),
+        );
+        break;
+      }
+      case 'on_desktop_receive_storage_drag_enter': {
+        // ignore: unused_local_variable
+        var detail = await this._handleOnDesktopReceiveStorageDragEnter(
+        );
+        break;
+      }
+      case 'on_desktop_receive_storage_drag_over': {
+        // ignore: unused_local_variable
+        var detail = await this._handleOnDesktopReceiveStorageDragOver(
+          getArgument('location_x')!.as<Integer>(),
+          getArgument('location_y')!.as<Integer>(),
+        );
+        break;
+      }
+      case 'on_desktop_receive_storage_drag_leave': {
+        // ignore: unused_local_variable
+        var detail = await this._handleOnDesktopReceiveStorageDragLeave(
+        );
+        break;
+      }
+      case 'on_desktop_receive_storage_drag_drop': {
+        // ignore: unused_local_variable
+        var detail = await this._handleOnDesktopReceiveStorageDragDrop(
+          getArgument('target')!.as<List<Object?>>().cast<String>(),
         );
         break;
       }
@@ -63,6 +91,39 @@ class PlatformIntegrationManager {
     String target,
   ) async {
     this._streamControllerForLink.sink.add(target);
+    return (
+    );
+  }
+
+  // ----------------
+
+  Future<()> _handleOnDesktopReceiveStorageDragEnter(
+  ) async {
+    await DropRegionManager.instance.onEnter();
+    return (
+    );
+  }
+
+  Future<()> _handleOnDesktopReceiveStorageDragOver(
+    Integer locationX,
+    Integer locationY,
+  ) async {
+    await DropRegionManager.instance.onOver(.new(locationX.toDouble(), locationY.toDouble()));
+    return (
+    );
+  }
+
+  Future<()> _handleOnDesktopReceiveStorageDragLeave(
+  ) async {
+    await DropRegionManager.instance.onLeave();
+    return (
+    );
+  }
+
+  Future<()> _handleOnDesktopReceiveStorageDragDrop(
+    List<String> target,
+  ) async {
+    await DropRegionManager.instance.onDrop(target);
     return (
     );
   }

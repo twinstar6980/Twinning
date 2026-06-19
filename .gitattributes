@@ -120,6 +120,7 @@
 /**/*.pbxproj                                text eol=lf
 /**/*.xcworkspacedata                        text eol=lf
 /**/*.xcconfig                               text eol=lf
+/**/*.xcsettings                             text eol=lf
 /**/*.entitlements                           text eol=lf
 /**/*.xib                                    text eol=lf
 /**/*.storyboard                             text eol=lf
