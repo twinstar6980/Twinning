@@ -60,7 +60,57 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     })
     UNUserNotificationCenter.current().delegate = self
     UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
+    self.window.registerForDraggedTypes([.fileURL])
     return
+  }
+
+  public func inject_MainFlutterWindow_draggingEntered(
+    _ host: MainFlutterWindow,
+    _ with_sender: any NSDraggingInfo,
+  ) -> NSDragOperation {
+    Task {
+      try? await self.invokeReceiveApplicationDragEnter()
+    }
+    return .init()
+  }
+
+  public func inject_MainFlutterWindow_draggingUpdated(
+    _ host: MainFlutterWindow,
+    _ with_sender: any NSDraggingInfo,
+  ) -> NSDragOperation {
+    let window = try! self.getCurrentWindow()
+    let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
+    let locationX = Int((point.x).rounded())
+    let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
+    Task {
+      try? await self.invokeReceiveApplicationDragOver(locationX, locationY)
+    }
+    return .link
+  }
+
+  public func inject_MainFlutterWindow_draggingExited(
+    _ host: MainFlutterWindow,
+    _ with_sender: (any NSDraggingInfo)?,
+  ) -> Void {
+    Task {
+      try? await self.invokeReceiveApplicationDragLeave()
+    }
+    return
+  }
+
+  public func inject_MainFlutterWindow_performDragOperation(
+    _ host: MainFlutterWindow,
+    _ with_sender: any NSDraggingInfo,
+  ) -> Bool {
+    let targetUrl = with_sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [NSPasteboard.ReadingOptionKey.urlReadingFileURLsOnly: true]) as? [URL]
+    guard targetUrl != nil else {
+      return false
+    }
+    let target = try! targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
+    Task {
+      try? await self.invokeReceiveApplicationDragDrop(target)
+    }
+    return true
   }
 
   // MARK: - handle
@@ -71,14 +121,14 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   ) async -> Void {
     do {
       let method = call.method
-      var rawArgument = call.arguments as? [String: Any?]
+      var rawArgument = call.arguments as? Dictionary<String, Any?>
       guard rawArgument != nil else {
         throw NSError(domain: "invalid argument.", code: 0)
       }
       let getArgument = { (name: String) in
         return try self.extractFlutterValueMap(&rawArgument!, name)
       }
-      var rawResult: [String: Any?] = [:]
+      var rawResult: Dictionary<String, Any?> = [:]
       let setResult = { (name: String, value: Any?) in
         return try self.infuseFlutterValueMap(&rawResult, name, value)
       }
@@ -128,22 +178,22 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           try self.decodeFlutterValue(try getArgument("title")),
           try self.decodeFlutterValue(try getArgument("description")),
         )
-      case "on_desktop_query_screen_placement":
-        let detail = try await self.handleOnDesktopQueryScreenPlacement(
+      case "query_screen_placement":
+        let detail = try await self.handleQueryScreenPlacement(
         )
         try setResult("x", try self.encodeFlutterValue(detail.x))
         try setResult("y", try self.encodeFlutterValue(detail.y))
         try setResult("width", try self.encodeFlutterValue(detail.width))
         try setResult("height", try self.encodeFlutterValue(detail.height))
-      case "on_desktop_query_window_placement":
-        let detail = try await self.handleOnDesktopQueryWindowPlacement(
+      case "query_window_placement":
+        let detail = try await self.handleQueryWindowPlacement(
         )
         try setResult("x", try self.encodeFlutterValue(detail.x))
         try setResult("y", try self.encodeFlutterValue(detail.y))
         try setResult("width", try self.encodeFlutterValue(detail.width))
         try setResult("height", try self.encodeFlutterValue(detail.height))
-      case "on_desktop_update_window_placement":
-        let _ = try await self.handleOnDesktopUpdateWindowPlacement(
+      case "update_window_placement":
+        let _ = try await self.handleUpdateWindowPlacement(
           try self.decodeFlutterValue(try getArgument("x")),
           try self.decodeFlutterValue(try getArgument("y")),
           try self.decodeFlutterValue(try getArgument("width")),
@@ -344,10 +394,10 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     let accent: Int? = {
       return (
-        (Int(accentColor!.alphaComponent * 255.0) << 24) |
-        (Int(accentColor!.redComponent * 255.0) << 16) |
-        (Int(accentColor!.greenComponent * 255.0) << 8) |
-        (Int(accentColor!.blueComponent * 255.0) << 0)
+        (Int((accentColor!.alphaComponent * 255.0).rounded()) << 24) |
+        (Int((accentColor!.redComponent * 255.0).rounded()) << 16) |
+        (Int((accentColor!.greenComponent * 255.0).rounded()) << 8) |
+        (Int((accentColor!.blueComponent * 255.0).rounded()) << 0)
       )
     }()
     return accent
@@ -371,40 +421,41 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // ----------------
 
   @MainActor
-  private func handleOnDesktopQueryScreenPlacement(
+  private func handleQueryScreenPlacement(
   ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
-    let screen = self.window.screen
-    guard screen != nil else {
-      throw NSError(domain: "failed to get screen.", code: 0)
-    }
-    let rect = screen!.visibleFrame
+    let screen = try self.getCurrentScreen()
+    let rect = screen.visibleFrame
     let x = Int(rect.origin.x)
-    let y = Int(rect.origin.y)
+    let y = Int(screen.frame.height - (rect.origin.y + rect.size.height))
     let width = Int(rect.size.width)
     let height = Int(rect.size.height)
     return (x, y, width, height)
   }
 
   @MainActor
-  private func handleOnDesktopQueryWindowPlacement(
+  private func handleQueryWindowPlacement(
   ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
-    let rect = self.window.frame
+    let screen = try self.getCurrentScreen()
+    let window = try self.getCurrentWindow()
+    let rect = window.convertToScreen(window.contentView!.convert(window.contentView!.bounds, to: nil))
     let x = Int(rect.origin.x)
-    let y = Int(rect.origin.y)
+    let y = Int(screen.frame.height - (rect.origin.y + rect.size.height))
     let width = Int(rect.size.width)
     let height = Int(rect.size.height)
     return (x, y, width, height)
   }
 
   @MainActor
-  private func handleOnDesktopUpdateWindowPlacement(
+  private func handleUpdateWindowPlacement(
     _ x: Int,
     _ y: Int,
     _ width: Int,
     _ height: Int,
   ) async throws -> Void {
-    let rect = NSRect(x: x, y: y, width: width, height: height)
-    window.setFrame(rect, display: false)
+    let screen = try self.getCurrentScreen()
+    let window = try self.getCurrentWindow()
+    let rect = window.frameRect(forContentRect: NSRect(x: x, y: (Int(screen.frame.height) - (y + height)), width: width, height: height))
+    window.setFrame(rect, display: true)
     return
   }
 
@@ -412,7 +463,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   private func invoke(
     _ method: String,
-    _ argument: [String: Any?],
+    _ argument: Dictionary<String, Any?>,
   ) async throws -> Void {
     self.channel.invokeMethod(method, arguments: argument)
     return
@@ -424,6 +475,36 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ target: String,
   ) async throws -> Void {
     return try await self.invoke("receive_application_link", [
+      "target": self.encodeFlutterValue(target),
+    ])
+  }
+
+  // ----------------
+
+  private func invokeReceiveApplicationDragEnter(
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_enter", [:])
+  }
+
+  private func invokeReceiveApplicationDragOver(
+    _ locationX: Int,
+    _ locationY: Int,
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_over", [
+      "location_x": self.encodeFlutterValue(locationX),
+      "location_y": self.encodeFlutterValue(locationY),
+    ])
+  }
+
+  private func invokeReceiveApplicationDragLeave(
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_leave", [:])
+  }
+
+  private func invokeReceiveApplicationDragDrop(
+    _ target: Array<String>,
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_drop", [
       "target": self.encodeFlutterValue(target),
     ])
   }
@@ -448,7 +529,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func extractFlutterValueMap(
-    _ map: inout [String: Any?],
+    _ map: inout Dictionary<String, Any?>,
     _ name: String,
   ) throws -> Any? {
     guard map.index(forKey: name) != nil else {
@@ -458,7 +539,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   }
 
   private func infuseFlutterValueMap(
-    _ map: inout [String: Any?],
+    _ map: inout Dictionary<String, Any?>,
     _ name: String,
     _ value: Any?,
   ) throws -> Void {
@@ -470,10 +551,11 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   private func queryApplicationIdentifier(
   ) throws -> String {
-    guard let identifier = Bundle.main.bundleIdentifier else {
+    let identifier = Bundle.main.bundleIdentifier
+    guard identifier != nil else {
       throw NSError(domain: "failed to get bundle identifier.", code: 0)
     }
-    return identifier
+    return identifier!
   }
 
   // ----------------
@@ -481,13 +563,14 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   private func resolveFileUrl(
     _ url: URL,
   ) throws -> String {
-    guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
+    let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true)
+    guard urlComponent != nil else {
       throw NSError(domain: "invalid url.", code: 0)
     }
-    guard urlComponent.scheme == "file" && urlComponent.host == "" && urlComponent.port == nil && urlComponent.path != nil else {
+    guard urlComponent!.scheme == "file" && urlComponent!.host == "" && urlComponent!.port == nil && urlComponent!.path != nil else {
       throw NSError(domain: "unknown url.", code: 0)
     }
-    var path = urlComponent.path!
+    var path = urlComponent!.path!
     if path.count > 1 && path.last == "/" {
       path.removeLast()
     }
@@ -501,6 +584,21 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
       throw NSError(domain: "failed to open link.", code: 0)
     }
     return
+  }
+
+  private func getCurrentScreen(
+  ) throws -> NSScreen {
+    let window = try self.getCurrentWindow()
+    let screen = window.screen
+    guard screen != nil else {
+      throw NSError(domain: "failed to get screen.", code: 0)
+    }
+    return screen!
+  }
+
+  private func getCurrentWindow(
+  ) throws -> NSWindow {
+    return self.window
   }
 
   // MARK: - resolve AppleEvent

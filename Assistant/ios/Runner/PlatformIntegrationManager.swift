@@ -60,7 +60,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     let link = with_connectionOptions.urlContexts.first?.url.absoluteString
     if link != nil {
       Task {
-        _ = try? await self.invokeReceiveApplicationLink(link!)
+        try? await self.invokeReceiveApplicationLink(link!)
       }
     }
     return
@@ -74,7 +74,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     let link = with_URLContexts.first?.url.absoluteString
     if link != nil {
       Task {
-        _ = try? await self.invokeReceiveApplicationLink(link!)
+        try? await self.invokeReceiveApplicationLink(link!)
       }
     }
     return
@@ -88,14 +88,14 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   ) async -> Void {
     do {
       let method = call.method
-      var rawArgument = call.arguments as? [String: Any?]
+      var rawArgument = call.arguments as? Dictionary<String, Any?>
       guard rawArgument != nil else {
         throw NSError(domain: "invalid argument.", code: 0)
       }
       let getArgument = { (name: String) in
         return try self.extractFlutterValueMap(&rawArgument!, name)
       }
-      var rawResult: [String: Any?] = [:]
+      var rawResult: Dictionary<String, Any?> = [:]
       let setResult = { (name: String, value: Any?) in
         return try self.infuseFlutterValueMap(&rawResult, name, value)
       }
@@ -144,6 +144,27 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
         let _ = try await self.handlePushSystemNotification(
           try self.decodeFlutterValue(try getArgument("title")),
           try self.decodeFlutterValue(try getArgument("description")),
+        )
+      case "query_screen_placement":
+        let detail = try await self.handleQueryScreenPlacement(
+        )
+        try setResult("x", try self.encodeFlutterValue(detail.x))
+        try setResult("y", try self.encodeFlutterValue(detail.y))
+        try setResult("width", try self.encodeFlutterValue(detail.width))
+        try setResult("height", try self.encodeFlutterValue(detail.height))
+      case "query_window_placement":
+        let detail = try await self.handleQueryWindowPlacement(
+        )
+        try setResult("x", try self.encodeFlutterValue(detail.x))
+        try setResult("y", try self.encodeFlutterValue(detail.y))
+        try setResult("width", try self.encodeFlutterValue(detail.width))
+        try setResult("height", try self.encodeFlutterValue(detail.height))
+      case "update_window_placement":
+        let _ = try await self.handleUpdateWindowPlacement(
+          try self.decodeFlutterValue(try getArgument("x")),
+          try self.decodeFlutterValue(try getArgument("y")),
+          try self.decodeFlutterValue(try getArgument("width")),
+          try self.decodeFlutterValue(try getArgument("height")),
         )
       default:
         throw NSError(domain: "invalid method.", code: 0)
@@ -274,7 +295,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     picker.shouldShowFileExtensions = true
     picker.directoryURL = URL(fileURLWithPath: location)
     picker.delegate = self
-    (try self.getCurrentSceneWindow().rootViewController as! FlutterViewController).present(picker, animated: true)
+    (try self.getCurrentWindow().rootViewController as! FlutterViewController).present(picker, animated: true)
     let targetUrl = await withCheckedContinuation { (continuation) in self.continuation = continuation } as! [URL]
     self.continuation = nil
     let target = try targetUrl.map({ (item) in try self.resolveFileUrl(item) })
@@ -303,13 +324,50 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     return
   }
 
+  // ----------------
+
+  @MainActor
+  private func handleQueryScreenPlacement(
+  ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
+    let window = try self.getCurrentWindow()
+    let insets = window.safeAreaInsets
+    let rect = window.bounds
+    let x = Int(rect.origin.x + insets.left)
+    let y = Int(rect.origin.y + insets.top)
+    let width = Int(rect.size.width - (insets.left + insets.right))
+    let height = Int(rect.size.height - (insets.top + insets.bottom))
+    return (x, y, width, height)
+  }
+
+  @MainActor
+  private func handleQueryWindowPlacement(
+  ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
+    let window = try self.getCurrentWindow()
+    let rect = window.convert(window.bounds, to: nil)
+    let x = Int(rect.origin.x)
+    let y = Int(rect.origin.y)
+    let width = Int(rect.size.width)
+    let height = Int(rect.size.height)
+    return (x, y, width, height)
+  }
+
+  @MainActor
+  private func handleUpdateWindowPlacement(
+    _ x: Int,
+    _ y: Int,
+    _ width: Int,
+    _ height: Int,
+  ) async throws -> Void {
+    throw NSError(domain: "unsupported method.", code: 0)
+  }
+
   // MARK: - invoke
 
   private func invoke(
     _ method: String,
-    _ argument: [String: Any?],
+    _ argument: Dictionary<String, Any?>,
   ) async throws -> Void {
-    self.channel?.invokeMethod(method, arguments: argument)
+    self.channel.invokeMethod(method, arguments: argument)
     return
   }
 
@@ -319,6 +377,36 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ target: String,
   ) async throws -> Void {
     return try await self.invoke("receive_application_link", [
+      "target": self.encodeFlutterValue(target),
+    ])
+  }
+
+  // ----------------
+
+  private func invokeReceiveApplicationDragEnter(
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_enter", [:])
+  }
+
+  private func invokeReceiveApplicationDragOver(
+    _ locationX: Int,
+    _ locationY: Int,
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_over", [
+      "location_x": self.encodeFlutterValue(locationX),
+      "location_y": self.encodeFlutterValue(locationY),
+    ])
+  }
+
+  private func invokeReceiveApplicationDragLeave(
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_leave", [:])
+  }
+
+  private func invokeReceiveApplicationDragDrop(
+    _ target: Array<String>,
+  ) async throws -> Void {
+    return try await self.invoke("receive_application_drag_drop", [
       "target": self.encodeFlutterValue(target),
     ])
   }
@@ -343,7 +431,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   }
 
   private func extractFlutterValueMap(
-    _ map: inout [String: Any?],
+    _ map: inout Dictionary<String, Any?>,
     _ name: String,
   ) throws -> Any? {
     guard map.index(forKey: name) != nil else {
@@ -353,7 +441,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   }
 
   private func infuseFlutterValueMap(
-    _ map: inout [String: Any?],
+    _ map: inout Dictionary<String, Any?>,
     _ name: String,
     _ value: Any?,
   ) throws -> Void {
@@ -365,10 +453,11 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
 
   private func queryApplicationIdentifier(
   ) throws -> String {
-    guard let identifier = Bundle.main.bundleIdentifier else {
+    let identifier = Bundle.main.bundleIdentifier
+    guard identifier != nil else {
       throw NSError(domain: "failed to get bundle identifier.", code: 0)
     }
-    return identifier
+    return identifier!
   }
 
   // ----------------
@@ -376,13 +465,14 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   private func resolveFileUrl(
     _ url: URL,
   ) throws -> String {
-    guard let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
+    let urlComponent = NSURLComponents(url: url, resolvingAgainstBaseURL: true)
+    guard urlComponent != nil else {
       throw NSError(domain: "invalid url.", code: 0)
     }
-    guard urlComponent.scheme == "file" && urlComponent.host == "" && urlComponent.port == nil && urlComponent.path != nil else {
+    guard urlComponent!.scheme == "file" && urlComponent!.host == "" && urlComponent!.port == nil && urlComponent!.path != nil else {
       throw NSError(domain: "unknown url.", code: 0)
     }
-    var path = urlComponent.path!
+    var path = urlComponent!.path!
     if path.count > 1 && path.last == "/" {
       path.removeLast()
     }
@@ -398,15 +488,17 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     return
   }
 
-  private func getCurrentSceneWindow(
+  private func getCurrentWindow(
   ) throws -> UIWindow {
-    guard let currentScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else {
+    let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
+    guard scene != nil else {
       throw NSError(domain: "invalid scene.", code: 0)
     }
-    guard let currentWindow = currentScene.windows.first(where: { $0.isKeyWindow }) else {
+    let window = scene!.windows.first(where: { $0.isKeyWindow })
+    guard window != nil else {
       throw NSError(domain: "invalid window.", code: 0)
     }
-    return currentWindow
+    return window!
   }
 
   // MARK: - implement UIDocumentPickerDelegate

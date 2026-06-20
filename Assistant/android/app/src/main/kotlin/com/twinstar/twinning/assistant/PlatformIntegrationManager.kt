@@ -9,12 +9,17 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.Settings
+import android.view.DragEvent
+import android.view.View
+import android.view.WindowInsets
 import androidx.core.database.getFloatOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
@@ -28,6 +33,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Date
+import kotlin.math.roundToLong
 import kotlin.properties.Delegates
 
 class PlatformIntegrationManager {
@@ -106,6 +112,40 @@ class PlatformIntegrationManager {
         this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
       }
     }
+    this.activity.findViewById<View>(android.R.id.content).setOnDragListener({ view, event ->
+      when (event.action) {
+        DragEvent.ACTION_DRAG_ENTERED -> {
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragEnter()
+          }
+        }
+        DragEvent.ACTION_DRAG_LOCATION -> {
+          val displayDensity = this.queryDisplayDensity()
+          val locationX = (event.x / displayDensity).roundToLong()
+          val locationY = (event.y / displayDensity).roundToLong()
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragOver(locationX, locationY)
+          }
+        }
+        DragEvent.ACTION_DRAG_EXITED -> {
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragLeave()
+          }
+        }
+        DragEvent.ACTION_DROP -> {
+          val target = mutableListOf<String>()
+          for (targetIndex in 0 until event.clipData.itemCount) {
+            val targetItemUri = event.clipData.getItemAt(targetIndex).uri
+            val targetItem = this.resolveContentUri(targetItemUri)
+            target.add(targetItem)
+          }
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragDrop(target)
+          }
+        }
+      }
+      return@setOnDragListener true
+    })
     return
   }
 
@@ -235,6 +275,30 @@ class PlatformIntegrationManager {
           val detail = this.handlePushSystemNotification(
             this.decodeFlutterValue<String>(getArgument("title")),
             this.decodeFlutterValue<String>(getArgument("description")),
+          )
+        }
+        "query_screen_placement" -> {
+          val detail = this.handleQueryScreenPlacement(
+          )
+          setResult("x", this.encodeFlutterValue(detail.first.first))
+          setResult("y", this.encodeFlutterValue(detail.first.second))
+          setResult("width", this.encodeFlutterValue(detail.second.first))
+          setResult("height", this.encodeFlutterValue(detail.second.second))
+        }
+        "query_window_placement" -> {
+          val detail = this.handleQueryWindowPlacement(
+          )
+          setResult("x", this.encodeFlutterValue(detail.first.first))
+          setResult("y", this.encodeFlutterValue(detail.first.second))
+          setResult("width", this.encodeFlutterValue(detail.second.first))
+          setResult("height", this.encodeFlutterValue(detail.second.second))
+        }
+        "update_window_placement" -> {
+          val detail = this.handleUpdateWindowPlacement(
+            this.decodeFlutterValue<Long>(getArgument("x")),
+            this.decodeFlutterValue<Long>(getArgument("y")),
+            this.decodeFlutterValue<Long>(getArgument("width")),
+            this.decodeFlutterValue<Long>(getArgument("height")),
           )
         }
         else -> throw Exception("invalid method")
@@ -451,6 +515,43 @@ class PlatformIntegrationManager {
     return
   }
 
+  // ----------------
+
+  private suspend fun handleQueryScreenPlacement(
+  ): Pair<Pair<Long, Long>, Pair<Long, Long>> {
+    val displayDensity = this.queryDisplayDensity()
+    val display = this.activity.display
+    val displaySize = Point()
+    display.getRealSize(displaySize)
+    val insets = this.activity.windowManager.maximumWindowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+    val rect = Rect(insets.left, insets.top, displaySize.x - insets.right, displaySize.y - insets.bottom)
+    val x = (rect.left / displayDensity).toLong()
+    val y = (rect.top / displayDensity).toLong()
+    val width = (rect.width() / displayDensity).toLong()
+    val height = (rect.height() / displayDensity).toLong()
+    return Pair(Pair(x, y), Pair(width, height))
+  }
+
+  private suspend fun handleQueryWindowPlacement(
+  ): Pair<Pair<Long, Long>, Pair<Long, Long>> {
+    val displayDensity = this.queryDisplayDensity()
+    val rect = this.activity.windowManager.currentWindowMetrics.bounds
+    val x = (rect.left / displayDensity).toLong()
+    val y = (rect.top / displayDensity).toLong()
+    val width = (rect.width() / displayDensity).toLong()
+    val height = (rect.height() / displayDensity).toLong()
+    return Pair(Pair(x, y), Pair(width, height))
+  }
+
+  private suspend fun handleUpdateWindowPlacement(
+    x: Long,
+    y: Long,
+    width: Long,
+    height: Long,
+  ): Unit {
+    throw Exception("unsupported method")
+  }
+
   // endregion
 
   // region invoke
@@ -469,6 +570,38 @@ class PlatformIntegrationManager {
     target: String,
   ): Unit {
     return this.invoke("receive_application_link", mapOf(
+      "target" to this.encodeFlutterValue(target),
+    ))
+  }
+
+  // ----------------
+
+  private suspend fun invokeReceiveApplicationDragEnter(
+  ): Unit {
+    return this.invoke("receive_application_drag_enter", mapOf(
+    ))
+  }
+
+  private suspend fun invokeReceiveApplicationDragOver(
+    locationX: Long,
+    locationY: Long,
+  ): Unit {
+    return this.invoke("receive_application_drag_over", mapOf(
+      "location_x" to this.encodeFlutterValue(locationX),
+      "location_y" to this.encodeFlutterValue(locationY),
+    ))
+  }
+
+  private suspend fun invokeReceiveApplicationDragLeave(
+  ): Unit {
+    return this.invoke("receive_application_drag_leave", mapOf(
+    ))
+  }
+
+  private suspend fun invokeReceiveApplicationDragDrop(
+    target: List<String>,
+  ): Unit {
+    return this.invoke("receive_application_drag_drop", mapOf(
       "target" to this.encodeFlutterValue(target),
     ))
   }
@@ -494,6 +627,9 @@ class PlatformIntegrationManager {
   private inline fun <reified TValue> decodeFlutterValue(
     raw: Any?,
   ): TValue {
+    if (TValue::class == Long::class && raw is Int) {
+      return raw.toLong() as TValue
+    }
     return raw as TValue
   }
 
@@ -521,6 +657,11 @@ class PlatformIntegrationManager {
   }
 
   // ----------------
+
+  private fun queryDisplayDensity(
+  ): Double {
+    return this.activity.context.resources.displayMetrics.density.toDouble()
+  }
 
   private inline fun <reified TValue> queryDatabaseOfContentUri(
     uri: Uri,

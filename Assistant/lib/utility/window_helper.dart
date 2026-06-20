@@ -9,15 +9,13 @@ class WindowHelper {
 
   static Future<({Integer x, Integer y, Integer width, Integer height})> queryScreenPlacement(
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    var platformResult = await PlatformIntegrationManager.instance.invokeOnDesktopQueryScreenPlacement();
+    var platformResult = await PlatformIntegrationManager.instance.invokeQueryScreenPlacement();
     return platformResult;
   }
 
   static Future<({Integer x, Integer y, Integer width, Integer height})> queryWindowPlacement(
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    var platformResult = await PlatformIntegrationManager.instance.invokeOnDesktopQueryWindowPlacement();
+    var platformResult = await PlatformIntegrationManager.instance.invokeQueryWindowPlacement();
     return platformResult;
   }
 
@@ -27,9 +25,8 @@ class WindowHelper {
     Integer width,
     Integer height,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
     // ignore: unused_local_variable
-    var platformResult = await PlatformIntegrationManager.instance.invokeOnDesktopUpdateWindowPlacement(x, y, width, height);
+    var platformResult = await PlatformIntegrationManager.instance.invokeUpdateWindowPlacement(x, y, width, height);
     return;
   }
 
@@ -39,7 +36,6 @@ class WindowHelper {
     Integer width,
     Integer height,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
     var screenPlacement = await WindowHelper.queryScreenPlacement();
     var x = screenPlacement.x + (screenPlacement.width - width) ~/ 2;
     var y = screenPlacement.y + (screenPlacement.height - height) ~/ 2;

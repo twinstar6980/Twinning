@@ -53,29 +53,29 @@ class PlatformIntegrationManager {
         );
         break;
       }
-      case 'on_desktop_receive_storage_drag_enter': {
+      case 'receive_application_drag_enter': {
         // ignore: unused_local_variable
-        var detail = await this._handleOnDesktopReceiveStorageDragEnter(
+        var detail = await this._handleReceiveApplicationDragEnter(
         );
         break;
       }
-      case 'on_desktop_receive_storage_drag_over': {
+      case 'receive_application_drag_over': {
         // ignore: unused_local_variable
-        var detail = await this._handleOnDesktopReceiveStorageDragOver(
+        var detail = await this._handleReceiveApplicationDragOver(
           getArgument('location_x')!.as<Integer>(),
           getArgument('location_y')!.as<Integer>(),
         );
         break;
       }
-      case 'on_desktop_receive_storage_drag_leave': {
+      case 'receive_application_drag_leave': {
         // ignore: unused_local_variable
-        var detail = await this._handleOnDesktopReceiveStorageDragLeave(
+        var detail = await this._handleReceiveApplicationDragLeave(
         );
         break;
       }
-      case 'on_desktop_receive_storage_drag_drop': {
+      case 'receive_application_drag_drop': {
         // ignore: unused_local_variable
-        var detail = await this._handleOnDesktopReceiveStorageDragDrop(
+        var detail = await this._handleReceiveApplicationDragDrop(
           getArgument('target')!.as<List<Object?>>().cast<String>(),
         );
         break;
@@ -97,14 +97,14 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  Future<()> _handleOnDesktopReceiveStorageDragEnter(
+  Future<()> _handleReceiveApplicationDragEnter(
   ) async {
     await DropRegionManager.instance.onEnter();
     return (
     );
   }
 
-  Future<()> _handleOnDesktopReceiveStorageDragOver(
+  Future<()> _handleReceiveApplicationDragOver(
     Integer locationX,
     Integer locationY,
   ) async {
@@ -113,14 +113,14 @@ class PlatformIntegrationManager {
     );
   }
 
-  Future<()> _handleOnDesktopReceiveStorageDragLeave(
+  Future<()> _handleReceiveApplicationDragLeave(
   ) async {
     await DropRegionManager.instance.onLeave();
     return (
     );
   }
 
-  Future<()> _handleOnDesktopReceiveStorageDragDrop(
+  Future<()> _handleReceiveApplicationDragDrop(
     List<String> target,
   ) async {
     await DropRegionManager.instance.onDrop(target);
@@ -258,10 +258,9 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  Future<({Integer x, Integer y, Integer width, Integer height})> invokeOnDesktopQueryScreenPlacement(
+  Future<({Integer x, Integer y, Integer width, Integer height})> invokeQueryScreenPlacement(
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    var detail = await this._invoke('on_desktop_query_screen_placement', {
+    var detail = await this._invoke('query_screen_placement', {
     });
     return (
       x: detail['x']!.as<Integer>(),
@@ -271,10 +270,9 @@ class PlatformIntegrationManager {
     );
   }
 
-  Future<({Integer x, Integer y, Integer width, Integer height})> invokeOnDesktopQueryWindowPlacement(
+  Future<({Integer x, Integer y, Integer width, Integer height})> invokeQueryWindowPlacement(
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
-    var detail = await this._invoke('on_desktop_query_window_placement', {
+    var detail = await this._invoke('query_window_placement', {
     });
     return (
       x: detail['x']!.as<Integer>(),
@@ -284,15 +282,14 @@ class PlatformIntegrationManager {
     );
   }
 
-  Future<()> invokeOnDesktopUpdateWindowPlacement(
+  Future<()> invokeUpdateWindowPlacement(
     Integer x,
     Integer y,
     Integer width,
     Integer height,
   ) async {
-    assertTest(SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh);
     // ignore: unused_local_variable
-    var detail = await this._invoke('on_desktop_update_window_placement', {
+    var detail = await this._invoke('update_window_placement', {
       'x': x,
       'y': y,
       'width': width,

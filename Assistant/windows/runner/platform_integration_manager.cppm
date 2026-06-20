@@ -294,8 +294,8 @@ export {
 						);
 						break;
 					}
-					case hash_string("on_desktop_query_screen_placement"): {
-						auto detail = thiz.handle_on_desktop_query_screen_placement(
+					case hash_string("query_screen_placement"): {
+						auto detail = thiz.handle_query_screen_placement(
 						);
 						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
@@ -303,8 +303,8 @@ export {
 						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
 						break;
 					}
-					case hash_string("on_desktop_query_window_placement"): {
-						auto detail = thiz.handle_on_desktop_query_window_placement(
+					case hash_string("query_window_placement"): {
+						auto detail = thiz.handle_query_window_placement(
 						);
 						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
@@ -312,8 +312,8 @@ export {
 						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
 						break;
 					}
-					case hash_string("on_desktop_update_window_placement"): {
-						auto detail = thiz.handle_on_desktop_update_window_placement(
+					case hash_string("update_window_placement"): {
+						auto detail = thiz.handle_update_window_placement(
 							thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
 							thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
 							thiz.decode_flutter_value<std::int64_t>(get_argument("width")),
@@ -445,6 +445,7 @@ export {
 			auto state_h = HRESULT{};
 			auto location_h = winrt::to_hstring(location);
 			auto name_h = winrt::to_hstring(name);
+			auto window = thiz.get_current_window();
 			auto dialog = winrt::com_ptr<IFileDialog>{};
 			if (type == "load_file" || type == "load_directory") {
 				state_h = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(dialog.put()));
@@ -485,7 +486,7 @@ export {
 				winrt::check_hresult(state_h);
 			}
 			auto target = std::vector<std::string>{};
-			state_h = dialog->Show(thiz.m_window->GetHandle());
+			state_h = dialog->Show(window);
 			if (state_h != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
 				winrt::check_hresult(state_h);
 				if (type == "load_file" || type == "load_directory") {
@@ -528,12 +529,10 @@ export {
 			auto accent_color = setting.GetColorValue(winrt::Windows::UI::ViewManagement::UIColorType::Accent);
 			auto accent = std::optional<std::int64_t>{};
 			accent.emplace(
-				static_cast<std::int64_t>(
-					(accent_color.A << 24) |
-					(accent_color.R << 16) |
-					(accent_color.G << 8) |
-					(accent_color.B << 0)
-				)
+				static_cast<std::int64_t>(accent_color.A << 24) |
+				static_cast<std::int64_t>(accent_color.R << 16) |
+				static_cast<std::int64_t>(accent_color.G << 8) |
+				static_cast<std::int64_t>(accent_color.B << 0)
 			);
 			return std::make_tuple(std::move(accent));
 		}
@@ -568,7 +567,7 @@ export {
 				winrt::Windows::UI::Notifications::ToastNotification const & sender,
 				winrt::Windows::Foundation::IInspectable const &             args
 			) -> auto {
-					thiz.bring_window_to_foreground(thiz.m_window->GetHandle());
+					thiz.bring_window_to_foreground(thiz.get_current_window());
 					return;
 				}
 			);
@@ -579,51 +578,68 @@ export {
 
 		// ----------------
 
-		auto handle_on_desktop_query_screen_placement(
+		auto handle_query_screen_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
 			auto state_b = BOOL{};
-			auto scale_factor = thiz.query_display_scale_factor();
-			auto monitor = MonitorFromWindow(thiz.m_window->GetHandle(), MONITOR_DEFAULTTONEAREST);
+			auto display_density = thiz.query_display_density();
+			auto monitor = thiz.get_current_screen();
 			auto monitor_info = MONITORINFO{
 				.cbSize = sizeof(MONITORINFO),
 			};
 			state_b = GetMonitorInfoW(monitor, &monitor_info);
 			winrt::check_bool(state_b);
 			auto rect = monitor_info.rcWork;
-			auto x = static_cast<std::int64_t>(std::llround(rect.left / scale_factor));
-			auto y = static_cast<std::int64_t>(std::llround(rect.top / scale_factor));
-			auto width = static_cast<std::int64_t>(std::llround((rect.right - rect.left) / scale_factor));
-			auto height = static_cast<std::int64_t>(std::llround((rect.bottom - rect.top) / scale_factor));
+			auto x = static_cast<std::int64_t>(rect.left / display_density);
+			auto y = static_cast<std::int64_t>(rect.top / display_density);
+			auto width = static_cast<std::int64_t>((rect.right - rect.left) / display_density);
+			auto height = static_cast<std::int64_t>((rect.bottom - rect.top) / display_density);
 			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
 		}
 
-		auto handle_on_desktop_query_window_placement(
+		auto handle_query_window_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
 			auto state_b = BOOL{};
-			auto scale_factor = thiz.query_display_scale_factor();
+			auto window = thiz.get_current_window();
+			auto display_density = thiz.query_display_density();
 			auto rect = RECT{};
-			state_b = GetWindowRect(thiz.m_window->GetHandle(), &rect);
+			state_b = GetClientRect(window, &rect);
 			winrt::check_bool(state_b);
-			auto x = static_cast<std::int64_t>(std::llround(rect.left / scale_factor));
-			auto y = static_cast<std::int64_t>(std::llround(rect.top / scale_factor));
-			auto width = static_cast<std::int64_t>(std::llround((rect.right - rect.left) / scale_factor));
-			auto height = static_cast<std::int64_t>(std::llround((rect.bottom - rect.top) / scale_factor));
+			auto point = POINT{
+				.x = rect.left,
+				.y = rect.top,
+			};
+			state_b = ClientToScreen(window, &point);
+			winrt::check_bool(state_b);
+			auto x = static_cast<std::int64_t>(point.x / display_density);
+			auto y = static_cast<std::int64_t>(point.y / display_density);
+			auto width = static_cast<std::int64_t>((rect.right - rect.left) / display_density);
+			auto height = static_cast<std::int64_t>((rect.bottom - rect.top) / display_density);
 			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
 		}
 
-		auto handle_on_desktop_update_window_placement(
+		auto handle_update_window_placement(
 			std::int64_t const & x,
 			std::int64_t const & y,
 			std::int64_t const & width,
 			std::int64_t const & height
 		) -> std::tuple<> {
 			auto state_b = BOOL{};
-			auto scale_factor = thiz.query_display_scale_factor();
-			auto actual_x = static_cast<int>(std::llround(x * scale_factor));
-			auto actual_y = static_cast<int>(std::llround(y * scale_factor));
-			auto actual_width = static_cast<int>(std::llround(width * scale_factor));
-			auto actual_height = static_cast<int>(std::llround(height * scale_factor));
-			state_b = SetWindowPos(thiz.m_window->GetHandle(), nullptr, actual_x, actual_y, actual_width, actual_height, SWP_NOZORDER);
+			auto window = thiz.get_current_window();
+			auto display_density = thiz.query_display_density();
+			auto style = GetWindowLongW(window, GWL_STYLE);
+			auto ex_style = GetWindowLongW(window, GWL_EXSTYLE);
+			auto rect = RECT{
+				.left = static_cast<LONG>(x * display_density),
+				.top = static_cast<LONG>(y * display_density),
+				.right = static_cast<LONG>((x + width) * display_density),
+				.bottom = static_cast<LONG>((y + height) * display_density),
+			};
+			AdjustWindowRectEx(&rect, style, FALSE, ex_style);
+			auto actual_x = static_cast<int>(rect.left);
+			auto actual_y = static_cast<int>(rect.top);
+			auto actual_width = static_cast<int>(rect.right - rect.left);
+			auto actual_height = static_cast<int>(rect.bottom - rect.top);
+			state_b = SetWindowPos(window, nullptr, actual_x, actual_y, actual_width, actual_height, SWP_NOZORDER);
 			winrt::check_bool(state_b);
 			return std::make_tuple();
 		}
@@ -712,21 +728,21 @@ export {
 
 		// ----------------
 
-		auto invoke_on_desktop_receive_storage_drag_enter(
+		auto invoke_receive_application_drag_enter(
 		) -> void {
 			return thiz.invoke(
-				"on_desktop_receive_storage_drag_enter",
+				"receive_application_drag_enter",
 				std::map<std::string, flutter::EncodableValue>{{
 				}}
 			);
 		}
 
-		auto invoke_on_desktop_receive_storage_drag_over(
+		auto invoke_receive_application_drag_over(
 			std::int64_t const & location_x,
 			std::int64_t const & location_y
 		) -> void {
 			return thiz.invoke(
-				"on_desktop_receive_storage_drag_over",
+				"receive_application_drag_over",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("location_x", thiz.encode_flutter_value(auto{location_x})),
 					std::make_pair("location_y", thiz.encode_flutter_value(auto{location_y})),
@@ -734,20 +750,20 @@ export {
 			);
 		}
 
-		auto invoke_on_desktop_receive_storage_drag_leave(
+		auto invoke_receive_application_drag_leave(
 		) -> void {
 			return thiz.invoke(
-				"on_desktop_receive_storage_drag_leave",
+				"receive_application_drag_leave",
 				std::map<std::string, flutter::EncodableValue>{{
 				}}
 			);
 		}
 
-		auto invoke_on_desktop_receive_storage_drag_drop(
+		auto invoke_receive_application_drag_drop(
 			std::vector<std::string> const & target
 		) -> void {
 			return thiz.invoke(
-				"on_desktop_receive_storage_drag_drop",
+				"receive_application_drag_drop",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
@@ -913,6 +929,26 @@ export {
 			return;
 		}
 
+		auto query_display_density(
+		) const -> double {
+			auto window = thiz.get_current_window();
+			auto dpi = GetDpiForWindow(window);
+			return dpi / 96.0;
+		}
+
+		auto get_current_screen(
+		) const -> HMONITOR {
+			auto window = thiz.get_current_window();
+			auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONULL);
+			winrt::check_pointer(monitor);
+			return monitor;
+		}
+
+		auto get_current_window(
+		) const -> HWND {
+			return thiz.m_window->GetHandle();
+		}
+
 		auto query_known_folder_path(
 			KNOWNFOLDERID const & type
 		) const -> std::string {
@@ -952,12 +988,6 @@ export {
 			auto item_display_h = std::wstring{item_display};
 			CoTaskMemFree(item_display);
 			return winrt::to_string(item_display_h);
-		}
-
-		auto query_display_scale_factor(
-		) const -> double {
-			auto dpi = GetDpiForWindow(thiz.m_window->GetHandle());
-			return dpi / 96.0;
 		}
 
 		auto bring_window_to_foreground(
@@ -1071,8 +1101,9 @@ export {
 		auto register_drop_target(
 		) -> void {
 			auto state_h = HRESULT{};
+			auto window = thiz.get_current_window();
 			thiz.m_drop_target = winrt::make<DropTarget>(&thiz);
-			state_h = RegisterDragDrop(thiz.m_window->GetHandle(), thiz.m_drop_target.get());
+			state_h = RegisterDragDrop(window, thiz.m_drop_target.get());
 			winrt::check_hresult(state_h);
 			return;
 		}
@@ -1080,7 +1111,8 @@ export {
 		auto unregister_drop_target(
 		) -> void {
 			auto state_h = HRESULT{};
-			state_h = RevokeDragDrop(thiz.m_window->GetHandle());
+			auto window = thiz.get_current_window();
+			state_h = RevokeDragDrop(window);
 			winrt::check_hresult(state_h);
 			thiz.m_drop_target = nullptr;
 			return;
@@ -1093,6 +1125,8 @@ export {
 
 			winrt::com_ptr<IDropTargetHelper> m_helper;
 
+			bool m_allow;
+
 			std::add_pointer_t<PlatformIntegrationManager> m_host;
 
 		public:
@@ -1104,6 +1138,7 @@ export {
 			) :
 				winrt::implements<DropTarget, IDropTarget>{},
 				m_helper{},
+				m_allow{false},
 				m_host{host} {
 				winrt::check_hresult(CoCreateInstance(CLSID_DragDropHelper, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(thiz.m_helper.put())));
 				return;
@@ -1123,14 +1158,26 @@ export {
 			) override {
 				try {
 					auto state_h = HRESULT{};
+					auto window = thiz.m_host->get_current_window();
 					auto point = POINT{
 						.x = pt.x,
 						.y = pt.y,
 					};
 					*pdwEffect = DROPEFFECT_NONE;
-					state_h = thiz.m_helper->DragEnter(thiz.m_host->m_window->GetHandle(), pDataObj, &point, *pdwEffect);
+					state_h = thiz.m_helper->DragEnter(window, pDataObj, &point, *pdwEffect);
 					winrt::check_hresult(state_h);
-					thiz.m_host->invoke_on_desktop_receive_storage_drag_enter();
+					auto drop_format = FORMATETC{
+						.cfFormat = CF_HDROP,
+						.ptd = nullptr,
+						.dwAspect = DVASPECT_CONTENT,
+						.lindex = -1,
+						.tymed = TYMED_HGLOBAL,
+					};
+					state_h = pDataObj->QueryGetData(&drop_format);
+					thiz.m_allow = state_h == S_OK;
+					if (thiz.m_allow) {
+						thiz.m_host->invoke_receive_application_drag_enter();
+					}
 					return S_OK;
 				}
 				catch (...) {
@@ -1146,20 +1193,22 @@ export {
 				try {
 					auto state_b = BOOL{};
 					auto state_h = HRESULT{};
+					auto window = thiz.m_host->get_current_window();
 					auto point = POINT{
 						.x = pt.x,
 						.y = pt.y,
 					};
-					*pdwEffect = DROPEFFECT_LINK;
+					*pdwEffect = !thiz.m_allow ? DROPEFFECT_NONE : DROPEFFECT_LINK;
 					state_h = thiz.m_helper->DragOver(&point, *pdwEffect);
 					winrt::check_hresult(state_h);
-					auto point_client = POINT{point};
-					state_b = ScreenToClient(thiz.m_host->m_window->GetHandle(), &point_client);
-					winrt::check_bool(state_b);
-					auto scale_factor = thiz.m_host->query_display_scale_factor();
-					auto location_x = static_cast<std::int64_t>(std::llround(point_client.x / scale_factor));
-					auto location_y = static_cast<std::int64_t>(std::llround(point_client.y / scale_factor));
-					thiz.m_host->invoke_on_desktop_receive_storage_drag_over(location_x, location_y);
+					if (thiz.m_allow) {
+						state_b = ScreenToClient(window, &point);
+						winrt::check_bool(state_b);
+						auto display_density = thiz.m_host->query_display_density();
+						auto location_x = static_cast<std::int64_t>(std::llround(point.x / display_density));
+						auto location_y = static_cast<std::int64_t>(std::llround(point.y / display_density));
+						thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
+					}
 					return S_OK;
 				}
 				catch (...) {
@@ -1173,7 +1222,10 @@ export {
 					auto state_h = HRESULT{};
 					state_h = thiz.m_helper->DragLeave();
 					winrt::check_hresult(state_h);
-					thiz.m_host->invoke_on_desktop_receive_storage_drag_leave();
+					if (thiz.m_allow) {
+						thiz.m_allow = false;
+						thiz.m_host->invoke_receive_application_drag_leave();
+					}
 					return S_OK;
 				}
 				catch (...) {
@@ -1196,41 +1248,44 @@ export {
 					*pdwEffect = DROPEFFECT_NONE;
 					state_h = thiz.m_helper->Drop(pDataObj, &point, *pdwEffect);
 					winrt::check_hresult(state_h);
-					auto drop_format = FORMATETC{
-						.cfFormat = CF_HDROP,
-						.ptd = nullptr,
-						.dwAspect = DVASPECT_CONTENT,
-						.lindex = -1,
-						.tymed = TYMED_HGLOBAL,
-					};
-					auto drop_storage = STGMEDIUM{};
-					state_h = pDataObj->GetData(&drop_format, &drop_storage);
-					winrt::check_hresult(state_h);
-					auto drop_storage_finalizer = thiz.m_host->make_finalizer(
-						[&] {
-							ReleaseStgMedium(&drop_storage);
+					if (thiz.m_allow) {
+						thiz.m_allow = false;
+						auto drop_format = FORMATETC{
+							.cfFormat = CF_HDROP,
+							.ptd = nullptr,
+							.dwAspect = DVASPECT_CONTENT,
+							.lindex = -1,
+							.tymed = TYMED_HGLOBAL,
+						};
+						auto drop_storage = STGMEDIUM{};
+						state_h = pDataObj->GetData(&drop_format, &drop_storage);
+						winrt::check_hresult(state_h);
+						auto drop_storage_finalizer = thiz.m_host->make_finalizer(
+							[&] {
+								ReleaseStgMedium(&drop_storage);
+							}
+						);
+						auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
+						winrt::check_pointer(drop_handle);
+						auto drop_handle_finalizer = thiz.m_host->make_finalizer(
+							[&] {
+								GlobalUnlock(drop_storage.hGlobal);
+							}
+						);
+						auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
+						auto target = std::vector<std::string>{};
+						for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
+							auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
+							auto target_item_path_data = std::vector<WCHAR>{};
+							target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
+							target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
+							assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
+							auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
+							auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
+							target.emplace_back(target_item_path_long);
 						}
-					);
-					auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
-					winrt::check_pointer(drop_handle);
-					auto drop_handle_finalizer = thiz.m_host->make_finalizer(
-						[&] {
-							GlobalUnlock(drop_storage.hGlobal);
-						}
-					);
-					auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
-					auto target = std::vector<std::string>{};
-					for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
-						auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
-						auto target_item_path_data = std::vector<WCHAR>{};
-						target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
-						target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
-						assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
-						auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
-						auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
-						target.emplace_back(target_item_path_long);
+						thiz.m_host->invoke_receive_application_drag_drop(target);
 					}
-					thiz.m_host->invoke_on_desktop_receive_storage_drag_drop(target);
 					return S_OK;
 				}
 				catch (...) {

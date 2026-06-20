@@ -237,8 +237,8 @@ export {
 						);
 						break;
 					}
-					case hash_string("on_desktop_query_screen_placement"): {
-						auto detail = thiz.handle_on_desktop_query_screen_placement(
+					case hash_string("query_screen_placement"): {
+						auto detail = thiz.handle_query_screen_placement(
 						);
 						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
@@ -246,8 +246,8 @@ export {
 						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
 						break;
 					}
-					case hash_string("on_desktop_query_window_placement"): {
-						auto detail = thiz.handle_on_desktop_query_window_placement(
+					case hash_string("query_window_placement"): {
+						auto detail = thiz.handle_query_window_placement(
 						);
 						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
 						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
@@ -255,9 +255,9 @@ export {
 						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
 						break;
 					}
-					case hash_string("on_desktop_update_window_placement"): {
+					case hash_string("update_window_placement"): {
 						[[maybe_unused]]
-						auto detail = thiz.handle_on_desktop_update_window_placement(
+						auto detail = thiz.handle_update_window_placement(
 							thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
 							thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
 							thiz.decode_flutter_value<std::int64_t>(get_argument("width")),
@@ -472,7 +472,7 @@ export {
 
 		// ----------------
 
-		auto handle_on_desktop_query_screen_placement(
+		auto handle_query_screen_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
 			auto display = gdk_display_get_default();
 			assert_test(display != nullptr);
@@ -492,7 +492,7 @@ export {
 			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
 		}
 
-		auto handle_on_desktop_query_window_placement(
+		auto handle_query_window_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
 			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
 			assert_test(window != nullptr);
@@ -506,7 +506,7 @@ export {
 			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
 		}
 
-		auto handle_on_desktop_update_window_placement(
+		auto handle_update_window_placement(
 			std::int64_t const & x,
 			std::int64_t const & y,
 			std::int64_t const & width,
