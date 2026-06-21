@@ -99,12 +99,8 @@ class PlatformIntegrationManager {
     host: MainActivity,
     with_savedInstanceState: Bundle?,
   ): Unit {
-    val notificationManager = this.activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    notificationManager.createNotificationChannel(
-      NotificationChannel("main", "Main", NotificationManager.IMPORTANCE_DEFAULT).also {
-        it.setShowBadge(false)
-      },
-    )
+    this.registerNotificationSupport()
+    this.registerDragDropSupport()
     val intent = this.activity.intent
     if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
       runBlocking {
@@ -112,40 +108,6 @@ class PlatformIntegrationManager {
         this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
       }
     }
-    this.activity.findViewById<View>(android.R.id.content).setOnDragListener({ view, event ->
-      when (event.action) {
-        DragEvent.ACTION_DRAG_ENTERED -> {
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragEnter()
-          }
-        }
-        DragEvent.ACTION_DRAG_LOCATION -> {
-          val displayDensity = this.queryDisplayDensity()
-          val locationX = (event.x / displayDensity).roundToLong()
-          val locationY = (event.y / displayDensity).roundToLong()
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragOver(locationX, locationY)
-          }
-        }
-        DragEvent.ACTION_DRAG_EXITED -> {
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragLeave()
-          }
-        }
-        DragEvent.ACTION_DROP -> {
-          val target = mutableListOf<String>()
-          for (targetIndex in 0 until event.clipData.itemCount) {
-            val targetItemUri = event.clipData.getItemAt(targetIndex).uri
-            val targetItem = this.resolveContentUri(targetItemUri)
-            target.add(targetItem)
-          }
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragDrop(target)
-          }
-        }
-      }
-      return@setOnDragListener true
-    })
     return
   }
 
@@ -523,8 +485,7 @@ class PlatformIntegrationManager {
     val display = this.activity.display
     val displaySize = Point()
     display.getRealSize(displaySize)
-    val insets = this.activity.windowManager.maximumWindowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-    val rect = Rect(insets.left, insets.top, displaySize.x - insets.right, displaySize.y - insets.bottom)
+    val rect = Rect(0, 0, displaySize.x, displaySize.y)
     val x = (rect.left / displayDensity).toLong()
     val y = (rect.top / displayDensity).toLong()
     val width = (rect.width() / displayDensity).toLong()
@@ -604,6 +565,62 @@ class PlatformIntegrationManager {
     return this.invoke("receive_application_drag_drop", mapOf(
       "target" to this.encodeFlutterValue(target),
     ))
+  }
+
+  // endregion
+
+  // region support
+
+  private fun registerNotificationSupport(
+  ): Unit {
+    val manager = this.activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    manager.createNotificationChannel(
+      NotificationChannel("main", "Main", NotificationManager.IMPORTANCE_DEFAULT).also {
+        it.setShowBadge(false)
+      },
+    )
+    return
+  }
+
+  // ----------------
+
+  private fun registerDragDropSupport(
+  ): Unit {
+    this.activity.findViewById<View>(android.R.id.content).setOnDragListener({ view, event ->
+      when (event.action) {
+        DragEvent.ACTION_DRAG_ENTERED -> {
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragEnter()
+          }
+        }
+        DragEvent.ACTION_DRAG_LOCATION -> {
+          val displayDensity = this.queryDisplayDensity()
+          val locationX = (event.x / displayDensity).roundToLong()
+          val locationY = (event.y / displayDensity).roundToLong()
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragOver(locationX, locationY)
+          }
+        }
+        DragEvent.ACTION_DRAG_EXITED -> {
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragLeave()
+          }
+        }
+        DragEvent.ACTION_DROP -> {
+          val target = mutableListOf<String>()
+          for (targetIndex in 0 until event.clipData.itemCount) {
+            val targetItemUri = event.clipData.getItemAt(targetIndex).uri
+            val targetItem = this.resolveContentUri(targetItemUri)
+            target.add(targetItem)
+          }
+          runBlocking {
+            this@PlatformIntegrationManager.invokeReceiveApplicationDragDrop(target)
+          }
+        }
+      }
+      return@setOnDragListener true
+    })
+    return
   }
 
   // endregion

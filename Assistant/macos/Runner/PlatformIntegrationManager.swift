@@ -58,9 +58,10 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
       }
       return
     })
-    UNUserNotificationCenter.current().delegate = self
-    UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
-    self.window.registerForDraggedTypes([.fileURL])
+    Task { @MainActor in
+      try self.registerNotificationSupport()
+      try self.registerDragDropSupport()
+    }
     return
   }
 
@@ -68,8 +69,8 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ host: MainFlutterWindow,
     _ with_sender: any NSDraggingInfo,
   ) -> NSDragOperation {
-    Task {
-      try? await self.invokeReceiveApplicationDragEnter()
+    Task { @MainActor in
+      try await self.invokeReceiveApplicationDragEnter()
     }
     return .init()
   }
@@ -78,12 +79,12 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ host: MainFlutterWindow,
     _ with_sender: any NSDraggingInfo,
   ) -> NSDragOperation {
-    let window = try! self.getCurrentWindow()
-    let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
-    let locationX = Int((point.x).rounded())
-    let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
-    Task {
-      try? await self.invokeReceiveApplicationDragOver(locationX, locationY)
+    Task { @MainActor in
+      let window = try self.getCurrentWindow()
+      let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
+      let locationX = Int((point.x).rounded())
+      let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
+      try await self.invokeReceiveApplicationDragOver(locationX, locationY)
     }
     return .link
   }
@@ -92,8 +93,8 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ host: MainFlutterWindow,
     _ with_sender: (any NSDraggingInfo)?,
   ) -> Void {
-    Task {
-      try? await self.invokeReceiveApplicationDragLeave()
+    Task { @MainActor in
+      try await self.invokeReceiveApplicationDragLeave()
     }
     return
   }
@@ -102,13 +103,13 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ host: MainFlutterWindow,
     _ with_sender: any NSDraggingInfo,
   ) -> Bool {
-    let targetUrl = with_sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [NSPasteboard.ReadingOptionKey.urlReadingFileURLsOnly: true]) as? [URL]
-    guard targetUrl != nil else {
-      return false
-    }
-    let target = try! targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
-    Task {
-      try? await self.invokeReceiveApplicationDragDrop(target)
+    Task { @MainActor in
+      let targetUrl = with_sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [NSPasteboard.ReadingOptionKey.urlReadingFileURLsOnly: true]) as? [URL]
+      guard targetUrl != nil else {
+        throw NSError(domain: "failed to get url.", code: 0)
+      }
+      let target = try targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
+      try await self.invokeReceiveApplicationDragDrop(target)
     }
     return true
   }
@@ -509,6 +510,25 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     ])
   }
 
+  // MARK: - support
+
+  private func registerNotificationSupport(
+  ) throws -> Void {
+    let center = UNUserNotificationCenter.current()
+    center.delegate = self
+    center.requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
+    return
+  }
+
+  // ----------------
+
+  private func registerDragDropSupport(
+  ) throws -> Void {
+    let window = try self.getCurrentWindow()
+    window.registerForDraggedTypes([.fileURL])
+    return
+  }
+
   // MARK: - utility
 
   private func encodeFlutterValue<TValue>(
@@ -611,7 +631,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     let link = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
     if link != nil {
       Task {
-        _ = try? await self.invokeReceiveApplicationLink(link!)
+        try await self.invokeReceiveApplicationLink(link!)
       }
     }
     return

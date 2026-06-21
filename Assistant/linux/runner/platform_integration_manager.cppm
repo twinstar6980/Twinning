@@ -17,6 +17,8 @@ export {
 
 		std::add_pointer_t<GtkApplication> m_application;
 
+		bool m_drag_inside;
+
 	public:
 
 		#pragma region construct
@@ -59,7 +61,8 @@ export {
 			std::nullptr_t _
 		) :
 			m_channel{},
-			m_application{} {
+			m_application{},
+			m_drag_inside{false} {
 			return;
 		}
 
@@ -137,6 +140,8 @@ export {
 				&thiz,
 				nullptr
 			);
+			thiz.register_notification_support();
+			thiz.register_drag_drop_support();
 			return;
 		}
 
@@ -364,8 +369,7 @@ export {
 			std::string const & name
 		) -> std::tuple<std::vector<std::string>> {
 			assert_test(type == "load_file" || type == "load_directory" || type == "save_file");
-			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
-			assert_test(window != nullptr);
+			auto window = thiz.get_current_window();
 			auto dialog_action = GtkFileChooserAction{};
 			if (type == "load_file") {
 				dialog_action = GTK_FILE_CHOOSER_ACTION_OPEN;
@@ -411,8 +415,7 @@ export {
 		auto handle_query_system_theme(
 		) -> std::tuple<std::optional<std::int64_t>> {
 			auto state_b = gboolean{};
-			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
-			assert_test(window != nullptr);
+			auto window = thiz.get_current_window();
 			auto context = gtk_widget_get_style_context(GTK_WIDGET(window));
 			auto accent_color = GdkRGBA{};
 			state_b = gtk_style_context_lookup_color(context, "theme_selected_bg_color", &accent_color);
@@ -474,17 +477,9 @@ export {
 
 		auto handle_query_screen_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
-			auto display = gdk_display_get_default();
-			assert_test(display != nullptr);
-			auto monitor = gdk_display_get_primary_monitor(display);
-			if (monitor == nullptr) {
-				auto monitor_count = gdk_display_get_n_monitors(display);
-				assert_test(monitor_count != 0);
-				monitor = gdk_display_get_monitor(display, 0);
-				assert_test(monitor != nullptr);
-			}
+			auto monitor = thiz.get_current_monitor();
 			auto rect = GdkRectangle{};
-			gdk_monitor_get_geometry(monitor, &rect);
+			gdk_monitor_get_workarea(monitor, &rect);
 			auto x = static_cast<std::int64_t>(rect.x);
 			auto y = static_cast<std::int64_t>(rect.y);
 			auto width = static_cast<std::int64_t>(rect.width);
@@ -494,8 +489,7 @@ export {
 
 		auto handle_query_window_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
-			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
-			assert_test(window != nullptr);
+			auto window = thiz.get_current_window();
 			auto rect = GdkRectangle{};
 			gtk_window_get_position(window, &rect.x, &rect.y);
 			gtk_window_get_size(window, &rect.width, &rect.height);
@@ -512,8 +506,7 @@ export {
 			std::int64_t const & width,
 			std::int64_t const & height
 		) -> std::tuple<> {
-			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
-			assert_test(window != nullptr);
+			auto window = thiz.get_current_window();
 			auto actual_x = static_cast<gint>(x);
 			auto actual_y = static_cast<gint>(y);
 			auto actual_width = static_cast<gint>(width);
@@ -557,6 +550,166 @@ export {
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
+		}
+
+		// ----------------
+
+		auto invoke_receive_application_drag_enter(
+		) -> void {
+			return thiz.invoke(
+				"receive_application_drag_enter",
+				std::map<std::string, FlValue *>{
+				}
+			);
+		}
+
+		auto invoke_receive_application_drag_over(
+			std::int64_t const & location_x,
+			std::int64_t const & location_y
+		) -> void {
+			return thiz.invoke(
+				"receive_application_drag_over",
+				std::map<std::string, FlValue *>{{
+					std::make_pair("location_x", thiz.encode_flutter_value(auto{location_x})),
+					std::make_pair("location_y", thiz.encode_flutter_value(auto{location_y})),
+				}}
+			);
+		}
+
+		auto invoke_receive_application_drag_leave(
+		) -> void {
+			return thiz.invoke(
+				"receive_application_drag_leave",
+				std::map<std::string, FlValue *>{
+				}
+			);
+		}
+
+		auto invoke_receive_application_drag_drop(
+			std::vector<std::string> const & target
+		) -> void {
+			return thiz.invoke(
+				"receive_application_drag_drop",
+				std::map<std::string, FlValue *>{{
+					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
+				}}
+			);
+		}
+
+		#pragma endregion
+
+		#pragma region support
+
+		auto register_notification_support(
+		) -> void {
+			return;
+		}
+
+		// ----------------
+
+		auto register_drag_drop_support(
+		) -> void {
+			auto window = thiz.get_current_window();
+			auto widget = GTK_WIDGET(window);
+			auto target = GtkTargetEntry{
+				.target = const_cast<gchar *>("text/uri-list"),
+				.flags = GTK_TARGET_OTHER_APP,
+				.info = 1,
+			};
+			gtk_drag_dest_set(
+				widget,
+				GTK_DEST_DEFAULT_ALL,
+				&target,
+				1,
+				static_cast<GdkDragAction>(GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK)
+			);
+			g_signal_connect(
+				widget,
+				"drag-motion",
+				G_CALLBACK(
+					+[](
+					GtkWidget *      widget,
+					GdkDragContext * context,
+					gint             x,
+					gint             y,
+					guint            time,
+					gpointer         user_data
+				) -> gboolean {
+						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
+						if (!self.m_drag_inside) {
+							self.m_drag_inside = true;
+							self.invoke_receive_application_drag_enter();
+						}
+						else {
+							auto location_x = static_cast<std::int64_t>(x);
+							auto location_y = static_cast<std::int64_t>(y);
+							self.invoke_receive_application_drag_over(location_x, location_y);
+						}
+						return TRUE;
+					}
+				),
+				&thiz
+			);
+			g_signal_connect(
+				widget,
+				"drag-leave",
+				G_CALLBACK(
+					+[](
+					GtkWidget *      widget,
+					GdkDragContext * context,
+					guint            time,
+					gpointer         user_data
+				) -> void {
+						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
+						self.m_drag_inside = false;
+						g_autoptr(GdkEvent) event = gtk_get_current_event();
+						assert_test(event != nullptr);
+						if (event->type != GDK_DROP_START) {
+							self.invoke_receive_application_drag_leave();
+						}
+						return;
+					}
+				),
+				&thiz
+			);
+			g_signal_connect(
+				widget,
+				"drag-data-received",
+				G_CALLBACK(
+					+[](
+					GtkWidget *        widget,
+					GdkDragContext *   context,
+					gint               x,
+					gint               y,
+					GtkSelectionData * data,
+					guint              info,
+					guint              time,
+					gpointer           user_data
+				) -> void {
+						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
+						self.m_drag_inside = false;
+						g_auto(GStrv) target_uri = gtk_selection_data_get_uris(data);
+						assert_test(target_uri != nullptr);
+						auto has_invalid_item = false;
+						auto target = std::vector<std::string>{};
+						for (auto target_index = std::size_t{0}; target_uri[target_index] != nullptr; ++target_index) {
+							g_autofree gchar * target_item = g_filename_from_uri(target_uri[target_index], nullptr, nullptr);
+							if (target_item == nullptr) {
+								has_invalid_item = true;
+								break;
+							}
+							target.emplace_back(target_item);
+						}
+						if (!has_invalid_item) {
+							self.invoke_receive_application_drag_drop(target);
+						}
+						gtk_drag_finish(context, has_invalid_item ? FALSE : TRUE, FALSE, time);
+						return;
+					}
+				),
+				&thiz
+			);
+			return;
 		}
 
 		#pragma endregion
@@ -693,6 +846,27 @@ export {
 				throw std::runtime_error{std::string{"Exception: "} + error->message};
 			}
 			return;
+		}
+
+		auto get_current_monitor(
+		) const -> GdkMonitor * {
+			auto display = gdk_display_get_default();
+			assert_test(display != nullptr);
+			auto monitor = gdk_display_get_primary_monitor(display);
+			if (monitor == nullptr) {
+				auto monitor_count = gdk_display_get_n_monitors(display);
+				assert_test(monitor_count != 0);
+				monitor = gdk_display_get_monitor(display, 0);
+				assert_test(monitor != nullptr);
+			}
+			return monitor;
+		}
+
+		auto get_current_window(
+		) const -> GtkWindow * {
+			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
+			assert_test(window != nullptr);
+			return window;
 		}
 
 		#pragma endregion

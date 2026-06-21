@@ -1,4 +1,4 @@
-import '/common.dart'; // ignore: unused_import
+import '/common.dart';
 import '/widget/export.dart';
 import '/utility/convert_helper.dart';
 import '/view/kairosoft_game_manager/game_helper.dart';

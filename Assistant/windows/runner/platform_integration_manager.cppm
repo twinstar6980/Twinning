@@ -27,9 +27,11 @@ export {
 
 		std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> m_channel;
 
-		std::add_pointer_t<FlutterWindow> m_window;
+		HWND m_window;
 
-		winrt::com_ptr<IDropTarget> m_drop_target;
+		DWORD m_notification_activation_callback_registration;
+
+		winrt::com_ptr<IDropTarget> m_drag_drop_target;
 
 	public:
 
@@ -74,7 +76,8 @@ export {
 		) :
 			m_channel{},
 			m_window{},
-			m_drop_target{} {
+			m_notification_activation_callback_registration{},
+			m_drag_drop_target{} {
 			return;
 		}
 
@@ -173,7 +176,7 @@ export {
 			FlutterWindow &                                   host,
 			std::unique_ptr<flutter::FlutterViewController> & also_flutter_controller
 		) -> void {
-			thiz.m_window = &host;
+			thiz.m_window = host.GetHandle();
 			thiz.m_channel = std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
 				also_flutter_controller->engine()->messenger(),
 				std::format("{}/PlatformIntegrationManager", thiz.query_application_identifier()),
@@ -189,8 +192,8 @@ export {
 				}
 			);
 			OleInitialize(nullptr);
-			thiz.register_notification_activation_callback();
-			thiz.register_drop_target();
+			thiz.register_notification_support();
+			thiz.register_drag_drop_support();
 			auto argument = GetCommandLineArguments();
 			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
 				thiz.invoke_receive_application_link(argument.front());
@@ -205,8 +208,10 @@ export {
 			if (thiz.m_window == nullptr) {
 				return;
 			}
+			thiz.unregister_notification_support();
+			thiz.unregister_drag_drop_support();
 			OleUninitialize();
-			thiz.unregister_drop_target();
+			thiz.m_window = nullptr;
 			return;
 		}
 
@@ -582,7 +587,7 @@ export {
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
 			auto state_b = BOOL{};
 			auto display_density = thiz.query_display_density();
-			auto monitor = thiz.get_current_screen();
+			auto monitor = thiz.get_current_monitor();
 			auto monitor_info = MONITORINFO{
 				.cbSize = sizeof(MONITORINFO),
 			};
@@ -732,8 +737,8 @@ export {
 		) -> void {
 			return thiz.invoke(
 				"receive_application_drag_enter",
-				std::map<std::string, flutter::EncodableValue>{{
-				}}
+				std::map<std::string, flutter::EncodableValue>{
+				}
 			);
 		}
 
@@ -754,8 +759,8 @@ export {
 		) -> void {
 			return thiz.invoke(
 				"receive_application_drag_leave",
-				std::map<std::string, flutter::EncodableValue>{{
-				}}
+				std::map<std::string, flutter::EncodableValue>{
+				}
 			);
 		}
 
@@ -769,6 +774,315 @@ export {
 				}}
 			);
 		}
+
+		#pragma endregion
+
+		#pragma region support
+
+		auto register_notification_support(
+		) -> void {
+			if (!thiz.check_application_packaged()) {
+				return;
+			}
+			auto state_h = HRESULT{};
+			auto rclsid = winrt::guid{"3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A"};
+			auto factory = winrt::make_self<NotificationActivationCallbackFactory>();
+			state_h = CoRegisterClassObject(rclsid, factory.get(), CLSCTX_LOCAL_SERVER, REGCLS_MULTIPLEUSE, &thiz.m_notification_activation_callback_registration);
+			winrt::check_hresult(state_h);
+			return;
+		}
+
+		auto unregister_notification_support(
+		) -> void {
+			if (!thiz.check_application_packaged()) {
+				return;
+			}
+			auto state_h = HRESULT{};
+			state_h = CoRevokeClassObject(thiz.m_notification_activation_callback_registration);
+			winrt::check_hresult(state_h);
+			return;
+		}
+
+		class NotificationActivationCallback :
+			public winrt::implements<NotificationActivationCallback, INotificationActivationCallback> {
+
+		public:
+
+			#pragma region constructor
+
+			explicit NotificationActivationCallback(
+			) :
+				winrt::implements<NotificationActivationCallback, INotificationActivationCallback>{} {
+				return;
+			}
+
+			#pragma endregion
+
+			#pragma region implement INotificationActivationCallback
+
+			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			virtual IFACEMETHODIMP Activate(
+				LPCWSTR                              appUserModelId,
+				LPCWSTR                              invokedArgs,
+				NOTIFICATION_USER_INPUT_DATA const * data,
+				ULONG                                count
+			) override {
+				return S_OK;
+			}
+
+			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			#pragma endregion
+
+		};
+
+		class NotificationActivationCallbackFactory :
+			public winrt::implements<NotificationActivationCallbackFactory, IClassFactory> {
+
+		public:
+
+			#pragma region constructor
+
+			explicit NotificationActivationCallbackFactory(
+			) :
+				winrt::implements<NotificationActivationCallbackFactory, IClassFactory>{} {
+				return;
+			}
+
+			#pragma endregion
+
+			#pragma region implement IClassFactory
+
+			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			virtual IFACEMETHODIMP CreateInstance(
+				IUnknown * pUnkOuter,
+				REFIID     riid,
+				void **    ppvObject
+			) override {
+				try {
+					return winrt::make<NotificationActivationCallback>()->QueryInterface(riid, ppvObject);
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP LockServer(
+				BOOL fLock
+			) override {
+				return S_OK;
+			}
+
+			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			#pragma endregion
+
+		};
+
+		// ----------------
+
+		auto register_drag_drop_support(
+		) -> void {
+			auto state_h = HRESULT{};
+			auto window = thiz.get_current_window();
+			thiz.m_drag_drop_target = winrt::make<DropTarget>(&thiz);
+			state_h = RegisterDragDrop(window, thiz.m_drag_drop_target.get());
+			winrt::check_hresult(state_h);
+			return;
+		}
+
+		auto unregister_drag_drop_support(
+		) -> void {
+			auto state_h = HRESULT{};
+			auto window = thiz.get_current_window();
+			state_h = RevokeDragDrop(window);
+			winrt::check_hresult(state_h);
+			thiz.m_drag_drop_target = nullptr;
+			return;
+		}
+
+		class DropTarget :
+			public winrt::implements<DropTarget, IDropTarget> {
+
+		private:
+
+			winrt::com_ptr<IDropTargetHelper> m_helper;
+
+			bool m_allow;
+
+			std::add_pointer_t<PlatformIntegrationManager> m_host;
+
+		public:
+
+			#pragma region constructor
+
+			explicit DropTarget(
+				PlatformIntegrationManager * const& host
+			) :
+				winrt::implements<DropTarget, IDropTarget>{},
+				m_helper{},
+				m_allow{false},
+				m_host{host} {
+				winrt::check_hresult(CoCreateInstance(CLSID_DragDropHelper, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(thiz.m_helper.put())));
+				return;
+			}
+
+			#pragma endregion
+
+			#pragma region implement IDropTarget
+
+			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			virtual IFACEMETHODIMP DragEnter(
+				IDataObject * pDataObj,
+				DWORD         grfKeyState,
+				POINTL        pt,
+				DWORD *       pdwEffect
+			) override {
+				try {
+					auto state_h = HRESULT{};
+					auto window = thiz.m_host->get_current_window();
+					auto point = POINT{
+						.x = pt.x,
+						.y = pt.y,
+					};
+					*pdwEffect = DROPEFFECT_NONE;
+					state_h = thiz.m_helper->DragEnter(window, pDataObj, &point, *pdwEffect);
+					winrt::check_hresult(state_h);
+					auto drop_format = FORMATETC{
+						.cfFormat = CF_HDROP,
+						.ptd = nullptr,
+						.dwAspect = DVASPECT_CONTENT,
+						.lindex = -1,
+						.tymed = TYMED_HGLOBAL,
+					};
+					state_h = pDataObj->QueryGetData(&drop_format);
+					thiz.m_allow = state_h == S_OK;
+					if (thiz.m_allow) {
+						thiz.m_host->invoke_receive_application_drag_enter();
+					}
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP DragOver(
+				DWORD   grfKeyState,
+				POINTL  pt,
+				DWORD * pdwEffect
+			) override {
+				try {
+					auto state_b = BOOL{};
+					auto state_h = HRESULT{};
+					auto window = thiz.m_host->get_current_window();
+					auto point = POINT{
+						.x = pt.x,
+						.y = pt.y,
+					};
+					*pdwEffect = !thiz.m_allow ? DROPEFFECT_NONE : DROPEFFECT_LINK;
+					state_h = thiz.m_helper->DragOver(&point, *pdwEffect);
+					winrt::check_hresult(state_h);
+					if (thiz.m_allow) {
+						state_b = ScreenToClient(window, &point);
+						winrt::check_bool(state_b);
+						auto display_density = thiz.m_host->query_display_density();
+						auto location_x = static_cast<std::int64_t>(std::llround(point.x / display_density));
+						auto location_y = static_cast<std::int64_t>(std::llround(point.y / display_density));
+						thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
+					}
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP DragLeave(
+			) override {
+				try {
+					auto state_h = HRESULT{};
+					state_h = thiz.m_helper->DragLeave();
+					winrt::check_hresult(state_h);
+					if (thiz.m_allow) {
+						thiz.m_allow = false;
+						thiz.m_host->invoke_receive_application_drag_leave();
+					}
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			virtual IFACEMETHODIMP Drop(
+				IDataObject * pDataObj,
+				DWORD         grfKeyState,
+				POINTL        pt,
+				DWORD *       pdwEffect
+			) override {
+				try {
+					auto state_h = HRESULT{};
+					auto point = POINT{
+						.x = pt.x,
+						.y = pt.y,
+					};
+					*pdwEffect = DROPEFFECT_NONE;
+					state_h = thiz.m_helper->Drop(pDataObj, &point, *pdwEffect);
+					winrt::check_hresult(state_h);
+					if (thiz.m_allow) {
+						thiz.m_allow = false;
+						auto drop_format = FORMATETC{
+							.cfFormat = CF_HDROP,
+							.ptd = nullptr,
+							.dwAspect = DVASPECT_CONTENT,
+							.lindex = -1,
+							.tymed = TYMED_HGLOBAL,
+						};
+						auto drop_storage = STGMEDIUM{};
+						state_h = pDataObj->GetData(&drop_format, &drop_storage);
+						winrt::check_hresult(state_h);
+						auto drop_storage_finalizer = thiz.m_host->make_finalizer(
+							[&] {
+								ReleaseStgMedium(&drop_storage);
+							}
+						);
+						auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
+						winrt::check_pointer(drop_handle);
+						auto drop_handle_finalizer = thiz.m_host->make_finalizer(
+							[&] {
+								GlobalUnlock(drop_storage.hGlobal);
+							}
+						);
+						auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
+						auto target = std::vector<std::string>{};
+						for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
+							auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
+							auto target_item_path_data = std::vector<WCHAR>{};
+							target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
+							target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
+							assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
+							auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
+							auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
+							target.emplace_back(target_item_path_long);
+						}
+						thiz.m_host->invoke_receive_application_drag_drop(target);
+					}
+					return S_OK;
+				}
+				catch (...) {
+					return winrt::to_hresult();
+				}
+			}
+
+			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
+
+			#pragma endregion
+
+		};
 
 		#pragma endregion
 
@@ -936,7 +1250,7 @@ export {
 			return dpi / 96.0;
 		}
 
-		auto get_current_screen(
+		auto get_current_monitor(
 		) const -> HMONITOR {
 			auto window = thiz.get_current_window();
 			auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONULL);
@@ -946,7 +1260,9 @@ export {
 
 		auto get_current_window(
 		) const -> HWND {
-			return thiz.m_window->GetHandle();
+			auto window = thiz.m_window;
+			assert_test(window != nullptr);
+			return window;
 		}
 
 		auto query_known_folder_path(
@@ -1001,303 +1317,6 @@ export {
 			SetForegroundWindow(window);
 			return;
 		}
-
-		// ----------------
-
-		auto register_notification_activation_callback(
-		) -> void {
-			if (!thiz.check_application_packaged()) {
-				return;
-			}
-			auto state_h = HRESULT{};
-			auto rclsid = winrt::guid{"3FCD5C89-78F3-489B-88E5-37CBC3C3FC1A"};
-			auto factory = winrt::make_self<NotificationActivationCallbackFactory>();
-			auto registration = DWORD{};
-			state_h = CoRegisterClassObject(rclsid, factory.get(), CLSCTX_LOCAL_SERVER, REGCLS_MULTIPLEUSE, &registration);
-			winrt::check_hresult(state_h);
-			return;
-		}
-
-		class NotificationActivationCallback :
-			public winrt::implements<NotificationActivationCallback, INotificationActivationCallback> {
-
-		public:
-
-			#pragma region constructor
-
-			explicit NotificationActivationCallback(
-			) :
-				winrt::implements<NotificationActivationCallback, INotificationActivationCallback>{} {
-				return;
-			}
-
-			#pragma endregion
-
-			#pragma region implement INotificationActivationCallback
-
-			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
-
-			virtual IFACEMETHODIMP Activate(
-				LPCWSTR                              appUserModelId,
-				LPCWSTR                              invokedArgs,
-				NOTIFICATION_USER_INPUT_DATA const * data,
-				ULONG                                count
-			) override {
-				return S_OK;
-			}
-
-			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
-
-			#pragma endregion
-
-		};
-
-		class NotificationActivationCallbackFactory :
-			public winrt::implements<NotificationActivationCallbackFactory, IClassFactory> {
-
-		public:
-
-			#pragma region constructor
-
-			explicit NotificationActivationCallbackFactory(
-			) :
-				winrt::implements<NotificationActivationCallbackFactory, IClassFactory>{} {
-				return;
-			}
-
-			#pragma endregion
-
-			#pragma region implement IClassFactory
-
-			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
-
-			virtual IFACEMETHODIMP CreateInstance(
-				IUnknown * pUnkOuter,
-				REFIID     riid,
-				void * *   ppvObject
-			) override {
-				try {
-					return winrt::make<NotificationActivationCallback>()->QueryInterface(riid, ppvObject);
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
-			}
-
-			virtual IFACEMETHODIMP LockServer(
-				BOOL fLock
-			) override {
-				return S_OK;
-			}
-
-			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
-
-			#pragma endregion
-
-		};
-
-		// ----------------
-
-		auto register_drop_target(
-		) -> void {
-			auto state_h = HRESULT{};
-			auto window = thiz.get_current_window();
-			thiz.m_drop_target = winrt::make<DropTarget>(&thiz);
-			state_h = RegisterDragDrop(window, thiz.m_drop_target.get());
-			winrt::check_hresult(state_h);
-			return;
-		}
-
-		auto unregister_drop_target(
-		) -> void {
-			auto state_h = HRESULT{};
-			auto window = thiz.get_current_window();
-			state_h = RevokeDragDrop(window);
-			winrt::check_hresult(state_h);
-			thiz.m_drop_target = nullptr;
-			return;
-		}
-
-		class DropTarget :
-			public winrt::implements<DropTarget, IDropTarget> {
-
-		private:
-
-			winrt::com_ptr<IDropTargetHelper> m_helper;
-
-			bool m_allow;
-
-			std::add_pointer_t<PlatformIntegrationManager> m_host;
-
-		public:
-
-			#pragma region constructor
-
-			explicit DropTarget(
-				PlatformIntegrationManager * const & host
-			) :
-				winrt::implements<DropTarget, IDropTarget>{},
-				m_helper{},
-				m_allow{false},
-				m_host{host} {
-				winrt::check_hresult(CoCreateInstance(CLSID_DragDropHelper, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(thiz.m_helper.put())));
-				return;
-			}
-
-			#pragma endregion
-
-			#pragma region implement IDropTarget
-
-			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
-
-			virtual IFACEMETHODIMP DragEnter(
-				IDataObject * pDataObj,
-				DWORD         grfKeyState,
-				POINTL        pt,
-				DWORD *       pdwEffect
-			) override {
-				try {
-					auto state_h = HRESULT{};
-					auto window = thiz.m_host->get_current_window();
-					auto point = POINT{
-						.x = pt.x,
-						.y = pt.y,
-					};
-					*pdwEffect = DROPEFFECT_NONE;
-					state_h = thiz.m_helper->DragEnter(window, pDataObj, &point, *pdwEffect);
-					winrt::check_hresult(state_h);
-					auto drop_format = FORMATETC{
-						.cfFormat = CF_HDROP,
-						.ptd = nullptr,
-						.dwAspect = DVASPECT_CONTENT,
-						.lindex = -1,
-						.tymed = TYMED_HGLOBAL,
-					};
-					state_h = pDataObj->QueryGetData(&drop_format);
-					thiz.m_allow = state_h == S_OK;
-					if (thiz.m_allow) {
-						thiz.m_host->invoke_receive_application_drag_enter();
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
-			}
-
-			virtual IFACEMETHODIMP DragOver(
-				DWORD   grfKeyState,
-				POINTL  pt,
-				DWORD * pdwEffect
-			) override {
-				try {
-					auto state_b = BOOL{};
-					auto state_h = HRESULT{};
-					auto window = thiz.m_host->get_current_window();
-					auto point = POINT{
-						.x = pt.x,
-						.y = pt.y,
-					};
-					*pdwEffect = !thiz.m_allow ? DROPEFFECT_NONE : DROPEFFECT_LINK;
-					state_h = thiz.m_helper->DragOver(&point, *pdwEffect);
-					winrt::check_hresult(state_h);
-					if (thiz.m_allow) {
-						state_b = ScreenToClient(window, &point);
-						winrt::check_bool(state_b);
-						auto display_density = thiz.m_host->query_display_density();
-						auto location_x = static_cast<std::int64_t>(std::llround(point.x / display_density));
-						auto location_y = static_cast<std::int64_t>(std::llround(point.y / display_density));
-						thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
-			}
-
-			virtual IFACEMETHODIMP DragLeave(
-			) override {
-				try {
-					auto state_h = HRESULT{};
-					state_h = thiz.m_helper->DragLeave();
-					winrt::check_hresult(state_h);
-					if (thiz.m_allow) {
-						thiz.m_allow = false;
-						thiz.m_host->invoke_receive_application_drag_leave();
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
-			}
-
-			virtual IFACEMETHODIMP Drop(
-				IDataObject * pDataObj,
-				DWORD         grfKeyState,
-				POINTL        pt,
-				DWORD *       pdwEffect
-			) override {
-				try {
-					auto state_h = HRESULT{};
-					auto point = POINT{
-						.x = pt.x,
-						.y = pt.y,
-					};
-					*pdwEffect = DROPEFFECT_NONE;
-					state_h = thiz.m_helper->Drop(pDataObj, &point, *pdwEffect);
-					winrt::check_hresult(state_h);
-					if (thiz.m_allow) {
-						thiz.m_allow = false;
-						auto drop_format = FORMATETC{
-							.cfFormat = CF_HDROP,
-							.ptd = nullptr,
-							.dwAspect = DVASPECT_CONTENT,
-							.lindex = -1,
-							.tymed = TYMED_HGLOBAL,
-						};
-						auto drop_storage = STGMEDIUM{};
-						state_h = pDataObj->GetData(&drop_format, &drop_storage);
-						winrt::check_hresult(state_h);
-						auto drop_storage_finalizer = thiz.m_host->make_finalizer(
-							[&] {
-								ReleaseStgMedium(&drop_storage);
-							}
-						);
-						auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
-						winrt::check_pointer(drop_handle);
-						auto drop_handle_finalizer = thiz.m_host->make_finalizer(
-							[&] {
-								GlobalUnlock(drop_storage.hGlobal);
-							}
-						);
-						auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
-						auto target = std::vector<std::string>{};
-						for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
-							auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
-							auto target_item_path_data = std::vector<WCHAR>{};
-							target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
-							target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
-							assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
-							auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
-							auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
-							target.emplace_back(target_item_path_long);
-						}
-						thiz.m_host->invoke_receive_application_drag_drop(target);
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
-			}
-
-			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
-
-			#pragma endregion
-
-		};
 
 		#pragma endregion
 

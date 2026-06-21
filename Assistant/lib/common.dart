@@ -16,13 +16,17 @@ typedef Floater = lib.double;
 
 typedef String = lib.String;
 
+typedef List<E> = lib.List<E>;
+
+typedef Map<K, V> = lib.Map<K, V>;
+
 // ----------------
 
 final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '206';
+  static const String version = '207';
 
   static const String name = 'Twinning Assistant';
 

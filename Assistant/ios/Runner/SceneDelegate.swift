@@ -22,4 +22,12 @@ class SceneDelegate: FlutterSceneDelegate {
     return
   }
 
+  public override func sceneDidBecomeActive(
+    _ scene: UIScene,
+  ) -> Void {
+    super.sceneDidBecomeActive(scene)
+    PlatformIntegrationManager.instance().inject_SceneDelegate_sceneDidBecomeActive(self, scene)
+    return
+  }
+
 }

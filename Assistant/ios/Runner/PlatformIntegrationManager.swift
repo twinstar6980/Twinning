@@ -3,7 +3,7 @@ import UniformTypeIdentifiers
 import UserNotifications
 import Flutter
 
-class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate {
+class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate, UIDropInteractionDelegate {
 
   // MARK: - variable
 
@@ -46,8 +46,6 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
       }
       return
     })
-    UNUserNotificationCenter.current().delegate = self
-    UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
     return
   }
 
@@ -60,7 +58,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     let link = with_connectionOptions.urlContexts.first?.url.absoluteString
     if link != nil {
       Task {
-        try? await self.invokeReceiveApplicationLink(link!)
+        try await self.invokeReceiveApplicationLink(link!)
       }
     }
     return
@@ -74,8 +72,19 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     let link = with_URLContexts.first?.url.absoluteString
     if link != nil {
       Task {
-        try? await self.invokeReceiveApplicationLink(link!)
+        try await self.invokeReceiveApplicationLink(link!)
       }
+    }
+    return
+  }
+
+  public func inject_SceneDelegate_sceneDidBecomeActive(
+    _ host: SceneDelegate,
+    _ with_scene: UIScene,
+  ) -> Void {
+    Task {
+      try self.registerNotificationSupport()
+      try self.registerDragDropSupport()
     }
     return
   }
@@ -329,21 +338,21 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   @MainActor
   private func handleQueryScreenPlacement(
   ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
-    let window = try self.getCurrentWindow()
-    let insets = window.safeAreaInsets
-    let rect = window.bounds
-    let x = Int(rect.origin.x + insets.left)
-    let y = Int(rect.origin.y + insets.top)
-    let width = Int(rect.size.width - (insets.left + insets.right))
-    let height = Int(rect.size.height - (insets.top + insets.bottom))
+    let screen = try self.getCurrentScreen()
+    let rect = screen.bounds
+    let x = Int(rect.origin.x)
+    let y = Int(rect.origin.y)
+    let width = Int(rect.size.width)
+    let height = Int(rect.size.height)
     return (x, y, width, height)
   }
 
   @MainActor
   private func handleQueryWindowPlacement(
   ) async throws -> (x: Int, y: Int, width: Int, height: Int) {
+    let screen = try self.getCurrentScreen()
     let window = try self.getCurrentWindow()
-    let rect = window.convert(window.bounds, to: nil)
+    let rect = window.convert(window.bounds, to: screen.coordinateSpace)
     let x = Int(rect.origin.x)
     let y = Int(rect.origin.y)
     let width = Int(rect.size.width)
@@ -409,6 +418,26 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     return try await self.invoke("receive_application_drag_drop", [
       "target": self.encodeFlutterValue(target),
     ])
+  }
+
+  // MARK: - support
+
+  private func registerNotificationSupport(
+  ) throws -> Void {
+    let center = UNUserNotificationCenter.current()
+    center.delegate = self
+    center.requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
+    return
+  }
+
+  // ----------------
+
+  private func registerDragDropSupport(
+  ) throws -> Void {
+    let window = try self.getCurrentWindow()
+    window.rootViewController!.view.isUserInteractionEnabled = true
+    window.rootViewController!.view.addInteraction(UIDropInteraction(delegate: self))
+    return
   }
 
   // MARK: - utility
@@ -488,6 +517,16 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     return
   }
 
+  private func getCurrentScreen(
+  ) throws -> UIScreen {
+    let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
+    guard scene != nil else {
+      throw NSError(domain: "invalid scene.", code: 0)
+    }
+    let screen = scene!.screen
+    return screen
+  }
+
   private func getCurrentWindow(
   ) throws -> UIWindow {
     let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
@@ -527,6 +566,71 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     willPresent notification: UNNotification,
   ) async -> UNNotificationPresentationOptions {
     return [.sound, .list, .banner]
+  }
+
+  // MARK: - implement UIDropInteractionDelegate
+
+  public func dropInteraction(
+    _ interaction: UIDropInteraction,
+    sessionDidEnter session: any UIDropSession,
+  ) -> Void {
+    let allow = session.canLoadObjects(ofClass: URL.self)
+    if allow {
+      Task {
+        try await self.invokeReceiveApplicationDragEnter()
+      }
+    }
+    return
+  }
+
+  public func dropInteraction(
+    _ interaction: UIDropInteraction,
+    sessionDidUpdate session: any UIDropSession,
+  ) -> UIDropProposal {
+    let allow = session.canLoadObjects(ofClass: URL.self)
+    if allow {
+      Task {
+        let point = session.location(in: interaction.view!)
+        let locationX = Int(point.x)
+        let locationY = Int(point.y)
+        try await self.invokeReceiveApplicationDragOver(locationX, locationY)
+      }
+    }
+    return UIDropProposal(operation: !allow ? .forbidden : .copy)
+  }
+
+  public func dropInteraction(
+    _ interaction: UIDropInteraction,
+    sessionDidExit session: any UIDropSession,
+  ) -> Void {
+    let allow = session.canLoadObjects(ofClass: URL.self)
+    if allow {
+      Task {
+        try await self.invokeReceiveApplicationDragLeave()
+      }
+    }
+    return
+  }
+
+  public func dropInteraction(
+    _ interaction: UIDropInteraction,
+    performDrop session: any UIDropSession,
+  ) -> Void {
+    let allow = session.canLoadObjects(ofClass: URL.self)
+    if allow {
+      Task {
+        // TODO
+        // let targetUrl = try await withCheckedThrowingContinuation { continuation in
+        //   session.loadObjects(ofClass: URL.self, completion: { sessionObject in
+        //     continuation.resume(returning: sessionObject)
+        //   })
+        // } as! [URL]
+        let targetUrl = [URL]()
+        let target = try targetUrl.map({ (item) in try self.resolveFileUrl(item) })
+        try await self.invokeReceiveApplicationDragDrop(target)
+      }
+    }
+    return
   }
 
 }
